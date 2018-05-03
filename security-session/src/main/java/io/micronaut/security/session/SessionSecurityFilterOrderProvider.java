@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.authentication.providers;
+package io.micronaut.security.session;
 
-import org.reactivestreams.Publisher;
+import io.micronaut.security.filters.SecurityFilterOrderProvider;
+import io.micronaut.session.http.HttpSessionFilter;
+import javax.inject.Singleton;
 
 /**
- * Responsible for returning user information based
- * on their username.
- *
+ * {@link SecurityFilterOrderProvider} implementation for Session-Based Authentication.
  * @author Sergio del Amo
- * @author Graeme Rocher
  * @since 1.0
  */
-public interface UserFetcher {
+@Singleton
+public class SessionSecurityFilterOrderProvider implements SecurityFilterOrderProvider {
 
-    /**
-     * Fetches a user based on the username.
-     *
-     * @param username e.g. admin
-     * @return The users information or an empty publisher if no user is present
-     */
-    Publisher<UserState> findByUsername(String username);
+    private static final int ORDER_PADDING = 100;
+
+    @Override
+    public Integer getSecurityFilterOrder() {
+        return HttpSessionFilter.ORDER + ORDER_PADDING;
+    }
 }

@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.authentication.providers;
-
-import org.reactivestreams.Publisher;
-
 /**
- * Responsible for returning user information based
- * on their username.
+ * Contains classes specific to Session-based Authentication within Micronaut.
  *
  * @author Sergio del Amo
- * @author Graeme Rocher
  * @since 1.0
  */
-public interface UserFetcher {
 
-    /**
-     * Fetches a user based on the username.
-     *
-     * @param username e.g. admin
-     * @return The users information or an empty publisher if no user is present
-     */
-    Publisher<UserState> findByUsername(String username);
-}
+@Configuration
+@Requires(property = SecuritySessionConfigurationProperties.PREFIX + ".enabled")
+package io.micronaut.security.session;
+
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;
