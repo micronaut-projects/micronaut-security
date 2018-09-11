@@ -14,11 +14,27 @@
  * limitations under the License.
  */
 
+package io.micronaut.security.token.writer;
+
+import io.micronaut.core.util.Toggleable;
+
 /**
- * JWT token validator.
+ *  HTTP Token Writer Configuration.
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-package io.micronaut.security.token.jwt.validator;
+interface HttpHeaderTokenWriterConfiguration extends Toggleable {
 
+    /**
+     *
+     * @return a Prefix before the token in the header value. E.g. Bearer
+     */
+    String getPrefix();
+
+    /**
+     *
+     * @return an HTTP Header name. e.g. Authorization
+     */
+    String getHeaderName();
+}
