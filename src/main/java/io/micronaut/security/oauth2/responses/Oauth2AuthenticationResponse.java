@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * Oauth 2.0 authorization response.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class Oauth2AuthenticationResponse implements AuthenticationResponse {
 

@@ -25,12 +25,12 @@ import io.reactivex.Single;
  * Handles Oauth 2.0 Authorization responses.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface AuthorizationResponseHandler {
 
     /**
-     *
+     * @param request Http Request
      * @param authenticationResponse Authorization response
      * @return A Http Response
      */

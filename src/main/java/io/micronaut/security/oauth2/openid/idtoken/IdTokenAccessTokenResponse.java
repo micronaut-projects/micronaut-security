@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse>Successful Token Response</a>
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class IdTokenAccessTokenResponse extends AccessTokenResponse {
 

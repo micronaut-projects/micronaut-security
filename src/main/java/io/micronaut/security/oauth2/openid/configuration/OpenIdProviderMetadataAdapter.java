@@ -34,7 +34,7 @@ import java.util.Objects;
  * fetched from remote identity provider, with the different endpoint configurations.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class OpenIdProviderMetadataAdapter implements OpenIdProviderMetadata {
 

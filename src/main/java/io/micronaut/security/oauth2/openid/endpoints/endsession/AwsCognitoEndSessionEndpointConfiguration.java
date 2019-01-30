@@ -29,6 +29,14 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Provides specific configuration to logout from AWS Cognito.
+ *
+ * @see <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/logout-endpoint.html">AWS Cognito Logout Endpoint</a>
+ *
+ * @author Sergio del Amo
+ * @since 1.0.0
+ */
 @Requires(property = OauthConfigurationProperties.PREFIX + ".domain-name")
 @Requires(property = OauthConfigurationProperties.PREFIX + ".end-session.aws-cognito.enabled", notEquals = StringUtils.FALSE)
 @Requires(condition = AwsCognitoOpenidConfigurationCondition.class)
@@ -39,9 +47,16 @@ public class AwsCognitoEndSessionEndpointConfiguration implements EndSessionEndp
     private final String logoutUri;
     private final String domainName;
 
+    /**
+     *
+     * @param embeddedServer Embedded Server
+     * @param domainName AWS Cognito User's pool domain Name
+     * @param logoutPath {@link io.micronaut.security.endpoints.LogoutController} path.
+     */
     public AwsCognitoEndSessionEndpointConfiguration(
-            @Value("${micronaut.security.oauth2.domain-name}") String domainName,
             EmbeddedServer embeddedServer,
+            @Value("${micronaut.security.oauth2.domain-name}") String domainName,
+
             @Value("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}") String logoutPath) {
         this.domainName = domainName;
         this.logoutUri = embeddedServer.getURL().toString() + logoutPath;

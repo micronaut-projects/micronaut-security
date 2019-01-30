@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.3.2">Access Token Request</a>
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class PasswordGrant {
 

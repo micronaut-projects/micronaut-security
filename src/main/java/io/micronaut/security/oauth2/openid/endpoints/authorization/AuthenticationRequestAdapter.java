@@ -27,7 +27,7 @@ import java.util.Optional;
  * Provides an {@link AuthenticationRequest} by combining {@link OauthConfiguration},
  * {@link StateProvider}, {@link NonceProvider}, {@link AuthorizationEndpointConfiguration}.
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class AuthenticationRequestAdapter implements AuthenticationRequest {
 

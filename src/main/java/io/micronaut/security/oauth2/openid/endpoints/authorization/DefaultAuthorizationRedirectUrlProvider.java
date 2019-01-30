@@ -18,7 +18,6 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.uri.UriBuilder;
-import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.openid.endpoints.DefaultRedirectUrlProvider;
 import org.slf4j.Logger;
@@ -33,7 +32,7 @@ import java.util.Optional;
  * Default implementation of {@link io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRedirectUrlProvider}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Singleton
 @Requires(beans = {AuthenticationRequestProvider.class, OpenIdProviderMetadata.class})
@@ -56,6 +55,7 @@ public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRed
      *
      * @param authenticationRequestProvider Authentication Request provider
      * @param openIdProviderMetadata OpenID provider metadata.
+     * @param defaultRedirectUrlProvider Default Redirect Url Provider
      */
     public DefaultAuthorizationRedirectUrlProvider(AuthenticationRequestProvider authenticationRequestProvider,
                                                    OpenIdProviderMetadata openIdProviderMetadata,
@@ -91,7 +91,7 @@ public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRed
         UriBuilder builder = UriBuilder.of(baseUrl);
         for (String k : queryParams.keySet()) {
             Object val = queryParams.get(k);
-            if(val != null) {
+            if (val != null) {
                 builder.queryParam(k, val);
             }
         }

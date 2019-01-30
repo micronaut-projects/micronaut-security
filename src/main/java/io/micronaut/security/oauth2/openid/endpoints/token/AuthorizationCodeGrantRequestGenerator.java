@@ -17,14 +17,12 @@
 package io.micronaut.security.oauth2.openid.endpoints.token;
 
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
-
 import javax.annotation.Nonnull;
 
 /**
  * Generates a Token endpoint request for an Authorization code grant.
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 public interface AuthorizationCodeGrantRequestGenerator {

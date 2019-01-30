@@ -26,7 +26,7 @@ import io.micronaut.security.oauth2.grants.GrantType;
  * Conditions which verifies {@link TokenEndpointConfiguration#getGrantType()} is a particular grant type.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public abstract class TokenEndpointGrantTypeCondition implements Condition {
 

@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
  * Encapsulates Oauth 2.0 application configuration.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface OauthConfiguration {
 

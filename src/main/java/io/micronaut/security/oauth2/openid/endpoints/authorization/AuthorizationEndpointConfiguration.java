@@ -23,7 +23,7 @@ import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
  *
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Authentication Request</a>
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 public interface AuthorizationEndpointConfiguration extends EndpointUrl  {

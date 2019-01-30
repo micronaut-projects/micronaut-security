@@ -23,7 +23,7 @@ import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
  * Handle a not valid {@link IdTokenAccessTokenResponse}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface NotValidIdTokenAccessTokenResponseHandler {
 

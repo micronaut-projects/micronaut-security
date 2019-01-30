@@ -20,7 +20,7 @@ package io.micronaut.security.oauth2.grants;
  * The OAuth 2.0 grant types.
  * @see <a href="https://oauth.net/2/grant-types/">OAuth 2.0 Grant Types</a>
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 public enum GrantType {

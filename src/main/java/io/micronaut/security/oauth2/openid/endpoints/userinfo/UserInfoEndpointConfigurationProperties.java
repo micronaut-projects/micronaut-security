@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * {@link ConfigurationProperties} implementation of {@link UserInfoEndpointConfiguration}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @ConfigurationProperties(UserInfoEndpointConfigurationProperties.PREFIX)
 public class UserInfoEndpointConfigurationProperties implements UserInfoEndpointConfiguration {

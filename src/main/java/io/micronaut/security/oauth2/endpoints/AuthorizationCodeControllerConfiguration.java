@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * Configuration for {@link AuthorizationCodeController}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface AuthorizationCodeControllerConfiguration extends Toggleable {
 

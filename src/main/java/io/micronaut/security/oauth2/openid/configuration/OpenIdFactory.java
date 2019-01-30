@@ -16,7 +16,6 @@
 
 package io.micronaut.security.oauth2.openid.configuration;
 
-import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
@@ -28,8 +27,6 @@ import io.micronaut.security.oauth2.openid.endpoints.registration.RegistrationEn
 import io.micronaut.security.oauth2.openid.endpoints.revocation.RevocationEndpointConfiguration;
 import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.openid.endpoints.userinfo.UserInfoEndpointConfiguration;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +37,7 @@ import javax.inject.Singleton;
  * The discovery endpoint is declared by the property micronaut.security.oauth2.openid-configuration
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Requires(beans = {OpenIdProviderConfiguration.class,
         AuthorizationEndpointConfiguration.class,
@@ -151,6 +148,5 @@ public class OpenIdFactory {
                                            OpenIdProviderMetadataSession openIdProviderMetadataSession) {
         return new OpenIdEndpointsAdapter(openIdProviderMetadata, openIdProviderMetadataSession);
     }
-
 
 }

@@ -20,7 +20,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
  * Condition which ensures the {@link AuthorizationEndpointRequestConfiguration#getResponseType()} is code.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class AuthorizationRequestResponseTypeCodeCondition extends AuthorizationRequestResponseTypeCondition {
     @Override

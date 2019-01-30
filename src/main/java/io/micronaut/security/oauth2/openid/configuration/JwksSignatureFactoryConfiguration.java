@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
+package io.micronaut.security.oauth2.openid.configuration;
+
+import com.nimbusds.jose.jwk.KeyType;
+import io.micronaut.core.util.Toggleable;
+
 /**
- * Open ID Connect related classes.
+ * Configuration for {@link JwksSignatureFactory}.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
-package io.micronaut.security.oauth2.openid;
+public interface JwksSignatureFactoryConfiguration extends Toggleable {
+    /**
+     * Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
+     * @return The KeyType for the JWKS signature configuration.
+     */
+    KeyType getKeyType();
+}

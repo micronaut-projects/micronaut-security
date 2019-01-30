@@ -25,7 +25,7 @@ import java.util.List;
  * End-session endpoint configuration.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface EndSessionEndpointConfiguration extends EndpointUrl {
 

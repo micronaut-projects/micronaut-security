@@ -28,7 +28,7 @@ import java.util.List;
  * {@link ConfigurationProperties} implementation of {@link EndSessionEndpointConfiguration}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @ConfigurationProperties(EndSessionEndpointConfigurationProperties.PREFIX)
 public class EndSessionEndpointConfigurationProperties implements EndSessionEndpointConfiguration {

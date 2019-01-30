@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * @see <a href="https://openid.net/specs/openid-connect-session-1_0.html#OPMetadata">OpenID Connect Session Management</a>
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface OpenIdProviderMetadataSession {
 

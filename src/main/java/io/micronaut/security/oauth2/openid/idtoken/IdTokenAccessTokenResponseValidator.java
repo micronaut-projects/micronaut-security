@@ -24,7 +24,7 @@ import java.util.Optional;
  * Validates a ID Token Access Response.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface IdTokenAccessTokenResponseValidator {
 

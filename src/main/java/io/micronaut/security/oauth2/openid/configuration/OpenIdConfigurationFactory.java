@@ -26,7 +26,7 @@ import javax.inject.Singleton;
  * Creates a bean {@link OpenIdConfiguration} by fetching the remote configuration of an identity provider.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Requires(beans = {OpenIdConfigurationClient.class})
 @Factory

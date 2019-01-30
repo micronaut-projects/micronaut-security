@@ -23,7 +23,7 @@ import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
  *
  * @see <a href="https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg-17#section-3">Client Registration Endpoint</a>
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 public interface RegistrationEndpointConfiguration extends EndpointUrl {

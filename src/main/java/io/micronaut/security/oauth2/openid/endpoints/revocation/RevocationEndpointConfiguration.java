@@ -23,7 +23,7 @@ import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
  *
  * @see <a href="https://tools.ietf.org/html/rfc7009">Oauth 2.0 Token Revocation</a>
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 public interface RevocationEndpointConfiguration extends EndpointUrl {

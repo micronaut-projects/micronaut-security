@@ -24,7 +24,14 @@ import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 
 import java.util.Optional;
 
+/**
+ * Abstract Condition to check if micronaut.security.oauth.openid-configuration contains a search sequence.
+ *
+ * @author Sergio del Amo
+ * @since 1.0.0
+ */
 public abstract class OpenidConfigurationCondition implements Condition {
+
     @Override
     public boolean matches(ConditionContext context) {
         BeanContext beanContext = context.getBeanContext();
@@ -36,5 +43,9 @@ public abstract class OpenidConfigurationCondition implements Condition {
         return false;
     }
 
-    abstract protected String getSearchSequence();
+    /**
+     *
+     * @return the Search sequence which will be checked against the value of property micronaut.security.oauth.openid-configuration.
+     */
+    protected abstract String getSearchSequence();
 }

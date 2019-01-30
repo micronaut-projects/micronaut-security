@@ -17,13 +17,9 @@
 package io.micronaut.security.oauth2.openid.endpoints.token;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.context.annotation.Value;
 import io.micronaut.http.MediaType;
-import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
-import io.micronaut.security.oauth2.endpoints.AuthorizationCodeControllerConfigurationProperties;
 import io.micronaut.security.oauth2.grants.GrantType;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,7 +27,7 @@ import javax.annotation.Nullable;
  * {@link ConfigurationProperties} implementation of {@link TokenEndpointConfiguration}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @ConfigurationProperties(TokenEndpointConfigurationProperties.PREFIX)
 public class TokenEndpointConfigurationProperties implements TokenEndpointConfiguration {
@@ -133,6 +129,10 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
         return this.contentType;
     }
 
+    /**
+     * The Content-Type used to communicate with the token endpoint.
+     * @param contentType The Content-Type
+     */
     public void setContentType(@Nonnull MediaType contentType) {
         this.contentType = contentType;
     }

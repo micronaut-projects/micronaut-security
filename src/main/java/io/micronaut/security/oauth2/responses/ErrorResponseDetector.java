@@ -24,7 +24,7 @@ import java.util.Map;
  * Utility to verify if a particular object encapsulates an {@link ErrorResponse}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class ErrorResponseDetector {
 

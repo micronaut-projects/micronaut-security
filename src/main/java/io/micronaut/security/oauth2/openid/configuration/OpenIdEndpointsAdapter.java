@@ -22,7 +22,7 @@ import io.micronaut.security.oauth2.openid.endpoints.OpenIdEndpoints;
  * Adapts {@link OpenIdProviderMetadata} and {@link OpenIdProviderMetadataSession} to {@link OpenIdEndpoints}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class OpenIdEndpointsAdapter implements OpenIdEndpoints {
 

@@ -25,7 +25,7 @@ import java.util.Objects;
  * Adapts from a Map to {@link ErrorResponse}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class ErrorResponseMapAdapter implements ErrorResponse {
 

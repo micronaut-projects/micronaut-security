@@ -23,7 +23,7 @@ import java.util.List;
  * Configuration for an OpenID Provider.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface OpenIdProviderConfiguration {
 

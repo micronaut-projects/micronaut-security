@@ -22,7 +22,7 @@ import io.micronaut.http.HttpRequest;
  * Provides an URL to end session with the OpenID provider.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface EndSessionUrlProvider {
 

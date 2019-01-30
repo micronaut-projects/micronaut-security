@@ -17,14 +17,11 @@
 package io.micronaut.security.oauth2.openid.endpoints.token;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.context.annotation.Value;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
-import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
-import io.micronaut.security.oauth2.endpoints.AuthorizationCodeControllerConfigurationProperties;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.openid.endpoints.DefaultRedirectUrlProvider;
@@ -36,7 +33,7 @@ import java.util.Objects;
 /**
  * Default implementation of {@link AuthorizationCodeGrantRequestGenerator}.
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 @Requires(beans = {OpenIdProviderMetadata.class, TokenEndpointConfiguration.class, OauthConfiguration.class})
@@ -62,6 +59,7 @@ public class DefaultAuthorizationCodeGrantRequestGenerator implements Authorizat
      * @param oauthConfiguration Oauth 2 Configuration
      * @param openIdProviderMetadata OpenID provider metadata.
      * @param tokenEndpointConfiguration Token Endpoint configuration
+     * @param defaultRedirectUrlProvider The Default Redirect Url Provider.
      */
     public DefaultAuthorizationCodeGrantRequestGenerator(@Nonnull OauthConfiguration oauthConfiguration,
                                                          @Nonnull OpenIdProviderMetadata openIdProviderMetadata,

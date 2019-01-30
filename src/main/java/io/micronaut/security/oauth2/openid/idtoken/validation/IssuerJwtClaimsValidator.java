@@ -36,7 +36,7 @@ import javax.inject.Singleton;
  * @see <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">Open ID Provider Metadata Spec</a>
  *
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 @Requires(property = JwtClaimsValidator.PREFIX + ".issuer", notEquals = StringUtils.FALSE)

@@ -27,7 +27,7 @@ import javax.inject.Singleton;
  * Default implementation of {@link AuthenticationRequestProvider}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Requires(beans = {OauthConfiguration.class, AuthorizationEndpointRequestConfiguration.class})
 @Singleton

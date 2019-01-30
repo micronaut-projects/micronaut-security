@@ -21,11 +21,16 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.handlers.UnauthorizedRejectionUriProvider;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRedirectUrlProvider;
-
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.Optional;
 
+/**
+ * Provides an implementation of {@link UnauthorizedRejectionUriProvider} to redirect to the authorization url provide by {@link AuthorizationRedirectUrlProvider}.
+ *
+ * @author Sergio del Amo
+ * @since 1.0.0
+ */
 @Requires(beans = AuthorizationRedirectUrlProvider.class)
 @Requires(property = OpenIdUnauthorizedRejectionUriProvider.PREFIX, notEquals = StringUtils.FALSE)
 @Singleton
@@ -36,10 +41,15 @@ public class OpenIdUnauthorizedRejectionUriProvider implements UnauthorizedRejec
     @Nonnull
     private final AuthorizationRedirectUrlProvider authorizationRedirectUrlProvider;
 
+    /**
+     *
+     * @param authorizationRedirectUrlProvider Authorization Redirect Url Provider
+     */
     public OpenIdUnauthorizedRejectionUriProvider(@Nonnull AuthorizationRedirectUrlProvider authorizationRedirectUrlProvider) {
         this.authorizationRedirectUrlProvider = authorizationRedirectUrlProvider;
 
     }
+
     @Override
     public Optional<String> getUnauthorizedRedirectUri() {
         return Optional.of(authorizationRedirectUrlProvider.resolveAuthorizationRedirectUrl());

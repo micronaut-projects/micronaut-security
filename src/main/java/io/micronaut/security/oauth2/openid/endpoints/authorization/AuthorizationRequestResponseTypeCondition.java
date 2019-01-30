@@ -25,7 +25,7 @@ import io.micronaut.context.exceptions.NoSuchBeanException;
  * Conditions which verifies {@link AuthorizationEndpointRequestConfiguration#getResponseType()} is a particular response type.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public abstract class AuthorizationRequestResponseTypeCondition implements Condition {
 

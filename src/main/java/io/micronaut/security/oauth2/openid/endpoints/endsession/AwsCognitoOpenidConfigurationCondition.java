@@ -16,6 +16,12 @@
 
 package io.micronaut.security.oauth2.openid.endpoints.endsession;
 
+/**
+ * Condition which evaluates to true if micronaut.security.oauth.openid-configuration contains cognito.
+ *
+ * @author Sergio del Amo
+ * @since 1.0.0
+ */
 public class AwsCognitoOpenidConfigurationCondition extends OpenidConfigurationCondition {
     @Override
     protected String getSearchSequence() {

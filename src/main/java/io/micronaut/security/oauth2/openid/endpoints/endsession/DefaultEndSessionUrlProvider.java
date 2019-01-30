@@ -18,18 +18,15 @@ package io.micronaut.security.oauth2.openid.endpoints.endsession;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.openid.endpoints.OpenIdEndpoints;
 import io.micronaut.security.token.reader.TokenResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,7 +34,7 @@ import java.util.Optional;
  * Default implementation of {@link EndSessionUrlProvider}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Singleton
 @Requires(beans = {TokenResolver.class, OpenIdEndpoints.class, OauthConfiguration.class, EndSessionEndpointConfiguration.class})

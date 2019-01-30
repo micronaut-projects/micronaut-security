@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-6">Refreshing an Access Token</a>
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class RefreshTokenGrant {
     @Nonnull

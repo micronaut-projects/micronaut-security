@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * end-session endpoint exposed by OpenID providers.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class EndSessionParameter {
     @Nonnull

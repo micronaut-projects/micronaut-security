@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 /**
  * {@link ConfigurationProperties} implementation of {@link IntrospectionEndpointConfiguration}.
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 @ConfigurationProperties(IntrospectionEndpointConfigurationProperties.PREFIX)

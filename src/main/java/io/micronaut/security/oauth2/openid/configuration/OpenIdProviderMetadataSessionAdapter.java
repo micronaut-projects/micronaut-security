@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * fetched from remote identity provider, with the end-session endpoint configuration ({@link EndSessionEndpointConfiguration}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class OpenIdProviderMetadataSessionAdapter implements OpenIdProviderMetadataSession {
 

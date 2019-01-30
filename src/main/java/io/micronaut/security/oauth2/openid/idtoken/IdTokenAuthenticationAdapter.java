@@ -35,7 +35,7 @@ import static io.micronaut.security.oauth2.openid.idtoken.Address.JSONKEY_STREET
  * Adapts from {@link Authentication} to {@link IdToken}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class IdTokenAuthenticationAdapter implements IdToken {
 

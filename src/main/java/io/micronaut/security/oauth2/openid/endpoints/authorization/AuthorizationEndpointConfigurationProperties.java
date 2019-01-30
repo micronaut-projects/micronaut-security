@@ -17,16 +17,11 @@
 package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.context.annotation.Value;
-import io.micronaut.http.annotation.Post;
-import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
-import io.micronaut.security.oauth2.endpoints.AuthorizationCodeControllerConfigurationProperties;
 import io.micronaut.security.oauth2.openid.OpenIdScope;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.Null;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +29,7 @@ import java.util.List;
  * {@link ConfigurationProperties} for OAuth 2.0 authorization endpoint.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @ConfigurationProperties(AuthorizationEndpointConfigurationProperties.PREFIX)
 public class AuthorizationEndpointConfigurationProperties implements AuthorizationEndpointConfiguration, AuthorizationEndpointRequestConfiguration {

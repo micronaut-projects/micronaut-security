@@ -25,14 +25,17 @@ import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
  * Handle a valid {@link IdTokenAccessTokenResponse}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface SuccessfulIdTokenAccessTokenResponseHandler {
 
     /**
-     *
+     * @param request The HTTP request
      * @param idTokenAccessTokenResponse An ID Token Access Token response.
+     * @param authentication Authentication
      * @return A Http Response
      */
-    HttpResponse handle(HttpRequest request, IdTokenAccessTokenResponse idTokenAccessTokenResponse, Authentication authentication);
+    HttpResponse handle(HttpRequest request,
+                        IdTokenAccessTokenResponse idTokenAccessTokenResponse,
+                        Authentication authentication);
 }

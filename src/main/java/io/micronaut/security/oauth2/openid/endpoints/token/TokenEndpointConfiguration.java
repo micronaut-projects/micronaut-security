@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  *
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint">Token Endpoint</a>
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 public interface TokenEndpointConfiguration extends EndpointUrl {
@@ -53,6 +53,10 @@ public interface TokenEndpointConfiguration extends EndpointUrl {
     @Nullable
     String getRedirectUri();
 
+    /**
+     *
+     * @return The Content Type
+     */
     @Nonnull
     MediaType getContentType();
 }

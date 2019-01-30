@@ -26,7 +26,7 @@ import java.util.Objects;
  * Adapts from {@link HttpParameters} to {@link ErrorResponse}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class ErrorResponseHttpParamsAdapter implements ErrorResponse {
 

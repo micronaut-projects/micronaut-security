@@ -21,17 +21,43 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.oauth2.endpoints.AuthorizationCodeControllerConfigurationProperties;
 import javax.inject.Singleton;
 
+/**
+ * Utility bean to return the absolute URL to the {@link io.micronaut.security.oauth2.endpoints.AuthorizationCodeController}.
+ *
+ * @author Sergio del Amo
+ * @since 1.0.0
+ */
 @Singleton
 public class DefaultRedirectUrlProvider {
 
     private final String defaultRedirectUri;
 
+    /**
+     *
+     * @param embeddedServer The embedded server
+     * @param authorizationCodeControllerPath The root path of {@link io.micronaut.security.oauth2.endpoints.AuthorizationCodeController}.
+     * @param authorizationCodeControllerActionPath The path to the actions of {@link io.micronaut.security.oauth2.endpoints.AuthorizationCodeController}.
+     */
     public DefaultRedirectUrlProvider(EmbeddedServer embeddedServer,
                                       @Value("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".controller-path:/authcode}") String authorizationCodeControllerPath,
                                       @Value("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".action-path:/cb}") String authorizationCodeControllerActionPath) {
-        this.defaultRedirectUri = embeddedServer.getURL().toString() + authorizationCodeControllerPath + authorizationCodeControllerActionPath;
+
+        this.defaultRedirectUri = getServerUrl(embeddedServer) + authorizationCodeControllerPath +
+                authorizationCodeControllerActionPath;
     }
 
+    /**
+     * @param embeddedServer The embedded server
+     * @return The URL where the Micronaut app server listens.
+     */
+    public String getServerUrl(EmbeddedServer embeddedServer) {
+        return embeddedServer.getURL().toString();
+    }
+
+    /**
+     *
+     * @return Absolute URL to the {@link io.micronaut.security.oauth2.endpoints.AuthorizationCodeController}.
+     */
     public String getRedirectUri() {
         return defaultRedirectUri;
     }

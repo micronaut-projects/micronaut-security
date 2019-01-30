@@ -20,7 +20,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
  * Provides an authentication Request.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface AuthenticationRequestProvider {
 

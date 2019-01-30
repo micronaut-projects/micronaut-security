@@ -18,6 +18,6 @@
  * Oauth 2.0 response handlers.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 package io.micronaut.security.oauth2.handlers;

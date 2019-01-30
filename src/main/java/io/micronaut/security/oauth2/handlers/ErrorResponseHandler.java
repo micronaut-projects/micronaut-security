@@ -24,7 +24,7 @@ import io.reactivex.Single;
  * Handles Oauth 2.0 Error responses.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface ErrorResponseHandler {
 

@@ -26,7 +26,7 @@ import java.util.List;
  * {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link OpenIdProviderConfiguration}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @ConfigurationProperties(OpenIdProviderConfigurationProperties.PREFIX)
 public class OpenIdProviderConfigurationProperties implements OpenIdProviderConfiguration {
@@ -143,6 +143,10 @@ public class OpenIdProviderConfigurationProperties implements OpenIdProviderConf
         return jwksUri;
     }
 
+    /**
+     * Sets the JWKS uri.
+     * @param jwksUri JWKS uri.
+     */
     public void setJwksUri(@Nullable String jwksUri) {
         this.jwksUri = jwksUri;
     }

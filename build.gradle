@@ -1,6 +1,7 @@
-//apply plugin: 'checkstyle'
 apply plugin: "io.spring.dependency-management"
 apply from: rootProject.file('gradle/license.gradle')
+apply from: rootProject.file('gradle/checkstyle.gradle')
+
 
 dependencyManagement {
     imports {

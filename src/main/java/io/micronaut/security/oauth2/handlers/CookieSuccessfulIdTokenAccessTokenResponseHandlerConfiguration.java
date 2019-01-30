@@ -21,6 +21,12 @@ import javax.annotation.Nonnull;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
+/**
+ * Configuration for {@link CookieSuccessfulIdTokenAccessTokenResponseHandler}.
+ *
+ * @author Sergio del Amo
+ * @since 1.0.0
+ */
 public interface CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration extends Toggleable {
 
     /**
@@ -29,7 +35,7 @@ public interface CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration 
      */
     String getLoginSuccessTargetUrl();
 
-    // TODO remove this and use CookieConfiguration
+    // TODO remove this and extend CookieConfiguration
     // https://github.com/micronaut-projects/micronaut-core/pull/1185
     /**
      * @return The name of the cookie

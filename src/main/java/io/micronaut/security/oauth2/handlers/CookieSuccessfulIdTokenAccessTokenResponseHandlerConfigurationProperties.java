@@ -26,6 +26,12 @@ import javax.annotation.Nullable;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
+/**
+ * {@link ConfigurationProperties} implementation of {@link CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration}.
+ *
+ * @author Sergio del Amo
+ * @since 1.0.0
+ */
 @ConfigurationProperties(CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationProperties.PREFIX)
 public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationProperties implements CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration {
 

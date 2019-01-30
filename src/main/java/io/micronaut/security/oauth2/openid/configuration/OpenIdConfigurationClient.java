@@ -26,7 +26,7 @@ import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
  * The discovery endpoint is declared by the property micronaut.security.oauth2.openid-configuration
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Requires(property = OauthConfigurationProperties.PREFIX + ".openid-configuration")
 @Client("${micronaut.security.oauth2.openid-configuration}")

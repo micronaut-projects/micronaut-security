@@ -16,7 +16,6 @@
 
 package io.micronaut.security.oauth2.handlers;
 
-import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -29,11 +28,6 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -41,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * Default implementation of {@link SuccessfulIdTokenAccessTokenResponseHandler}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Requires(property = CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Requires(beans = { CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration.class })
@@ -74,6 +68,11 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements Succes
         }
     }
 
+    /**
+     *
+     * @param authentication Authentication
+     * @return Number of seconds to JWT expiration time.
+     */
     protected long secondsToExpirationTime(Authentication authentication) {
         Object expDate = authentication.getAttributes().get(JwtClaims.EXPIRATION_TIME);
         if (expDate instanceof Date) {

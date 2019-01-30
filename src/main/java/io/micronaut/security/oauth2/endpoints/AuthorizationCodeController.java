@@ -49,7 +49,7 @@ import java.util.Map;
  * Callback controller used for Authorization code flow.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Requires(property = AuthorizationCodeControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
@@ -75,7 +75,9 @@ public class AuthorizationCodeController {
 
     /**
      * Callback action accessible through an Http Post request.
+     *
      * @param formFields A Map encapsulating the form url encoded payload.
+     * @param httpRequest The HTTP Request
      * @return An HttpResponse.
      */
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -96,7 +98,9 @@ public class AuthorizationCodeController {
 
     /**
      * Callback action accessible through an Http Get request.
+     *
      * @param parameters Http parameters
+     * @param httpRequest The HTTP Request
      * @return An HttpResponse.
      */
     @Get("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".action-path:/cb}")

@@ -25,7 +25,7 @@ import javax.inject.Singleton;
  * Default implementation of {@link NotValidIdTokenAccessTokenResponseHandler}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Singleton
 public class DefaultNotValidIdTokenAccessTokenResponseHandler implements NotValidIdTokenAccessTokenResponseHandler {

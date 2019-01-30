@@ -27,7 +27,7 @@ import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
  * and the {@link OpenIdProviderMetadata#getTokenEndpoint} is not null.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class TokenEndpointNotNullCondition implements Condition {
 

@@ -21,7 +21,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
  *
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface AuthorizationRedirectUrlProvider {
 

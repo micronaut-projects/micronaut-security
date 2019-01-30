@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * {@link ConfigurationProperties} implementation of {@link AuthorizationCodeControllerConfiguration}.
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 @ConfigurationProperties(AuthorizationCodeControllerConfigurationProperties.PREFIX)

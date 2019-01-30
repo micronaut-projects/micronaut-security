@@ -20,7 +20,7 @@ package io.micronaut.security.oauth2.openid.endpoints.token;
  * Client Authentication methods that are used by Clients to authenticate to the Authorization Server when using the Token Endpoint.
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication">Client Authentication</a>
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 public enum TokenEndpointAuthMethod {

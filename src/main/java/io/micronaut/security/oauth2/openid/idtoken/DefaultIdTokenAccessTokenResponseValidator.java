@@ -24,8 +24,6 @@ import io.micronaut.security.oauth2.openid.idtoken.validation.IdTokenClaimsValid
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
-import org.reactivestreams.Publisher;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,35 +34,45 @@ import java.util.Optional;
  * Default implementation of {@link IdTokenAccessTokenResponseValidator}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Requires(beans = {JwtTokenValidator.class})
 @Singleton
 public class DefaultIdTokenAccessTokenResponseValidator implements IdTokenAccessTokenResponseValidator {
 
     private final JwtTokenValidator jwtTokenValidator;
-    private final List<JwtClaimsValidator> jwtClaimsValidator;
+    private final List<JwtClaimsValidator> jwtClaimsValidators;
 
     /**
-     *
      * @param jwtTokenValidator JWT token Validator
+     * @param genericValidators Generic JWT Claims Validators
+     * @param idTokenValidators ID token JWT Claims validators
      */
     public DefaultIdTokenAccessTokenResponseValidator(JwtTokenValidator jwtTokenValidator,
                                                       Collection<GenericJwtClaimsValidator> genericValidators,
                                                       Collection<IdTokenClaimsValidator> idTokenValidators) {
         this.jwtTokenValidator = jwtTokenValidator;
-        jwtClaimsValidator = new ArrayList<>();
-        jwtClaimsValidator.addAll(genericValidators);
-        jwtClaimsValidator.addAll(idTokenValidators);
+        jwtClaimsValidators = new ArrayList<>();
+        jwtClaimsValidators.addAll(genericValidators);
+        jwtClaimsValidators.addAll(idTokenValidators);
     }
 
+    /**
+     *
+     * @param idTokenAccessTokenResponse ID Token Access Token response
+     * @return An {@link Authentication} if the JWT ID token is valid.
+     */
     @Override
     public Optional<Authentication> validate(IdTokenAccessTokenResponse idTokenAccessTokenResponse) {
         return jwtTokenValidator.authenticationIfValidJwtSignatureAndClaims(idTokenAccessTokenResponse.getIdToken(),
-                getJwtClaimsValidator());
+                getJwtClaimsValidators());
     }
 
-    public List<JwtClaimsValidator> getJwtClaimsValidator() {
-        return jwtClaimsValidator;
+    /**
+     *
+     * @return A list of both generic and ID Token JWT Claims validators.
+     */
+    public List<JwtClaimsValidator> getJwtClaimsValidators() {
+        return jwtClaimsValidators;
     }
 }

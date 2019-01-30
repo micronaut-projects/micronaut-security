@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @see <a href="https://tools.ietf.org/html/rfc7522#section-2.1"> Using SAML Assertions as Authorization Grants</a>
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class SamlBearerAssertionGrant {
     @Nonnull

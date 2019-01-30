@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  *
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.1.2">Authentication Response</a>
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 public interface AuthenticationResponse {

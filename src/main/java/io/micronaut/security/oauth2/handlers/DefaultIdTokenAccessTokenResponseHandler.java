@@ -30,7 +30,7 @@ import java.util.Optional;
  * Validates a {@link IdTokenAccessTokenResponse} and creates an HTTP Response.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Requires(beans = {
         IdTokenAccessTokenResponseValidator.class,

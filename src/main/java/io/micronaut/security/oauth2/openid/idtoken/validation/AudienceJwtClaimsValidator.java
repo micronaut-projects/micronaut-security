@@ -36,7 +36,7 @@ import java.util.List;
  * 3. The Client MUST validate that the aud (audience) Claim contains its client_id value registered at the Issuer identified by the iss (issuer) Claim as an audience. The aud (audience) Claim MAY contain an array with more than one element. The ID Token MUST be rejected if the ID Token does not list the Client as a valid audience, or if it contains additional audiences not trusted by the Client.
  *
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @author Sergio del Amo
  */
 @Requires(property = JwtClaimsValidator.PREFIX + ".audience", notEquals = StringUtils.FALSE)

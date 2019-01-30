@@ -17,8 +17,6 @@
 package io.micronaut.security.oauth2.grants;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.util.BeanUtil;
-
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +26,7 @@ import java.util.Map;
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.1.3">Access Token Request</a>
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class AuthorizationCodeGrant {
     public static final String KEY_GRANT_TYPE = "grant_type";

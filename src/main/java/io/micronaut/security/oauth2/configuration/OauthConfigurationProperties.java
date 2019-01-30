@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link io.micronaut.security.oauth2.configuration.OauthConfiguration}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Requires(property = OauthConfigurationProperties.PREFIX + ".client-id")
 @ConfigurationProperties(OauthConfigurationProperties.PREFIX)

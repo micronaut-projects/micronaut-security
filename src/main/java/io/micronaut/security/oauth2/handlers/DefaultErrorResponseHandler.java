@@ -29,7 +29,7 @@ import javax.inject.Singleton;
  * Default implementation of {@link ErrorResponseHandler}.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 @Secondary
 @Singleton

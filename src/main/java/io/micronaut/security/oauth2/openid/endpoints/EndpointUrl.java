@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * to convey they are reachable at a URL.
  *
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 1.0.0
  */
 public interface EndpointUrl {
 

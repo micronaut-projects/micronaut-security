@@ -20,20 +20,34 @@ import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 
-@Requires(beans = {OpenIdConfiguration.class})
+/**
+ * {@link Factory} to create {@link JwksSignature} for an OpenID Configuration.
+ *
+ * @author Sergio del Amo
+ * @since 1.0.0
+ */
+@Requires(property = JwksSignatureFactoryConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@Requires(beans = {OpenIdConfiguration.class, JwksSignatureFactoryConfiguration.class})
 @Factory
 public class JwksSignatureFactory {
 
     private final OpenIdConfiguration openIdConfiguration;
+    private final JwksSignatureFactoryConfiguration jwksSignatureFactoryConfiguration;
 
-    public JwksSignatureFactory(OpenIdConfiguration openIdConfiguration) {
+    /**
+     * @param jwksSignatureFactoryConfiguration JWKS Signature Factory Configuration
+     * @param openIdConfiguration Open ID Configuration
+     */
+    public JwksSignatureFactory(OpenIdConfiguration openIdConfiguration, JwksSignatureFactoryConfiguration jwksSignatureFactoryConfiguration) {
         this.openIdConfiguration = openIdConfiguration;
+        this.jwksSignatureFactoryConfiguration = jwksSignatureFactoryConfiguration;
     }
     /**
      *
@@ -53,7 +67,7 @@ public class JwksSignatureFactory {
             @Nonnull
             @Override
             public KeyType getKeyType() {
-                return KeyType.RSA;
+                return jwksSignatureFactoryConfiguration.getKeyType();
             }
         });
     }
