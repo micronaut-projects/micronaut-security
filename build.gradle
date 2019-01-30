@@ -25,6 +25,5 @@ dependencies {
     testCompile "com.stehno.ersatz:ersatz:$ersatzVersion"
     testCompile 'com.sun.activation:javax.activation:1.2.0' // Java 11
 }
-//
-//apply from: rootProject.file('gradle/checkstyle.gradle')
-//apply from: rootProject.file('gradle/testVerbose.gradle')
+
+apply from: rootProject.file('gradle/testVerbose.gradle')
