@@ -60,8 +60,7 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_HTTPONLY = true;
-
-
+    
     /**
      * Default Cookie Path.
      */
@@ -96,7 +95,7 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     }
 
     /**
-     * Cookie Name. Default value ({@value io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties#DEFAULT_COOKIENAME}).
+     * Cookie Name. Default value (JWT).
      * @param cookieName Cookie name
      */
     public void setCookieName(String cookieName) {
@@ -154,7 +153,7 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     }
 
     /**
-     * Sets the domain name of this Cookie. Default value ({@value #DEFAULT_COOKIENAME}).
+     * Sets the domain name of this Cookie. Default value (JWT).
      * @param cookieDomain the domain name of this Cookie
      */
     public void setCookieDomain(@Nullable String cookieDomain) {
@@ -162,7 +161,7 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     }
 
     /**
-     * Sets the path of the cookie. Default value ({@value DEFAULT_COOKIEPATH}.
+     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
      * @param cookiePath The path of the cookie.
      */
     public void setCookiePath(@Nullable String cookiePath) {
@@ -170,7 +169,7 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     }
 
     /**
-     * Whether the Cookie can only be accessed via HTTP. Default value ({@value DEFAULT_HTTPONLY}.
+     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}).
      * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP.
      */
     public void setCookieHttpOnly(boolean cookieHttpOnly) {
@@ -178,7 +177,7 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     }
 
     /**
-     * Sets whether the cookie is secured. Default value ({@value DEFAULT_SECURE}.
+     * Sets whether the cookie is secured. Default value ({@value #DEFAULT_SECURE}).
      * @param cookieSecure True if the cookie is secure
      */
     public void setCookieSecure(boolean cookieSecure) {

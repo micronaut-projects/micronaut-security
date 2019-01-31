@@ -9,24 +9,45 @@ import spock.lang.Specification
 class TokenEndpointConfigurationDefaultValuesSpec extends Specification {
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
-    @AutoCleanup
     @Shared
-    ApplicationContext context = ApplicationContext.run([
-            (SPEC_NAME_PROPERTY): getClass().simpleName,
-            'micronaut.security.enabled': true,
-    ], Environment.TEST)
-
-    @Shared
-    TokenEndpointConfiguration tokenEndpointConfiguration = context.getBean(TokenEndpointConfiguration)
+    Map<String, Object> conf = [
+        (SPEC_NAME_PROPERTY): getClass().simpleName,
+        'micronaut.security.enabled': true,
+    ]
 
     void "TokenEndpointConfiguration default grant type is authorization_code"() {
-        expect:
+        given:
+        ApplicationContext context = ApplicationContext.run(conf)
+
+        when:
+        TokenEndpointConfiguration tokenEndpointConfiguration = context.getBean(TokenEndpointConfiguration)
+
+        then:
+        noExceptionThrown()
         tokenEndpointConfiguration.grantType == 'authorization_code'
+
+        and:
+        !tokenEndpointConfiguration.authMethod
+
+        then:
+        context.close()
     }
 
-    void "TokenEndpointConfiguration default authMethod is client_secret_basic"() {
-        expect:
+    void "TokenEndpointConfiguration default authMethod is client_secret_basic if cognito"() {
+        given:
+        Map<String, Object> specConf = new HashMap<>(conf)
+        specConf.put('micronaut.security.oauth2.openid-configuration', 'https://cognito-idp.eu-west-1.amazonaws.com/XXXXX/.well-known/openid-configuration')
+        ApplicationContext context = ApplicationContext.run(specConf)
+
+        when:
+        TokenEndpointConfiguration tokenEndpointConfiguration = context.getBean(TokenEndpointConfiguration)
+
+        then:
+        noExceptionThrown()
         tokenEndpointConfiguration.authMethod == 'client_secret_basic'
+
+        then:
+        context.close()
     }
 
 }

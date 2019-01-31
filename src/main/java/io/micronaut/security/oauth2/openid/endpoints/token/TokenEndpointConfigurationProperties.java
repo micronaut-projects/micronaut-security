@@ -35,12 +35,6 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".token";
 
     /**
-     * Default AUTH METHOD.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_AUTHMETHOD = TokenEndpointAuthMethod.CLIENT_SECRET_BASIC.getAuthMethod();
-
-    /**
      * Default Grant Type.
      */
     @SuppressWarnings("WeakerAccess")
@@ -52,6 +46,8 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
     @SuppressWarnings("WeakerAccess")
     public static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
 
+    private final AuthMethodProvider authMethodProvider;
+
     @Nullable
     private String url;
 
@@ -59,13 +55,21 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
     private String grantType = DEFAULT_GRANTTYPE;
 
     @Nullable
-    private String authMethod = DEFAULT_AUTHMETHOD;
+    private String authMethod;
 
     @Nonnull
     private MediaType contentType = DEFAULT_CONTENT_TYPE;
 
     @Nullable
     private String redirectUri;
+
+    /**
+     *
+     * @param authMethodProvider Default auth method provider
+     */
+    public TokenEndpointConfigurationProperties(@Nullable AuthMethodProvider authMethodProvider) {
+        this.authMethodProvider = authMethodProvider;
+    }
 
     @Nonnull
     @Override
@@ -76,7 +80,7 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
     @Nullable
     @Override
     public String getAuthMethod() {
-        return authMethod;
+        return authMethod != null ? authMethod : (authMethodProvider != null ? authMethodProvider.findAuthMethod().getAuthMethod() : null);
     }
 
     @Nullable

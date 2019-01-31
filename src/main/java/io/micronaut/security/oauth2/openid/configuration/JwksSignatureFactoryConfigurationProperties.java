@@ -46,7 +46,7 @@ public class JwksSignatureFactoryConfigurationProperties implements JwksSignatur
     }
 
     /**
-     * Enables {@link io.micronaut.security.oauth2.handlers.CookieSuccessfulIdTokenAccessTokenResponseHandler}. Default value ({@value #DEFAULT_ENABLED}).
+     * Enables {@link JwksSignatureFactory}. Default value ({@value #DEFAULT_ENABLED}).
      * @param enabled enabled flag
      */
     public void setEnabled(boolean enabled) {

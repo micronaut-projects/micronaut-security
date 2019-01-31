@@ -1,6 +1,7 @@
 package io.micronaut.security.oauth2.openid.endpoints.endsession
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.security.oauth2.openid.providers.AwsCognitoEndSessionEndpointConfiguration
 import spock.lang.Specification
 
 class AwsCognitoEndSessionEndpointConfigurationSpec extends Specification {

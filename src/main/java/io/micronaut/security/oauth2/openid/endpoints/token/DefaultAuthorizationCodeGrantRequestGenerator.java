@@ -102,6 +102,7 @@ public class DefaultAuthorizationCodeGrantRequestGenerator implements Authorizat
         AuthorizationCodeGrant authorizationCodeGrant = new AuthorizationCodeGrant();
         authorizationCodeGrant.setCode(code);
         authorizationCodeGrant.setClientId(oauthConfiguration.getClientId());
+        authorizationCodeGrant.setClientSecret(oauthConfiguration.getClientSecret());
         authorizationCodeGrant.setRedirectUri(tokenEndpointConfiguration.getRedirectUri() != null ? tokenEndpointConfiguration.getRedirectUri() : defaultRedirectUrlProvider.getRedirectUri());
         return authorizationCodeGrant;
     }

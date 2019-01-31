@@ -1,14 +1,3 @@
-apply plugin: "io.spring.dependency-management"
-apply from: rootProject.file('gradle/license.gradle')
-apply from: rootProject.file('gradle/checkstyle.gradle')
-
-
-dependencyManagement {
-    imports {
-        mavenBom "io.micronaut:micronaut-bom:$micronautVersion"
-    }
-}
-
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
@@ -17,6 +6,7 @@ dependencies {
     compile "io.micronaut:micronaut-security-jwt"
     compile "io.micronaut:micronaut-inject"
     compile "io.micronaut:micronaut-http-client"
+    compileOnly "io.micronaut:micronaut-views"
 
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-http-client"
@@ -25,5 +15,3 @@ dependencies {
     testCompile "com.stehno.ersatz:ersatz:$ersatzVersion"
     testCompile 'com.sun.activation:javax.activation:1.2.0' // Java 11
 }
-
-apply from: rootProject.file('gradle/testVerbose.gradle')

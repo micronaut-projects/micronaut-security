@@ -120,13 +120,10 @@ public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
      * @return A url encoded string with parameters
      */
     protected String instantiateTemplate(String baseUrl) {
-           Optional<String> optionalUrlArguments = endSessionEndpointConfiguration.getParameters()
+        Optional<String> optionalUrlArguments = endSessionEndpointConfiguration.getParameters()
                 .stream()
                 .map(EndSessionParameter::getName)
                 .reduce((a, b) -> a + COMMA + b);
-           if (!optionalUrlArguments.isPresent()) {
-               return "";
-           }
-           return baseUrl + OPENCURLYBRACE +  QUESTIONMARK + optionalUrlArguments.get() + CLOSECURLYBRACE;
+        return optionalUrlArguments.map(s -> baseUrl + OPENCURLYBRACE + QUESTIONMARK + s + CLOSECURLYBRACE).orElse(baseUrl);
     }
 }

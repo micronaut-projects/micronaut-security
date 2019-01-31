@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.openid.endpoints.DefaultRedirectUrlProvider;
@@ -37,8 +38,6 @@ import java.util.Optional;
 @Singleton
 @Requires(beans = {AuthenticationRequestProvider.class, OpenIdProviderMetadata.class})
 public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRedirectUrlProvider {
-
-    private static final String SPACE = " ";
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationRedirectUrlProvider.class);
 
@@ -129,7 +128,7 @@ public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRed
      */
     protected void populateScope(@Nonnull AuthenticationRequest authenticationRequest,
                                  @Nonnull Map<String, Object> parameters) {
-        Optional<String> optionalStr = authenticationRequest.getScopes().stream().reduce((a, b) -> a + SPACE + b);
+        Optional<String> optionalStr = authenticationRequest.getScopes().stream().reduce((a, b) -> a + StringUtils.SPACE + b);
         parameters.put(AuthenticationRequest.PARAMETER_SCOPE, optionalStr.orElse(AuthorizationEndpointConfigurationProperties.DEFAULT_SCOPE));
     }
 
@@ -243,7 +242,7 @@ public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRed
     protected void populateUiLocales(@Nonnull AuthenticationRequest authenticationRequest,
                                      @Nonnull Map<String, Object> parameters) {
         if (authenticationRequest.getUiLocales() != null) {
-            Optional<String> optionalUiLocales = authenticationRequest.getUiLocales().stream().reduce((a, b) -> a + SPACE + b);
+            Optional<String> optionalUiLocales = authenticationRequest.getUiLocales().stream().reduce((a, b) -> a + StringUtils.SPACE + b);
             optionalUiLocales.ifPresent(uiLocales -> parameters.put(AuthenticationRequest.PARAMETER_UI_LOCALES, uiLocales));
         }
     }
@@ -280,7 +279,7 @@ public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRed
     protected void populateAcrValues(@Nonnull AuthenticationRequest authenticationRequest,
                                      @Nonnull Map<String, Object> parameters) {
         if (authenticationRequest.getAcrValues() != null) {
-            Optional<String> optionalAcrValues = authenticationRequest.getAcrValues().stream().reduce((a, b) -> a + SPACE + b);
+            Optional<String> optionalAcrValues = authenticationRequest.getAcrValues().stream().reduce((a, b) -> a + StringUtils.SPACE + b);
             optionalAcrValues.ifPresent(acrValues -> parameters.put(AuthenticationRequest.PARAMETER_ACR_VALUES, acrValues));
         }
     }

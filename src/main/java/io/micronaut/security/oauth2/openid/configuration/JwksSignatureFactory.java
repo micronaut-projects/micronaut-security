@@ -49,6 +49,7 @@ public class JwksSignatureFactory {
         this.openIdConfiguration = openIdConfiguration;
         this.jwksSignatureFactoryConfiguration = jwksSignatureFactoryConfiguration;
     }
+
     /**
      *
      * @return a bean of type {@link JwksSignature}

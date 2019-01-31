@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 original authors
+ * Copyright 2017-2019 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.endsession;
+package io.micronaut.security.oauth2.openid.providers;
 
 /**
- * Condition which evaluates to true if micronaut.security.oauth.openid-configuration contains cognito.
+ * Condition which evaluates to true if micronaut.security.oauth.openid-configuration contains okta.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public class AwsCognitoOpenidConfigurationCondition extends OpenidConfigurationCondition {
+public class OktaOpenidConfigurationCondition extends OpenidConfigurationCondition {
     @Override
     protected String getSearchSequence() {
-        return "cognito";
+        return "okta";
     }
 }

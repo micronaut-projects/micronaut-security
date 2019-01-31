@@ -27,11 +27,7 @@ import java.util.Map;
  * ID Token.
  *
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token</a>
- *
- * and:
- *
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims">Standard Claims</a>
- *
  * @author Sergio del Amo
  * @version 1.1.0
  */

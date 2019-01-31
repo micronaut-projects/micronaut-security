@@ -17,25 +17,36 @@
 package io.micronaut.security.oauth2.grants;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Password Grant.
- * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.3.2">Access Token Request</a>
+ * Password Grant Request.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
 public class PasswordGrant {
+    public static final String KEY_GRANT_TYPE = "grant_type";
+    public static final String KEY_CLIENT_ID = "client_id";
+    public static final String KEY_CLIENT_SECRET = "client_secret";
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_PASSWORD = "password";
+    public static final String KEY_SCOPE = "scope";
 
     @Nonnull
-    @JsonProperty("grant_type")
+    @JsonProperty(KEY_GRANT_TYPE)
     private String grantType = GrantType.PASSWORD.getGrantType();
 
+    @Nonnull
+    @JsonProperty(KEY_CLIENT_ID)
+    private String clientId;
+
     @Nullable
-    private String scope;
+    @JsonProperty(KEY_CLIENT_SECRET)
+    private String clientSecret;
 
     @Nonnull
     private String username;
@@ -43,16 +54,18 @@ public class PasswordGrant {
     @Nonnull
     private String password;
 
+    @Nullable
+    private String scope;
+
     /**
-     * Instantiates a PasswordGrant.
+     * Instantiate Password Grant.
      */
     public PasswordGrant() {
-
     }
 
     /**
      *
-     * @return password
+     * @return Oauth 2.0 Grant Type.
      */
     @Nonnull
     public String getGrantType() {
@@ -61,7 +74,48 @@ public class PasswordGrant {
 
     /**
      *
-     * @return The resource owner username.
+     * @param grantType Oauth 2.0 Grant Type.
+     */
+    public void setGrantType(@Nonnull String grantType) {
+        this.grantType = grantType;
+    }
+
+    /**
+     *
+     * @return The application's Client identifier.
+     */
+    @Nonnull
+    public String getClientId() {
+        return clientId;
+    }
+
+    /**
+     *
+     * @param clientId Application's Client identifier.
+     */
+    public void setClientId(@Nonnull String clientId) {
+        this.clientId = clientId;
+    }
+
+    /**
+     *
+     * @param clientSecret Application's Client clientSecret.
+     */
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
+    /**
+     *
+     * @return The application's Client clientSecret.
+     */
+    public String getClientSecret() {
+        return this.clientSecret;
+    }
+
+    /**
+     *
+     * @return An username
      */
     @Nonnull
     public String getUsername() {
@@ -70,7 +124,7 @@ public class PasswordGrant {
 
     /**
      *
-     * @param username The resource owner username.
+     * @param username An username
      */
     public void setUsername(@Nonnull String username) {
         this.username = username;
@@ -78,7 +132,7 @@ public class PasswordGrant {
 
     /**
      *
-     * @return The resource owner password.
+     * @return An password
      */
     @Nonnull
     public String getPassword() {
@@ -87,7 +141,7 @@ public class PasswordGrant {
 
     /**
      *
-     * @param password The resource owner password.
+     * @param password An password
      */
     public void setPassword(@Nonnull String password) {
         this.password = password;
@@ -95,7 +149,27 @@ public class PasswordGrant {
 
     /**
      *
-     * @return Optional requested scope values for the access token.
+     * @return this object as a Map
+     */
+    public Map<String, String> toMap() {
+        Map<String, String> m = new HashMap<>();
+        m.put(KEY_GRANT_TYPE, getGrantType());
+        m.put(KEY_CLIENT_ID, getClientId());
+        if (getClientSecret() != null) {
+            m.put(KEY_CLIENT_SECRET, getClientSecret());
+        }
+        m.put(KEY_USERNAME, getUsername());
+        m.put(KEY_PASSWORD, getPassword());
+
+        if (getScope() != null) {
+            m.put(KEY_SCOPE, getScope());
+        }
+        return m;
+    }
+
+    /**
+     *
+     * @return Requested scopes separed by spaces
      */
     @Nonnull
     public String getScope() {
@@ -104,9 +178,10 @@ public class PasswordGrant {
 
     /**
      *
-     * @param scope Optional requested scope values for the access token.
+     * @param scope Requested scopes separed by spaces
      */
     public void setScope(@Nonnull String scope) {
         this.scope = scope;
     }
 }
+

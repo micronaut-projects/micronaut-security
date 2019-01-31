@@ -23,8 +23,7 @@ import javax.annotation.Nullable;
 /**
  * Representation of an Address Claim which represents a physical mailing address.
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim">Address Claim</a>.
- *
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim">Address Claim</a>
  * @author Sergio del Amo
  * @version 1.1.0
  */

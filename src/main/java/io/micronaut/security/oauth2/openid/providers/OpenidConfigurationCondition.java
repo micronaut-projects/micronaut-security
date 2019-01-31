@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 original authors
+ * Copyright 2017-2019 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.endsession;
+package io.micronaut.security.oauth2.openid.providers;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.condition.Condition;

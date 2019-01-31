@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.grants;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import java.util.Map;
 public class AuthorizationCodeGrant {
     public static final String KEY_GRANT_TYPE = "grant_type";
     public static final String KEY_CLIENT_ID = "client_id";
+    public static final String KEY_CLIENT_SECRET = "client_secret";
     public static final String KEY_REDIRECT_URI = "redirect_uri";
     public static final String KEY_CODE = "code";
 
@@ -41,6 +43,10 @@ public class AuthorizationCodeGrant {
     @Nonnull
     @JsonProperty(KEY_CLIENT_ID)
     private String clientId;
+
+    @Nullable
+    @JsonProperty(KEY_CLIENT_SECRET)
+    private String clientSecret;
 
     @Nonnull
     @JsonProperty(KEY_REDIRECT_URI)
@@ -92,6 +98,22 @@ public class AuthorizationCodeGrant {
 
     /**
      *
+     * @param clientSecret Application's Client clientSecret.
+     */
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
+    /**
+     *
+     * @return The application's Client clientSecret.
+     */
+    public String getClientSecret() {
+        return this.clientSecret;
+    }
+
+    /**
+     *
      * @return Redirection URI to which the response will be sent.
      */
     @Nonnull
@@ -132,6 +154,9 @@ public class AuthorizationCodeGrant {
         Map<String, String> m = new HashMap<>();
         m.put(KEY_GRANT_TYPE, getGrantType());
         m.put(KEY_CLIENT_ID, getClientId());
+        if (getClientSecret() != null) {
+            m.put(KEY_CLIENT_SECRET, getClientSecret());
+        }
         m.put(KEY_REDIRECT_URI, getRedirectUri());
         m.put(KEY_CODE, getCode());
         return m;

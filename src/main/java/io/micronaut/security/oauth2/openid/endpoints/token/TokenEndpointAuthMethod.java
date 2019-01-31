@@ -28,7 +28,6 @@ public enum TokenEndpointAuthMethod {
     CLIENT_SECRET_BASIC("client_secret_basic"),
     CLIENT_SECRET_JWT("client_secret_jwt"),
     PRIVATE_KEY_JWT("private_key_jwt");
-
     private String authMethod;
 
     /**
