@@ -32,5 +32,5 @@ public interface NotValidIdTokenAccessTokenResponseHandler {
      * @param idTokenAccessTokenResponse An ID Token Access Token response.
      * @return A Http Response
      */
-    HttpResponse handle(IdTokenAccessTokenResponse idTokenAccessTokenResponse);
+    HttpResponse<?> handle(IdTokenAccessTokenResponse idTokenAccessTokenResponse);
 }

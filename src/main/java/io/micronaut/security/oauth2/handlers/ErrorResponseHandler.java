@@ -29,9 +29,10 @@ import io.reactivex.Single;
 public interface ErrorResponseHandler {
 
     /**
+     * Handles an OAuth 2.0 error.
      *
-     * @param errorResponse Oauth 2.0 Error Response
+     * @param errorResponse OAuth 2.0 Error Response
      * @return A Http Response
      */
-    Single<HttpResponse> handle(ErrorResponse errorResponse);
+    Single<HttpResponse<?>> handle(ErrorResponse errorResponse);
 }

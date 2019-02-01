@@ -82,7 +82,7 @@ public class AuthorizationCodeController {
      */
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Post("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".action-path:/cb}")
-    public Single<HttpResponse> cbPost(@Body Map formFields, HttpRequest httpRequest) {
+    public Single<HttpResponse<?>> cbPost(@Body Map<String, String> formFields, HttpRequest httpRequest) {
 
         if (ErrorResponseDetector.isErrorResponse(formFields)) {
             ErrorResponse errorResponse = new ErrorResponseMapAdapter(formFields);
@@ -104,7 +104,7 @@ public class AuthorizationCodeController {
      * @return An HttpResponse.
      */
     @Get("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".action-path:/cb}")
-    public Single<HttpResponse> cbGet(HttpParameters parameters, HttpRequest httpRequest) {
+    public Single<HttpResponse<?>> cbGet(HttpParameters parameters, HttpRequest httpRequest) {
 
         if (ErrorResponseDetector.isErrorResponse(parameters)) {
             ErrorResponse errorResponse = new ErrorResponseHttpParamsAdapter(parameters);

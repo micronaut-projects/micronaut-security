@@ -59,7 +59,7 @@ public class DefaultAuthorizationResponseHandler implements AuthorizationRespons
     }
 
     @Override
-    public Single<HttpResponse> handle(HttpRequest originalRequest, AuthenticationResponse authenticationResponse) {
+    public Single<HttpResponse<?>> handle(HttpRequest originalRequest, AuthenticationResponse authenticationResponse) {
 
         HttpRequest request = authorizationCodeGrantRequestGenerator.generateRequest(authenticationResponse.getCode());
         try {

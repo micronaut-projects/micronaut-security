@@ -34,5 +34,5 @@ public interface IdTokenAccessTokenResponseHandler {
      * @param idTokenAccessTokenResponse An ID Token Access Token response.
      * @return A Http Response
      */
-    HttpResponse handle(HttpRequest request, IdTokenAccessTokenResponse idTokenAccessTokenResponse);
+    HttpResponse<?> handle(HttpRequest<?> request, IdTokenAccessTokenResponse idTokenAccessTokenResponse);
 }

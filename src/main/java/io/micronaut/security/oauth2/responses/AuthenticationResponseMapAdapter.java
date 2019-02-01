@@ -29,13 +29,13 @@ import java.util.Objects;
  */
 public class AuthenticationResponseMapAdapter implements AuthenticationResponse {
 
-    private final Map formFields;
+    private final Map<String, String> formFields;
 
     /**
      * Constructs an adapter from a Map to {@link AuthenticationResponse}.
      * @param formFields A Map encapsulating the form url encoded payload.
      */
-    public AuthenticationResponseMapAdapter(Map formFields) {
+    public AuthenticationResponseMapAdapter(Map<String, String> formFields) {
         this.formFields = formFields;
     }
 
@@ -53,10 +53,7 @@ public class AuthenticationResponseMapAdapter implements AuthenticationResponse 
 
     private String getStringValue(String keyname) {
         if (formFields != null && formFields.containsKey(keyname)) {
-            Object value = formFields.get(keyname);
-            if (value instanceof String) {
-                return (String) value;
-            }
+            return formFields.get(keyname);
         }
         return null;
     }

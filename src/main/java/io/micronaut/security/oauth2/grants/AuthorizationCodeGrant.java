@@ -151,7 +151,7 @@ public class AuthorizationCodeGrant {
      * @return this object as a Map
      */
     public Map<String, String> toMap() {
-        Map<String, String> m = new HashMap<>();
+        Map<String, String> m = new HashMap<>(5);
         m.put(KEY_GRANT_TYPE, getGrantType());
         m.put(KEY_CLIENT_ID, getClientId());
         if (getClientSecret() != null) {

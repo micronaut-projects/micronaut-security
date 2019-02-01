@@ -31,7 +31,7 @@ import javax.inject.Singleton;
 public class DefaultNotValidIdTokenAccessTokenResponseHandler implements NotValidIdTokenAccessTokenResponseHandler {
 
     @Override
-    public HttpResponse handle(IdTokenAccessTokenResponse idTokenAccessTokenResponse) {
+    public HttpResponse<?> handle(IdTokenAccessTokenResponse idTokenAccessTokenResponse) {
         return HttpResponse.badRequest();
     }
 }

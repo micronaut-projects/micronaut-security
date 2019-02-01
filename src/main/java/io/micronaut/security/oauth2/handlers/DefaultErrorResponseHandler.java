@@ -38,7 +38,7 @@ public class DefaultErrorResponseHandler implements ErrorResponseHandler {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultErrorResponseHandler.class);
 
     @Override
-    public Single<HttpResponse> handle(ErrorResponse errorResponse) {
+    public Single<HttpResponse<?>> handle(ErrorResponse errorResponse) {
         logErrorResponse(errorResponse);
         Oauth2ErrorResponse body = Oauth2ErrorResponse.of(errorResponse);
         return Single.just(HttpResponse.badRequest(body));

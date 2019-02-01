@@ -34,5 +34,5 @@ public interface AuthorizationResponseHandler {
      * @param authenticationResponse Authorization response
      * @return A Http Response
      */
-    Single<HttpResponse> handle(HttpRequest request, AuthenticationResponse authenticationResponse);
+    Single<HttpResponse<?>> handle(HttpRequest<?> request, AuthenticationResponse authenticationResponse);
 }

@@ -59,7 +59,7 @@ public class DefaultIdTokenAccessTokenResponseHandler implements IdTokenAccessTo
     }
 
     @Override
-    public HttpResponse handle(HttpRequest request, IdTokenAccessTokenResponse idTokenAccessTokenResponse) {
+    public HttpResponse<?> handle(HttpRequest<?> request, IdTokenAccessTokenResponse idTokenAccessTokenResponse) {
         Optional<Authentication> authenticationOptional = idTokenAccessTokenResponseValidator.validate(idTokenAccessTokenResponse);
 
         if (authenticationOptional.isPresent()) {
