@@ -28,8 +28,7 @@ import javax.annotation.Nonnull;
  * @author Sergio del Amo
  */
 @ConfigurationProperties(AuthorizationCodeControllerConfigurationProperties.PREFIX)
-public class AuthorizationCodeControllerConfigurationProperties
-        implements AuthorizationCodeControllerConfiguration {
+public class AuthorizationCodeControllerConfigurationProperties implements AuthorizationCodeControllerConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".endpoints.authcode";
 
     /**
@@ -88,7 +87,7 @@ public class AuthorizationCodeControllerConfigurationProperties
     }
 
     /**
-     * if the callback endpoint is /authcode/cb controller path will be /authcode .
+     * if the callback endpoint is /authcode/cb controller path will be /authcode.
      * Default value ({@value #DEFAULT_CONTROLLERPATH}).
      * @param controllerPath Controller's path
      */
