@@ -171,7 +171,7 @@ public class PasswordGrant {
      *
      * @return Requested scopes separed by spaces
      */
-    @Nonnull
+    @Nullable
     public String getScope() {
         return scope;
     }
