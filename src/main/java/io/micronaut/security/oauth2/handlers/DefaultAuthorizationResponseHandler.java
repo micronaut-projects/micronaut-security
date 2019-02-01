@@ -28,8 +28,8 @@ import io.reactivex.Single;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
-import java.net.MalformedURLException;
 import java.util.Optional;
 
 /**
@@ -46,16 +46,20 @@ public class DefaultAuthorizationResponseHandler implements AuthorizationRespons
 
     private final AuthorizationCodeGrantRequestGenerator authorizationCodeGrantRequestGenerator;
     private final IdTokenAccessTokenResponseHandler idTokenAccessTokenResponseHandler;
+    private final RxHttpClient tokenClient;
 
     /**
      * Creates a DefaultAuthorizationResponseHandler.
      * @param authorizationCodeGrantRequestGenerator Authorization Code Grant Request Generator
      * @param idTokenAccessTokenResponseHandler ID Token Access Token response handler
+     * @param tokenClient RxHttpClient pointing to the token endpoint
      */
     public DefaultAuthorizationResponseHandler(AuthorizationCodeGrantRequestGenerator authorizationCodeGrantRequestGenerator,
-                                               IdTokenAccessTokenResponseHandler idTokenAccessTokenResponseHandler) {
+                                               IdTokenAccessTokenResponseHandler idTokenAccessTokenResponseHandler,
+                                               @Named("oauth2tokenendpoint") RxHttpClient tokenClient) {
         this.authorizationCodeGrantRequestGenerator = authorizationCodeGrantRequestGenerator;
         this.idTokenAccessTokenResponseHandler = idTokenAccessTokenResponseHandler;
+        this.tokenClient = tokenClient;
     }
 
     @Override
@@ -63,25 +67,17 @@ public class DefaultAuthorizationResponseHandler implements AuthorizationRespons
 
         HttpRequest request = authorizationCodeGrantRequestGenerator.generateRequest(authenticationResponse.getCode());
         try {
-            RxHttpClient rxHttpClient = RxHttpClient.create(request.getUri().toURL());
-            try {
-                Flowable<HttpResponse<IdTokenAccessTokenResponse>> flowable = rxHttpClient.exchange(request, IdTokenAccessTokenResponse.class);
-                return flowable.map(response -> {
-                    Optional<IdTokenAccessTokenResponse> idTokenAccessTokenResponse = response.getBody();
-                    if (idTokenAccessTokenResponse.isPresent()) {
-                        return idTokenAccessTokenResponseHandler.handle(originalRequest, idTokenAccessTokenResponse.get());
-                    }
-                    return HttpResponse.serverError();
-                }).firstOrError();
-            } catch (HttpClientResponseException e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("http client exception: {}", request.getUri(), e);
+            Flowable<HttpResponse<IdTokenAccessTokenResponse>> flowable = tokenClient.exchange(request, IdTokenAccessTokenResponse.class);
+            return flowable.map(response -> {
+                Optional<IdTokenAccessTokenResponse> idTokenAccessTokenResponse = response.getBody();
+                if (idTokenAccessTokenResponse.isPresent()) {
+                    return idTokenAccessTokenResponseHandler.handle(originalRequest, idTokenAccessTokenResponse.get());
                 }
-            }
-
-        } catch (MalformedURLException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("uri: {}", request.getUri(), e);
+                return HttpResponse.serverError();
+            }).firstOrError();
+        } catch (HttpClientResponseException e) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("http client exception: {}", request.getUri(), e);
             }
         }
 

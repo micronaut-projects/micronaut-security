@@ -35,8 +35,8 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,19 +61,23 @@ public class GrantTypePasswordAuthenticationProvider implements AuthenticationPr
     private final GrantTypePasswordRequestProvider grantTypePasswordRequestProvider;
     private final IdTokenAccessTokenResponseValidator idTokenAccessTokenResponseValidator;
     private final TokenConfiguration tokenConfiguration;
+    private final RxHttpClient tokenClient;
 
     /**
      *
      * @param grantTypePasswordRequestProvider Grant type password request provider
      * @param idTokenAccessTokenResponseValidator IDToken/AccessToken response validator
      * @param tokenConfiguration Token Configuration
+     * @param tokenClient RxHttpClient pointing to the token endpoint
      */
     public GrantTypePasswordAuthenticationProvider(GrantTypePasswordRequestProvider grantTypePasswordRequestProvider,
                                                    IdTokenAccessTokenResponseValidator idTokenAccessTokenResponseValidator,
-                                                   TokenConfiguration tokenConfiguration) {
+                                                   TokenConfiguration tokenConfiguration,
+                                                   @Named("oauth2tokenendpoint") RxHttpClient tokenClient) {
         this.grantTypePasswordRequestProvider = grantTypePasswordRequestProvider;
         this.idTokenAccessTokenResponseValidator = idTokenAccessTokenResponseValidator;
         this.tokenConfiguration = tokenConfiguration;
+        this.tokenClient = tokenClient;
     }
 
     @Override
@@ -81,17 +85,8 @@ public class GrantTypePasswordAuthenticationProvider implements AuthenticationPr
 
         if (authenticationRequest.getIdentity() instanceof String && authenticationRequest.getSecret() instanceof String) {
             HttpRequest request = grantTypePasswordRequestProvider.generateRequest((String) authenticationRequest.getIdentity(), (String) authenticationRequest.getSecret());
-            RxHttpClient rxHttpClient;
-            try {
-                rxHttpClient = RxHttpClient.create(request.getUri().toURL());
-            } catch (MalformedURLException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("malformed url {}", request.getUri(), e);
-                }
-                return Flowable.just(new AuthenticationFailed());
-            }
 
-            Flowable<HttpResponse<IdTokenAccessTokenResponse>> flowable = rxHttpClient.exchange(request, IdTokenAccessTokenResponse.class);
+            Flowable<HttpResponse<IdTokenAccessTokenResponse>> flowable = tokenClient.exchange(request, IdTokenAccessTokenResponse.class);
             return flowable.map(response -> {
                 if (response.getBody().isPresent()) {
                     Optional<IdTokenAccessTokenResponse> idTokenAccessTokenResponseOpt = response.getBody();
