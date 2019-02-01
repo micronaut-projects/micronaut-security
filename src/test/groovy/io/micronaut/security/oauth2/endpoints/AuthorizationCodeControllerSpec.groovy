@@ -42,7 +42,8 @@ class AuthorizationCodeControllerSpec extends Specification {
 
         when:
         String path = '/oauth2/default/v1/token'
-        HttpResponse rsp = HttpClient.create(mockHttpServer.URL).toBlocking().exchange(HttpRequest.POST(path, ""))
+        HttpClient mockHttpClient = HttpClient.create(mockHttpServer.URL)
+        HttpResponse rsp = mockHttpClient.toBlocking().exchange(HttpRequest.POST(path, ""))
 
         then:
         rsp.status() == HttpStatus.OK
@@ -65,8 +66,6 @@ class AuthorizationCodeControllerSpec extends Specification {
 
         ]
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, config, Environment.TEST)
-
-
 
         then:
         embeddedServer.applicationContext.containsBean(OauthConfiguration)
@@ -124,6 +123,9 @@ class AuthorizationCodeControllerSpec extends Specification {
         rsp.status() == HttpStatus.OK
 
         cleanup:
+        mockHttpClient.close()
+
+        and:
         mockHttpServer.close()
 
         and:

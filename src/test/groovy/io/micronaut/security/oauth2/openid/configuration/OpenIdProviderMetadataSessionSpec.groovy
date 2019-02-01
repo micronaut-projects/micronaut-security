@@ -1,34 +1,32 @@
 package io.micronaut.security.oauth2.openid.configuration
 
-import com.stehno.ersatz.ContentType
-import com.stehno.ersatz.ErsatzServer
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
+import io.micronaut.core.io.socket.SocketUtils
+import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.Specification
 
 class OpenIdProviderMetadataSessionSpec extends Specification {
     private static final String SPEC_NAME_PROPERTY = 'spec.name'
 
     void "A OpenIdProviderMetadataSession bean is loaded from a Okta remote openid-configuration endpoint"() {
+
         given:
         String openIdConfigurationJson = 'src/test/resources/okta-openid-configuration.json'
         String path = '/oauth2/default/.well-known/openid-configuration'
-        File jsonFile = new File(openIdConfigurationJson)
-        assert jsonFile.exists()
+        int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
+        String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
+        Map<String, Object> mockHttpServerConf = [
+                'spec.name': 'MockHttpServer',
+                'micronaut.security.enabled': true,
+                'micronaut.server.port': mockHttpServerPort,
+                'openidconfigurationfile': openIdConfigurationJson,
+                'opendiconfigurationpath': '/oauth2/default/.well-known'
+        ]
+        EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        ErsatzServer ersatz = new ErsatzServer()
-        ersatz.expectations {
-            get(path){
-                called 1
-                responder {
-                    body(jsonFile.text, ContentType.APPLICATION_JSON)
-                }
-            }
-        }
-
-        and:
-        String openIdConfigurationEndpoint = "${ersatz.httpUrl}$path"
+        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
@@ -45,10 +43,10 @@ class OpenIdProviderMetadataSessionSpec extends Specification {
         metadata.endSessionEndpoint == "https://dev-265911.oktapreview.com/oauth2/default/v1/logout"
 
         and:
-        ersatz.verify()
+        mockHttpServer.applicationContext.getBean(FileOpenIdConfigurationController).called == 1
 
         cleanup:
-        ersatz.stop()
+        mockHttpServer.close()
 
         and:
         context.close()

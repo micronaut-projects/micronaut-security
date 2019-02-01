@@ -1,9 +1,10 @@
 package io.micronaut.security.oauth2.openid.endpoints
 
-import com.stehno.ersatz.ContentType
-import com.stehno.ersatz.ErsatzServer
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
+import io.micronaut.core.io.socket.SocketUtils
+import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.oauth2.openid.configuration.FileOpenIdConfigurationController
 import spock.lang.Specification
 
 class OpenIdEndpointsSpec extends Specification {
@@ -13,23 +14,23 @@ class OpenIdEndpointsSpec extends Specification {
     void "OpenIdEndpoints is loaded"() {
         given:
         String openIdConfigurationJson = 'src/test/resources/okta-openid-configuration.json'
-        String path = '/oauth2/default/.well-known/openid-configuration'
-        File jsonFile = new File(openIdConfigurationJson)
-        assert jsonFile.exists()
+
+        String controllerPath = '/oauth2/default/.well-known'
+        String path = "${controllerPath}/openid-configuration"
+        int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
+        String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
+        Map<String, Object> mockHttpServerConf = [
+                'spec.name': 'MockHttpServer',
+                'micronaut.security.enabled': true,
+                'micronaut.server.port': mockHttpServerPort,
+                'openidconfigurationfile': openIdConfigurationJson,
+                'opendiconfigurationpath': controllerPath
+        ]
+        EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        ErsatzServer ersatz = new ErsatzServer()
-        ersatz.expectations {
-            get(path){
-                called 1
-                responder {
-                    body(jsonFile.text, ContentType.APPLICATION_JSON)
-                }
-            }
-        }
+        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
 
-        and:
-        String openIdConfigurationEndpoint = "${ersatz.httpUrl}$path"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
@@ -43,10 +44,10 @@ class OpenIdEndpointsSpec extends Specification {
         noExceptionThrown()
 
         and:
-        ersatz.verify()
+        mockHttpServer.applicationContext.getBean(FileOpenIdConfigurationController).called == 1
 
         cleanup:
-        ersatz.stop()
+        mockHttpServer.close()
 
         and:
         context.close()

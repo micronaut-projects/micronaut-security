@@ -1,9 +1,9 @@
 package io.micronaut.security.oauth2.openid.configuration
 
-import com.stehno.ersatz.ContentType
-import com.stehno.ersatz.ErsatzServer
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
+import io.micronaut.core.io.socket.SocketUtils
+import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.Specification
 
 class OpenIdProviderMetadataSpec extends Specification {
@@ -13,22 +13,18 @@ class OpenIdProviderMetadataSpec extends Specification {
         given:
         String openIdConfigurationJson = 'src/test/resources/auth0-openid-configuration.json'
         String path = '/.well-known/openid-configuration'
-        File jsonFile = new File(openIdConfigurationJson)
-        assert jsonFile.exists()
+        int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
+        String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
+        Map<String, Object> mockHttpServerConf = [
+                'spec.name': 'MockHttpServer',
+                'micronaut.security.enabled': true,
+                'micronaut.server.port': mockHttpServerPort,
+                'openidconfigurationfile': openIdConfigurationJson
+        ]
+        EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        ErsatzServer ersatz = new ErsatzServer()
-        ersatz.expectations {
-            get(path){
-                called 1
-                responder {
-                    body(jsonFile.text, ContentType.APPLICATION_JSON)
-                }
-            }
-        }
-
-        and:
-        String openIdConfigurationEndpoint = "${ersatz.httpUrl}${path}"
+        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
@@ -89,10 +85,10 @@ class OpenIdProviderMetadataSpec extends Specification {
         //TODO "mfa_challenge_endpoint":"https://micronautguides.eu.auth0.com/mfa/challenge"}
 
         and:
-        ersatz.verify()
+        mockHttpServer.applicationContext.getBean(FileOpenIdConfigurationController).called == 1
 
         cleanup:
-        ersatz.stop()
+        mockHttpServer.close()
 
         and:
         context.close()
@@ -102,22 +98,19 @@ class OpenIdProviderMetadataSpec extends Specification {
         given:
         String openIdConfigurationJson = 'src/test/resources/aws-cognito-openid-configuration.json'
         String path = '/eu-west-1_ZLiEFD4b6/.well-known/openid-configuration'
-        File jsonFile = new File(openIdConfigurationJson)
-        assert jsonFile.exists()
+        int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
+        String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
+        Map<String, Object> mockHttpServerConf = [
+                'spec.name': 'MockHttpServer',
+                'micronaut.security.enabled': true,
+                'micronaut.server.port': mockHttpServerPort,
+                'openidconfigurationfile': openIdConfigurationJson,
+                'opendiconfigurationpath': '/eu-west-1_ZLiEFD4b6/.well-known'
+        ]
+        EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        ErsatzServer ersatz = new ErsatzServer()
-        ersatz.expectations {
-            get(path){
-                called 1
-                responder {
-                    body(jsonFile.text, ContentType.APPLICATION_JSON)
-                }
-            }
-        }
-
-        and:
-        String openIdConfigurationEndpoint = "${ersatz.httpUrl}$path"
+        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
@@ -161,10 +154,10 @@ class OpenIdProviderMetadataSpec extends Specification {
         metadata.userinfoEndpoint == "https://micronautguides.auth.eu-west-1.amazoncognito.com/oauth2/userInfo"
 
         and:
-        ersatz.verify()
+        mockHttpServer.applicationContext.getBean(FileOpenIdConfigurationController).called == 1
 
         cleanup:
-        ersatz.stop()
+        mockHttpServer.close()
 
         and:
         context.close()
@@ -174,22 +167,19 @@ class OpenIdProviderMetadataSpec extends Specification {
         given:
         String openIdConfigurationJson = 'src/test/resources/okta-openid-configuration.json'
         String path = '/oauth2/default/.well-known/openid-configuration'
-        File jsonFile = new File(openIdConfigurationJson)
-        assert jsonFile.exists()
+        int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
+        String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
+        Map<String, Object> mockHttpServerConf = [
+                'spec.name': 'MockHttpServer',
+                'micronaut.security.enabled': true,
+                'micronaut.server.port': mockHttpServerPort,
+                'openidconfigurationfile': openIdConfigurationJson,
+                'opendiconfigurationpath': '/oauth2/default/.well-known'
+        ]
+        EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        ErsatzServer ersatz = new ErsatzServer()
-        ersatz.expectations {
-            get(path){
-                called 1
-                responder {
-                    body(jsonFile.text, ContentType.APPLICATION_JSON)
-                }
-            }
-        }
-
-        and:
-        String openIdConfigurationEndpoint = "${ersatz.httpUrl}$path"
+        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
@@ -266,10 +256,10 @@ class OpenIdProviderMetadataSpec extends Specification {
         metadata.requestObjectSigningAlgValuesSupported == ["HS256","HS384","HS512","RS256","RS384","RS512","ES256","ES384","ES512"]
 
         and:
-        ersatz.verify()
+        mockHttpServer.applicationContext.getBean(FileOpenIdConfigurationController).called == 1
 
         cleanup:
-        ersatz.stop()
+        mockHttpServer.close()
 
         and:
         context.close()

@@ -1,10 +1,10 @@
 package io.micronaut.security.oauth2.openid.configuration
 
-import com.stehno.ersatz.ContentType
-import com.stehno.ersatz.ErsatzServer
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.core.io.socket.SocketUtils
+import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.Specification
 
 class OpenIdConfigurationClientSpec extends Specification {
@@ -30,22 +30,19 @@ class OpenIdConfigurationClientSpec extends Specification {
     void "OpenIdConfigurationClient bean is loaded if micronaut.security.oauth2.openid-configuration is set"() {
         given:
         String openIdConfigurationJson = 'src/test/resources/auth0-openid-configuration.json'
-        File jsonFile = new File(openIdConfigurationJson)
-        assert jsonFile.exists()
+        String path = '/.well-known/openid-configuration'
+        int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
+        String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
+        Map<String, Object> mockHttpServerConf = [
+                'spec.name': 'MockHttpServer',
+                'micronaut.security.enabled': true,
+                'micronaut.server.port': mockHttpServerPort,
+                'openidconfigurationfile': openIdConfigurationJson,
+        ]
+        EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        ErsatzServer ersatz = new ErsatzServer()
-        ersatz.expectations {
-            get('/.well-known/openid-configuration'){
-                called 1
-                responder {
-                    body(jsonFile.text, ContentType.APPLICATION_JSON)
-                }
-            }
-        }
-
-        and:
-        String openIdConfigurationEndpoint = "${ersatz.httpUrl}/.well-known/openid-configuration"
+        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
@@ -72,10 +69,10 @@ class OpenIdConfigurationClientSpec extends Specification {
         noExceptionThrown()
 
         and:
-        ersatz.verify()
+        mockHttpServer.applicationContext.getBean(FileOpenIdConfigurationController).called == 1
 
         cleanup:
-        ersatz.stop()
+        mockHttpServer.close()
 
         and:
         context.close()

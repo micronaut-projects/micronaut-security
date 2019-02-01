@@ -12,9 +12,5 @@ dependencies {
     testCompile "io.micronaut:micronaut-http-client"
     testCompile "io.micronaut:micronaut-http-server-netty"
     testCompile "io.micronaut:micronaut-inject-groovy"
-    testCompile "com.stehno.ersatz:ersatz:$ersatzVersion", {
-        exclude module:'groovy-all'
-        exclude module:'logback-classic'
-    }
     testCompile 'com.sun.activation:javax.activation:1.2.0' // Java 11
 }
