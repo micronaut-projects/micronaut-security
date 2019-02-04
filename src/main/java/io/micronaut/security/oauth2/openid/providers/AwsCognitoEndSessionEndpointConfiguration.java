@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.openid.providers;
 
+import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
@@ -24,6 +25,7 @@ import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.endpoints.LogoutControllerConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfigurationProperties;
 import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionParameter;
 import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionParameterType;
 
@@ -44,26 +46,33 @@ import java.util.List;
 @Requires(property = OauthConfigurationProperties.PREFIX + ".domain-name")
 @Requires(property = OauthConfigurationProperties.PREFIX + ".end-session.aws-cognito.enabled", notEquals = StringUtils.FALSE)
 @Requires(condition = AwsCognitoOpenidConfigurationCondition.class)
+@Requires(beans = {
+        EmbeddedServer.class,
+        EndSessionEndpointConfigurationProperties.class
+})
 @Primary
 @Singleton
 public class AwsCognitoEndSessionEndpointConfiguration implements EndSessionEndpointConfiguration {
 
     private final String logoutUri;
     private final String domainName;
+    private final EndSessionEndpointConfigurationProperties endSessionEndpointConfigurationProperties;
 
     /**
      *
      * @param embeddedServer Embedded Server
      * @param domainName AWS Cognito User's pool domain Name
      * @param logoutPath {@link io.micronaut.security.endpoints.LogoutController} path.
+     * @param endSessionEndpointConfigurationProperties Default {@link ConfigurationProperties} implementation of {@link EndSessionEndpointConfiguration}.
      */
     public AwsCognitoEndSessionEndpointConfiguration(
             EmbeddedServer embeddedServer,
             @Value("${micronaut.security.oauth2.domain-name}") String domainName,
-
-            @Value("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}") String logoutPath) {
+            @Value("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}") String logoutPath,
+            EndSessionEndpointConfigurationProperties endSessionEndpointConfigurationProperties) {
         this.domainName = domainName;
         this.logoutUri = embeddedServer.getURL().toString() + logoutPath;
+        this.endSessionEndpointConfigurationProperties = endSessionEndpointConfigurationProperties;
     }
 
     @Nonnull
@@ -78,10 +87,18 @@ public class AwsCognitoEndSessionEndpointConfiguration implements EndSessionEndp
 
         EndSessionParameter logoutUriParam = new EndSessionParameter();
         logoutUriParam.setName("logout_uri");
-        logoutUriParam.setValue(logoutUri);
+        logoutUriParam.setValue(getRedirectUri());
         endSessionParameters.add(logoutUriParam);
 
         return endSessionParameters;
+    }
+
+    @Nullable
+    @Override
+    public String getRedirectUri() {
+        return endSessionEndpointConfigurationProperties.getRedirectUri() != null ?
+                endSessionEndpointConfigurationProperties.getRedirectUri() :
+                logoutUri;
     }
 
     @Nullable

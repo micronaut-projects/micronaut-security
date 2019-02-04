@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.openid.endpoints.endsession;
 import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -35,4 +36,7 @@ public interface EndSessionEndpointConfiguration extends EndpointUrl {
      */
     @Nonnull
     List<EndSessionParameter> getParameters();
+
+    @Nullable
+    String getRedirectUri();
 }

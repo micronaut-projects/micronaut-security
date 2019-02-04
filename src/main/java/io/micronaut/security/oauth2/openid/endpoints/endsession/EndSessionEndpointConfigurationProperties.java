@@ -38,6 +38,9 @@ public class EndSessionEndpointConfigurationProperties implements EndSessionEndp
     @Nullable
     private String url;
 
+    @Nullable
+    private String redirectUri;
+
     @Nonnull
     private List<EndSessionParameter> parameters = new ArrayList<>();
 
@@ -45,6 +48,20 @@ public class EndSessionEndpointConfigurationProperties implements EndSessionEndp
     @Override
     public List<EndSessionParameter> getParameters() {
         return parameters;
+    }
+
+    @Nullable
+    @Override
+    public String getRedirectUri() {
+        return redirectUri;
+    }
+
+    /**
+     *
+     * @param redirectUri Redirection URI to which the response will be sent.
+     */
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
     }
 
     /**
