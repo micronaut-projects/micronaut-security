@@ -16,7 +16,6 @@
 
 package io.micronaut.security.oauth2.openid.providers;
 
-import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
@@ -66,7 +65,7 @@ public class OktaEndSessionEndpointConfiguration implements EndSessionEndpointCo
      * @param embeddedServer Embedded Server
      * @param openIdConfiguration Open ID Configuration
      * @param logoutPath {@link io.micronaut.security.endpoints.LogoutController} path.
-     * @param endSessionEndpointConfigurationProperties Default {@link ConfigurationProperties} implementation of {@link EndSessionEndpointConfiguration}.
+     * @param endSessionEndpointConfigurationProperties Default {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link EndSessionEndpointConfiguration}.
      */
     public OktaEndSessionEndpointConfiguration(
             EmbeddedServer embeddedServer,

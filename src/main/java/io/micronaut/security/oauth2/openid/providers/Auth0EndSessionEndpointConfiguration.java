@@ -16,7 +16,6 @@
 
 package io.micronaut.security.oauth2.openid.providers;
 
-import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
@@ -69,7 +68,7 @@ public class Auth0EndSessionEndpointConfiguration implements EndSessionEndpointC
      * @param domainName AWS Cognito User's pool domain Name
      * @param auth0Version Auth0 api version
      * @param logoutPath {@link LogoutController} path.
-     * @param endSessionEndpointConfigurationProperties Default {@link ConfigurationProperties} implementation of {@link EndSessionEndpointConfiguration}.
+     * @param endSessionEndpointConfigurationProperties Default {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link EndSessionEndpointConfiguration}.
      */
     public Auth0EndSessionEndpointConfiguration(
             EmbeddedServer embeddedServer,
