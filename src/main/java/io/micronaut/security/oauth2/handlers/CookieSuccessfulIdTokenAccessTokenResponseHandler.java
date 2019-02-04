@@ -55,7 +55,8 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements Succes
     @Override
     public HttpResponse handle(HttpRequest request, IdTokenAccessTokenResponse idTokenAccessTokenResponse, Authentication authentication) {
 
-        Cookie cookie = of(request, configuration, idTokenAccessTokenResponse.getIdToken());
+        Cookie cookie = Cookie.of(configuration.getCookieName(), idTokenAccessTokenResponse.getIdToken());
+        cookie.configure(configuration);
         if (!configuration.getCookieMaxAge().isPresent()) {
             long seconds = secondsToExpirationTime(authentication);
             cookie.maxAge(seconds);
@@ -83,19 +84,5 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements Succes
         }
 
         return Integer.MAX_VALUE;
-    }
-
-// TODO remove this and use CookieConfiguration
-// https://github.com/micronaut-projects/micronaut-core/pull/1185
-    static Cookie of(HttpRequest request, CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration configuration, String value) {
-        Cookie cookie = Cookie.of(configuration.getCookieName(), value);
-        configuration.getCookiePath().ifPresent(cookie::path);
-        configuration.getCookieDomain().ifPresent(cookie::domain);
-        configuration.getCookieMaxAge().ifPresent(cookie::maxAge);
-        configuration.isCookieHttpOnly().ifPresent(cookie::httpOnly);
-        if (request.isSecure()) {
-            configuration.isCookieSecure().ifPresent(cookie::secure);
-        }
-        return cookie;
     }
 }
