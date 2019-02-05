@@ -56,7 +56,7 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements Succes
     public HttpResponse handle(HttpRequest request, IdTokenAccessTokenResponse idTokenAccessTokenResponse, Authentication authentication) {
 
         Cookie cookie = Cookie.of(configuration.getCookieName(), idTokenAccessTokenResponse.getIdToken());
-        cookie.configure(configuration);
+        cookie.configure(configuration, request.isSecure());
         if (!configuration.getCookieMaxAge().isPresent()) {
             long seconds = secondsToExpirationTime(authentication);
             cookie.maxAge(seconds);
