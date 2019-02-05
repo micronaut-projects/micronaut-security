@@ -16,11 +16,11 @@
 
 package io.micronaut.security.oauth2.openid.idtoken.validation;
 
-import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,15 +55,18 @@ public class IssuerJwtClaimsValidator implements IdTokenClaimsValidator {
     }
 
     @Override
-    public boolean validate(JWTClaimsSet claimsSet) {
-        String issuer = claimsSet.getIssuer();
-        if (issuer == null) {
+    public boolean validate(JwtClaims claims) {
+        Object issuerObj = claims.get(JwtClaims.ISSUER);
+        if (issuerObj == null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("issue claims does not exist");
             }
             return false;
         }
-
+        if (!(issuerObj instanceof String)) {
+            return false;
+        }
+        String issuer = (String) issuerObj;
         boolean condition = issuer.equals(openIdProviderMetadata.getIssuer());
         if (!condition && LOG.isDebugEnabled()) {
             LOG.debug("JWT issuer claim does not match {}", openIdProviderMetadata.getIssuer());

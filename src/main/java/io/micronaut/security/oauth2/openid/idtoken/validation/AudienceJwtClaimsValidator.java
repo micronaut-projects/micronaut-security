@@ -16,10 +16,11 @@
 
 package io.micronaut.security.oauth2.openid.idtoken.validation;
 
-import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.jwt.validator.JWTClaimsSetUtils;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,12 +56,13 @@ public class AudienceJwtClaimsValidator implements IdTokenClaimsValidator {
     }
 
     @Override
-    public boolean validate(JWTClaimsSet claimsSet) {
-        List<String> audienceList = claimsSet.getAudience();
+    public boolean validate(JwtClaims claims) {
+        List<String> audienceList = JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims).getAudience();
         boolean condition = audienceList.stream().anyMatch(audience -> audience.equals(oauthConfiguration.getClientId()));
         if (!condition && LOG.isDebugEnabled()) {
             LOG.debug("JWT audience claims does not contain {}", oauthConfiguration.getClientId());
         }
         return condition;
     }
+
 }
