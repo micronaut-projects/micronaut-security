@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.openid.endpoints.DefaultRedirectUrlProvider;
@@ -65,12 +66,12 @@ public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRed
     }
 
     /**
-     *
+     * @param request the Original request prior redirect.
      * @return A URL to redirect the user to the OpenID Provider authorization endpoint.
      */
     @Override
-    public String resolveAuthorizationRedirectUrl() {
-        AuthenticationRequest authenticationRequest = authenticationRequestProvider.generateAuthenticationRequest();
+    public String resolveAuthorizationRedirectUrl(HttpRequest<?> request) {
+        AuthenticationRequest authenticationRequest = authenticationRequestProvider.generateAuthenticationRequest(request);
         Map<String, Object> arguments = instantiateParameters(authenticationRequest);
         String baseUrl = this.openIdProviderMetadata.getAuthorizationEndpoint();
         String expandedUri = expandedUri(baseUrl, arguments);

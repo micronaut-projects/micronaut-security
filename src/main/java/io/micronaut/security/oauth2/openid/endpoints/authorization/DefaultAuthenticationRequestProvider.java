@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 
 import javax.annotation.Nonnull;
@@ -75,8 +76,9 @@ public class DefaultAuthenticationRequestProvider implements AuthenticationReque
     }
 
     @Override
-    public AuthenticationRequest generateAuthenticationRequest() {
-        return new AuthenticationRequestAdapter(oauthConfiguration,
+    public AuthenticationRequest generateAuthenticationRequest(HttpRequest<?> request) {
+        return new AuthenticationRequestAdapter(request,
+                oauthConfiguration,
                 authorizationEndpointRequestConfiguration,
                 stateProvider,
                 nonceProvider,

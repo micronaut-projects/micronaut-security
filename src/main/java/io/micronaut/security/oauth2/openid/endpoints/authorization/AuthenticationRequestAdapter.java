@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 
 import javax.annotation.Nonnull;
@@ -30,6 +31,9 @@ import java.util.Optional;
  * @since 1.0.0
  */
 public class AuthenticationRequestAdapter implements AuthenticationRequest {
+
+    @Nonnull
+    private HttpRequest<?> request;
 
     @Nonnull
     private OauthConfiguration oauthConfiguration;
@@ -51,6 +55,7 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
 
     /**
      *
+     * @param request the Original request prior redirect.
      * @param oauthConfiguration Oauth 2 Configuration
      * @param authorizationEndpointConfiguration Authorization Endpoint Configuration
      * @param stateProvider State Provider
@@ -58,13 +63,15 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
      * @param loginHintProvider Login Hint Provider
      * @param idTokenHintProvider Id Token Hint Provider
      */
-    public AuthenticationRequestAdapter(OauthConfiguration oauthConfiguration,
+    public AuthenticationRequestAdapter(HttpRequest<?> request,
+                                        OauthConfiguration oauthConfiguration,
                                         AuthorizationEndpointRequestConfiguration authorizationEndpointConfiguration,
                                         @Nullable StateProvider stateProvider,
                                         @Nullable NonceProvider nonceProvider,
                                         @Nullable LoginHintProvider loginHintProvider,
                                         @Nullable IdTokenHintProvider idTokenHintProvider
                                         ) {
+        this.request = request;
         this.oauthConfiguration = oauthConfiguration;
         this.authorizationEndpointConfiguration = authorizationEndpointConfiguration;
         this.stateProvider = stateProvider;
@@ -82,7 +89,7 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
     @Override
     @Nullable
     public String getState() {
-        return getStateProvider().isPresent() ? getStateProvider().get().generateState() : null;
+        return getStateProvider().isPresent() ? getStateProvider().get().generateState(request) : null;
     }
 
     @Nullable

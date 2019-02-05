@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
+import io.micronaut.http.HttpRequest;
+
 /**
  * Provides an authorization redirect URL.
  *
@@ -26,8 +28,8 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 public interface AuthorizationRedirectUrlProvider {
 
     /**
-     *
+     * @param request the Original request prior redirect.
      * @return A URL to redirect the user to the OpenID Provider authorization endpoint.
      */
-    String resolveAuthorizationRedirectUrl();
+    String resolveAuthorizationRedirectUrl(HttpRequest<?> request);
 }

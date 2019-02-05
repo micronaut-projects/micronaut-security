@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.handlers;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.handlers.UnauthorizedRejectionUriProvider;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRedirectUrlProvider;
@@ -51,7 +52,7 @@ public class OpenIdUnauthorizedRejectionUriProvider implements UnauthorizedRejec
     }
 
     @Override
-    public Optional<String> getUnauthorizedRedirectUri() {
-        return Optional.of(authorizationRedirectUrlProvider.resolveAuthorizationRedirectUrl());
+    public Optional<String> getUnauthorizedRedirectUri(HttpRequest<?> request) {
+        return Optional.of(authorizationRedirectUrlProvider.resolveAuthorizationRedirectUrl(request));
     }
 }

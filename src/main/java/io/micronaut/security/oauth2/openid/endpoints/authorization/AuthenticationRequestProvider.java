@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
+import io.micronaut.http.HttpRequest;
+
 /**
  * Provides an authentication Request.
  *
@@ -25,8 +27,8 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 public interface AuthenticationRequestProvider {
 
     /**
-     *
+     * @param request the Original request prior redirect.
      * @return An Authentication request against an Open ID identity provider.
      */
-    AuthenticationRequest generateAuthenticationRequest();
+    AuthenticationRequest generateAuthenticationRequest(HttpRequest<?> request);
 }
