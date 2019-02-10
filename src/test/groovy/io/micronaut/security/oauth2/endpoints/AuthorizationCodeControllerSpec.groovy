@@ -14,7 +14,6 @@ import io.micronaut.security.oauth2.configuration.OauthConfiguration
 import io.micronaut.security.oauth2.handlers.AuthorizationResponseHandler
 import io.micronaut.security.oauth2.handlers.ErrorResponseHandler
 import io.micronaut.security.oauth2.handlers.IdTokenAccessTokenResponseHandler
-import io.micronaut.security.oauth2.handlers.NotValidIdTokenAccessTokenResponseHandler
 import io.micronaut.security.oauth2.handlers.SuccessfulIdTokenAccessTokenResponseHandler
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.openid.endpoints.token.AuthorizationCodeGrantRequestGenerator
@@ -91,9 +90,6 @@ class AuthorizationCodeControllerSpec extends Specification {
 
         and:
         embeddedServer.applicationContext.containsBean(ErrorResponseHandler)
-
-        and:
-        embeddedServer.applicationContext.containsBean(NotValidIdTokenAccessTokenResponseHandler)
 
         and:
         embeddedServer.applicationContext.containsBean(SuccessfulIdTokenAccessTokenResponseHandler)

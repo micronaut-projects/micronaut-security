@@ -34,27 +34,21 @@ import java.util.Optional;
  */
 @Requires(beans = {
         IdTokenAccessTokenResponseValidator.class,
-        NotValidIdTokenAccessTokenResponseHandler.class,
         SuccessfulIdTokenAccessTokenResponseHandler.class
 })
 @Singleton
 public class DefaultIdTokenAccessTokenResponseHandler implements IdTokenAccessTokenResponseHandler {
 
     private final IdTokenAccessTokenResponseValidator idTokenAccessTokenResponseValidator;
-    private final NotValidIdTokenAccessTokenResponseHandler notValidIdTokenAccessTokenResponseHandler;
     private final SuccessfulIdTokenAccessTokenResponseHandler successfulIdTokenAccessTokenResponseHandler;
 
     /**
      *
      * @param idTokenAccessTokenResponseValidator ID Token Access token response validator
-     * @param notValidIdTokenAccessTokenResponseHandler Not Valid - ID Token Access token handler
      * @param successfulIdTokenAccessTokenResponseHandler Successful - ID Token Access token handler
      */
-    public DefaultIdTokenAccessTokenResponseHandler(IdTokenAccessTokenResponseValidator idTokenAccessTokenResponseValidator,
-                                                    NotValidIdTokenAccessTokenResponseHandler notValidIdTokenAccessTokenResponseHandler,
-                                                    SuccessfulIdTokenAccessTokenResponseHandler successfulIdTokenAccessTokenResponseHandler) {
+    public DefaultIdTokenAccessTokenResponseHandler(IdTokenAccessTokenResponseValidator idTokenAccessTokenResponseValidator,              SuccessfulIdTokenAccessTokenResponseHandler successfulIdTokenAccessTokenResponseHandler) {
         this.idTokenAccessTokenResponseValidator = idTokenAccessTokenResponseValidator;
-        this.notValidIdTokenAccessTokenResponseHandler = notValidIdTokenAccessTokenResponseHandler;
         this.successfulIdTokenAccessTokenResponseHandler = successfulIdTokenAccessTokenResponseHandler;
     }
 
@@ -65,6 +59,6 @@ public class DefaultIdTokenAccessTokenResponseHandler implements IdTokenAccessTo
         if (authenticationOptional.isPresent()) {
             return successfulIdTokenAccessTokenResponseHandler.handle(request, idTokenAccessTokenResponse, authenticationOptional.get());
         }
-        return notValidIdTokenAccessTokenResponseHandler.handle(idTokenAccessTokenResponse);
+        throw new InvalidIdTokenAccessTokenResponseException(idTokenAccessTokenResponse);
     }
 }

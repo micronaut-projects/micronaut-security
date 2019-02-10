@@ -1,3 +1,5 @@
+package io.micronaut.security.oauth2.handlers;
+
 /*
  * Copyright 2017-2019 original authors
  *
@@ -14,24 +16,27 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.handlers;
-
-import io.micronaut.http.HttpResponse;
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
 
-import javax.inject.Singleton;
-
 /**
- * Default implementation of {@link NotValidIdTokenAccessTokenResponseHandler}.
+ * A runtime exception thrown when the validation of a {@link IdTokenAccessTokenResponse} fails.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.0
  */
-@Singleton
-public class DefaultNotValidIdTokenAccessTokenResponseHandler implements NotValidIdTokenAccessTokenResponseHandler {
+public class InvalidIdTokenAccessTokenResponseException extends RuntimeException {
 
-    @Override
-    public HttpResponse<?> handle(IdTokenAccessTokenResponse idTokenAccessTokenResponse) {
-        return HttpResponse.badRequest();
+    private final IdTokenAccessTokenResponse response;
+    /**
+     * Sets the message based on the response.
+     *
+     * @param response The authentication response
+     */
+    public InvalidIdTokenAccessTokenResponseException(IdTokenAccessTokenResponse response) {
+        this.response = response;
+    }
+
+    public IdTokenAccessTokenResponse getResponse() {
+        return response;
     }
 }
