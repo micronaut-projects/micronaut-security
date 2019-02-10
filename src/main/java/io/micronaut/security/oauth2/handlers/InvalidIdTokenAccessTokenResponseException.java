@@ -27,15 +27,20 @@ import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
 public class InvalidIdTokenAccessTokenResponseException extends RuntimeException {
 
     private final IdTokenAccessTokenResponse response;
+
     /**
-     * Sets the message based on the response.
+     * Constructor.
      *
-     * @param response The authentication response
+     * @param response ID Token - Access Token response obtained from the Token endpoint.
      */
     public InvalidIdTokenAccessTokenResponseException(IdTokenAccessTokenResponse response) {
         this.response = response;
     }
 
+    /**
+     *
+     * @return The {@link IdTokenAccessTokenResponse} which failed validation.
+     */
     public IdTokenAccessTokenResponse getResponse() {
         return response;
     }

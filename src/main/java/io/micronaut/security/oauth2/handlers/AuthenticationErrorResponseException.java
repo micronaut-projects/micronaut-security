@@ -16,39 +16,28 @@
 
 package io.micronaut.security.oauth2.handlers;
 
-import io.micronaut.context.annotation.Secondary;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.security.oauth2.responses.ErrorResponse;
-import io.micronaut.security.oauth2.responses.Oauth2ErrorResponse;
-import io.reactivex.Single;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.inject.Singleton;
 
 /**
- * Default implementation of {@link ErrorResponseHandler}.
+ * A runtime exception thrown when a Oauth 2. Error code is received from the authorization endpoint.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.0
  */
-@Secondary
-@Singleton
-public class DefaultErrorResponseHandler implements ErrorResponseHandler {
+public class AuthenticationErrorResponseException extends RuntimeException {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultErrorResponseHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationErrorResponseException.class);
 
-    @Override
-    public Single<HttpResponse<?>> handle(ErrorResponse errorResponse) {
-        logErrorResponse(errorResponse);
-        Oauth2ErrorResponse body = Oauth2ErrorResponse.of(errorResponse);
-        return Single.just(HttpResponse.badRequest(body));
-    }
+    private final ErrorResponse errorResponse;
 
     /**
-     * Logs the Error Response.
-     * @param errorResponse Error Response.
+     * Constructor.
+     *
+     * @param errorResponse Oauth 2 Authentication Error Response.
      */
-    protected void logErrorResponse(ErrorResponse errorResponse) {
+    public AuthenticationErrorResponseException(ErrorResponse errorResponse) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("error: {} error_description: {}, state: {} error_uri {}",
                     errorResponse.getError(),
@@ -56,5 +45,14 @@ public class DefaultErrorResponseHandler implements ErrorResponseHandler {
                     errorResponse.getErrorUri() != null ? errorResponse.getErrorUri() : "",
                     errorResponse.getState() != null ? errorResponse.getState() : "");
         }
+        this.errorResponse = errorResponse;
+    }
+
+    /**
+     *
+     * @return Authentication Error Response.
+     */
+    public ErrorResponse getErrorResponse() {
+        return errorResponse;
     }
 }

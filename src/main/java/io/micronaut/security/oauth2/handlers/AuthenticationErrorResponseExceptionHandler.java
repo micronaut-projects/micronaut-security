@@ -16,23 +16,25 @@
 
 package io.micronaut.security.oauth2.handlers;
 
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.security.oauth2.responses.ErrorResponse;
-import io.reactivex.Single;
+import io.micronaut.http.server.exceptions.ExceptionHandler;
+
+import javax.inject.Singleton;
 
 /**
- * Handles Oauth 2.0 Error responses.
+ * An exception handler for {@link AuthenticationErrorResponseException}.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.0
  */
-public interface ErrorResponseHandler {
+@Singleton
+@Requires(classes = {AuthenticationErrorResponseException.class, ExceptionHandler.class})
+public class AuthenticationErrorResponseExceptionHandler implements ExceptionHandler<AuthenticationErrorResponseException, HttpResponse> {
 
-    /**
-     * Handles an OAuth 2.0 error.
-     *
-     * @param errorResponse OAuth 2.0 Error Response
-     * @return A Http Response
-     */
-    Single<HttpResponse<?>> handle(ErrorResponse errorResponse);
+    @Override
+    public HttpResponse handle(HttpRequest request, AuthenticationErrorResponseException exception) {
+        return HttpResponse.badRequest(exception.getErrorResponse());
+    }
 }

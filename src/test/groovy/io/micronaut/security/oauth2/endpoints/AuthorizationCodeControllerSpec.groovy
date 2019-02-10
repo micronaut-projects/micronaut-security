@@ -12,7 +12,7 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.oauth2.configuration.OauthConfiguration
 import io.micronaut.security.oauth2.handlers.AuthorizationResponseHandler
-import io.micronaut.security.oauth2.handlers.ErrorResponseHandler
+
 import io.micronaut.security.oauth2.handlers.IdTokenAccessTokenResponseHandler
 import io.micronaut.security.oauth2.handlers.SuccessfulIdTokenAccessTokenResponseHandler
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
@@ -87,9 +87,6 @@ class AuthorizationCodeControllerSpec extends Specification {
 
         and:
         embeddedServer.applicationContext.containsBean(DefaultAuthorizationCodeGrantRequestGenerator)
-
-        and:
-        embeddedServer.applicationContext.containsBean(ErrorResponseHandler)
 
         and:
         embeddedServer.applicationContext.containsBean(SuccessfulIdTokenAccessTokenResponseHandler)

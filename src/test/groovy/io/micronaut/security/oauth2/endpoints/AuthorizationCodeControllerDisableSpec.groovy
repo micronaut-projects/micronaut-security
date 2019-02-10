@@ -5,7 +5,7 @@ import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.security.oauth2.configuration.OauthConfiguration
 import io.micronaut.security.oauth2.handlers.AuthorizationResponseHandler
-import io.micronaut.security.oauth2.handlers.ErrorResponseHandler
+
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointConfiguration
 import spock.lang.Shared
@@ -48,9 +48,6 @@ class AuthorizationCodeControllerDisableSpec extends Specification {
         ApplicationContext context = ApplicationContext.run(conf, Environment.TEST)
 
         expect:
-        context.containsBean(ErrorResponseHandler)
-
-        and:
         context.containsBean(AuthorizationResponseHandler)
 
         and:

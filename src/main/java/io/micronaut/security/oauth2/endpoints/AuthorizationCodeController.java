@@ -28,8 +28,8 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.oauth2.handlers.AuthenticationErrorResponseException;
 import io.micronaut.security.oauth2.handlers.AuthorizationResponseHandler;
-import io.micronaut.security.oauth2.handlers.ErrorResponseHandler;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRequestResponseTypeCodeCondition;
 import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointGrantTypeAuthorizationCodeCondition;
 import io.micronaut.security.oauth2.responses.AuthenticationResponse;
@@ -55,21 +55,17 @@ import java.util.Map;
 @Requires(property = AuthorizationCodeControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Requires(condition = AuthorizationRequestResponseTypeCodeCondition.class)
 @Requires(condition = TokenEndpointGrantTypeAuthorizationCodeCondition.class)
-@Requires(beans = {ErrorResponseHandler.class, AuthorizationResponseHandler.class})
+@Requires(beans = {AuthorizationResponseHandler.class})
 @Controller("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".controller-path:/authcode}")
 public class AuthorizationCodeController {
 
-    private final ErrorResponseHandler errorResponseHandler;
     private final AuthorizationResponseHandler authorizationResponseHandler;
 
     /**
      *
-     * @param errorResponseHandler Error Response Handler.
      * @param authorizationResponseHandler Authorization Response Handler.
      */
-    public AuthorizationCodeController(ErrorResponseHandler errorResponseHandler,
-                                       AuthorizationResponseHandler authorizationResponseHandler) {
-        this.errorResponseHandler = errorResponseHandler;
+    public AuthorizationCodeController(AuthorizationResponseHandler authorizationResponseHandler) {
         this.authorizationResponseHandler = authorizationResponseHandler;
     }
 
@@ -86,7 +82,7 @@ public class AuthorizationCodeController {
 
         if (ErrorResponseDetector.isErrorResponse(formFields)) {
             ErrorResponse errorResponse = new ErrorResponseMapAdapter(formFields);
-            return errorResponseHandler.handle(errorResponse);
+            throw new AuthenticationErrorResponseException(errorResponse);
 
         } else if (AuthorizationResponseDetector.isAuthorizationResponse(formFields)) {
             AuthenticationResponse authenticationResponse = new AuthenticationResponseMapAdapter(formFields);
@@ -108,7 +104,7 @@ public class AuthorizationCodeController {
 
         if (ErrorResponseDetector.isErrorResponse(parameters)) {
             ErrorResponse errorResponse = new ErrorResponseHttpParamsAdapter(parameters);
-            return errorResponseHandler.handle(errorResponse);
+            throw new AuthenticationErrorResponseException(errorResponse);
 
         } else if (AuthorizationResponseDetector.isAuthorizationResponse(parameters)) {
             AuthenticationResponse authenticationResponse = new AuthenticationResponseHttpParamsAdapter(parameters);

@@ -2,6 +2,7 @@ package io.micronaut.security.oauth2.endpoints
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
+import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
@@ -19,14 +20,18 @@ class AuthorizationCodeControllerErrorResponseSpec extends Specification {
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
     @Shared
+    int serverPort = SocketUtils.findAvailableTcpPort()
+
+    @Shared
     Map<String, Object> config = [
             (SPEC_NAME_PROPERTY): getClass().simpleName,
+            'micronaut.server.port': serverPort,
             'micronaut.security.enabled': true,
             'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.oauth2.client-id': 'XXX',
-            'micronaut.security.oauth2.openid.openid-issuer': 'http://localhost:8080',
-            'micronaut.security.oauth2.token.redirect-uri': 'http://localhost:8080',
-            'micronaut.security.oauth2.token.url': 'http://localhost:8080',
+            'micronaut.security.oauth2.openid.openid-issuer': "http://localhost:$serverPort",
+            'micronaut.security.oauth2.token.redirect-uri': "http://localhost:$serverPort",
+            'micronaut.security.oauth2.token.url': "http://localhost:$serverPort",
     ]
 
     @Shared
@@ -94,6 +99,4 @@ class AuthorizationCodeControllerErrorResponseSpec extends Specification {
         errorResponse.getErrorDescription() == 'Unsupported response_type value'
         errorResponse.getErrorUri() == null
     }
-
-
 }
