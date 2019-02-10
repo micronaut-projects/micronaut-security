@@ -90,7 +90,7 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
     }
 
     /**
-     *
+     * Oauth 2.0. Grant Type. Default value (authorization_code).
      * @param grantType Oauth 2.0 Grant Type
      */
     public void setGrantType(@Nonnull String grantType) {
@@ -98,7 +98,7 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
     }
 
     /**
-     *
+     * Client Authentication method. By default no value is specified. In that case, the value returned by {@link io.micronaut.security.oauth2.openid.endpoints.token.AuthMethodProvider}, if such a bean exists, is used.
      * @param authMethod Client Authentication method.
      */
     public void setAuthMethod(@Nullable String authMethod) {
@@ -134,7 +134,7 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
     }
 
     /**
-     * The Content-Type used to communicate with the token endpoint.
+     * The Content-Type used to communicate with the token endpoint. Default value (application/x-www-form-urlencoded).
      * @param contentType The Content-Type
      */
     public void setContentType(@Nonnull MediaType contentType) {

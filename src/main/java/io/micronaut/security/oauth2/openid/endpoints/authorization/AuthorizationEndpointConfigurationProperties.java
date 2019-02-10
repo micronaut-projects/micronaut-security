@@ -106,7 +106,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     *
+     * Sets Oauth 2.0 scopes. Default value (['openid']).
      * @param scopes OAuth 2.0 scopes.
      */
     public void setScopes(@Nonnull List<String> scopes) {
@@ -120,7 +120,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     *
+     * Set OAuth 2.0 Response Type. Default value ({@value #DEFAULT_RESPONSETYPE}).
      * @param responseType OAuth 2.0 Response Type.
      */
     public void setResponseType(@Nonnull String responseType) {
@@ -134,7 +134,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     *
+     * Redirection URI to which the response will be sent. Default value (http://localhost:8080/auth/code).
      * @param redirectUri Redirection URI to which the response will be sent.
      */
     public void setRedirectUri(String redirectUri) {
@@ -148,7 +148,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     *
+     * Informs the Authorization Server of the mechanism to be used for returning parameters from the Authorization Endpoint. Default value ({@value #DEFAULT_RESPONSEMODE}).
      * @param responseMode Informs the Authorization Server of the mechanism to be used for returning parameters from the Authorization Endpoint.
      */
     public void setResponseMode(@Nullable String responseMode) {
@@ -162,7 +162,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     *
+     * ASCII string value that specifies how the Authorization Server displays the authentication and consent user interface pages to the End-User. Default value (null).
      * @param display ASCII string value that specifies how the Authorization Server displays the authentication and consent user interface pages to the End-User.
      */
     public void setDisplay(@Nullable Display display) {
@@ -176,7 +176,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     *
+     * Space delimited, case sensitive list of ASCII string values that specifies whether the Authorization Server prompts the End-User for reauthentication and consent. Default value (null).
      * @param prompt Space delimited, case sensitive list of ASCII string values that specifies whether the Authorization Server prompts the End-User for reauthentication and consent.
      */
     public void setPrompt(@Nullable Prompt prompt) {
@@ -190,7 +190,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     *
+     * Maximum Authentication Age. Default value (null).
      * @param maxAge Maximum Authentication Age.
      */
     public void setMaxAge(@Nullable Integer maxAge) {
@@ -204,7 +204,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     *
+     * End-User's preferred languages and scripts for the user interface. Default value (null).
      * @param uiLocales End-User's preferred languages and scripts for the user interface
      */
     public void setUiLocales(@Nullable List<String> uiLocales) {
@@ -218,7 +218,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     *
+     * Requested Authentication Context Class Reference values. Default value (null).
      * @param acrValues Requested Authentication Context Class Reference values.
      */
     public void setAcrValues(@Nullable List<String>  acrValues) {

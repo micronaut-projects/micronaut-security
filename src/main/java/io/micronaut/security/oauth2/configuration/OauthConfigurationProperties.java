@@ -49,7 +49,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     }
 
     /**
-     * Oauth 2 Application Client Secret.
+     * Oauth 2 Application Client Secret. Optional.
      * @param clientSecret The application's Client Secret.
      */
     public void setClientSecret(@Nullable String clientSecret) {
