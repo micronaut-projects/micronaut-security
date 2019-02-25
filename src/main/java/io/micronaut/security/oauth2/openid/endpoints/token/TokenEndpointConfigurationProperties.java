@@ -90,7 +90,7 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
     }
 
     /**
-     * Oauth 2.0. Grant Type. Default value (authorization_code).
+     * OAuth 2.0 Grant Type. Default value (authorization_code).
      * @param grantType OAuth 2.0 Grant Type
      */
     public void setGrantType(@Nonnull String grantType) {

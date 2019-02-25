@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Encapsulates the parts of the Oauth 2.0. Authorization Request that are configurable.
+ * Encapsulates the parts of the OAuth 2.0 Authorization Request that are configurable.
  *
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Authentication Request</a>
  *

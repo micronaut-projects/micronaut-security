@@ -19,7 +19,7 @@ package io.micronaut.security.oauth2.openid.endpoints.revocation;
 import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
 
 /**
- * Oauth 2.0. Introspection endpoint configuration.
+ * OAuth 2.0 Introspection endpoint configuration.
  *
  * @see <a href="https://tools.ietf.org/html/rfc7009">OAuth 2.0 Token Revocation</a>
  *

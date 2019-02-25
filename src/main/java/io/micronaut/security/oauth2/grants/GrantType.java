@@ -74,7 +74,7 @@ public enum GrantType {
 
     /**
      *
-     * @param grantType The Oauth 2.0. Grant Type
+     * @param grantType The OAuth 2.0 Grant Type
      */
     GrantType(String grantType) {
         this.grantType = grantType;
@@ -82,7 +82,7 @@ public enum GrantType {
 
     /**
      *
-     * @return The Oauth 2.0. Grant Type
+     * @return The OAuth 2.0. Grant Type
      */
     public String getGrantType() {
         return this.grantType;
