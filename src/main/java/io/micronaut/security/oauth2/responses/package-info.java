@@ -15,7 +15,7 @@
  */
 
 /**
- * Oauth 2.0 responses.
+ * OAuth 2.0 responses.
  *
  * @author Sergio del Amo
  * @since 1.0.0

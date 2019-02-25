@@ -15,7 +15,7 @@
  */
 
 /**
- * Controllers used to receive Oauth 2.0 callbacks.
+ * Controllers used to receive OAuth 2.0 callbacks.
  *
  * @author Sergio del Amo
  * @since 1.0.0

@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Oauth 2.0 authorization response.
+ * OAuth 2.0 authorization response.
  *
  * @author Sergio del Amo
  * @since 1.0.0

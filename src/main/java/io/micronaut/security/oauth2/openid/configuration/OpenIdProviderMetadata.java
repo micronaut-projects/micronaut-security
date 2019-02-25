@@ -327,7 +327,7 @@ public interface OpenIdProviderMetadata {
     String getIntrospectionEndpoint();
 
     /**
-     * @see <a href="https://tools.ietf.org/html/rfc7009">Oauth 2.0 Token Revocation</a>
+     * @see <a href="https://tools.ietf.org/html/rfc7009">OAuth 2.0 Token Revocation</a>
      * @return The fully qualified URL of the server's revocation endpoint defined by Oauth Token Revocation.
      */
     @Nullable

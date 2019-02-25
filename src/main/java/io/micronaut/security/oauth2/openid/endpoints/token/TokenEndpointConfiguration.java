@@ -34,7 +34,7 @@ public interface TokenEndpointConfiguration extends EndpointUrl {
 
     /**
      *
-     * @return Oauth 2.0 Grant type
+     * @return OAuth 2.0 Grant type
      */
     @Nonnull
     String getGrantType();

@@ -65,7 +65,7 @@ public class PasswordGrant {
 
     /**
      *
-     * @return Oauth 2.0 Grant Type.
+     * @return OAuth 2.0 Grant Type.
      */
     @Nonnull
     public String getGrantType() {
@@ -74,7 +74,7 @@ public class PasswordGrant {
 
     /**
      *
-     * @param grantType Oauth 2.0 Grant Type.
+     * @param grantType OAuth 2.0 Grant Type.
      */
     public void setGrantType(@Nonnull String grantType) {
         this.grantType = grantType;

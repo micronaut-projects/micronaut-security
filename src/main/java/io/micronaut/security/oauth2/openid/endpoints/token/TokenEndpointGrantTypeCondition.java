@@ -46,7 +46,7 @@ public abstract class TokenEndpointGrantTypeCondition implements Condition {
 
     /**
      *
-     * @return The Oauth 2.0 Grant type.
+     * @return The OAuth 2.0 Grant type.
      */
     protected abstract GrantType checkedGrantType();
 }

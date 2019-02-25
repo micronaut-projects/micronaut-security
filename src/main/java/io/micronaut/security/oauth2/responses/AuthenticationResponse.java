@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Oauth 2.0 Authentication Response.
+ * OAuth 2.0 Authentication Response.
  *
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.1.2">Authentication Response</a>
  *

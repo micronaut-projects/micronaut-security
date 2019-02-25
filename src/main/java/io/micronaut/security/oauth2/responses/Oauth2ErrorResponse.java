@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Oauth 2.0 ErrorCode Response.
+ * OAuth 2.0 ErrorCode Response.
  *
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2">RFC 6749 - ErrorCode Response</a>
  *

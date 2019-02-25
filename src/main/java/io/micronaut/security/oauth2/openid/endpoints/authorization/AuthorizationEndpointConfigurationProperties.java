@@ -106,7 +106,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     * Sets Oauth 2.0 scopes. Default value (['openid']).
+     * Sets OAuth 2.0 scopes. Default value (['openid']).
      * @param scopes OAuth 2.0 scopes.
      */
     public void setScopes(@Nonnull List<String> scopes) {

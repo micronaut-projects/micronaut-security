@@ -15,7 +15,7 @@
  */
 
 /**
- * Oauth 2.0 response handlers.
+ * OAuth 2.0 response handlers.
  *
  * @author Sergio del Amo
  * @since 1.0.0

@@ -45,7 +45,7 @@ public abstract class AuthorizationRequestResponseTypeCondition implements Condi
 
     /**
      *
-     * @return The Oauth 2.0 Grant type.
+     * @return The OAuth 2.0 Grant type.
      */
     protected abstract String checkedResponseType();
 }

@@ -41,7 +41,7 @@ public enum GrantType {
     AUTHORIZATION_CODE("authorization_code"),
 
     /**
-     *  Oauth 2.0 refresh tokens.
+     *  OAuth 2.0 refresh tokens.
      *
      *  Refresh tokens are issued to the client by the authorization server and are
      *  used to obtain a new access token when the current access token

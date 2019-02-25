@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Encapsulates Oauth 2.0 application configuration.
+ * Encapsulates OAuth 2.0 application configuration.
  *
  * @author Sergio del Amo
  * @since 1.0.0

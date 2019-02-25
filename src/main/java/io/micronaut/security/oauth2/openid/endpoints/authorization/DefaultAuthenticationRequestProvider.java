@@ -54,7 +54,7 @@ public class DefaultAuthenticationRequestProvider implements AuthenticationReque
 
     /**
      *
-     * @param oauthConfiguration Oauth 2.0 Configuration
+     * @param oauthConfiguration OAuth 2.0 Configuration
      * @param authorizationEndpointRequestConfiguration Authorization Endpoint Request Configuration
      * @param stateProvider Authorization state provider
      * @param nonceProvider Authorization nonce provider

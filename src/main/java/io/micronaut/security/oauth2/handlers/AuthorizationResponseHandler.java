@@ -22,7 +22,7 @@ import io.micronaut.security.oauth2.responses.AuthenticationResponse;
 import io.reactivex.Single;
 
 /**
- * Handles Oauth 2.0 Authorization responses.
+ * Handles OAuth 2.0 Authorization responses.
  *
  * @author Sergio del Amo
  * @since 1.0.0
