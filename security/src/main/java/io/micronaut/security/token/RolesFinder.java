@@ -17,37 +17,22 @@
 package io.micronaut.security.token;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Set;
+import java.util.List;
 
 /**
- * Authentication claims.
+ * Retrieves roles from token claims.
  *
- * @since 1.1.0
  * @author Sergio del Amo
+ * @since 1.1.0
  */
-public interface Claims {
+public interface RolesFinder {
 
     /**
-     * Retrieves a value from the claims for the given name.
+     * Retrieves the list of roles from the provided claims.
      *
-     * @param name the claim name
-     * @return {@code null} if the claim not exist or the claim value.
-     */
-    @Nullable
-    Object get(String name);
-
-    /**
-     *
-     * @return All claim names.
+     * @param claims The claims of the token.
+     * @return The granted roles.
      */
     @Nonnull
-    Set<String> names();
-
-    /**
-     *
-     * @param name the claim name
-     * @return {@code false} if the claim does not exist.
-     */
-    boolean contains(String name);
+    List<String> findInClaims(@Nonnull Claims claims);
 }
