@@ -15,8 +15,7 @@ class OpenIdEndpointsSpec extends Specification {
         given:
         String openIdConfigurationJson = 'src/test/resources/okta-openid-configuration.json'
 
-        String controllerPath = '/oauth2/default/.well-known'
-        String path = "${controllerPath}/openid-configuration"
+        String path = '/oauth2/default'
         int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
         String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
         Map<String, Object> mockHttpServerConf = [
@@ -24,17 +23,17 @@ class OpenIdEndpointsSpec extends Specification {
                 'micronaut.security.enabled': true,
                 'micronaut.server.port': mockHttpServerPort,
                 'openidconfigurationfile': openIdConfigurationJson,
-                'opendiconfigurationpath': controllerPath
+                'opendiconfigurationpath': path
         ]
         EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
+        String issuer = "${mockHttpServerUrl}${path}"
 
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
-                'micronaut.security.oauth2.openid-configuration': openIdConfigurationEndpoint
+                'micronaut.security.oauth2.issuer': issuer
         ], Environment.TEST)
 
         when:

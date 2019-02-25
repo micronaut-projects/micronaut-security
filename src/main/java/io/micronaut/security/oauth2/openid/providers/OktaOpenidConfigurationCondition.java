@@ -17,7 +17,7 @@
 package io.micronaut.security.oauth2.openid.providers;
 
 /**
- * Condition which evaluates to true if micronaut.security.oauth.openid-configuration contains okta.
+ * Condition which evaluates to true if micronaut.security.oauth2.issuer contains okta.
  *
  * @author Sergio del Amo
  * @since 1.0.0

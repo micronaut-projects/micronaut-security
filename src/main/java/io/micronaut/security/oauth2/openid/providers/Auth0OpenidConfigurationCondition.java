@@ -17,7 +17,7 @@
 package io.micronaut.security.oauth2.openid.providers;
 
 /**
- * Condition which evaluates to true if micronaut.security.oauth.openid-configuration contains auth0.
+ * Condition which evaluates to true if micronaut.security.oauth2.issuer contains auth0.
  *
  * @author Sergio del Amo
  * @since 1.0.0

@@ -27,10 +27,9 @@ class OpenIdConfigurationClientSpec extends Specification {
         context.close()
     }
 
-    void "OpenIdConfigurationClient bean is loaded if micronaut.security.oauth2.openid-configuration is set"() {
+    void "OpenIdConfigurationClient bean is loaded if micronaut.security.oauth2.issuer is set"() {
         given:
         String openIdConfigurationJson = 'src/test/resources/auth0-openid-configuration.json'
-        String path = '/.well-known/openid-configuration'
         int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
         String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
         Map<String, Object> mockHttpServerConf = [
@@ -42,11 +41,10 @@ class OpenIdConfigurationClientSpec extends Specification {
         EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
-                'micronaut.security.oauth2.openid-configuration': openIdConfigurationEndpoint
+                'micronaut.security.oauth2.issuer': mockHttpServerUrl
         ], Environment.TEST)
 
         when:

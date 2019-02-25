@@ -12,7 +12,6 @@ class OpenIdProviderMetadataSpec extends Specification {
     void "A OpenIdProviderMetadata bean is loaded from a Auth0 remote openid-configuration endpoint"() {
         given:
         String openIdConfigurationJson = 'src/test/resources/auth0-openid-configuration.json'
-        String path = '/.well-known/openid-configuration'
         int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
         String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
         Map<String, Object> mockHttpServerConf = [
@@ -24,11 +23,10 @@ class OpenIdProviderMetadataSpec extends Specification {
         EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
-                'micronaut.security.oauth2.openid-configuration': openIdConfigurationEndpoint
+                'micronaut.security.oauth2.issuer': mockHttpServerUrl
         ], Environment.TEST)
 
         when:
@@ -97,7 +95,7 @@ class OpenIdProviderMetadataSpec extends Specification {
     void "A OpenIdProviderMetadata bean is loaded from a AWS Cognito remote openid-configuration endpoint"() {
         given:
         String openIdConfigurationJson = 'src/test/resources/aws-cognito-openid-configuration.json'
-        String path = '/eu-west-1_ZLiEFD4b6/.well-known/openid-configuration'
+        String poolId = '/eu-west-1_ZLiEFD4b6'
         int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
         String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
         Map<String, Object> mockHttpServerConf = [
@@ -105,16 +103,16 @@ class OpenIdProviderMetadataSpec extends Specification {
                 'micronaut.security.enabled': true,
                 'micronaut.server.port': mockHttpServerPort,
                 'openidconfigurationfile': openIdConfigurationJson,
-                'opendiconfigurationpath': '/eu-west-1_ZLiEFD4b6/.well-known'
+                'opendiconfigurationpath': "${poolId}"
         ]
         EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
+        String issuer = "${mockHttpServerUrl}${poolId}"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
-                'micronaut.security.oauth2.openid-configuration': openIdConfigurationEndpoint
+                'micronaut.security.oauth2.issuer': issuer
         ], Environment.TEST)
 
         when:
@@ -166,7 +164,7 @@ class OpenIdProviderMetadataSpec extends Specification {
     void "A OpenIdProviderMetadata bean is loaded from a Okta remote openid-configuration endpoint"() {
         given:
         String openIdConfigurationJson = 'src/test/resources/okta-openid-configuration.json'
-        String path = '/oauth2/default/.well-known/openid-configuration'
+        String path = '/oauth2/default'
         int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
         String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
         Map<String, Object> mockHttpServerConf = [
@@ -174,16 +172,16 @@ class OpenIdProviderMetadataSpec extends Specification {
                 'micronaut.security.enabled': true,
                 'micronaut.server.port': mockHttpServerPort,
                 'openidconfigurationfile': openIdConfigurationJson,
-                'opendiconfigurationpath': '/oauth2/default/.well-known'
+                'opendiconfigurationpath': path
         ]
         EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
+        String issuer = "${mockHttpServerUrl}${path}"
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
-                'micronaut.security.oauth2.openid-configuration': openIdConfigurationEndpoint
+                'micronaut.security.oauth2.issuer': issuer
         ], Environment.TEST)
 
         when:

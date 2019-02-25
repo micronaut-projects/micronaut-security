@@ -10,7 +10,7 @@ import io.micronaut.security.rules.SecurityRule
 @Requires(property = 'openidconfigurationfile')
 @Requires(property = 'spec.name', value='MockHttpServer')
 @Secured(SecurityRule.IS_ANONYMOUS)
-@Controller('${opendiconfigurationpath:/.well-known}')
+@Controller('${opendiconfigurationpath:/}')
 class FileOpenIdConfigurationController {
 
     private final int called = 0
@@ -22,7 +22,7 @@ class FileOpenIdConfigurationController {
         text = jsonFile.text
     }
 
-    @Get("/openid-configuration")
+    @Get("/.well-known/openid-configuration")
     String index() {
         called++
         text

@@ -15,8 +15,7 @@ class DefaultAuthorizationRedirectUrlProviderSpec extends Specification {
     void "AuthorizationRedirectUrlProvider build a url"() {
         given:
         String openIdConfigurationJson = 'src/test/resources/aws-cognito-openid-configuration.json'
-        String controllerPath = '/eu-west-1_ZLiEFD4b6/.well-known'
-        String path = "${controllerPath}/openid-configuration"
+        String poolId = '/eu-west-1_ZLiEFD4b6'
 
         int mockHttpServerPort = SocketUtils.findAvailableTcpPort()
         String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
@@ -25,17 +24,17 @@ class DefaultAuthorizationRedirectUrlProviderSpec extends Specification {
                 'micronaut.security.enabled': true,
                 'micronaut.server.port': mockHttpServerPort,
                 'openidconfigurationfile': openIdConfigurationJson,
-                'opendiconfigurationpath': controllerPath
+                'opendiconfigurationpath': poolId
         ]
         EmbeddedServer mockHttpServer = ApplicationContext.run(EmbeddedServer, mockHttpServerConf)
 
         and:
-        String openIdConfigurationEndpoint = "${mockHttpServerUrl}${path}"
+        String issuer = "${mockHttpServerUrl}${poolId}"
         ApplicationContext context = ApplicationContext.run([
             (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
             'micronaut.security.enabled'                    : true,
             'micronaut.security.oauth2.client-id'           : 'XXXX',
-            'micronaut.security.oauth2.openid-configuration': openIdConfigurationEndpoint
+            'micronaut.security.oauth2.issuer': issuer
         ], Environment.TEST)
 
         when:

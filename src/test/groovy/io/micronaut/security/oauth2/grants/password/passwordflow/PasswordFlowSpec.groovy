@@ -32,10 +32,9 @@ class PasswordFlowSpec extends Specification {
         when:
         HttpClient mockHttpClient = mockHttpServer.applicationContext.createBean(HttpClient, mockHttpServer.URL)
 
-        String configpath = "/.well-known/openid-configuration"
-        String openidConfigurationUrl = "${mockHttpServerUrl}${configpath}".toString()
+        String openidConfigurationEndpointUri = "${mockHttpServerUrl}/.well-known/openid-configuration".toString()
 
-        HttpRequest openidConfigurationReq = HttpRequest.GET(configpath)
+        HttpRequest openidConfigurationReq = HttpRequest.GET(openidConfigurationEndpointUri)
         HttpResponse<String> rsp = mockHttpClient.toBlocking().exchange(openidConfigurationReq, String)
 
         then:
@@ -49,14 +48,14 @@ class PasswordFlowSpec extends Specification {
                 'micronaut.security.enabled': true,
                 'micronaut.security.oauth2.client-id': 'XXXX',
                 'micronaut.security.oauth2.client-secret': 'YYYY',
-                'micronaut.security.oauth2.openid-configuration': openidConfigurationUrl,
+                'micronaut.security.oauth2.issuer': mockHttpServerUrl,
                 "micronaut.security.oauth2.grant-type-password.enabled": true
         ]
         EmbeddedServer server = ApplicationContext.run(EmbeddedServer, conf)
-        String openIdConfiguration = server.applicationContext.getProperty("micronaut.security.oauth2.openid-configuration", String)
+        String issuer = server.applicationContext.getProperty("micronaut.security.oauth2.issuer", String)
 
         then:
-        openIdConfiguration
+        issuer
 
         when:
         OpenIdConfigurationClient openIdConfigurationClient = server.applicationContext.getBean(OpenIdConfigurationClient)
