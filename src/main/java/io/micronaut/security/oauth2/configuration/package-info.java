@@ -15,7 +15,7 @@
  */
 
 /**
- * Oauth 2 Configuration classes.
+ * OAuth 2.0 Configuration classes.
  *
  * @author Sergio del Amo
  * @since 1.0.0

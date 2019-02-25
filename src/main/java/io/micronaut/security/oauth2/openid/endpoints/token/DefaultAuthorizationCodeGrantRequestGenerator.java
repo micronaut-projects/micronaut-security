@@ -56,7 +56,7 @@ public class DefaultAuthorizationCodeGrantRequestGenerator implements Authorizat
 
     /**
      *
-     * @param oauthConfiguration Oauth 2 Configuration
+     * @param oauthConfiguration OAuth 2.0 Configuration
      * @param openIdProviderMetadata OpenID provider metadata.
      * @param tokenEndpointConfiguration Token Endpoint configuration
      * @param defaultRedirectUrlProvider The Default Redirect Url Provider.

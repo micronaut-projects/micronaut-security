@@ -56,7 +56,7 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
     /**
      *
      * @param request the Original request prior redirect.
-     * @param oauthConfiguration Oauth 2 Configuration
+     * @param oauthConfiguration OAuth 2.0 Configuration
      * @param authorizationEndpointConfiguration Authorization Endpoint Configuration
      * @param stateProvider State Provider
      * @param nonceProvider Nonce Provider

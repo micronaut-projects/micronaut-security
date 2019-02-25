@@ -15,7 +15,7 @@
  */
 
 /**
- * Oauth 2 related classes classes.
+ * OAuth 2.0 related classes classes.
  *
  * @author Sergio del Amo
  * @since 1.0.0

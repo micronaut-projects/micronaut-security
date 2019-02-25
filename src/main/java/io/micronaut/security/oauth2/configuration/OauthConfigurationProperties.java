@@ -41,7 +41,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     private String clientSecret;
 
     /**
-     * Oauth 2 Application Client ID.
+     * OAuth 2.0 Application Client ID.
      * @param clientId The application's Client ID.
      */
     public void setClientId(@Nonnull String clientId) {
@@ -49,7 +49,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     }
 
     /**
-     * Oauth 2 Application Client Secret. Optional.
+     * OAuth 2.0 Application Client Secret. Optional.
      * @param clientSecret The application's Client Secret.
      */
     public void setClientSecret(@Nullable String clientSecret) {

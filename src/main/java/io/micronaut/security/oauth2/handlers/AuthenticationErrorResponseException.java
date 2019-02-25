@@ -35,7 +35,7 @@ public class AuthenticationErrorResponseException extends RuntimeException {
     /**
      * Constructor.
      *
-     * @param errorResponse Oauth 2 Authentication Error Response.
+     * @param errorResponse OAuth 2.0 Authentication Error Response.
      */
     public AuthenticationErrorResponseException(ErrorResponse errorResponse) {
         if (LOG.isDebugEnabled()) {

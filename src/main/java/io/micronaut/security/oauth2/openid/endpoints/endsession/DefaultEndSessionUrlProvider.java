@@ -59,7 +59,7 @@ public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
     /**
      *
      * @param tokenResolver Token Resolver
-     * @param oauthConfiguration Oauth 2 Configuration
+     * @param oauthConfiguration OAuth 2.0 Configuration
      * @param openIdEndpoints Open ID endpoints
      * @param endSessionEndpointConfiguration End-session endpoint configuration
      */
