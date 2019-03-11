@@ -32,7 +32,10 @@ import java.util.Map;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-@Requires(beans = EndsessionViewModelProcessorConfiguration.class)
+@Requires(beans = {
+        EndsessionViewModelProcessorConfiguration.class,
+        EndSessionUrlProvider.class
+})
 @Requires(classes = ViewModelProcessor.class)
 @Singleton
 public class EndsessionViewModelProcessor implements ViewModelProcessor {
