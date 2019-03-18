@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Client Credentials Grant.
@@ -28,10 +30,12 @@ import javax.annotation.Nullable;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public class ClientCredentialsGrant {
+public class ClientCredentialsGrant implements AsMap {
+    public static final String KEY_GRANT_TYPE = "grant_type";
+    public static final String KEY_SCOPES = "scopes";
 
     @Nonnull
-    @JsonProperty("grant_type")
+    @JsonProperty(KEY_GRANT_TYPE)
     private String grantType = GrantType.CLIENT_CREDENTIALS.getGrantType();
 
     @Nullable
@@ -68,5 +72,17 @@ public class ClientCredentialsGrant {
      */
     public void setScope(@Nullable String scope) {
         this.scope = scope;
+    }
+
+    /**
+     *
+     * @return this object as a Map
+     */
+    @Override
+    public Map<String, String> toMap() {
+        Map<String, String> m = new HashMap<>(2);
+        m.put(KEY_GRANT_TYPE, getGrantType());
+        m.put(KEY_SCOPES, getScope());
+        return m;
     }
 }

@@ -29,7 +29,7 @@ import java.util.Map;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public class AuthorizationCodeGrant {
+public class AuthorizationCodeGrant implements AsMap {
     public static final String KEY_GRANT_TYPE = "grant_type";
     public static final String KEY_CLIENT_ID = "client_id";
     public static final String KEY_CLIENT_SECRET = "client_secret";
@@ -150,6 +150,7 @@ public class AuthorizationCodeGrant {
      *
      * @return this object as a Map
      */
+    @Override
     public Map<String, String> toMap() {
         Map<String, String> m = new HashMap<>(5);
         m.put(KEY_GRANT_TYPE, getGrantType());
