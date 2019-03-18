@@ -22,6 +22,7 @@ import io.micronaut.security.oauth2.openid.OpenIdScope;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,7 +53,9 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
      * Default scope.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_SCOPE = OpenIdScope.OPENID.getScope();
+    public static final List<String> DEFAULT_SCOPE = Arrays.asList(OpenIdScope.OPENID.getScope(),
+            OpenIdScope.EMAIL.getScope(),
+            OpenIdScope.PROFILE.getScope());
 
     @Nullable
     private String url;
@@ -61,7 +64,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     private String redirectUri;
 
     @Nonnull
-    private List<String> scopes = Collections.singletonList(DEFAULT_SCOPE);
+    private List<String> scopes = DEFAULT_SCOPE;
 
     @Nonnull
     private String responseType = DEFAULT_RESPONSETYPE;
@@ -106,7 +109,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
     }
 
     /**
-     * Sets OAuth 2.0 scopes. Default value (['openid']).
+     * Sets OAuth 2.0 scopes. Default value (['openid', 'email', 'profile']).
      * @param scopes OAuth 2.0 scopes.
      */
     public void setScopes(@Nonnull List<String> scopes) {

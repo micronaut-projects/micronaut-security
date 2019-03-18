@@ -20,6 +20,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.uri.UriBuilder;
+import io.micronaut.security.oauth2.openid.OpenIdScope;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.openid.endpoints.DefaultRedirectUrlProvider;
 import org.slf4j.Logger;
@@ -130,7 +131,7 @@ public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRed
     protected void populateScope(@Nonnull AuthenticationRequest authenticationRequest,
                                  @Nonnull Map<String, Object> parameters) {
         Optional<String> optionalStr = authenticationRequest.getScopes().stream().reduce((a, b) -> a + StringUtils.SPACE + b);
-        parameters.put(AuthenticationRequest.PARAMETER_SCOPE, optionalStr.orElse(AuthorizationEndpointConfigurationProperties.DEFAULT_SCOPE));
+        parameters.put(AuthenticationRequest.PARAMETER_SCOPE, optionalStr.orElse(OpenIdScope.OPENID.getScope()));
     }
 
     /**
