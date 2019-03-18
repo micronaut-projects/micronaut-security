@@ -21,6 +21,7 @@ import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 
@@ -40,14 +41,19 @@ public class JwksSignatureFactory {
 
     private final OpenIdConfiguration openIdConfiguration;
     private final JwksSignatureFactoryConfiguration jwksSignatureFactoryConfiguration;
+    private final JwkValidator jwkValidator;
 
     /**
      * @param jwksSignatureFactoryConfiguration JWKS Signature Factory Configuration
      * @param openIdConfiguration Open ID Configuration
+     * @param jwkValidator JSON Web Key Validator
      */
-    public JwksSignatureFactory(OpenIdConfiguration openIdConfiguration, JwksSignatureFactoryConfiguration jwksSignatureFactoryConfiguration) {
+    public JwksSignatureFactory(OpenIdConfiguration openIdConfiguration,
+                                JwksSignatureFactoryConfiguration jwksSignatureFactoryConfiguration,
+                                JwkValidator jwkValidator) {
         this.openIdConfiguration = openIdConfiguration;
         this.jwksSignatureFactoryConfiguration = jwksSignatureFactoryConfiguration;
+        this.jwkValidator = jwkValidator;
     }
 
     /**
@@ -58,7 +64,6 @@ public class JwksSignatureFactory {
     @Singleton
     public JwksSignature jwsk() {
         return new JwksSignature(new JwksSignatureConfiguration() {
-
             @Nonnull
             @Override
             public String getUrl() {
@@ -70,6 +75,6 @@ public class JwksSignatureFactory {
             public KeyType getKeyType() {
                 return jwksSignatureFactoryConfiguration.getKeyType();
             }
-        });
+        }, jwkValidator);
     }
 }
