@@ -89,13 +89,13 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
     @Override
     @Nullable
     public String getState() {
-        return getStateProvider().isPresent() ? getStateProvider().get().generateState(request) : null;
+        return getStateProvider().map(sp -> sp.generateState(request)).orElse(null);
     }
 
     @Nullable
     @Override
     public String getNonce() {
-        return getNonceProvider().isPresent() ? getNonceProvider().get().generateNonce() : null;
+        return getNonceProvider().map(NonceProvider::generateNonce).orElse(null);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
         return getAuthorizationEndpointConfiguration().getResponseType();
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public String getRedirectUri() {
         return getAuthorizationEndpointConfiguration().getRedirectUri();
@@ -149,13 +149,13 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
     @Nullable
     @Override
     public String getIdTokenHint() {
-        return getIdTokenHintProvider().isPresent() ? getIdTokenHintProvider().get().resolveIdTokenHint() : null;
+        return getIdTokenHintProvider().map(IdTokenHintProvider::resolveIdTokenHint).orElse(null);
     }
 
     @Nullable
     @Override
     public String getLoginHint() {
-        return getLoginHintProvider().isPresent() ? getLoginHintProvider().get().resolveLoginHint() : null;
+        return getLoginHintProvider().map(LoginHintProvider::resolveLoginHint).orElse(null);
     }
 
     @Nullable
@@ -164,7 +164,6 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
         return getAuthorizationEndpointConfiguration().getAcrValues();
     }
 
-    @Nonnull
     private OauthConfiguration getOauthConfiguration() {
         return oauthConfiguration;
     }
@@ -185,7 +184,6 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
         return Optional.ofNullable(nonceProvider);
     }
 
-    @Nonnull
     private AuthorizationEndpointRequestConfiguration getAuthorizationEndpointConfiguration() {
         return authorizationEndpointConfiguration;
     }
