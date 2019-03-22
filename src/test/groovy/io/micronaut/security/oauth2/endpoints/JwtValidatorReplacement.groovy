@@ -7,6 +7,7 @@ import io.micronaut.security.authentication.DefaultAuthentication
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator
+import io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidator
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 
@@ -16,8 +17,8 @@ import javax.inject.Singleton
 @Singleton
 @Requires(property = 'spec.name', value='AuthorizationCodeControllerSpec')
 class JwtValidatorReplacement extends JwtTokenValidator {
-    JwtValidatorReplacement(Collection<SignatureConfiguration> signatureConfigurations, Collection<EncryptionConfiguration> encryptionConfigurations, Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators) {
-        super(signatureConfigurations, encryptionConfigurations, genericJwtClaimsValidators)
+    JwtValidatorReplacement(Collection<SignatureConfiguration> signatureConfigurations, Collection<EncryptionConfiguration> encryptionConfigurations, Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators, JwtAuthenticationFactory jwtAuthenticationFactory) {
+        super(signatureConfigurations, encryptionConfigurations, genericJwtClaimsValidators, jwtAuthenticationFactory)
     }
 
     Optional<Authentication> authenticationIfValidJwtSignatureAndClaims(String token, Collection<? extends JwtClaimsValidator> claimsValidators) {
