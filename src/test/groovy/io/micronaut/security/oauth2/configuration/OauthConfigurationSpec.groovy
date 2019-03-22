@@ -8,7 +8,7 @@ import spock.lang.Specification
 class OauthConfigurationSpec extends Specification {
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
-    void "OauthConfiguration is disabled if client-secret is present but no client-id"() {
+    void "OauthConfiguration is disabled if client-secret is present but not enabled"() {
         given:
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
@@ -26,12 +26,12 @@ class OauthConfigurationSpec extends Specification {
         context.close()
     }
 
-    void "OauthConfiguration is enabled if client-id is present"() {
+    void "OauthConfiguration is present if enabled is set"() {
         given:
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
                 'micronaut.security.enabled': true,
-                'micronaut.security.oauth2.client-id': 'YYYY',
+                'micronaut.security.oauth2.enabled': true,
         ], Environment.TEST)
 
         when:

@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.configuration;
 
+import io.micronaut.core.util.Toggleable;
+
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
@@ -25,7 +27,7 @@ import javax.validation.constraints.NotNull;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public interface OauthConfiguration {
+public interface OauthConfiguration extends Toggleable {
 
     /**
      *

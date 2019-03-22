@@ -33,6 +33,7 @@ class DefaultAuthorizationRedirectUrlProviderSpec extends Specification {
         ApplicationContext context = ApplicationContext.run([
             (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
             'micronaut.security.enabled'                    : true,
+            'micronaut.security.oauth2.enabled'             : true,
             'micronaut.security.oauth2.client-id'           : 'XXXX',
             'micronaut.security.oauth2.issuer': issuer
         ], Environment.TEST)

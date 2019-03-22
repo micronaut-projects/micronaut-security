@@ -25,7 +25,7 @@ class AuthorizationCodeControllerPathSpec extends Specification {
             (SPEC_NAME_PROPERTY): getClass().simpleName,
             'micronaut.security.enabled': true,
             'micronaut.security.token.jwt.enabled': true,
-            'micronaut.security.oauth2.client-id': 'XXX',
+            'micronaut.security.oauth2.enabled': true,
             'micronaut.security.oauth2.token.redirect-uri': 'http://localhost:8080',
             'micronaut.security.oauth2.token.url': 'http://localhost:8080',
             'micronaut.security.endpoints.authcode.controller-path': '/cb',
