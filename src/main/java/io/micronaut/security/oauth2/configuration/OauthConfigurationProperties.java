@@ -30,7 +30,8 @@ import javax.annotation.Nullable;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-@Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
+@Requires(property = OauthConfigurationProperties.PREFIX + ".client-id")
 @ConfigurationProperties(OauthConfigurationProperties.PREFIX)
 public class OauthConfigurationProperties implements OauthConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".oauth2";
@@ -39,7 +40,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
 
     @Nonnull
     private String clientId;

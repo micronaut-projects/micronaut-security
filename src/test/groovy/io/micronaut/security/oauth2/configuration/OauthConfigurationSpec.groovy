@@ -60,4 +60,38 @@ class OauthConfigurationSpec extends Specification {
         cleanup:
         context.close()
     }
+
+
+    void "OauthConfiguration is enabled via application-xxx.yml file"() {
+        given:
+        ApplicationContext context = ApplicationContext.run([
+                (SPEC_NAME_PROPERTY): getClass().simpleName,
+        ], Environment.TEST, "xxx")
+
+        when:
+        OauthConfiguration oauthConfiguration = context.getBean(OauthConfiguration)
+
+        then:
+        oauthConfiguration.clientId == "XXXXX"
+
+        cleanup:
+        context.close()
+    }
+
+    void "OauthConfiguration can be disabled after enabling it via application-xxx.yml file"() {
+        given:
+        ApplicationContext context = ApplicationContext.run([
+                (SPEC_NAME_PROPERTY): getClass().simpleName,
+                "micronaut.security.oauth2.enabled": false,
+        ], Environment.TEST, "xxx")
+
+        when:
+        context.getBean(OauthConfiguration)
+
+        then:
+        thrown(NoSuchBeanException)
+
+        cleanup:
+        context.close()
+    }
 }
