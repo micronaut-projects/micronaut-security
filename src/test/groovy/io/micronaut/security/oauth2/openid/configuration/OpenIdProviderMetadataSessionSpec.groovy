@@ -47,8 +47,6 @@ class OpenIdProviderMetadataSessionSpec extends Specification {
 
         cleanup:
         mockHttpServer.close()
-
-        and:
         context.close()
     }
 }

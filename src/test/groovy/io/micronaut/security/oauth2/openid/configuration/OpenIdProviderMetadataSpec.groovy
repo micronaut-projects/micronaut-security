@@ -87,8 +87,6 @@ class OpenIdProviderMetadataSpec extends Specification {
 
         cleanup:
         mockHttpServer.close()
-
-        and:
         context.close()
     }
 
@@ -156,8 +154,6 @@ class OpenIdProviderMetadataSpec extends Specification {
 
         cleanup:
         mockHttpServer.close()
-
-        and:
         context.close()
     }
 
@@ -258,8 +254,6 @@ class OpenIdProviderMetadataSpec extends Specification {
 
         cleanup:
         mockHttpServer.close()
-
-        and:
         context.close()
     }
 }

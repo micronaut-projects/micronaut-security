@@ -73,8 +73,6 @@ class EndSessionUrlProviderSpec extends Specification {
 
         cleanup:
         mockHttpServer.close()
-
-        and:
         context.close()
     }
 }

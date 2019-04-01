@@ -32,6 +32,6 @@ class AuthorizationEndpointRequestConfigurationSpec extends Specification {
 
     void "AuthorizationEndpointRequestConfiguration default scopes are [openid]"() {
         expect:
-        authorizationEndpointRequestConfiguration.scopes.sort() == ['openid', 'email', 'profile'].sort()
+        authorizationEndpointRequestConfiguration.scopes == ['openid', 'email', 'profile']
     }
 }

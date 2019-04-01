@@ -71,8 +71,6 @@ class OpenIdConfigurationClientSpec extends Specification {
 
         cleanup:
         mockHttpServer.close()
-
-        and:
         context.close()
     }
 }

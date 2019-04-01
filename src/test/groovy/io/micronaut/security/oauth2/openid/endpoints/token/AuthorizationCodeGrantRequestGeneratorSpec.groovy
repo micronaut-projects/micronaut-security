@@ -69,8 +69,6 @@ class AuthorizationCodeGrantRequestGeneratorSpec extends Specification {
 
         cleanup:
         mockHttpServer.close()
-
-        and:
         context.close()
     }
 }

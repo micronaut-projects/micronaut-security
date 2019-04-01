@@ -57,35 +57,15 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
             OpenIdScope.EMAIL.getScope(),
             OpenIdScope.PROFILE.getScope());
 
-    @Nullable
     private String url;
-
-    @Nullable
     private String redirectUri;
-
-    @Nonnull
     private List<String> scopes = DEFAULT_SCOPE;
-
-    @Nonnull
     private String responseType = DEFAULT_RESPONSETYPE;
-
-    // This is nullable to enable users to set it to null because the Spec says "The use of this parameter is NOT RECOMMENDED when the Response Mode that would be requested is the default mode specified for the Response Type."
-    @Nullable
     private String responseMode = DEFAULT_RESPONSEMODE;
-
-    @Nullable
     private Display display;
-
-    @Nullable
     private Prompt prompt;
-
-    @Nullable
     private Integer maxAge;
-
-    @Nullable
     private List<String> uiLocales;
-
-    @Nullable
     private List<String>  acrValues;
 
     @Nullable
@@ -152,7 +132,7 @@ public class AuthorizationEndpointConfigurationProperties implements Authorizati
 
     /**
      * Informs the Authorization Server of the mechanism to be used for returning parameters from the Authorization Endpoint. Default value ({@value #DEFAULT_RESPONSEMODE}).
-     * @param responseMode Informs the Authorization Server of the mechanism to be used for returning parameters from the Authorization Endpoint.
+     * @param responseMode Informs the authorization server of the mechanism to be used for returning parameters from the authorization endpoint. Allows null because the spec says "The use of this parameter is NOT RECOMMENDED when the Response Mode that would be requested is the default mode specified for the Response Type".
      */
     public void setResponseMode(@Nullable String responseMode) {
         this.responseMode = responseMode;

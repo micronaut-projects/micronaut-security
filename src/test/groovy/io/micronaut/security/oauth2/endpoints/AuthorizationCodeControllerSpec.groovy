@@ -117,14 +117,8 @@ class AuthorizationCodeControllerSpec extends Specification {
 
         cleanup:
         mockHttpClient.close()
-
-        and:
         mockHttpServer.close()
-
-        and:
         client.close()
-
-        and:
         embeddedServer.close()
     }
 }
