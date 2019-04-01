@@ -1,5 +1,0 @@
-micronaut:
-  security:
-    enabled: true
-    oauth2:
-      client-id: XXXXX
