@@ -16,7 +16,9 @@
 
 package io.micronaut.security.oauth2.openid.configuration;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Introspected;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,165 +31,49 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 1.0.0
  */
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class OpenIdConfiguration implements OpenIdProviderMetadata, OpenIdProviderMetadataSession {
 
-    @Nonnull
-    @JsonProperty("authorization_endpoint")
     private String authorizationEndpoint;
-
-    @Nonnull
-    @JsonProperty("id_token_signing_alg_values_supported")
     private List<String> idTokenSigningAlgValuesSupported;
-
-    @Nonnull
     private String issuer;
-
-    @Nonnull
-    @JsonProperty("jwks_uri")
     private String jwksUri;
-
-    @Nullable
-    @JsonProperty("acr_values_supported")
     private List<String> acrValuesSupported;
-
-    @Nullable
-    @JsonProperty("response_types_supported")
     private List<String> responseTypesSupported;
-
-    @Nullable
-    @JsonProperty("response_modes_supported")
     private List<String> responseModesSupported;
-
-    @Nullable
-    @JsonProperty("scopes_supported")
     private List<String> scopesSupported;
-
-    @Nullable
-    @JsonProperty("grant_types_supported")
     private List<String> grantTypesSupported;
-
-    @Nonnull
-    @JsonProperty("subject_types_supported")
     private List<String> subjectTypesSupported;
-
-    @Nullable
-    @JsonProperty("token_endpoint")
     private String tokenEndpoint;
-
-    @Nullable
-    @JsonProperty("token_endpoint_auth_methods_supported")
     private List<String> tokenEndpointAuthMethodsSupported;
-
-    @Nullable
-    @JsonProperty("userinfo_endpoint")
     private String userinfoEndpoint;
-
-    @Nullable
-    @JsonProperty("registration_endpoint")
     private String registrationEndpoint;
-
-    @Nullable
-    @JsonProperty("claims_supported")
     private List<String> claimsSupported;
-
-    @Nullable
-    @JsonProperty("code_challenge_methods_supported")
     private List<String> codeChallengeMethodsSupported;
-
-    @Nullable
-    @JsonProperty("introspection_endpoint")
     private String introspectionEndpoint;
-
-    @Nullable
-    @JsonProperty("introspection_endpoint_auth_methods_supported")
     private List<String> introspectionEndpointAuthMethodsSupported;
-
-    @Nullable
-    @JsonProperty("revocation_endpoint")
     private String revocationEndpoint;
-
-    @Nullable
-    @JsonProperty("revocation_endpoint_auth_methods_supported")
     private List<String> revocationEndpointAuthMethodsSupported;
-
-    @Nullable
-    @JsonProperty("end_session_endpoint")
     private String endSessionEndpoint;
-
-    @Nullable
-    @JsonProperty("request_parameter_supported")
     private Boolean requestParameterSupported;
-
-    @Nullable
-    @JsonProperty("request_uri_parameter_supported")
     private Boolean requestUriParameterSupported;
-
-    @Nullable
-    @JsonProperty("require_request_uri_registration")
     private Boolean requireRequestUriRegistration;
-
-    @Nullable
-    @JsonProperty("request_object_signing_alg_values_supported")
     private List<String> requestObjectSigningAlgValuesSupported;
-
-    @Nullable
-    @JsonProperty("service_documentation")
     private String serviceDocumentation;
-
-    @Nullable
-    @JsonProperty("id_token_encryption_enc_values_supported")
     private List<String> idTokenEncryptionEncValuesSupported;
-
-    @Nullable
-    @JsonProperty("display_values_supported")
     private List<String> displayValuesSupported;
-
-    @Nullable
-    @JsonProperty("claim_types_supported")
     private List<String> claimTypesSupported;
-
-    @Nullable
-    @JsonProperty("claims_parameter_supported")
     private Boolean claimsParameterSupported = Boolean.FALSE;
-
-    @Nullable
-    @JsonProperty("op_tos_uri")
     private String opTosUri;
-
-    @Nullable
-    @JsonProperty("op_policy_uri")
     private String opPolicyUri;
-
-    @Nullable
-    @JsonProperty("uri_locales_supported")
     private List<String> uriLocalesSupported;
-
-    @Nullable
-    @JsonProperty("claims_locales_supported")
     private List<String> claimsLocalesSupported;
-
-    @JsonProperty("userinfo_encryption_alg_values_supported")
-    @Nullable
     private List<String> userinfoEncryptionAlgValuesSupported;
-
-    @Nullable
-    @JsonProperty("userinfo_encryption_enc_values_supported")
     private List<String> userinfoEncryptionEncValuesSupported;
-
-    @Nullable
-    @JsonProperty("token_endpoint_auth_signing_alg_values_supported")
     private List<String> tokenEndpointAuthSigningAlgValuesSupported;
-
-    @Nullable
-    @JsonProperty("request_object_encryption_alg_values_supported")
     private List<String> requestObjectEncryptionAlgValuesSupported;
-
-    @Nullable
-    @JsonProperty("request_object_encryption_enc_values_supported")
     private List<String> requestObjectEncryptionEncValuesSupported;
-
-    @Nullable
-    @JsonProperty("check_session_if_frame")
     private String checkSessionIframe;
 
     /**

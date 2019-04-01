@@ -44,7 +44,6 @@ import java.util.List;
 public class AudienceJwtClaimsValidator implements IdTokenClaimsValidator {
     private static final Logger LOG = LoggerFactory.getLogger(AudienceJwtClaimsValidator.class);
 
-    @Nonnull
     private final OauthConfiguration oauthConfiguration;
 
     /**

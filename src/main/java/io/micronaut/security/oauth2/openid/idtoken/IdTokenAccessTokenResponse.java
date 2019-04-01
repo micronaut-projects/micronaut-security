@@ -17,6 +17,9 @@
 package io.micronaut.security.oauth2.openid.idtoken;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.security.oauth2.responses.AccessTokenResponse;
 
 import javax.annotation.Nonnull;
@@ -32,10 +35,10 @@ import java.util.Map;
  * @author Sergio del Amo
  * @since 1.0.0
  */
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class IdTokenAccessTokenResponse extends AccessTokenResponse {
 
-    @Nonnull
-    @JsonProperty("id_token")
     private String idToken;
 
     /**

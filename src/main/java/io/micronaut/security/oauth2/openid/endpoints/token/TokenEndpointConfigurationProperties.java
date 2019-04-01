@@ -48,19 +48,10 @@ public class TokenEndpointConfigurationProperties implements TokenEndpointConfig
 
     private final AuthMethodProvider authMethodProvider;
 
-    @Nullable
     private String url;
-
-    @Nonnull
     private String grantType = DEFAULT_GRANTTYPE;
-
-    @Nullable
     private String authMethod;
-
-    @Nonnull
     private MediaType contentType = DEFAULT_CONTENT_TYPE;
-
-    @Nullable
     private String redirectUri;
 
     /**

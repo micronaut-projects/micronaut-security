@@ -32,25 +32,12 @@ import java.util.List;
 public class OpenIdProviderConfigurationProperties implements OpenIdProviderConfiguration {
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".openid";
 
-    @Nullable
     private String openidIssuer;
-
-    @Nullable
     private List<String> scopesSupported;
-
-    @Nullable
     private List<String> responseTypesSupported;
-
-    @Nullable
     private List<String> subjectTypesSupported;
-
-    @Nullable
     private List<String> idTokenEncryptionEncValuesSupported;
-
-    @Nullable
     private List<String> requestObjectSigningAlgValuesSupported;
-
-    @Nullable
     private String jwksUri;
 
     @Nullable

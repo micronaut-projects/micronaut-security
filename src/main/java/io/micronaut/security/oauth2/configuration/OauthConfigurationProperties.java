@@ -42,12 +42,8 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
-    @Nonnull
     private String clientId;
-
-    @Nullable
     private String clientSecret;
-
     private boolean enabled = DEFAULT_ENABLED;
 
     /**

@@ -31,10 +31,7 @@ import javax.annotation.Nullable;
  */
 public class OpenIdProviderMetadataSessionAdapter implements OpenIdProviderMetadataSession {
 
-    @Nullable
     private final OpenIdProviderMetadataSession openIdProviderMetadataSession;
-
-    @Nonnull
     private final EndSessionEndpointConfiguration endSessionEndpointConfiguration;
 
     /**
@@ -61,7 +58,6 @@ public class OpenIdProviderMetadataSessionAdapter implements OpenIdProviderMetad
         return resolveUrl(endSessionEndpointConfiguration, openIdProviderMetadataSession != null ? openIdProviderMetadataSession.getEndSessionEndpoint() : null);
     }
 
-    @Nullable
     private String resolveUrl(@Nonnull EndpointUrl endpointUrl, @Nullable String url) {
         return endpointUrl.getUrl() != null ? endpointUrl.getUrl() : url;
     }

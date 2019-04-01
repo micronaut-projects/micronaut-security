@@ -27,13 +27,9 @@ import javax.annotation.Nullable;
  * @since 1.0.0
  */
 public class EndSessionParameter {
-    @Nonnull
+
     private String name;
-
-    @Nullable
     private String value;
-
-    @Nonnull
     private EndSessionParameterType type = EndSessionParameterType.STRING;
 
     /**

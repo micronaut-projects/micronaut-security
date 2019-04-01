@@ -34,22 +34,11 @@ import javax.inject.Singleton;
 @Singleton
 public class DefaultAuthenticationRequestProvider implements AuthenticationRequestProvider {
 
-    @Nonnull
     private final OauthConfiguration oauthConfiguration;
-
-    @Nonnull
     private final AuthorizationEndpointRequestConfiguration authorizationEndpointRequestConfiguration;
-
-    @Nullable
     private final StateProvider stateProvider;
-
-    @Nullable
     private final NonceProvider nonceProvider;
-
-    @Nullable
     private final LoginHintProvider loginHintProvider;
-
-    @Nullable
     private final IdTokenHintProvider idTokenHintProvider;
 
     /**

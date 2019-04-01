@@ -39,7 +39,6 @@ public class OpenIdUnauthorizedRejectionUriProvider implements UnauthorizedRejec
 
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".unauthorized-rejection-uri-provider.enabled";
 
-    @Nonnull
     private final AuthorizationRedirectUrlProvider authorizationRedirectUrlProvider;
 
     /**

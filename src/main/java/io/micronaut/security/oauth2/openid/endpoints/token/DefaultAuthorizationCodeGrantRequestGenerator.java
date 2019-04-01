@@ -42,16 +42,9 @@ import java.util.Objects;
 @Singleton
 public class DefaultAuthorizationCodeGrantRequestGenerator implements AuthorizationCodeGrantRequestGenerator {
 
-    @Nonnull
     private final OauthConfiguration oauthConfiguration;
-
-    @Nonnull
     private final OpenIdProviderMetadata openIdProviderMetadata;
-
-    @Nonnull
     private final TokenEndpointConfiguration tokenEndpointConfiguration;
-
-    @Nonnull
     private final DefaultRedirectUrlProvider defaultRedirectUrlProvider;
 
     /**

@@ -43,13 +43,8 @@ public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRed
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationRedirectUrlProvider.class);
 
-    @Nonnull
     private final AuthenticationRequestProvider authenticationRequestProvider;
-
-    @Nonnull
     private final OpenIdProviderMetadata openIdProviderMetadata;
-
-    @Nonnull
     private final DefaultRedirectUrlProvider defaultRedirectUrlProvider;
 
     /**

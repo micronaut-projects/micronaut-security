@@ -27,10 +27,7 @@ import javax.annotation.Nullable;
  */
 public class Oauth2AuthenticationResponse implements AuthenticationResponse {
 
-    @Nullable
     private String state;
-
-    @Nonnull
     private String code;
 
     /**

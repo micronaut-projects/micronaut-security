@@ -35,13 +35,8 @@ public class EndSessionEndpointConfigurationProperties implements EndSessionEndp
 
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".end-session";
 
-    @Nullable
     private String url;
-
-    @Nullable
     private String redirectUri;
-
-    @Nonnull
     private List<EndSessionParameter> parameters = new ArrayList<>();
 
     @Nonnull

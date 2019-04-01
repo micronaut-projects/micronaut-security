@@ -2,6 +2,7 @@ dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
     annotationProcessor "io.micronaut:micronaut-security"
+    annotationProcessor "io.micronaut:micronaut-graal"
     compileOnly "io.micronaut:micronaut-inject-java"
     compile "io.micronaut:micronaut-security-jwt"
     compile "io.micronaut:micronaut-inject"

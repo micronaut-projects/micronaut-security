@@ -31,7 +31,6 @@ import javax.annotation.Nullable;
 public class RevocationEndpointConfigurationProperties implements RevocationEndpointConfiguration {
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".revocation";
 
-    @Nullable
     private String url;
 
     @Nullable

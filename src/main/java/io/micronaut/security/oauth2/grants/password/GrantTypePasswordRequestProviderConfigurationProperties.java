@@ -56,10 +56,7 @@ public class GrantTypePasswordRequestProviderConfigurationProperties implements 
 
     private boolean enabled = DEFAULT_ENABLED;
 
-    @Nonnull
     private MediaType contentType = DEFAULT_CONTENT_TYPE;
-
-    @Nonnull
     private List<String> scopes = Collections.singletonList(DEFAULT_SCOPE);
 
     /**

@@ -35,13 +35,8 @@ public class DeniedControllerConfigurationProperties implements DeniedController
     public static final String DEFAULT_DESCRIPTION = "Sorry, you're not authorized to view this page";
     public static final String DEFAULT_PATH = "/denied";
 
-    @Nonnull
     private String titleCopy = DEFAULT_TITLE;
-
-    @Nonnull
     private String descriptionCopy = DEFAULT_DESCRIPTION;
-
-    @Nonnull
     private String path = DEFAULT_PATH;
 
     /**

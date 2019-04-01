@@ -32,25 +32,12 @@ import java.util.Optional;
  */
 public class AuthenticationRequestAdapter implements AuthenticationRequest {
 
-    @Nonnull
     private HttpRequest<?> request;
-
-    @Nonnull
     private OauthConfiguration oauthConfiguration;
-
-    @Nullable
     private StateProvider stateProvider;
-
-    @Nullable
     private NonceProvider nonceProvider;
-
-    @Nullable
     private LoginHintProvider loginHintProvider;
-
-    @Nullable
     private IdTokenHintProvider idTokenHintProvider;
-
-    @Nonnull
     private AuthorizationEndpointRequestConfiguration authorizationEndpointConfiguration;
 
     /**

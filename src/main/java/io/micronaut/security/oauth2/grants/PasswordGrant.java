@@ -17,6 +17,10 @@
 package io.micronaut.security.oauth2.grants;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Introspected;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -28,7 +32,10 @@ import java.util.Map;
  * @author Sergio del Amo
  * @since 1.0.0
  */
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PasswordGrant {
+
     public static final String KEY_GRANT_TYPE = "grant_type";
     public static final String KEY_CLIENT_ID = "client_id";
     public static final String KEY_CLIENT_SECRET = "client_secret";
@@ -36,25 +43,11 @@ public class PasswordGrant {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_SCOPE = "scope";
 
-    @Nonnull
-    @JsonProperty(KEY_GRANT_TYPE)
     private String grantType = GrantType.PASSWORD.getGrantType();
-
-    @Nonnull
-    @JsonProperty(KEY_CLIENT_ID)
     private String clientId;
-
-    @Nullable
-    @JsonProperty(KEY_CLIENT_SECRET)
     private String clientSecret;
-
-    @Nonnull
     private String username;
-
-    @Nonnull
     private String password;
-
-    @Nullable
     private String scope;
 
     /**

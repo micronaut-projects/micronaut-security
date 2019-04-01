@@ -50,11 +50,7 @@ public class AuthorizationCodeControllerConfigurationProperties implements Autho
     public static final String DEFAULT_ACTIONPATH = "/cb";
 
     private boolean enabled = DEFAULT_ENABLED;
-
-    @Nonnull
     private String controllerPath = DEFAULT_CONTROLLERPATH;
-
-    @Nonnull
     private String  actionPath = DEFAULT_ACTIONPATH;
 
     /**

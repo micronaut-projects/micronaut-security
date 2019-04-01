@@ -67,13 +67,8 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_COOKIEPATH = "/";
 
-    @Nonnull
     private String cookieName = JwtCookieConfigurationProperties.DEFAULT_COOKIENAME;
-
-    @Nullable
     private String cookieDomain;
-
-    @Nullable
     private String cookiePath = DEFAULT_COOKIEPATH;
     private String loginSuccessTargetUrl = DEFAULT_LOGINSUCCESSTARGETURL;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;

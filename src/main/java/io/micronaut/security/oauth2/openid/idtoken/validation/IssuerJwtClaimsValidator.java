@@ -43,7 +43,6 @@ public class IssuerJwtClaimsValidator implements IdTokenClaimsValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(IssuerJwtClaimsValidator.class);
 
-    @Nonnull
     private final OpenIdProviderMetadata openIdProviderMetadata;
 
     /**

@@ -45,15 +45,9 @@ public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
     private static final char QUESTIONMARK = '?';
     private static final Logger LOG = LoggerFactory.getLogger(DefaultEndSessionUrlProvider.class);
 
-    @Nonnull
     private final TokenResolver tokenResolver;
-
-    @Nonnull
     private final OauthConfiguration oauthConfiguration;
-
     private final OpenIdEndpoints openIdEndpoints;
-
-    @Nonnull
     private final EndSessionEndpointConfiguration endSessionEndpointConfiguration;
 
     /**

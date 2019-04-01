@@ -38,28 +38,13 @@ import java.util.Objects;
  */
 public class OpenIdProviderMetadataAdapter implements OpenIdProviderMetadata {
 
-    @Nullable
     private OpenIdProviderMetadata openIdProviderMetadata;
-
-    @Nonnull
     private OpenIdProviderConfiguration openIdProviderConfiguration;
-
-    @Nonnull
     private AuthorizationEndpointConfiguration authorizationEndpointConfiguration;
-
-    @Nonnull
     private IntrospectionEndpointConfiguration introspectionEndpointConfiguration;
-
-    @Nonnull
     private RegistrationEndpointConfiguration registrationEndpointConfiguration;
-
-    @Nonnull
     private RevocationEndpointConfiguration revocationEndpointConfiguration;
-
-    @Nonnull
     private TokenEndpointConfiguration tokenEndpointConfiguration;
-
-    @Nonnull
     private UserInfoEndpointConfiguration userInfoEndpointConfiguration;
 
     /**

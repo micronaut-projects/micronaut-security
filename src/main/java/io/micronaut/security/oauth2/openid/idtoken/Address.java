@@ -16,7 +16,9 @@
 
 package io.micronaut.security.oauth2.openid.idtoken;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Introspected;
 
 import javax.annotation.Nullable;
 
@@ -27,6 +29,8 @@ import javax.annotation.Nullable;
  * @author Sergio del Amo
  * @version 1.1.0
  */
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Address {
 
     public static final String JSONKEY_COUNTRY = "country";
@@ -35,23 +39,11 @@ public class Address {
     public static final String JSONKEY_POSTAL_CODE = "postal_code";
     public static final String JSONKEY_REGION = "region";
 
-    @Nullable
     private String formatted;
-
-    @Nullable
-    @JsonProperty(JSONKEY_STREET_ADDRESS)
     private String streetAddress;
-
-    @Nullable
     private String locality;
-
-    @Nullable
     private String region;
-
-    @Nullable
-    @JsonProperty(JSONKEY_POSTAL_CODE)
     private String postalCode;
-
     private String country;
 
     /**

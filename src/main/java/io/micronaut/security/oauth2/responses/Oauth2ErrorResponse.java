@@ -29,16 +29,9 @@ import javax.annotation.Nullable;
  */
 public class Oauth2ErrorResponse {
 
-    @Nonnull
     private String error;
-
-    @Nullable
     private String errorDescription;
-
-    @Nullable
     private String errorUri;
-
-    @Nullable
     private String state;
 
     /**

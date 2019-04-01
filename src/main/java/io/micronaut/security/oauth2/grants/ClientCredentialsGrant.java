@@ -16,7 +16,9 @@
 
 package io.micronaut.security.oauth2.grants;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Introspected;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,15 +32,14 @@ import java.util.Map;
  * @author Sergio del Amo
  * @since 1.0.0
  */
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ClientCredentialsGrant implements AsMap {
+
     public static final String KEY_GRANT_TYPE = "grant_type";
     public static final String KEY_SCOPES = "scopes";
 
-    @Nonnull
-    @JsonProperty(KEY_GRANT_TYPE)
     private String grantType = GrantType.CLIENT_CREDENTIALS.getGrantType();
-
-    @Nullable
     private String scope;
 
     /**
