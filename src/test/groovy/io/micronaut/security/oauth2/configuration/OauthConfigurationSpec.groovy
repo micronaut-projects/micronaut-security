@@ -67,7 +67,7 @@ class OauthConfigurationSpec extends Specification {
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
                 'micronaut.security.enabled': true,
-                'micronaut.security.enabled.oauth2.client-id': 'XXXXX'
+                'micronaut.security.oauth2.client-id': 'XXXXX'
         ], Environment.TEST)
 
         when:
