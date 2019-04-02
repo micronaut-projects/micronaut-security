@@ -22,13 +22,13 @@ import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import javax.annotation.Nullable;
 
 /**
- * {@link ConfigurationProperties} implementation of {@link UserInfoEndpointConfiguration}.
+ * {@link ConfigurationProperties} implementation of {@link UserInfoEndpoint}.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
 @ConfigurationProperties(UserInfoEndpointConfigurationProperties.PREFIX)
-public class UserInfoEndpointConfigurationProperties implements UserInfoEndpointConfiguration {
+public class UserInfoEndpointConfigurationProperties implements UserInfoEndpoint {
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".user-info";
 
     private String url;

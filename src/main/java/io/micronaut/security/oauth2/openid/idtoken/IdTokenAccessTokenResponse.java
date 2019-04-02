@@ -16,7 +16,6 @@
 
 package io.micronaut.security.oauth2.openid.idtoken;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
@@ -60,7 +59,6 @@ public class IdTokenAccessTokenResponse extends AccessTokenResponse {
             accessTokenResponse.populateWithMap(m);
             accessTokenResponse.setIdToken((String) m.get("id_token"));
             return accessTokenResponse;
-
         }
         return null;
     }

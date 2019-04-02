@@ -16,15 +16,15 @@
 
 package io.micronaut.security.oauth2.openid.configuration;
 
-import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
-import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.openid.endpoints.Endpoint;
+import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpoint;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Creates an {@link OpenIdProviderMetadataSession} by merging together an existing {@link OpenIdProviderMetadataSession}, probably from a
- * fetched from remote identity provider, with the end-session endpoint configuration ({@link EndSessionEndpointConfiguration}.
+ * fetched from remote identity provider, with the end-session endpoint configuration ({@link EndSessionEndpoint}.
  *
  * @author Sergio del Amo
  * @since 1.0.0
@@ -32,17 +32,17 @@ import javax.annotation.Nullable;
 public class OpenIdProviderMetadataSessionAdapter implements OpenIdProviderMetadataSession {
 
     private final OpenIdProviderMetadataSession openIdProviderMetadataSession;
-    private final EndSessionEndpointConfiguration endSessionEndpointConfiguration;
+    private final EndSessionEndpoint endSessionEndpoint;
 
     /**
      *
      * @param openIdProviderMetadataSession Open Id Provider Metadata Session.
-     * @param endSessionEndpointConfiguration End-Session Endpoint Configuration
+     * @param endSessionEndpoint End-Session Endpoint Configuration
      */
     public OpenIdProviderMetadataSessionAdapter(@Nullable OpenIdProviderMetadataSession openIdProviderMetadataSession,
-                                                @Nonnull EndSessionEndpointConfiguration endSessionEndpointConfiguration) {
+                                                @Nonnull EndSessionEndpoint endSessionEndpoint) {
         this.openIdProviderMetadataSession = openIdProviderMetadataSession;
-        this.endSessionEndpointConfiguration = endSessionEndpointConfiguration;
+        this.endSessionEndpoint = endSessionEndpoint;
     }
 
     @Nullable
@@ -55,10 +55,10 @@ public class OpenIdProviderMetadataSessionAdapter implements OpenIdProviderMetad
     @Nullable
     @Override
     public String getEndSessionEndpoint() {
-        return resolveUrl(endSessionEndpointConfiguration, openIdProviderMetadataSession != null ? openIdProviderMetadataSession.getEndSessionEndpoint() : null);
+        return resolveUrl(endSessionEndpoint, openIdProviderMetadataSession != null ? openIdProviderMetadataSession.getEndSessionEndpoint() : null);
     }
 
-    private String resolveUrl(@Nonnull EndpointUrl endpointUrl, @Nullable String url) {
-        return endpointUrl.getUrl() != null ? endpointUrl.getUrl() : url;
+    private String resolveUrl(@Nonnull Endpoint endpoint, @Nullable String url) {
+        return endpoint.getUrl() != null ? endpoint.getUrl() : url;
     }
 }

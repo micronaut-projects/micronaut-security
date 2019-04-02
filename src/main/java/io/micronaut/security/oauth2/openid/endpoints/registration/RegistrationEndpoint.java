@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.authorization;
+package io.micronaut.security.oauth2.openid.endpoints.registration;
 
-import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
+import io.micronaut.security.oauth2.openid.endpoints.Endpoint;
 
 /**
- * OAuth 2.0 Authorization Request.
+ * Registration endpoint configuration.
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Authentication Request</a>
+ * @see <a href="https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg-17#section-3">Client Registration Endpoint</a>
  *
  * @since 1.0.0
  * @author Sergio del Amo
  */
-public interface AuthorizationEndpointConfiguration extends EndpointUrl  {
-
-
+public interface RegistrationEndpoint extends Endpoint {
 }

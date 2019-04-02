@@ -24,13 +24,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * {@link ConfigurationProperties} implementation of {@link TokenEndpointConfiguration}.
+ * {@link ConfigurationProperties} implementation of {@link TokenEndpoint}.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
 @ConfigurationProperties(TokenEndpointConfigurationProperties.PREFIX)
-public class TokenEndpointConfigurationProperties implements TokenEndpointConfiguration {
+public class TokenEndpointConfigurationProperties implements TokenEndpoint {
 
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".token";
 

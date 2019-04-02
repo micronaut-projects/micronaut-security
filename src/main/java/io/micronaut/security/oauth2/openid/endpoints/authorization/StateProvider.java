@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
 import io.micronaut.http.HttpRequest;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Generates a state parameter.
@@ -37,6 +37,6 @@ public interface StateProvider {
      * @param request the original request prior redirect.
      * @return A state parameter. A opaque value used to maintain state between the request and the callback.
      */
-    @Nonnull
+    @Nullable
     String generateState(HttpRequest<?> request);
 }

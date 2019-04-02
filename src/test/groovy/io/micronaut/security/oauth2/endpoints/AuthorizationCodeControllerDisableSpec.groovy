@@ -7,7 +7,7 @@ import io.micronaut.security.oauth2.configuration.OauthConfiguration
 import io.micronaut.security.oauth2.handlers.AuthorizationResponseHandler
 
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
-import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointConfiguration
+import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpoint
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -57,7 +57,7 @@ class AuthorizationCodeControllerDisableSpec extends Specification {
         context.containsBean(OpenIdProviderMetadata)
 
         and:
-        context.containsBean(TokenEndpointConfiguration)
+        context.containsBean(TokenEndpoint)
 
         and:
         context.containsBean(OauthConfiguration)

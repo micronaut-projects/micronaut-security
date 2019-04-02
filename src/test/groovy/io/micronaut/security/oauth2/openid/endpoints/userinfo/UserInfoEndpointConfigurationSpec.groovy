@@ -11,7 +11,7 @@ class UserInfoEndpointConfigurationSpec extends Specification {
         ApplicationContext context = ApplicationContext.run(['micronaut.security.enabled': true,], Environment.TEST)
 
         when:
-        context.getBean(UserInfoEndpointConfiguration)
+        context.getBean(UserInfoEndpoint)
 
         then:
         noExceptionThrown()

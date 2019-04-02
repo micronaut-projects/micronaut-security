@@ -22,13 +22,13 @@ import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import javax.annotation.Nullable;
 
 /**
- * {@link ConfigurationProperties} implementation of {@link IntrospectionEndpointConfiguration}.
+ * {@link ConfigurationProperties} implementation of {@link IntrospectionEndpoint}.
  *
  * @since 1.0.0
  * @author Sergio del Amo
  */
 @ConfigurationProperties(IntrospectionEndpointConfigurationProperties.PREFIX)
-public class IntrospectionEndpointConfigurationProperties implements IntrospectionEndpointConfiguration {
+public class IntrospectionEndpointConfigurationProperties implements IntrospectionEndpoint {
     @SuppressWarnings("WeakerAccess")
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".introspection";
 

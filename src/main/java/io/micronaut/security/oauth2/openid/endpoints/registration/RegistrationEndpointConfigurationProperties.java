@@ -22,13 +22,13 @@ import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import javax.annotation.Nullable;
 
 /**
- * {@link ConfigurationProperties} implementation of {@link RegistrationEndpointConfiguration}.
+ * {@link ConfigurationProperties} implementation of {@link RegistrationEndpoint}.
  *
  * @since 1.0.0
  * @author Sergio del Amo
  */
 @ConfigurationProperties(RegistrationEndpointConfigurationProperties.PREFIX)
-public class RegistrationEndpointConfigurationProperties implements RegistrationEndpointConfiguration {
+public class RegistrationEndpointConfigurationProperties implements RegistrationEndpoint {
 
     @SuppressWarnings("WeakerAccess")
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".registration";

@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.userinfo;
+package io.micronaut.security.oauth2.openid.endpoints.revocation;
 
-import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
+import io.micronaut.security.oauth2.openid.endpoints.Endpoint;
 
 /**
- * Configuration for OpenID connect UserInfo Endpoint.
+ * OAuth 2.0 Introspection endpoint configuration.
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo Endpoint</a>
- * @author Sergio del Amo
+ * @see <a href="https://tools.ietf.org/html/rfc7009">OAuth 2.0 Token Revocation</a>
+ *
  * @since 1.0.0
+ * @author Sergio del Amo
  */
-public interface UserInfoEndpointConfiguration extends EndpointUrl {
+public interface RevocationEndpoint extends Endpoint {
 }

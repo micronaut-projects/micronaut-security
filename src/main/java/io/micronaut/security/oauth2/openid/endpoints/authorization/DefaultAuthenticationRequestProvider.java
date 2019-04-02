@@ -20,7 +20,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 

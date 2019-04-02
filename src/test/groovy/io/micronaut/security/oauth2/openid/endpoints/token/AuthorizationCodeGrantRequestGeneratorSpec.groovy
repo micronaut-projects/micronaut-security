@@ -47,7 +47,7 @@ class AuthorizationCodeGrantRequestGeneratorSpec extends Specification {
         noExceptionThrown()
 
         when:
-        context.getBean(TokenEndpointConfiguration)
+        context.getBean(TokenEndpoint)
 
         then:
         noExceptionThrown()

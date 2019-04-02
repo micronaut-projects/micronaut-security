@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.revocation;
+package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
-import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
+import io.micronaut.security.oauth2.openid.endpoints.Endpoint;
 
 /**
- * OAuth 2.0 Introspection endpoint configuration.
+ * OAuth 2.0 Authorization Request.
  *
- * @see <a href="https://tools.ietf.org/html/rfc7009">OAuth 2.0 Token Revocation</a>
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Authentication Request</a>
  *
  * @since 1.0.0
  * @author Sergio del Amo
  */
-public interface RevocationEndpointConfiguration extends EndpointUrl {
+public interface AuthorizationEndpoint extends Endpoint {
+
+
 }

@@ -1,8 +1,6 @@
 package io.micronaut.security.oauth2.openid.endpoints.token
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
-import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -20,7 +18,7 @@ class TokenEndpointConfigurationDefaultValuesSpec extends Specification {
         ApplicationContext context = ApplicationContext.run(conf)
 
         when:
-        TokenEndpointConfiguration tokenEndpointConfiguration = context.getBean(TokenEndpointConfiguration)
+        TokenEndpoint tokenEndpointConfiguration = context.getBean(TokenEndpoint)
 
         then:
         noExceptionThrown()
@@ -40,7 +38,7 @@ class TokenEndpointConfigurationDefaultValuesSpec extends Specification {
         ApplicationContext context = ApplicationContext.run(specConf)
 
         when:
-        TokenEndpointConfiguration tokenEndpointConfiguration = context.getBean(TokenEndpointConfiguration)
+        TokenEndpoint tokenEndpointConfiguration = context.getBean(TokenEndpoint)
 
         then:
         noExceptionThrown()

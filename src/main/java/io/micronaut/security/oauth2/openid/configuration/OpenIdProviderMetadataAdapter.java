@@ -16,18 +16,19 @@
 
 package io.micronaut.security.oauth2.openid.configuration;
 
-import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.introspection.IntrospectionEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.registration.RegistrationEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.revocation.RevocationEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.userinfo.UserInfoEndpointConfiguration;
+import io.micronaut.security.oauth2.openid.endpoints.Endpoint;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.introspection.IntrospectionEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.registration.RegistrationEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.revocation.RevocationEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.userinfo.UserInfoEndpoint;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * Creates an {@link OpenIdProviderMetadata} by merging together an existing {@link OpenIdProviderMetadata}, probably from a
@@ -40,40 +41,40 @@ public class OpenIdProviderMetadataAdapter implements OpenIdProviderMetadata {
 
     private OpenIdProviderMetadata openIdProviderMetadata;
     private OpenIdProviderConfiguration openIdProviderConfiguration;
-    private AuthorizationEndpointConfiguration authorizationEndpointConfiguration;
-    private IntrospectionEndpointConfiguration introspectionEndpointConfiguration;
-    private RegistrationEndpointConfiguration registrationEndpointConfiguration;
-    private RevocationEndpointConfiguration revocationEndpointConfiguration;
-    private TokenEndpointConfiguration tokenEndpointConfiguration;
-    private UserInfoEndpointConfiguration userInfoEndpointConfiguration;
+    private AuthorizationEndpoint authorizationEndpoint;
+    private IntrospectionEndpoint introspectionEndpoint;
+    private RegistrationEndpoint registrationEndpoint;
+    private RevocationEndpoint revocationEndpoint;
+    private TokenEndpoint tokenEndpoint;
+    private UserInfoEndpoint userInfoEndpoint;
 
     /**
      *
      * @param openIdProviderMetadata Open ID provider metadata
      * @param openIdProviderConfiguration Open ID Provider configuration
-     * @param authorizationEndpointConfiguration Authorization endpoint configuration.
-     * @param introspectionEndpointConfiguration Introspection endpoint configuration.
-     * @param registrationEndpointConfiguration Registration endpoint configuration.
-     * @param revocationEndpointConfiguration Revocation endpoint configuration.
-     * @param tokenEndpointConfiguration Token endpoint configuration.
-     * @param userInfoEndpointConfiguration User info endpoint configuration.
+     * @param authorizationEndpoint Authorization endpoint configuration.
+     * @param introspectionEndpoint Introspection endpoint configuration.
+     * @param registrationEndpoint Registration endpoint configuration.
+     * @param revocationEndpoint Revocation endpoint configuration.
+     * @param tokenEndpoint Token endpoint configuration.
+     * @param userInfoEndpoint User info endpoint configuration.
      */
     public OpenIdProviderMetadataAdapter(@Nullable OpenIdProviderMetadata openIdProviderMetadata,
                                          @Nonnull OpenIdProviderConfiguration openIdProviderConfiguration,
-                                         @Nonnull AuthorizationEndpointConfiguration authorizationEndpointConfiguration,
-                                         @Nonnull IntrospectionEndpointConfiguration introspectionEndpointConfiguration,
-                                         @Nonnull RegistrationEndpointConfiguration registrationEndpointConfiguration,
-                                         @Nonnull RevocationEndpointConfiguration revocationEndpointConfiguration,
-                                         @Nonnull TokenEndpointConfiguration tokenEndpointConfiguration,
-                                         @Nonnull UserInfoEndpointConfiguration userInfoEndpointConfiguration) {
+                                         @Nonnull AuthorizationEndpoint authorizationEndpoint,
+                                         @Nonnull IntrospectionEndpoint introspectionEndpoint,
+                                         @Nonnull RegistrationEndpoint registrationEndpoint,
+                                         @Nonnull RevocationEndpoint revocationEndpoint,
+                                         @Nonnull TokenEndpoint tokenEndpoint,
+                                         @Nonnull UserInfoEndpoint userInfoEndpoint) {
         this.openIdProviderMetadata = openIdProviderMetadata;
         this.openIdProviderConfiguration = openIdProviderConfiguration;
-        this.authorizationEndpointConfiguration = authorizationEndpointConfiguration;
-        this.introspectionEndpointConfiguration = introspectionEndpointConfiguration;
-        this.registrationEndpointConfiguration = registrationEndpointConfiguration;
-        this.revocationEndpointConfiguration = revocationEndpointConfiguration;
-        this.tokenEndpointConfiguration = tokenEndpointConfiguration;
-        this.userInfoEndpointConfiguration = userInfoEndpointConfiguration;
+        this.authorizationEndpoint = authorizationEndpoint;
+        this.introspectionEndpoint = introspectionEndpoint;
+        this.registrationEndpoint = registrationEndpoint;
+        this.revocationEndpoint = revocationEndpoint;
+        this.tokenEndpoint = tokenEndpoint;
+        this.userInfoEndpoint = userInfoEndpoint;
     }
 
     @Nonnull
@@ -309,7 +310,7 @@ public class OpenIdProviderMetadataAdapter implements OpenIdProviderMetadata {
      * @return resolved userinfo endpoint url
      */
     protected String getUserinfoEndpointUrl() {
-        return resolveUrl(userInfoEndpointConfiguration, openIdProviderMetadata != null ? openIdProviderMetadata.getUserinfoEndpoint() : null);
+        return resolveUrl(userInfoEndpoint, OpenIdProviderMetadata::getUserinfoEndpoint);
     }
 
     /**
@@ -317,7 +318,7 @@ public class OpenIdProviderMetadataAdapter implements OpenIdProviderMetadata {
      * @return resolved token endpoint url
      */
     protected String getTokenEndpointUrl() {
-        return resolveUrl(tokenEndpointConfiguration, openIdProviderMetadata != null ? openIdProviderMetadata.getTokenEndpoint() : null);
+        return resolveUrl(tokenEndpoint, OpenIdProviderMetadata::getTokenEndpoint);
     }
 
     /**
@@ -325,7 +326,7 @@ public class OpenIdProviderMetadataAdapter implements OpenIdProviderMetadata {
      * @return resolved revocation endpoint url
      */
     protected String getRevocationEndpointUrl() {
-        return resolveUrl(revocationEndpointConfiguration, openIdProviderMetadata != null ? openIdProviderMetadata.getRevocationEndpoint() : null);
+        return resolveUrl(revocationEndpoint, OpenIdProviderMetadata::getRevocationEndpoint);
     }
 
     /**
@@ -333,7 +334,7 @@ public class OpenIdProviderMetadataAdapter implements OpenIdProviderMetadata {
      * @return resolved registration endpoint url
      */
     protected String getRegistrationEndpointUrl() {
-        return resolveUrl(registrationEndpointConfiguration, openIdProviderMetadata != null ? openIdProviderMetadata.getRegistrationEndpoint() : null);
+        return resolveUrl(registrationEndpoint, OpenIdProviderMetadata::getRegistrationEndpoint);
     }
 
     /**
@@ -341,7 +342,7 @@ public class OpenIdProviderMetadataAdapter implements OpenIdProviderMetadata {
      * @return resolved introspection endpoint url
      */
     protected String getIntrospectionEndpointUrl() {
-        return resolveUrl(introspectionEndpointConfiguration, openIdProviderMetadata != null ? openIdProviderMetadata.getIntrospectionEndpoint() : null);
+        return resolveUrl(introspectionEndpoint, OpenIdProviderMetadata::getIntrospectionEndpoint);
     }
 
     /**
@@ -349,10 +350,14 @@ public class OpenIdProviderMetadataAdapter implements OpenIdProviderMetadata {
      * @return resolved authorization endpoint url
      */
     protected String getAuthorizationEndpointUrl() {
-        return resolveUrl(authorizationEndpointConfiguration, openIdProviderMetadata != null ? openIdProviderMetadata.getAuthorizationEndpoint() : null);
+        return resolveUrl(authorizationEndpoint, OpenIdProviderMetadata::getAuthorizationEndpoint);
     }
 
-    private String resolveUrl(EndpointUrl endpointUrl, String url) {
-        return endpointUrl.getUrl() != null ? endpointUrl.getUrl() : url;
+    private String resolveUrl(Endpoint endpoint, Function<OpenIdProviderMetadata, String> urlProvider) {
+        String endpointUrl = endpoint.getUrl();
+        if (endpointUrl == null && openIdProviderMetadata != null) {
+            endpointUrl = urlProvider.apply(openIdProviderMetadata);
+        }
+        return endpointUrl;
     }
 }

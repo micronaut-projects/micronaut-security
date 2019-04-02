@@ -26,7 +26,7 @@ import io.micronaut.security.endpoints.LogoutControllerConfiguration;
 import io.micronaut.security.endpoints.LogoutControllerConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpoint;
 import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfigurationProperties;
 import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionParameter;
 import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionParameterType;
@@ -54,7 +54,7 @@ import java.util.List;
 @Requires(condition = OktaOpenidConfigurationCondition.class)
 @Primary
 @Singleton
-public class OktaEndSessionEndpointConfiguration implements EndSessionEndpointConfiguration {
+public class OktaEndSessionEndpointConfiguration implements EndSessionEndpoint {
 
     private final String logoutUri;
     private final String endSessionEndpoint;
@@ -65,7 +65,7 @@ public class OktaEndSessionEndpointConfiguration implements EndSessionEndpointCo
      * @param embeddedServer Embedded Server
      * @param openIdConfiguration Open ID Configuration
      * @param logoutPath {@link io.micronaut.security.endpoints.LogoutController} path.
-     * @param endSessionEndpointConfigurationProperties Default {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link EndSessionEndpointConfiguration}.
+     * @param endSessionEndpointConfigurationProperties Default {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link EndSessionEndpoint}.
      */
     public OktaEndSessionEndpointConfiguration(
             EmbeddedServer embeddedServer,

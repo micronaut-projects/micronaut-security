@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link ConfigurationProperties} implementation of {@link EndSessionEndpointConfiguration}.
+ * {@link ConfigurationProperties} implementation of {@link EndSessionEndpoint}.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
 @ConfigurationProperties(EndSessionEndpointConfigurationProperties.PREFIX)
-public class EndSessionEndpointConfigurationProperties implements EndSessionEndpointConfiguration {
+public class EndSessionEndpointConfigurationProperties implements EndSessionEndpoint {
 
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".end-session";
 

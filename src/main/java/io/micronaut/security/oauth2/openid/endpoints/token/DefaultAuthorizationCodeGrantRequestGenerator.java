@@ -36,7 +36,7 @@ import java.util.Objects;
  * @since 1.0.0
  * @author Sergio del Amo
  */
-@Requires(beans = {OpenIdProviderMetadata.class, TokenEndpointConfiguration.class, OauthConfiguration.class})
+@Requires(beans = {OpenIdProviderMetadata.class, TokenEndpoint.class, OauthConfiguration.class})
 @Requires(condition = TokenEndpointNotNullCondition.class)
 @Requires(condition = TokenEndpointGrantTypeAuthorizationCodeCondition.class)
 @Singleton
@@ -44,24 +44,24 @@ public class DefaultAuthorizationCodeGrantRequestGenerator implements Authorizat
 
     private final OauthConfiguration oauthConfiguration;
     private final OpenIdProviderMetadata openIdProviderMetadata;
-    private final TokenEndpointConfiguration tokenEndpointConfiguration;
+    private final TokenEndpoint tokenEndpoint;
     private final DefaultRedirectUrlProvider defaultRedirectUrlProvider;
 
     /**
      *
      * @param oauthConfiguration OAuth 2.0 Configuration
      * @param openIdProviderMetadata OpenID provider metadata.
-     * @param tokenEndpointConfiguration Token Endpoint configuration
+     * @param tokenEndpoint Token Endpoint configuration
      * @param defaultRedirectUrlProvider The Default Redirect Url Provider.
      */
     public DefaultAuthorizationCodeGrantRequestGenerator(@Nonnull OauthConfiguration oauthConfiguration,
                                                          @Nonnull OpenIdProviderMetadata openIdProviderMetadata,
-                                                         @Nonnull TokenEndpointConfiguration tokenEndpointConfiguration,
+                                                         @Nonnull TokenEndpoint tokenEndpoint,
                                                          @Nonnull DefaultRedirectUrlProvider defaultRedirectUrlProvider) {
 
         this.oauthConfiguration = oauthConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
-        this.tokenEndpointConfiguration = tokenEndpointConfiguration;
+        this.tokenEndpoint = tokenEndpoint;
         this.defaultRedirectUrlProvider = defaultRedirectUrlProvider;
     }
 
@@ -69,8 +69,8 @@ public class DefaultAuthorizationCodeGrantRequestGenerator implements Authorizat
     @Override
     public HttpRequest generateRequest(@Nonnull String code) {
         AuthorizationCodeGrant authorizationCodeGrant = isntantiateAuthorizationCodeGrant(code);
-        Object body = tokenEndpointConfiguration.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_TYPE) ? authorizationCodeGrant.toMap() : authorizationCodeGrant;
-        MutableHttpRequest req = HttpRequest.POST(Objects.requireNonNull(openIdProviderMetadata.getTokenEndpoint()), body).header(HttpHeaders.CONTENT_TYPE, tokenEndpointConfiguration.getContentType().getName());
+        Object body = tokenEndpoint.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_TYPE) ? authorizationCodeGrant.toMap() : authorizationCodeGrant;
+        MutableHttpRequest req = HttpRequest.POST(Objects.requireNonNull(openIdProviderMetadata.getTokenEndpoint()), body).header(HttpHeaders.CONTENT_TYPE, tokenEndpoint.getContentType().getName());
 
         return secureRequest(req);
     }
@@ -81,7 +81,7 @@ public class DefaultAuthorizationCodeGrantRequestGenerator implements Authorizat
      * @return a HTTP Request to the Token Endpoint with Authorization Code Grant payload.
      */
     protected MutableHttpRequest secureRequest(@Nonnull MutableHttpRequest request) {
-        if (tokenEndpointConfiguration.getAuthMethod() != null && tokenEndpointConfiguration.getAuthMethod().equals(TokenEndpointAuthMethod.CLIENT_SECRET_BASIC.getAuthMethod())) {
+        if (tokenEndpoint.getAuthMethod() != null && tokenEndpoint.getAuthMethod().equals(TokenEndpointAuthMethod.CLIENT_SECRET_BASIC.getAuthMethod())) {
             return request.basicAuth(oauthConfiguration.getClientId(), oauthConfiguration.getClientSecret());
         }
         return request;
@@ -96,7 +96,7 @@ public class DefaultAuthorizationCodeGrantRequestGenerator implements Authorizat
         authorizationCodeGrant.setCode(code);
         authorizationCodeGrant.setClientId(oauthConfiguration.getClientId());
         authorizationCodeGrant.setClientSecret(oauthConfiguration.getClientSecret());
-        authorizationCodeGrant.setRedirectUri(tokenEndpointConfiguration.getRedirectUri() != null ? tokenEndpointConfiguration.getRedirectUri() : defaultRedirectUrlProvider.getRedirectUri());
+        authorizationCodeGrant.setRedirectUri(tokenEndpoint.getRedirectUri() != null ? tokenEndpoint.getRedirectUri() : defaultRedirectUrlProvider.getRedirectUri());
         return authorizationCodeGrant;
     }
 }

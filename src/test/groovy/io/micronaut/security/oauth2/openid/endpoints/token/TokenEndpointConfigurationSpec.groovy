@@ -11,7 +11,7 @@ class TokenEndpointConfigurationSpec extends Specification {
         ApplicationContext context = ApplicationContext.run(['micronaut.security.enabled': true,], Environment.TEST)
 
         when:
-        context.getBean(TokenEndpointConfiguration)
+        context.getBean(TokenEndpoint)
 
         then:
         noExceptionThrown()

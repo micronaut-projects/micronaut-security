@@ -16,13 +16,11 @@
 
 package io.micronaut.security.oauth2.grants;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

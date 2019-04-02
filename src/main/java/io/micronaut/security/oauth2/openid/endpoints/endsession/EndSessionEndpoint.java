@@ -14,23 +14,31 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints;
+package io.micronaut.security.oauth2.openid.endpoints.endsession;
 
+import io.micronaut.security.oauth2.openid.endpoints.Endpoint;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
- * Interface to be implemented by OpenID endpoints' configuration
- * to convey they are reachable at a URL.
+ * End-session endpoint configuration.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public interface EndpointUrl {
+public interface EndSessionEndpoint extends Endpoint {
 
     /**
      *
-     * @return Endpoint's url.
+     * @return End-session endpoint parameters.
+     */
+    @Nonnull
+    List<EndSessionParameter> getParameters();
+
+    /**
+     * @return Redirection URI where the user is sent once the remote authorization server ends the session.
      */
     @Nullable
-    String getUrl();
+    String getRedirectUri();
 }

@@ -13,7 +13,7 @@ class IntrospectionEndpointConfigurationSpec extends Specification {
         ], Environment.TEST)
 
         when:
-        context.getBean(IntrospectionEndpointConfiguration)
+        context.getBean(IntrospectionEndpoint)
 
         then:
         noExceptionThrown()

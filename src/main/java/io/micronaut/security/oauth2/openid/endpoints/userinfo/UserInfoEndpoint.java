@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.introspection;
+package io.micronaut.security.oauth2.openid.endpoints.userinfo;
 
-import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
+import io.micronaut.security.oauth2.openid.endpoints.Endpoint;
 
 /**
- * OAuth 2.0 Introspection endpoint configuration.
+ * Configuration for OpenID connect UserInfo Endpoint.
  *
- * @see <a href="https://tools.ietf.org/html/rfc7662#section-2">Introsepction Endpoint [RFC662]</a>
- *
- * @since 1.0.0
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo Endpoint</a>
  * @author Sergio del Amo
+ * @since 1.0.0
  */
-public interface IntrospectionEndpointConfiguration extends EndpointUrl {
+public interface UserInfoEndpoint extends Endpoint {
 }

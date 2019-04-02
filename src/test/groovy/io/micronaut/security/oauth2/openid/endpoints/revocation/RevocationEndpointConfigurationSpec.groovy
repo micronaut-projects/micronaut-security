@@ -11,7 +11,7 @@ class RevocationEndpointConfigurationSpec extends Specification {
         ApplicationContext context = ApplicationContext.run(['micronaut.security.enabled': true,], Environment.TEST)
 
         when:
-        context.getBean(RevocationEndpointConfiguration)
+        context.getBean(RevocationEndpoint)
 
         then:
         noExceptionThrown()

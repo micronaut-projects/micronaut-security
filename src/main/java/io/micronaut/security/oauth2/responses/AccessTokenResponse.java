@@ -16,7 +16,6 @@
 
 package io.micronaut.security.oauth2.responses;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
@@ -156,20 +155,20 @@ public class AccessTokenResponse {
      * @param m A Map e.g a JSON response.
      */
     public void populateWithMap(@Nonnull Map<String, Object> m) {
-            this.setAccessToken((String) m.get("access_token"));
-            this.setTokenType((String) m.get("token_type"));
-            if (m.containsKey("refresh_token")
-                    && (m.get("refresh_token") instanceof String)) {
-                this.setRefreshToken((String) m.get("refresh_token"));
-            }
-            if (m.containsKey("scope")
-                    && (m.get("scope") instanceof String)) {
-                this.setScope((String) m.get("scope"));
-            }
-            if (m.containsKey("expires_in")
-                    && (m.get("expires_in") instanceof Integer)) {
-                this.setExpiresIn((Integer) m.get("expires_in"));
-            }
+        this.setAccessToken((String) m.get("access_token"));
+        this.setTokenType((String) m.get("token_type"));
+        if (m.containsKey("refresh_token")
+                && (m.get("refresh_token") instanceof String)) {
+            this.setRefreshToken((String) m.get("refresh_token"));
+        }
+        if (m.containsKey("scope")
+                && (m.get("scope") instanceof String)) {
+            this.setScope((String) m.get("scope"));
+        }
+        if (m.containsKey("expires_in")
+                && (m.get("expires_in") instanceof Integer)) {
+            this.setExpiresIn((Integer) m.get("expires_in"));
+        }
     }
 
     /**

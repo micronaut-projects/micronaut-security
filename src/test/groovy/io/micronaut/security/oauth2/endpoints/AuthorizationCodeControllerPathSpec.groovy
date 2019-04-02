@@ -10,7 +10,7 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.oauth2.configuration.OauthConfiguration
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.openid.endpoints.token.AuthorizationCodeGrantRequestGenerator
-import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointConfiguration
+import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpoint
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -47,7 +47,7 @@ class AuthorizationCodeControllerPathSpec extends Specification {
         clazz << [
                 OauthConfiguration,
                 OpenIdProviderMetadata,
-                TokenEndpointConfiguration,
+                TokenEndpoint,
                 AuthorizationCodeGrantRequestGenerator,
                 AuthorizationCodeController
         ]

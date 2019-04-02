@@ -17,7 +17,7 @@
 package io.micronaut.security.oauth2.openid.endpoints.token;
 
 /**
- * Returns a default {@link TokenEndpointAuthMethod} to be used if no auth method is specified for {@link TokenEndpointConfiguration}.
+ * Returns a default {@link TokenEndpointAuthMethod} to be used if no auth method is specified for {@link TokenEndpoint}.
  *
  * @author Sergio del Amo
  * @since 1.1.0

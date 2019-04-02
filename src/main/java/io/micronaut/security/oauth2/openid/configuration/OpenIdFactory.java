@@ -19,13 +19,13 @@ package io.micronaut.security.oauth2.openid.configuration;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.oauth2.openid.endpoints.OpenIdEndpoints;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.introspection.IntrospectionEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.registration.RegistrationEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.revocation.RevocationEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.userinfo.UserInfoEndpointConfiguration;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.introspection.IntrospectionEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.registration.RegistrationEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.revocation.RevocationEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpoint;
+import io.micronaut.security.oauth2.openid.endpoints.userinfo.UserInfoEndpoint;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -42,51 +42,51 @@ public class OpenIdFactory {
 
     /**
      * @param openIdConfiguration OpenID configuration
-     * @param endSessionEndpointConfiguration End-session endpoint configuration
+     * @param endSessionEndpoint End-session endpoint configuration
      * @return a bean of type {@link OpenIdProviderMetadataSession}
      */
     @Singleton
-    @Requires(beans = EndSessionEndpointConfiguration.class)
+    @Requires(beans = EndSessionEndpoint.class)
     public OpenIdProviderMetadataSession openIdProviderMetadataSession(@Nullable OpenIdConfiguration openIdConfiguration,
-                                                                       EndSessionEndpointConfiguration endSessionEndpointConfiguration) {
-        return new OpenIdProviderMetadataSessionAdapter(openIdConfiguration, endSessionEndpointConfiguration);
+                                                                       EndSessionEndpoint endSessionEndpoint) {
+        return new OpenIdProviderMetadataSessionAdapter(openIdConfiguration, endSessionEndpoint);
     }
 
     /**
      * @param openIdConfiguration OpenID configuration
      * @param openIdProviderConfiguration Open ID Provider configuration
-     * @param authorizationEndpointConfiguration Authorization endpoint configuration
-     * @param introspectionEndpointConfiguration Introspection endpoint configuration
-     * @param registrationEndpointConfiguration Registration endpoint configuration
-     * @param revocationEndpointConfiguration Revocation endpoint configuration
-     * @param tokenEndpointConfiguration Token endpoint configuration
-     * @param userInfoEndpointConfiguration User Info endpoint configuration
+     * @param authorizationEndpoint Authorization endpoint configuration
+     * @param introspectionEndpoint Introspection endpoint configuration
+     * @param registrationEndpoint Registration endpoint configuration
+     * @param revocationEndpoint Revocation endpoint configuration
+     * @param tokenEndpoint Token endpoint configuration
+     * @param userInfoEndpoint User Info endpoint configuration
      * @return a bean of type {@link OpenIdProviderMetadata}
      */
     @Requires(beans = {OpenIdProviderConfiguration.class,
-            AuthorizationEndpointConfiguration.class,
-            IntrospectionEndpointConfiguration.class,
-            RegistrationEndpointConfiguration.class,
-            RevocationEndpointConfiguration.class,
-            TokenEndpointConfiguration.class,
-            UserInfoEndpointConfiguration.class})
+            AuthorizationEndpoint.class,
+            IntrospectionEndpoint.class,
+            RegistrationEndpoint.class,
+            RevocationEndpoint.class,
+            TokenEndpoint.class,
+            UserInfoEndpoint.class})
     @Singleton
     public OpenIdProviderMetadata openIdProviderMetadata(@Nullable OpenIdConfiguration openIdConfiguration,
                                                          OpenIdProviderConfiguration openIdProviderConfiguration,
-                                                         AuthorizationEndpointConfiguration authorizationEndpointConfiguration,
-                                                         IntrospectionEndpointConfiguration introspectionEndpointConfiguration,
-                                                         RegistrationEndpointConfiguration registrationEndpointConfiguration,
-                                                         RevocationEndpointConfiguration revocationEndpointConfiguration,
-                                                         TokenEndpointConfiguration tokenEndpointConfiguration,
-                                                         UserInfoEndpointConfiguration userInfoEndpointConfiguration) {
+                                                         AuthorizationEndpoint authorizationEndpoint,
+                                                         IntrospectionEndpoint introspectionEndpoint,
+                                                         RegistrationEndpoint registrationEndpoint,
+                                                         RevocationEndpoint revocationEndpoint,
+                                                         TokenEndpoint tokenEndpoint,
+                                                         UserInfoEndpoint userInfoEndpoint) {
         return new OpenIdProviderMetadataAdapter(openIdConfiguration,
                 openIdProviderConfiguration,
-                authorizationEndpointConfiguration,
-                introspectionEndpointConfiguration,
-                registrationEndpointConfiguration,
-                revocationEndpointConfiguration,
-                tokenEndpointConfiguration,
-                userInfoEndpointConfiguration);
+                authorizationEndpoint,
+                introspectionEndpoint,
+                registrationEndpoint,
+                revocationEndpoint,
+                tokenEndpoint,
+                userInfoEndpoint);
     }
 
     /**

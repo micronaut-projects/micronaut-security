@@ -23,7 +23,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.endpoints.LogoutControllerConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
-import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpoint;
 import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfigurationProperties;
 import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionParameter;
 import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionParameterType;
@@ -51,7 +51,7 @@ import java.util.List;
 })
 @Primary
 @Singleton
-public class AwsCognitoEndSessionEndpointConfiguration implements EndSessionEndpointConfiguration {
+public class AwsCognitoEndSessionEndpointConfiguration implements EndSessionEndpoint {
 
     private final String logoutUri;
     private final String domainName;
@@ -62,7 +62,7 @@ public class AwsCognitoEndSessionEndpointConfiguration implements EndSessionEndp
      * @param embeddedServer Embedded Server
      * @param domainName AWS Cognito User's pool domain Name
      * @param logoutPath {@link io.micronaut.security.endpoints.LogoutController} path.
-     * @param endSessionEndpointConfigurationProperties Default {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link EndSessionEndpointConfiguration}.
+     * @param endSessionEndpointConfigurationProperties Default {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link EndSessionEndpoint}.
      */
     public AwsCognitoEndSessionEndpointConfiguration(
             EmbeddedServer embeddedServer,

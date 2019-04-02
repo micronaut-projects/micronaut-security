@@ -17,7 +17,7 @@
 package io.micronaut.security.oauth2.openid.endpoints.token;
 
 import io.micronaut.http.MediaType;
-import io.micronaut.security.oauth2.openid.endpoints.EndpointUrl;
+import io.micronaut.security.oauth2.openid.endpoints.Endpoint;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * @since 1.0.0
  * @author Sergio del Amo
  */
-public interface TokenEndpointConfiguration extends EndpointUrl {
+public interface TokenEndpoint extends Endpoint {
 
     /**
      *

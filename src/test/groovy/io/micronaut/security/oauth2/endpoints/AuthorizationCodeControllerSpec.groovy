@@ -18,7 +18,7 @@ import io.micronaut.security.oauth2.handlers.SuccessfulIdTokenAccessTokenRespons
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.openid.endpoints.token.AuthorizationCodeGrantRequestGenerator
 import io.micronaut.security.oauth2.openid.endpoints.token.DefaultAuthorizationCodeGrantRequestGenerator
-import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointConfiguration
+import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpoint
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponseValidator
 import io.micronaut.security.oauth2.responses.Oauth2AuthenticationResponse
 import spock.lang.Specification
@@ -50,7 +50,7 @@ class AuthorizationCodeControllerSpec extends Specification {
         when:
         String mockHttpServerUrl = "http://localhost:${mockHttpServerPort}"
         String authorizationRedirectUri = "${mockHttpServerUrl}/authcode/cb"
-        String tokenEndpoint = "${mockHttpServerUrl}${path}"
+        String tokenEndpointUrl = "${mockHttpServerUrl}${path}"
         Map<String, Object> config = [
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
                 'micronaut.security.enabled': true,
@@ -60,7 +60,7 @@ class AuthorizationCodeControllerSpec extends Specification {
                 'micronaut.security.oauth2.token.content-type': 'application/json',
                 'micronaut.security.oauth2.authorization.redirect-uri': authorizationRedirectUri,
                 'micronaut.security.oauth2.token.redirect-uri': authorizationRedirectUri,
-                'micronaut.security.oauth2.token.url': tokenEndpoint,
+                'micronaut.security.oauth2.token.url': tokenEndpointUrl,
                 'micronaut.security.oauth2.openid.idtoken.cookie.enabled': false
 
         ]
@@ -76,11 +76,11 @@ class AuthorizationCodeControllerSpec extends Specification {
         embeddedServer.applicationContext.containsBean(AuthorizationCodeController)
 
         when:
-        TokenEndpointConfiguration tokenEndpointConfiguration = embeddedServer.applicationContext.getBean(TokenEndpointConfiguration)
+        TokenEndpoint tokenEndpoint = embeddedServer.applicationContext.getBean(TokenEndpoint)
 
         then:
         noExceptionThrown()
-        tokenEndpointConfiguration.getRedirectUri() != null
+        tokenEndpoint.getRedirectUri() != null
 
         and:
         embeddedServer.applicationContext.containsBean(AuthorizationCodeGrantRequestGenerator)

@@ -8,7 +8,7 @@ import spock.lang.Specification
 class StateProviderSpec extends Specification {
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
-    void "no StateProvider is provided by default"() {
+    void "DefaultStateProvider is provided by default"() {
         given:
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
@@ -16,10 +16,10 @@ class StateProviderSpec extends Specification {
         ], Environment.TEST)
 
         when:
-        context.getBean(StateProvider)
+        StateProvider provider = context.getBean(StateProvider)
 
         then:
-        thrown(NoSuchBeanException)
+        provider instanceof DefaultStateProvider
 
         cleanup:
         context.close()

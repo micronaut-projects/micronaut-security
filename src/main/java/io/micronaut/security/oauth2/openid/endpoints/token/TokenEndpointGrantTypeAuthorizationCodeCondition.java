@@ -19,7 +19,7 @@ package io.micronaut.security.oauth2.openid.endpoints.token;
 import io.micronaut.security.oauth2.grants.GrantType;
 
 /**
- * Condition which ensures the {@link TokenEndpointConfiguration#getGrantType()} is authorization code.
+ * Condition which ensures the {@link TokenEndpoint#getGrantType()} is authorization code.
  *
  * @author Sergio del Amo
  * @since 1.0.0

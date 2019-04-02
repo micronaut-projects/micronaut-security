@@ -57,7 +57,7 @@ class EndSessionUrlProviderSpec extends Specification {
         noExceptionThrown()
 
         when:
-        context.getBean(EndSessionEndpointConfiguration)
+        context.getBean(EndSessionEndpoint)
 
         then:
         noExceptionThrown()

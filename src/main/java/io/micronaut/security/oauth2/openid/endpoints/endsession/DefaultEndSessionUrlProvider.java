@@ -37,7 +37,7 @@ import java.util.Optional;
  * @since 1.0.0
  */
 @Singleton
-@Requires(beans = {TokenResolver.class, OpenIdEndpoints.class, OauthConfiguration.class, EndSessionEndpointConfiguration.class})
+@Requires(beans = {TokenResolver.class, OpenIdEndpoints.class, OauthConfiguration.class, EndSessionEndpoint.class})
 public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
     private static final char OPENCURLYBRACE = '{';
     private static final char COMMA = ',';
@@ -48,23 +48,23 @@ public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
     private final TokenResolver tokenResolver;
     private final OauthConfiguration oauthConfiguration;
     private final OpenIdEndpoints openIdEndpoints;
-    private final EndSessionEndpointConfiguration endSessionEndpointConfiguration;
+    private final EndSessionEndpoint endSessionEndpoint;
 
     /**
      *
      * @param tokenResolver Token Resolver
      * @param oauthConfiguration OAuth 2.0 Configuration
      * @param openIdEndpoints Open ID endpoints
-     * @param endSessionEndpointConfiguration End-session endpoint configuration
+     * @param endSessionEndpoint End-session endpoint configuration
      */
     public DefaultEndSessionUrlProvider(@Nonnull TokenResolver tokenResolver,
                                         @Nonnull OauthConfiguration oauthConfiguration,
                                         @Nonnull OpenIdEndpoints openIdEndpoints,
-                                        @Nonnull EndSessionEndpointConfiguration endSessionEndpointConfiguration) {
+                                        @Nonnull EndSessionEndpoint endSessionEndpoint) {
         this.tokenResolver = tokenResolver;
         this.oauthConfiguration = oauthConfiguration;
         this.openIdEndpoints = openIdEndpoints;
-        this.endSessionEndpointConfiguration = endSessionEndpointConfiguration;
+        this.endSessionEndpoint = endSessionEndpoint;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
         UriTemplate uriTemplate = new UriTemplate(template);
         Map<String, Object> arguments = new HashMap<>();
 
-        for (EndSessionParameter param : endSessionEndpointConfiguration.getParameters()) {
+        for (EndSessionParameter param : endSessionEndpoint.getParameters()) {
             String value = resolveValue(param, request);
             if (value != null) {
                 arguments.put(param.getName(), value);
@@ -114,7 +114,7 @@ public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
      * @return A url encoded string with parameters
      */
     protected String instantiateTemplate(String baseUrl) {
-        Optional<String> optionalUrlArguments = endSessionEndpointConfiguration.getParameters()
+        Optional<String> optionalUrlArguments = endSessionEndpoint.getParameters()
                 .stream()
                 .map(EndSessionParameter::getName)
                 .reduce((a, b) -> a + COMMA + b);

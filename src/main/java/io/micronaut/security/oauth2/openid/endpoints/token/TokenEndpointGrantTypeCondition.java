@@ -23,7 +23,7 @@ import io.micronaut.context.exceptions.NoSuchBeanException;
 import io.micronaut.security.oauth2.grants.GrantType;
 
 /**
- * Conditions which verifies {@link TokenEndpointConfiguration#getGrantType()} is a particular grant type.
+ * Conditions which verifies {@link TokenEndpoint#getGrantType()} is a particular grant type.
  *
  * @author Sergio del Amo
  * @since 1.0.0
@@ -34,8 +34,8 @@ public abstract class TokenEndpointGrantTypeCondition implements Condition {
      public boolean matches(ConditionContext context) {
             BeanContext beanContext = context.getBeanContext();
             try {
-                TokenEndpointConfiguration tokenEndpointConfiguration = beanContext.getBean(TokenEndpointConfiguration.class);
-                if (tokenEndpointConfiguration.getGrantType().equals(checkedGrantType().getGrantType())) {
+                TokenEndpoint tokenEndpoint = beanContext.getBean(TokenEndpoint.class);
+                if (tokenEndpoint.getGrantType().equals(checkedGrantType().getGrantType())) {
                     return true;
                 }
             } catch (NoSuchBeanException e) {

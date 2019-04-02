@@ -26,7 +26,7 @@ import java.util.Optional;
 
 /**
  * Provides an {@link AuthenticationRequest} by combining {@link OauthConfiguration},
- * {@link StateProvider}, {@link NonceProvider}, {@link AuthorizationEndpointConfiguration}.
+ * {@link StateProvider}, {@link NonceProvider}, {@link AuthorizationEndpoint}.
  * @author Sergio del Amo
  * @since 1.0.0
  */

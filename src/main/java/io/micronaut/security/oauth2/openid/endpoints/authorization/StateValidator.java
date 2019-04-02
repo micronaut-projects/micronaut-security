@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 import io.micronaut.http.HttpRequest;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Validates a state parameter.
@@ -36,5 +37,5 @@ public interface StateValidator {
      * @param state the State value returned by the authorzation server
      * @return wether state is valid or not
      */
-    boolean validate(@Nonnull HttpRequest<?> request, @Nonnull String state);
+    boolean validate(@Nonnull HttpRequest<?> request, @Nullable String state);
 }

@@ -23,7 +23,6 @@ import io.micronaut.security.oauth2.openid.OpenIdScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @ConfigurationProperties(AuthorizationEndpointConfigurationProperties.PREFIX)
-public class AuthorizationEndpointConfigurationProperties implements AuthorizationEndpointConfiguration, AuthorizationEndpointRequestConfiguration {
+public class AuthorizationEndpointConfigurationProperties implements AuthorizationEndpoint, AuthorizationEndpointRequestConfiguration {
 
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".authorization";
 
