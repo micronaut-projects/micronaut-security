@@ -67,10 +67,17 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_COOKIEPATH = "/";
 
+    /**
+     * The default value to always redirect to the default uri.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ALWAYS_REDIRECT = false;
+
     private String cookieName = JwtCookieConfigurationProperties.DEFAULT_COOKIENAME;
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
-    private URI loginSuccessRedirectUri;
+    private URI defaultRedirectUri;
+    private Boolean alwaysRedirectDefault = DEFAULT_ALWAYS_REDIRECT;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     private Boolean cookieSecure = DEFAULT_SECURE;
     private TemporalAmount cookieMaxAge;
@@ -188,16 +195,30 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     }
 
     @Override
-    public Optional<URI> getLoginSuccessRedirectUri() {
-        return Optional.ofNullable(this.loginSuccessRedirectUri);
+    public Optional<URI> getDefaultRedirectUri() {
+        return Optional.ofNullable(this.defaultRedirectUri);
     }
 
     /**
      * Sets the login success target URL. Default behavior is to redirect back to the original URI.
      *
-     * @param loginSuccessRedirectUri The URI
+     * @param defaultRedirectUri The URI
      */
-    public void setLoginSuccessRedirectUri(URI loginSuccessRedirectUri) {
-        this.loginSuccessRedirectUri = loginSuccessRedirectUri;
+    public void setDefaultRedirectUri(URI defaultRedirectUri) {
+        this.defaultRedirectUri = defaultRedirectUri;
+    }
+
+    @Override
+    public Boolean getAlwaysRedirectDefault() {
+        return alwaysRedirectDefault;
+    }
+
+    /**
+     * Sets whether the default redirect URI should always be used. Default value ({@value #DEFAULT_ALWAYS_REDIRECT}).
+     *
+     * @param alwaysRedirectDefault The always redirect setting
+     */
+    public void setAlwaysRedirectDefault(Boolean alwaysRedirectDefault) {
+        this.alwaysRedirectDefault = alwaysRedirectDefault;
     }
 }

@@ -96,13 +96,13 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements Succes
                                  AuthenticationResponse authenticationResponse,
                                  IdTokenAccessTokenResponse idTokenAccessTokenResponse,
                                  Authentication authentication) {
-        Object state = stateProvider.deserializeState(authenticationResponse.getState());
-        URI uri = null;
-        if (state instanceof State) {
-            uri = ((State) state).getOriginalUri();
-        }
-        if (uri == null) {
-            uri = configuration.getLoginSuccessRedirectUri().orElse(null);
+
+        URI uri = configuration.getDefaultRedirectUri().orElse(null);
+        if (!configuration.getAlwaysRedirectDefault()) {
+            Object state = stateProvider.deserializeState(authenticationResponse.getState());
+            if (state instanceof State) {
+                uri = ((State) state).getOriginalUri();
+            }
         }
         if (uri == null) {
             try {

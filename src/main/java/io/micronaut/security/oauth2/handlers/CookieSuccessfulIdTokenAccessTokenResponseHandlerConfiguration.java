@@ -34,5 +34,10 @@ public interface CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration 
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after a successful login.
      */
-    Optional<URI> getLoginSuccessRedirectUri();
+    Optional<URI> getDefaultRedirectUri();
+
+    /**
+     * @return True if the default redirect URI should always be used.
+     */
+    Boolean getAlwaysRedirectDefault();
 }
