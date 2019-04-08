@@ -64,8 +64,8 @@ public class DefaultAuthenticationRequestProvider implements AuthenticationReque
     }
 
     @Override
-    public AuthenticationRequest generateAuthenticationRequest(HttpRequest<?> request, boolean unauthorized) {
-        return new AuthenticationRequestAdapter(request, unauthorized,
+    public AuthenticationRequest generateAuthenticationRequest(HttpRequest<?> request) {
+        return new AuthenticationRequestAdapter(request,
                 oauthConfiguration,
                 authorizationEndpointRequestConfiguration,
                 stateProvider,

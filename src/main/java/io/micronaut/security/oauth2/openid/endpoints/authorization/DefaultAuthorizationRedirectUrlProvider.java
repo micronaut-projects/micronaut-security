@@ -66,8 +66,8 @@ public class DefaultAuthorizationRedirectUrlProvider implements AuthorizationRed
      * @return A URL to redirect the user to the OpenID Provider authorization endpoint.
      */
     @Override
-    public String resolveAuthorizationRedirectUrl(HttpRequest<?> request, boolean unauthorized) {
-        AuthenticationRequest authenticationRequest = authenticationRequestProvider.generateAuthenticationRequest(request, unauthorized);
+    public String resolveAuthorizationRedirectUrl(HttpRequest<?> request) {
+        AuthenticationRequest authenticationRequest = authenticationRequestProvider.generateAuthenticationRequest(request);
         Map<String, Object> arguments = instantiateParameters(authenticationRequest);
         String baseUrl = this.openIdProviderMetadata.getAuthorizationEndpoint();
         String expandedUri = expandedUri(baseUrl, arguments);

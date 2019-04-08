@@ -28,9 +28,7 @@ public interface AuthenticationRequestProvider {
 
     /**
      * @param request the Original request prior redirect.
-     * @param unauthorized If the reason for redirection is because the user
-     *                     requested a resource that requires authorization.
      * @return An Authentication request against an Open ID identity provider.
      */
-    AuthenticationRequest generateAuthenticationRequest(HttpRequest<?> request, boolean unauthorized);
+    AuthenticationRequest generateAuthenticationRequest(HttpRequest<?> request);
 }

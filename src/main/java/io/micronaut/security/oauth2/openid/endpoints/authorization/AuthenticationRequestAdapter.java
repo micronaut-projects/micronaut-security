@@ -33,7 +33,6 @@ import java.util.Optional;
 public class AuthenticationRequestAdapter implements AuthenticationRequest {
 
     private HttpRequest<?> request;
-    private final boolean unauthorized;
     private OauthConfiguration oauthConfiguration;
     private StateProvider stateProvider;
     private NonceProvider nonceProvider;
@@ -44,8 +43,6 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
     /**
      *
      * @param request the Original request prior redirect.
-     * @param unauthorized If the reason for redirection is because the user
-     *                     requested a resource that requires authorization.
      * @param oauthConfiguration OAuth 2.0 Configuration
      * @param authorizationEndpointConfiguration Authorization Endpoint Configuration
      * @param stateProvider State Provider
@@ -54,7 +51,6 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
      * @param idTokenHintProvider Id Token Hint Provider
      */
     public AuthenticationRequestAdapter(HttpRequest<?> request,
-                                        boolean unauthorized,
                                         OauthConfiguration oauthConfiguration,
                                         AuthorizationEndpointRequestConfiguration authorizationEndpointConfiguration,
                                         @Nullable StateProvider stateProvider,
@@ -63,7 +59,6 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
                                         @Nullable IdTokenHintProvider idTokenHintProvider
                                         ) {
         this.request = request;
-        this.unauthorized = unauthorized;
         this.oauthConfiguration = oauthConfiguration;
         this.authorizationEndpointConfiguration = authorizationEndpointConfiguration;
         this.stateProvider = stateProvider;
@@ -81,7 +76,7 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
     @Override
     @Nullable
     public String getState() {
-        return getStateProvider().map(sp -> sp.generateState(request, unauthorized)).orElse(null);
+        return getStateProvider().map(sp -> sp.generateState(request)).orElse(null);
     }
 
     @Nullable

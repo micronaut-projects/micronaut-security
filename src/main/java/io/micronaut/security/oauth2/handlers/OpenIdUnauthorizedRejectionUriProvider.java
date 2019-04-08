@@ -38,7 +38,6 @@ import java.util.Optional;
 public class OpenIdUnauthorizedRejectionUriProvider implements UnauthorizedRejectionUriProvider {
 
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".unauthorized-rejection-uri-provider.enabled";
-
     private final AuthorizationRedirectUrlProvider authorizationRedirectUrlProvider;
 
     /**
@@ -52,6 +51,6 @@ public class OpenIdUnauthorizedRejectionUriProvider implements UnauthorizedRejec
 
     @Override
     public Optional<String> getUnauthorizedRedirectUri(HttpRequest<?> request) {
-        return Optional.of(authorizationRedirectUrlProvider.resolveAuthorizationRedirectUrl(request, true));
+        return Optional.of(authorizationRedirectUrlProvider.resolveAuthorizationRedirectUrl(request));
     }
 }

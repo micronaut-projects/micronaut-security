@@ -72,7 +72,7 @@ public class AuthorizationCodeController {
 
     @Get("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".login-path:/login}")
     HttpResponse redirect(HttpRequest request) {
-        return HttpResponse.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlProvider.resolveAuthorizationRedirectUrl(request, false));
+        return HttpResponse.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlProvider.resolveAuthorizationRedirectUrl(request));
     }
 
     /**

@@ -18,7 +18,9 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.oauth2.handlers.OpenIdUnauthorizedRejectionUriProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +51,8 @@ public class DefaultStateProvider implements StateProvider {
 
     @Nullable
     @Override
-    public String generateState(HttpRequest<?> request, boolean unauthorized) {
+    public String generateState(HttpRequest<?> request) {
+        boolean unauthorized = !request.getAttribute(HttpAttributes.PRINCIPAL).isPresent();
         Object state = buildState(request, unauthorized);
         if (state != null) {
             return serializeState(state);
