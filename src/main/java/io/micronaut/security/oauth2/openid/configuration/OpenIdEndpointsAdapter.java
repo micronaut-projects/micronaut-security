@@ -18,6 +18,8 @@ package io.micronaut.security.oauth2.openid.configuration;
 
 import io.micronaut.security.oauth2.openid.endpoints.OpenIdEndpoints;
 
+import javax.annotation.Nullable;
+
 /**
  * Adapts {@link OpenIdProviderMetadata} and {@link OpenIdProviderMetadataSession} to {@link OpenIdEndpoints}.
  *
@@ -46,6 +48,7 @@ public class OpenIdEndpointsAdapter implements OpenIdEndpoints {
     }
 
     @Override
+    @Nullable
     public String getEndSession() {
         return openIdProviderMetadataSession.getEndSessionEndpoint();
     }

@@ -24,8 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.io.IOException;
 
 /**
  * A default state provider that stores the original
@@ -50,8 +49,25 @@ public class DefaultStateProvider implements StateProvider {
 
     @Nullable
     @Override
-    public String generateState(HttpRequest<?> request) {
-        return serializeState(buildState(request));
+    public String generateState(HttpRequest<?> request, boolean unauthorized) {
+        Object state = buildState(request, unauthorized);
+        if (state != null) {
+            return serializeState(state);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Object deserializeState(String state) {
+        try {
+            return objectMapper.readValue(state, DefaultState.class);
+        } catch (IOException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Failed to deserialize the authorization request state", e);
+            }
+        }
+        return null;
     }
 
     /**
@@ -79,9 +95,11 @@ public class DefaultStateProvider implements StateProvider {
      * @return The state object
      */
     @Nullable
-    protected Object buildState(HttpRequest<?> request) {
-        Map<String, Object> state = new LinkedHashMap<>();
-        state.put("originalUri", request.getUri());
+    protected Object buildState(HttpRequest<?> request, boolean unauthorized) {
+        DefaultState state = new DefaultState();
+        if (unauthorized) {
+            state.setOriginalUri(request.getUri());
+        }
         return state;
     }
 }

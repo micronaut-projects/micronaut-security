@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.handlers;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
+import io.micronaut.security.oauth2.responses.AuthenticationResponse;
 
 /**
  * Handle a {@link IdTokenAccessTokenResponse}.
@@ -34,5 +35,7 @@ public interface IdTokenAccessTokenResponseHandler {
      * @param idTokenAccessTokenResponse An ID Token Access Token response.
      * @return A Http Response
      */
-    HttpResponse<?> handle(HttpRequest<?> request, IdTokenAccessTokenResponse idTokenAccessTokenResponse);
+    HttpResponse<?> handle(HttpRequest<?> request,
+                           AuthenticationResponse authenticationResponse,
+                           IdTokenAccessTokenResponse idTokenAccessTokenResponse);
 }

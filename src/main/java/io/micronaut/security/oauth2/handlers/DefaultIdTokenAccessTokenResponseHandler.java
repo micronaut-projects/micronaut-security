@@ -22,6 +22,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponseValidator;
+import io.micronaut.security.oauth2.responses.AuthenticationResponse;
 
 import javax.inject.Singleton;
 import java.util.Optional;
@@ -53,11 +54,13 @@ public class DefaultIdTokenAccessTokenResponseHandler implements IdTokenAccessTo
     }
 
     @Override
-    public HttpResponse<?> handle(HttpRequest<?> request, IdTokenAccessTokenResponse idTokenAccessTokenResponse) {
+    public HttpResponse<?> handle(HttpRequest<?> request,
+                                  AuthenticationResponse authenticationResponse,
+                                  IdTokenAccessTokenResponse idTokenAccessTokenResponse) {
         Optional<Authentication> authenticationOptional = idTokenAccessTokenResponseValidator.validate(idTokenAccessTokenResponse);
 
         if (authenticationOptional.isPresent()) {
-            return successfulIdTokenAccessTokenResponseHandler.handle(request, idTokenAccessTokenResponse, authenticationOptional.get());
+            return successfulIdTokenAccessTokenResponseHandler.handle(request, authenticationResponse, idTokenAccessTokenResponse, authenticationOptional.get());
         }
         throw new InvalidIdTokenAccessTokenResponseException(idTokenAccessTokenResponse);
     }

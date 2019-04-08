@@ -21,14 +21,14 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.views.model.ViewModelProcessor;
 
 /**
- * {@link ConfigurationProperties} implementation of {@link EndsessionViewModelProcessorConfiguration}.
+ * {@link ConfigurationProperties} implementation of {@link EndSessionViewModelProcessorConfiguration}.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
 @Requires(classes = ViewModelProcessor.class)
 @ConfigurationProperties(EndsessionViewModelProcessorConfigurationProperties.PREFIX)
-public class EndsessionViewModelProcessorConfigurationProperties implements EndsessionViewModelProcessorConfiguration {
+public class EndsessionViewModelProcessorConfigurationProperties implements EndSessionViewModelProcessorConfiguration {
     public static final String PREFIX = EndSessionEndpointConfigurationProperties.PREFIX + ".view-model-processor";
 
     /**
@@ -48,7 +48,7 @@ public class EndsessionViewModelProcessorConfigurationProperties implements Ends
     private String endSessionUrlKey = DEFAULT_ENDSESSIONURLKEY;
 
     /**
-     * @return true if you want to enable the {@link EndsessionViewModelProcessor}
+     * @return true if you want to enable the {@link EndSessionViewModelProcessor}
      */
     @Override
     public boolean isEnabled() {
@@ -56,7 +56,7 @@ public class EndsessionViewModelProcessorConfigurationProperties implements Ends
     }
 
     /**
-     * Sets whether the {@link EndsessionViewModelProcessor} is enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * Sets whether the {@link EndSessionViewModelProcessor} is enabled. Default value ({@value #DEFAULT_ENABLED}).
      *
      * @param enabled True if is enabled
      */

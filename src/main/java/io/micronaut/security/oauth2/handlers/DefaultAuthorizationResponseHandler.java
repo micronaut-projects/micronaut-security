@@ -83,7 +83,9 @@ public class DefaultAuthorizationResponseHandler implements AuthorizationRespons
             return flowable.map(response -> {
                 Optional<IdTokenAccessTokenResponse> idTokenAccessTokenResponse = response.getBody();
                 if (idTokenAccessTokenResponse.isPresent()) {
-                    return idTokenAccessTokenResponseHandler.handle(originalRequest, idTokenAccessTokenResponse.get());
+                    return idTokenAccessTokenResponseHandler.handle(originalRequest,
+                            authenticationResponse,
+                            idTokenAccessTokenResponse.get());
                 }
                 return HttpResponse.serverError();
             }).firstOrError();

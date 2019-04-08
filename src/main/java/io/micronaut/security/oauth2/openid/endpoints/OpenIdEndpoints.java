@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.openid.endpoints;
 
+import javax.annotation.Nullable;
+
 /**
  * Open ID Connect endpoint urls.
  *
@@ -34,6 +36,7 @@ public interface OpenIdEndpoints {
      *
      * @return end-session endpoint url.
      */
+    @Nullable
     String getEndSession();
 
     /**

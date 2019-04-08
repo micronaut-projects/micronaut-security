@@ -33,22 +33,22 @@ import java.util.Map;
  * @since 1.0.0
  */
 @Requires(beans = {
-        EndsessionViewModelProcessorConfiguration.class,
+        EndSessionViewModelProcessorConfiguration.class,
         EndSessionUrlProvider.class
 })
 @Requires(classes = ViewModelProcessor.class)
 @Singleton
-public class EndsessionViewModelProcessor implements ViewModelProcessor {
+public class EndSessionViewModelProcessor implements ViewModelProcessor {
 
-    private final EndsessionViewModelProcessorConfiguration endsessionViewModelProcessorConfiguration;
+    private final EndSessionViewModelProcessorConfiguration endsessionViewModelProcessorConfiguration;
     private final EndSessionUrlProvider endSessionUrlProvider;
 
     /**
      *
-     * @param endsessionViewModelProcessorConfiguration {@link EndsessionViewModelProcessor} Configuration.
+     * @param endsessionViewModelProcessorConfiguration {@link EndSessionViewModelProcessor} Configuration.
      * @param endSessionUrlProvider End session url provider
      */
-    public EndsessionViewModelProcessor(EndsessionViewModelProcessorConfiguration endsessionViewModelProcessorConfiguration,
+    public EndSessionViewModelProcessor(EndSessionViewModelProcessorConfiguration endsessionViewModelProcessorConfiguration,
                                         EndSessionUrlProvider endSessionUrlProvider) {
         this.endsessionViewModelProcessorConfiguration = endsessionViewModelProcessorConfiguration;
         this.endSessionUrlProvider = endSessionUrlProvider;
@@ -56,11 +56,16 @@ public class EndsessionViewModelProcessor implements ViewModelProcessor {
 
     @Override
     public void process(@Nonnull HttpRequest<?> request, @Nonnull ModelAndView<Map<String, Object>> modelAndView) {
+        String url = endSessionUrlProvider.resolveLogoutUrl(request);
+        if (url == null) {
+            return;
+        }
         Map<String, Object> viewModel = modelAndView.getModel().orElseGet(() -> {
             final HashMap<String, Object> newModel = new HashMap<>(1);
             modelAndView.setModel(newModel);
             return newModel;
         });
-        viewModel.putIfAbsent(endsessionViewModelProcessorConfiguration.getEndSessionUrlKey(), endSessionUrlProvider.resolveLogoutUrl(request));
+
+        viewModel.putIfAbsent(endsessionViewModelProcessorConfiguration.getEndSessionUrlKey(), url);
     }
 }

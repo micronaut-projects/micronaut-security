@@ -22,7 +22,10 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.State;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.StateProvider;
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
+import io.micronaut.security.oauth2.responses.AuthenticationResponse;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 import javax.inject.Singleton;
@@ -43,30 +46,33 @@ import java.util.concurrent.TimeUnit;
 public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements SuccessfulIdTokenAccessTokenResponseHandler {
 
     private final CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration configuration;
+    private final StateProvider stateProvider;
 
     /**
      *
      * @param configuration Cookie Successful IdToken-AccessToken Handler
      */
-    public CookieSuccessfulIdTokenAccessTokenResponseHandler(CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration configuration) {
+    public CookieSuccessfulIdTokenAccessTokenResponseHandler(
+            CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration configuration,
+                                                             StateProvider stateProvider) {
         this.configuration = configuration;
+        this.stateProvider = stateProvider;
     }
 
     @Override
-    public HttpResponse handle(HttpRequest request, IdTokenAccessTokenResponse idTokenAccessTokenResponse, Authentication authentication) {
-
+    public HttpResponse handle(HttpRequest request,
+                               AuthenticationResponse authenticationResponse,
+                               IdTokenAccessTokenResponse idTokenAccessTokenResponse,
+                               Authentication authentication) {
         Cookie cookie = Cookie.of(configuration.getCookieName(), idTokenAccessTokenResponse.getIdToken());
         cookie.configure(configuration, request.isSecure());
         if (!configuration.getCookieMaxAge().isPresent()) {
             long seconds = secondsToExpirationTime(authentication);
             cookie.maxAge(seconds);
         }
-        try {
-            URI location = new URI(configuration.getLoginSuccessTargetUrl());
-            return HttpResponse.seeOther(location).cookie(cookie);
-        } catch (URISyntaxException e) {
-            return HttpResponse.serverError();
-        }
+
+        URI location = getRedirectUri(request, authenticationResponse, idTokenAccessTokenResponse, authentication);
+        return HttpResponse.seeOther(location).cookie(cookie);
     }
 
     /**
@@ -84,5 +90,28 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements Succes
         }
 
         return Integer.MAX_VALUE;
+    }
+
+    protected URI getRedirectUri(HttpRequest request,
+                                 AuthenticationResponse authenticationResponse,
+                                 IdTokenAccessTokenResponse idTokenAccessTokenResponse,
+                                 Authentication authentication) {
+        Object state = stateProvider.deserializeState(authenticationResponse.getState());
+        URI uri = null;
+        if (state instanceof State) {
+            uri = ((State) state).getOriginalUri();
+        }
+        if (uri == null) {
+            uri = configuration.getLoginSuccessRedirectUri().orElse(null);
+        }
+        if (uri == null) {
+            try {
+                return new URI("/");
+            } catch (URISyntaxException e) {
+                throw new RuntimeException("This should never happen", e);
+            }
+        } else {
+            return uri;
+        }
     }
 }

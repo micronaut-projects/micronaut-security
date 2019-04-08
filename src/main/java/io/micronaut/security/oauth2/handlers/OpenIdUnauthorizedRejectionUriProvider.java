@@ -52,6 +52,6 @@ public class OpenIdUnauthorizedRejectionUriProvider implements UnauthorizedRejec
 
     @Override
     public Optional<String> getUnauthorizedRedirectUri(HttpRequest<?> request) {
-        return Optional.of(authorizationRedirectUrlProvider.resolveAuthorizationRedirectUrl(request));
+        return Optional.of(authorizationRedirectUrlProvider.resolveAuthorizationRedirectUrl(request, true));
     }
 }

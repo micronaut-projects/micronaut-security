@@ -19,6 +19,9 @@ package io.micronaut.security.oauth2.handlers;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.cookie.CookieConfiguration;
 
+import java.net.URI;
+import java.util.Optional;
+
 /**
  * Configuration for {@link CookieSuccessfulIdTokenAccessTokenResponseHandler}.
  *
@@ -31,5 +34,5 @@ public interface CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration 
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after a successful login.
      */
-    String getLoginSuccessTargetUrl();
+    Optional<URI> getLoginSuccessRedirectUri();
 }

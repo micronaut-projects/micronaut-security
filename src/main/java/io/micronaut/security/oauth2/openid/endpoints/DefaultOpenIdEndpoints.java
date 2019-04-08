@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.openid.endpoints;
 
+import javax.annotation.Nullable;
+
 /**
  * Default implementation of {@link OpenIdEndpoints}.
  *
@@ -64,6 +66,7 @@ public class DefaultOpenIdEndpoints implements OpenIdEndpoints {
     }
 
     @Override
+    @Nullable
     public String getEndSession() {
         return endSession;
     }

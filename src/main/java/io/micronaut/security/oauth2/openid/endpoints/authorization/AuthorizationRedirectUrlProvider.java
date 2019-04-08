@@ -29,7 +29,9 @@ public interface AuthorizationRedirectUrlProvider {
 
     /**
      * @param request the Original request prior redirect.
+     * @param unauthorized If the reason for redirection is because the user
+     *                     requested a resource that requires authorization.
      * @return A URL to redirect the user to the OpenID Provider authorization endpoint.
      */
-    String resolveAuthorizationRedirectUrl(HttpRequest<?> request);
+    String resolveAuthorizationRedirectUrl(HttpRequest<?> request, boolean unauthorized);
 }

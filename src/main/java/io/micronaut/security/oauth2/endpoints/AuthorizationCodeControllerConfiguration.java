@@ -29,16 +29,26 @@ import javax.annotation.Nonnull;
 public interface AuthorizationCodeControllerConfiguration extends Toggleable {
 
     /**
-     * if the callback endpoint is /authcode/cb controller path will be /authcode .
-     * @return Controller path.
+     * The base path the authorization controller responds to.
+     *
+     * @return The controller path
      */
     @Nonnull
     String getControllerPath();
 
     /**
-     * if the callback endpoint is /authcode/cb controller action path will be /cb .
-     * @return The controller's action path
+     * The path to respond to callbacks. Appended to the controller path.
+     *
+     * @return The controller's callback path
      */
     @Nonnull
-    String getActionPath();
+    String getCallbackPath();
+
+    /**
+     * The path to listen for login requests. Appended to the controller path.
+     *
+     * @return The controller's login path
+     */
+    @Nonnull
+    String getLoginPath();
 }

@@ -17,12 +17,12 @@
 package io.micronaut.security.oauth2.handlers;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderConfigurationProperties;
 import io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.net.URI;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
@@ -70,7 +70,7 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     private String cookieName = JwtCookieConfigurationProperties.DEFAULT_COOKIENAME;
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
-    private String loginSuccessTargetUrl = DEFAULT_LOGINSUCCESSTARGETURL;
+    private URI loginSuccessRedirectUri;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     private Boolean cookieSecure = DEFAULT_SECURE;
     private TemporalAmount cookieMaxAge;
@@ -188,18 +188,16 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     }
 
     @Override
-    public String getLoginSuccessTargetUrl() {
-        return this.loginSuccessTargetUrl;
+    public Optional<URI> getLoginSuccessRedirectUri() {
+        return Optional.ofNullable(this.loginSuccessRedirectUri);
     }
 
     /**
-     * Sets the login success target URL. Default value ({@value #DEFAULT_LOGINSUCCESSTARGETURL}).
+     * Sets the login success target URL. Default behavior is to redirect back to the original URI.
      *
-     * @param loginSuccessTargetUrl The URL
+     * @param loginSuccessRedirectUri The URI
      */
-    public void setLoginSuccessTargetUrl(String loginSuccessTargetUrl) {
-        if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
-            this.loginSuccessTargetUrl = loginSuccessTargetUrl;
-        }
+    public void setLoginSuccessRedirectUri(URI loginSuccessRedirectUri) {
+        this.loginSuccessRedirectUri = loginSuccessRedirectUri;
     }
 }

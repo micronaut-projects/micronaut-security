@@ -38,5 +38,10 @@ public interface StateProvider {
      * @return A state parameter. A opaque value used to maintain state between the request and the callback.
      */
     @Nullable
-    String generateState(HttpRequest<?> request);
+    String generateState(HttpRequest<?> request, boolean unauthorized);
+
+
+    @Nullable
+    Object deserializeState(String state);
+
 }

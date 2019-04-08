@@ -19,12 +19,12 @@ package io.micronaut.security.oauth2.openid.endpoints.endsession;
 import io.micronaut.core.util.Toggleable;
 
 /**
- * Configuration of {@link EndsessionViewModelProcessor}.
+ * Configuration of {@link EndSessionViewModelProcessor}.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public interface EndsessionViewModelProcessorConfiguration extends Toggleable {
+public interface EndSessionViewModelProcessorConfiguration extends Toggleable {
 
     /**
      *

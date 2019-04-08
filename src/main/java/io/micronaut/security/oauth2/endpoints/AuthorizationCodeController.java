@@ -18,10 +18,7 @@ package io.micronaut.security.oauth2.endpoints;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpParameters;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
+import io.micronaut.http.*;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
@@ -30,6 +27,7 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.oauth2.handlers.AuthenticationErrorResponseException;
 import io.micronaut.security.oauth2.handlers.AuthorizationResponseHandler;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRedirectUrlProvider;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRequestResponseTypeCodeCondition;
 import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointGrantTypeAuthorizationCodeCondition;
 import io.micronaut.security.oauth2.responses.AuthenticationResponse;
@@ -60,13 +58,21 @@ import java.util.Map;
 public class AuthorizationCodeController {
 
     private final AuthorizationResponseHandler authorizationResponseHandler;
+    private final AuthorizationRedirectUrlProvider redirectUrlProvider;
 
     /**
      *
      * @param authorizationResponseHandler Authorization Response Handler.
      */
-    public AuthorizationCodeController(AuthorizationResponseHandler authorizationResponseHandler) {
+    public AuthorizationCodeController(AuthorizationResponseHandler authorizationResponseHandler,
+                                       AuthorizationRedirectUrlProvider redirectUrlProvider) {
         this.authorizationResponseHandler = authorizationResponseHandler;
+        this.redirectUrlProvider = redirectUrlProvider;
+    }
+
+    @Get("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".login-path:/login}")
+    HttpResponse redirect(HttpRequest request) {
+        return HttpResponse.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlProvider.resolveAuthorizationRedirectUrl(request, false));
     }
 
     /**

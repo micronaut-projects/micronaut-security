@@ -25,6 +25,7 @@ import io.micronaut.security.token.reader.TokenResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,8 +69,12 @@ public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
     }
 
     @Override
+    @Nullable
     public String resolveLogoutUrl(HttpRequest<?> request) {
         String baseUrl = openIdEndpoints.getEndSession();
+        if (baseUrl == null) {
+            return null;
+        }
         String template = instantiateTemplate(baseUrl);
         UriTemplate uriTemplate = new UriTemplate(template);
         Map<String, Object> arguments = new HashMap<>();

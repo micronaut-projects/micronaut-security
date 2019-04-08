@@ -44,14 +44,21 @@ public class AuthorizationCodeControllerConfigurationProperties implements Autho
     public static final String DEFAULT_CONTROLLERPATH = "/authcode";
 
     /**
-     * The default code path.
+     * The default callback path.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_ACTIONPATH = "/cb";
+    public static final String DEFAULT_CALLBACK = "/cb";
+
+    /**
+     * The default login path.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final String DEFAULT_LOGIN = "/login";
 
     private boolean enabled = DEFAULT_ENABLED;
     private String controllerPath = DEFAULT_CONTROLLERPATH;
-    private String  actionPath = DEFAULT_ACTIONPATH;
+    private String callbackPath = DEFAULT_CALLBACK;
+    private String loginPath = DEFAULT_LOGIN;
 
     /**
      * @return true if you want to enable the {@link AuthorizationCodeController}
@@ -78,13 +85,19 @@ public class AuthorizationCodeControllerConfigurationProperties implements Autho
 
     @Nonnull
     @Override
-    public String getActionPath() {
-        return actionPath;
+    public String getCallbackPath() {
+        return callbackPath;
+    }
+
+    @Nonnull
+    @Override
+    public String getLoginPath() {
+        return loginPath;
     }
 
     /**
-     * if the callback endpoint is /authcode/cb controller path will be /authcode.
-     * Default value ({@value #DEFAULT_CONTROLLERPATH}).
+     * The authorization controller path. Default value ({@value #DEFAULT_CONTROLLERPATH}).
+     *
      * @param controllerPath Controller's path
      */
     public void setControllerPath(@Nonnull String controllerPath) {
@@ -92,10 +105,22 @@ public class AuthorizationCodeControllerConfigurationProperties implements Autho
     }
 
     /**
-     * if the callback endpoint is /authcode/cb controller action path will be /cb . Default value ({@value #DEFAULT_ACTIONPATH}).
-     * @param actionPath Controller action path.
+     * Sets the path used by OAuth providers to callback the application. The value is appended
+     * to the controller path value. Default value ({@value #DEFAULT_CALLBACK}).
+     *
+     * @param callbackPath Controller callback path.
      */
-    public void setActionPath(@Nonnull String actionPath) {
-        this.actionPath = actionPath;
+    public void setCallbackPath(@Nonnull String callbackPath) {
+        this.callbackPath = callbackPath;
+    }
+
+    /**
+     * Sets the path used to trigger a redirect to login with OAuth. The value is appended to
+     * the controller path value. Default value ({@value #DEFAULT_LOGIN}).
+     *
+     * @param loginPath Controller login path.
+     */
+    public void setLoginPath(@Nonnull String loginPath) {
+        this.loginPath = loginPath;
     }
 }

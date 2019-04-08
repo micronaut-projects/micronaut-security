@@ -20,6 +20,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
+import io.micronaut.security.oauth2.responses.AuthenticationResponse;
 
 /**
  * Handle a valid {@link IdTokenAccessTokenResponse}.
@@ -36,6 +37,7 @@ public interface SuccessfulIdTokenAccessTokenResponseHandler {
      * @return A Http Response
      */
     HttpResponse handle(HttpRequest request,
+                        AuthenticationResponse authenticationResponse,
                         IdTokenAccessTokenResponse idTokenAccessTokenResponse,
                         Authentication authentication);
 }
