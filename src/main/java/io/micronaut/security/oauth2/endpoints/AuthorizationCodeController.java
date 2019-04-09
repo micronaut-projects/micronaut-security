@@ -18,26 +18,24 @@ package io.micronaut.security.oauth2.endpoints;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.*;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpParameters;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.oauth2.handlers.AuthenticationErrorResponseException;
 import io.micronaut.security.oauth2.handlers.AuthorizationResponseHandler;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRedirectUrlProvider;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRequestResponseTypeCodeCondition;
 import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointGrantTypeAuthorizationCodeCondition;
 import io.micronaut.security.oauth2.responses.AuthenticationResponse;
-import io.micronaut.security.oauth2.responses.AuthorizationResponseDetector;
-import io.micronaut.security.oauth2.responses.AuthenticationResponseHttpParamsAdapter;
-import io.micronaut.security.oauth2.responses.AuthenticationResponseMapAdapter;
-import io.micronaut.security.oauth2.responses.ErrorResponse;
-import io.micronaut.security.oauth2.responses.ErrorResponseDetector;
-import io.micronaut.security.oauth2.responses.ErrorResponseHttpParamsAdapter;
-import io.micronaut.security.oauth2.responses.ErrorResponseMapAdapter;
+import io.micronaut.security.oauth2.responses.AuthenticationResponseFactory;
 import io.micronaut.security.rules.SecurityRule;
 import io.reactivex.Single;
 
@@ -59,16 +57,20 @@ public class AuthorizationCodeController {
 
     private final AuthorizationResponseHandler authorizationResponseHandler;
     private final AuthorizationRedirectUrlProvider redirectUrlProvider;
+    private final AuthenticationResponseFactory authenticationResponseFactory;
 
     /**
      *
      * @param authorizationResponseHandler Authorization Response Handler.
      * @param redirectUrlProvider Authorization Redirect url provider
+     * @param authenticationResponseFactory Factory to create {@link AuthenticationResponse} objects.
      */
     public AuthorizationCodeController(AuthorizationResponseHandler authorizationResponseHandler,
-                                       AuthorizationRedirectUrlProvider redirectUrlProvider) {
+                                       AuthorizationRedirectUrlProvider redirectUrlProvider,
+                                       AuthenticationResponseFactory authenticationResponseFactory) {
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.redirectUrlProvider = redirectUrlProvider;
+        this.authenticationResponseFactory = authenticationResponseFactory;
     }
 
     /**
@@ -91,16 +93,10 @@ public class AuthorizationCodeController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Post("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".action-path:/cb}")
     public Single<HttpResponse<?>> cbPost(@Body Map<String, String> formFields, HttpRequest httpRequest) {
-
-        if (ErrorResponseDetector.isErrorResponse(formFields)) {
-            ErrorResponse errorResponse = new ErrorResponseMapAdapter(formFields);
-            throw new AuthenticationErrorResponseException(errorResponse);
-
-        } else if (AuthorizationResponseDetector.isAuthorizationResponse(formFields)) {
-            AuthenticationResponse authenticationResponse = new AuthenticationResponseMapAdapter(formFields);
+        AuthenticationResponse authenticationResponse = authenticationResponseFactory.create(formFields);
+        if (authenticationResponse != null) {
             return authorizationResponseHandler.handle(httpRequest, authenticationResponse);
         }
-
         return Single.just(HttpResponse.ok());
     }
 
@@ -113,16 +109,10 @@ public class AuthorizationCodeController {
      */
     @Get("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".action-path:/cb}")
     public Single<HttpResponse<?>> cbGet(HttpParameters parameters, HttpRequest httpRequest) {
-
-        if (ErrorResponseDetector.isErrorResponse(parameters)) {
-            ErrorResponse errorResponse = new ErrorResponseHttpParamsAdapter(parameters);
-            throw new AuthenticationErrorResponseException(errorResponse);
-
-        } else if (AuthorizationResponseDetector.isAuthorizationResponse(parameters)) {
-            AuthenticationResponse authenticationResponse = new AuthenticationResponseHttpParamsAdapter(parameters);
+        AuthenticationResponse authenticationResponse = authenticationResponseFactory.create(parameters);
+        if (authenticationResponse != null) {
             return authorizationResponseHandler.handle(httpRequest, authenticationResponse);
         }
-
         return Single.just(HttpResponse.ok());
     }
 
