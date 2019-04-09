@@ -32,6 +32,7 @@ public interface SuccessfulIdTokenAccessTokenResponseHandler {
 
     /**
      * @param request The HTTP request
+     * @param authenticationResponse Authentication response
      * @param idTokenAccessTokenResponse An ID Token Access Token response.
      * @param authentication Authentication
      * @return A Http Response

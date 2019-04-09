@@ -41,6 +41,11 @@ public interface StateProvider {
     String generateState(HttpRequest<?> request);
 
 
+    /**
+     *
+     * @param state Serialized representation of {@link State}.
+     * @return A deserialized {@link State} object.
+     */
     @Nullable
     Object deserializeState(String state);
 

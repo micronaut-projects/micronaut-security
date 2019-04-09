@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.oauth2.handlers.OpenIdUnauthorizedRejectionUriProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,6 +94,7 @@ public class DefaultStateProvider implements StateProvider {
      * Creates the state object to be sent with the authorization redirect.
      *
      * @param request The originating request
+     * @param unauthorized whether the request was flagged as unauthorized
      * @return The state object
      */
     @Nullable

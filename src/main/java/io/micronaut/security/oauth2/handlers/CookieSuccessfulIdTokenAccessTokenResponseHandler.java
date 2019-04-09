@@ -51,6 +51,7 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements Succes
     /**
      *
      * @param configuration Cookie Successful IdToken-AccessToken Handler
+     * @param stateProvider State Provider
      */
     public CookieSuccessfulIdTokenAccessTokenResponseHandler(
             CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration configuration,
@@ -92,6 +93,14 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements Succes
         return Integer.MAX_VALUE;
     }
 
+    /**
+     *
+     * @param request The HTTP request
+     * @param authenticationResponse The Authentication Response
+     * @param idTokenAccessTokenResponse The IdTokenAccessTokenResponse
+     * @param authentication Authentication
+     * @return The URI to redirect to.
+     */
     protected URI getRedirectUri(HttpRequest request,
                                  AuthenticationResponse authenticationResponse,
                                  IdTokenAccessTokenResponse idTokenAccessTokenResponse,

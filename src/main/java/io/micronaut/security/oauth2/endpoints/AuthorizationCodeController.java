@@ -63,6 +63,7 @@ public class AuthorizationCodeController {
     /**
      *
      * @param authorizationResponseHandler Authorization Response Handler.
+     * @param redirectUrlProvider Authorization Redirect url provider
      */
     public AuthorizationCodeController(AuthorizationResponseHandler authorizationResponseHandler,
                                        AuthorizationRedirectUrlProvider redirectUrlProvider) {
@@ -70,8 +71,13 @@ public class AuthorizationCodeController {
         this.redirectUrlProvider = redirectUrlProvider;
     }
 
+    /**
+     *
+     * @param request HTTP request
+     * @return a 302 response with the redirection url in the Location HTTP header
+     */
     @Get("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".login-path:/login}")
-    HttpResponse redirect(HttpRequest request) {
+    public HttpResponse redirect(HttpRequest request) {
         return HttpResponse.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlProvider.resolveAuthorizationRedirectUrl(request));
     }
 
