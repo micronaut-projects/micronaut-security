@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;
+
 import javax.annotation.Nullable;
 import java.net.URI;
 

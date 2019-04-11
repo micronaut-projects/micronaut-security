@@ -10,6 +10,7 @@ import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State
 import io.micronaut.security.rules.SecurityRule
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -61,7 +62,7 @@ class AuthenticationResponseHttpParamsAdapterSpec extends Specification {
     }
 
     static class MockAuthenticationResponse implements AuthenticationResponse {
-        String state
+        State state
         String code
     }
 
