@@ -20,8 +20,8 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.InvalidStateException;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.StateValidator;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateValidator;
 import io.micronaut.security.oauth2.openid.endpoints.token.AuthorizationCodeGrantRequestGenerator;
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
 import io.micronaut.security.oauth2.responses.AuthenticationResponse;
@@ -72,9 +72,9 @@ public class DefaultAuthorizationResponseHandler implements AuthorizationRespons
 
     @Override
     public Single<HttpResponse<?>> handle(HttpRequest originalRequest, AuthenticationResponse authenticationResponse) {
-
-        if (stateValidator != null && authenticationResponse.getState() != null && !stateValidator.validate(originalRequest, authenticationResponse.getState())) {
-            throw new InvalidStateException("state " + authenticationResponse.getState() + " is not valid");
+        if (stateValidator != null) {
+            State state = authenticationResponse.getState();
+            stateValidator.validate(originalRequest, state);
         }
 
         HttpRequest request = authorizationCodeGrantRequestGenerator.generateRequest(authenticationResponse.getCode());

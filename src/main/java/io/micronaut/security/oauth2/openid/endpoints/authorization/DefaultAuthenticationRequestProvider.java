@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateProvider;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;

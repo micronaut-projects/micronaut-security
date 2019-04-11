@@ -16,6 +16,8 @@ import io.micronaut.security.oauth2.handlers.AuthorizationResponseHandler
 import io.micronaut.security.oauth2.handlers.IdTokenAccessTokenResponseHandler
 import io.micronaut.security.oauth2.handlers.SuccessfulIdTokenAccessTokenResponseHandler
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.JacksonStateSerDes
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateSerDes
 import io.micronaut.security.oauth2.openid.endpoints.token.AuthorizationCodeGrantRequestGenerator
 import io.micronaut.security.oauth2.openid.endpoints.token.DefaultAuthorizationCodeGrantRequestGenerator
 import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpoint
@@ -105,7 +107,7 @@ class AuthorizationCodeControllerSpec extends Specification {
 
         when:
         RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
-        Oauth2AuthenticationResponse authenticationResponse = new Oauth2AuthenticationResponse()
+        Oauth2AuthenticationResponse authenticationResponse = new Oauth2AuthenticationResponse(embeddedServer.applicationContext.getBean(StateSerDes))
         authenticationResponse.setCode("SplxlOBeZQQYbYS6WxSbIA")
         authenticationResponse.setState("af0ifjsldkj")
         HttpRequest request = HttpRequest.POST('/authcode/cb', authenticationResponse)

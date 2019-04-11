@@ -21,11 +21,12 @@ import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
+import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderConfigurationProperties;
 
 import java.util.Optional;
 
 /**
- * Abstract Condition to check if micronaut.security.oauth2.issuer contains a search sequence.
+ * Abstract Condition to check if micronaut.security.oauth2.openid.issuer contains a search sequence.
  *
  * @author Sergio del Amo
  * @since 1.0.0
@@ -37,7 +38,7 @@ public abstract class OpenidConfigurationCondition implements Condition {
         BeanContext beanContext = context.getBeanContext();
         if (beanContext instanceof PropertyResolver) {
             PropertyResolver propertyResolver = (PropertyResolver) beanContext;
-            Optional<String> openIdConfigurationUrl = propertyResolver.get(OauthConfigurationProperties.PREFIX + ".issuer", String.class);
+            Optional<String> openIdConfigurationUrl = propertyResolver.get(OpenIdProviderConfigurationProperties.PREFIX + ".issuer", String.class);
             return openIdConfigurationUrl.map(s -> s.contains(getSearchSequence())).orElse(false);
         }
         return false;
@@ -45,7 +46,7 @@ public abstract class OpenidConfigurationCondition implements Condition {
 
     /**
      *
-     * @return the Search sequence which will be checked against the value of property micronaut.security.oauth2.issuer.
+     * @return the Search sequence which will be checked against the value of property micronaut.security.oauth2.openid.issuer.
      */
     protected abstract String getSearchSequence();
 }

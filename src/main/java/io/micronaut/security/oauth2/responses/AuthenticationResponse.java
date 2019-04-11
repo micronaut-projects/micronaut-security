@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.responses;
 
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,7 +39,7 @@ public interface AuthenticationResponse {
      * @return state parameter.
      */
     @Nullable
-    String getState();
+    State getState();
 
     /**
      *

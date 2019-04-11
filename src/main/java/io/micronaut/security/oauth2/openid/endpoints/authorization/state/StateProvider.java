@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.authorization;
+package io.micronaut.security.oauth2.openid.endpoints.authorization.state;
 
 import io.micronaut.http.HttpRequest;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Validates a state parameter.
+ * Generates a state parameter.
  *
  * <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Auth Request state parameter</a>
+ *
+ * state: Opaque value used to maintain state between the request and the callback. Typically, Cross-Site Request Forgery (CSRF, XSRF) mitigation is done by cryptographically binding the value of this parameter with a browser cookie.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public interface StateValidator {
+public interface StateProvider {
 
     /**
      *
-     * @param request The HTTP Request
-     * @param state the State value returned by the authorzation server
-     * @return wether state is valid or not
+     * @param request the original request prior redirect.
+     * @return A state parameter. A opaque value used to maintain state between the request and the callback.
      */
-    boolean validate(@Nonnull HttpRequest<?> request, @Nullable String state);
+    @Nullable
+    String generateState(HttpRequest<?> request);
+
 }

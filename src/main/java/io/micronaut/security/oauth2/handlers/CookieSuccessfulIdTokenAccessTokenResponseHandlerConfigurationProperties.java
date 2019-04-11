@@ -44,12 +44,6 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     public static final boolean DEFAULT_ENABLED = true;
 
     /**
-     * The default login success target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_LOGINSUCCESSTARGETURL = "/";
-
-    /**
      * The default secure value.
      */
     @SuppressWarnings("WeakerAccess")
@@ -67,17 +61,11 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_COOKIEPATH = "/";
 
-    /**
-     * The default value to always redirect to the default uri.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ALWAYS_REDIRECT = false;
-
     private String cookieName = JwtCookieConfigurationProperties.DEFAULT_COOKIENAME;
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private URI defaultRedirectUri;
-    private Boolean alwaysRedirectDefault = DEFAULT_ALWAYS_REDIRECT;
+    private RedirectionStrategy redirectionStrategy = RedirectionStrategy.ORIGINAL;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     private Boolean cookieSecure = DEFAULT_SECURE;
     private TemporalAmount cookieMaxAge;
@@ -209,16 +197,16 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationPrope
     }
 
     @Override
-    public Boolean getAlwaysRedirectDefault() {
-        return alwaysRedirectDefault;
+    public RedirectionStrategy getRedirectionStrategy() {
+        return redirectionStrategy;
     }
 
     /**
-     * Sets whether the default redirect URI should always be used. Default value ({@value #DEFAULT_ALWAYS_REDIRECT}).
+     * Sets the redirection strategy. Default value (original).
      *
-     * @param alwaysRedirectDefault The always redirect setting
+     * @param redirectionStrategy The redirection strategy
      */
-    public void setAlwaysRedirectDefault(Boolean alwaysRedirectDefault) {
-        this.alwaysRedirectDefault = alwaysRedirectDefault;
+    public void setRedirectionStrategy(RedirectionStrategy redirectionStrategy) {
+        this.redirectionStrategy = redirectionStrategy;
     }
 }

@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.responses;
 
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateSerDes;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -27,21 +29,24 @@ import java.util.Objects;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public class AuthenticationResponseMapAdapter implements AuthenticationResponse {
+public class AuthenticationResponseMapAdapter extends AbstractAuthenticationResponse {
 
     private final Map<String, String> formFields;
 
     /**
      * Constructs an adapter from a Map to {@link AuthenticationResponse}.
+     *
      * @param formFields A Map encapsulating the form url encoded payload.
+     * @param stateSerDes The state serdes
      */
-    public AuthenticationResponseMapAdapter(Map<String, String> formFields) {
+    public AuthenticationResponseMapAdapter(Map<String, String> formFields, StateSerDes stateSerDes) {
+        super(stateSerDes);
         this.formFields = formFields;
     }
 
     @Nullable
     @Override
-    public String getState() {
+    public String getStateValue() {
         return getStringValue(AuthenticationResponse.KEY_STATE);
     }
 

@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

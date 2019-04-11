@@ -35,7 +35,7 @@ class EndSessionUrlProviderSpec extends Specification {
                 (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
                 'micronaut.security.enabled'                    : true,
                 'micronaut.security.oauth2.client-id'           : 'XXX',
-                'micronaut.security.oauth2.issuer': issuer
+                'micronaut.security.oauth2.openid.issuer': issuer
         ], Environment.TEST)
 
         when:

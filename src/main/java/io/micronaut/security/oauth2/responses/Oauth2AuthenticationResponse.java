@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.responses;
 
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateSerDes;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -25,16 +27,18 @@ import javax.annotation.Nullable;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public class Oauth2AuthenticationResponse implements AuthenticationResponse {
+public class Oauth2AuthenticationResponse extends AbstractAuthenticationResponse {
 
     private String state;
     private String code;
 
     /**
      * Construct authorization response object.
+     *
+     * @param stateSerDes The state serdes
      */
-    public Oauth2AuthenticationResponse() {
-        super();
+    public Oauth2AuthenticationResponse(StateSerDes stateSerDes) {
+        super(stateSerDes);
     }
 
     /**
@@ -42,11 +46,14 @@ public class Oauth2AuthenticationResponse implements AuthenticationResponse {
      * @return state parameter.
      */
     @Nullable
-    public String getState() {
+    @Override
+    public String getStateValue() {
         return state;
     }
 
     /**
+     * After the state has been retrieved, further calls to this method will
+     * not be reflected in the execution of {@link #getState()}.
      *
      * @param state Set state.
      */

@@ -36,7 +36,7 @@ class AuthorizationCodeGrantRequestGeneratorSpec extends Specification {
                 'micronaut.security.enabled'                    : true,
                 'micronaut.security.oauth2.client-id'           : 'XXXX',
                 'micronaut.security.oauth2.client-secret'       : 'YYYY',
-                'micronaut.security.oauth2.issuer': issuer,
+                'micronaut.security.oauth2.openid.issuer': issuer,
                 'micronaut.security.oauth2.token.redirect-uri'  : 'http://localhost:8080'
         ], Environment.TEST)
 

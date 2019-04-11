@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.providers;
+package io.micronaut.security.oauth2.openid.endpoints.authorization.state;
+
+import javax.annotation.Nullable;
+import java.net.URI;
 
 /**
- * Condition which evaluates to true if micronaut.security.oauth2.openid.issuer contains cognito.
+ * Represents the state sent in the authorization request and returned in the authorization response.
  *
- * @author Sergio del Amo
+ * @author James Kleeh
  * @since 1.0.0
  */
-public class AwsCognitoOpenidConfigurationCondition extends OpenidConfigurationCondition {
-    @Override
-    protected String getSearchSequence() {
-        return "cognito";
-    }
+public interface State {
+
+    /**
+     * @return The URI that was redirected from
+     */
+    @Nullable
+    URI getOriginalUri();
+
 }

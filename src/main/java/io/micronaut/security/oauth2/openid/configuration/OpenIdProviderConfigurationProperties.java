@@ -32,18 +32,21 @@ import java.util.List;
 public class OpenIdProviderConfigurationProperties implements OpenIdProviderConfiguration {
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".openid";
 
-    private String openidIssuer;
+    private static final String DEFAULT_CONFIG_PATH = "/.well-known/openid-configuration";
+
+    private String issuer;
     private List<String> scopesSupported;
     private List<String> responseTypesSupported;
     private List<String> subjectTypesSupported;
     private List<String> idTokenEncryptionEncValuesSupported;
     private List<String> requestObjectSigningAlgValuesSupported;
     private String jwksUri;
+    private String configurationPath = DEFAULT_CONFIG_PATH;
 
     @Nullable
     @Override
     public String getIssuer() {
-        return openidIssuer;
+        return issuer;
     }
 
     /**
@@ -51,7 +54,7 @@ public class OpenIdProviderConfigurationProperties implements OpenIdProviderConf
      * @param issuer URL using the https scheme with no query or fragment component that the Open ID Provider asserts as its Issuer Identifier.
      */
     public void setIssuer(@Nullable String issuer) {
-        this.openidIssuer = issuer;
+        this.issuer = issuer;
     }
 
     /**
@@ -136,5 +139,21 @@ public class OpenIdProviderConfigurationProperties implements OpenIdProviderConf
      */
     public void setJwksUri(@Nullable String jwksUri) {
         this.jwksUri = jwksUri;
+    }
+
+    /**
+     * @return The configuration path
+     */
+    public String getConfigurationPath() {
+        return configurationPath;
+    }
+
+    /**
+     * The configuration path to discover openid configuration. Default ({@value DEFAULT_CONFIG_PATH}).
+     *
+     * @param configurationPath The configuration path
+     */
+    public void setConfigurationPath(String configurationPath) {
+        this.configurationPath = configurationPath;
     }
 }

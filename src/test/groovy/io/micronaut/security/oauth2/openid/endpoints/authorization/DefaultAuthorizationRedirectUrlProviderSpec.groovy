@@ -4,7 +4,9 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpStatus
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.filters.SecurityFilter
 import io.micronaut.security.oauth2.openid.configuration.FileOpenIdConfigurationController
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
 import spock.lang.Specification
@@ -37,7 +39,7 @@ class DefaultAuthorizationRedirectUrlProviderSpec extends Specification {
             (SPEC_NAME_PROPERTY)                            : getClass().simpleName,
             'micronaut.security.enabled'                    : true,
             'micronaut.security.oauth2.client-id'           : 'XXXX',
-            'micronaut.security.oauth2.issuer': issuer
+            'micronaut.security.oauth2.openid.issuer': issuer
         ], Environment.TEST)
 
         when:
@@ -55,6 +57,7 @@ class DefaultAuthorizationRedirectUrlProviderSpec extends Specification {
         when:
         AuthorizationRedirectUrlProvider authorizationRedirectUrlProvider = context.getBean(AuthorizationRedirectUrlProvider)
         HttpRequest request = HttpRequest.GET("/authors")
+        request.setAttribute(SecurityFilter.REJECTION, HttpStatus.UNAUTHORIZED)
         String redirectUrl = URLDecoder.decode(authorizationRedirectUrlProvider.resolveAuthorizationRedirectUrl(request), StandardCharsets.UTF_8.toString())
 
         then:

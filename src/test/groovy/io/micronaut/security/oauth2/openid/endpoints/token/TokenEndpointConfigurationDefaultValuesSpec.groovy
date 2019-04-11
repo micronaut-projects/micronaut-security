@@ -34,7 +34,7 @@ class TokenEndpointConfigurationDefaultValuesSpec extends Specification {
     void "TokenEndpointConfiguration default authMethod is client_secret_basic if cognito"() {
         given:
         Map<String, Object> specConf = new HashMap<>(conf)
-        specConf.put('micronaut.security.oauth2.issuer', 'https://cognito-idp.eu-west-1.amazonaws.com/XXXXX')
+        specConf.put('micronaut.security.oauth2.openid.issuer', 'https://cognito-idp.eu-west-1.amazonaws.com/XXXXX')
         ApplicationContext context = ApplicationContext.run(specConf)
 
         when:

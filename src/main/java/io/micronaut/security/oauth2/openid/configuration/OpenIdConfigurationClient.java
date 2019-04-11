@@ -19,23 +19,22 @@ package io.micronaut.security.oauth2.openid.configuration;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 
 /**
  * Creates a HTTP Declarative client to communicate with an OpenID connect Discovery endpoint.
- * The discovery endpoint is declared by the property micronaut.security.oauth2.issuer
+ * The discovery endpoint is declared by the property micronaut.security.oauth2.openid.issuer
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
-@Requires(property = OauthConfigurationProperties.PREFIX + ".issuer")
-@Client("${micronaut.security.oauth2.issuer}")
+@Requires(property = OpenIdProviderConfigurationProperties.PREFIX + ".issuer")
+@Client("${" + OpenIdProviderConfigurationProperties.PREFIX + ".issuer" + "}")
 public interface OpenIdConfigurationClient {
 
     /**
      *
      * @return the OpenID Provider Metadata
      */
-    @Get("${micronaut.security.oauth2.openid-configuration-path:/.well-known/openid-configuration}")
+    @Get("${" + OpenIdProviderConfigurationProperties.PREFIX + "configuration-path:/.well-known/openid-configuration}")
     OpenIdConfiguration fetchConfiguration();
 }

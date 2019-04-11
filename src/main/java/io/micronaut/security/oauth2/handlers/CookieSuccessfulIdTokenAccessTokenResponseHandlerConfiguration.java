@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.handlers;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.cookie.CookieConfiguration;
 
+import javax.annotation.Nonnull;
 import java.net.URI;
 import java.util.Optional;
 
@@ -37,7 +38,8 @@ public interface CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration 
     Optional<URI> getDefaultRedirectUri();
 
     /**
-     * @return True if the default redirect URI should always be used.
+     * @return The redirection strategy.
      */
-    Boolean getAlwaysRedirectDefault();
+    @Nonnull
+    RedirectionStrategy getRedirectionStrategy();
 }

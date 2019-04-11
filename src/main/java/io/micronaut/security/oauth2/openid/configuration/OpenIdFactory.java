@@ -32,7 +32,7 @@ import javax.inject.Singleton;
 
 /**
  * Factory which creates beans of type Creates a HTTP Declarative client to communicate with an OpenID connect Discovery endpoint.
- * The discovery endpoint is declared by the property micronaut.security.oauth2.issuer
+ * The discovery endpoint is declared by the property micronaut.security.oauth2.openid.issuer
  *
  * @author Sergio del Amo
  * @since 1.0.0

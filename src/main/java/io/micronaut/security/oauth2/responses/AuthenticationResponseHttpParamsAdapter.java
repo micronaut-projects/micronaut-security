@@ -17,9 +17,9 @@
 package io.micronaut.security.oauth2.responses;
 
 import io.micronaut.http.HttpParameters;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateSerDes;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
@@ -28,21 +28,22 @@ import java.util.Objects;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public class AuthenticationResponseHttpParamsAdapter implements AuthenticationResponse {
+public class AuthenticationResponseHttpParamsAdapter extends AbstractAuthenticationResponse {
 
     private final HttpParameters httpParameters;
 
     /**
      * Constructs an adapter from {@link HttpParameters} to {@link ErrorResponse}.
      * @param httpParameters Http Parameters
+     * @param stateSerDes State Serdes
      */
-    public AuthenticationResponseHttpParamsAdapter(HttpParameters httpParameters) {
+    public AuthenticationResponseHttpParamsAdapter(HttpParameters httpParameters, StateSerDes stateSerDes) {
+        super(stateSerDes);
         this.httpParameters = httpParameters;
     }
 
-    @Nullable
     @Override
-    public String getState() {
+    protected String getStateValue() {
         return httpParameters.get(AuthenticationResponse.KEY_STATE);
     }
 

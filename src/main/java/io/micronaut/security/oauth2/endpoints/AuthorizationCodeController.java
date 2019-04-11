@@ -29,6 +29,7 @@ import io.micronaut.security.oauth2.handlers.AuthenticationErrorResponseExceptio
 import io.micronaut.security.oauth2.handlers.AuthorizationResponseHandler;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRedirectUrlProvider;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationRequestResponseTypeCodeCondition;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateSerDes;
 import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpointGrantTypeAuthorizationCodeCondition;
 import io.micronaut.security.oauth2.responses.AuthenticationResponse;
 import io.micronaut.security.oauth2.responses.AuthorizationResponseDetector;
@@ -59,17 +60,28 @@ public class AuthorizationCodeController {
 
     private final AuthorizationResponseHandler authorizationResponseHandler;
     private final AuthorizationRedirectUrlProvider redirectUrlProvider;
+    private final StateSerDes stateSerDes;
 
     /**
      *
      * @param authorizationResponseHandler Authorization Response Handler.
+     * @param redirectUrlProvider Redirect URL Provider
+     * @param stateSerDes The State SerDes
      */
     public AuthorizationCodeController(AuthorizationResponseHandler authorizationResponseHandler,
-                                       AuthorizationRedirectUrlProvider redirectUrlProvider) {
+                                       AuthorizationRedirectUrlProvider redirectUrlProvider,
+                                       StateSerDes stateSerDes) {
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.redirectUrlProvider = redirectUrlProvider;
+        this.stateSerDes = stateSerDes;
     }
 
+    /**
+     * Redirects to the authentication provider.
+     *
+     * @param request The request
+     * @return The redirect response
+     */
     @Get("${" + AuthorizationCodeControllerConfigurationProperties.PREFIX + ".login-path:/login}")
     HttpResponse redirect(HttpRequest request) {
         return HttpResponse.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlProvider.resolveAuthorizationRedirectUrl(request));
@@ -91,7 +103,7 @@ public class AuthorizationCodeController {
             throw new AuthenticationErrorResponseException(errorResponse);
 
         } else if (AuthorizationResponseDetector.isAuthorizationResponse(formFields)) {
-            AuthenticationResponse authenticationResponse = new AuthenticationResponseMapAdapter(formFields);
+            AuthenticationResponse authenticationResponse = new AuthenticationResponseMapAdapter(formFields, stateSerDes);
             return authorizationResponseHandler.handle(httpRequest, authenticationResponse);
         }
 
@@ -113,7 +125,7 @@ public class AuthorizationCodeController {
             throw new AuthenticationErrorResponseException(errorResponse);
 
         } else if (AuthorizationResponseDetector.isAuthorizationResponse(parameters)) {
-            AuthenticationResponse authenticationResponse = new AuthenticationResponseHttpParamsAdapter(parameters);
+            AuthenticationResponse authenticationResponse = new AuthenticationResponseHttpParamsAdapter(parameters, stateSerDes);
             return authorizationResponseHandler.handle(httpRequest, authenticationResponse);
         }
 

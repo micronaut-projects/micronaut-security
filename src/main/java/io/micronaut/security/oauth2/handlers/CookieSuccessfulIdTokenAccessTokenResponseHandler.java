@@ -22,8 +22,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.State;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.StateProvider;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
 import io.micronaut.security.oauth2.responses.AuthenticationResponse;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
@@ -46,17 +45,14 @@ import java.util.concurrent.TimeUnit;
 public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements SuccessfulIdTokenAccessTokenResponseHandler {
 
     private final CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration configuration;
-    private final StateProvider stateProvider;
 
     /**
      *
      * @param configuration Cookie Successful IdToken-AccessToken Handler
      */
     public CookieSuccessfulIdTokenAccessTokenResponseHandler(
-            CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration configuration,
-                                                             StateProvider stateProvider) {
+            CookieSuccessfulIdTokenAccessTokenResponseHandlerConfiguration configuration) {
         this.configuration = configuration;
-        this.stateProvider = stateProvider;
     }
 
     @Override
@@ -92,16 +88,23 @@ public class CookieSuccessfulIdTokenAccessTokenResponseHandler implements Succes
         return Integer.MAX_VALUE;
     }
 
+    /**
+     * @param request The HTTP request
+     * @param authenticationResponse The authentication response
+     * @param idTokenAccessTokenResponse The ID Token Access Token response.
+     * @param authentication The authentication
+     * @return The URI to redirect to
+     */
     protected URI getRedirectUri(HttpRequest request,
                                  AuthenticationResponse authenticationResponse,
                                  IdTokenAccessTokenResponse idTokenAccessTokenResponse,
                                  Authentication authentication) {
 
         URI uri = configuration.getDefaultRedirectUri().orElse(null);
-        if (!configuration.getAlwaysRedirectDefault()) {
-            Object state = stateProvider.deserializeState(authenticationResponse.getState());
-            if (state instanceof State) {
-                uri = ((State) state).getOriginalUri();
+        if (configuration.getRedirectionStrategy() == RedirectionStrategy.ORIGINAL) {
+            State state = authenticationResponse.getState();
+            if (state != null) {
+                uri = state.getOriginalUri();
             }
         }
         if (uri == null) {

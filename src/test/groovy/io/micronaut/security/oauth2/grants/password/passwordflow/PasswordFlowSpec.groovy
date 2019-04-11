@@ -48,11 +48,11 @@ class PasswordFlowSpec extends Specification {
                 'micronaut.security.enabled': true,
                 'micronaut.security.oauth2.client-id': 'XXXX',
                 'micronaut.security.oauth2.client-secret': 'YYYY',
-                'micronaut.security.oauth2.issuer': mockHttpServerUrl,
+                'micronaut.security.oauth2.openid.issuer': mockHttpServerUrl,
                 "micronaut.security.oauth2.grant-type-password.enabled": true
         ]
         EmbeddedServer server = ApplicationContext.run(EmbeddedServer, conf)
-        String issuer = server.applicationContext.getProperty("micronaut.security.oauth2.issuer", String)
+        String issuer = server.applicationContext.getProperty("micronaut.security.oauth2.openid.issuer", String)
 
         then:
         issuer
