@@ -67,4 +67,5 @@ public class JacksonStateSerDes implements StateSerDes {
         }
         return null;
     }
+
 }

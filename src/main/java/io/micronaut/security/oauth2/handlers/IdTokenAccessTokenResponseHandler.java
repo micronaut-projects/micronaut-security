@@ -30,7 +30,6 @@ import io.micronaut.security.oauth2.responses.AuthenticationResponse;
 public interface IdTokenAccessTokenResponseHandler {
 
     /**
-     *
      * @param request The HTTP Request
      * @param authenticationResponse The authentication response
      * @param idTokenAccessTokenResponse The ID Token Access Token response
