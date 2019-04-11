@@ -2,7 +2,6 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization.state.valida
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderConfigurationProperties;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.OpenIdStateConfiguration;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;

@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.responses;
 
 import io.micronaut.http.HttpParameters;
 import io.micronaut.security.oauth2.handlers.AuthenticationErrorResponseException;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateSerDes;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -33,6 +34,12 @@ import java.util.Map;
 @Singleton
 public class AuthenticationResponseFactory {
 
+    private final StateSerDes stateSerDes;
+
+    public AuthenticationResponseFactory(StateSerDes stateSerDes) {
+        this.stateSerDes = stateSerDes;
+    }
+
     /**
      *
      * @param parameters Http parameters
@@ -46,7 +53,7 @@ public class AuthenticationResponseFactory {
             throw new AuthenticationErrorResponseException(errorResponse);
 
         } else if (AuthorizationResponseDetector.isAuthorizationResponse(parameters)) {
-            return new AuthenticationResponseHttpParamsAdapter(parameters);
+            return new AuthenticationResponseHttpParamsAdapter(parameters, stateSerDes);
         }
         return null;
     }
@@ -64,7 +71,7 @@ public class AuthenticationResponseFactory {
             throw new AuthenticationErrorResponseException(errorResponse);
 
         } else if (AuthorizationResponseDetector.isAuthorizationResponse(formFields)) {
-            return new AuthenticationResponseMapAdapter(formFields);
+            return new AuthenticationResponseMapAdapter(formFields, stateSerDes);
         }
         return null;
     }
