@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.authorization.state;
+package io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.InvalidStateException;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

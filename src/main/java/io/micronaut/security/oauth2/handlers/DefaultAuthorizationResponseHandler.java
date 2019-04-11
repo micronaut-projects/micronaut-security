@@ -21,7 +21,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateValidator;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.openid.endpoints.token.AuthorizationCodeGrantRequestGenerator;
 import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
 import io.micronaut.security.oauth2.responses.AuthenticationResponse;
