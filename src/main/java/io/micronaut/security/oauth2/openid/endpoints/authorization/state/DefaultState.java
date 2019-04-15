@@ -16,8 +16,10 @@
 
 package io.micronaut.security.oauth2.openid.endpoints.authorization.state;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URI;
+import java.util.UUID;
 
 /**
  * Default state implementation.
@@ -28,6 +30,7 @@ import java.net.URI;
 public class DefaultState implements State {
 
     private URI originalUri;
+    private String nonce = UUID.randomUUID().toString();
 
     @Override
     @Nullable
@@ -35,11 +38,24 @@ public class DefaultState implements State {
         return originalUri;
     }
 
+    @Nonnull
+    @Override
+    public String getNonce() {
+        return nonce;
+    }
+
     /**
      * @param originalUri The original URI
      */
     public void setOriginalUri(URI originalUri) {
         this.originalUri = originalUri;
+    }
+
+    /**
+     * @param nonce The nonce
+     */
+    public void setNonce(String nonce) {
+        this.nonce = nonce;
     }
 
     @Override
@@ -59,9 +75,7 @@ public class DefaultState implements State {
             return false;
         }
         State other = (State) obj;
-        if (originalUri == null) {
-            return other.getOriginalUri() == null;
-        }
-        return originalUri.equals(other.getOriginalUri());
+
+        return nonce.equals(other.getNonce());
     }
 }

@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.authorization.state;
+package io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.persistence.session;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.net.URI;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.security.filters.SecurityFilterOrderProvider;
+import io.micronaut.session.http.HttpSessionFilter;
+
+import javax.inject.Singleton;
 
 /**
- * Represents the state sent in the authorization request and returned in the authorization response.
+ * Sets the security filter to execute after the session filter.
  *
  * @author James Kleeh
  * @since 1.0.0
  */
-public interface State {
+@Requires(missingBeans = SecurityFilterOrderProvider.class)
+@Singleton
+public class SessionSecurityFilterOrderProvider implements SecurityFilterOrderProvider {
 
-    /**
-     * @return The URI that was redirected from
-     */
-    @Nullable
-    URI getOriginalUri();
-
-    /**
-     * @return A nonce value
-     */
-    @Nonnull
-    String getNonce();
+    @Override
+    public int getOrder() {
+        return HttpSessionFilter.ORDER + 100;
+    }
 }

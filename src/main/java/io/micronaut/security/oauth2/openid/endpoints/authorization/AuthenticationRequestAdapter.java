@@ -16,37 +16,39 @@
 
 package io.micronaut.security.oauth2.openid.endpoints.authorization;
 
+import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateProvider;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Provides an {@link AuthenticationRequest} by combining {@link OauthConfiguration},
- * {@link StateProvider}, {@link NonceProvider}, {@link AuthorizationEndpoint}.
+ * {@link StateFactory}, {@link NonceProvider}, {@link AuthorizationEndpoint}.
  * @author Sergio del Amo
  * @since 1.0.0
  */
 public class AuthenticationRequestAdapter implements AuthenticationRequest {
 
-    private HttpRequest<?> request;
     private OauthConfiguration oauthConfiguration;
-    private StateProvider stateProvider;
+    private StateFactory stateFactory;
     private NonceProvider nonceProvider;
     private LoginHintProvider loginHintProvider;
     private IdTokenHintProvider idTokenHintProvider;
     private AuthorizationEndpointRequestConfiguration authorizationEndpointConfiguration;
+    private final Supplier<String> stateSupplier;
 
     /**
      *
-     * @param request the Original request prior redirect.
+     * @param request The original request prior redirect.
      * @param oauthConfiguration OAuth 2.0 Configuration
      * @param authorizationEndpointConfiguration Authorization Endpoint Configuration
-     * @param stateProvider State Provider
+     * @param stateFactory State Provider
      * @param nonceProvider Nonce Provider
      * @param loginHintProvider Login Hint Provider
      * @param idTokenHintProvider Id Token Hint Provider
@@ -54,18 +56,19 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
     public AuthenticationRequestAdapter(HttpRequest<?> request,
                                         OauthConfiguration oauthConfiguration,
                                         AuthorizationEndpointRequestConfiguration authorizationEndpointConfiguration,
-                                        @Nullable StateProvider stateProvider,
+                                        @Nullable StateFactory stateFactory,
                                         @Nullable NonceProvider nonceProvider,
                                         @Nullable LoginHintProvider loginHintProvider,
                                         @Nullable IdTokenHintProvider idTokenHintProvider
                                         ) {
-        this.request = request;
         this.oauthConfiguration = oauthConfiguration;
         this.authorizationEndpointConfiguration = authorizationEndpointConfiguration;
-        this.stateProvider = stateProvider;
+        this.stateFactory = stateFactory;
         this.nonceProvider = nonceProvider;
         this.loginHintProvider = loginHintProvider;
         this.idTokenHintProvider = idTokenHintProvider;
+        this.stateSupplier = SupplierUtil.memoized(() ->
+            getStateFactory().map(sf -> sf.buildState(request)).orElse(null));
     }
 
     @Override
@@ -77,7 +80,7 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
     @Override
     @Nullable
     public String getState() {
-        return getStateProvider().map(sp -> sp.generateState(request)).orElse(null);
+        return stateSupplier.get();
     }
 
     @Nullable
@@ -164,8 +167,8 @@ public class AuthenticationRequestAdapter implements AuthenticationRequest {
         return Optional.ofNullable(loginHintProvider);
     }
 
-    private Optional<StateProvider> getStateProvider() {
-        return Optional.ofNullable(stateProvider);
+    private Optional<StateFactory> getStateFactory() {
+        return Optional.ofNullable(stateFactory);
     }
 
     private Optional<NonceProvider> getNonceProvider() {

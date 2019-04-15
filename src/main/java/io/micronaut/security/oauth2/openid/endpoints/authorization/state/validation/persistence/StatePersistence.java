@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation;
+package io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.persistence;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;

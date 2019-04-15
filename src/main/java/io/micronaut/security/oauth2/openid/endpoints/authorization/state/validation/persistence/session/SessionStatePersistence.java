@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation;
+package io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.persistence.session;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateSerDes;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.DefaultStateValidationConfiguration;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.persistence.StatePersistence;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
@@ -41,37 +42,29 @@ public class SessionStatePersistence implements StatePersistence {
     private static final String SESSION_KEY = "oauth2State";
 
     private final SessionStore<Session> sessionStore;
-    private final StateSerDes stateSerDes;
 
     /**
      * @param sessionStore The session store
-     * @param stateSerDes The state serdes
      */
-    public SessionStatePersistence(SessionStore<Session> sessionStore,
-                                   StateSerDes stateSerDes) {
+    public SessionStatePersistence(SessionStore<Session> sessionStore) {
         this.sessionStore = sessionStore;
-        this.stateSerDes = stateSerDes;
     }
 
     @Override
     public Optional<State> retrieveState(HttpRequest<?> request) {
         return SessionForRequest.find(request)
                 .flatMap(session -> {
-                    Optional<String> state = session.get(SESSION_KEY, String.class);
+                    Optional<State> state = session.get(SESSION_KEY, State.class);
                     if (state.isPresent()) {
                         session.remove(SESSION_KEY);
                     }
                     return state;
-                })
-                .flatMap(state -> Optional.ofNullable(stateSerDes.deserialize(state)));
+                });
     }
 
     @Override
     public void persistState(HttpRequest<?> request, State state) {
-        String serializedState = stateSerDes.serialize(state);
-        if (serializedState != null) {
-            Session session = SessionForRequest.find(request).orElse(SessionForRequest.create(sessionStore, request));
-            session.put(SESSION_KEY, serializedState);
-        }
+        Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
+        session.put(SESSION_KEY, state);
     }
 }

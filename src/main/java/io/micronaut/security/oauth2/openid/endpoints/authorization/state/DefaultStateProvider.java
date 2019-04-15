@@ -19,7 +19,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization.state;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.security.filters.SecurityFilter;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.StatePersistence;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.persistence.StatePersistence;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -33,14 +33,14 @@ import java.util.Optional;
  * @since 1.0.0
  */
 @Singleton
-public class DefaultStateProvider implements StateProvider {
+public class DefaultStateProvider implements StateFactory {
 
     private final StateSerDes stateSerDes;
-    @Nullable
     private final StatePersistence statePersistence;
 
     /**
      * @param stateSerDes To serialize the state
+     * @param statePersistence A state persistence
      */
     public DefaultStateProvider(StateSerDes stateSerDes, @Nullable StatePersistence statePersistence) {
         this.stateSerDes = stateSerDes;
@@ -49,7 +49,7 @@ public class DefaultStateProvider implements StateProvider {
 
     @Nullable
     @Override
-    public String generateState(HttpRequest<?> request) {
+    public String buildState(HttpRequest<?> request) {
         Optional<HttpStatus> rejectedStatus = request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class);
         boolean unauthorized = rejectedStatus.isPresent() && rejectedStatus.get().equals(HttpStatus.UNAUTHORIZED);
         DefaultState state = new DefaultState();

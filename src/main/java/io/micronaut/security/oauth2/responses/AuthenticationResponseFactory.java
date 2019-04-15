@@ -36,6 +36,9 @@ public class AuthenticationResponseFactory {
 
     private final StateSerDes stateSerDes;
 
+    /**
+     * @param stateSerDes The state serdes
+     */
     public AuthenticationResponseFactory(StateSerDes stateSerDes) {
         this.stateSerDes = stateSerDes;
     }

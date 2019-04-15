@@ -14,33 +14,16 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.endpoints.authorization;
-
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;
-
-import javax.annotation.Nullable;
-import java.net.URI;
-
 /**
- * Default implementation of {@link State}.
+ * Classes related to state persistence in a session.
+ *
  * @author James Kleeh
  * @since 1.0.0
  */
-public class DefaultState implements State {
+@Configuration
+@Requires(property = DefaultStateValidationConfiguration.PREFIX + ".persistence", value = "session")
+package io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.persistence.session;
 
-    private URI originalUri;
-
-    @Override
-    @Nullable
-    public URI getOriginalUri() {
-        return originalUri;
-    }
-
-    /**
-     *
-     * @param originalUri Original Uri
-     */
-    public void setOriginalUri(URI originalUri) {
-        this.originalUri = originalUri;
-    }
-}
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.DefaultStateValidationConfiguration;

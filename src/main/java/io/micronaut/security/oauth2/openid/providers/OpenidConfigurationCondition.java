@@ -20,7 +20,6 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.value.PropertyResolver;
-import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderConfigurationProperties;
 
 import java.util.Optional;

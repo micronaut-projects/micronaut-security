@@ -15,7 +15,7 @@
  */
 
 /**
- * Classes related to state validation
+ * Classes related to state validation.
  *
  * @author James Kleeh
  * @since 1.0.0

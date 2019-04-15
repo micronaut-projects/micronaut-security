@@ -30,14 +30,14 @@ import javax.annotation.Nullable;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public interface StateProvider {
+public interface StateFactory {
 
     /**
      *
-     * @param request the original request prior redirect.
+     * @param request The original request prior redirect
      * @return A state parameter. A opaque value used to maintain state between the request and the callback.
      */
     @Nullable
-    String generateState(HttpRequest<?> request);
+    String buildState(HttpRequest<?> request);
 
 }

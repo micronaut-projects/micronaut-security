@@ -15,7 +15,7 @@
  */
 
 /**
- * Classes related to OAuth2 state management
+ * Classes related to OAuth2 state management.
  *
  * @author James Kleeh
  * @since 1.0.0

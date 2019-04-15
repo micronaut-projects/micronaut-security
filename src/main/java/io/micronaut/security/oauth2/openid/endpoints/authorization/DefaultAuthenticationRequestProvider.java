@@ -19,7 +19,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateProvider;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -36,7 +36,7 @@ public class DefaultAuthenticationRequestProvider implements AuthenticationReque
 
     private final OauthConfiguration oauthConfiguration;
     private final AuthorizationEndpointRequestConfiguration authorizationEndpointRequestConfiguration;
-    private final StateProvider stateProvider;
+    private final StateFactory stateFactory;
     private final NonceProvider nonceProvider;
     private final LoginHintProvider loginHintProvider;
     private final IdTokenHintProvider idTokenHintProvider;
@@ -45,20 +45,20 @@ public class DefaultAuthenticationRequestProvider implements AuthenticationReque
      *
      * @param oauthConfiguration OAuth 2.0 Configuration
      * @param authorizationEndpointRequestConfiguration Authorization Endpoint Request Configuration
-     * @param stateProvider Authorization state provider
+     * @param stateFactory Authorization state provider
      * @param nonceProvider Authorization nonce provider
      * @param loginHintProvider Login Hint Provider
      * @param idTokenHintProvider Id Token Hint Provider
      */
     public DefaultAuthenticationRequestProvider(OauthConfiguration oauthConfiguration,
                                                 AuthorizationEndpointRequestConfiguration authorizationEndpointRequestConfiguration,
-                                                @Nullable StateProvider stateProvider,
+                                                @Nullable StateFactory stateFactory,
                                                 @Nullable NonceProvider nonceProvider,
                                                 @Nullable LoginHintProvider loginHintProvider,
                                                 @Nullable IdTokenHintProvider idTokenHintProvider) {
         this.oauthConfiguration = oauthConfiguration;
         this.authorizationEndpointRequestConfiguration = authorizationEndpointRequestConfiguration;
-        this.stateProvider = stateProvider;
+        this.stateFactory = stateFactory;
         this.nonceProvider = nonceProvider;
         this.loginHintProvider = loginHintProvider;
         this.idTokenHintProvider = idTokenHintProvider;
@@ -69,7 +69,7 @@ public class DefaultAuthenticationRequestProvider implements AuthenticationReque
         return new AuthenticationRequestAdapter(request,
                 oauthConfiguration,
                 authorizationEndpointRequestConfiguration,
-                stateProvider,
+                stateFactory,
                 nonceProvider,
                 loginHintProvider,
                 idTokenHintProvider);
