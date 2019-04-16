@@ -70,7 +70,7 @@ class DefaultAuthorizationRedirectUrlProviderSpec extends Specification {
         redirectUrl.contains("client_id=XXXX")
         redirectUrl.contains("response_mode=query")
         redirectUrl.contains("redirect_uri")
-        redirectUrl.contains("state={\"originalUri\":\"/authors\"}")
+        redirectUrl.contains("state={\"originalUri\":\"/authors\",\"nonce\":")
 
         and:
         mockHttpServer.applicationContext.getBean(FileOpenIdConfigurationController).called == 1
