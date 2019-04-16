@@ -33,7 +33,7 @@ import java.util.Optional;
  * @since 1.0.0
  */
 @Singleton
-public class DefaultStateProvider implements StateFactory {
+public class DefaultStateFactory implements StateFactory {
 
     private final StateSerDes stateSerDes;
     private final StatePersistence statePersistence;
@@ -42,7 +42,7 @@ public class DefaultStateProvider implements StateFactory {
      * @param stateSerDes To serialize the state
      * @param statePersistence A state persistence
      */
-    public DefaultStateProvider(StateSerDes stateSerDes, @Nullable StatePersistence statePersistence) {
+    public DefaultStateFactory(StateSerDes stateSerDes, @Nullable StatePersistence statePersistence) {
         this.stateSerDes = stateSerDes;
         this.statePersistence = statePersistence;
     }

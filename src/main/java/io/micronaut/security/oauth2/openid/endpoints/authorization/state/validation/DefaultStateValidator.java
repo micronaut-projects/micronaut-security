@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization.state.valida
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.InvalidStateException;
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State;
 import io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.persistence.StatePersistence;
 

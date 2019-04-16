@@ -2,7 +2,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.DefaultStateProvider
+import io.micronaut.security.oauth2.openid.endpoints.authorization.state.DefaultStateFactory
 import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateFactory
 import spock.lang.Specification
 
@@ -20,7 +20,7 @@ class StateProviderSpec extends Specification {
         StateFactory provider = context.getBean(StateFactory)
 
         then:
-        provider instanceof DefaultStateProvider
+        provider instanceof DefaultStateFactory
 
         cleanup:
         context.close()
