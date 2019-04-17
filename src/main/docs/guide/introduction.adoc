@@ -1,26 +1,28 @@
-Micronaut is a modern, JVM-based, full stack microservices framework designed for building modular, easily testable microservice applications.
+Micronaut Security is a fully featured and customizable security solution for your applications.
 
-Micronaut is developed by the creators of the Grails framework and takes inspiration from lessons learnt over the years building real-world applications from monoliths to microservices using Spring, Spring Boot and Grails.
+== Getting Started
 
-Micronaut aims to provide all the tools necessary to build full-featured microservice applications, including:
+[TIP]
+.Using the CLI
+====
+If you are creating your project using the Micronaut CLI, supply either the `security-jwt` or `security-session` features configure the security support in your project:
+----
+$ mn create-app my-app --features security-jwt
+----
+====
+To use the Micronaut's security capabilities you must have the `security` dependency on your classpath. For example in `build.gradle`:
 
-* Dependency Injection and Inversion of Control (IoC)
-* Sensible Defaults and Auto-Configuration
-* Configuration and Configuration Sharing
-* Service Discovery
-* HTTP Routing
-* HTTP Client with client-side load-balancing
+.build.gradle
+[source,groovy]
+----
+annotationProcessor "io.micronaut:micronaut-security"
+compile "io.micronaut:micronaut-security"
+----
 
-At the same time Micronaut aims to avoid the downsides of frameworks like Spring, Spring Boot and Grails by providing:
+Enable security capabilities with:
 
-* Fast startup time
-* Reduced memory footprint
-* Minimal use of reflection
-* Minimal use of proxies
-* Easy unit testing
+include::{includedir}configurationProperties/io.micronaut.security.config.SecurityConfigurationProperties.adoc[]
 
-Historically, frameworks such as Spring and Grails were not designed to run in scenarios such as server-less functions, Android apps, or low memory-footprint microservices. In contrast, Micronaut is designed to be suitable for all of these scenarios.
+Once you enable security, Micronaut returns HTTP Status Unauthorized (401) for any endpoint invocation.
 
-This goal is achieved through the use of Java's https://docs.oracle.com/javase/8/docs/api/javax/annotation/processing/Processor.html[annotation processors], which are usable on any JVM language that supports them, as well as an HTTP Server and Client built on https://netty.io/[Netty]. In order to provide a similar programming model to Spring and Grails, these annotation processors precompile the necessary metadata in order to perform DI, define AOP proxies and configure your application to run in a microservices environment.
-
-Many of the APIs within Micronaut are heavily inspired by Spring and Grails. This is by design, and aids in bringing developers up to speed quickly.
+image::secured_by_default.svg[]

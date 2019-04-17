@@ -1,1 +1,0 @@
-Micronaut features an extensible bean scoping mechanism based on JSR-330. The following default scopes are supported:

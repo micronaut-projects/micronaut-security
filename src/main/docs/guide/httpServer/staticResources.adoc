@@ -1,5 +1,0 @@
-Static resource resolution is disabled by default. Micronaut supports resolving resources from the classpath or the file system.
-
-See the information below for available configuration options:
-
-include::{includedir}configurationProperties/io.micronaut.web.router.resource.StaticResourceConfiguration.adoc[]
