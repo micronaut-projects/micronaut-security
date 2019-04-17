@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: cglib:cglib-nodep:2.2.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cglib/cglib-nodep/2.2.2/d456bb230c70c0b95c76fb28e429d42f275941/cglib-nodep-2.2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cglib/cglib-nodep/2.2.2/fc1558bebc50419cdb55fbffd81c290e21f058c1/cglib-nodep-2.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

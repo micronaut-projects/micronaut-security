@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: info.picocli:picocli:3.5.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.picocli/picocli/3.5.0/bd2da634bbf45e585692b4382af6cc744228ad7d/picocli-3.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.picocli/picocli/3.5.0/137082c5b8a0d4d3ba64fc23745562aa6725088a/picocli-3.5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

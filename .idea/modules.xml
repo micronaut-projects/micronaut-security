@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/micronaut-security.iml" filepath="$PROJECT_DIR$/.idea/modules/micronaut-security.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security/micronaut-security.security.iml" filepath="$PROJECT_DIR$/.idea/modules/security/micronaut-security.security.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-jwt/micronaut-security.security-jwt.iml" filepath="$PROJECT_DIR$/.idea/modules/security-jwt/micronaut-security.security-jwt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-jwt/micronaut-security.security-jwt.main.iml" filepath="$PROJECT_DIR$/.idea/modules/security-jwt/micronaut-security.security-jwt.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-jwt/micronaut-security.security-jwt.test.iml" filepath="$PROJECT_DIR$/.idea/modules/security-jwt/micronaut-security.security-jwt.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-ldap/micronaut-security.security-ldap.iml" filepath="$PROJECT_DIR$/.idea/modules/security-ldap/micronaut-security.security-ldap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-ldap/micronaut-security.security-ldap.main.iml" filepath="$PROJECT_DIR$/.idea/modules/security-ldap/micronaut-security.security-ldap.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-ldap/micronaut-security.security-ldap.test.iml" filepath="$PROJECT_DIR$/.idea/modules/security-ldap/micronaut-security.security-ldap.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-session/micronaut-security.security-session.iml" filepath="$PROJECT_DIR$/.idea/modules/security-session/micronaut-security.security-session.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-session/micronaut-security.security-session.main.iml" filepath="$PROJECT_DIR$/.idea/modules/security-session/micronaut-security.security-session.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-session/micronaut-security.security-session.test.iml" filepath="$PROJECT_DIR$/.idea/modules/security-session/micronaut-security.security-session.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security/micronaut-security.security.main.iml" filepath="$PROJECT_DIR$/.idea/modules/security/micronaut-security.security.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security/micronaut-security.security.test.iml" filepath="$PROJECT_DIR$/.idea/modules/security/micronaut-security.security.test.iml" />
+    </modules>
+  </component>
+</project>

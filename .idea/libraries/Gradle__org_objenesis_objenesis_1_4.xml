@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.objenesis:objenesis:1.4">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/1.4/43e5c3beb2b3f1bb582bf3155c0979de077c014a/objenesis-1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/1.4/3a83a771dcc872a85fbb856630a3562c60ec4a0c/objenesis-1.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

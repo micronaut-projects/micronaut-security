@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.codehaus.groovy:groovy-cli-commons:2.5.6">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-cli-commons/2.5.6/8b405518664cdfc254a603002314db202c41d2c5/groovy-cli-commons-2.5.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-cli-commons/2.5.6/4de13b6636c2e932fdf22af2593d88a20aaa7400/groovy-cli-commons-2.5.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

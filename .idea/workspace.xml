@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d3d48923-f65d-429d-ad66-5dec60046d2b" name="Default Changelist" comment="" />
+    <ignored path="$PROJECT_DIR$/classes/" />
+    <ignored path="$PROJECT_DIR$/.gradle/" />
+    <ignored path="$PROJECT_DIR$/build/" />
+    <ignored path="$PROJECT_DIR$/aop/.gradle/" />
+    <ignored path="$PROJECT_DIR$/aop/build/" />
+    <ignored path="$PROJECT_DIR$/bom/.gradle/" />
+    <ignored path="$PROJECT_DIR$/bom/build/" />
+    <ignored path="$PROJECT_DIR$/buffer-netty/.gradle/" />
+    <ignored path="$PROJECT_DIR$/buffer-netty/build/" />
+    <ignored path="$PROJECT_DIR$/cli/.gradle/" />
+    <ignored path="$PROJECT_DIR$/cli/build/" />
+    <ignored path="$PROJECT_DIR$/configurations/.gradle/" />
+    <ignored path="$PROJECT_DIR$/configurations/build/" />
+    <ignored path="$PROJECT_DIR$/core/.gradle/" />
+    <ignored path="$PROJECT_DIR$/core/build/" />
+    <ignored path="$PROJECT_DIR$/discovery-client/.gradle/" />
+    <ignored path="$PROJECT_DIR$/discovery-client/build/" />
+    <ignored path="$PROJECT_DIR$/function/.gradle/" />
+    <ignored path="$PROJECT_DIR$/function/build/" />
+    <ignored path="$PROJECT_DIR$/function-client/.gradle/" />
+    <ignored path="$PROJECT_DIR$/function-client/build/" />
+    <ignored path="$PROJECT_DIR$/function-web/.gradle/" />
+    <ignored path="$PROJECT_DIR$/function-web/build/" />
+    <ignored path="$PROJECT_DIR$/graal/.gradle/" />
+    <ignored path="$PROJECT_DIR$/graal/build/" />
+    <ignored path="$PROJECT_DIR$/http/.gradle/" />
+    <ignored path="$PROJECT_DIR$/http/build/" />
+    <ignored path="$PROJECT_DIR$/http-client/.gradle/" />
+    <ignored path="$PROJECT_DIR$/http-client/build/" />
+    <ignored path="$PROJECT_DIR$/http-netty/.gradle/" />
+    <ignored path="$PROJECT_DIR$/http-netty/build/" />
+    <ignored path="$PROJECT_DIR$/http-server/.gradle/" />
+    <ignored path="$PROJECT_DIR$/http-server/build/" />
+    <ignored path="$PROJECT_DIR$/http-server-netty/.gradle/" />
+    <ignored path="$PROJECT_DIR$/http-server-netty/build/" />
+    <ignored path="$PROJECT_DIR$/inject/.gradle/" />
+    <ignored path="$PROJECT_DIR$/inject/build/" />
+    <ignored path="$PROJECT_DIR$/inject-groovy/.gradle/" />
+    <ignored path="$PROJECT_DIR$/inject-groovy/build/" />
+    <ignored path="$PROJECT_DIR$/inject-java/.gradle/" />
+    <ignored path="$PROJECT_DIR$/inject-java/build/" />
+    <ignored path="$PROJECT_DIR$/inject-java-test/.gradle/" />
+    <ignored path="$PROJECT_DIR$/inject-java-test/build/" />
+    <ignored path="$PROJECT_DIR$/jdbc/.gradle/" />
+    <ignored path="$PROJECT_DIR$/jdbc/build/" />
+    <ignored path="$PROJECT_DIR$/management/.gradle/" />
+    <ignored path="$PROJECT_DIR$/management/build/" />
+    <ignored path="$PROJECT_DIR$/messaging/.gradle/" />
+    <ignored path="$PROJECT_DIR$/messaging/build/" />
+    <ignored path="$PROJECT_DIR$/multitenancy/.gradle/" />
+    <ignored path="$PROJECT_DIR$/multitenancy/build/" />
+    <ignored path="$PROJECT_DIR$/router/.gradle/" />
+    <ignored path="$PROJECT_DIR$/router/build/" />
+    <ignored path="$PROJECT_DIR$/runtime/.gradle/" />
+    <ignored path="$PROJECT_DIR$/runtime/build/" />
+    <ignored path="$PROJECT_DIR$/runtime-osx/.gradle/" />
+    <ignored path="$PROJECT_DIR$/runtime-osx/build/" />
+    <ignored path="$PROJECT_DIR$/security/.gradle/" />
+    <ignored path="$PROJECT_DIR$/security/build/" />
+    <ignored path="$PROJECT_DIR$/security-jwt/.gradle/" />
+    <ignored path="$PROJECT_DIR$/security-jwt/build/" />
+    <ignored path="$PROJECT_DIR$/security-session/.gradle/" />
+    <ignored path="$PROJECT_DIR$/security-session/build/" />
+    <ignored path="$PROJECT_DIR$/session/.gradle/" />
+    <ignored path="$PROJECT_DIR$/session/build/" />
+    <ignored path="$PROJECT_DIR$/spring/.gradle/" />
+    <ignored path="$PROJECT_DIR$/spring/build/" />
+    <ignored path="$PROJECT_DIR$/test-suite/.gradle/" />
+    <ignored path="$PROJECT_DIR$/test-suite/build/" />
+    <ignored path="$PROJECT_DIR$/test-suite-groovy/.gradle/" />
+    <ignored path="$PROJECT_DIR$/test-suite-groovy/build/" />
+    <ignored path="$PROJECT_DIR$/test-suite-kotlin/.gradle/" />
+    <ignored path="$PROJECT_DIR$/test-suite-kotlin/build/" />
+    <ignored path="$PROJECT_DIR$/test-utils/.gradle/" />
+    <ignored path="$PROJECT_DIR$/test-utils/build/" />
+    <ignored path="$PROJECT_DIR$/tracing/.gradle/" />
+    <ignored path="$PROJECT_DIR$/tracing/build/" />
+    <ignored path="$PROJECT_DIR$/validation/.gradle/" />
+    <ignored path="$PROJECT_DIR$/validation/build/" />
+    <ignored path="$PROJECT_DIR$/views/.gradle/" />
+    <ignored path="$PROJECT_DIR$/views/build/" />
+    <ignored path="$PROJECT_DIR$/websocket/.gradle/" />
+    <ignored path="$PROJECT_DIR$/websocket/build/" />
+    <ignored path="$PROJECT_DIR$/configurations/cassandra/.gradle/" />
+    <ignored path="$PROJECT_DIR$/configurations/cassandra/build/" />
+    <ignored path="$PROJECT_DIR$/configurations/hibernate-validator/.gradle/" />
+    <ignored path="$PROJECT_DIR$/configurations/hibernate-validator/build/" />
+    <ignored path="$PROJECT_DIR$/configurations/jmx/.gradle/" />
+    <ignored path="$PROJECT_DIR$/configurations/jmx/build/" />
+    <ignored path="$PROJECT_DIR$/configurations/openapi/.gradle/" />
+    <ignored path="$PROJECT_DIR$/configurations/openapi/build/" />
+    <ignored path="$PROJECT_DIR$/configurations/picocli/.gradle/" />
+    <ignored path="$PROJECT_DIR$/configurations/picocli/build/" />
+    <ignored path="$PROJECT_DIR$/configurations/security-ldap/.gradle/" />
+    <ignored path="$PROJECT_DIR$/configurations/security-ldap/build/" />
+    <ignored path="$PROJECT_DIR$/security-ldap/.gradle/" />
+    <ignored path="$PROJECT_DIR$/security-ldap/build/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="isMigrated" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/render.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorEncryption.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="375">
+                <caret line="23" column="4" lean-forward="true" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>micronautDocsVersion</find>
+      <find>YamlAscii</find>
+    </findStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/security/src/test/groovy/io/micronaut</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/settings.gradle" />
+        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/security-ldap/build.gradle" />
+        <option value="$PROJECT_DIR$/gradle.properties" />
+        <option value="$PROJECT_DIR$/.travis.yml" />
+        <option value="$PROJECT_DIR$/security/build.gradle" />
+        <option value="$PROJECT_DIR$/security-jwt/build.gradle" />
+        <option value="$PROJECT_DIR$/security-session/build.gradle" />
+        <option value="$PROJECT_DIR$/src/main/docs/guide/toc.yml" />
+        <option value="$PROJECT_DIR$/src/main/docs/guide/security.adoc" />
+        <option value="$PROJECT_DIR$/src/main/docs/guide/introduction.adoc" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="65" />
+    <option name="y" value="23" />
+    <option name="width" value="1713" />
+    <option name="height" value="937" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="micronaut-security" type="b2602c69:ProjectViewProjectNode" />
+              <item name="micronaut-security" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="micronaut-security" type="b2602c69:ProjectViewProjectNode" />
+              <item name="micronaut-security" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="micronaut-security" type="b2602c69:ProjectViewProjectNode" />
+              <item name="micronaut-security" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="micronaut-security" type="b2602c69:ProjectViewProjectNode" />
+              <item name="micronaut-security" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="micronaut-security" type="b2602c69:ProjectViewProjectNode" />
+              <item name="micronaut-security" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+              <item name="guide" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="/usr/local/bin/node" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="io.micronaut.testutils" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/docs/guide" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="Applet">
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d3d48923-f65d-429d-ad66-5dec60046d2b" name="Default Changelist" comment="" />
+      <created>1555515088216</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1555515088216</updated>
+      <workItem from="1555515089910" duration="4236000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="4236000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="65" y="23" width="1713" height="937" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Designer" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24955116" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" weight="0.3296837" />
+      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.3296837" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Build" weight="0.3296837" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Gradle" />
+      <window_info anchor="right" id="Maven" />
+      <window_info anchor="right" id="Bean Validation" />
+      <window_info anchor="right" id="Palette&#9;" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2160">
+          <caret line="144" column="1" selection-start-line="144" selection-start-column="1" selection-end-line="144" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/security-ldap/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="40" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gradle.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.travis.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="28" selection-start-line="27" selection-start-column="28" selection-end-line="27" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/security/src/test/groovy/io/micronaut/testutils/YamlAsciidocTagCleaner.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/security/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/security-jwt/src/test/groovy/io/micronaut/testutils/YamlAsciidocTagCleaner.groovy">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/security-jwt/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="419">
+          <caret line="31" column="58" selection-start-line="31" selection-start-column="58" selection-end-line="31" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/security-session/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/security-session/src/test/groovy/io/micronaut/testutils/YamlAsciidocTagCleaner.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="26" column="1" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/toc.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="47" selection-start-line="47" selection-end-line="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/security.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/introduction.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="435">
+            <caret line="27" column="31" selection-start-line="27" selection-start-column="31" selection-end-line="27" selection-end-column="31" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/render.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorEncryption.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="375">
+            <caret line="23" column="4" lean-forward="true" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>groovy-2.4.9</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

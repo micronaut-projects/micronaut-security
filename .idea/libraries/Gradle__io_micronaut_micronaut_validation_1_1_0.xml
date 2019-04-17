@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: io.micronaut:micronaut-validation:1.1.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-validation/1.1.0/f802b91cb08f8469929f637d104082c0da7d3cb7/micronaut-validation-1.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-validation/1.1.0/2ecb2eec62666eb5014c91b0f5820d4b7fd2cb07/micronaut-validation-1.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

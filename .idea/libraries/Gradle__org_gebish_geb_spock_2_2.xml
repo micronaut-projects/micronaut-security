@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.gebish:geb-spock:2.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.gebish/geb-spock/2.2/25dd3c1326dd93838cda47fa27d057e35722b160/geb-spock-2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.gebish/geb-spock/2.2/994c545e0e3f3ae1586abd968cd34a7c2224ee1d/geb-spock-2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
