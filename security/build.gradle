@@ -1,18 +1,17 @@
 dependencies {
-    compileOnly project(":inject-java")
-    compileOnly project(":graal")
-    compile project(":runtime")
-    compile project(":management")
-    compile project(":http")
-    compile project(":http-server")
-    testCompile project(":http-client")
-    testCompile project(":inject-java")
-    compile project(':configurations:hibernate-validator')
-    testCompile project(":inject-groovy")
-    testCompile project(":http-server-netty")
-    testCompile project(":test-utils")
+    compileOnly "io.micronaut:micronaut-inject-java"
+    compileOnly "io.micronaut:micronaut-graal"
+    compile "io.micronaut:micronaut-runtime"
+    compile "io.micronaut:micronaut-management"
+    compile "io.micronaut:micronaut-http"
+    compile "io.micronaut:micronaut-http-server"
+    testCompile "io.micronaut:micronaut-http-client"
+    testCompile "io.micronaut:micronaut-inject-java"
+    compile "io.micronaut.configuration:micronaut-hibernate-validator"
+    testCompile "io.micronaut:micronaut-inject-groovy"
+    testCompile "io.micronaut:micronaut-http-server-netty"
 
-    testCompile dependencyVersion("reactor")
+    testCompile "io.projectreactor:reactor-core:3.2.5.RELEASE"
 }
 
 //tasks.withType(Test) {
