@@ -1,2 +1,0 @@
-To configure Micronaut integration with https://flywaydb.org/[Flyway], please follow
-https://micronaut-projects.github.io/micronaut-flyway/latest/guide/index.html[these instructions]

@@ -76,7 +76,7 @@ class HealthSensitivitySpec extends Specification {
     }
 
     @Unroll
-    void "#description => #expected"(boolean sensitive, boolean security, boolean authenticated, HealthLevelOfDetail expected, String description) {
+    void "test #description #expected"(boolean sensitive, boolean security, boolean authenticated, HealthLevelOfDetail expected, String description) {
         given:
         Map m = [
                 'spec.name'                            : 'healthsensitivity',

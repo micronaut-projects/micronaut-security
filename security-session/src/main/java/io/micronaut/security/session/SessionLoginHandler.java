@@ -78,7 +78,7 @@ public class SessionLoginHandler implements LoginHandler {
 
     @Override
     public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
-        Session session = SessionForRequest.findOrCreate(request, sessionStore);
+        Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
         session.put(SecurityFilter.AUTHENTICATION, new AuthenticationUserDetailsAdapter(userDetails, rolesKeyName));
         try {
             URI location = new URI(securitySessionConfiguration.getLoginSuccessTargetUrl());
