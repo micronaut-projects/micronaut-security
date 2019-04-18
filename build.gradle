@@ -60,6 +60,7 @@ subprojects { Project subproject ->
     apply plugin: "groovy"
     apply plugin: "java"
     apply plugin: "io.spring.dependency-management"
+    
 
     dependencyManagement {
         imports {
@@ -71,6 +72,8 @@ subprojects { Project subproject ->
     targetCompatibility = '1.8'
     compileJava.options.compilerArgs.add '-parameters'
     compileTestJava.options.compilerArgs.add '-parameters'
+    apply from: rootProject.file('gradle/publishing.gradle')
+    
     
     jar {
         manifest {
@@ -113,6 +116,11 @@ subprojects { Project subproject ->
         documentation "org.codehaus.groovy:groovy-templates:$groovyVersion"
         documentation "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
 
+        annotationProcessor "io.micronaut:micronaut-inject-java"
+        annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
+        annotationProcessor "io.micronaut:micronaut-graal"
+        compile "io.micronaut:micronaut-inject"
+        
         testCompile("org.spockframework:spock-core:${spockVersion}") {
             exclude module:'groovy-all'
         }
@@ -121,6 +129,88 @@ subprojects { Project subproject ->
 
         testRuntime "ch.qos.logback:logback-classic:1.2.3"
         testCompile "org.codehaus.groovy:groovy-test:$groovyVersion"
+    }
+
+    task moveConfigProps() {
+        group 'documentation'
+        doLast {
+            ant.mkdir(dir: "${rootProject.buildDir}/config-props")
+            ant.move(file: "${subproject.buildDir}/classes/java/main/META-INF/config-properties.adoc", tofile: "${rootProject.buildDir}/config-props/${subproject.name}-config-properties.adoc", failonerror: false, quiet: true)
+        }
+    }
+
+    task javaDocAtReplacement(type: io.micronaut.docs.JavaDocAtValueReplacementTask, dependsOn: moveConfigProps) {
+        adocFile = new File("${rootProject.buildDir}/config-props/${subproject.name}-config-properties.adoc")
+        rootProjectDir = rootProject.projectDir
+    }
+
+    task replaceAtLink(dependsOn: moveConfigProps) {
+        group 'documentation'
+
+        doLast {
+            File file = new File("${rootProject.buildDir}/config-props/${subproject.name}-config-properties.adoc")
+            if (file.exists()) {
+                def atLinkReplacer = { String str ->
+                    String newLine = str.substring(0, str.indexOf('{@link io.micronaut.'))
+                    String sub = "api:" + str.substring(str.indexOf('{@link io.micronaut.') + '{@link io.micronaut.'.length())
+                    newLine += sub.substring(0, sub.indexOf('}')) + '[]'
+                    newLine += sub.substring(sub.indexOf('}') + '}'.length())
+                    newLine
+                }
+
+                List<String> lines = file.readLines()
+                List<String> outputLines = []
+                for (String line : lines) {
+                    String proccessedLine = line
+                    while (proccessedLine.contains('{@link io.micronaut.')) {
+                        proccessedLine = atLinkReplacer(proccessedLine)
+                    }
+                    outputLines << proccessedLine
+                }
+                file.text = outputLines.join('\n')
+            }
+        }
+    }
+    task processConfigProps(dependsOn: [replaceAtLink, javaDocAtReplacement]) {
+        group 'documentation'
+        ext {
+            individualConfigPropsFolder = "${rootProject.buildDir}/generated/configurationProperties"
+        }
+        doFirst {
+            if (!new File("${rootProject.buildDir}/generated").exists()) {
+                new File("${rootProject.buildDir}/generated").mkdir()
+            }
+            if (!new File("${rootProject.buildDir}/generated/configurationProperties").exists()) {
+                new File("${rootProject.buildDir}/generated/configurationProperties").mkdir()
+            }
+        }
+        doLast {
+
+            def f = new File("${rootProject.buildDir}/config-props/${subproject.name}-config-properties.adoc")
+            if (f.exists()) {
+                def lines = f.readLines()
+                def separator = "<<<"
+                List<String> accumulator = []
+                String configurationPropertyName = ''
+                for (String line : lines) {
+
+                    if (line.startsWith('<a id="')) {
+                        String sub = line.substring(line.indexOf('id="') + 'id="'.length())
+                        sub = sub.substring(0, sub.indexOf('"'))
+                        configurationPropertyName = sub
+                    }
+                    if (line == separator) {
+                        File outputfile = new File("${individualConfigPropsFolder}/${configurationPropertyName}.adoc")
+                        outputfile.createNewFile()
+                        outputfile.text = accumulator.join('\n')
+                        accumulator = []
+                        configurationPropertyName = null
+                    } else {
+                        accumulator << line
+                    }
+                }
+            }
+        }
     }
 
     groovydoc {
@@ -145,7 +235,7 @@ subprojects { Project subproject ->
     checkstyleTest.enabled = false
 }
 
-apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-docs/v${micronautDocsVersion}/gradle/docs.gradle"
+apply from: rootProject.file('gradle/docs.gradle')
 
 allprojects {
     apply plugin: 'idea'

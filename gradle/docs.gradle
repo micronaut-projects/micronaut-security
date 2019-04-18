@@ -20,7 +20,7 @@ def docResourcesDir = "${buildDir}/resources/${commonGithubSlug}-${commonBranch}
 
 task prepareDocResources {
     group = DOCUMENTATION_GROUP
-    description = 'Downloads common documentation resoruces and unzips them to build folder'
+    description = 'Downloads common documentation resources and unzips them to build folder'
     doLast {
         ant.mkdir(dir:buildDir)
         ant.get(src:"https://github.com/${commonGithubOrg}/${commonGithubSlug}/archive/${commonBranch}.zip", dest:"${buildDir}/resources.zip")
