@@ -21,6 +21,7 @@ import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
@@ -81,21 +82,11 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_LOGINFAILURETARGETURL = "/";
 
-    @Nullable
     private String cookieDomain;
-
-    @Nullable
     private String cookiePath = DEFAULT_COOKIEPATH;
-
-    @Nullable
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
-
-    @Nullable
     private Boolean cookieSecure = DEFAULT_SECURE;
-
-    @Nullable
-    private TemporalAmount cookieMaxAge;
-
+    private Duration cookieMaxAge;
     private boolean enabled = DEFAULT_ENABLED;
     private String logoutTargetUrl = DEFAULT_LOGOUTTARGETURL;
     private String cookieName = DEFAULT_COOKIENAME;
@@ -262,7 +253,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      * Sets the maximum age of the cookie.
      * @param cookieMaxAge The maximum age of the cookie
      */
-    public void setCookieMaxAge(TemporalAmount cookieMaxAge) {
+    public void setCookieMaxAge(Duration cookieMaxAge) {
         this.cookieMaxAge = cookieMaxAge;
     }
 }

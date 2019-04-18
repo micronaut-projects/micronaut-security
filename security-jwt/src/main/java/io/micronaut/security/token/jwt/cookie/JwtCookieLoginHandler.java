@@ -28,6 +28,7 @@ import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 /**
@@ -62,7 +63,10 @@ public class JwtCookieLoginHandler implements LoginHandler {
 
             Cookie cookie = Cookie.of(jwtCookieConfiguration.getCookieName(), accessRefreshTokenOptional.get().getAccessToken());
             cookie.configure(jwtCookieConfiguration, request.isSecure());
-            if (!jwtCookieConfiguration.getCookieMaxAge().isPresent()) {
+            Optional<TemporalAmount> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
+            if (cookieMaxAge.isPresent()) {
+                cookie.maxAge(cookieMaxAge.get());
+            } else {
                 cookie.maxAge(jwtGeneratorConfiguration.getAccessTokenExpiration());
             }
             try {
