@@ -59,6 +59,7 @@ subprojects { Project subproject ->
     apply plugin: "groovy"
     apply plugin: "java"
     apply plugin: "io.spring.dependency-management"
+    
 
     dependencyManagement {
         imports {
@@ -70,6 +71,8 @@ subprojects { Project subproject ->
     targetCompatibility = '1.8'
     compileJava.options.compilerArgs.add '-parameters'
     compileTestJava.options.compilerArgs.add '-parameters'
+    apply from: rootProject.file('gradle/publishing.gradle')
+    
     
     jar {
         manifest {
@@ -144,7 +147,7 @@ subprojects { Project subproject ->
     checkstyleTest.enabled = false
 }
 
-apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-docs/v${micronautDocsVersion}/gradle/docs.gradle"
+apply from: rootProject.file('gradle/docs.gradle')
 
 allprojects {
     apply plugin: 'idea'

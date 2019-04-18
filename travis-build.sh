@@ -38,7 +38,7 @@ fi
 
 if [[ $EXIT_STATUS -eq 0 ]]; then
     echo "Publishing archives for branch $TRAVIS_BRANCH"
-    if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH =~ ^master$ && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+    if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH =~ ^master|[12]\..\.x$ && $TRAVIS_PULL_REQUEST == 'false' ]]; then
 
       echo "Publishing archives"
       ./gradlew --stop
@@ -58,14 +58,6 @@ if [[ $EXIT_STATUS -eq 0 ]]; then
 
         cd gh-pages
 
-        if [[ $TRAVIS_BRANCH =~ ^master|[12]\..\.x$ ]]; then
-           mkdir -p snapshot
-           cp -r ../build/docs/. ./snapshot/
-
-           git add snapshot/*
-        fi
-
-
         # If there is a tag present then this becomes the latest
         if [[ -n $TRAVIS_TAG ]]; then
             mkdir -p latest
@@ -84,7 +76,11 @@ if [[ $EXIT_STATUS -eq 0 ]]; then
             mkdir -p "$majorVersion"
             cp -r ../build/docs/. "./$majorVersion/"
             git add "$majorVersion/*"
+        else
+            mkdir -p snapshot
+            cp -r ../build/docs/. ./snapshot/
 
+            git add snapshot/*
         fi
 
         git commit -a -m "Updating docs for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID" && {
