@@ -1,0 +1,14 @@
+To configure the `issuer` with AWS Cognito you can setup:
+
+[source, yaml]
+.src/main/resources/application.yml
+----
+micronaut:
+  security:
+    oauth2:
+      client-secret: '${OAUTH_CLIENT_SECRET}'
+      client-id: '${OAUTH_CLIENT_ID}'
+      issuer: 'https://cognito-idp.${AWS_REGION}.amazonaws.com/${COGNITO_POOL_ID}'
+----
+
+Please, note you will need to define environment varaibles for `AWS_REGION` and `COGNITO_POOL_ID`.

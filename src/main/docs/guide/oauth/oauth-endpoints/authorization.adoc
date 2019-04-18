@@ -1,0 +1,5 @@
+If you use the Service discovery endpoint some of the configuration values required to communicate with the Authorization endpoint will be inferred from the service discovery endpoint response. For example, you will not need to configure the authorization endpoint's url since that information is typically returned by service discovery endpoint. However, if the default values do not suffice, you can configure the communication with the authorization endpoint:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationEndpointConfigurationProperties.adoc[]
+
+The authorization request is built by default with api:io.micronaut.security.oauth2.openid.endpoints.authorization.DefaultAuthenticationRequestProvider[]. Remember you can always https://docs.micronaut.io/latest/guide/index.html#replaces[replace that bean] and provide your own implementation of api:io.micronaut.security.oauth2.openid.endpoints.authorization.AuthenticationRequestProvider[].

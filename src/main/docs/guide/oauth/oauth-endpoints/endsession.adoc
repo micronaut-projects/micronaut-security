@@ -1,0 +1,17 @@
+A logout process may look like the one displayed in the next image:
+
+image::logout-diagramm.png[]
+
+Ending the session in the authorization server provider is not standard.
+
+Micronaut provides several beans which are loaded by default.
+
+The authorization server's end session url is provided by an implementation of api:io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionUrlProvider[]. By default, api:io.micronaut.security.oauth2.openid.endpoints.endsession.DefaultEndSessionUrlProvider[] is used.
+
+Micronaut attempts to create a valid configuration by default but you can always control the end-session endpoint configuration:
+
+However, if the default values do not suffice, you can configure the communication with the authorization endpoint:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfigurationProperties.adoc[]
+
+Several <<providerSpecificBeans, Provider Specific beans>> related to end session endpoint configuration are provided.

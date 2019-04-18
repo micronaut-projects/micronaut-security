@@ -1,0 +1,3 @@
+The api:io.micronaut.security.oauth2.endpoints.AuthorizationCodeController[AuthorizationCodeController controller] handles the response from the Authorization endpoint and it can be configured:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.endpoints.AuthorizationCodeControllerConfigurationProperties.adoc[]

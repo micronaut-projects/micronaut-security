@@ -1,0 +1,3 @@
+By default, api:io.micronaut.security.oauth2.handlers.CookieSuccessfulIdTokenAccessTokenResponseHandler[] is provided which can be configured with:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.handlers.CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationProperties.adoc[]

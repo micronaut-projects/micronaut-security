@@ -5,6 +5,8 @@ dependencies {
     compile "io.micronaut:micronaut-management"
     compile "io.micronaut:micronaut-http"
     compile "io.micronaut:micronaut-http-server"
+    compile "io.micronaut:micronaut-validation"
+    
     testCompile "io.micronaut:micronaut-http-client"
     testCompile "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-inject-groovy"

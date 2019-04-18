@@ -1,0 +1,18 @@
+[source,yaml]
+.src/main/resources/application.yml
+----
+micronaut:
+  security:
+    oauth2:
+      client-secret: '${OAUTH_CLIENT_SECRET}'
+      client-id: '${OAUTH_CLIENT_ID}'
+      issuer: '${KEYCLOACK_DOMAIN}/auth/realms/${KEYCLOAK_REALM}'
+----
+
+You will need to define the environment variable `KEYCLOACK_DOMAIN` and `KEYCLOAK_REALM` for example: 
+
+[source,bash]
+----
+export KEYCLOACK_DOMAIN=http://localhost:8080
+export KEYCLOAK_REALM=master
+----

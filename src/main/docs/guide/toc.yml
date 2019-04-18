@@ -44,3 +44,42 @@ retrievingAuthenticatedUser:
   securityService: User outside of a controller
   accessSecurityInViews: User in a view
 securityEvents: Security Events
+oauth:
+  title: OAuth 2.0
+  installation:
+    title: Installation
+  examples:
+    title: Examples
+  openid:
+    title: Open ID Connect
+  service-discovery:
+    title: Service Discovery
+    service-discovery-okta: Service Discovery with OKTA
+    service-discovery-cognito: Service Discovery with AWS Cognito
+    service-discovery-auth0: Service Discovery with Auth0
+    service-discovery-keycloak: Service Discovery with Keycloak
+  oauth-endpoints:
+    title: Endpoints
+    authorization:
+      title: Authorization Endpoint
+      state: State
+      idTokenHint: IDToken Hint
+      loginHint: Login Hint
+      nonce: Nonce
+    token: Token Endpoint
+    endsession:
+      title: End Session Endpoint
+      logoutController: Logout Controller
+      logouturl: Logout URL
+  providerSpecificBeans:
+    title: Provider Specific Beans
+  flows:
+    title: 'Flows'
+    authorization-code-grant-type:
+      title: OpenID Connect Authorization code Flow
+      authorization-code-controller: Authorization Code Controller
+      id-token-validator: ID Token Validator
+      failure-handler: Failure Handler
+      successful-handler: Successful ID Token Handler
+      cookie-successful-handler: Cookie Successful ID Token Handler
+    password-grant-type: Password Grant Type

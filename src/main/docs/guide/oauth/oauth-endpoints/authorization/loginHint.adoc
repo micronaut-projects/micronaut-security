@@ -1,0 +1,7 @@
+The default implementation does not provide an https://openid.net/specs/openid-connect-core-1_0.html#IDToken[login hint].
+
+____
+Hint to the Authorization Server about the login identifier the End-User might use to log in.
+____
+
+However, you can provide a api:io.micronaut.security.oauth2.openid.endpoints.authorization.LoginHintProvider[LoginHintProvider bean] and it will be included in the authentication request.

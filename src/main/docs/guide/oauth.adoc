@@ -1,0 +1,33 @@
+This project eases OAuth 2.0 integration with Micronaut.
+
+Micronaut supports integration with authentication & authorization platforms such as https://developer.okta.com[Okta], https://auth0.com[Auth0], https://aws.amazon.com/cognito[AWS Cognito], https://www.keycloak.org[Keycloak], etc.
+
+Once you create an application client with a provider, you will get a Client ID and optionally a Client Secret.
+
+image::aws-cognito-appclient.png[]
+
+The previous image shows how to get an client id and client secret with AWS Cognito. Please, note you can obtain similar credentials with other providers.
+
+Once, you get the `client_id` and `client_secret` configure the OAuth 2.0 configuration:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.adoc[]
+
+For example, if you configured:
+
+[source, yaml]
+.src/main/resources/application.yml
+----
+micronaut:
+  security:
+    oauth2:
+      client-secret: '${OAUTH_CLIENT_SECRET}'
+      client-id: '${OAUTH_CLIENT_ID}'
+----
+
+You can supply two environment variables `OAUTH_CLIENT_SECRET`, `OAUTH_CLIENT_ID` with the credentials you obtained from the provider to be used as values of `micronaut.security.oauth2.client-id` and `micronaut.security.oauth2.client-secret`.
+
+
+
+
+
+

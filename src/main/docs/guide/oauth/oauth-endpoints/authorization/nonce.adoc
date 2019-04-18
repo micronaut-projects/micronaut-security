@@ -1,0 +1,7 @@
+The default implementation does not provide an https://openid.net/specs/openid-connect-core-1_0.html#IDToken[Nonce parameter].
+
+____
+A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.
+____
+
+However, you can provide a api:io.micronaut.security.oauth2.openid.endpoints.authorization.NonceProvider[NonceProvider bean] and it will be included in the authentication request.

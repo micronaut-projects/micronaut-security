@@ -1,0 +1,7 @@
+The default implementation does not provide an https://openid.net/specs/openid-connect-core-1_0.html#IDToken[ID Token hint].
+
+____
+A Token previously issued by the Authorization Server being passed as a hint about the End-User's current or past authenticated session with the Client.
+____
+
+However, you can provide a api:io.micronaut.security.oauth2.openid.endpoints.authorization.IdTokenHintProvider[IdTokenHintProvider bean] and it will be included in the authentication request.

@@ -1,0 +1,33 @@
+By default, this library will provide a https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest[state parameter] to authentication requests to track the original URL if the request to the URL was denied because the request was unauthorized. That allows the redirection back to the original requested resource after authentication.
+
+Because the validation of the state requires the state to be stored somewhere temporarily, state validation is only enabled if a api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.persistence.StatePersistence[] bean is present. An implementation of state persistence that stores the state in an http session has been provided, however it must be enabled through configuration and the necessary dependencies must be on the classpath.
+
+To enable state persistence with an http session:
+
+. Add a dependency to `micronaut-session`
++
+dependency:micronaut-session[]
++
+. Set the state persistence to `session`
++
+.application.yml
+----
+micronaut.security.oauth2.openid.state.validation.persistence: session
+----
++
+
+If state validation fails, an api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.InvalidStateException[] will be thrown.
+
+=== Customizing The State
+
+There are several interfaces that implementations can be provided for to override how the state parameter is handled.
+
+|===
+|Interface |Responsibility |Default Implementation
+|api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateFactory[] |Builds a api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.State[] |api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.DefaultStateFactory[]
+|api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateSerDes[] |Serializes and de-serializes the state object for use in the authorization request |api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.JacksonStateSerDes[]
+|api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.StateValidator[] |Validates the state received in the authorization response |api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.DefaultStateValidator[]
+|api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.validation.persistence.StatePersistence[] |Stores the state to be retrieved later to allow validation |None unless configured
+|===
+
+To override the behavior of any of those beans, provide an implementation and replace the default one.
