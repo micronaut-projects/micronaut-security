@@ -124,7 +124,18 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/rejection/MyRejectionHandler.java[tag=clazz,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+@Replaces(HttpStatusCodeRejectionHandler.class)
+public class MyRejectionHandler extends HttpStatusCodeRejectionHandler {
+
+    @Override
+    public Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; reject(HttpRequest&lt;?&gt; request, boolean forbidden) {
+        //Let the HttpStatusCodeRejectionHandler create the initial request
+        //then add a header
+        return Flowable.fromPublisher(super.reject(request, forbidden))
+                .map(response -&gt; response.header("X-Reason", "Example Header"));
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">

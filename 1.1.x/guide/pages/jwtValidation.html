@@ -144,7 +144,16 @@ participate as signature configurations in the JWT validation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlconfig]</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          jwks:
+            awscognito:
+              url: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXX/.well-known/jwks.json'</code></pre>
 </div>
 </div>
 <div class="paragraph">

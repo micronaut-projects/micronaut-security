@@ -124,9 +124,34 @@ This controller can only be enabled if you are using JWT authentication.
 <div class="paragraph">
 <p>You can enable the <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysController.html">KeysController</a> to expose an endpoint which returns a JWK Set. You can configure it with:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.endpoints.KeysControllerConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.endpoints.KeysControllerConfigurationProperties" href="#io.micronaut.security.token.jwt.endpoints.KeysControllerConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html">KeysControllerConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.keys.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysController.html">KeysController</a>. Default value false.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.keys.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysController.html">KeysController</a>. Default value "/keys".</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>Moreover, you will need to provide beans to type <a href="../api/io/micronaut/security/token/jwt/endpoints/JwkProvider.html">JwkProvider</a>.</p>
 </div>

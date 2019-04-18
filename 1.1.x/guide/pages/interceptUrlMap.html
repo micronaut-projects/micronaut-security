@@ -108,7 +108,25 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/securityRule/intercepturlmap/InterceptUrlMapSpec.groovy[tag=yamlconfig,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    intercept-url-map:
+      -
+        pattern: /images/*
+        http-method: GET
+        access:
+          - isAnonymous() <i class="conum" data-value="1"></i><b>(1)</b>
+      -
+        pattern: /books
+        access:
+          - isAuthenticated() <i class="conum" data-value="2"></i><b>(2)</b>
+      -
+        pattern: /books/grails
+        http-method: GET
+        access:
+          - ROLE_GRAILS <i class="conum" data-value="3"></i><b>(3)</b>
+          - ROLE_GROOVY</code></pre>
 </div>
 </div>
 <div class="colist arabic">

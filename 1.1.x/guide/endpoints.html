@@ -135,9 +135,34 @@ function addJsClass() {
 <div class="paragraph">
 <p>You can enable <code>LoginController</code> with configuration property:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.endpoints.LoginControllerConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.endpoints.LoginControllerConfigurationProperties" href="#io.micronaut.security.endpoints.LoginControllerConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html">LoginControllerConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.login.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/endpoints/LoginController.html">LoginController</a>. Default value false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.login.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/endpoints/LoginController.html">LoginController</a>. Default value "/login"</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>The response of the Login Endpoint is handled by a bean instance of <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a>.</p>
 </div>
@@ -171,9 +196,39 @@ function addJsClass() {
 <div class="paragraph">
 <p>You can enable <code>LogoutController</code> with configuration property:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.endpoints.LogoutControllerConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.endpoints.LogoutControllerConfigurationProperties" href="#io.micronaut.security.endpoints.LogoutControllerConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/endpoints/LogoutControllerConfigurationProperties.html">LogoutControllerConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/endpoints/LogoutController.html">LogoutController</a>. Default value false.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/endpoints/LogoutController.html">LogoutController</a>. Default value "/logout".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.get-allowed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables HTTP GET invocations of <a href="../api/io/micronaut/security/endpoints/LogoutController.html">LogoutController</a>. Default value (false).</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>Each bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> gets invoked.</p>
 </div>
@@ -227,9 +282,34 @@ This controller can only be enabled if you are using JWT authentication.
 <p>By default, issued access tokens expire after a period of time, and they are paired with refresh tokens. To
 ease the refresh, you can enable <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthController.html">OauthController</a>, with configuration property:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties" href="#io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html">OauthControllerConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.oauth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthController.html">OauthController</a> is enabled. Default value (false).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.oauth.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path to map the <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthController.html">OauthController</a> to. Default value ("/oauth/access_token").</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>The controller exposes an endpoint as defined by <a href="https://tools.ietf.org/html/rfc6749#section-6">section 6 of the OAuth 2.0 spec</a> - Refreshing an Access Token.</p>
 </div>
@@ -300,9 +380,34 @@ This controller can only be enabled if you are using JWT authentication.
 <div class="paragraph">
 <p>You can enable the <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysController.html">KeysController</a> to expose an endpoint which returns a JWK Set. You can configure it with:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.endpoints.KeysControllerConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.endpoints.KeysControllerConfigurationProperties" href="#io.micronaut.security.token.jwt.endpoints.KeysControllerConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html">KeysControllerConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.keys.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysController.html">KeysController</a>. Default value false.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.keys.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysController.html">KeysController</a>. Default value "/keys".</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>Moreover, you will need to provide beans to type <a href="../api/io/micronaut/security/token/jwt/endpoints/JwkProvider.html">JwkProvider</a>.</p>
 </div>

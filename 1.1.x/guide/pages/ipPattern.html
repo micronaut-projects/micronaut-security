@@ -111,7 +111,12 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/securityRule/IpPatternSpec.groovy[tag=yamlconfig,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    ip-patterns:
+      - 127.0.0.1
+      - 192.168.1.*</code></pre>
 </div>
 </div>
 <div class="paragraph">

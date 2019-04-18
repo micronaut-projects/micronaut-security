@@ -111,7 +111,17 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/token/basicauth/AuthenticationProviderUserPassword.groovy[tag=clazz,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Singleton
+public class AuthenticationProviderUserPassword implements AuthenticationProvider {
+
+    @Override
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(AuthenticationRequest authenticationRequest) {
+        if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
+            return Flowable.just(new UserDetails("user", new ArrayList&lt;&gt;()));
+        }
+        return Flowable.just(new AuthenticationFailed());
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">

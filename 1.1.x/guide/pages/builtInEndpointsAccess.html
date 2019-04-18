@@ -108,7 +108,13 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/securityRule/builtinendpoints/BuiltInEndpointsSpec.groovy[tag=yamlconfig,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">endpoints:
+  beans:
+    enabled: true
+    sensitive: true <i class="conum" data-value="1"></i><b>(1)</b>
+  info:
+    enabled: true
+    sensitive: false  <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
