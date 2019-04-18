@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>4.3.2 JWT Token Generation 1.1.1.BUILD-SNAPSHOT</title>
+    <title>4.3.2 JWT Token Generation 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -56,6 +56,9 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
                         </div>
                         
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>10</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
                     </div>
                 </div>
             </li>
@@ -87,7 +90,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>4.3.2 JWT Token Generation</h1>
 
-                    <p><strong>Version:</strong> 1.1.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -120,9 +123,34 @@ function addJsClass() {
 <div class="paragraph">
 <p>The following configuration options are available:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html">JwtGeneratorConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refresh token expiration. By default refresh tokens, do not expire.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value (3600).</p></td>
+</tr>
+</tbody>
+</table>
 
 
 <h2 id="jwtGeneratorSignature">4.3.2.1 JWT Signature</h2>
@@ -155,7 +183,17 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/signandencrypt/SignSecretEncryptRSASpec.groovy[indent=0, tag=yamlconfig]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne <i class="conum" data-value="1"></i><b>(1)</b>
+              jws-algorithm: HS256 <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -175,7 +213,18 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/base64/JwtBase64Spec.groovy[indent=0, tag=yamlconfig]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: 'cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=' <i class="conum" data-value="1"></i><b>(1)</b>
+              base64: true <i class="conum" data-value="2"></i><b>(2)</b>
+              jws-algorithm: HS256</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -220,7 +269,17 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/signandencrypt/SignSecretEncryptRSASpec.groovy[indent=0, tag=yamlconfig]
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne <i class="conum" data-value="1"></i><b>(1)</b>
+              jws-algorithm: HS256 <i class="conum" data-value="2"></i><b>(2)</b>
 pem:
   path: /home/user/rsa-2048bit-key-pair.pem <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
@@ -247,7 +306,43 @@ pem:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/signandencrypt/RSAOAEPEncryptionConfiguration.groovy[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Named("generator") <i class="conum" data-value="1"></i><b>(1)</b>
+@Singleton
+class RSAOAEPEncryptionConfiguration implements RSAEncryptionConfiguration {
+
+    private RSAPrivateKey rsaPrivateKey
+    private RSAPublicKey rsaPublicKey
+    JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP_256
+    EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM
+
+    RSAOAEPEncryptionConfiguration(@Value('${pem.path}') String pemPath) {
+        Optional&lt;KeyPair&gt; keyPair = KeyPairProvider.keyPair(pemPath)
+        if (keyPair.isPresent()) {
+            this.rsaPublicKey = (RSAPublicKey) keyPair.get().getPublic()
+            this.rsaPrivateKey = (RSAPrivateKey) keyPair.get().getPrivate()
+        }
+    }
+
+    @Override
+    RSAPublicKey getPublicKey() {
+        return rsaPublicKey
+    }
+
+    @Override
+    RSAPrivateKey getPrivateKey() {
+        return rsaPrivateKey
+    }
+
+    @Override
+    JWEAlgorithm getJweAlgorithm() {
+        return jweAlgorithm
+    }
+
+    @Override
+    EncryptionMethod getEncryptionMethod() {
+        return encryptionMethod
+    }
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -263,7 +358,42 @@ pem:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/signandencrypt/KeyPairProvider.groovy[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Slf4j
+class KeyPairProvider {
+    /**
+     *
+     * @param pemPath Full path to PEM file.
+     * @return returns KeyPair if successfully for PEM files.
+     */
+    static Optional&lt;KeyPair&gt; keyPair(String pemPath) {
+        // Load BouncyCastle as JCA provider
+        Security.addProvider(new BouncyCastleProvider())
+
+        // Parse the EC key pair
+        PEMParser pemParser
+        try {
+            pemParser = new PEMParser(new InputStreamReader(Files.newInputStream(Paths.get(pemPath))))
+            PEMKeyPair pemKeyPair = (PEMKeyPair) pemParser.readObject()
+
+            // Convert to Java (JCA) format
+            JcaPEMKeyConverter converter = new JcaPEMKeyConverter()
+            KeyPair keyPair = converter.getKeyPair(pemKeyPair)
+            pemParser.close()
+
+            return Optional.of(keyPair)
+
+        } catch (FileNotFoundException e) {
+            log.warn("file not found: {}", pemPath)
+
+        } catch (PEMException e) {
+            log.warn("PEMException {}", e.getMessage())
+
+        } catch (IOException e) {
+            log.warn("IOException {}", e.getMessage())
+        }
+        return Optional.empty()
+    }
+}</code></pre>
 </div>
 </div>
 </div>

@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3 Security Rules 1.1.1.BUILD-SNAPSHOT</title>
+    <title>3 Security Rules 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -56,6 +56,9 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
                         </div>
                         
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>10</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
                     </div>
                 </div>
             </li>
@@ -87,7 +90,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>3 Security Rules</h1>
 
-                    <p><strong>Version:</strong> 1.1.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -144,7 +147,12 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/securityRule/IpPatternSpec.groovy[tag=yamlconfig,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    ip-patterns:
+      - 127.0.0.1
+      - 192.168.1.*</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -168,7 +176,30 @@ access at <a href="../api/io/micronaut/http/annotation/Controller.html">Controll
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/securityRule/secured/ExampleController.java[tag=exampleControllerPlusImports,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Controller("/example")
+@Secured(SecurityRule.IS_AUTHENTICATED) <i class="conum" data-value="1"></i><b>(1)</b>
+public class ExampleController {
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @Secured({"ROLE_ADMIN", "ROLE_X"}) <i class="conum" data-value="2"></i><b>(2)</b>
+    public String withroles() {
+        return "You have ROLE_ADMIN or ROLE_X roles";
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @Secured(SecurityRule.IS_ANONYMOUS)  <i class="conum" data-value="3"></i><b>(3)</b>
+    public String anonymous() {
+        return "You are anonymous";
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/authenticated") <i class="conum" data-value="1"></i><b>(1)</b>
+    public String authenticated(Authentication authentication) {
+        return authentication.getName() + " is authenticated";
+    }
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -192,7 +223,23 @@ access at <a href="../api/io/micronaut/http/annotation/Controller.html">Controll
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/securityRule/permitall/ExampleController.java[tag=exampleControllerPlusImports,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller("/example")
+public class ExampleController {
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_X"}) <i class="conum" data-value="1"></i><b>(1)</b>
+    public String withroles() {
+        return "You have ROLE_ADMIN or ROLE_X roles";
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @PermitAll  <i class="conum" data-value="2"></i><b>(2)</b>
+    public String anonymous() {
+        return "You are anonymous";
+    }
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -223,7 +270,25 @@ access at <a href="../api/io/micronaut/http/annotation/Controller.html">Controll
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/securityRule/intercepturlmap/InterceptUrlMapSpec.groovy[tag=yamlconfig,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    intercept-url-map:
+      -
+        pattern: /images/*
+        http-method: GET
+        access:
+          - isAnonymous() <i class="conum" data-value="1"></i><b>(1)</b>
+      -
+        pattern: /books
+        access:
+          - isAuthenticated() <i class="conum" data-value="2"></i><b>(2)</b>
+      -
+        pattern: /books/grails
+        http-method: GET
+        access:
+          - ROLE_GRAILS <i class="conum" data-value="3"></i><b>(3)</b>
+          - ROLE_GROOVY</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -244,7 +309,40 @@ access at <a href="../api/io/micronaut/http/annotation/Controller.html">Controll
 </div>
 <div class="paragraph">
 <p>As you see in the previous code listing, any endpoint is identified by a combination of pattern
-and an optional HTTP Method</p>
+and an optional HTTP method.</p>
+</div>
+<div class="paragraph">
+<p>If a given request URI matches more than one intercept url map, the one that specifies an http method that matches the request method will be used. If there are multiple mappings that do not specify a method and match the request URI, then the first mapping will be used. For example:</p>
+</div>
+<div class="paragraph">
+<p>The example below defines that all HTTP requests to URIs matching the pattern <code>/v1/myResource/**</code> and using HTTP method <code>GET</code> will be accessible to everyone. Requests matching the same URI pattern but using a different HTTP method than <code>GET</code> require fully authenticated access.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    intercept-url-map:
+      - pattern: /v1/myResource/**
+        httpMethod: GET <i class="conum" data-value="1"></i><b>(1)</b>
+        access:
+          - isAnonymous()
+      - pattern: /v1/myResource/**
+        access:
+          - isAuthenticated() <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Accessing <code>/v1/myResource/**</code> with a GET request does not require authentication.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Accessing <code>/v1/myResource/**</code> with a request that isn&#8217;t GET requires authentication.</td>
+</tr>
+</table>
 </div>
 
 
@@ -262,7 +360,13 @@ and an optional HTTP Method</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/securityRule/builtinendpoints/BuiltInEndpointsSpec.groovy[tag=yamlconfig,indent=0]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">endpoints:
+  beans:
+    enabled: true
+    sensitive: true <i class="conum" data-value="1"></i><b>(1)</b>
+  info:
+    enabled: true
+    sensitive: false  <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">

@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>8 Retrieve the authenticated user 1.1.1.BUILD-SNAPSHOT</title>
+    <title>8 Retrieve the authenticated user 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -56,6 +56,9 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
                         </div>
                         
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>10</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
                     </div>
                 </div>
             </li>
@@ -87,7 +90,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>8 Retrieve the authenticated user</h1>
 
-                    <p><strong>Version:</strong> 1.1.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -95,9 +98,6 @@ function addJsClass() {
                     <h2>Table of Contents</h2>
                     
                     <div class="toc-item" style="margin-left:0px"><a href="#securityService"><strong>8.1</strong><span>User outside of a controller</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0px"><a href="#accessSecurityInViews"><strong>8.2</strong><span>User in a view</span></a>
                     </div>
                     
                 </div>
@@ -122,9 +122,26 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/principalparam/UserController.groovy[tag=imports,indent=0]
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.security.annotation.Secured;
+import javax.annotation.Nullable;
+import java.security.Principal;
 
-Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/principalparam/UserController.groovy[tag=clazz,indent=0]</code></pre>
+@Controller("/user")
+public class UserController {
+
+    @Secured("isAnonymous()")
+    @Get("/myinfo")
+    public Map myinfo(@Nullable Principal principal) {
+        if (principal == null) {
+            return Collections.singletonMap("isLoggedIn", false);
+        }
+        return CollectionUtils.mapOf("isLoggedIn", true, "username", principal.getName());
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -132,9 +149,30 @@ Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/princi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/authentication/UserController.groovy[tag=imports,indent=0]
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
+import javax.annotation.Nullable
 
-Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/authentication/UserController.groovy[tag=clazz,indent=0]</code></pre>
+
+@Controller("/user")
+public class UserController {
+
+    @Secured("isAnonymous()")
+    @Get("/myinfo")
+    public Map myinfo(@Nullable Authentication authentication) {
+        if (authentication == null) {
+            return Collections.singletonMap("isLoggedIn", false);
+        }
+        return CollectionUtils.mapOf("isLoggedIn", true,
+                "username", authentication.getName(),
+                "roles", authentication.getAttributes().get("roles")
+        );
+    }
+}</code></pre>
 </div>
 </div>
 
@@ -150,44 +188,6 @@ Unresolved directive in &lt;stdin&gt; - include::{testssecurity}/security/authen
 
 <div class="paragraph">
 <p>If you need to access the currently authenticated user outside of a controller, you can inject <a href="../api/io/micronaut/security/utils/SecurityService.html">SecurityService</a> bean, which provides a set of convenient methods related to authentication and authorization.</p>
-</div>
-
-
-<h2 id="accessSecurityInViews">8.2 User in a view</h2>
-
-<div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/retrievingAuthenticatedUser/accessSecurityInViews.adoc"'>
-        <i class='fa fa-pencil-square-o'></i> Improve this doc
-    </button>
-</div>
-
-
-<div class="paragraph">
-<p><a href="../api/io/micronaut/views/model/security/SecurityViewModelProcessor.html">SecurityViewModelProcessor</a> is enabled by default and injects the current username in the view. The following properties allow you to customize the injection:</p>
-</div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.views.model.security.SecurityViewModelProcessorConfigurationProperties.adoc[]</p>
-</div>
-<div class="paragraph">
-<p>In a controller, you can return a model without specifying in the model the authenticated user:</p>
-</div>
-<div class="listingblock">
-<div class="title">src/main/java/myapp/BooksController.java</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved directive in &lt;stdin&gt; - include::{testsviews}/../views/model/security/BooksController.java[tags=class]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and still access the authenticated user in the view (for example a velocity template):</p>
-</div>
-<div class="listingblock">
-<div class="title">src/main/resources/views/books.vm</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">Unresolved directive in &lt;stdin&gt; - include::{testsviews}/../../../../resources/views/securitydecorator.vm[tag=html]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can access information about the current user with the <code>security</code> map.</p>
 </div>
 
 

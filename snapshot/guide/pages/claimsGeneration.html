@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>4.3.4 Claims Generation 1.1.1.BUILD-SNAPSHOT</title>
+    <title>4.3.4 Claims Generation 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -56,6 +56,9 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
                         </div>
                         
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>10</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
                     </div>
                 </div>
             </li>
@@ -87,7 +90,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>4.3.4 Claims Generation</h1>
 
-                    <p><strong>Version:</strong> 1.1.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -113,7 +116,28 @@ fulfil your needs you can provide your own <a href="#replaces">replacement</a> o
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/jwtclaimsoverride/EmailUserDetails.java[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class EmailUserDetails extends UserDetails {
+
+    private String email;
+
+    public EmailUserDetails(String username, Collection&lt;String&gt; roles) {
+        super(username, roles);
+    }
+
+
+    public EmailUserDetails(String username, Collection&lt;String&gt; roles, String email) {
+        super(username, roles);
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -121,7 +145,14 @@ fulfil your needs you can provide your own <a href="#replaces">replacement</a> o
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/jwtclaimsoverride/CustomAuthenticationProvider.java[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+public class CustomAuthenticationProvider implements AuthenticationProvider {
+
+    @Override
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(AuthenticationRequest authenticationRequest) {
+        return Flowable.just(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -129,7 +160,25 @@ fulfil your needs you can provide your own <a href="#replaces">replacement</a> o
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/jwtclaimsoverride/CustomJWTClaimsSetGenerator.java[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+@Replaces(bean = JWTClaimsSetGenerator.class)
+public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
+
+    public CustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
+                                       @Nullable JwtIdGenerator jwtIdGenerator,
+                                       @Nullable ClaimsAudienceProvider claimsAudienceProvider,
+                                       @Nullable ApplicationConfiguration applicationConfiguration) {
+        super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration);
+    }
+
+    @Override
+    protected void populateWithUserDetails(JWTClaimsSet.Builder builder, UserDetails userDetails) {
+        super.populateWithUserDetails(builder, userDetails);
+        if (userDetails instanceof EmailUserDetails) {
+            builder.claim("email", ((EmailUserDetails)userDetails).getEmail());
+        }
+    }
+}</code></pre>
 </div>
 </div>
 

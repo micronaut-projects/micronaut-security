@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>7.1 Login Controller 1.1.1.BUILD-SNAPSHOT</title>
+    <title>7.1 Login Controller 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -56,6 +56,9 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
                         </div>
                         
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>10</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
                     </div>
                 </div>
             </li>
@@ -87,7 +90,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>7.1 Login Controller</h1>
 
-                    <p><strong>Version:</strong> 1.1.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -106,9 +109,34 @@ function addJsClass() {
 <div class="paragraph">
 <p>You can enable <code>LoginController</code> with configuration property:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.endpoints.LoginControllerConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.endpoints.LoginControllerConfigurationProperties" href="#io.micronaut.security.endpoints.LoginControllerConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html">LoginControllerConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.login.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/endpoints/LoginController.html">LoginController</a>. Default value false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.login.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/endpoints/LoginController.html">LoginController</a>. Default value "/login"</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>The response of the Login Endpoint is handled by a bean instance of <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a>.</p>
 </div>

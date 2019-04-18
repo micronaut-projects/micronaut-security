@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>4.3 JSON Web Token 1.1.1.BUILD-SNAPSHOT</title>
+    <title>4.3 JSON Web Token 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -56,6 +56,9 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
                         </div>
                         
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>10</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
                     </div>
                 </div>
             </li>
@@ -87,7 +90,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>4.3 JSON Web Token</h1>
 
-                    <p><strong>Version:</strong> 1.1.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -141,9 +144,34 @@ function addJsClass() {
 <div class="paragraph">
 <p>The following configuration properties are available to customize token based authentication:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.config.TokenConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.config.TokenConfigurationProperties" href="#io.micronaut.security.token.config.TokenConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/config/TokenConfigurationProperties.html">TokenConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the configuration is enabled. Default value true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.roles-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the roles property. Default value "roles".</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>Micronaut ships with security capabilities based on <a href="https://jwt.io/">Json Web Token (JWT)</a>.
 JWT is an <a href="https://tools.ietf.org/html/rfc7519">IETF standard</a> which defines a secure way to encapsulate arbitrary data that can be sent over unsecure URL’s.</p>
@@ -181,9 +209,29 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <div class="paragraph">
 <p>The following configuration properties are available to customize JWT based authentication behaviour:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.config.JwtConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.config.JwtConfigurationProperties" href="#io.micronaut.security.token.jwt.config.JwtConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/config/JwtConfigurationProperties.html">JwtConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value (false).</p></td>
+</tr>
+</tbody>
+</table>
 <div class="sect1">
 <h2 id="_what_does_a_jwt_look_like">What does a JWT look like?</h2>
 <div class="sectionbody">
@@ -269,9 +317,39 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <div class="paragraph">
 <p>The following configuration properties are available to customize how the Bearer Token will be read:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/bearer/BearerTokenConfigurationProperties.html">BearerTokenConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set whether to enable bearer token authentication. Default value true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.header-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the header name to use. Default value {@value io.micronaut.http.HttpHeaders#AUTHORIZATION}.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.prefix</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the prefix to use for the auth token. Default value {@value io.micronaut.http.HttpHeaderValues#AUTHORIZATION_PREFIX_BEARER}.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="sect1">
 <h2 id="_sending_tokens_in_the_request">Sending tokens in the request</h2>
 <div class="sectionbody">
@@ -333,9 +411,74 @@ Check out the <a href="http://guides.micronaut.io/micronaut-security-jwt/guide/i
 <div class="paragraph">
 <p>Reading tokens from Cookies is disabled by default. Note that using JWT tokens from cookies requires JWT Authentication to be enabled.</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties" href="#io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html">JwtCookieConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-domain</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the domain name of this Cookie. Default value ("JWT").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ("/".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-http-only</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value (true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-secure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value (true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-max-age</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.temporal.TemporalAmount</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the maximum age of the cookie.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT cookie based security is enabled. Default value (false).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.logout-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the logout target URL. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ("JWT").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-success-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the login success target URL. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-failure-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the login failure target URL. Default value ("/").</p></td>
+</tr>
+</tbody>
+</table>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -365,9 +508,34 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 <div class="paragraph">
 <p>The following configuration options are available:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html">JwtGeneratorConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refresh token expiration. By default refresh tokens, do not expire.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value (3600).</p></td>
+</tr>
+</tbody>
+</table>
 
 
 <h2 id="jwtGeneratorSignature">4.3.2.1 JWT Signature</h2>
@@ -400,7 +568,17 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/signandencrypt/SignSecretEncryptRSASpec.groovy[indent=0, tag=yamlconfig]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne <i class="conum" data-value="1"></i><b>(1)</b>
+              jws-algorithm: HS256 <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -420,7 +598,18 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/base64/JwtBase64Spec.groovy[indent=0, tag=yamlconfig]</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: 'cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=' <i class="conum" data-value="1"></i><b>(1)</b>
+              base64: true <i class="conum" data-value="2"></i><b>(2)</b>
+              jws-algorithm: HS256</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -465,7 +654,17 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/signandencrypt/SignSecretEncryptRSASpec.groovy[indent=0, tag=yamlconfig]
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne <i class="conum" data-value="1"></i><b>(1)</b>
+              jws-algorithm: HS256 <i class="conum" data-value="2"></i><b>(2)</b>
 pem:
   path: /home/user/rsa-2048bit-key-pair.pem <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
@@ -492,7 +691,43 @@ pem:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/signandencrypt/RSAOAEPEncryptionConfiguration.groovy[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Named("generator") <i class="conum" data-value="1"></i><b>(1)</b>
+@Singleton
+class RSAOAEPEncryptionConfiguration implements RSAEncryptionConfiguration {
+
+    private RSAPrivateKey rsaPrivateKey
+    private RSAPublicKey rsaPublicKey
+    JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP_256
+    EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM
+
+    RSAOAEPEncryptionConfiguration(@Value('${pem.path}') String pemPath) {
+        Optional&lt;KeyPair&gt; keyPair = KeyPairProvider.keyPair(pemPath)
+        if (keyPair.isPresent()) {
+            this.rsaPublicKey = (RSAPublicKey) keyPair.get().getPublic()
+            this.rsaPrivateKey = (RSAPrivateKey) keyPair.get().getPrivate()
+        }
+    }
+
+    @Override
+    RSAPublicKey getPublicKey() {
+        return rsaPublicKey
+    }
+
+    @Override
+    RSAPrivateKey getPrivateKey() {
+        return rsaPrivateKey
+    }
+
+    @Override
+    JWEAlgorithm getJweAlgorithm() {
+        return jweAlgorithm
+    }
+
+    @Override
+    EncryptionMethod getEncryptionMethod() {
+        return encryptionMethod
+    }
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -508,7 +743,42 @@ pem:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/signandencrypt/KeyPairProvider.groovy[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Slf4j
+class KeyPairProvider {
+    /**
+     *
+     * @param pemPath Full path to PEM file.
+     * @return returns KeyPair if successfully for PEM files.
+     */
+    static Optional&lt;KeyPair&gt; keyPair(String pemPath) {
+        // Load BouncyCastle as JCA provider
+        Security.addProvider(new BouncyCastleProvider())
+
+        // Parse the EC key pair
+        PEMParser pemParser
+        try {
+            pemParser = new PEMParser(new InputStreamReader(Files.newInputStream(Paths.get(pemPath))))
+            PEMKeyPair pemKeyPair = (PEMKeyPair) pemParser.readObject()
+
+            // Convert to Java (JCA) format
+            JcaPEMKeyConverter converter = new JcaPEMKeyConverter()
+            KeyPair keyPair = converter.getKeyPair(pemKeyPair)
+            pemParser.close()
+
+            return Optional.of(keyPair)
+
+        } catch (FileNotFoundException e) {
+            log.warn("file not found: {}", pemPath)
+
+        } catch (PEMException e) {
+            log.warn("PEMException {}", e.getMessage())
+
+        } catch (IOException e) {
+            log.warn("IOException {}", e.getMessage())
+        }
+        return Optional.empty()
+    }
+}</code></pre>
 </div>
 </div>
 </div>
@@ -557,7 +827,16 @@ participate as signature configurations in the JWT validation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlconfig]</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          jwks:
+            awscognito:
+              url: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXX/.well-known/jwks.json'</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -587,7 +866,28 @@ fulfil your needs you can provide your own <a href="#replaces">replacement</a> o
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/jwtclaimsoverride/EmailUserDetails.java[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class EmailUserDetails extends UserDetails {
+
+    private String email;
+
+    public EmailUserDetails(String username, Collection&lt;String&gt; roles) {
+        super(username, roles);
+    }
+
+
+    public EmailUserDetails(String username, Collection&lt;String&gt; roles, String email) {
+        super(username, roles);
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -595,7 +895,14 @@ fulfil your needs you can provide your own <a href="#replaces">replacement</a> o
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/jwtclaimsoverride/CustomAuthenticationProvider.java[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+public class CustomAuthenticationProvider implements AuthenticationProvider {
+
+    @Override
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(AuthenticationRequest authenticationRequest) {
+        return Flowable.just(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -603,7 +910,25 @@ fulfil your needs you can provide your own <a href="#replaces">replacement</a> o
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved directive in &lt;stdin&gt; - include::{testssecurityjwt}/jwtclaimsoverride/CustomJWTClaimsSetGenerator.java[indent=0, tag=clazz]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+@Replaces(bean = JWTClaimsSetGenerator.class)
+public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
+
+    public CustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
+                                       @Nullable JwtIdGenerator jwtIdGenerator,
+                                       @Nullable ClaimsAudienceProvider claimsAudienceProvider,
+                                       @Nullable ApplicationConfiguration applicationConfiguration) {
+        super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration);
+    }
+
+    @Override
+    protected void populateWithUserDetails(JWTClaimsSet.Builder builder, UserDetails userDetails) {
+        super.populateWithUserDetails(builder, userDetails);
+        if (userDetails instanceof EmailUserDetails) {
+            builder.claim("email", ((EmailUserDetails)userDetails).getEmail());
+        }
+    }
+}</code></pre>
 </div>
 </div>
 

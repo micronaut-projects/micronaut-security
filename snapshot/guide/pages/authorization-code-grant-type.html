@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>10.7.1 OpenID Connect Authorization code Flow 1.2.0.BUILD-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <div class="navTitle">
+        
+        Micronaut Security
+    </div>
+    <div class="navLinks">
+        <ul>
+            <li>
+                <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                    <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                    <div id="nav-summary-childs" style="display:none;">
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>2</strong><span>Authentication Providers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>3</strong><span>Security Rules</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>4</strong><span>Authentication Strategies</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>5</strong><span>Rejection Handling</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/tokenPropagation.html"><strong>6</strong><span>Token Propagation</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/endpoints.html"><strong>7</strong><span>Built-In Security Controllers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/retrievingAuthenticatedUser.html"><strong>8</strong><span>Retrieve the authenticated user</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>10</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="separator selected">
+                <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>9</strong><span>Security Events</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+
+
+                <div class="project">
+                    <h1>10.7.1 OpenID Connect Authorization code Flow</h1>
+
+                    <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
+                </div>
+
+                
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#authorization-code-controller"><strong>10.1</strong><span>Authorization Code Controller</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#id-token-validator"><strong>10.2</strong><span>ID Token Validator</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#failure-handler"><strong>10.3</strong><span>Failure Handler</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#successful-handler"><strong>10.4</strong><span>Successful ID Token Handler</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#cookie-successful-handler"><strong>10.5</strong><span>Cookie Successful ID Token Handler</span></a>
+                    </div>
+                    
+                </div>
+                
+
+                
+
+<h2 id="authorization-code-grant-type">10.7.1 OpenID Connect Authorization code Flow</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code-grant-type.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The following configuration illustrates a possible set up to use authorization code flow with Micronaut and a third-party OpenID Configuration authorization server.</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    security:
+        enabled: true <i class="conum" data-value="1"></i><b>(1)</b>
+        oauth2:
+          client-secret: '${OAUTH_CLIENT_SECRET}'  <i class="conum" data-value="2"></i><b>(2)</b>
+          client-id: '${OAUTH_CLIENT_ID}' <i class="conum" data-value="3"></i><b>(3)</b>
+          issuer: '${OKTA_DOMAIN}/oauth2/${OKTA_AUTHSERVERID}' <i class="conum" data-value="4"></i><b>(4)</b>
+        token:
+            jwt:
+                enabled: true <i class="conum" data-value="5"></i><b>(5)</b>
+                cookie:
+                    enabled: true <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Enable security</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Client Secret. Your authorization server provider provides this value.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Client ID. Your authorization server provider provides this value.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><code>issuer</code> url. Allows micronaut to discover the configuration of the Open ID Configuration server.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Often, ID Token will be responded as JWT tokens. You will need to enable <a href="https://docs.micronaut.io/latest/guide/index.html#jwt">Micronaut&#8217;s JWT support</a> to validate it.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Once, validated you may want to save the JWT IDToken in a cookie. To read in subsequent requests, enable <a href="https://docs.micronaut.io/latest/guide/index.html#cookieToken">Cookie Token Reader</a>.</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/diagramm.png" alt="diagramm">
+</div>
+</div>
+
+
+<h2 id="authorization-code-controller">10.7.1.1 Authorization Code Controller</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code-grant-type/authorization-code-controller.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The <a href="../api/io/micronaut/security/oauth2/endpoints/AuthorizationCodeController.html">AuthorizationCodeController controller</a> handles the response from the Authorization endpoint and it can be configured:</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.endpoints.AuthorizationCodeControllerConfigurationProperties.adoc[]</p>
+</div>
+
+
+<h2 id="id-token-validator">10.7.1.2 ID Token Validator</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code-grant-type/id-token-validator.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Assuming the ID Token is a JWT token, the <a href="../api/io/micronaut/security/oauth2/openid/idtoken/DefaultIdTokenAccessTokenResponseValidator.html">DefaultIdTokenAccessTokenResponseValidator</a> validates the JWT Claims against every bean of type <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> and <a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a>.</p>
+</div>
+<div class="paragraph">
+<p>Some <a href="../api/io/micronaut/:io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> are already registered:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html">ExpirationJwtClaimsValidator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html">SubjectNotNullJwtClaimsValidator</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Some <a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> are already registered:
+and:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/AudienceJwtClaimsValidator.html">AudienceJwtClaimsValidator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IssuerJwtClaimsValidator.html">IssuerJwtClaimsValidator</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Please, validate your IDToken as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a> section.</p>
+</div>
+<div class="paragraph">
+<p>Remember to enable JWT support <code>micronaut.security.token.jwt.enabled=true</code>.</p>
+</div>
+
+
+<h2 id="failure-handler">10.7.1.3 Failure Handler</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code-grant-type/failure-handler.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>If the validation of the <a href="../api/io/micronaut/security/oauth2/openid/idtoken/IdTokenAccessTokenResponse.html">IdTokenAccessTokenResponse</a>, an object which encapsulates the response of the token endpoint, fails a <a href="../api/io/micronaut/security/oauth2/handlers/InvalidIdTokenAccessTokenResponseException.html">InvalidIdTokenAccessTokenResponseException</a> is raised.</p>
+</div>
+<div class="paragraph">
+<p>Read <a href="https://docs.micronaut.io/latest/guide/index.html#errorHandling">Error Handling</a> section in the documentation to handle the exception according to your needs.</p>
+</div>
+
+
+<h2 id="successful-handler">10.7.1.4 Successful ID Token Handler</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code-grant-type/successful-handler.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Once the authentication has been validated, it is to time handle the ID Token. Provide a bean of type:
+<a href="../api/io/micronaut/security/oauth2/handlers/SuccessfulIdTokenAccessTokenResponseHandler.html">SuccessfulIdTokenAccessTokenResponseHandler</a></p>
+</div>
+
+
+<h2 id="cookie-successful-handler">10.7.1.5 Cookie Successful ID Token Handler</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code-grant-type/cookie-successful-handler.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>By default, <a href="../api/io/micronaut/security/oauth2/handlers/CookieSuccessfulIdTokenAccessTokenResponseHandler.html">CookieSuccessfulIdTokenAccessTokenResponseHandler</a> is provided which can be configured with:</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.handlers.CookieSuccessfulIdTokenAccessTokenResponseHandlerConfigurationProperties.adoc[]</p>
+</div>
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>9</strong><span>Security Events</span></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

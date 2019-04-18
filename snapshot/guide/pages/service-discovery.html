@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>10.4 Service Discovery 1.2.0.BUILD-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <div class="navTitle">
+        
+        Micronaut Security
+    </div>
+    <div class="navLinks">
+        <ul>
+            <li>
+                <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                    <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                    <div id="nav-summary-childs" style="display:none;">
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>2</strong><span>Authentication Providers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>3</strong><span>Security Rules</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>4</strong><span>Authentication Strategies</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>5</strong><span>Rejection Handling</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/tokenPropagation.html"><strong>6</strong><span>Token Propagation</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/endpoints.html"><strong>7</strong><span>Built-In Security Controllers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/retrievingAuthenticatedUser.html"><strong>8</strong><span>Retrieve the authenticated user</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>10</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="separator selected">
+                <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>9</strong><span>Security Events</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+
+
+                <div class="project">
+                    <h1>10.4 Service Discovery</h1>
+
+                    <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
+                </div>
+
+                
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#service-discovery-okta"><strong>10.1</strong><span>Service Discovery with OKTA</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#service-discovery-cognito"><strong>10.2</strong><span>Service Discovery with AWS Cognito</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#service-discovery-auth0"><strong>10.3</strong><span>Service Discovery with Auth0</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#service-discovery-keycloak"><strong>10.4</strong><span>Service Discovery with Keycloak</span></a>
+                    </div>
+                    
+                </div>
+                
+
+                
+
+<h2 id="service-discovery">10.4 Service Discovery</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/service-discovery.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The easiest way to integrate a Micronaut application with an Open ID Connect server is to use the <code>.well-know/openid-configuration</code> endpoint, an endpoint which applications use to retrieve the configuration information for the OIDC server.</p>
+</div>
+<div class="paragraph">
+<p>Micronaut assumes the URL for the endpoint is the value of property <code>micronaut.security.oauth2.openid.issuer</code> plus the suffix <code>/.well-know/openid-configuration</code>.</p>
+</div>
+<div class="paragraph">
+<p>The endpoint returns a specified set of fields. Micronaut uses the configuration returned to configure itself accordingly.</p>
+</div>
+<div class="paragraph">
+<p>Please, check with your provider the value of the OAuth 2.0 <code>issuer</code>. Next, we show examples for common providers:</p>
+</div>
+
+
+<h2 id="service-discovery-okta">10.4.1 Service Discovery with OKTA</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/service-discovery/service-discovery-okta.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="listingblock">
+<div class="title">src/main/resources/application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    oauth2:
+      client-secret: '${OAUTH_CLIENT_SECRET}'
+      client-id: '${OAUTH_CLIENT_ID}'
+      issuer: '${OKTA_DOMAIN}/oauth2/${OKTA_AUTHSERVERID}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will need to setup the <code>OKTA_DOMAIN</code> and <code>OKTA_AUTHSERVERID</code> environment variables.</p>
+</div>
+<div class="paragraph">
+<p>Those may be something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export OKTA_DOMAIN=https://dev-XXXXX.oktapreview.com
+export OKTA_AUTHSERVERID=default</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check <a href="https://developer.okta.com/docs/api/resources/oidc#well-knownopenid-configuration">OKTA .well-known/openid-configuration documentation</a>.</p>
+</div>
+
+
+<h2 id="service-discovery-cognito">10.4.2 Service Discovery with AWS Cognito</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/service-discovery/service-discovery-cognito.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>To configure the <code>issuer</code> with AWS Cognito you can setup:</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    oauth2:
+      client-secret: '${OAUTH_CLIENT_SECRET}'
+      client-id: '${OAUTH_CLIENT_ID}'
+      issuer: 'https://cognito-idp.${AWS_REGION}.amazonaws.com/${COGNITO_POOL_ID}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please, note you will need to define environment varaibles for <code>AWS_REGION</code> and <code>COGNITO_POOL_ID</code>.</p>
+</div>
+
+
+<h2 id="service-discovery-auth0">10.4.3 Service Discovery with Auth0</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/service-discovery/service-discovery-auth0.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="listingblock">
+<div class="title">src/main/resources/application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    oauth2:
+      client-secret: '${OAUTH_CLIENT_SECRET}'
+      client-id: '${OAUTH_CLIENT_ID}'
+      issuer: '${AUTH0_DOMAINNAME}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will need to define the environment variable <code>AUTH0_DOMAINNAME</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can obtain the auth0 domain from the application dashboard:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/auth0-domain.png" alt="auth0 domain">
+</div>
+</div>
+<div class="paragraph">
+<p>Check <a href="https://auth0.com/docs/protocols/oidc/openid-connect-discovery">Auth0 OpenID connect discovery documentation</a>.</p>
+</div>
+
+
+<h2 id="service-discovery-keycloak">10.4.4 Service Discovery with Keycloak</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/service-discovery/service-discovery-keycloak.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="listingblock">
+<div class="title">src/main/resources/application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    oauth2:
+      client-secret: '${OAUTH_CLIENT_SECRET}'
+      client-id: '${OAUTH_CLIENT_ID}'
+      issuer: '${KEYCLOACK_DOMAIN}/auth/realms/${KEYCLOAK_REALM}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will need to define the environment variable <code>KEYCLOACK_DOMAIN</code> and <code>KEYCLOAK_REALM</code> for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export KEYCLOACK_DOMAIN=http://localhost:8080
+export KEYCLOAK_REALM=master</code></pre>
+</div>
+</div>
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>9</strong><span>Security Events</span></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
