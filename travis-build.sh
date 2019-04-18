@@ -83,7 +83,7 @@ if [[ $EXIT_STATUS -eq 0 ]]; then
 
                 git add snapshot/*
             else
-                version = "$TRAVIS_BRANCH"
+                version="$TRAVIS_BRANCH"
                 mkdir -p "$version"
                 cp -r ../build/docs/. "./$version/"
                 git add "$version/*"
