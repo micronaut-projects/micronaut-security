@@ -28,7 +28,7 @@ The code snippet below illustrates how to send credentials using the `basicAuth`
 [source, groovy]
 .Accessing a protected resource using an Authorization request header
 ----
-include::http-client/src/test/groovy/io/micronaut/http/client/BasicAuthSpec.groovy[tag=basicAuth, indent=0]
+include::{testssecurity}/security/token/basicauth/BasicAuthSpec.groovy[tag=basicAuth, indent=0]
 ----
 
 The following configuration properties are available to customize basic authentication behaviour:

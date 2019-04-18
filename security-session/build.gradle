@@ -8,7 +8,6 @@ buildscript {
 }
 
 dependencies {
-    compileOnly "io.micronaut:micronaut-inject-java"
     compile "io.micronaut:micronaut-runtime"
     compile "io.micronaut:micronaut-management"
     compile "io.micronaut:micronaut-http"

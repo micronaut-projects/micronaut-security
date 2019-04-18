@@ -1,7 +1,6 @@
 group "io.micronaut.configuration"
 
 dependencies {
-    compileOnly "io.micronaut:micronaut-inject-java"
     compile project(":security")
 
     testCompile "com.unboundid:unboundid-ldapsdk:4.0.7"
