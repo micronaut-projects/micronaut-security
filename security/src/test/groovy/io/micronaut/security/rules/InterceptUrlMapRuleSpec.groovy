@@ -56,7 +56,7 @@ class InterceptUrlMapRuleSpec extends Specification {
 
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/1511")
     @Unroll
-    void "An http #request.method request to '#request.uri' should result in the security result '#expectedResult'"() {
+    void "An http #method request to '#uri' should result in the security result #expectedResult"() {
 
         given: 'a token configuration'
         TokenConfiguration configuration = Mock()
@@ -95,5 +95,8 @@ class InterceptUrlMapRuleSpec extends Specification {
         HttpRequest.HEAD('/v1/sessions/')             || SecurityRuleResult.REJECTED
         HttpRequest.PATCH('/v1/sessions/123', 'body') || SecurityRuleResult.REJECTED
         HttpRequest.PATCH('/v1/sessions/', 'body')    || SecurityRuleResult.REJECTED
+
+        method = request.method
+        uri = request.uri
     }
 }
