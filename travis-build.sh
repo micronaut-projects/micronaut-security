@@ -77,10 +77,17 @@ if [[ $EXIT_STATUS -eq 0 ]]; then
             cp -r ../build/docs/. "./$majorVersion/"
             git add "$majorVersion/*"
         else
-            mkdir -p snapshot
-            cp -r ../build/docs/. ./snapshot/
+            if [[ $TRAVIS_BRANCH =~ ^master$ ]]; then
+                mkdir -p snapshot
+                cp -r ../build/docs/. ./snapshot/
 
-            git add snapshot/*
+                git add snapshot/*
+            else
+                version = "$TRAVIS_BRANCH"
+                mkdir -p "$version"
+                cp -r ../build/docs/. "./$version/"
+                git add "$version/*"
+            fi
         fi
 
         git commit -a -m "Updating docs for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID" && {
