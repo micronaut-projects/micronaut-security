@@ -6,6 +6,8 @@
 
  ## Documentation
 
- See the [Documentation](https://micronaut-projects.github.io/micronaut-security/1.1.x/guide) for more information.
+ See the [Documentation](https://micronaut-projects.github.io/micronaut-security/latest/guide) for more information.
+
+ [Snapshot Documentation](https://micronaut-projects.github.io/micronaut-security/snapshot/guide).
 
 
