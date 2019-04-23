@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>4.3.2 JWT Token Generation 1.1.1.BUILD-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <div class="navTitle">
+        
+        Micronaut Security
+    </div>
+    <div class="navLinks">
+        <ul>
+            <li>
+                <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                    <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                    <div id="nav-summary-childs" style="display:none;">
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>2</strong><span>Authentication Providers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>3</strong><span>Security Rules</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>4</strong><span>Authentication Strategies</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>5</strong><span>Rejection Handling</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/tokenPropagation.html"><strong>6</strong><span>Token Propagation</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/endpoints.html"><strong>7</strong><span>Built-In Security Controllers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/retrievingAuthenticatedUser.html"><strong>8</strong><span>Retrieve the authenticated user</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="separator selected">
+                <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityRule.html">&lt;&lt; <strong>3</strong><span>Security Rules</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/rejection.html"><strong>5</strong><span>Rejection Handling</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>4.3.2 JWT Token Generation</h1>
+
+                    <p><strong>Version:</strong> 1.1.1.BUILD-SNAPSHOT</p>
+                </div>
+
+                
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#jwtGeneratorSignature"><strong>4.1</strong><span>JWT Signature</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#jwtGeneratorEncryption"><strong>4.2</strong><span>Encrypted JWTs</span></a>
+                    </div>
+                    
+                </div>
+                
+
+                
+
+<h2 id="jwtGenerator">4.3.2 JWT Token Generation</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut relies on <a href="https://connect2id.com/products/nimbus-jose-jwt">Nimbus JOSE + JWT</a> library to provide JWT token signature and encryption.</p>
+</div>
+<div class="paragraph">
+<p>The following configuration options are available:</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/Users/sdelamo/Developer/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties.adoc[]</p>
+</div>
+
+
+<h2 id="jwtGeneratorSignature">4.3.2.1 JWT Signature</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut security capabilities use signed JWT’s as specified by the
+<a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a> specification.</p>
+</div>
+<div class="paragraph">
+<p>To enable a JWT signature in token generation, you need to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorConfiguration.html">RSASignatureGeneratorConfiguration</a>,
+<a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureGeneratorConfiguration.html">ECSignatureGeneratorConfiguration</a>,
+<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a> qualified with name <code>generator</code>.</p>
+</div>
+<div class="paragraph">
+<p>To verify signed JWT tokens, you need to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html">RSASignatureConfiguration</a>,
+<a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorConfiguration.html">RSASignatureGeneratorConfiguration</a>,
+<a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureGeneratorConfiguration.html">ECSignatureGeneratorConfiguration</a>,
+<a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html">ECSignatureConfiguration</a>, or
+<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can setup a <code>SecretSignatureConfiguration</code> named <code>generator</code> easily via configuration properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne <i class="conum" data-value="1"></i><b>(1)</b>
+              jws-algorithm: HS256 <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><strong>Change this for your own secret and keep it safe</strong>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Json Web Token Signature name. In this example, HMAC using SHA-256 hash algorithm.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can supply the secret with Base64 encoding.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: 'cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=' <i class="conum" data-value="1"></i><b>(1)</b>
+              base64: true <i class="conum" data-value="2"></i><b>(2)</b>
+              jws-algorithm: HS256</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Secret Base64 encoded</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Signal that the secret is Base64 encoded</td>
+</tr>
+</table>
+</div>
+
+
+<h2 id="jwtGeneratorEncryption">4.3.2.2 Encrypted JWTs</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorEncryption.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Signed claims prevents an attacker to tamper its contents to introduce malicious data or try a privilege escalation by adding more roles. However, the claims can be decoded just by using Base 64.</p>
+</div>
+<div class="paragraph">
+<p>If the claims contains sensitive information, you can use a JSON Web Encryption algorithm to prevent them to be decoded.</p>
+</div>
+<div class="paragraph">
+<p>To enable a JWT encryption in token generation, you need to have in your app a bean of type  <a href="../api/io/micronaut/security/token/jwt/encryption/rsa/RSAEncryptionConfiguration.html">RSAEncryptionConfiguration</a>,
+<a href="../api/io/micronaut/security/token/jwt/encryption/ec/ECEncryptionConfiguration.html">ECEncryptionConfiguration</a>,
+<a href="../api/io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html">SecretEncryptionConfiguration</a> qualified with name <code>generator</code>.</p>
+</div>
+<div class="sect1">
+<h2 id="_example_of_jwt_signed_with_secret_and_encrypted_with_rsa">Example of JWT Signed with Secret and Encrypted with RSA</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Setup a <a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a> through configuration properties</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne <i class="conum" data-value="1"></i><b>(1)</b>
+              jws-algorithm: HS256 <i class="conum" data-value="2"></i><b>(2)</b>
+pem:
+  path: /home/user/rsa-2048bit-key-pair.pem <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Name the Signature configuration <code>generator</code> to make it participate in JWT token generation.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Location of PEM file</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Generate a 2048-bit RSA private + public key pair:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">openssl genrsa -out rsa-2048bit-key-pair.pem 2048</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Named("generator") <i class="conum" data-value="1"></i><b>(1)</b>
+@Singleton
+class RSAOAEPEncryptionConfiguration implements RSAEncryptionConfiguration {
+
+    private RSAPrivateKey rsaPrivateKey
+    private RSAPublicKey rsaPublicKey
+    JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP_256
+    EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM
+
+    RSAOAEPEncryptionConfiguration(@Value('${pem.path}') String pemPath) {
+        Optional&lt;KeyPair&gt; keyPair = KeyPairProvider.keyPair(pemPath)
+        if (keyPair.isPresent()) {
+            this.rsaPublicKey = (RSAPublicKey) keyPair.get().getPublic()
+            this.rsaPrivateKey = (RSAPrivateKey) keyPair.get().getPrivate()
+        }
+    }
+
+    @Override
+    RSAPublicKey getPublicKey() {
+        return rsaPublicKey
+    }
+
+    @Override
+    RSAPrivateKey getPrivateKey() {
+        return rsaPrivateKey
+    }
+
+    @Override
+    JWEAlgorithm getJweAlgorithm() {
+        return jweAlgorithm
+    }
+
+    @Override
+    EncryptionMethod getEncryptionMethod() {
+        return encryptionMethod
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Name Bean <code>generator</code> to designate this bean as participant in the JWT Token Generation.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To parse the PEM key, use a collaborator as described in <a href="https://connect2id.com/products/nimbus-jose-jwt/openssl-key-generation">OpenSSL key generation</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Slf4j
+class KeyPairProvider {
+    /**
+     *
+     * @param pemPath Full path to PEM file.
+     * @return returns KeyPair if successfully for PEM files.
+     */
+    static Optional&lt;KeyPair&gt; keyPair(String pemPath) {
+        // Load BouncyCastle as JCA provider
+        Security.addProvider(new BouncyCastleProvider())
+
+        // Parse the EC key pair
+        PEMParser pemParser
+        try {
+            pemParser = new PEMParser(new InputStreamReader(Files.newInputStream(Paths.get(pemPath))))
+            PEMKeyPair pemKeyPair = (PEMKeyPair) pemParser.readObject()
+
+            // Convert to Java (JCA) format
+            JcaPEMKeyConverter converter = new JcaPEMKeyConverter()
+            KeyPair keyPair = converter.getKeyPair(pemKeyPair)
+            pemParser.close()
+
+            return Optional.of(keyPair)
+
+        } catch (FileNotFoundException e) {
+            log.warn("file not found: {}", pemPath)
+
+        } catch (PEMException e) {
+            log.warn("PEMException {}", e.getMessage())
+
+        } catch (IOException e) {
+            log.warn("IOException {}", e.getMessage())
+        }
+        return Optional.empty()
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityRule.html">&lt;&lt; <strong>3</strong><span>Security Rules</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/rejection.html"><strong>5</strong><span>Rejection Handling</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
