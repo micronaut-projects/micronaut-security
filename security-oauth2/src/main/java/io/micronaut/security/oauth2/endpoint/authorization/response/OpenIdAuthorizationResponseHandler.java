@@ -4,7 +4,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.OpenIdTokenEndpointClient;
-import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import org.reactivestreams.Publisher;
 
 public interface OpenIdAuthorizationResponseHandler {

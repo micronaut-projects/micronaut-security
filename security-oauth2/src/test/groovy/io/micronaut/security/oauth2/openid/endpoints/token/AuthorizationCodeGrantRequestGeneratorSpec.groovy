@@ -7,7 +7,7 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoints.token.request.TokenEndpointClient
 import io.micronaut.security.oauth2.openid.configuration.FileOpenIdConfigurationController
-import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata
 import spock.lang.Specification
 
 class AuthorizationCodeGrantRequestGeneratorSpec extends Specification {

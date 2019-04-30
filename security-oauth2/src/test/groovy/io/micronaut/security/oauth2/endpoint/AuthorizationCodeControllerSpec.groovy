@@ -15,7 +15,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.Oauth2Author
 
 import io.micronaut.security.oauth2.handlers.IdTokenAccessTokenResponseHandler
 import io.micronaut.security.oauth2.handlers.SuccessfulIdTokenAccessTokenResponseHandler
-import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.state.StateSerDes
 import io.micronaut.security.oauth2.endpoints.token.request.TokenEndpointClient
 import io.micronaut.security.oauth2.endpoints.token.request.OpenIdTokenEndpointClient

@@ -17,8 +17,6 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import com.nimbusds.jwt.JWT;
-import io.micronaut.context.BeanContext;
-import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -28,7 +26,7 @@ import io.micronaut.security.oauth2.endpoint.token.request.OpenIdTokenEndpointCl
 import io.micronaut.security.oauth2.endpoint.token.response.*;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
-import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;

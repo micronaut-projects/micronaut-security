@@ -14,6 +14,7 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
     public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         Map<String, Object> claims = new HashMap<>(openIdClaims.getClaims());
         claims.put("oauthProvider", providerName);
+        claims.put("openIdToken", tokenResponse.getIdToken());
         return new UserDetails(openIdClaims.getSubject(), Collections.emptyList(), claims);
     }
 

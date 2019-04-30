@@ -18,7 +18,7 @@ public class CallbackUrlBuilder implements UrlBuilder {
     CallbackUrlBuilder(HostResolver hostResolver,
                        OauthConfigurationProperties oauthConfigurationProperties) {
         this.hostResolver = hostResolver;
-        this.urlTemplate = oauthConfigurationProperties.getCallbackUrl();
+        this.urlTemplate = oauthConfigurationProperties.getCallbackUri();
     }
 
     @Override

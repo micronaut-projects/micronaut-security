@@ -19,7 +19,7 @@ import io.micronaut.security.oauth2.endpoint.token.request.DefaultOpenIdTokenEnd
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequestBuilder;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
-import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import org.reactivestreams.Publisher;
 
 import java.util.List;

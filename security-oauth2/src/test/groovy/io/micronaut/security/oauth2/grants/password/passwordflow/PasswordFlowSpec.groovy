@@ -8,7 +8,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.oauth2.grants.password.GrantTypePasswordAuthenticationProvider
-import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata
 import spock.lang.Specification
 
 class PasswordFlowSpec extends Specification {

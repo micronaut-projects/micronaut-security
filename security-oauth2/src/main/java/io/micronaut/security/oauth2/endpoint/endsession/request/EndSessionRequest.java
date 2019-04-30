@@ -14,10 +14,26 @@
  * limitations under the License.
  */
 
+package io.micronaut.security.oauth2.endpoint.endsession.request;
+
+import io.micronaut.http.HttpRequest;
+import io.micronaut.security.authentication.Authentication;
+
+import javax.annotation.Nullable;
+
 /**
- * Open ID Configuration.
+ * Provides an URL to end session with the OpenID provider.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
-package io.micronaut.security.oauth2.openid.configuration;
+public interface EndSessionRequest {
+
+    /**
+     * @param authentication The authentication.
+     * @return The OpenID provider end session URL.
+     */
+    @Nullable
+    String getUrl(HttpRequest originating,
+                  Authentication authentication);
+}

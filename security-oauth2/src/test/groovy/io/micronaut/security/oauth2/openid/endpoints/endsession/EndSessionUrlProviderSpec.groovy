@@ -5,6 +5,7 @@ import io.micronaut.context.env.Environment
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
+import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest
 import io.micronaut.security.oauth2.openid.configuration.FileOpenIdConfigurationController
 import io.micronaut.security.oauth2.openid.endpoints.OpenIdEndpoints
 import io.micronaut.security.token.reader.TokenResolver
@@ -63,7 +64,7 @@ class EndSessionUrlProviderSpec extends Specification {
         noExceptionThrown()
 
         when:
-        context.getBean(EndSessionUrlProvider)
+        context.getBean(EndSessionRequest)
 
         then:
         noExceptionThrown()

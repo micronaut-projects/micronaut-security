@@ -18,7 +18,7 @@ public class LoginUrlBuilder implements UrlBuilder {
     LoginUrlBuilder(HostResolver hostResolver,
                     OauthConfigurationProperties oauthConfigurationProperties) {
         this.hostResolver = hostResolver;
-        this.urlTemplate = oauthConfigurationProperties.getLoginUrl();
+        this.urlTemplate = oauthConfigurationProperties.getLoginUri();
     }
 
     @Override

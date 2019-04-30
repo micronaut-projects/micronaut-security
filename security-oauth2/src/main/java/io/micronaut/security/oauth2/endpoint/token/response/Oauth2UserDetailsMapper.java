@@ -5,5 +5,7 @@ import org.reactivestreams.Publisher;
 
 public interface Oauth2UserDetailsMapper {
 
+    String PROVIDER_KEY = "oauth2Provider";
+
     Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse);
 }

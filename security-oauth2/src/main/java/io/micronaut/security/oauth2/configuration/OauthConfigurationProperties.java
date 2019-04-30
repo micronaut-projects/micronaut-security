@@ -19,8 +19,12 @@ package io.micronaut.security.oauth2.configuration;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
+
+import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link OauthClientConfiguration}.
@@ -30,7 +34,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  */
 @Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(OauthConfigurationProperties.PREFIX)
-public class OauthConfigurationProperties implements Toggleable {
+public class OauthConfigurationProperties implements OauthConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".oauth2";
 
     /**
@@ -43,8 +47,9 @@ public class OauthConfigurationProperties implements Toggleable {
 
 
     private boolean enabled = DEFAULT_ENABLED;
-    private String callbackUrl = DEFAULT_CALLBACK;
-    private String loginUrl = DEFAULT_LOGIN;
+    private String callbackUri = DEFAULT_CALLBACK;
+    private String loginUri = DEFAULT_LOGIN;
+    private OpenIdConfigurationProperties openid;
 
     /**
      * @return true if you want to enable the {@link OauthClientConfiguration}
@@ -63,19 +68,85 @@ public class OauthConfigurationProperties implements Toggleable {
         this.enabled = enabled;
     }
 
-    public String getLoginUrl() {
-        return loginUrl;
+    @Override
+    public String getLoginUri() {
+        return loginUri;
     }
 
-    public void setLoginUrl(String loginUrl) {
-        this.loginUrl = loginUrl;
+    public void setLoginUri(String loginUri) {
+        this.loginUri = loginUri;
     }
 
-    public String getCallbackUrl() {
-        return callbackUrl;
+    public String getCallbackUri() {
+        return callbackUri;
     }
 
-    public void setCallbackUrl(String callbackUrl) {
-        this.callbackUrl = callbackUrl;
+    public void setCallbackUri(String callbackUri) {
+        this.callbackUri = callbackUri;
+    }
+
+    @Override
+    public Optional<OpenIdConfiguration> getOpenid() {
+        return Optional.ofNullable(openid);
+    }
+
+    public void setOpenid(OpenIdConfigurationProperties openid) {
+        this.openid = openid;
+    }
+
+    @ConfigurationProperties("openid")
+    public static class OpenIdConfigurationProperties implements OpenIdConfiguration {
+
+        public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".openid";
+
+        private EndSessionConfigurationProperties endSession;
+
+        @Override
+        public Optional<EndSessionConfiguration> getEndSession() {
+            return Optional.of(endSession);
+        }
+
+        public void setEndSession(EndSessionConfigurationProperties endSession) {
+            this.endSession = endSession;
+        }
+
+
+        @ConfigurationProperties("end-session")
+        public static class EndSessionConfigurationProperties implements EndSessionConfiguration {
+
+            public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".end-session";
+
+            private static final String DEFAULT_VIEW_MODEL_KEY = "endSessionUrl";
+
+            private String viewModelKey = DEFAULT_VIEW_MODEL_KEY;
+            private String redirectUri;
+
+            @Override
+            @Nonnull
+            public String getViewModelKey() {
+                return viewModelKey;
+            }
+
+            /**
+             * The key to reference the end session URL in a view. Default value ({@value #DEFAULT_VIEW_MODEL_KEY}).
+             *
+             * @param viewModelKey
+             */
+            public void setViewModelKey(String viewModelKey) {
+                this.viewModelKey = viewModelKey;
+            }
+
+            @Override
+            @NotNull
+            @Nonnull
+            public String getRedirectUri() {
+                return redirectUri;
+            }
+
+            public void setRedirectUri(String redirectUri) {
+                this.redirectUri = redirectUri;
+            }
+        }
+
     }
 }

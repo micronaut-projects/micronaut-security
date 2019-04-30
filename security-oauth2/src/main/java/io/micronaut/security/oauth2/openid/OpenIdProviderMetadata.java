@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid.configuration;
+package io.micronaut.security.oauth2.openid;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

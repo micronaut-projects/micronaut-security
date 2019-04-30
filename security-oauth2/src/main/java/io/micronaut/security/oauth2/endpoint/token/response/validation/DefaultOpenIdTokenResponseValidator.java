@@ -22,7 +22,7 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

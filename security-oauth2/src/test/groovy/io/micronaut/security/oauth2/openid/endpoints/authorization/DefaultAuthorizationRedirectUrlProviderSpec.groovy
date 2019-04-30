@@ -9,7 +9,7 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.filters.SecurityFilter
 import io.micronaut.security.oauth2.endpoints.authorization.request.AuthorizationRequestBuilder
 import io.micronaut.security.oauth2.openid.configuration.FileOpenIdConfigurationController
-import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata
 import spock.lang.Specification
 
 import java.nio.charset.StandardCharsets

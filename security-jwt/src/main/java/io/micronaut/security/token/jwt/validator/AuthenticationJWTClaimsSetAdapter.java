@@ -20,6 +20,7 @@ import io.micronaut.security.authentication.Authentication;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class AuthenticationJWTClaimsSetAdapter implements Authentication {
     }
 
     @Override
-    @NonNull
+    @Nonnull
     public Map<String, Object> getAttributes() {
         return claimSet == null ? new HashMap<>() : claimSet.getClaims();
     }
