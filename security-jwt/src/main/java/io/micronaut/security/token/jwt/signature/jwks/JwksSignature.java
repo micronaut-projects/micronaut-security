@@ -55,13 +55,8 @@ public class JwksSignature implements SignatureConfiguration {
 
     private final JwkValidator jwkValidator;
 
-    @Nullable
     private JWKSet jwkSet;
-
-    @Nonnull
     private final KeyType keyType;
-
-    @Nonnull
     private final String url;
 
     /**

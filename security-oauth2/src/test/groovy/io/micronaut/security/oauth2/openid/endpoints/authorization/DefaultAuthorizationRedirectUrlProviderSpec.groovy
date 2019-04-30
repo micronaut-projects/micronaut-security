@@ -7,6 +7,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.filters.SecurityFilter
+import io.micronaut.security.oauth2.endpoints.authorization.request.AuthorizationRequestBuilder
 import io.micronaut.security.oauth2.openid.configuration.FileOpenIdConfigurationController
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
 import spock.lang.Specification
@@ -43,7 +44,7 @@ class DefaultAuthorizationRedirectUrlProviderSpec extends Specification {
         ], Environment.TEST)
 
         when:
-        context.getBean(AuthenticationRequestProvider)
+        context.getBean(AuthorizationRequestBuilder)
 
         then:
         noExceptionThrown()

@@ -41,7 +41,7 @@ public class AuthorizationCodeGrant implements AsMap {
     public static final String KEY_REDIRECT_URI = "redirect_uri";
     public static final String KEY_CODE = "code";
 
-    private String grantType = GrantType.AUTHORIZATION_CODE.getGrantType();
+    private String grantType = GrantType.AUTHORIZATION_CODE.toString();
     private String clientId;
     private String clientSecret;
     private String redirectUri;

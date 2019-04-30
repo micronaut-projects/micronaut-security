@@ -20,7 +20,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
-import io.micronaut.security.oauth2.configuration.OauthConfiguration;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.grants.PasswordGrant;
 import io.micronaut.security.oauth2.openid.endpoints.OpenIdEndpoints;
 
@@ -36,7 +36,7 @@ import java.util.Objects;
  */
 @Requires(beans = {
         GrantTypePasswordRequestProviderConfiguration.class,
-        OauthConfiguration.class,
+        OauthClientConfiguration.class,
         OpenIdEndpoints.class,
 })
 @Requires(property = GrantTypePasswordRequestProviderConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
@@ -44,7 +44,7 @@ import java.util.Objects;
 public class GrantTypePasswordRequestProvider {
 
     private final GrantTypePasswordRequestProviderConfiguration grantTypePasswordRequestProviderConfiguration;
-    private final OauthConfiguration oauthConfiguration;
+    private final OauthClientConfiguration oauthConfiguration;
     private final OpenIdEndpoints openIdEndpoints;
 
     /**
@@ -53,7 +53,7 @@ public class GrantTypePasswordRequestProvider {
      * @param openIdEndpoints OpenID endpoints
      * @param grantTypePasswordRequestProviderConfiguration {@link GrantTypePasswordRequestProvider} configuration
      */
-    public GrantTypePasswordRequestProvider(OauthConfiguration oauthConfiguration,
+    public GrantTypePasswordRequestProvider(OauthClientConfiguration oauthConfiguration,
                                             OpenIdEndpoints openIdEndpoints,
                                             GrantTypePasswordRequestProviderConfiguration grantTypePasswordRequestProviderConfiguration) {
         this.oauthConfiguration = oauthConfiguration;

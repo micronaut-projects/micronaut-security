@@ -16,19 +16,26 @@
 
 package io.micronaut.security.oauth2.openid.configuration;
 
+import com.nimbusds.jose.jwk.KeyType;
+import io.micronaut.context.BeanContext;
+import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.oauth2.openid.endpoints.OpenIdEndpoints;
-import io.micronaut.security.oauth2.openid.endpoints.authorization.AuthorizationEndpoint;
-import io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpoint;
-import io.micronaut.security.oauth2.openid.endpoints.introspection.IntrospectionEndpoint;
-import io.micronaut.security.oauth2.openid.endpoints.registration.RegistrationEndpoint;
-import io.micronaut.security.oauth2.openid.endpoints.revocation.RevocationEndpoint;
-import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpoint;
-import io.micronaut.security.oauth2.openid.endpoints.userinfo.UserInfoEndpoint;
+import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.exceptions.BeanInstantiationException;
+import io.micronaut.http.client.RxHttpClient;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.security.oauth2.client.OpenIdClient;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.*;
+import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.grants.GrantType;
+import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Factory which creates beans of type Creates a HTTP Declarative client to communicate with an OpenID connect Discovery endpoint.
@@ -40,65 +47,84 @@ import javax.inject.Singleton;
 @Factory
 public class OpenIdFactory {
 
-    /**
-     * @param openIdConfiguration OpenID configuration
-     * @param endSessionEndpoint End-session endpoint configuration
-     * @return a bean of type {@link OpenIdProviderMetadataSession}
-     */
-    @Singleton
-    @Requires(beans = EndSessionEndpoint.class)
-    public OpenIdProviderMetadataSession openIdProviderMetadataSession(@Nullable OpenIdConfiguration openIdConfiguration,
-                                                                       EndSessionEndpoint endSessionEndpoint) {
-        return new OpenIdProviderMetadataSessionAdapter(openIdConfiguration, endSessionEndpoint);
+    private final BeanContext beanContext;
+
+    OpenIdFactory(BeanContext beanContext) {
+        this.beanContext = beanContext;
     }
 
-    /**
-     * @param openIdConfiguration OpenID configuration
-     * @param openIdProviderConfiguration Open ID Provider configuration
-     * @param authorizationEndpoint Authorization endpoint configuration
-     * @param introspectionEndpoint Introspection endpoint configuration
-     * @param registrationEndpoint Registration endpoint configuration
-     * @param revocationEndpoint Revocation endpoint configuration
-     * @param tokenEndpoint Token endpoint configuration
-     * @param userInfoEndpoint User Info endpoint configuration
-     * @return a bean of type {@link OpenIdProviderMetadata}
-     */
-    @Requires(beans = {OpenIdProviderConfiguration.class,
-            AuthorizationEndpoint.class,
-            IntrospectionEndpoint.class,
-            RegistrationEndpoint.class,
-            RevocationEndpoint.class,
-            TokenEndpoint.class,
-            UserInfoEndpoint.class})
-    @Singleton
-    public OpenIdProviderMetadata openIdProviderMetadata(@Nullable OpenIdConfiguration openIdConfiguration,
-                                                         OpenIdProviderConfiguration openIdProviderConfiguration,
-                                                         AuthorizationEndpoint authorizationEndpoint,
-                                                         IntrospectionEndpoint introspectionEndpoint,
-                                                         RegistrationEndpoint registrationEndpoint,
-                                                         RevocationEndpoint revocationEndpoint,
-                                                         TokenEndpoint tokenEndpoint,
-                                                         UserInfoEndpoint userInfoEndpoint) {
-        return new OpenIdProviderMetadataAdapter(openIdConfiguration,
-                openIdProviderConfiguration,
-                authorizationEndpoint,
-                introspectionEndpoint,
-                registrationEndpoint,
-                revocationEndpoint,
-                tokenEndpoint,
-                userInfoEndpoint);
+    @EachBean(OpenIdClientConfiguration.class)
+    OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration) {
+        OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
+                .map(issuer -> {
+                    RxHttpClient issuerClient = beanContext.createBean(RxHttpClient.class, issuer);
+                    try {
+                        return issuerClient.toBlocking().retrieve(clientConfiguration.getConfigurationPath(), OpenIdConfiguration.class);
+                    } catch (HttpClientResponseException e) {
+                        throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + clientConfiguration.getName(), e);
+                    }
+                }).orElse(new OpenIdConfiguration());
+
+        overrideFromConfig(openIdConfiguration, clientConfiguration);
+        return openIdConfiguration;
     }
 
-    /**
-     *
-     * @param openIdProviderMetadata Open ID Provider metadata
-     * @param openIdProviderMetadataSession Open ID Provider Metadata Session
-     * @return a bean of type {@link OpenIdEndpoints}
-     */
-    @Singleton
-    public OpenIdEndpoints openIdEndpoints(OpenIdProviderMetadata openIdProviderMetadata,
-                                           OpenIdProviderMetadataSession openIdProviderMetadataSession) {
-        return new OpenIdEndpointsAdapter(openIdProviderMetadata, openIdProviderMetadataSession);
+    @EachBean(OpenIdConfiguration.class)
+    OpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
+                              @Parameter OpenIdProviderMetadata openIdProviderMetadata) {
+        Optional<OpenIdClientConfiguration> openIdClientConfiguration = oauthClientConfiguration.getOpenid();
+        if (openIdClientConfiguration.isPresent()) {
+            Optional<TokenEndpointConfiguration> token = openIdClientConfiguration.get().getToken();
+            if (!token.isPresent() || token.get().getGrantType() == GrantType.AUTHORIZATION_CODE) {
+                Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.get().getAuthorization();
+                if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
+                    return beanContext.createBean(OpenIdClient.class, oauthClientConfiguration, openIdProviderMetadata);
+                }
+            }
+        }
+        return null;
+    }
+
+    @EachBean(OpenIdConfiguration.class)
+    JwksSignatureConfiguration signatureConfiguration(OpenIdProviderMetadata openIdProviderMetadata) {
+        return new JwksSignatureConfiguration() {
+            @Nonnull
+            @Override
+            public String getUrl() {
+                return openIdProviderMetadata.getJwksUri();
+            }
+
+            @Nullable
+            @Override
+            public KeyType getKeyType() {
+                return null;
+            }
+        };
+    }
+
+    private void overrideFromConfig(OpenIdConfiguration configuration,
+                                    OpenIdClientConfiguration openIdClientConfiguration) {
+        openIdClientConfiguration.getJwksUri().ifPresent(configuration::setJwksUri);
+
+        openIdClientConfiguration.getIntrospection().ifPresent(introspection -> {
+            introspection.getUrl().ifPresent(configuration::setIntrospectionEndpoint);
+            introspection.getAuthMethod().ifPresent(authMethod -> configuration.setIntrospectionEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
+        });
+        openIdClientConfiguration.getRevocation().ifPresent(revocation -> {
+            revocation.getUrl().ifPresent(configuration::setRevocationEndpoint);
+            revocation.getAuthMethod().ifPresent(authMethod -> configuration.setRevocationEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
+        });
+        openIdClientConfiguration.getRegistration()
+                .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setRegistrationEndpoint);
+        openIdClientConfiguration.getUserInfo()
+                .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setUserinfoEndpoint);
+        openIdClientConfiguration.getAuthorization()
+                .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setAuthorizationEndpoint);
+        openIdClientConfiguration.getToken().ifPresent(token -> {
+            token.getUrl().ifPresent(configuration::setTokenEndpoint);
+            token.getAuthMethod().ifPresent(authMethod -> configuration.setTokenEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
+        });
+
     }
 
 }

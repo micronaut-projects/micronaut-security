@@ -19,7 +19,7 @@ package io.micronaut.security.oauth2.grants.password;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
-import io.micronaut.security.oauth2.openid.OpenIdScope;
+import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -46,7 +46,7 @@ public class GrantTypePasswordRequestProviderConfigurationProperties implements 
      * Default scope.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_SCOPE = OpenIdScope.OPENID.getScope();
+    public static final String DEFAULT_SCOPE = OpenIdScope.OPENID.toString();
 
     /**
      * Default Grant Type.

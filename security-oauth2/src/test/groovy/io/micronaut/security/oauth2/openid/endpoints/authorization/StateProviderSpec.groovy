@@ -2,8 +2,8 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.DefaultStateFactory
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.StateFactory
+import io.micronaut.security.oauth2.state.DefaultStateFactory
+import io.micronaut.security.oauth2.state.StateFactory
 import spock.lang.Specification
 
 class StateProviderSpec extends Specification {

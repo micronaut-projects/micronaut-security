@@ -20,7 +20,6 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.value.PropertyResolver;
-import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderConfigurationProperties;
 
 import java.util.Optional;
 
@@ -37,7 +36,7 @@ public abstract class OpenidConfigurationCondition implements Condition {
         BeanContext beanContext = context.getBeanContext();
         if (beanContext instanceof PropertyResolver) {
             PropertyResolver propertyResolver = (PropertyResolver) beanContext;
-            Optional<String> openIdConfigurationUrl = propertyResolver.get(OpenIdProviderConfigurationProperties.PREFIX + ".issuer", String.class);
+            Optional<String> openIdConfigurationUrl = propertyResolver.get("issuer", String.class);
             return openIdConfigurationUrl.map(s -> s.contains(getSearchSequence())).orElse(false);
         }
         return false;

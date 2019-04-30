@@ -3,6 +3,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.security.oauth2.endpoints.authorization.request.AuthorizationRequestBuilder
 import spock.lang.Specification
 
 class AuthenticationRequestProviderSpec extends Specification {
@@ -16,7 +17,7 @@ class AuthenticationRequestProviderSpec extends Specification {
         ], Environment.TEST)
 
         when:
-        context.getBean(AuthenticationRequestProvider)
+        context.getBean(AuthorizationRequestBuilder)
 
         then:
         thrown(NoSuchBeanException)

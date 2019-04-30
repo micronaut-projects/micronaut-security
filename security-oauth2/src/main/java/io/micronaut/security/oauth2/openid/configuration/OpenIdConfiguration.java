@@ -262,7 +262,7 @@ public class OpenIdConfiguration implements OpenIdProviderMetadata, OpenIdProvid
         this.subjectTypesSupported = subjectTypesSupported;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public String getTokenEndpoint() {
         return tokenEndpoint;

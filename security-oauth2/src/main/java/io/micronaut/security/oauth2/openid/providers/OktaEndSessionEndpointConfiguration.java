@@ -69,7 +69,7 @@ public class OktaEndSessionEndpointConfiguration implements EndSessionEndpoint {
      */
     public OktaEndSessionEndpointConfiguration(
             EmbeddedServer embeddedServer,
-            OpenIdConfiguration openIdConfiguration,
+            OpenIdProviderMetadata openIdProviderMetadata,
             @Value("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}") String logoutPath,
             EndSessionEndpointConfigurationProperties endSessionEndpointConfigurationProperties) {
         this.endSessionEndpoint = openIdConfiguration.getEndSessionEndpoint();

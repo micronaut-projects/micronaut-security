@@ -19,7 +19,7 @@ package io.micronaut.security.oauth2.openid.endpoints.endsession;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.uri.UriTemplate;
-import io.micronaut.security.oauth2.configuration.OauthConfiguration;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.openid.endpoints.OpenIdEndpoints;
 import io.micronaut.security.token.reader.TokenResolver;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ import java.util.Optional;
  * @since 1.0.0
  */
 @Singleton
-@Requires(beans = {TokenResolver.class, OpenIdEndpoints.class, OauthConfiguration.class, EndSessionEndpoint.class})
+@Requires(beans = {TokenResolver.class, OpenIdEndpoints.class, OauthClientConfiguration.class, EndSessionEndpoint.class})
 public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
     private static final char OPENCURLYBRACE = '{';
     private static final char COMMA = ',';
@@ -47,7 +47,7 @@ public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultEndSessionUrlProvider.class);
 
     private final TokenResolver tokenResolver;
-    private final OauthConfiguration oauthConfiguration;
+    private final OauthClientConfiguration oauthConfiguration;
     private final OpenIdEndpoints openIdEndpoints;
     private final EndSessionEndpoint endSessionEndpoint;
 
@@ -59,7 +59,7 @@ public class DefaultEndSessionUrlProvider implements EndSessionUrlProvider {
      * @param endSessionEndpoint End-session endpoint configuration
      */
     public DefaultEndSessionUrlProvider(@Nonnull TokenResolver tokenResolver,
-                                        @Nonnull OauthConfiguration oauthConfiguration,
+                                        @Nonnull OauthClientConfiguration oauthConfiguration,
                                         @Nonnull OpenIdEndpoints openIdEndpoints,
                                         @Nonnull EndSessionEndpoint endSessionEndpoint) {
         this.tokenResolver = tokenResolver;

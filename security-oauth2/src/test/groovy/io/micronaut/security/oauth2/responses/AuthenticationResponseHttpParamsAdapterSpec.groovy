@@ -10,7 +10,8 @@ import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.oauth2.openid.endpoints.authorization.state.State
+import io.micronaut.security.oauth2.endpoints.authorization.response.AuthorizationResponse
+import io.micronaut.security.oauth2.state.State
 import io.micronaut.security.rules.SecurityRule
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -56,12 +57,12 @@ class AuthenticationResponseHttpParamsAdapterSpec extends Specification {
         }
 
         @Get("/")
-        AuthenticationResponse index(HttpParameters httpParameters) {
+        AuthorizationResponse index(HttpParameters httpParameters) {
             authenticationResponseFactory.create(httpParameters)
         }
     }
 
-    static class MockAuthenticationResponse implements AuthenticationResponse {
+    static class MockAuthenticationResponse implements AuthorizationResponse {
         State state
         String code
     }

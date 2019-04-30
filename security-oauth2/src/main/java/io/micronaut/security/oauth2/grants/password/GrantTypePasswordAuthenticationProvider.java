@@ -27,8 +27,8 @@ import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse;
-import io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponseValidator;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -51,7 +51,7 @@ import java.util.Optional;
 @Requires(property = GrantTypePasswordRequestProviderConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 @Requires(beans = {
         GrantTypePasswordRequestProvider.class,
-        IdTokenAccessTokenResponseValidator.class,
+        OpenIdTokenResponseValidator.class,
         TokenConfiguration.class,
 })
 @Singleton
@@ -59,23 +59,23 @@ public class GrantTypePasswordAuthenticationProvider implements AuthenticationPr
     private static final Logger LOG = LoggerFactory.getLogger(GrantTypePasswordAuthenticationProvider.class);
 
     private final GrantTypePasswordRequestProvider grantTypePasswordRequestProvider;
-    private final IdTokenAccessTokenResponseValidator idTokenAccessTokenResponseValidator;
+    private final OpenIdTokenResponseValidator openIdTokenResponseValidator;
     private final TokenConfiguration tokenConfiguration;
     private final RxHttpClient tokenClient;
 
     /**
      *
      * @param grantTypePasswordRequestProvider Grant type password request provider
-     * @param idTokenAccessTokenResponseValidator IDToken/AccessToken response validator
+     * @param openIdTokenResponseValidator IDToken/AccessToken response validator
      * @param tokenConfiguration Token Configuration
      * @param tokenClient RxHttpClient pointing to the token endpoint
      */
     public GrantTypePasswordAuthenticationProvider(GrantTypePasswordRequestProvider grantTypePasswordRequestProvider,
-                                                   IdTokenAccessTokenResponseValidator idTokenAccessTokenResponseValidator,
+                                                   OpenIdTokenResponseValidator openIdTokenResponseValidator,
                                                    TokenConfiguration tokenConfiguration,
                                                    @Named("oauth2tokenendpoint") RxHttpClient tokenClient) {
         this.grantTypePasswordRequestProvider = grantTypePasswordRequestProvider;
-        this.idTokenAccessTokenResponseValidator = idTokenAccessTokenResponseValidator;
+        this.openIdTokenResponseValidator = openIdTokenResponseValidator;
         this.tokenConfiguration = tokenConfiguration;
         this.tokenClient = tokenClient;
     }
@@ -86,13 +86,13 @@ public class GrantTypePasswordAuthenticationProvider implements AuthenticationPr
         if (authenticationRequest.getIdentity() instanceof String && authenticationRequest.getSecret() instanceof String) {
             HttpRequest request = grantTypePasswordRequestProvider.generateRequest((String) authenticationRequest.getIdentity(), (String) authenticationRequest.getSecret());
 
-            Flowable<HttpResponse<IdTokenAccessTokenResponse>> flowable = tokenClient.exchange(request, IdTokenAccessTokenResponse.class);
+            Flowable<HttpResponse<OpenIdTokenResponse>> flowable = tokenClient.exchange(request, OpenIdTokenResponse.class);
             return flowable.map(response -> {
                 if (response.getBody().isPresent()) {
-                    Optional<IdTokenAccessTokenResponse> idTokenAccessTokenResponseOpt = response.getBody();
+                    Optional<OpenIdTokenResponse> idTokenAccessTokenResponseOpt = response.getBody();
                     if (idTokenAccessTokenResponseOpt.isPresent()) {
-                        IdTokenAccessTokenResponse idTokenAccessTokenResponse = idTokenAccessTokenResponseOpt.get();
-                        Optional<Authentication> authenticationOpt = idTokenAccessTokenResponseValidator.validate(idTokenAccessTokenResponse);
+                        OpenIdTokenResponse openIdTokenResponse = idTokenAccessTokenResponseOpt.get();
+                        Optional<Authentication> authenticationOpt = openIdTokenResponseValidator.validate(openIdTokenResponse);
                         if (authenticationOpt.isPresent()) {
                             Authentication authentication = authenticationOpt.get();
                             return getUserDetails(authentication);

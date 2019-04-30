@@ -23,7 +23,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.handlers.ForbiddenRejectionUriProvider;
-import io.micronaut.security.oauth2.endpoints.DeniedControllerConfigurationProperties;
+import io.micronaut.security.oauth2.endpoint.DeniedControllerConfigurationProperties;
 
 import javax.inject.Singleton;
 import java.util.Optional;
@@ -40,18 +40,15 @@ import java.util.Optional;
 @Singleton
 public class DefaultForbiddenRejectionUriProvider implements ForbiddenRejectionUriProvider {
 
-    private final String uri;
-
     /**
      *
-     * @param uri The default route uri of the {@link io.micronaut.security.oauth2.endpoints.DeniedController}.
      */
-    public DefaultForbiddenRejectionUriProvider(@Value("${" + DeniedControllerConfigurationProperties.PREFIX + ".path:/denied}") String uri) {
-        this.uri = uri;
+    public DefaultForbiddenRejectionUriProvider() {
+
     }
 
     @Override
     public Optional<String> getForbiddenRedirectUri(HttpRequest<?> request) {
-        return Optional.of(uri);
+        return Optional.of("/denied");
     }
 }

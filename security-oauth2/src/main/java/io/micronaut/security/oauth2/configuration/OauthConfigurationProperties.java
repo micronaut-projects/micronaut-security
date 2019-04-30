@@ -19,21 +19,18 @@ package io.micronaut.security.oauth2.configuration;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
- * {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link io.micronaut.security.oauth2.configuration.OauthConfiguration}.
+ * {@link ConfigurationProperties} implementation of {@link OauthClientConfiguration}.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
 @Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
-@Requires(property = OauthConfigurationProperties.PREFIX + ".client-id")
 @ConfigurationProperties(OauthConfigurationProperties.PREFIX)
-public class OauthConfigurationProperties implements OauthConfiguration {
+public class OauthConfigurationProperties implements Toggleable {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".oauth2";
 
     /**
@@ -41,50 +38,16 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+    private static final String DEFAULT_LOGIN = "/oauth/login/{provider}";
+    private static final String DEFAULT_CALLBACK = "/oauth/callback/{provider}";
 
-    private String clientId;
-    private String clientSecret;
+
     private boolean enabled = DEFAULT_ENABLED;
+    private String callbackUrl = DEFAULT_CALLBACK;
+    private String loginUrl = DEFAULT_LOGIN;
 
     /**
-     * OAuth 2.0 Application Client ID.
-     * @param clientId The application's Client ID.
-     */
-    public void setClientId(@Nonnull String clientId) {
-        this.clientId = clientId;
-    }
-
-    /**
-     * OAuth 2.0 Application Client Secret. Optional.
-     * @param clientSecret The application's Client Secret.
-     */
-    public void setClientSecret(@Nullable String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    /**
-     *
-     * @return the application's Client identifier
-     */
-    @Nonnull
-    @Override
-    public String getClientId() {
-        return clientId;
-    }
-
-    /**
-     *
-     @return the application's Client secret
-     */
-    @Nullable
-    @Override
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
-
-    /**
-     * @return true if you want to enable the {@link OauthConfiguration}
+     * @return true if you want to enable the {@link OauthClientConfiguration}
      */
     @Override
     public boolean isEnabled() {
@@ -92,7 +55,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     }
 
     /**
-     * Sets whether the {@link OauthConfiguration} is enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * Sets whether the {@link OauthClientConfiguration} is enabled. Default value ({@value #DEFAULT_ENABLED}).
      *
      * @param enabled True if is enabled
      */
@@ -100,4 +63,19 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         this.enabled = enabled;
     }
 
+    public String getLoginUrl() {
+        return loginUrl;
+    }
+
+    public void setLoginUrl(String loginUrl) {
+        this.loginUrl = loginUrl;
+    }
+
+    public String getCallbackUrl() {
+        return callbackUrl;
+    }
+
+    public void setCallbackUrl(String callbackUrl) {
+        this.callbackUrl = callbackUrl;
+    }
 }

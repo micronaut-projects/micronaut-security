@@ -19,6 +19,8 @@ import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -48,6 +50,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
      */
     @Override
     @NotNull
+    @Nonnull
     public String getUrl() {
         return url;
     }
@@ -65,7 +68,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
      * @return Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
      */
     @Override
-    @NotNull
+    @Nullable
     public KeyType getKeyType() {
         return keyType;
     }

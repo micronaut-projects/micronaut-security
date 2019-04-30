@@ -16,7 +16,7 @@
 
 package io.micronaut.security.oauth2.openid.endpoints.endsession;
 
-import io.micronaut.security.oauth2.openid.endpoints.Endpoint;
+import io.micronaut.security.oauth2.endpoint.Endpoint;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;

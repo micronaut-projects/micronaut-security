@@ -4,7 +4,8 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.oauth2.configuration.OauthConfiguration
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
+import io.micronaut.security.oauth2.endpoints.token.request.TokenEndpointClient
 import io.micronaut.security.oauth2.openid.configuration.FileOpenIdConfigurationController
 import io.micronaut.security.oauth2.openid.configuration.OpenIdProviderMetadata
 import spock.lang.Specification
@@ -53,13 +54,13 @@ class AuthorizationCodeGrantRequestGeneratorSpec extends Specification {
         noExceptionThrown()
 
         when:
-        context.getBean(OauthConfiguration.class)
+        context.getBean(OauthClientConfiguration.class)
 
         then:
         noExceptionThrown()
 
         when:
-        context.getBean(AuthorizationCodeGrantRequestGenerator)
+        context.getBean(TokenEndpointClient)
 
         then:
         noExceptionThrown()

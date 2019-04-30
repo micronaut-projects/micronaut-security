@@ -42,7 +42,7 @@ public class PasswordGrant {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_SCOPE = "scope";
 
-    private String grantType = GrantType.PASSWORD.getGrantType();
+    private String grantType = GrantType.PASSWORD.toString();
     private String clientId;
     private String clientSecret;
     private String username;
