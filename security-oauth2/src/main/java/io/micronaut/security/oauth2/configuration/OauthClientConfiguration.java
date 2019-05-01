@@ -20,6 +20,7 @@ import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
+import io.micronaut.security.oauth2.grants.GrantType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,6 +58,9 @@ public interface OauthClientConfiguration extends Toggleable {
      */
     @Nonnull
     List<String> getScopes();
+
+    @Nonnull
+    GrantType getGrantType();
 
     Optional<SecureEndpointConfiguration> getToken();
 

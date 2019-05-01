@@ -37,6 +37,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private String clientSecret;
     private List<String> scopes;
     private boolean enabled = DEFAULT_ENABLED;
+    private GrantType grantType = GrantType.AUTHORIZATION_CODE;
     private AuthorizationEndpointConfigurationProperties authorization;
     private TokenEndpointConfigurationProperties token;
     private OpenIdClientConfigurationProperties openid;
@@ -120,6 +121,21 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         return name;
     }
 
+
+    @Nonnull
+    @Override
+    public GrantType getGrantType() {
+        return grantType;
+    }
+
+    /**
+     * OAuth 2.0 grant type. Default value (authorization_code).
+     *
+     * @param grantType The grant type
+     */
+    public void setGrantType(@Nonnull GrantType grantType) {
+        this.grantType = grantType;
+    }
 
     public Optional<SecureEndpointConfiguration> getToken() {
         return Optional.ofNullable(token);
@@ -415,30 +431,13 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @ConfigurationProperties("token")
         public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
 
-
             /**
              * Default content type.
              */
             @SuppressWarnings("WeakerAccess")
             public static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
 
-            private GrantType grantType = GrantType.AUTHORIZATION_CODE;
             private MediaType contentType = DEFAULT_CONTENT_TYPE;
-
-            @Nonnull
-            @Override
-            public GrantType getGrantType() {
-                return grantType;
-            }
-
-            /**
-             * OAuth 2.0 grant type. Default value (authorization_code).
-             *
-             * @param grantType The grant type
-             */
-            public void setGrantType(@Nonnull GrantType grantType) {
-                this.grantType = grantType;
-            }
 
             @Nonnull
             @Override

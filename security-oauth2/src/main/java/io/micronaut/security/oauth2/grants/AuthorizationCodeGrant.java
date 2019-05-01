@@ -33,13 +33,13 @@ import java.util.Map;
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class AuthorizationCodeGrant implements AsMap {
+public class AuthorizationCodeGrant implements SecureGrant, AsMap {
 
-    public static final String KEY_GRANT_TYPE = "grant_type";
-    public static final String KEY_CLIENT_ID = "client_id";
-    public static final String KEY_CLIENT_SECRET = "client_secret";
-    public static final String KEY_REDIRECT_URI = "redirect_uri";
-    public static final String KEY_CODE = "code";
+    private static final String KEY_GRANT_TYPE = "grant_type";
+    private static final String KEY_CLIENT_ID = "client_id";
+    private static final String KEY_CLIENT_SECRET = "client_secret";
+    private static final String KEY_REDIRECT_URI = "redirect_uri";
+    private static final String KEY_CODE = "code";
 
     private String grantType = GrantType.AUTHORIZATION_CODE.toString();
     private String clientId;
@@ -146,12 +146,17 @@ public class AuthorizationCodeGrant implements AsMap {
     public Map<String, String> toMap() {
         Map<String, String> m = new HashMap<>(5);
         m.put(KEY_GRANT_TYPE, getGrantType());
-        m.put(KEY_CLIENT_ID, getClientId());
-        if (getClientSecret() != null) {
-            m.put(KEY_CLIENT_SECRET, getClientSecret());
-        }
-        m.put(KEY_REDIRECT_URI, getRedirectUri());
         m.put(KEY_CODE, getCode());
+        if (clientId != null) {
+            m.put(KEY_CLIENT_ID, clientId);
+        }
+        if (clientSecret != null) {
+            m.put(KEY_CLIENT_SECRET, clientSecret);
+        }
+        if (redirectUri != null) {
+            m.put(KEY_REDIRECT_URI, getRedirectUri());
+        }
         return m;
     }
+
 }

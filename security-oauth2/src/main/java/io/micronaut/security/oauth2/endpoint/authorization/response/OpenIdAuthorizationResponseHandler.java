@@ -15,6 +15,5 @@ public interface OpenIdAuthorizationResponseHandler {
     Publisher<AuthenticationResponse> handle(AuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,
                                              OpenIdProviderMetadata openIdProviderMetadata,
-                                             OpenIdTokenEndpointClient<?> tokenEndpointClient,
                                              SecureEndpoint tokenEndpoint);
 }

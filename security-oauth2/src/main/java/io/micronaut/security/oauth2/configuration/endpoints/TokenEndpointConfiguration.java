@@ -32,12 +32,6 @@ import javax.annotation.Nonnull;
 public interface TokenEndpointConfiguration extends SecureEndpointConfiguration {
 
     /**
-     * @return The grant type
-     */
-    @Nonnull
-    GrantType getGrantType();
-
-    /**
      * @return The content type
      */
     @Nonnull

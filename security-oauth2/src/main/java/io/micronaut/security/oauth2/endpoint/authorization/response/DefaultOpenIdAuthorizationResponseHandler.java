@@ -22,11 +22,13 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.oauth2.endpoint.token.request.OpenIdTokenEndpointClient;
+import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
+import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.*;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -51,14 +53,20 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
 
     private final OpenIdTokenResponseValidator tokenResponseValidator;
     private final OpenIdUserDetailsMapper userDetailsMapper;
+    private final TokenEndpointClient tokenEndpointClient;
+    private final CallbackUrlBuilder callbackUrlBuilder;
     private final @Nullable StateValidator stateValidator;
 
 
     public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
                                                      OpenIdUserDetailsMapper userDetailsMapper,
+                                                     TokenEndpointClient tokenEndpointClient,
+                                                     CallbackUrlBuilder callbackUrlBuilder,
                                                      @Nullable StateValidator stateValidator) {
         this.tokenResponseValidator = tokenResponseValidator;
         this.userDetailsMapper = userDetailsMapper;
+        this.tokenEndpointClient = tokenEndpointClient;
+        this.callbackUrlBuilder = callbackUrlBuilder;
         this.stateValidator = stateValidator;
     }
 
@@ -67,7 +75,6 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             AuthorizationResponse authorizationResponse,
             OauthClientConfiguration clientConfiguration,
             OpenIdProviderMetadata openIdProviderMetadata,
-            OpenIdTokenEndpointClient<?> tokenEndpointClient,
             SecureEndpoint tokenEndpoint) {
 
         if (stateValidator != null) {
@@ -75,8 +82,10 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
         }
 
-        return Flowable.fromPublisher(tokenEndpointClient
-                .sendRequest(authorizationResponse, clientConfiguration, tokenEndpoint))
+        OpenIdCodeTokenRequestContext requestContext = new OpenIdCodeTokenRequestContext(authorizationResponse, callbackUrlBuilder, tokenEndpoint, clientConfiguration);
+
+        return Flowable.fromPublisher(
+                tokenEndpointClient.sendRequest(requestContext))
                 .switchMap(response -> {
                     return Flowable.create(emitter -> {
                         Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response);

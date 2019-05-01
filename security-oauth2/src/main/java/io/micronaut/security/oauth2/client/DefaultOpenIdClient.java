@@ -15,7 +15,6 @@ import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.response.*;
-import io.micronaut.security.oauth2.endpoint.token.request.DefaultOpenIdTokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequestBuilder;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
@@ -34,7 +33,6 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private final AuthorizationRequestBuilder authorizationRequestBuilder;
     private final AuthorizationRedirectUrlBuilder redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
-    private final DefaultOpenIdTokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint tokenEndpoint;
     private final BeanContext beanContext;
 
@@ -43,14 +41,12 @@ public class DefaultOpenIdClient implements OpenIdClient {
                         AuthorizationRequestBuilder authorizationRequestBuilder,
                         AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                         OpenIdAuthorizationResponseHandler authorizationResponseHandler,
-                        DefaultOpenIdTokenEndpointClient tokenEndpointClient,
                         BeanContext beanContext) {
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
         this.authorizationRequestBuilder = authorizationRequestBuilder;
         this.redirectUrlBuilder = redirectUrlBuilder;
         this.authorizationResponseHandler = authorizationResponseHandler;
-        this.tokenEndpointClient = tokenEndpointClient;
         this.beanContext = beanContext;
         this.tokenEndpoint = getTokenEndpoint(openIdProviderMetadata);
     }
@@ -86,7 +82,6 @@ public class DefaultOpenIdClient implements OpenIdClient {
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
                     openIdProviderMetadata,
-                    tokenEndpointClient,
                     tokenEndpoint);
         }
     }

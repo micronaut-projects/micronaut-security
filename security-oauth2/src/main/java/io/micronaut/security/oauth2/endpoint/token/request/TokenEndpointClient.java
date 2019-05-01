@@ -16,9 +16,7 @@
 
 package io.micronaut.security.oauth2.endpoint.token.request;
 
-import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
 
@@ -30,13 +28,11 @@ import javax.annotation.Nonnull;
  * @since 1.0.0
  * @author Sergio del Amo
  */
-public interface TokenEndpointClient<T extends TokenResponse> {
+public interface TokenEndpointClient {
 
     /**
      * @return a HTTP Request to the Token Endpoint with Authorization Code Grant payload.
      */
     @Nonnull
-    Publisher<T> sendRequest(AuthorizationResponse authorizationResponse,
-                             OauthClientConfiguration clientConfiguration,
-                             SecureEndpoint tokenEndpoint);
+    <G, R extends TokenResponse> Publisher<R> sendRequest(TokenRequestContext<G, R> requestContext);
 }

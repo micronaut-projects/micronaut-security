@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class JwtBearerAssertionGrant {
 
-    private String grantType = GrantType.JWT_BEARER_ASSERTION_GRANT.getGrantType();
+    private String grantType = GrantType.JWT_BEARER_ASSERTION_GRANT.toString();
     private String assertion;
     private String scope;
 

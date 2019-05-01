@@ -39,7 +39,7 @@ public class ClientCredentialsGrant implements AsMap {
     public static final String KEY_GRANT_TYPE = "grant_type";
     public static final String KEY_SCOPES = "scopes";
 
-    private String grantType = GrantType.CLIENT_CREDENTIALS.getGrantType();
+    private String grantType = GrantType.CLIENT_CREDENTIALS.toString();
     private String scope;
 
     /**

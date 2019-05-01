@@ -73,9 +73,8 @@ public class OpenIdFactory {
     OpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
                               @Parameter OpenIdProviderMetadata openIdProviderMetadata) {
         Optional<OpenIdClientConfiguration> openIdClientConfiguration = oauthClientConfiguration.getOpenid();
-        if (openIdClientConfiguration.isPresent()) {
-            Optional<TokenEndpointConfiguration> token = openIdClientConfiguration.get().getToken();
-            if (!token.isPresent() || token.get().getGrantType() == GrantType.AUTHORIZATION_CODE) {
+        if (openIdClientConfiguration.map(OpenIdClientConfiguration::getIssuer).isPresent()) {
+            if (oauthClientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
                 Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.get().getAuthorization();
                 if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
                     return beanContext.createBean(OpenIdClient.class, oauthClientConfiguration, openIdProviderMetadata);

@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.grants;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +34,7 @@ import java.util.Map;
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class PasswordGrant {
+public class PasswordGrant implements SecureGrant, AsMap {
 
     public static final String KEY_GRANT_TYPE = "grant_type";
     public static final String KEY_CLIENT_ID = "client_id";
@@ -141,26 +142,6 @@ public class PasswordGrant {
 
     /**
      *
-     * @return this object as a Map
-     */
-    public Map<String, String> toMap() {
-        Map<String, String> m = new HashMap<>();
-        m.put(KEY_GRANT_TYPE, getGrantType());
-        m.put(KEY_CLIENT_ID, getClientId());
-        if (getClientSecret() != null) {
-            m.put(KEY_CLIENT_SECRET, getClientSecret());
-        }
-        m.put(KEY_USERNAME, getUsername());
-        m.put(KEY_PASSWORD, getPassword());
-
-        if (getScope() != null) {
-            m.put(KEY_SCOPE, getScope());
-        }
-        return m;
-    }
-
-    /**
-     *
      * @return Requested scopes separed by spaces
      */
     @Nullable
@@ -174,6 +155,27 @@ public class PasswordGrant {
      */
     public void setScope(@Nonnull String scope) {
         this.scope = scope;
+    }
+
+    /**
+     *
+     * @return this object as a Map
+     */
+    public Map<String, String> toMap() {
+        Map<String, String> m = new HashMap<>();
+        m.put(KEY_GRANT_TYPE, grantType);
+        m.put(KEY_USERNAME, username);
+        m.put(KEY_PASSWORD, password);
+        if (StringUtils.isNotEmpty(scope)) {
+            m.put(KEY_SCOPE, scope);
+        }
+        if (clientId != null) {
+            m.put(KEY_CLIENT_ID, clientId);
+        }
+        if (clientSecret != null) {
+            m.put(KEY_CLIENT_SECRET, clientSecret);
+        }
+        return m;
     }
 }
 
