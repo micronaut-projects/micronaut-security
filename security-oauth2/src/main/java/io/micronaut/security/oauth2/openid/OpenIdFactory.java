@@ -53,12 +53,12 @@ public class OpenIdFactory {
 
     private final BeanContext beanContext;
 
-    OpenIdFactory(BeanContext beanContext) {
+    public OpenIdFactory(BeanContext beanContext) {
         this.beanContext = beanContext;
     }
 
     @EachBean(OpenIdClientConfiguration.class)
-    OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
+    public OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
                                             HttpClientConfiguration defaultHttpConfiguration) {
         OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
                 .map(issuer -> {
@@ -75,7 +75,7 @@ public class OpenIdFactory {
     }
 
     @EachBean(OpenIdConfiguration.class)
-    DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
+    public DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
                               @Parameter OpenIdProviderMetadata openIdProviderMetadata,
                               AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                               OpenIdAuthorizationResponseHandler authorizationResponseHandler,
@@ -95,7 +95,7 @@ public class OpenIdFactory {
     }
 
     @EachBean(OpenIdConfiguration.class)
-    JwksSignatureConfiguration signatureConfiguration(OpenIdProviderMetadata openIdProviderMetadata) {
+    public JwksSignatureConfiguration signatureConfiguration(OpenIdProviderMetadata openIdProviderMetadata) {
         return new JwksSignatureConfiguration() {
             @Nonnull
             @Override
