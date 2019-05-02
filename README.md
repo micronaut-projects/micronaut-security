@@ -1,4 +1,4 @@
-# Micronaut RabbitMQ
+# Micronaut Security
 
 [![Build Status](https://travis-ci.org/micronaut-projects/micronaut-security.svg?branch=master)](https://travis-ci.org/micronaut-projects/micronaut-security)
 
