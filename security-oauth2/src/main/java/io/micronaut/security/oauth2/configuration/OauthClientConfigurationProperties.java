@@ -277,6 +277,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.jwksUri = jwksUri;
         }
 
+        @Override
         public Optional<SecureEndpointConfiguration> getIntrospection() {
             return Optional.ofNullable(introspection);
         }
@@ -285,6 +286,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.introspection = introspection;
         }
 
+        @Override
         public Optional<SecureEndpointConfiguration> getRevocation() {
             return Optional.ofNullable(revocation);
         }
@@ -311,6 +313,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.userInfo = userInfo;
         }
 
+        @Override
         public Optional<AuthorizationEndpointConfiguration> getAuthorization() {
             return Optional.ofNullable(authorization);
         }
@@ -319,6 +322,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.authorization = authorization;
         }
 
+        @Override
         public Optional<TokenEndpointConfiguration> getToken() {
             return Optional.ofNullable(token);
         }

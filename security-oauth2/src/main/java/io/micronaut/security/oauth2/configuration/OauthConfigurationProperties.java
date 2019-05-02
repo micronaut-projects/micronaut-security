@@ -80,6 +80,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         this.loginUri = loginUri;
     }
 
+    @Override
     public String getCallbackUri() {
         return callbackUri;
     }
