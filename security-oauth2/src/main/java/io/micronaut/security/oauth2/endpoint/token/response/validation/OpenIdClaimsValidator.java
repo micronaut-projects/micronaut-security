@@ -16,9 +16,9 @@
 
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
-import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 /**
  * JWT Claims Validator for ID Token.
@@ -37,7 +37,7 @@ public interface OpenIdClaimsValidator {
      * @param providerMetadata OpenID Connect provider metadata
      * @return Whether the JWT Claims pass validation or not.
      */
-    boolean validate(JWTClaimsSet claims,
+    boolean validate(JwtClaims claims,
                      OauthClientConfiguration clientConfiguration,
                      OpenIdProviderMetadata providerMetadata);
 }

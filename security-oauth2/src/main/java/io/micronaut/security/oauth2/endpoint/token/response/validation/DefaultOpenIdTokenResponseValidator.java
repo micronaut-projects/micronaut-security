@@ -23,6 +23,8 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +66,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
             try {
                 JWTClaimsSet claimsSet = jwt.get().getJWTClaimsSet();
                 if (openIdClaimsValidators.stream().allMatch(validator ->
-                                validator.validate(claimsSet, clientConfiguration, openIdProviderMetadata))) {
+                                validator.validate(new JwtClaimsSetAdapter(claimsSet), clientConfiguration, openIdProviderMetadata))) {
                     return jwt;
                 }
             } catch (ParseException e) {
