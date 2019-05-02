@@ -28,11 +28,13 @@ import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
+import io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -46,18 +48,14 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdTokenResponseValidator.class);
 
-    private final JwtTokenValidator jwtTokenValidator;
     private final Collection<OpenIdClaimsValidator> openIdClaimsValidators;
     private final JwkValidator jwkValidator;
 
     /**
-     * @param jwtTokenValidator JWT token Validator
      * @param idTokenValidators ID token JWT Claims validators
      */
-    public DefaultOpenIdTokenResponseValidator(JwtTokenValidator jwtTokenValidator,
-                                               Collection<OpenIdClaimsValidator> idTokenValidators,
+    public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
                                                JwkValidator jwkValidator) {
-        this.jwtTokenValidator = jwtTokenValidator;
         this.openIdClaimsValidators = idTokenValidators;
         this.jwkValidator = jwkValidator;
     }
@@ -66,8 +64,9 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     public Optional<JWT> validate(OauthClientConfiguration clientConfiguration,
                                   OpenIdProviderMetadata openIdProviderMetadata,
                                   OpenIdTokenResponse openIdTokenResponse) {
-        Optional<JWT> jwt = jwtTokenValidator.validateSignedJwtSignatureAndClaims(openIdTokenResponse.getIdToken(),
-                new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator));
+        Optional<JWT> jwt = JwtTokenValidatorUtils.parseJwtIfValidSignature(openIdTokenResponse.getIdToken(),
+                Collections.singletonList(new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator)),
+                Collections.emptyList());
 
         if (jwt.isPresent()) {
             try {

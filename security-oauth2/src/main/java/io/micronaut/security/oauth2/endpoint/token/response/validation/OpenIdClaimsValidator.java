@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.jwt.validator.JwtClaimsValidator;
 
 /**
  * JWT Claims Validator for ID Token.
