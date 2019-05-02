@@ -4,13 +4,19 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.ExecutionHandleLocator;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.naming.NameResolver;
+import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
+import io.micronaut.inject.BeanDefinition;
+import io.micronaut.inject.ExecutionHandle;
+import io.micronaut.inject.MethodExecutionHandle;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
 import io.micronaut.security.oauth2.url.LoginUrlBuilder;
 import io.micronaut.web.router.DefaultRouteBuilder;
 
 import javax.inject.Singleton;
+import java.util.List;
 
 @Singleton
 public class OauthRouteBuilder extends DefaultRouteBuilder {
@@ -20,25 +26,25 @@ public class OauthRouteBuilder extends DefaultRouteBuilder {
                              ConversionService<?> conversionService,
                              BeanContext beanContext,
                              CallbackUrlBuilder callbackUrlBuilder,
-                             LoginUrlBuilder loginUrlBuilder) {
+                             LoginUrlBuilder loginUrlBuilder,
+                             List<OauthController> controllerList) {
         super(executionHandleLocator, uriNamingStrategy, conversionService);
 
-        beanContext.getBeanDefinitions(OauthController.class).forEach(bd -> {
-            if (bd instanceof NameResolver) {
-                ((NameResolver) bd).resolveName().ifPresent(name -> {
-                    String loginPath = loginUrlBuilder.getPath(name);
-                    String callbackPath = callbackUrlBuilder.getPath(name);
+        controllerList.forEach((controller) -> {
+            String name = controller.getProviderName();
+            String loginPath = loginUrlBuilder.getPath(name);
+            String callbackPath = callbackUrlBuilder.getPath(name);
 
-                    bd.findMethod("login", HttpRequest.class).ifPresent(m ->
-                            GET(loginPath, bd, m));
+            BeanDefinition<OauthController> bd = beanContext.getBeanDefinition(OauthController.class, Qualifiers.byName(name));
 
-                    bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
-                        POST(callbackPath, bd, m).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
-                        GET(callbackPath, bd, m);
-                    });
+            bd.findMethod("login", HttpRequest.class).ifPresent(m ->
+                buildRoute(HttpMethod.GET, loginPath, ExecutionHandle.of(controller, m)));
 
-                });
-            }
+            bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
+                MethodExecutionHandle<OauthController, Object> executionHandle = ExecutionHandle.of(controller, m);
+                buildRoute(HttpMethod.GET, callbackPath, executionHandle);
+                buildRoute(HttpMethod.POST, callbackPath, executionHandle).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+            });
         });
 
     }

@@ -49,6 +49,11 @@ public class DefaultOauthController implements OauthController {
     }
 
     @Override
+    public String getProviderName() {
+        return oauthClient.getName();
+    }
+
+    @Override
     public HttpResponse login(HttpRequest request) {
         return oauthClient.authorizationRedirect(request);
     }

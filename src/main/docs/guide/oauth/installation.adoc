@@ -2,4 +2,4 @@ dependency:micronaut-oauth2[version="{version}",groupId="io.micronaut.configurat
 
 To use the `BUILD-SNAPSHOT` version of this library, check the https://docs.micronaut.io/latest/guide/index.html#usingsnapshots[documentation to use snapshots].
 
-Code can be found at the https://github.com/micronaut-projects/micronaut-oauth2[micronaut-oauth2] repository.
+Code can be found at the https://github.com/micronaut-projects/micronaut-security/tree/master/security-oauth2[micronaut-security] repository.

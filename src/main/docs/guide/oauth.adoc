@@ -1,6 +1,7 @@
-This project eases OAuth 2.0 integration with Micronaut.
+Micronaut supports authentication with OAuth 2.0 servers, including support for the OpenID standard.
 
-Micronaut supports integration with authentication & authorization platforms such as https://developer.okta.com[Okta], https://auth0.com[Auth0], https://aws.amazon.com/cognito[AWS Cognito], https://www.keycloak.org[Keycloak], etc.
+
+The easiest way to get started is by configuring a provider that supports OpenID. Platforms such as https://developer.okta.com[Okta], https://auth0.com[Auth0], https://aws.amazon.com/cognito[AWS Cognito], https://www.keycloak.org[Keycloak], etc are common examples.
 
 Once you create an application client with a provider, you will get a Client ID and optionally a Client Secret.
 
@@ -20,6 +21,7 @@ For example, if you configured:
 micronaut:
   security:
     oauth2:
+      clients:
       client-secret: '${OAUTH_CLIENT_SECRET}'
       client-id: '${OAUTH_CLIENT_ID}'
 ----

@@ -12,6 +12,8 @@ import java.util.Map;
 @Secured(SecurityRule.IS_ANONYMOUS)
 public interface OauthController {
 
+    String getProviderName();
+
     @Executable
     HttpResponse login(HttpRequest request);
 
