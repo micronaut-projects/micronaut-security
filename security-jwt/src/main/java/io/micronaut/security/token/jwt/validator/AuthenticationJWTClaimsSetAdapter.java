@@ -17,7 +17,6 @@ package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.authentication.Authentication;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
 import javax.annotation.Nonnull;
