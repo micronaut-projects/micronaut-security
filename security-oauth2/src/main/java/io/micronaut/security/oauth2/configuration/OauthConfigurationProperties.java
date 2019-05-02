@@ -119,7 +119,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             private static final String DEFAULT_VIEW_MODEL_KEY = "endSessionUrl";
 
             private String viewModelKey = DEFAULT_VIEW_MODEL_KEY;
-            private String redirectUri;
+            private String redirectUri = "/";
 
             @Override
             @Nonnull
@@ -137,7 +137,6 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             }
 
             @Override
-            @NotNull
             @Nonnull
             public String getRedirectUri() {
                 return redirectUri;

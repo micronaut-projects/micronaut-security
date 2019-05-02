@@ -75,6 +75,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
                             try {
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
                                 emitter.onNext(openIdUserDetailsMapper.createUserDetails(clientConfiguration.getName(), response, claims));
+                                emitter.onComplete();
                             } catch (ParseException e) {
                                 //Should never happen as validation succeeded
                                 emitter.onError(e);
@@ -82,6 +83,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
                         } else {
                             //TODO: Create a more meaningful response
                             emitter.onNext(new AuthenticationFailed());
+                            emitter.onComplete();
                         }
                     }, BackpressureStrategy.ERROR);
                 });

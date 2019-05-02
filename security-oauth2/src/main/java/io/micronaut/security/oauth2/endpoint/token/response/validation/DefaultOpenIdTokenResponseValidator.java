@@ -16,13 +16,19 @@
 
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
+import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,22 +50,27 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
 
     private final JwtTokenValidator jwtTokenValidator;
     private final Collection<OpenIdClaimsValidator> openIdClaimsValidators;
+    private final JwkValidator jwkValidator;
 
     /**
      * @param jwtTokenValidator JWT token Validator
      * @param idTokenValidators ID token JWT Claims validators
      */
     public DefaultOpenIdTokenResponseValidator(JwtTokenValidator jwtTokenValidator,
-                                               Collection<OpenIdClaimsValidator> idTokenValidators) {
+                                               Collection<OpenIdClaimsValidator> idTokenValidators,
+                                               JwkValidator jwkValidator) {
         this.jwtTokenValidator = jwtTokenValidator;
         this.openIdClaimsValidators = idTokenValidators;
+        this.jwkValidator = jwkValidator;
     }
 
     @Override
     public Optional<JWT> validate(OauthClientConfiguration clientConfiguration,
                                   OpenIdProviderMetadata openIdProviderMetadata,
                                   OpenIdTokenResponse openIdTokenResponse) {
-        Optional<JWT> jwt = jwtTokenValidator.validateJwtSignatureAndClaims(openIdTokenResponse.getIdToken());
+        Optional<JWT> jwt = jwtTokenValidator.validateSignedJwtSignatureAndClaims(openIdTokenResponse.getIdToken(),
+                new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator));
+
         if (jwt.isPresent()) {
             try {
                 JWTClaimsSet claimsSet = jwt.get().getJWTClaimsSet();

@@ -93,6 +93,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                             try {
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
                                 emitter.onNext(userDetailsMapper.createUserDetails(clientConfiguration.getName(), response, claims));
+                                emitter.onComplete();
                             } catch (ParseException e) {
                                 //Should never happen as validation succeeded
                                 emitter.onError(e);
@@ -100,6 +101,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                         } else {
                             //TODO: Create a more meaningful response
                             emitter.onNext(new AuthenticationFailed());
+                            emitter.onComplete();
                         }
                     }, BackpressureStrategy.ERROR);
                 });

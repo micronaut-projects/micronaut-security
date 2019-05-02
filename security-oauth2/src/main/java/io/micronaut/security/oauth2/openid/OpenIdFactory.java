@@ -94,23 +94,6 @@ public class OpenIdFactory {
         return null;
     }
 
-    @EachBean(OpenIdConfiguration.class)
-    JwksSignatureConfiguration signatureConfiguration(OpenIdProviderMetadata openIdProviderMetadata) {
-        return new JwksSignatureConfiguration() {
-            @Nonnull
-            @Override
-            public String getUrl() {
-                return openIdProviderMetadata.getJwksUri();
-            }
-
-            @Nullable
-            @Override
-            public KeyType getKeyType() {
-                return null;
-            }
-        };
-    }
-
     private void overrideFromConfig(OpenIdConfiguration configuration,
                                     OpenIdClientConfiguration openIdClientConfiguration) {
         openIdClientConfiguration.getJwksUri().ifPresent(configuration::setJwksUri);

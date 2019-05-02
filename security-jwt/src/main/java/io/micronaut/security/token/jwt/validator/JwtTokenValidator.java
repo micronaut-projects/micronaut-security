@@ -130,31 +130,47 @@ public class JwtTokenValidator implements TokenValidator {
             LOG.debug("JWT is signed");
         }
 
-        final JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();
         for (final SignatureConfiguration config : signatureConfigurations) {
-            if (config.supports(algorithm)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Using signature configuration: {}", config.toString());
-                }
-                try {
-                    if (config.verify(signedJWT)) {
-                        return Optional.of(signedJWT);
-                    } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("JWT Signature verification failed: {}", signedJWT.getParsedString());
-                        }
-                    }
-                } catch (final JOSEException e) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Verification fails with signature configuration: {}, passing to the next one", config);
-                    }
-                }
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("{}", config.supportedAlgorithmsMessage());
-                }
+            Optional<JWT> jwt = validateSignedJWTSignature(signedJWT, config);
+            if (jwt.isPresent()) {
+                return jwt;
             }
         }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("No signature algorithm found for JWT: {}", signedJWT.getParsedString());
+        }
+        return Optional.empty();
+    }
+
+    public  Optional<JWT> validateSignedJWTSignature(SignedJWT signedJWT, SignatureConfiguration config) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("JWT is signed");
+        }
+
+        final JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();
+        if (config.supports(algorithm)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Using signature configuration: {}", config.toString());
+            }
+            try {
+                if (config.verify(signedJWT)) {
+                    return Optional.of(signedJWT);
+                } else {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("JWT Signature verification failed: {}", signedJWT.getParsedString());
+                    }
+                }
+            } catch (final JOSEException e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Verification fails with signature configuration: {}, passing to the next one", config);
+                }
+            }
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("{}", config.supportedAlgorithmsMessage());
+            }
+        }
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("No signature algorithm found for JWT: {}", signedJWT.getParsedString());
         }
@@ -255,6 +271,31 @@ public class JwtTokenValidator implements TokenValidator {
      */
     public Optional<JWT> validateJwtSignatureAndClaims(String token) {
         return validateJwtSignatureAndClaims(token, genericJwtClaimsValidators);
+    }
+
+    /**
+     * Validates JWT signature and Claims.
+     * @param token A JWT token
+     * @return empty if signature or claims verification failed, JWT otherwise.
+     */
+    public Optional<JWT> validateSignedJwtSignatureAndClaims(String token, SignatureConfiguration signatureConfiguration) {
+        try {
+            JWT jwt = JWTParser.parse(token);
+
+            if (jwt instanceof SignedJWT) {
+                final SignedJWT signedJWT = (SignedJWT) jwt;
+                if (validateSignedJWTSignature(signedJWT, signatureConfiguration).isPresent()) {
+                    if (verifyClaims(signedJWT.getJWTClaimsSet(), genericJwtClaimsValidators)) {
+                        return Optional.of(jwt);
+                    }
+                }
+            }
+        } catch (final ParseException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Cannot decrypt / verify JWT: {}", e.getMessage());
+            }
+        }
+        return Optional.empty();
     }
 
     /**

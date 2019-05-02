@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Prototype
 public class DefaultOauthClient implements OauthClient {
 
     private final OauthClientConfiguration clientConfiguration;
@@ -40,8 +39,8 @@ public class DefaultOauthClient implements OauthClient {
     private final BeanContext beanContext;
     private final SecureEndpoint tokenEndpoint;
 
-    public DefaultOauthClient(@Parameter OauthClientConfiguration clientConfiguration,
-                              @Parameter OauthUserDetailsMapper userDetailsMapper,
+    public DefaultOauthClient(OauthClientConfiguration clientConfiguration,
+                              OauthUserDetailsMapper userDetailsMapper,
                               AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                               OauthAuthorizationResponseHandler authorizationResponseHandler,
                               BeanContext beanContext) {

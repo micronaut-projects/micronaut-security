@@ -7,6 +7,7 @@ import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
@@ -14,7 +15,7 @@ import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
 
 import java.util.Map;
 
-public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, OpenIdTokenResponse> {
+public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, DefaultOpenIdTokenResponse> {
 
     private final AuthorizationResponse authorizationResponse;
     private final CallbackUrlBuilder callbackUrlBuilder;
@@ -45,8 +46,8 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     }
 
     @Override
-    public Argument<OpenIdTokenResponse> getResponseType() {
-        return Argument.of(OpenIdTokenResponse.class);
+    public Argument<DefaultOpenIdTokenResponse> getResponseType() {
+        return Argument.of(DefaultOpenIdTokenResponse.class);
     }
 
     @Override

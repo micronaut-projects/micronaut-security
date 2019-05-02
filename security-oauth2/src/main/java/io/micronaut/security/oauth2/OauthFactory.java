@@ -15,9 +15,9 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapp
 @Factory
 public class OauthFactory {
 
-    @EachBean(OauthClientConfiguration.class)
-    OauthClient oauthClient(@Parameter OauthClientConfiguration clientConfiguration,
-                            @Parameter OauthUserDetailsMapper userDetailsMapper,
+    @EachBean(OauthUserDetailsMapper.class)
+    OauthClient oauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
+                            @Parameter OauthClientConfiguration clientConfiguration,
                             AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                             OauthAuthorizationResponseHandler authorizationResponseHandler,
                             BeanContext beanContext) {
