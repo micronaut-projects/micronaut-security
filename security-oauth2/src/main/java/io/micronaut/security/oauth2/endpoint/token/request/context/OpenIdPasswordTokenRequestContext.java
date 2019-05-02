@@ -16,7 +16,6 @@
 package io.micronaut.security.oauth2.endpoint.token.request.context;
 
 import io.micronaut.core.type.Argument;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;

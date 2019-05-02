@@ -17,7 +17,6 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.core.util.Toggleable;
-import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.grants.GrantType;
