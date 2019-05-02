@@ -218,7 +218,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     }
 
     /**
-     * Sets the domain name of this Cookie. Default value ({@value #DEFAULT_COOKIENAME}).
+     * Sets the domain name of this Cookie.
      * @param cookieDomain the domain name of this Cookie
      */
     public void setCookieDomain(@Nullable String cookieDomain) {
