@@ -17,7 +17,6 @@
 package io.micronaut.security.oauth2.configuration.endpoints;
 
 import io.micronaut.http.MediaType;
-import io.micronaut.security.oauth2.grants.GrantType;
 
 import javax.annotation.Nonnull;
 

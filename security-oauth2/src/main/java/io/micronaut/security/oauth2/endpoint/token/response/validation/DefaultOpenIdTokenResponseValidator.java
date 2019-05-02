@@ -16,11 +16,9 @@
 
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
 import javax.inject.Singleton;
 
-import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -28,7 +26,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +73,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
             try {
                 JWTClaimsSet claimsSet = jwt.get().getJWTClaimsSet();
                 if (openIdClaimsValidators.stream().allMatch(validator ->
-                                validator.validate(claimsSet, clientConfiguration, openIdProviderMetadata))) {
+                                validator.validate(new JwtClaimsSetAdapter(claimsSet), clientConfiguration, openIdProviderMetadata))) {
                     return jwt;
                 }
             } catch (ParseException e) {

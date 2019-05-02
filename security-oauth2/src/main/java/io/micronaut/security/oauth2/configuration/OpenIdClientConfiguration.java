@@ -73,9 +73,7 @@ public interface OpenIdClientConfiguration extends Named {
      */
     Optional<EndpointConfiguration> getUserInfo();
 
-
     Optional<AuthorizationEndpointConfiguration> getAuthorization();
-
 
     Optional<TokenEndpointConfiguration> getToken();
 }

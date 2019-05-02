@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017-2019 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
@@ -20,6 +35,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Creates a bean of type {@link OauthClientConfiguration} for each micronaut.security.oauth2.clients during startup of the bean context.
+ *
+ * @author James Kleeh
+ * @since 1.0.0
+ */
 @Context
 @EachProperty(OauthConfigurationProperties.PREFIX + ".clients")
 public class OauthClientConfigurationProperties implements OauthClientConfiguration {
@@ -256,6 +277,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.jwksUri = jwksUri;
         }
 
+        @Override
         public Optional<SecureEndpointConfiguration> getIntrospection() {
             return Optional.ofNullable(introspection);
         }
@@ -264,6 +286,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.introspection = introspection;
         }
 
+        @Override
         public Optional<SecureEndpointConfiguration> getRevocation() {
             return Optional.ofNullable(revocation);
         }
@@ -290,6 +313,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.userInfo = userInfo;
         }
 
+        @Override
         public Optional<AuthorizationEndpointConfiguration> getAuthorization() {
             return Optional.ofNullable(authorization);
         }
@@ -298,6 +322,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.authorization = authorization;
         }
 
+        @Override
         public Optional<TokenEndpointConfiguration> getToken() {
             return Optional.ofNullable(token);
         }
@@ -336,7 +361,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * The authorization response type. Default value (code). See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Value that determines the authorization processing flow to be used. Default value (code). See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
              *
              * @param responseType The response type
              */
@@ -350,7 +375,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * The authorization response mode. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Mechanism to be used for returning Authorization Response parameters from the Authorization Endpoint. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
              * @param responseMode The response mode
              */
             public void setResponseMode(@Nullable String responseMode) {

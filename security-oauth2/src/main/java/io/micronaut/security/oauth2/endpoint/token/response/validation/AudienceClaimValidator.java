@@ -19,6 +19,8 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.jwt.validator.JWTClaimsSetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,9 +42,14 @@ public class AudienceClaimValidator implements OpenIdClaimsValidator {
     private static final Logger LOG = LoggerFactory.getLogger(AudienceClaimValidator.class);
 
     @Override
-    public boolean validate(JWTClaimsSet claims,
+    public boolean validate(JwtClaims claims,
                             OauthClientConfiguration clientConfiguration,
                             OpenIdProviderMetadata providerMetadata) {
+        return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims), clientConfiguration);
+    }
+
+    private boolean validate(JWTClaimsSet claims,
+                            OauthClientConfiguration clientConfiguration) {
         List<String> audienceList = claims.getAudience();
         boolean condition = audienceList.stream().anyMatch(audience -> audience.equals(clientConfiguration.getClientId()));
         if (!condition && LOG.isDebugEnabled()) {

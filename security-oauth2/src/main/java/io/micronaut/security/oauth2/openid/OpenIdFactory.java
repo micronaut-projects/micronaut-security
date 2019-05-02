@@ -16,7 +16,6 @@
 
 package io.micronaut.security.oauth2.openid;
 
-import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
@@ -26,7 +25,6 @@ import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient;
-import io.micronaut.security.oauth2.client.OpenIdClient;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -34,10 +32,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Authorization
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -53,12 +48,12 @@ public class OpenIdFactory {
 
     private final BeanContext beanContext;
 
-    OpenIdFactory(BeanContext beanContext) {
+    public OpenIdFactory(BeanContext beanContext) {
         this.beanContext = beanContext;
     }
 
     @EachBean(OpenIdClientConfiguration.class)
-    OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
+    public OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
                                             HttpClientConfiguration defaultHttpConfiguration) {
         OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
                 .map(issuer -> {
@@ -75,7 +70,7 @@ public class OpenIdFactory {
     }
 
     @EachBean(OpenIdConfiguration.class)
-    DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
+    public DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
                               @Parameter OpenIdProviderMetadata openIdProviderMetadata,
                               AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                               OpenIdAuthorizationResponseHandler authorizationResponseHandler,

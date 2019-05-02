@@ -19,6 +19,8 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.jwt.validator.JWTClaimsSetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +40,13 @@ public class IssuerClaimValidator implements OpenIdClaimsValidator {
     private static final Logger LOG = LoggerFactory.getLogger(IssuerClaimValidator.class);
 
     @Override
-    public boolean validate(JWTClaimsSet claims,
+    public boolean validate(JwtClaims claims,
                             OauthClientConfiguration clientConfiguration,
+                            OpenIdProviderMetadata providerMetadata) {
+        return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims), providerMetadata);
+    }
+
+    private boolean validate(JWTClaimsSet claims,
                             OpenIdProviderMetadata providerMetadata) {
         String issuer = claims.getIssuer();
         if (issuer == null) {
