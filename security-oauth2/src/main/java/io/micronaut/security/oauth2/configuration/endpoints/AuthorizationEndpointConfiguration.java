@@ -8,11 +8,24 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * OAuth 2.0. Authorization Endpoint configuration.
+ *
+ * @author James Kleeh
+ * @since 1.0.0
+ */
 public interface AuthorizationEndpointConfiguration extends EndpointConfiguration {
 
+    /**
+     *
+     * @return Mechanism to be used for returning Authorization Response parameters from the Authorization Endpoint.
+     */
     Optional<String> getResponseMode();
 
+    /**
+     *
+     * @return Value that determines the authorization processing flow to be used
+     */
     @Nonnull
     ResponseType getResponseType();
 

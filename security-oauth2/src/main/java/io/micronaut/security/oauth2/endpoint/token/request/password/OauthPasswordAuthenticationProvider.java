@@ -50,6 +50,12 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
     private final OauthClientConfiguration clientConfiguration;
     private final OauthUserDetailsMapper userDetailsMapper;
 
+    /**
+     *
+     * @param tokenEndpointClient Token Endpoint Client
+     * @param clientConfiguration OAuth 2.0 Client Configuration
+     * @param userDetailsMapper  OAuth 2.0 User Details Mapper
+     */
     public OauthPasswordAuthenticationProvider(TokenEndpointClient tokenEndpointClient,
                                                OauthClientConfiguration clientConfiguration,
                                                OauthUserDetailsMapper userDetailsMapper) {

@@ -20,6 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Creates a bean of type {@link OauthClientConfiguration} for each micronaut.security.oauth2.clients during startup of the bean context.
+ *
+ * @author James Kleeh
+ * @since 1.0.0
+ */
 @Context
 @EachProperty(OauthConfigurationProperties.PREFIX + ".clients")
 public class OauthClientConfigurationProperties implements OauthClientConfiguration {
@@ -336,7 +342,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * The authorization response type. Default value (code). See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Value that determines the authorization processing flow to be used. Default value (code). See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
              *
              * @param responseType The response type
              */
@@ -350,7 +356,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * The authorization response mode. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Mechanism to be used for returning Authorization Response parameters from the Authorization Endpoint. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
              * @param responseMode The response mode
              */
             public void setResponseMode(@Nullable String responseMode) {
