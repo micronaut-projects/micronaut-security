@@ -2,7 +2,7 @@ package io.micronaut.security.oauth2.grants.password
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
-import io.micronaut.security.oauth2.endpoint.token.request.password.GrantTypePasswordAuthenticationProvider
+import io.micronaut.security.oauth2.endpoint.token.request.password.OauthPasswordAuthenticationProvider
 import io.micronaut.security.oauth2.openid.endpoints.OpenIdEndpoints
 import spock.lang.Shared
 import spock.lang.Specification
@@ -32,7 +32,7 @@ class GrantTypePasswordAuthenticationProviderSpec extends Specification {
         !applicationContext.containsBean(GrantTypePasswordRequestProvider)
 
         and:
-        !applicationContext.containsBean(GrantTypePasswordAuthenticationProvider)
+        !applicationContext.containsBean(OauthPasswordAuthenticationProvider)
 
         cleanup:
         applicationContext.close()
@@ -54,7 +54,7 @@ class GrantTypePasswordAuthenticationProviderSpec extends Specification {
         applicationContext.containsBean(GrantTypePasswordRequestProvider)
 
         and:
-        applicationContext.containsBean(GrantTypePasswordAuthenticationProvider)
+        applicationContext.containsBean(OauthPasswordAuthenticationProvider)
 
         cleanup:
         applicationContext.close()

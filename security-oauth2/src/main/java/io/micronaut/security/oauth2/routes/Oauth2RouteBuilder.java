@@ -7,7 +7,6 @@ import io.micronaut.core.naming.NameResolver;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
 import io.micronaut.inject.qualifiers.Qualifiers;
-import io.micronaut.security.oauth2.client.Oauth2Client;
 import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
@@ -34,19 +33,14 @@ public class Oauth2RouteBuilder extends DefaultRouteBuilder {
                     String loginPath = loginUrlBuilder.getPath(name);
                     String callbackPath = callbackUrlBuilder.getPath(name);
 
-                    //bean will not be present for non openid clients
-                    Optional<String> grantType = beanContext.findBean(TokenEndpointConfiguration.class, Qualifiers.byName(name)).map(TokenEndpointConfiguration::getGrantType);
-                    boolean isAuthorizationCodeGrant = !grantType.isPresent() || grantType.get().equals(GrantType.AUTHORIZATION_CODE.getGrantType());
+                    bd.findMethod("login", HttpRequest.class).ifPresent(m ->
+                            GET(loginPath, bd, m));
 
-                    if (isAuthorizationCodeGrant) {
-                        bd.findMethod("login", HttpRequest.class).ifPresent(m ->
-                                GET(loginPath, bd, m));
+                    bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
+                        POST(callbackPath, bd, m).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+                        GET(callbackPath, bd, m);
+                    });
 
-                        bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
-                            POST(callbackPath, bd, m).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
-                            GET(callbackPath, bd, m);
-                        });
-                    }
                 });
             }
         });

@@ -11,7 +11,7 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
-import io.micronaut.security.oauth2.endpoint.authorization.response.Oauth2AuthorizationResponseHandler
+import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler
 
 import io.micronaut.security.oauth2.handlers.IdTokenAccessTokenResponseHandler
 import io.micronaut.security.oauth2.handlers.SuccessfulIdTokenAccessTokenResponseHandler
@@ -99,7 +99,7 @@ class AuthorizationCodeControllerSpec extends Specification {
         embeddedServer.applicationContext.containsBean(IdTokenAccessTokenResponseHandler)
 
         and:
-        embeddedServer.applicationContext.containsBean(Oauth2AuthorizationResponseHandler)
+        embeddedServer.applicationContext.containsBean(OauthAuthorizationResponseHandler)
 
         and:
         embeddedServer.applicationContext.containsBean(AuthorizationCodeController)

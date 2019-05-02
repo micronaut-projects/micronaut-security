@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,6 +56,17 @@ public class PasswordGrant implements SecureGrant, AsMap {
      * Instantiate Password Grant.
      */
     public PasswordGrant() {
+    }
+
+    /**
+     * Instantiate Password Grant.
+     */
+    public PasswordGrant(AuthenticationRequest authenticationRequest, OauthClientConfiguration clientConfiguration) {
+        username = authenticationRequest.getIdentity().toString();
+        password = authenticationRequest.getSecret().toString();
+        scope = clientConfiguration.getScopes().stream()
+                .reduce((a, b) -> a + StringUtils.SPACE + b)
+                .orElse(null);
     }
 
     /**

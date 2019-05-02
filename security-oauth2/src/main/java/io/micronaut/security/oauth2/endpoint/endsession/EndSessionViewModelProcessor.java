@@ -21,10 +21,9 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest;
-import io.micronaut.security.oauth2.endpoint.token.response.Oauth2UserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.views.ModelAndView;
 import io.micronaut.views.model.ViewModelProcessor;
 
@@ -55,7 +54,7 @@ public class EndSessionViewModelProcessor implements ViewModelProcessor {
     @Override
     public void process(@Nonnull HttpRequest<?> request, @Nonnull ModelAndView<Map<String, Object>> modelAndView) {
         request.getUserPrincipal(Authentication.class).ifPresent(authentication -> {
-            Object provider = authentication.getAttributes().get(Oauth2UserDetailsMapper.PROVIDER_KEY);
+            Object provider = authentication.getAttributes().get(OauthUserDetailsMapper.PROVIDER_KEY);
             if (provider != null) {
                 beanContext.findBean(EndSessionRequest.class, Qualifiers.byName(provider.toString()))
                         .ifPresent(endSessionRequest -> {

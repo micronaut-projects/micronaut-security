@@ -41,7 +41,7 @@ import java.text.ParseException;
 import java.util.Optional;
 
 /**
- * Default implementation of {@link Oauth2AuthorizationResponseHandler}.
+ * Default implementation of {@link OauthAuthorizationResponseHandler}.
  *
  * @author Sergio del Amo
  * @since 1.0.0

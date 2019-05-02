@@ -33,7 +33,7 @@ import java.util.List;
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class OpenIdConfiguration implements OpenIdProviderMetadata, OpenIdProviderMetadataSession {
+public class OpenIdConfiguration implements OpenIdProviderMetadata {
 
     private String authorizationEndpoint;
     private List<String> idTokenSigningAlgValuesSupported;

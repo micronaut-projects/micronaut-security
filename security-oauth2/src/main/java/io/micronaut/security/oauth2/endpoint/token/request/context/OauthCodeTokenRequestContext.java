@@ -11,20 +11,20 @@ import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
 
 import java.util.Map;
 
-public class Oauth2CodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, DefaultTokenResponse> {
+public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, DefaultTokenResponse> {
 
     private final AuthorizationResponse authorizationResponse;
 
-    public Oauth2CodeTokenRequestContext(AuthorizationResponse authorizationResponse,
-                                         SecureEndpoint endpoint,
-                                         OauthClientConfiguration clientConfiguration) {
+    public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
+                                        SecureEndpoint endpoint,
+                                        OauthClientConfiguration clientConfiguration) {
         this(authorizationResponse, MediaType.APPLICATION_FORM_URLENCODED_TYPE, endpoint, clientConfiguration);
     }
 
-    public Oauth2CodeTokenRequestContext(AuthorizationResponse authorizationResponse,
-                                         MediaType mediaType,
-                                         SecureEndpoint endpoint,
-                                         OauthClientConfiguration clientConfiguration) {
+    public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
+                                        MediaType mediaType,
+                                        SecureEndpoint endpoint,
+                                        OauthClientConfiguration clientConfiguration) {
         super(mediaType, endpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
     }

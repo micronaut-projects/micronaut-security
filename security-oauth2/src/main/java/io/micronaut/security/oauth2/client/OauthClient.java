@@ -7,7 +7,7 @@ import org.reactivestreams.Publisher;
 
 import java.util.Map;
 
-public interface Oauth2Client {
+public interface OauthClient {
 
     String getName();
 

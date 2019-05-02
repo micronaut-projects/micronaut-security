@@ -51,7 +51,7 @@ public class DefaultStateFactory implements StateFactory {
     @Override
     public String buildState(HttpRequest<?> request) {
         Optional<HttpStatus> rejectedStatus = request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class);
-        boolean unauthorized = rejectedStatus.isPresent() && rejectedStatus.get().equals(HttpStatus.UNAUTHORIZED);
+        boolean unauthorized = rejectedStatus.filter(status -> status.equals(HttpStatus.UNAUTHORIZED)).isPresent();
         DefaultState state = new DefaultState();
         if (unauthorized) {
             state.setOriginalUri(request.getUri());

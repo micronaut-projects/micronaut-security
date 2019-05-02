@@ -25,8 +25,8 @@ import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
-import io.micronaut.security.oauth2.endpoint.token.request.context.Oauth2PasswordTokenRequestContext;
-import io.micronaut.security.oauth2.endpoint.token.response.Oauth2UserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -41,18 +41,18 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public class GrantTypePasswordAuthenticationProvider implements AuthenticationProvider {
+public class OauthPasswordAuthenticationProvider implements AuthenticationProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GrantTypePasswordAuthenticationProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OauthPasswordAuthenticationProvider.class);
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
     private final OauthClientConfiguration clientConfiguration;
-    private final Oauth2UserDetailsMapper userDetailsMapper;
+    private final OauthUserDetailsMapper userDetailsMapper;
 
-    public GrantTypePasswordAuthenticationProvider(TokenEndpointClient tokenEndpointClient,
-                                                   OauthClientConfiguration clientConfiguration,
-                                                   Oauth2UserDetailsMapper userDetailsMapper) {
+    public OauthPasswordAuthenticationProvider(TokenEndpointClient tokenEndpointClient,
+                                               OauthClientConfiguration clientConfiguration,
+                                               OauthUserDetailsMapper userDetailsMapper) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.clientConfiguration = clientConfiguration;
         this.userDetailsMapper = userDetailsMapper;
@@ -73,7 +73,7 @@ public class GrantTypePasswordAuthenticationProvider implements AuthenticationPr
     @Override
     public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
 
-        Oauth2PasswordTokenRequestContext context = new Oauth2PasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
+        OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
         return Flowable.fromPublisher(
                 tokenEndpointClient.sendRequest(context))

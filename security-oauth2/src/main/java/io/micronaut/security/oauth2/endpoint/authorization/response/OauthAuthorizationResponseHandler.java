@@ -19,7 +19,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.token.response.Oauth2UserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import org.reactivestreams.Publisher;
 
 /**
@@ -28,13 +28,13 @@ import org.reactivestreams.Publisher;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public interface Oauth2AuthorizationResponseHandler {
+public interface OauthAuthorizationResponseHandler {
 
     /**
      * @return A Http Response
      */
     Publisher<AuthenticationResponse> handle(AuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,
-                                             Oauth2UserDetailsMapper userDetailsMapper,
+                                             OauthUserDetailsMapper userDetailsMapper,
                                              SecureEndpoint tokenEndpoint);
 }

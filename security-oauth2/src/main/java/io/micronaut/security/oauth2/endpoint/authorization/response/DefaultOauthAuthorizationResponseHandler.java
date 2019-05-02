@@ -4,16 +4,16 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
-import io.micronaut.security.oauth2.endpoint.token.request.context.Oauth2CodeTokenRequestContext;
-import io.micronaut.security.oauth2.endpoint.token.response.Oauth2UserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
-public class DefaultOauth2AuthorizationResponseHandler implements Oauth2AuthorizationResponseHandler {
+public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizationResponseHandler {
 
     private final TokenEndpointClient tokenEndpointClient;
 
-    DefaultOauth2AuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient) {
+    DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient) {
         this.tokenEndpointClient = tokenEndpointClient;
     }
 
@@ -21,10 +21,10 @@ public class DefaultOauth2AuthorizationResponseHandler implements Oauth2Authoriz
     public Publisher<AuthenticationResponse> handle(
             AuthorizationResponse authorizationResponse,
             OauthClientConfiguration clientConfiguration,
-            Oauth2UserDetailsMapper userDetailsMapper,
+            OauthUserDetailsMapper userDetailsMapper,
             SecureEndpoint tokenEndpoint) {
 
-        Oauth2CodeTokenRequestContext context = new Oauth2CodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration);
+        OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration);
 
         return Flowable.fromPublisher(
                 tokenEndpointClient.sendRequest(context))

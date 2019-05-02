@@ -7,7 +7,7 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.oauth2.endpoint.token.request.password.GrantTypePasswordAuthenticationProvider
+import io.micronaut.security.oauth2.endpoint.token.request.password.OauthPasswordAuthenticationProvider
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata
 import spock.lang.Specification
 
@@ -70,7 +70,7 @@ class PasswordFlowSpec extends Specification {
         server.applicationContext.containsBean(DefaultIdTokenAccessTokenResponseValidatorReplacement)
 
         and:
-        server.applicationContext.containsBean(GrantTypePasswordAuthenticationProvider)
+        server.applicationContext.containsBean(OauthPasswordAuthenticationProvider)
 
         when:
         HttpClient httpClient = HttpClient.create(server.URL)

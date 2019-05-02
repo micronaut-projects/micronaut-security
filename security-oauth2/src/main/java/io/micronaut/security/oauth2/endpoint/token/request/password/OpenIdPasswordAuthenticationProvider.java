@@ -1,0 +1,101 @@
+package io.micronaut.security.oauth2.endpoint.token.request.password;
+
+import com.nimbusds.jwt.JWT;
+import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
+import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
+import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdPasswordTokenRequestContext;
+import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvider {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OauthPasswordAuthenticationProvider.class);
+
+    private final TokenEndpointClient tokenEndpointClient;
+    private final SecureEndpoint secureEndpoint;
+    private final OauthClientConfiguration clientConfiguration;
+    private final OpenIdProviderMetadata openIdProviderMetadata;
+    private final OpenIdUserDetailsMapper openIdUserDetailsMapper;
+    private final OpenIdTokenResponseValidator tokenResponseValidator;
+
+    public OpenIdPasswordAuthenticationProvider(OauthClientConfiguration clientConfiguration,
+                                                OpenIdProviderMetadata openIdProviderMetadata,
+                                                TokenEndpointClient tokenEndpointClient,
+                                                OpenIdUserDetailsMapper openIdUserDetailsMapper,
+                                                OpenIdTokenResponseValidator tokenResponseValidator) {
+        this.tokenEndpointClient = tokenEndpointClient;
+        this.clientConfiguration = clientConfiguration;
+        this.openIdProviderMetadata = openIdProviderMetadata;
+        this.openIdUserDetailsMapper = openIdUserDetailsMapper;
+        this.tokenResponseValidator = tokenResponseValidator;
+
+        Optional<TokenEndpointConfiguration> tokenEndpointConfiguration = clientConfiguration.getOpenid().flatMap(OpenIdClientConfiguration::getToken);
+        if (!tokenEndpointConfiguration.isPresent()) {
+            throw new IllegalArgumentException("Missing token endpoint configuration");
+        }
+        this.secureEndpoint = getTokenEndpoint(openIdProviderMetadata);
+    }
+
+    @Override
+    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+
+        OpenIdPasswordTokenRequestContext requestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
+
+        return Flowable.fromPublisher(
+                tokenEndpointClient.sendRequest(requestContext))
+                .switchMap(response -> {
+                    return Flowable.create(emitter -> {
+                        Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response);
+                        if (jwt.isPresent()) {
+                            try {
+                                OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
+                                emitter.onNext(openIdUserDetailsMapper.createUserDetails(clientConfiguration.getName(), response, claims));
+                            } catch (ParseException e) {
+                                //Should never happen as validation succeeded
+                                emitter.onError(e);
+                            }
+                        } else {
+                            //TODO: Create a more meaningful response
+                            emitter.onNext(new AuthenticationFailed());
+                        }
+                    }, BackpressureStrategy.ERROR);
+                });
+    }
+
+    protected SecureEndpoint getTokenEndpoint(OpenIdProviderMetadata openIdProviderMetadata) {
+        List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
+        List<AuthenticationMethod> authenticationMethods = null;
+        if (authMethodsSupported != null) {
+            authenticationMethods = authMethodsSupported.stream()
+                    .map(String::toUpperCase)
+                    .map(AuthenticationMethod::valueOf)
+                    .collect(Collectors.toList());
+        }
+        return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), authenticationMethods);
+    }
+}
