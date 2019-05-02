@@ -45,7 +45,6 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     private static final String DEFAULT_LOGIN = "/oauth/login/{provider}";
     private static final String DEFAULT_CALLBACK = "/oauth/callback/{provider}";
 
-
     private boolean enabled = DEFAULT_ENABLED;
     private String callbackUri = DEFAULT_CALLBACK;
     private String loginUri = DEFAULT_LOGIN;
