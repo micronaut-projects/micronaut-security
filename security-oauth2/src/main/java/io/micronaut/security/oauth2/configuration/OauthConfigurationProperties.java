@@ -73,6 +73,10 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         return loginUri;
     }
 
+    /**
+     *
+     * @param loginUri The Login uri
+     */
     public void setLoginUri(String loginUri) {
         this.loginUri = loginUri;
     }
@@ -81,6 +85,10 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         return callbackUri;
     }
 
+    /**
+     *
+     * @param callbackUri The callback Uri
+     */
     public void setCallbackUri(String callbackUri) {
         this.callbackUri = callbackUri;
     }
@@ -143,6 +151,10 @@ public class OauthConfigurationProperties implements OauthConfiguration {
                 return redirectUri;
             }
 
+            /**
+             *
+             * @param redirectUri Redirect uri
+             */
             public void setRedirectUri(String redirectUri) {
                 this.redirectUri = redirectUri;
             }

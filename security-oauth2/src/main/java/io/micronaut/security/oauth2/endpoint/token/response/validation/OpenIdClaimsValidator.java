@@ -30,6 +30,13 @@ import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
  */
 public interface OpenIdClaimsValidator {
 
+    /**
+     *
+     * @param claims ID Token Claims
+     * @param clientConfiguration OAuth 2.0 Client Configuration
+     * @param providerMetadata OpenID Connect provider metadata
+     * @return Whether the JWT Claims pass validation or not.
+     */
     boolean validate(JWTClaimsSet claims,
                      OauthClientConfiguration clientConfiguration,
                      OpenIdProviderMetadata providerMetadata);
