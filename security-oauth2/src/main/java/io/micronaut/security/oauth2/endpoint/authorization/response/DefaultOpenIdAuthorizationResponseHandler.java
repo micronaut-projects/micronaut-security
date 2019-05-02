@@ -58,7 +58,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
     private final @Nullable StateValidator stateValidator;
 
 
-    public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
+    DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
                                                      OpenIdUserDetailsMapper userDetailsMapper,
                                                      TokenEndpointClient tokenEndpointClient,
                                                      CallbackUrlBuilder callbackUrlBuilder,

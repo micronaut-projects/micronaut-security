@@ -19,15 +19,15 @@ import org.reactivestreams.Publisher;
 import java.util.Map;
 
 @EachBean(OauthClient.class)
-public class DefaultOauth2Controller implements Oauth2Controller {
+public class DefaultOauthController implements OauthController {
 
     private final OauthClient oauthClient;
     private final LoginHandler loginHandler;
     private final ApplicationEventPublisher eventPublisher;
 
-    DefaultOauth2Controller(@Parameter OauthClient oauthClient,
-                            LoginHandler loginHandler,
-                            ApplicationEventPublisher eventPublisher) {
+    DefaultOauthController(@Parameter OauthClient oauthClient,
+                           LoginHandler loginHandler,
+                           ApplicationEventPublisher eventPublisher) {
         this.oauthClient = oauthClient;
         this.loginHandler = loginHandler;
         this.eventPublisher = eventPublisher;

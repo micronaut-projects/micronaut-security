@@ -6,28 +6,24 @@ import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.naming.NameResolver;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
-import io.micronaut.inject.qualifiers.Qualifiers;
-import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
-import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
 import io.micronaut.security.oauth2.url.LoginUrlBuilder;
 import io.micronaut.web.router.DefaultRouteBuilder;
 
 import javax.inject.Singleton;
-import java.util.Optional;
 
 @Singleton
-public class Oauth2RouteBuilder extends DefaultRouteBuilder {
+public class OauthRouteBuilder extends DefaultRouteBuilder {
 
-    public Oauth2RouteBuilder(ExecutionHandleLocator executionHandleLocator,
-                              UriNamingStrategy uriNamingStrategy,
-                              ConversionService<?> conversionService,
-                              BeanContext beanContext,
-                              CallbackUrlBuilder callbackUrlBuilder,
-                              LoginUrlBuilder loginUrlBuilder) {
+    public OauthRouteBuilder(ExecutionHandleLocator executionHandleLocator,
+                             UriNamingStrategy uriNamingStrategy,
+                             ConversionService<?> conversionService,
+                             BeanContext beanContext,
+                             CallbackUrlBuilder callbackUrlBuilder,
+                             LoginUrlBuilder loginUrlBuilder) {
         super(executionHandleLocator, uriNamingStrategy, conversionService);
 
-        beanContext.getBeanDefinitions(Oauth2Controller.class).forEach(bd -> {
+        beanContext.getBeanDefinitions(OauthController.class).forEach(bd -> {
             if (bd instanceof NameResolver) {
                 ((NameResolver) bd).resolveName().ifPresent(name -> {
                     String loginPath = loginUrlBuilder.getPath(name);

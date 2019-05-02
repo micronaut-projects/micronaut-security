@@ -144,7 +144,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      */
     @Override
     public Map<String, String> toMap() {
-        Map<String, String> m = new HashMap<>(5);
+        Map<String, String> m = new SecureGrantMap(5);
         m.put(KEY_GRANT_TYPE, getGrantType());
         m.put(KEY_CODE, getCode());
         if (clientId != null) {

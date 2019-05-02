@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
+import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -37,6 +39,7 @@ import java.util.function.Supplier;
  * @author Sergio del Amo
  * @since 1.0.0
  */
+@Prototype
 public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
 
     private final HttpRequest<?> request;
@@ -58,8 +61,8 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
      * @param loginHintResolver The login hint provider
      * @param idTokenHintResolver The id token hint provider
      */
-    public DefaultOpenIdAuthorizationRequest(HttpRequest<?> request,
-                                             OauthClientConfiguration oauthConfiguration,
+    public DefaultOpenIdAuthorizationRequest(@Parameter HttpRequest<?> request,
+                                             @Parameter OauthClientConfiguration oauthConfiguration,
                                              CallbackUrlBuilder callbackUrlBuilder,
                                              @Nullable StateFactory stateFactory,
                                              @Nullable NonceProvider nonceProvider,

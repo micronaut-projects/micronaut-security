@@ -22,12 +22,16 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.exceptions.BeanInstantiationException;
+import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.security.oauth2.client.DefaultOpenIdClient;
 import io.micronaut.security.oauth2.client.OpenIdClient;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
@@ -54,10 +58,11 @@ public class OpenIdFactory {
     }
 
     @EachBean(OpenIdClientConfiguration.class)
-    OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration) {
+    OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
+                                            HttpClientConfiguration defaultHttpConfiguration) {
         OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
                 .map(issuer -> {
-                    RxHttpClient issuerClient = beanContext.createBean(RxHttpClient.class, issuer);
+                    RxHttpClient issuerClient = beanContext.createBean(RxHttpClient.class, issuer, defaultHttpConfiguration);
                     try {
                         return issuerClient.toBlocking().retrieve(clientConfiguration.getConfigurationPath(), OpenIdConfiguration.class);
                     } catch (HttpClientResponseException e) {
@@ -70,14 +75,19 @@ public class OpenIdFactory {
     }
 
     @EachBean(OpenIdConfiguration.class)
-    OpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
-                              @Parameter OpenIdProviderMetadata openIdProviderMetadata) {
-        Optional<OpenIdClientConfiguration> openIdClientConfiguration = oauthClientConfiguration.getOpenid();
-        if (openIdClientConfiguration.map(OpenIdClientConfiguration::getIssuer).isPresent()) {
-            if (oauthClientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.get().getAuthorization();
-                if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
-                    return beanContext.createBean(OpenIdClient.class, oauthClientConfiguration, openIdProviderMetadata);
+    DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
+                              @Parameter OpenIdProviderMetadata openIdProviderMetadata,
+                              AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                              OpenIdAuthorizationResponseHandler authorizationResponseHandler,
+                              BeanContext beanContext) {
+        if (oauthClientConfiguration.isEnabled()) {
+            Optional<OpenIdClientConfiguration> openIdClientConfiguration = oauthClientConfiguration.getOpenid();
+            if (openIdClientConfiguration.map(OpenIdClientConfiguration::getIssuer).isPresent()) {
+                if (oauthClientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
+                    Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.get().getAuthorization();
+                    if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
+                        return new DefaultOpenIdClient(oauthClientConfiguration, openIdProviderMetadata, redirectUrlBuilder, authorizationResponseHandler, beanContext);
+                    }
                 }
             }
         }

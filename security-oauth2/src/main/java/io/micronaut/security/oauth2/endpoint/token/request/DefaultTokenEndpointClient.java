@@ -3,6 +3,7 @@ package io.micronaut.security.oauth2.endpoint.token.request;
 import io.micronaut.context.BeanContext;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
@@ -42,7 +43,8 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
         MutableHttpRequest<G> request = HttpRequest.POST(
                 requestContext.getEndpoint().getUrl(),
                 requestContext.getGrant())
-                .contentType(requestContext.getMediaType());
+                .contentType(requestContext.getMediaType())
+                .accept(MediaType.APPLICATION_JSON_TYPE);
 
         secureRequest(request, requestContext);
 
@@ -72,6 +74,11 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                         body.setClientId(clientConfiguration.getClientId());
                         body.setClientSecret(clientConfiguration.getClientSecret());
                     });
+        } else {
+            request.getBody()
+                    .filter(body -> body instanceof SecureGrant)
+                    .map(SecureGrant.class::cast)
+                    .ifPresent(body -> body.setClientId(clientConfiguration.getClientId()));
         }
     }
 

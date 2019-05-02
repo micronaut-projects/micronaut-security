@@ -3,6 +3,7 @@ package io.micronaut.security.oauth2.client;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpHeaders;
@@ -11,36 +12,41 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest;
-import io.micronaut.security.oauth2.endpoint.authorization.response.*;
-import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
+import io.micronaut.security.oauth2.endpoint.authorization.request.OauthAuthorizationRequest;
+import io.micronaut.security.oauth2.endpoint.authorization.response.*;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import org.reactivestreams.Publisher;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DefaultOpenIdClient implements OpenIdClient {
+@Prototype
+public class DefaultOauthClient implements OauthClient {
 
     private final OauthClientConfiguration clientConfiguration;
-    private final OpenIdProviderMetadata openIdProviderMetadata;
+    private final OauthUserDetailsMapper userDetailsMapper;
     private final AuthorizationRedirectUrlBuilder redirectUrlBuilder;
-    private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
-    private final SecureEndpoint tokenEndpoint;
+    private final OauthAuthorizationResponseHandler authorizationResponseHandler;
     private final BeanContext beanContext;
+    private final SecureEndpoint tokenEndpoint;
 
-    public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
-                        OpenIdProviderMetadata openIdProviderMetadata,
-                        AuthorizationRedirectUrlBuilder redirectUrlBuilder,
-                        OpenIdAuthorizationResponseHandler authorizationResponseHandler,
-                        BeanContext beanContext) {
+    public DefaultOauthClient(@Parameter OauthClientConfiguration clientConfiguration,
+                              @Parameter OauthUserDetailsMapper userDetailsMapper,
+                              AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                              OauthAuthorizationResponseHandler authorizationResponseHandler,
+                              BeanContext beanContext) {
         this.clientConfiguration = clientConfiguration;
-        this.openIdProviderMetadata = openIdProviderMetadata;
+        this.userDetailsMapper = userDetailsMapper;
         this.redirectUrlBuilder = redirectUrlBuilder;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
@@ -54,10 +60,14 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     @Override
     public HttpResponse authorizationRedirect(HttpRequest originating) {
-        AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration);
+        AuthorizationRequest authorizationRequest = beanContext.createBean(OauthAuthorizationRequest.class, originating, clientConfiguration);
+        String authorizationEndpoint = clientConfiguration.getAuthorization()
+                .flatMap(EndpointConfiguration::getUrl)
+                .orElseThrow(() -> new ConfigurationException("Oauth client requires the authorization URL to be set in configuration"));
+
         return HttpResponse.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION,
-                        redirectUrlBuilder.buildUrl(authorizationRequest, openIdProviderMetadata.getAuthorizationEndpoint()));
+                        redirectUrlBuilder.buildUrl(authorizationRequest, authorizationEndpoint));
     }
 
     @Override
@@ -76,7 +86,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
             AuthorizationResponse authorizationResponse = beanContext.createBean(AuthorizationResponse.class, request);
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
-                    openIdProviderMetadata,
+                    userDetailsMapper,
                     tokenEndpoint);
         }
     }
@@ -86,14 +96,14 @@ public class DefaultOpenIdClient implements OpenIdClient {
     }
 
     protected SecureEndpoint getTokenEndpoint() {
-        List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
-        List<AuthenticationMethod> authenticationMethods = null;
-        if (authMethodsSupported != null) {
-            authenticationMethods = authMethodsSupported.stream()
-                    .map(String::toUpperCase)
-                    .map(AuthenticationMethod::valueOf)
-                    .collect(Collectors.toList());
-        }
-        return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), authenticationMethods);
+        String url = clientConfiguration.getToken()
+                .flatMap(EndpointConfiguration::getUrl).orElseThrow(() -> new ConfigurationException("Oauth client requires the token endpoint URL to be set in configuration"));
+
+        List<AuthenticationMethod> authenticationMethods = Collections.singletonList(
+                clientConfiguration.getToken()
+                        .flatMap(SecureEndpointConfiguration::getAuthMethod)
+                        .orElse(AuthenticationMethod.CLIENT_SECRET_POST));
+
+        return new DefaultSecureEndpoint(url, authenticationMethods);
     }
 }

@@ -10,7 +10,7 @@ import org.reactivestreams.Publisher;
 import java.util.Map;
 
 @Secured(SecurityRule.IS_ANONYMOUS)
-public interface Oauth2Controller {
+public interface OauthController {
 
     @Executable
     HttpResponse login(HttpRequest request);

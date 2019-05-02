@@ -175,7 +175,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      * @return this object as a Map
      */
     public Map<String, String> toMap() {
-        Map<String, String> m = new HashMap<>();
+        Map<String, String> m = new SecureGrantMap();
         m.put(KEY_GRANT_TYPE, grantType);
         m.put(KEY_USERNAME, username);
         m.put(KEY_PASSWORD, password);
