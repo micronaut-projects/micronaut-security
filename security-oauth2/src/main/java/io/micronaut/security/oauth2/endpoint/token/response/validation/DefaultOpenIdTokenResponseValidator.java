@@ -27,7 +27,6 @@ import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
-import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
