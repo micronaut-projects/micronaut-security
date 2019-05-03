@@ -1,32 +1,26 @@
 Micronaut supports authentication with OAuth 2.0 servers, including support for the OpenID standard.
 
 
-The easiest way to get started is by configuring a provider that supports OpenID. Platforms such as https://developer.okta.com[Okta], https://auth0.com[Auth0], https://aws.amazon.com/cognito[AWS Cognito], https://www.keycloak.org[Keycloak], etc are common examples.
+The easiest way to get started is by configuring a provider that supports OpenID. Platforms such as https://developer.okta.com[Okta], https://auth0.com[Auth0], https://aws.amazon.com/cognito[AWS Cognito], https://www.keycloak.org[Keycloak], and https://developers.google.com/identity/protocols/OpenIDConnect[Google] are common examples.
 
-Once you create an application client with a provider, you will get a Client ID and optionally a Client Secret.
+Once you create an application client with a provider, you will get a client id and a client secret. The client id and secret combined with the issuer URL is all that is needed to enable authentication with an OpenID provider.
 
-image::aws-cognito-appclient.png[]
-
-The previous image shows how to get an client id and client secret with AWS Cognito. Please, note you can obtain similar credentials with other providers.
-
-Once, you get the `client_id` and `client_secret` configure the OAuth 2.0 configuration:
-
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.adoc[]
-
-For example, if you configured:
+For example, to configure Google as a provider:
 
 [source, yaml]
-.src/main/resources/application.yml
 ----
 micronaut:
   security:
+    enabled: true
     oauth2:
       clients:
-      client-secret: '${OAUTH_CLIENT_SECRET}'
-      client-id: '${OAUTH_CLIENT_ID}'
+        google:
+          enabled: false
+          client-secret: sKWpIl5AHRKh_qTM2xXBrECY
+          client-id: 943299861358-3j92fqgsqefgv2g3dpf18frumhq9haul.apps.googleusercontent.com
+          openid:
+            issuer: https://accounts.google.com
 ----
-
-You can supply two environment variables `OAUTH_CLIENT_SECRET`, `OAUTH_CLIENT_ID` with the credentials you obtained from the provider to be used as values of `micronaut.security.oauth2.client-id` and `micronaut.security.oauth2.client-secret`.
 
 
 

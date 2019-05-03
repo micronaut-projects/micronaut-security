@@ -16,8 +16,6 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
-import io.micronaut.context.annotation.Parameter;
-import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpHeaders;
@@ -34,6 +32,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.*;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
 import java.util.List;
@@ -68,11 +67,13 @@ public class DefaultOpenIdClient implements OpenIdClient {
     }
 
     @Override
-    public HttpResponse authorizationRedirect(HttpRequest originating) {
+    public Publisher<HttpResponse> authorizationRedirect(HttpRequest originating) {
         AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration);
-        return HttpResponse.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION,
-                        redirectUrlBuilder.buildUrl(authorizationRequest, openIdProviderMetadata.getAuthorizationEndpoint()));
+        String url = redirectUrlBuilder.buildUrl(authorizationRequest,
+                openIdProviderMetadata.getAuthorizationEndpoint());
+        return Flowable.just(
+                HttpResponse.status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, url));
     }
 
     @Override

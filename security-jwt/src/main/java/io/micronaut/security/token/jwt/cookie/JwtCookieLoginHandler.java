@@ -21,6 +21,7 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.handlers.LoginHandler;
+import io.micronaut.security.handlers.RedirectingLoginhandler;
 import io.micronaut.security.token.jwt.generator.JwtGeneratorConfiguration;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
@@ -37,7 +38,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @Singleton
-public class JwtCookieLoginHandler implements LoginHandler {
+public class JwtCookieLoginHandler implements RedirectingLoginhandler {
 
     protected final JwtCookieConfiguration jwtCookieConfiguration;
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;

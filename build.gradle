@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
@@ -28,8 +27,8 @@ plugins {
 apply plugin: 'org.aim42.htmlSanityCheck'
 
 repositories {
-    maven { url "https://repo.grails.org/grails/core" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://repo.grails.org/grails/core" }
 }
 
 version project.projectVersion

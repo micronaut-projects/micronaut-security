@@ -13,21 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.client;
 
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import org.reactivestreams.Publisher;
+package io.micronaut.security.handlers;
 
-import java.util.Map;
-
-public interface OauthClient {
-
-    String getName();
-
-    Publisher<HttpResponse> authorizationRedirect(HttpRequest originating);
-
-    Publisher<AuthenticationResponse> onCallback(HttpRequest<Map<String, Object>> request);
-
+/**
+ * A marker contract to indicate the login handler
+ * returns redirecting responses.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
+public interface RedirectingLoginhandler extends LoginHandler {
 }

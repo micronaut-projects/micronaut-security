@@ -23,6 +23,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.OauthAuthoriz
 import io.micronaut.security.oauth2.endpoint.authorization.response.*;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
 import java.util.Collections;
@@ -58,15 +59,15 @@ public class DefaultOauthClient implements OauthClient {
     }
 
     @Override
-    public HttpResponse authorizationRedirect(HttpRequest originating) {
+    public Publisher<HttpResponse> authorizationRedirect(HttpRequest originating) {
         AuthorizationRequest authorizationRequest = beanContext.createBean(OauthAuthorizationRequest.class, originating, clientConfiguration);
         String authorizationEndpoint = clientConfiguration.getAuthorization()
                 .flatMap(EndpointConfiguration::getUrl)
                 .orElseThrow(() -> new ConfigurationException("Oauth client requires the authorization URL to be set in configuration"));
 
-        return HttpResponse.status(HttpStatus.FOUND)
+        return Flowable.just(HttpResponse.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION,
-                        redirectUrlBuilder.buildUrl(authorizationRequest, authorizationEndpoint));
+                        redirectUrlBuilder.buildUrl(authorizationRequest, authorizationEndpoint)));
     }
 
     @Override

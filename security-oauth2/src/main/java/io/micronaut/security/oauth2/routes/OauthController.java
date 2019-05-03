@@ -15,7 +15,7 @@ public interface OauthController {
     String getProviderName();
 
     @Executable
-    HttpResponse login(HttpRequest request);
+    Publisher<HttpResponse> login(HttpRequest request);
 
     @Executable
     Publisher<HttpResponse> callback(HttpRequest<Map<String, Object>> request);

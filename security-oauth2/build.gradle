@@ -9,6 +9,7 @@ dependencies {
     compile project(":security-jwt")
     compile "io.micronaut:micronaut-inject"
     compile "io.micronaut:micronaut-http-client"
+    compile "io.micronaut:micronaut-router:1.2.0.BUILD-20190503.014106-27"
     compileOnly "io.micronaut:micronaut-views"
     compileOnly "io.micronaut:micronaut-session"
 
