@@ -21,10 +21,14 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -37,6 +41,10 @@ import java.util.*;
  * @since 1.0.0
  */
 public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
+    private static final Logger LOG = LoggerFactory.getLogger(AwsCognitoEndSessionRequest.class);
+
+    public static final String PARAM_CLIENT_ID = "client_id";
+    public static final String PARAM_LOGOUT_URI = "logout_uri";
 
     public AwsCognitoEndSessionRequest(@Nullable EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                        OauthClientConfiguration clientConfiguration,
@@ -46,6 +54,22 @@ public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
 
     @Override
     protected String getUrl() {
+        if(clientConfiguration.getOpenid().isPresent()) {
+            if (clientConfiguration.getOpenid().get().getUserInfo().isPresent()) {
+                Optional<String> url = clientConfiguration.getOpenid().get().getUserInfo().get().getUrl();
+                if (url.isPresent() ) {
+                    URL userInfoUrl = null;
+                    try {
+                        userInfoUrl = new URL(url.get());
+                         return userInfoUrl.toString().replaceAll(userInfoUrl.getPath(), "/logout");
+                    } catch (MalformedURLException e) {
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("MalformedURLException building cognito logout url");
+                        }
+                    }
+                }
+            }
+        }
         URL url = clientConfiguration.getOpenid()
                 .flatMap(OpenIdClientConfiguration::getIssuer)
                 .get();
@@ -57,9 +81,9 @@ public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
                                                Authentication authentication) {
         Map<String, Object> arguments = new HashMap<>();
 
-        arguments.put("client_id", clientConfiguration.getClientId());
+        arguments.put(PARAM_CLIENT_ID, clientConfiguration.getClientId());
 
-        getRedirectUri(originating).ifPresent(url -> arguments.put("logout_uri", url));
+        getRedirectUri(originating).ifPresent(url -> arguments.put(PARAM_LOGOUT_URI, url));
 
         return arguments;
     }

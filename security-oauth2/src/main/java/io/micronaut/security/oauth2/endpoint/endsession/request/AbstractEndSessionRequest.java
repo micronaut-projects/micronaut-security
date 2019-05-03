@@ -19,15 +19,19 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public abstract class AbstractEndSessionRequest implements EndSessionRequest {
+
+    public static final String PARAMETERS_KEY = "parameters";
 
     @Nullable
     protected final EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder;
@@ -44,16 +48,16 @@ public abstract class AbstractEndSessionRequest implements EndSessionRequest {
 
     @Nullable
     @Override
-    public String getUrl(HttpRequest originating,
-                         Authentication authentication) {
-        Map<String, Map> parameters = new HashMap<>(1);
-        parameters.put("parameters", getArguments(originating, authentication));
+    public String getUrl(HttpRequest originating, Authentication authentication) {
+        return getTemplate().expand(getParameters(originating, authentication));
+    }
 
-        return getTemplate().expand(parameters);
+    protected Map<String, Object> getParameters(HttpRequest originating, Authentication authentication) {
+        return Collections.singletonMap(PARAMETERS_KEY, getArguments(originating, authentication));
     }
 
     protected UriTemplate getTemplate() {
-        return UriTemplate.of(getUrl()).nest("{?parameters*}");
+        return UriTemplate.of(getUrl()).nest("{?" + PARAMETERS_KEY + "*}");
     }
 
     protected abstract String getUrl();

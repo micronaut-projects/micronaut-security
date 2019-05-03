@@ -26,12 +26,13 @@ import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.grants.GrantType;
-import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -57,9 +58,10 @@ public class OpenIdFactory {
                                             HttpClientConfiguration defaultHttpConfiguration) {
         OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
                 .map(issuer -> {
+                    String absoluteIssuerUrl = issuer.toString() + clientConfiguration.getConfigurationPath();
                     RxHttpClient issuerClient = beanContext.createBean(RxHttpClient.class, issuer, defaultHttpConfiguration);
                     try {
-                        return issuerClient.toBlocking().retrieve(clientConfiguration.getConfigurationPath(), OpenIdConfiguration.class);
+                        return issuerClient.toBlocking().retrieve(absoluteIssuerUrl, OpenIdConfiguration.class);
                     } catch (HttpClientResponseException e) {
                         throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + clientConfiguration.getName(), e);
                     }
@@ -101,6 +103,7 @@ public class OpenIdFactory {
             revocation.getUrl().ifPresent(configuration::setRevocationEndpoint);
             revocation.getAuthMethod().ifPresent(authMethod -> configuration.setRevocationEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
         });
+
         openIdClientConfiguration.getRegistration()
                 .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setRegistrationEndpoint);
         openIdClientConfiguration.getUserInfo()
