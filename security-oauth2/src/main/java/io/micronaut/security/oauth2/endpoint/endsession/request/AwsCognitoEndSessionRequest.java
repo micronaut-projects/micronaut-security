@@ -42,6 +42,7 @@ import java.util.*;
  * @since 1.0.0
  */
 public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
+
     private static final Logger LOG = LoggerFactory.getLogger(AwsCognitoEndSessionRequest.class);
 
     public static final String PARAM_CLIENT_ID = "client_id";
@@ -58,12 +59,12 @@ public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
         String userInfoEndpoint = providerMetadata.getUserinfoEndpoint();
         if (userInfoEndpoint != null) {
             return UriBuilder.of(providerMetadata.getUserinfoEndpoint()).replacePath("/logout").toString();
+        } else {
+            URL url = clientConfiguration.getOpenid()
+                    .flatMap(OpenIdClientConfiguration::getIssuer)
+                    .get();
+            return StringUtils.prependUri(url.toString(), "/logout");
         }
-
-        URL url = clientConfiguration.getOpenid()
-                .flatMap(OpenIdClientConfiguration::getIssuer)
-                .get();
-        return StringUtils.prependUri(url.toString(), "/logout");
     }
 
     @Override
