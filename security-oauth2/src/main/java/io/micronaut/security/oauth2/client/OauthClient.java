@@ -21,6 +21,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import org.reactivestreams.Publisher;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface OauthClient {
 

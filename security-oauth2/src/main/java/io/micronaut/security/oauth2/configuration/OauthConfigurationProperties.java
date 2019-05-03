@@ -44,10 +44,12 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     public static final boolean DEFAULT_ENABLED = true;
     private static final String DEFAULT_LOGIN = "/oauth/login/{provider}";
     private static final String DEFAULT_CALLBACK = "/oauth/callback/{provider}";
+    private static final String DEFAULT_LOGOUT = "/oauth/logout/{provider}";
 
     private boolean enabled = DEFAULT_ENABLED;
     private String callbackUri = DEFAULT_CALLBACK;
     private String loginUri = DEFAULT_LOGIN;
+    private String logoutUri = DEFAULT_LOGOUT;
     private OpenIdConfigurationProperties openid;
 
     /**
@@ -93,6 +95,16 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         this.callbackUri = callbackUri;
     }
 
+
+    @Override
+    public String getLogoutUri() {
+        return logoutUri;
+    }
+
+    public void setLogoutUri(String logoutUri) {
+        this.logoutUri = logoutUri;
+    }
+
     @Override
     public Optional<OpenIdConfiguration> getOpenid() {
         return Optional.ofNullable(openid);
@@ -107,7 +119,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
 
         public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".openid";
 
-        private EndSessionConfigurationProperties endSession;
+        private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
 
         @Override
         public Optional<EndSessionConfiguration> getEndSession() {
@@ -127,7 +139,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             private static final String DEFAULT_VIEW_MODEL_KEY = "endSessionUrl";
 
             private String viewModelKey = DEFAULT_VIEW_MODEL_KEY;
-            private String redirectUri = "/";
+            private String redirectUri = "/logout";
 
             @Override
             @Nonnull

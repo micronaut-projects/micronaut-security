@@ -21,17 +21,24 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.exceptions.BeanInstantiationException;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClientConfiguration;
+import io.micronaut.http.client.LoadBalancer;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
+import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest;
+import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionResolver;
+import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.grants.GrantType;
 
 import java.util.Collections;
@@ -55,13 +62,13 @@ public class OpenIdFactory {
 
     @EachBean(OpenIdClientConfiguration.class)
     public OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
-                                            HttpClientConfiguration defaultHttpConfiguration) {
+                                                   HttpClientConfiguration defaultHttpConfiguration) {
         OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
                 .map(issuer -> {
-                    String absoluteIssuerUrl = issuer.toString() + clientConfiguration.getConfigurationPath();
-                    RxHttpClient issuerClient = beanContext.createBean(RxHttpClient.class, issuer, defaultHttpConfiguration);
+                    RxHttpClient issuerClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultHttpConfiguration);
+                    String configurationUrl = StringUtils.prependUri(issuer.toString(), clientConfiguration.getConfigurationPath());
                     try {
-                        return issuerClient.toBlocking().retrieve(absoluteIssuerUrl, OpenIdConfiguration.class);
+                        return issuerClient.toBlocking().retrieve(configurationUrl, OpenIdConfiguration.class);
                     } catch (HttpClientResponseException e) {
                         throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + clientConfiguration.getName(), e);
                     }
@@ -73,17 +80,31 @@ public class OpenIdFactory {
 
     @EachBean(OpenIdConfiguration.class)
     public DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
-                              @Parameter OpenIdProviderMetadata openIdProviderMetadata,
-                              AuthorizationRedirectUrlBuilder redirectUrlBuilder,
-                              OpenIdAuthorizationResponseHandler authorizationResponseHandler,
-                              BeanContext beanContext) {
+                                            @Parameter OpenIdProviderMetadata openIdProviderMetadata,
+                                            AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                                            OpenIdAuthorizationResponseHandler authorizationResponseHandler,
+                                            EndSessionResolver endSessionResolver,
+                                            EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                            BeanContext beanContext) {
         if (oauthClientConfiguration.isEnabled()) {
             Optional<OpenIdClientConfiguration> openIdClientConfiguration = oauthClientConfiguration.getOpenid();
             if (openIdClientConfiguration.map(OpenIdClientConfiguration::getIssuer).isPresent()) {
                 if (oauthClientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                    Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.get().getAuthorization();
+                    OpenIdClientConfiguration clientConfiguration = openIdClientConfiguration.get();
+                    Optional<AuthorizationEndpointConfiguration> authorization = clientConfiguration.getAuthorization();
                     if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
-                        return new DefaultOpenIdClient(oauthClientConfiguration, openIdProviderMetadata, redirectUrlBuilder, authorizationResponseHandler, beanContext);
+
+                        EndSessionRequest endSessionRequest = null;
+                        if (clientConfiguration.getEndSession().isEnabled()) {
+                            endSessionRequest = endSessionResolver.resolve(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
+                        }
+
+                        return new DefaultOpenIdClient(oauthClientConfiguration,
+                                openIdProviderMetadata,
+                                redirectUrlBuilder,
+                                authorizationResponseHandler,
+                                beanContext,
+                                endSessionRequest);
                     }
                 }
             }

@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.grants.GrantType;
@@ -218,6 +219,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private UserInfoEndpointConfigurationProperties userInfo;
         private AuthorizationEndpointConfigurationProperties authorization;
         private TokenEndpointConfigurationProperties token;
+        private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
 
         OpenIdClientConfigurationProperties(@Parameter String name) {
             this.name = name;
@@ -329,6 +331,15 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
 
         public void setToken(TokenEndpointConfigurationProperties token) {
             this.token = token;
+        }
+
+        @Nonnull
+        public Toggleable getEndSession() {
+            return endSession;
+        }
+
+        public void setEndSession(@Nonnull EndSessionConfigurationProperties endSession) {
+            this.endSession = endSession;
         }
 
         @ConfigurationProperties("introspection")
@@ -476,6 +487,23 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              */
             public void setContentType(@Nonnull MediaType contentType) {
                 this.contentType = contentType;
+            }
+        }
+
+        @ConfigurationProperties("end-session")
+        public static class EndSessionConfigurationProperties implements Toggleable {
+
+            private static Boolean DEFAULT_ENABLED = false;
+
+            private boolean enabled = false;
+
+            @Override
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
             }
         }
     }

@@ -33,10 +33,14 @@ public interface OauthConfiguration extends Toggleable {
     String getLoginUri();
 
     /**
-     *
      * @return the Callback Uri
      */
     String getCallbackUri();
+
+    /**
+     * @return the Callback Uri
+     */
+    String getLogoutUri();
 
     /**
      *

@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -54,22 +55,11 @@ public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
 
     @Override
     protected String getUrl() {
-        if(clientConfiguration.getOpenid().isPresent()) {
-            if (clientConfiguration.getOpenid().get().getUserInfo().isPresent()) {
-                Optional<String> url = clientConfiguration.getOpenid().get().getUserInfo().get().getUrl();
-                if (url.isPresent() ) {
-                    URL userInfoUrl = null;
-                    try {
-                        userInfoUrl = new URL(url.get());
-                         return userInfoUrl.toString().replaceAll(userInfoUrl.getPath(), "/logout");
-                    } catch (MalformedURLException e) {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("MalformedURLException building cognito logout url");
-                        }
-                    }
-                }
-            }
+        String userInfoEndpoint = providerMetadata.getUserinfoEndpoint();
+        if (userInfoEndpoint != null) {
+            return UriBuilder.of(providerMetadata.getUserinfoEndpoint()).replacePath("/logout").toString();
         }
+
         URL url = clientConfiguration.getOpenid()
                 .flatMap(OpenIdClientConfiguration::getIssuer)
                 .get();

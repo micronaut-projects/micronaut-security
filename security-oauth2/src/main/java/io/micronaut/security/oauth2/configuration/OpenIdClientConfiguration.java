@@ -17,11 +17,13 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.core.naming.Named;
+import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.Optional;
 
@@ -76,4 +78,7 @@ public interface OpenIdClientConfiguration extends Named {
     Optional<AuthorizationEndpointConfiguration> getAuthorization();
 
     Optional<TokenEndpointConfiguration> getToken();
+
+    @Nonnull
+    Toggleable getEndSession();
 }

@@ -15,6 +15,12 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.security.authentication.Authentication;
+
+import java.util.Optional;
+
 /**
  * OpenID Connect Client.
  *
@@ -22,4 +28,8 @@ package io.micronaut.security.oauth2.client;
  * @since 1.0.0
  */
 public interface OpenIdClient extends OauthClient {
+
+    boolean supportsEndSession();
+
+    Optional<HttpResponse> endSessionRedirect(HttpRequest request, Authentication authentication);
 }

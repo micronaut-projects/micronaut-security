@@ -22,6 +22,7 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -31,12 +32,15 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthori
 import io.micronaut.security.oauth2.endpoint.authorization.response.*;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DefaultOpenIdClient implements OpenIdClient {
@@ -47,23 +51,39 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
     private final SecureEndpoint tokenEndpoint;
     private final BeanContext beanContext;
+    private final EndSessionRequest endSessionRequest;
 
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
-                        OpenIdProviderMetadata openIdProviderMetadata,
-                        AuthorizationRedirectUrlBuilder redirectUrlBuilder,
-                        OpenIdAuthorizationResponseHandler authorizationResponseHandler,
-                        BeanContext beanContext) {
+                               OpenIdProviderMetadata openIdProviderMetadata,
+                               AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                               OpenIdAuthorizationResponseHandler authorizationResponseHandler,
+                               BeanContext beanContext,
+                               @Nullable EndSessionRequest endSessionRequest) {
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
         this.redirectUrlBuilder = redirectUrlBuilder;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
+        this.endSessionRequest = endSessionRequest;
         this.tokenEndpoint = getTokenEndpoint();
     }
 
     @Override
     public String getName() {
         return clientConfiguration.getName();
+    }
+
+    @Override
+    public boolean supportsEndSession() {
+        return endSessionRequest != null;
+    }
+
+    @Override
+    public Optional<HttpResponse> endSessionRedirect(HttpRequest request, Authentication authentication) {
+        return Optional.ofNullable(endSessionRequest)
+                .map(esr -> esr.getUrl(request, authentication))
+                .map(url -> HttpResponse.status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, url));
     }
 
     @Override
