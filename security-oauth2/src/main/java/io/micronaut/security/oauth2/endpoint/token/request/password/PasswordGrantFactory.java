@@ -41,14 +41,16 @@ public class PasswordGrantFactory {
             TokenEndpointClient tokenEndpointClient,
             @Nullable OpenIdTokenResponseValidator tokenResponseValidator) {
 
-        if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
-            if (clientConfiguration.getToken().isPresent()) {
-                if (userDetailsMapper != null) {
-                    return new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, userDetailsMapper);
-                }
-            } else if (clientConfiguration.getOpenid().isPresent()) {
-                if (openIdUserDetailsMapper != null && openIdProviderMetadata != null && tokenResponseValidator != null) {
-                    return new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdUserDetailsMapper, tokenResponseValidator);
+        if (clientConfiguration.isEnabled()) {
+            if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
+                if (clientConfiguration.getToken().isPresent()) {
+                    if (userDetailsMapper != null) {
+                        return new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, userDetailsMapper);
+                    }
+                } else if (clientConfiguration.getOpenid().isPresent()) {
+                    if (openIdUserDetailsMapper != null && openIdProviderMetadata != null && tokenResponseValidator != null) {
+                        return new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdUserDetailsMapper, tokenResponseValidator);
+                    }
                 }
             }
         }

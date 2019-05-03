@@ -11,6 +11,7 @@ import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguratio
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
+import io.micronaut.security.oauth2.grants.GrantType;
 
 @Factory
 public class OauthFactory {
@@ -24,7 +25,9 @@ public class OauthFactory {
         if (clientConfiguration.isEnabled()) {
             if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
                 if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
-                    return new DefaultOauthClient(clientConfiguration, userDetailsMapper, redirectUrlBuilder, authorizationResponseHandler, beanContext);
+                    if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
+                        return new DefaultOauthClient(clientConfiguration, userDetailsMapper, redirectUrlBuilder, authorizationResponseHandler, beanContext);
+                    }
                 }
             }
         }
