@@ -15,19 +15,13 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import com.nimbusds.jose.EncryptionMethod;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWEHeader;
-import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.JWTParser;
-import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
@@ -38,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -105,17 +98,7 @@ public class JwtTokenValidator implements TokenValidator {
      * @return empty if signature configurations exists, Optional.of(jwt) if no signature configuration is available.
      */
     public Optional<JWT> validatePlainJWTSignature(JWT jwt) {
-        if (signatureConfigurations.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT is not signed and no signature configurations -> verified");
-            }
-            return Optional.of(jwt);
-        } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("A non-signed JWT cannot be accepted as signature configurations have been defined");
-            }
-            return Optional.empty();
-        }
+        return JwtTokenValidatorUtils.validatePlainJWTSignature(jwt, signatureConfigurations);
     }
 
     /**
@@ -126,96 +109,37 @@ public class JwtTokenValidator implements TokenValidator {
      * @return empty if signature validation fails
      */
     public  Optional<JWT> validateSignedJWTSignature(SignedJWT signedJWT) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("JWT is signed");
-        }
-
-        final JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();
-        for (final SignatureConfiguration config : signatureConfigurations) {
-            if (config.supports(algorithm)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Using signature configuration: {}", config.toString());
-                }
-                try {
-                    if (config.verify(signedJWT)) {
-                        return Optional.of(signedJWT);
-                    } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("JWT Signature verification failed: {}", signedJWT.getParsedString());
-                        }
-                    }
-                } catch (final JOSEException e) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Verification fails with signature configuration: {}, passing to the next one", config);
-                    }
-                }
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("{}", config.supportedAlgorithmsMessage());
-                }
-            }
-        }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("No signature algorithm found for JWT: {}", signedJWT.getParsedString());
-        }
-        return Optional.empty();
+        return JwtTokenValidatorUtils.validateSignedJWTSignature(signedJWT, signatureConfigurations);
     }
 
     /**
      * Verifies the provided claims with the provided validators.
-     *
+     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#verifyClaims(JwtClaims, Collection)} instead.
      * @param jwtClaimsSet JWT Claims
      * @param claimsValidators The claims validators
      * @return Whether the JWT claims pass every validation.
      */
+    @Deprecated
     public boolean verifyClaims(JWTClaimsSet jwtClaimsSet, Collection<? extends JwtClaimsValidator> claimsValidators) {
-        return claimsValidators.stream()
-                .allMatch(jwtClaimsValidator -> jwtClaimsValidator.validate(new JwtClaimsSetAdapter(jwtClaimsSet)));
+        return JwtTokenValidatorUtils.verifyClaims(new JwtClaimsSetAdapter(jwtClaimsSet), claimsValidators);
     }
 
     /**
      *
      * Validates a encrypted JWT Signature.
      *
+     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#validateEncryptedJWTSignature(EncryptedJWT, String, List, List)}
+     *
      * @param encryptedJWT a encrytped JWT Token
      * @param token the JWT token as String
      * @return empty if signature validation fails
      */
+    @Deprecated
     public Optional<JWT> validateEncryptedJWTSignature(EncryptedJWT encryptedJWT, String token) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("JWT is encrypted");
-        }
-
-        final JWEHeader header = encryptedJWT.getHeader();
-        final JWEAlgorithm algorithm = header.getAlgorithm();
-        final EncryptionMethod method = header.getEncryptionMethod();
-        for (final EncryptionConfiguration config : encryptionConfigurations) {
-            if (config.supports(algorithm, method)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Using encryption configuration: {}", config.toString());
-                }
-                try {
-                    config.decrypt(encryptedJWT);
-                    SignedJWT signedJWT = encryptedJWT.getPayload().toSignedJWT();
-                    if (signedJWT == null) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("encrypted JWT could couldn't be converted to a signed JWT.");
-                        }
-                        return Optional.empty();
-                    }
-                    return validateSignedJWTSignature(signedJWT);
-
-                } catch (final JOSEException e) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config.toString());
-                    }
-                }
-            }
-        }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("No encryption algorithm found for JWT: {}", token);
-        }
-        return Optional.empty();
+        return JwtTokenValidatorUtils.validateEncryptedJWTSignature(encryptedJWT,
+                token,
+                signatureConfigurations,
+                encryptionConfigurations);
     }
 
     /**
@@ -275,57 +199,34 @@ public class JwtTokenValidator implements TokenValidator {
     public boolean validate(String token, Collection<? extends JwtClaimsValidator> claimsValidators) {
         return validateJwtSignatureAndClaims(token, claimsValidators).isPresent();
     }
-
     /**
      * Validates JWT signature and Claims.
      *
+     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#validateJwtSignatureAndClaims(String, Collection, List, List)} instead.
      * @param token A JWT token
      * @param claimsValidators a Collection of claims Validators.
      * @return empty if signature or claims verification failed, JWT otherwise.
      */
+    @Deprecated
     public Optional<JWT> validateJwtSignatureAndClaims(String token, Collection<? extends JwtClaimsValidator> claimsValidators) {
-        Optional<JWT> jwt = parseJwtIfValidSignature(token);
-        if (jwt.isPresent()) {
-            try {
-                if (verifyClaims(jwt.get().getJWTClaimsSet(), claimsValidators)) {
-                    return jwt;
-                }
-            } catch (ParseException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("ParseException creating authentication", e.getMessage());
-                }
-            }
-        }
-        return Optional.empty();
+        return JwtTokenValidatorUtils.validateJwtSignatureAndClaims(token,
+                claimsValidators,
+                signatureConfigurations,
+                encryptionConfigurations);
     }
 
     /**
-     * Retuns a JWT if the signature could be verified.
+     * Returns a JWT if the signature could be verified.
+     *
+     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#parseJwtIfValidSignature(String, List, List)}
      * @param token a JWT token
      * @return Empty if JWT signature verification failed or JWT if valid signature.
      */
+    @Deprecated
     public Optional<JWT> parseJwtIfValidSignature(String token) {
-        try {
-            JWT jwt = JWTParser.parse(token);
-
-            if (jwt instanceof PlainJWT) {
-                return validatePlainJWTSignature(jwt);
-
-            } else if (jwt instanceof EncryptedJWT) {
-                final EncryptedJWT encryptedJWT = (EncryptedJWT) jwt;
-                return validateEncryptedJWTSignature(encryptedJWT, token);
-
-            } else if (jwt instanceof SignedJWT) {
-                final SignedJWT signedJWT = (SignedJWT) jwt;
-                return validateSignedJWTSignature(signedJWT);
-            }
-
-        } catch (final ParseException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Cannot decrypt / verify JWT: {}", e.getMessage());
-            }
-        }
-        return Optional.empty();
+        return JwtTokenValidatorUtils.parseJwtIfValidSignature(token,
+                signatureConfigurations,
+                encryptionConfigurations);
     }
 
 

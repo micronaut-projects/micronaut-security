@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class RefreshTokenGrant {
 
-    private String grantType = GrantType.REFRESH_TOKEN.getGrantType();
+    private String grantType = GrantType.REFRESH_TOKEN.toString();
     private String refreshToken;
     private String scope;
 

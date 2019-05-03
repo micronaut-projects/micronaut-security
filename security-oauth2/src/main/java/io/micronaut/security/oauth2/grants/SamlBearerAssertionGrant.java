@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SamlBearerAssertionGrant {
 
-    private String grantType = GrantType.SAML_2_0_BEARER_ASSERTION_GRANT.getGrantType();
+    private String grantType = GrantType.SAML_2_0_BEARER_ASSERTION_GRANT.toString();
     private String assertion;
     private String scope;
 

@@ -5,6 +5,7 @@ import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.oauth2.openid.OpenIdConfiguration
 import spock.lang.Specification
 
 class OpenIdConfigurationClientSpec extends Specification {

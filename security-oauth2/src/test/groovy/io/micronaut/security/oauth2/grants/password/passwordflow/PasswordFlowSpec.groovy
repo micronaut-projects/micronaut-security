@@ -7,8 +7,8 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.oauth2.grants.password.GrantTypePasswordAuthenticationProvider
-import io.micronaut.security.oauth2.openid.configuration.OpenIdConfigurationClient
+import io.micronaut.security.oauth2.endpoint.token.request.password.OauthPasswordAuthenticationProvider
+import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata
 import spock.lang.Specification
 
 class PasswordFlowSpec extends Specification {
@@ -46,23 +46,22 @@ class PasswordFlowSpec extends Specification {
         Map<String, Object> conf = [
                 'spec.name': 'passwordFlow',
                 'micronaut.security.enabled': true,
-                'micronaut.security.oauth2.client-id': 'XXXX',
-                'micronaut.security.oauth2.client-secret': 'YYYY',
-                'micronaut.security.oauth2.openid.issuer': mockHttpServerUrl,
-                "micronaut.security.oauth2.grant-type-password.enabled": true
+                'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
+                'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
+                'micronaut.security.oauth2.clients.foo.openid.issuer': mockHttpServerUrl,
+                "micronaut.security.oauth2.clients.foo.grant-type-password.enabled": true
         ]
         EmbeddedServer server = ApplicationContext.run(EmbeddedServer, conf)
-        String issuer = server.applicationContext.getProperty("micronaut.security.oauth2.openid.issuer", String)
+        String issuer = server.applicationContext.getProperty("micronaut.security.oauth2.clients.foo.openid.issuer", String)
 
         then:
         issuer
 
         when:
-        OpenIdConfigurationClient openIdConfigurationClient = server.applicationContext.getBean(OpenIdConfigurationClient)
+        OpenIdProviderMetadata openIdProviderMetadata = server.applicationContext.getBean(OpenIdProviderMetadata)
 
         then:
-        openIdConfigurationClient
-        openIdConfigurationClient.fetchConfiguration()
+        openIdProviderMetadata.getIssuer() == "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_ZLiEFD4b6"
 
         and:
         server.applicationContext.containsBean(EchoUserNameController)
@@ -71,7 +70,7 @@ class PasswordFlowSpec extends Specification {
         server.applicationContext.containsBean(DefaultIdTokenAccessTokenResponseValidatorReplacement)
 
         and:
-        server.applicationContext.containsBean(GrantTypePasswordAuthenticationProvider)
+        server.applicationContext.containsBean(OauthPasswordAuthenticationProvider)
 
         when:
         HttpClient httpClient = HttpClient.create(server.URL)

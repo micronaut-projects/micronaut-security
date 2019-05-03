@@ -13,33 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.core.util.Toggleable;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 /**
- * Encapsulates OAuth 2.0 application configuration.
- *
- * @author Sergio del Amo
+ * OAuth 2.0 Configuration
+ * @author James Kleeh
  * @since 1.0.0
  */
 public interface OauthConfiguration extends Toggleable {
 
     /**
      *
-     * @return the application's Client identifier
+     * @return the login Uri
      */
-    @NotNull
-    String getClientId();
+    String getLoginUri();
+
+    /**
+     * @return the Callback Uri
+     */
+    String getCallbackUri();
+
+    /**
+     * @return the Callback Uri
+     */
+    String getLogoutUri();
 
     /**
      *
-     @return the application's Client secret
+     * @return OpenID Connect Configuration
      */
-    @Nullable
-    String getClientSecret();
+    Optional<OpenIdConfiguration> getOpenid();
 }

@@ -1,7 +1,7 @@
 package io.micronaut.security.oauth2.openid.endpoints.endsession
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.security.oauth2.openid.providers.AwsCognitoEndSessionEndpointConfiguration
+import io.micronaut.security.oauth2.endpoint.endsession.request.AwsCognitoEndSessionRequest
 import spock.lang.Specification
 
 class AwsCognitoEndSessionEndpointConfigurationSpec extends Specification {
@@ -15,7 +15,7 @@ class AwsCognitoEndSessionEndpointConfigurationSpec extends Specification {
         ])
 
         expect:
-        applicationContext.containsBean(AwsCognitoEndSessionEndpointConfiguration)
+        applicationContext.containsBean(AwsCognitoEndSessionRequest)
 
         cleanup:
         applicationContext.close()
@@ -30,7 +30,7 @@ class AwsCognitoEndSessionEndpointConfigurationSpec extends Specification {
         ])
 
         expect:
-        !applicationContext.containsBean(AwsCognitoEndSessionEndpointConfiguration)
+        !applicationContext.containsBean(AwsCognitoEndSessionRequest)
 
         cleanup:
         applicationContext.close()

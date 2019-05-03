@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
+import javax.annotation.Nonnull;
 import java.security.Principal;
 import java.util.Map;
 
@@ -29,5 +30,6 @@ public interface Authentication extends Principal {
     /**
      * @return Any additional attributes in the authentication
      */
+    @Nonnull
     Map<String, Object> getAttributes();
 }

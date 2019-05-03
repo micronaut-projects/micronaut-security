@@ -20,4 +20,11 @@
  * @author Sergio del Amo
  * @since 1.0.0
  */
+@Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@Configuration
 package io.micronaut.security.oauth2;
+
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;

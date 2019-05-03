@@ -1,12 +1,15 @@
+group "io.micronaut.configuration"
+
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
-    annotationProcessor "io.micronaut:micronaut-security"
+    annotationProcessor project(":security")
     annotationProcessor "io.micronaut:micronaut-graal"
     compileOnly "io.micronaut:micronaut-inject-java"
-    compile "io.micronaut:micronaut-security-jwt"
+    compile project(":security-jwt")
     compile "io.micronaut:micronaut-inject"
     compile "io.micronaut:micronaut-http-client"
+    compile "io.micronaut:micronaut-router:1.2.0.BUILD-20190503.014106-27"
     compileOnly "io.micronaut:micronaut-views"
     compileOnly "io.micronaut:micronaut-session"
 
@@ -15,4 +18,5 @@ dependencies {
     testCompile "io.micronaut:micronaut-http-server-netty"
     testCompile "io.micronaut:micronaut-inject-groovy"
     testCompile 'com.sun.activation:javax.activation:1.2.0' // Java 11
+    testCompile project(":security-jwt")
 }

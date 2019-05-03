@@ -17,6 +17,9 @@ package io.micronaut.security.token.jwt.generator.claims;
 
 import io.micronaut.security.token.Claims;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @see <a href="https://tools.ietf.org/html/rfc7519#section-4.1">Registered Claims Names</a>
  */
@@ -35,4 +38,5 @@ public interface JwtClaims extends Claims {
 
     String AUDIENCE        = "aud";
 
+    List<String> ALL_CLAIMS = Arrays.asList(ISSUER, SUBJECT, EXPIRATION_TIME, NOT_BEFORE, ISSUED_AT, JWT_ID, AUDIENCE);
 }

@@ -84,7 +84,6 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
     @Override
     public Map<String, Object> generateClaims(UserDetails userDetails, @Nullable Integer expiration) {
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
-        populateSub(builder, userDetails);
         populateIat(builder);
         populateExp(builder, expiration);
         populateJti(builder);
@@ -186,7 +185,8 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param userDetails Authenticated user's representation.
      */
     protected void populateWithUserDetails(JWTClaimsSet.Builder builder, UserDetails userDetails) {
-        builder.claim(tokenConfiguration.getRolesName(), userDetails.getRoles());
+        userDetails.getAttributes(tokenConfiguration.getRolesName(), JwtClaims.SUBJECT)
+                .forEach(builder::claim);
     }
 
     /**

@@ -84,7 +84,8 @@ public enum GrantType {
      *
      * @return The OAuth 2.0. Grant Type
      */
-    public String getGrantType() {
+    @Override
+    public String toString() {
         return this.grantType;
     }
 }

@@ -3,6 +3,7 @@ package io.micronaut.security.oauth2.openid.endpoints.authorization
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.security.oauth2.endpoints.authorization.request.IdTokenHintResolver
 import spock.lang.Specification
 
 class IdTokenHintProviderSpec extends Specification {
@@ -16,7 +17,7 @@ class IdTokenHintProviderSpec extends Specification {
         ], Environment.TEST)
 
         when:
-        context.getBean(IdTokenHintProvider)
+        context.getBean(IdTokenHintResolver)
 
         then:
         thrown(NoSuchBeanException)

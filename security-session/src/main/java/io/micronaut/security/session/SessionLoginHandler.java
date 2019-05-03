@@ -22,6 +22,7 @@ import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.filters.SecurityFilter;
+import io.micronaut.security.handlers.RedirectingLoginhandler;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
@@ -39,7 +40,7 @@ import java.net.URISyntaxException;
  * @since 1.0
  */
 @Singleton
-public class SessionLoginHandler implements LoginHandler {
+public class SessionLoginHandler implements RedirectingLoginhandler {
 
     protected final SessionStore<Session> sessionStore;
     protected final SecuritySessionConfiguration securitySessionConfiguration;

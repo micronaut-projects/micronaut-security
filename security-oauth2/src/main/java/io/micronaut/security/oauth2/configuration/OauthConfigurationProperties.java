@@ -20,18 +20,19 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 /**
- * {@link io.micronaut.context.annotation.ConfigurationProperties} implementation of {@link io.micronaut.security.oauth2.configuration.OauthConfiguration}.
+ * {@link ConfigurationProperties} implementation of {@link OauthClientConfiguration}.
  *
  * @author Sergio del Amo
  * @since 1.0.0
  */
 @Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
-@Requires(property = OauthConfigurationProperties.PREFIX + ".client-id")
 @ConfigurationProperties(OauthConfigurationProperties.PREFIX)
 public class OauthConfigurationProperties implements OauthConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".oauth2";
@@ -41,50 +42,18 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+    private static final String DEFAULT_LOGIN = "/oauth/login/{provider}";
+    private static final String DEFAULT_CALLBACK = "/oauth/callback/{provider}";
+    private static final String DEFAULT_LOGOUT = "/oauth/logout/{provider}";
 
-    private String clientId;
-    private String clientSecret;
     private boolean enabled = DEFAULT_ENABLED;
+    private String callbackUri = DEFAULT_CALLBACK;
+    private String loginUri = DEFAULT_LOGIN;
+    private String logoutUri = DEFAULT_LOGOUT;
+    private OpenIdConfigurationProperties openid;
 
     /**
-     * OAuth 2.0 Application Client ID.
-     * @param clientId The application's Client ID.
-     */
-    public void setClientId(@Nonnull String clientId) {
-        this.clientId = clientId;
-    }
-
-    /**
-     * OAuth 2.0 Application Client Secret. Optional.
-     * @param clientSecret The application's Client Secret.
-     */
-    public void setClientSecret(@Nullable String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    /**
-     *
-     * @return the application's Client identifier
-     */
-    @Nonnull
-    @Override
-    public String getClientId() {
-        return clientId;
-    }
-
-    /**
-     *
-     @return the application's Client secret
-     */
-    @Nullable
-    @Override
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
-
-    /**
-     * @return true if you want to enable the {@link OauthConfiguration}
+     * @return true if you want to enable the {@link OauthClientConfiguration}
      */
     @Override
     public boolean isEnabled() {
@@ -92,7 +61,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     }
 
     /**
-     * Sets whether the {@link OauthConfiguration} is enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * Sets whether the {@link OauthClientConfiguration} is enabled. Default value ({@value #DEFAULT_ENABLED}).
      *
      * @param enabled True if is enabled
      */
@@ -100,4 +69,107 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         this.enabled = enabled;
     }
 
+    @Override
+    public String getLoginUri() {
+        return loginUri;
+    }
+
+    /**
+     *
+     * @param loginUri The Login uri
+     */
+    public void setLoginUri(String loginUri) {
+        this.loginUri = loginUri;
+    }
+
+    @Override
+    public String getCallbackUri() {
+        return callbackUri;
+    }
+
+    /**
+     *
+     * @param callbackUri The callback Uri
+     */
+    public void setCallbackUri(String callbackUri) {
+        this.callbackUri = callbackUri;
+    }
+
+
+    @Override
+    public String getLogoutUri() {
+        return logoutUri;
+    }
+
+    public void setLogoutUri(String logoutUri) {
+        this.logoutUri = logoutUri;
+    }
+
+    @Override
+    public Optional<OpenIdConfiguration> getOpenid() {
+        return Optional.ofNullable(openid);
+    }
+
+    public void setOpenid(OpenIdConfigurationProperties openid) {
+        this.openid = openid;
+    }
+
+    @ConfigurationProperties("openid")
+    public static class OpenIdConfigurationProperties implements OpenIdConfiguration {
+
+        public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".openid";
+
+        private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
+
+        @Override
+        public Optional<EndSessionConfiguration> getEndSession() {
+            return Optional.of(endSession);
+        }
+
+        public void setEndSession(EndSessionConfigurationProperties endSession) {
+            this.endSession = endSession;
+        }
+
+
+        @ConfigurationProperties("end-session")
+        public static class EndSessionConfigurationProperties implements EndSessionConfiguration {
+
+            public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".end-session";
+
+            private static final String DEFAULT_VIEW_MODEL_KEY = "endSessionUrl";
+
+            private String viewModelKey = DEFAULT_VIEW_MODEL_KEY;
+            private String redirectUri = "/logout";
+
+            @Override
+            @Nonnull
+            public String getViewModelKey() {
+                return viewModelKey;
+            }
+
+            /**
+             * The key to reference the end session URL in a view. Default value ({@value #DEFAULT_VIEW_MODEL_KEY}).
+             *
+             * @param viewModelKey
+             */
+            public void setViewModelKey(String viewModelKey) {
+                this.viewModelKey = viewModelKey;
+            }
+
+            @Override
+            @Nonnull
+            public String getRedirectUri() {
+                return redirectUri;
+            }
+
+            /**
+             *
+             * @param redirectUri Redirect uri
+             */
+            public void setRedirectUri(String redirectUri) {
+                this.redirectUri = redirectUri;
+            }
+        }
+
+    }
 }

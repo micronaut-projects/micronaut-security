@@ -17,7 +17,7 @@ class OauthConfigurationSpec extends Specification {
         ], Environment.TEST)
 
         when:
-        context.getBean(OauthConfiguration)
+        context.getBean(OauthClientConfiguration)
 
         then:
         thrown(NoSuchBeanException)
@@ -35,7 +35,7 @@ class OauthConfigurationSpec extends Specification {
         ], Environment.TEST)
 
         when:
-        context.getBean(OauthConfiguration)
+        context.getBean(OauthClientConfiguration)
 
         then:
         noExceptionThrown()
@@ -52,7 +52,7 @@ class OauthConfigurationSpec extends Specification {
         ], Environment.TEST)
 
         when:
-        context.getBean(OauthConfiguration)
+        context.getBean(OauthClientConfiguration)
 
         then:
         thrown(NoSuchBeanException)
@@ -71,7 +71,7 @@ class OauthConfigurationSpec extends Specification {
         ], Environment.TEST)
 
         when:
-        OauthConfiguration oauthConfiguration = context.getBean(OauthConfiguration)
+        OauthClientConfiguration oauthConfiguration = context.getBean(OauthClientConfiguration)
 
         then:
         oauthConfiguration.clientId == "XXXXX"
@@ -88,7 +88,7 @@ class OauthConfigurationSpec extends Specification {
         ], Environment.TEST, "xxx")
 
         when:
-        context.getBean(OauthConfiguration)
+        context.getBean(OauthClientConfiguration)
 
         then:
         thrown(NoSuchBeanException)

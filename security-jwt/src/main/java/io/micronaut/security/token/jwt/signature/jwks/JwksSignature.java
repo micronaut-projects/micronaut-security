@@ -29,8 +29,8 @@ import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
@@ -55,13 +55,8 @@ public class JwksSignature implements SignatureConfiguration {
 
     private final JwkValidator jwkValidator;
 
-    @Nullable
     private JWKSet jwkSet;
-
-    @Nonnull
     private final KeyType keyType;
-
-    @Nonnull
     private final String url;
 
     /**
@@ -69,14 +64,22 @@ public class JwksSignature implements SignatureConfiguration {
      * @param jwksSignatureConfiguration JSON Web Key Set configuration.
      * @param jwkValidator JWK Validator to be used.
      */
+    @Inject
     public JwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
                          JwkValidator jwkValidator) {
-        this.url = jwksSignatureConfiguration.getUrl();
+        this(jwksSignatureConfiguration.getUrl(), jwksSignatureConfiguration.getKeyType(), jwkValidator);
+    }
+
+    @Inject
+    public JwksSignature(String url,
+                         @Nullable KeyType keyType,
+                         JwkValidator jwkValidator) {
+        this.url = url;
         if (LOG.isDebugEnabled()) {
             LOG.debug("JWT validation URL: {}", url);
         }
         this.jwkSet = loadJwkSet(url);
-        this.keyType = jwksSignatureConfiguration.getKeyType();
+        this.keyType = keyType;
         this.jwkValidator = jwkValidator;
     }
 
