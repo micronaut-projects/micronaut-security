@@ -20,7 +20,6 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.handlers.RedirectingLoginhandler;
 import io.micronaut.security.token.jwt.generator.JwtGeneratorConfiguration;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
