@@ -54,22 +54,18 @@ public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
 
     @Override
     protected String getUrl() {
-        if(clientConfiguration.getOpenid().isPresent()) {
-            if (clientConfiguration.getOpenid().get().getUserInfo().isPresent()) {
-                Optional<String> url = clientConfiguration.getOpenid().get().getUserInfo().get().getUrl();
-                if (url.isPresent() ) {
-                    URL userInfoUrl = null;
-                    try {
-                        userInfoUrl = new URL(url.get());
-                         return userInfoUrl.toString().replaceAll(userInfoUrl.getPath(), "/logout");
-                    } catch (MalformedURLException e) {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("MalformedURLException building cognito logout url");
-                        }
-                    }
+
+        if (providerMetadata.getUserinfoEndpoint() != null) {
+            try {
+                URL userInfoUrl = new URL(providerMetadata.getUserinfoEndpoint());
+                return userInfoUrl.toString().replaceAll(userInfoUrl.getPath(), "/logout");
+            } catch (MalformedURLException e) {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("MalformedURLException building cognito logout url");
                 }
             }
         }
+
         URL url = clientConfiguration.getOpenid()
                 .flatMap(OpenIdClientConfiguration::getIssuer)
                 .get();
