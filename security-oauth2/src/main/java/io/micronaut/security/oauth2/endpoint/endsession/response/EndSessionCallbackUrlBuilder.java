@@ -24,12 +24,23 @@ import io.micronaut.security.oauth2.url.UrlBuilder;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
+/**
+ * A {@link UrlBuilder} for generating the URL used by OpenID
+ * providers to redirect back to after logging the user out.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Singleton
 public class EndSessionCallbackUrlBuilder implements UrlBuilder {
 
     private final HostResolver hostResolver;
     private final EndSessionConfiguration endSessionConfiguration;
 
+    /**
+     * @param hostResolver The host resolver
+     * @param endSessionConfiguration The end session configuration
+     */
     EndSessionCallbackUrlBuilder(HostResolver hostResolver,
                                  EndSessionConfiguration endSessionConfiguration) {
         this.hostResolver = hostResolver;

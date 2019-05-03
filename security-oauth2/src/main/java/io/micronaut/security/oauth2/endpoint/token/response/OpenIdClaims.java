@@ -16,8 +16,6 @@
 
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import io.micronaut.security.config.SecurityConfigurationProperties;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Date;
@@ -33,8 +31,6 @@ import java.util.Map;
  * @version 1.1.0
  */
 public interface OpenIdClaims {
-
-    String PREFIX = SecurityConfigurationProperties.PREFIX + ".idtoken";
 
     String CLAIMS_NAME = "name";
     String CLAIMS_GIVEN_NAME = "given_name";

@@ -18,6 +18,14 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * The OpenID extensions to the standard OAuth 2.0 authorization request.
+ *
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">OpenID Authorization Request</a>
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface OpenIdAuthorizationRequest extends AuthorizationRequest {
 
     String PARAMETER_RESPONSE_MODE = "response_mode";

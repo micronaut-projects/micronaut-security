@@ -26,11 +26,20 @@ import org.reactivestreams.Publisher;
 
 import javax.inject.Singleton;
 
+/**
+ * Default implementation of {@link OauthAuthorizationResponseHandler}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Singleton
 public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizationResponseHandler {
 
     private final TokenEndpointClient tokenEndpointClient;
 
+    /**
+     * @param tokenEndpointClient The token endpoint client
+     */
     DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient) {
         this.tokenEndpointClient = tokenEndpointClient;
     }

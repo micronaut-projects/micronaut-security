@@ -28,6 +28,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * The default implementation of {@link OauthAuthorizationRequest}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Prototype
 public class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
 
@@ -36,7 +42,12 @@ public class DefaultOauthAuthorizationRequest implements OauthAuthorizationReque
     private final CallbackUrlBuilder callbackUrlBuilder;
     private final Supplier<String> stateSupplier;
 
-
+    /**
+     * @param request The callback request
+     * @param oauthClientConfiguration The client configuration
+     * @param callbackUrlBuilder The callback URL builder
+     * @param stateFactory The state factory
+     */
     DefaultOauthAuthorizationRequest(@Parameter HttpRequest<?> request,
                                      @Parameter OauthClientConfiguration oauthClientConfiguration,
                                      CallbackUrlBuilder callbackUrlBuilder,

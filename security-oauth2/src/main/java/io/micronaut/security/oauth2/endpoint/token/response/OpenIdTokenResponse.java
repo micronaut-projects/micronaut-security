@@ -13,12 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.micronaut.security.oauth2.endpoint.token.response;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Introspected;
 
 import javax.annotation.Nonnull;
 
-public interface OpenIdTokenResponse extends TokenResponse {
+/**
+ * Id Token Access Token Response.
+ *
+ * After receiving and validating a valid and authorized Token Request from the Client, the Authorization Server returns a successful response that includes an ID Token and an Access Token.
+ *
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse>Successful Token Response</a>
+ * @author Sergio del Amo
+ * @since 1.2.0
+ */
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+public class OpenIdTokenResponse extends TokenResponse {
 
+    private String idToken;
+
+    /**
+     * Instantiates ID Token Access Token Response.
+     */
+    public OpenIdTokenResponse() {
+
+    }
+
+    /**
+     *
+     * @return ID Token value associated with the authenticated session.
+     */
     @Nonnull
-    String getIdToken();
+    public String getIdToken() {
+        return idToken;
+    }
+
+    /**
+     *
+     * @param idToken ID Token value associated with the authenticated session.
+     */
+    public void setIdToken(@Nonnull String idToken) {
+        this.idToken = idToken;
+    }
 }

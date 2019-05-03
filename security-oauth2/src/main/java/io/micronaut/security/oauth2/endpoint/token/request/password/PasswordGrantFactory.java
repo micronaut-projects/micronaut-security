@@ -18,9 +18,11 @@ package io.micronaut.security.oauth2.endpoint.token.request.password;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
@@ -29,9 +31,35 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
 import javax.annotation.Nullable;
 
+/**
+ * Factory creating {@link AuthenticationProvider} beans that delegate
+ * to the password grant flow of an OAuth 2.0 or OpenID provider.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Factory
-public class PasswordGrantFactory {
+@Internal
+class PasswordGrantFactory {
 
+    /**
+     * For authentication providers delegating to OAuth 2.0 providers,
+     * the {@param openIdUserDetailsMapper}, {@param openIdProviderMetadata},
+     * and {@param tokenResponseValidator} parameters are expected
+     * to be null.
+     *
+     * For authentication providers delegating to OpenID providers,
+     * the {@param userDetailsMapper} parameter is expected to be null.
+     *
+     * @param clientConfiguration The client configuration
+     * @param userDetailsMapper The OAuth 2.0 user details mapper
+     * @param openIdUserDetailsMapper The client specific OpenID user details mapper
+     * @param openIdProviderMetadata The OpenID provider metadata
+     * @param tokenEndpointClient The token endpoint client
+     * @param defaultOpenIdUserDetailsMapper The default OpenID user details mapper
+     * @param tokenResponseValidator The OpenID token response validator
+     * @return The authentication provider
+     */
     @EachBean(OauthClientConfiguration.class)
     AuthenticationProvider passwordGrantProvider(
             @Parameter OauthClientConfiguration clientConfiguration,
@@ -39,6 +67,7 @@ public class PasswordGrantFactory {
             @Parameter @Nullable OpenIdUserDetailsMapper openIdUserDetailsMapper,
             @Parameter @Nullable OpenIdProviderMetadata openIdProviderMetadata,
             TokenEndpointClient tokenEndpointClient,
+            DefaultOpenIdUserDetailsMapper defaultOpenIdUserDetailsMapper,
             @Nullable OpenIdTokenResponseValidator tokenResponseValidator) {
 
         if (clientConfiguration.isEnabled()) {
@@ -48,7 +77,10 @@ public class PasswordGrantFactory {
                         return new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, userDetailsMapper);
                     }
                 } else if (clientConfiguration.getOpenid().isPresent()) {
-                    if (openIdUserDetailsMapper != null && openIdProviderMetadata != null && tokenResponseValidator != null) {
+                    if (openIdProviderMetadata != null && tokenResponseValidator != null) {
+                        if (openIdUserDetailsMapper == null) {
+                            openIdUserDetailsMapper = defaultOpenIdUserDetailsMapper;
+                        }
                         return new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdUserDetailsMapper, tokenResponseValidator);
                     }
                 }

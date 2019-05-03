@@ -22,7 +22,6 @@ import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
@@ -30,20 +29,39 @@ import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
 
 import java.util.Map;
 
-public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, DefaultOpenIdTokenResponse> {
+/**
+ * A token request context for sending an authorization
+ * code grant request to an OpenID provider.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
+public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, OpenIdTokenResponse> {
 
     private final AuthorizationResponse authorizationResponse;
     private final CallbackUrlBuilder callbackUrlBuilder;
 
+    /**
+     * @param authorizationResponse The authorization response
+     * @param callbackUrlBuilder The callback URL builder
+     * @param tokenEndpoint The token endpoint
+     * @param clientConfiguration The client configuration
+     */
     public OpenIdCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                          CallbackUrlBuilder callbackUrlBuilder,
-                                         SecureEndpoint endpoint,
+                                         SecureEndpoint tokenEndpoint,
                                          OauthClientConfiguration clientConfiguration) {
-        super(getMediaType(clientConfiguration), endpoint, clientConfiguration);
+        super(getMediaType(clientConfiguration), tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
         this.callbackUrlBuilder = callbackUrlBuilder;
     }
 
+    /**
+     * Resolves the media type for the request body
+     *
+     * @param clientConfiguration The client configuration
+     * @return The media type
+     */
     protected static MediaType getMediaType(OauthClientConfiguration clientConfiguration) {
         return clientConfiguration.getOpenid()
                 .flatMap(OpenIdClientConfiguration::getToken)
@@ -61,8 +79,8 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     }
 
     @Override
-    public Argument<DefaultOpenIdTokenResponse> getResponseType() {
-        return Argument.of(DefaultOpenIdTokenResponse.class);
+    public Argument<OpenIdTokenResponse> getResponseType() {
+        return Argument.of(OpenIdTokenResponse.class);
     }
 
     @Override

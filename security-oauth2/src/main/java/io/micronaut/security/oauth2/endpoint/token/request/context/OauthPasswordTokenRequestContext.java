@@ -16,25 +16,36 @@
 package io.micronaut.security.oauth2.endpoint.token.request.context;
 
 import io.micronaut.core.type.Argument;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultTokenErrorResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.PasswordGrant;
 
 import java.util.Map;
 
-public class OauthPasswordTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, DefaultTokenResponse> {
+/**
+ * A token request context for sending a password grant
+ * request to an OAuth 2.0 provider.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
+public class OauthPasswordTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, TokenResponse> {
 
     private final AuthenticationRequest authenticationRequest;
 
+    /**
+     * @param authenticationRequest The authentication request
+     * @param tokenEndpoint The token endpoint
+     * @param clientConfiguration The client configuration
+     */
     public OauthPasswordTokenRequestContext(AuthenticationRequest authenticationRequest,
-                                            SecureEndpoint endpoint,
+                                            SecureEndpoint tokenEndpoint,
                                             OauthClientConfiguration clientConfiguration) {
-        super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, endpoint, clientConfiguration);
+        super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
         this.authenticationRequest = authenticationRequest;
     }
 
@@ -45,12 +56,12 @@ public class OauthPasswordTokenRequestContext extends AbstractTokenRequestContex
     }
 
     @Override
-    public Argument<DefaultTokenResponse> getResponseType() {
-        return Argument.of(DefaultTokenResponse.class);
+    public Argument<TokenResponse> getResponseType() {
+        return Argument.of(TokenResponse.class);
     }
 
     @Override
     public Argument<?> getErrorResponseType() {
-        return Argument.of(DefaultTokenErrorResponse.class);
+        return Argument.of(TokenErrorResponse.class);
     }
 }

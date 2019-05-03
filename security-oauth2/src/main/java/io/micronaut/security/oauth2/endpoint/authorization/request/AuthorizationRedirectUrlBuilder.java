@@ -15,8 +15,22 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
+/**
+ * Responsible for redirecting to an OAuth 2.0 provider
+ * for authentication.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface AuthorizationRedirectUrlBuilder {
 
+    /**
+     * Builds the URL string to redirect to
+     *
+     * @param authorizationRequest The authorization request
+     * @param authorizationEndpoint The autorization endpoint
+     * @return The URL
+     */
     String buildUrl(AuthorizationRequest authorizationRequest,
                     String authorizationEndpoint);
 }

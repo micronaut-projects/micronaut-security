@@ -15,9 +15,9 @@
  */
 
 /**
- * Classes related to OAuth 2.0 token endpoint requests and responses.
+ * Classes dealing with end session requests
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-package io.micronaut.security.oauth2.endpoint.token;
+package io.micronaut.security.oauth2.endpoint.endsession.request;

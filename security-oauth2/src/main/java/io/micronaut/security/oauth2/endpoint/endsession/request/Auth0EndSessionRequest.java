@@ -24,7 +24,6 @@ import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 
-import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.*;
 
@@ -32,12 +31,18 @@ import java.util.*;
  * Provides specific configuration to logout from Auth0.
  *
  * @see <a href="https://auth0.com/docs/logout/guides/logout-auth0">Log Users Out of Auth0</a>
+ *
  * @author Sergio del Amo
  * @since 1.2.0
  */
 public class Auth0EndSessionRequest extends AbstractEndSessionRequest {
 
-    public Auth0EndSessionRequest(@Nullable EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata
+     */
+    public Auth0EndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                   OauthClientConfiguration clientConfiguration,
                                   OpenIdProviderMetadata providerMetadata) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
@@ -55,11 +60,8 @@ public class Auth0EndSessionRequest extends AbstractEndSessionRequest {
     protected Map<String, Object> getArguments(HttpRequest originating,
                                                Authentication authentication) {
         Map<String, Object> arguments = new HashMap<>();
-
         arguments.put("client_id", clientConfiguration.getClientId());
-
-        getRedirectUri(originating).ifPresent(url -> arguments.put("returnTo", url));
-
+        arguments.put("returnTo", getRedirectUri(originating));
         return arguments;
     }
 }

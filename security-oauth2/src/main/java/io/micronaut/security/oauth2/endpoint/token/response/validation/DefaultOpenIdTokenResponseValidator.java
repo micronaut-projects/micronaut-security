@@ -51,7 +51,8 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     private final JwkValidator jwkValidator;
 
     /**
-     * @param idTokenValidators ID token JWT Claims validators
+     * @param idTokenValidators OpenID JWT Claims validators
+     * @param jwkValidator The JWK validator
      */
     public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
                                                JwkValidator jwkValidator) {

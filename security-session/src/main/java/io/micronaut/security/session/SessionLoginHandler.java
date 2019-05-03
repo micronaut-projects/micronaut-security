@@ -20,7 +20,6 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
 import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.RedirectingLoginhandler;
 import io.micronaut.security.token.config.TokenConfiguration;
@@ -35,7 +34,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * {@link LoginHandler} implementation for Session-based Authentication.
+ * A {@link RedirectingLoginhandler} implementation for session based authentication.
+ *
  * @author Sergio del Amo
  * @since 1.0
  */

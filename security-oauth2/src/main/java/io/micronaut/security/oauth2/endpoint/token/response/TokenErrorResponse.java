@@ -15,17 +15,77 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Introspected;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface TokenErrorResponse {
+/**
+ * Represent the response of an authorization server to an invalid access token request.
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2>RFC 6749 Access Token Error Response</a>
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+public class TokenErrorResponse {
 
+    private TokenError error;
+    private String errorDescription;
+    private String errorUri;
+
+    /**
+     * Default constructor
+     */
+    public TokenErrorResponse() {
+    }
+
+    /**
+     * @return The error code
+     */
     @Nonnull
-    TokenError getError();
+    public TokenError getError() {
+        return error;
+    }
 
-    @Nullable
-    String getErrorDescription();
+    /**
+     * @param error The error code
+     */
+    public void setError(TokenError error) {
+        this.error = error;
+    }
 
+    /**
+     * @return The error description
+     */
     @Nullable
-    String getErrorUri();
+    public String getErrorDescription() {
+        return errorDescription;
+    }
+
+    /**
+     * @param errorDescription The error description
+     */
+    public void setErrorDescription(String errorDescription) {
+        this.errorDescription = errorDescription;
+    }
+
+    /**
+     * @return The error uri
+     */
+    @Nullable
+    public String getErrorUri() {
+        return errorUri;
+    }
+
+    /**
+     * @param errorUri The error uri
+     */
+    public void setErrorUri(String errorUri) {
+        this.errorUri = errorUri;
+    }
 }

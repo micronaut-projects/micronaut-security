@@ -23,7 +23,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapp
 import org.reactivestreams.Publisher;
 
 /**
- * Handles OAuth 2.0 Authorization responses.
+ * Responsible for handling the authorization callback response
+ * from an OAuth 2.0 provider.
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -31,7 +32,14 @@ import org.reactivestreams.Publisher;
 public interface OauthAuthorizationResponseHandler {
 
     /**
-     * @return A Http Response
+     * Receives the authorization response and ultimately
+     * returns the authentication response.
+     *
+     * @param authorizationResponse The authorization response
+     * @param clientConfiguration The client configuration
+     * @param userDetailsMapper The user details mapper
+     * @param tokenEndpoint The token endpoint
+     * @return An authentication response publisher
      */
     Publisher<AuthenticationResponse> handle(AuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,

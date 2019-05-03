@@ -55,6 +55,9 @@ public abstract class StateAwareAuthorizationCallback {
     @Nullable
     protected abstract String getStateValue();
 
+    /**
+     * @return The state in the callback
+     */
     @Nullable
     public State getState() {
         return stateSupplier.get();

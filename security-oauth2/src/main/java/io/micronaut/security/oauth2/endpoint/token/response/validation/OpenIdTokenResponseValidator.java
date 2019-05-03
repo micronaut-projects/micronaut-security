@@ -24,7 +24,7 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import java.util.Optional;
 
 /**
- * Validates a ID Token Access Response.
+ * Validates an OpenID token response
  *
  * @author Sergio del Amo
  * @since 1.2.0

@@ -23,6 +23,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The default implementation of {@link OpenIdUserDetailsMapper} that uses
+ * the subject claim for the username and populates the attributes with the
+ * non JWT standard claims. If an {@link OpenIdUserDetailsMapper} bean is created
+ * with a named qualifier that is the same name of the provider, that bean will
+ * be used instead of this one.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Singleton
 public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 

@@ -27,7 +27,6 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.*;
 
@@ -39,16 +38,20 @@ import java.util.*;
  * @author Sergio del Amo
  * @since 1.2.0
  */
-public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
+public class AwsCognitoEndSessionEndpoint extends AbstractEndSessionRequest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AwsCognitoEndSessionRequest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AwsCognitoEndSessionEndpoint.class);
+    private static final String PARAM_CLIENT_ID = "client_id";
+    private static final String PARAM_LOGOUT_URI = "logout_uri";
 
-    public static final String PARAM_CLIENT_ID = "client_id";
-    public static final String PARAM_LOGOUT_URI = "logout_uri";
-
-    public AwsCognitoEndSessionRequest(@Nullable EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                       OauthClientConfiguration clientConfiguration,
-                                       OpenIdProviderMetadata providerMetadata) {
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata
+     */
+    public AwsCognitoEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                        OauthClientConfiguration clientConfiguration,
+                                        OpenIdProviderMetadata providerMetadata) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
@@ -69,11 +72,8 @@ public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
     protected Map<String, Object> getArguments(HttpRequest originating,
                                                Authentication authentication) {
         Map<String, Object> arguments = new HashMap<>();
-
         arguments.put(PARAM_CLIENT_ID, clientConfiguration.getClientId());
-
-        getRedirectUri(originating).ifPresent(url -> arguments.put(PARAM_LOGOUT_URI, url));
-
+        arguments.put(PARAM_LOGOUT_URI, getRedirectUri(originating));
         return arguments;
     }
 }

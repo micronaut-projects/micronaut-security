@@ -28,14 +28,26 @@ import io.micronaut.security.oauth2.grants.PasswordGrant;
 
 import java.util.Map;
 
+/**
+ * A token request context for sending a password grant
+ * request to an OpenID provider.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public class OpenIdPasswordTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, OpenIdTokenResponse> {
 
     private final AuthenticationRequest authenticationRequest;
 
+    /**
+     * @param authenticationRequest The authentication request
+     * @param tokenEndpoint The token endpoint
+     * @param clientConfiguration The client configuration
+     */
     public OpenIdPasswordTokenRequestContext(AuthenticationRequest authenticationRequest,
-                                             SecureEndpoint endpoint,
+                                             SecureEndpoint tokenEndpoint,
                                              OauthClientConfiguration clientConfiguration) {
-        super(getMediaType(clientConfiguration), endpoint, clientConfiguration);
+        super(getMediaType(clientConfiguration), tokenEndpoint, clientConfiguration);
         this.authenticationRequest = authenticationRequest;
     }
 
@@ -45,6 +57,12 @@ public class OpenIdPasswordTokenRequestContext extends AbstractTokenRequestConte
         return passwordGrant.toMap();
     }
 
+    /**
+     * Resolves the media type for the request body
+     *
+     * @param clientConfiguration The client configuration
+     * @return The media type
+     */
     protected static MediaType getMediaType(OauthClientConfiguration clientConfiguration) {
         return clientConfiguration.getOpenid()
                 .flatMap(OpenIdClientConfiguration::getToken)

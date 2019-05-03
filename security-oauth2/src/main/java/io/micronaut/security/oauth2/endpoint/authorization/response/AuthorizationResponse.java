@@ -36,20 +36,21 @@ public interface AuthorizationResponse {
     String KEY_STATE = "state";
 
     /**
-     * If the initial request contained a state parameter, the response must also include the exact value from the request. The client will be using this to associate this response with the initial request.
-     * @return state parameter.
+     * @return The state parameter in the callback request
      */
     @Nullable
     State getState();
 
     /**
-     *
      * @return An authorization code which the client will later exchange for an access token.
      */
     @Nonnull
     String getCode();
 
 
+    /**
+     * @return The authorization callback request
+     */
     @Nonnull
     HttpRequest getCallbackRequest();
 }

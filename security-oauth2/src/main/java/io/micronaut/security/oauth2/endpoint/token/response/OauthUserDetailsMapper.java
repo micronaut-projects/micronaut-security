@@ -18,9 +18,22 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 import io.micronaut.security.authentication.UserDetails;
 import org.reactivestreams.Publisher;
 
+/**
+ * A contract for mapping an OAuth 2.0 token endpoint
+ * response to a {@link UserDetails} object.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface OauthUserDetailsMapper {
 
     String PROVIDER_KEY = "oauth2Provider";
 
+    /**
+     * Convert the token response into a user details.
+     *
+     * @param tokenResponse The token response
+     * @return The user details
+     */
     Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse);
 }

@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.endpoint.authorization.response;
+package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.server.exceptions.ExceptionHandler;
+import io.micronaut.security.authentication.Authentication;
 
-import javax.inject.Singleton;
+import javax.annotation.Nullable;
 
 /**
- * An exception handler for {@link AuthorizationErrorResponseException}.
+ * Represents the end session endpoint of an OpenID provider.
  *
  * @author Sergio del Amo
  * @since 1.2.0
  */
-@Singleton
-public class AuthorizationErrorResponseExceptionHandler implements ExceptionHandler<AuthorizationErrorResponseException, HttpResponse> {
+public interface EndSessionEndpoint {
 
-    @Override
-    public HttpResponse handle(HttpRequest request, AuthorizationErrorResponseException exception) {
-        return HttpResponse.badRequest(exception.getAuthorizationErrorResponse());
-    }
+    /**
+     * @param originating The Originating HTTP Request
+     * @param authentication The authentication.
+     * @return The OpenID provider end session URL.
+     */
+    @Nullable
+    String getUrl(HttpRequest originating, Authentication authentication);
 }

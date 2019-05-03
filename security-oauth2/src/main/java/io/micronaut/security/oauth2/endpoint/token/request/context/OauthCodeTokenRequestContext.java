@@ -20,27 +20,32 @@ import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultTokenErrorResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
 
 import java.util.Map;
 
-public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, DefaultTokenResponse> {
+/**
+ * A token request context for sending an authorization
+ * code grant request to an OAuth 2.0 provider.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
+public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, TokenResponse> {
 
     private final AuthorizationResponse authorizationResponse;
 
+    /**
+     * @param authorizationResponse The authorization response
+     * @param tokenEndpoint The token endpoint
+     * @param clientConfiguration The client configuration
+     */
     public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
-                                        SecureEndpoint endpoint,
+                                        SecureEndpoint tokenEndpoint,
                                         OauthClientConfiguration clientConfiguration) {
-        this(authorizationResponse, MediaType.APPLICATION_FORM_URLENCODED_TYPE, endpoint, clientConfiguration);
-    }
-
-    public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
-                                        MediaType mediaType,
-                                        SecureEndpoint endpoint,
-                                        OauthClientConfiguration clientConfiguration) {
-        super(mediaType, endpoint, clientConfiguration);
+        super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
     }
 
@@ -52,12 +57,12 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
     }
 
     @Override
-    public Argument<DefaultTokenResponse> getResponseType() {
-        return Argument.of(DefaultTokenResponse.class);
+    public Argument<TokenResponse> getResponseType() {
+        return Argument.of(TokenResponse.class);
     }
 
     @Override
     public Argument<?> getErrorResponseType() {
-        return Argument.of(DefaultTokenErrorResponse.class);
+        return Argument.of(TokenErrorResponse.class);
     }
 }

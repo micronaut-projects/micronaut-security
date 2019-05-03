@@ -19,6 +19,7 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
@@ -34,7 +35,8 @@ import io.micronaut.security.oauth2.grants.GrantType;
  * @since 1.2.0
  */
 @Factory
-public class OauthClientFactory {
+@Internal
+class OauthClientFactory {
 
     /**
      * Creates an {@link OauthClient} with the provided parameters. Relies

@@ -32,7 +32,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthori
 import io.micronaut.security.oauth2.endpoint.authorization.response.*;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
-import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest;
+import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -58,7 +58,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
     private final SecureEndpoint tokenEndpoint;
     private final BeanContext beanContext;
-    private final EndSessionRequest endSessionRequest;
+    private final EndSessionEndpoint endSessionEndpoint;
 
     /**
      * @param clientConfiguration The client configuration
@@ -67,7 +67,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
-     * @param endSessionRequest The end session request
+     * @param endSessionEndpoint The end session request
      */
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                OpenIdProviderMetadata openIdProviderMetadata,
@@ -75,14 +75,14 @@ public class DefaultOpenIdClient implements OpenIdClient {
                                AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                BeanContext beanContext,
-                               @Nullable EndSessionRequest endSessionRequest) {
+                               @Nullable EndSessionEndpoint endSessionEndpoint) {
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
         this.userDetailsMapper = userDetailsMapper;
         this.redirectUrlBuilder = redirectUrlBuilder;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
-        this.endSessionRequest = endSessionRequest;
+        this.endSessionEndpoint = endSessionEndpoint;
         this.tokenEndpoint = getTokenEndpoint();
     }
 
@@ -93,12 +93,12 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     @Override
     public boolean supportsEndSession() {
-        return endSessionRequest != null;
+        return endSessionEndpoint != null;
     }
 
     @Override
     public Optional<HttpResponse> endSessionRedirect(HttpRequest request, Authentication authentication) {
-        return Optional.ofNullable(endSessionRequest)
+        return Optional.ofNullable(endSessionEndpoint)
                 .map(esr -> esr.getUrl(request, authentication))
                 .map(url -> HttpResponse.status(HttpStatus.FOUND)
                         .header(HttpHeaders.LOCATION, url));

@@ -25,10 +25,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * An implementation of {@link OpenIdClaims} backed by an {@link JWTClaimsSet}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public class JWTOpenIdClaims implements OpenIdClaims {
 
     private final JWTClaimsSet claimsSet;
 
+    /**
+     * @param claimsSet The JWT claims set
+     */
     public JWTOpenIdClaims(JWTClaimsSet claimsSet) {
         this.claimsSet = claimsSet;
     }

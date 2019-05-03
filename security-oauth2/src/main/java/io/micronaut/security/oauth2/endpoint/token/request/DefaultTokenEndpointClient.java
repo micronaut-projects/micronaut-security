@@ -37,6 +37,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The default implementation of {@link TokenEndpointClient}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Singleton
 public class DefaultTokenEndpointClient implements TokenEndpointClient  {
 
@@ -44,6 +50,10 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     private final RxHttpClient defaultTokenClient;
     private final ConcurrentHashMap<String, RxHttpClient> tokenClients = new ConcurrentHashMap<>();
 
+    /**
+     * @param beanContext The bean context
+     * @param defaultClientConfiguration The default client configuration
+     */
     public DefaultTokenEndpointClient(BeanContext beanContext,
                                       HttpClientConfiguration defaultClientConfiguration) {
         this.beanContext = beanContext;
@@ -66,9 +76,13 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     }
 
     /**
+     * Secures the request according to the context's endpoint supported authentication
+     * methods.
      *
      * @param request Token endpoint Request
-     * @return a HTTP Request to the Token Endpoint with Authorization Code Grant payload.
+     * @param requestContext The request context
+     * @param <G> The token request grant or body
+     * @param <R> The token response type
      */
     protected <G, R extends TokenResponse> void secureRequest(@Nonnull MutableHttpRequest<G> request,
                                  TokenRequestContext<G, R> requestContext) {
@@ -95,6 +109,12 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
         }
     }
 
+    /**
+     * Retrieves a client for the given provider.
+     *
+     * @param providerName The provider name
+     * @return An HTTP client to use to send the request
+     */
     protected RxHttpClient getClient(String providerName) {
         return tokenClients.computeIfAbsent(providerName, (provider) -> {
             Optional<RxHttpClient> client = beanContext.findBean(RxHttpClient.class, Qualifiers.byName(provider));

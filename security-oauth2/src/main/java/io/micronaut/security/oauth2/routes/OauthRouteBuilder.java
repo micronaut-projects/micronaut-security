@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.ExecutionHandleLocator;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
@@ -43,7 +44,8 @@ import java.util.List;
  * @since 1.2.0
  */
 @Singleton
-public class OauthRouteBuilder extends DefaultRouteBuilder {
+@Internal
+class OauthRouteBuilder extends DefaultRouteBuilder {
 
     /**
      * @param executionHandleLocator The execution handler locator
@@ -55,7 +57,7 @@ public class OauthRouteBuilder extends DefaultRouteBuilder {
      * @param logoutUrlBuilder The logout URL builder
      * @param controllerList The list of controllers
      */
-    public OauthRouteBuilder(ExecutionHandleLocator executionHandleLocator,
+    OauthRouteBuilder(ExecutionHandleLocator executionHandleLocator,
                              UriNamingStrategy uriNamingStrategy,
                              ConversionService<?> conversionService,
                              BeanContext beanContext,

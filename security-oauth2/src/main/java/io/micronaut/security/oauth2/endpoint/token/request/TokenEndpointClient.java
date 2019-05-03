@@ -23,7 +23,7 @@ import org.reactivestreams.Publisher;
 import javax.annotation.Nonnull;
 
 /**
- * Generates a Token endpoint request for an Authorization code grant.
+ * Responsible for sending requests to a token endpoint.
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -31,6 +31,9 @@ import javax.annotation.Nonnull;
 public interface TokenEndpointClient {
 
     /**
+     * @param requestContext The token request context
+     * @param <G> The token request grant or body
+     * @param <R> The token response type
      * @return a HTTP Request to the Token Endpoint with Authorization Code Grant payload.
      */
     @Nonnull

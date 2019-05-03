@@ -13,43 +13,124 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.micronaut.security.oauth2.endpoint.token.response;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Introspected;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface TokenResponse {
+/**
+ * Represent the response of an authorization server to a valid access token request.
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.1>RFC 6749 Access Token Successful Response</a>
+ *
+ * @author Sergio del Amo
+ * @since 1.2.0
+ */
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+public class TokenResponse {
+
+    private String accessToken;
+    private String tokenType;
+    private Integer expiresIn;
+    private String refreshToken;
+    private String scope;
 
     /**
+     * Instantiates Access Token Response.
+     */
+    public TokenResponse() {
+
+    }
+
+    /**
+     *
      * @return The access token issued by the authorization server.
      */
     @Nonnull
-    String getAccessToken();
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    /**
+     *
+     * @param accessToken The access token issued by the authorization server.
+     */
+    public void setAccessToken(@Nonnull String accessToken) {
+        this.accessToken = accessToken;
+    }
 
     /**
      *
      * @return The type of the token issued.
      */
     @Nonnull
-    String getTokenType();
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    /**
+     *
+     * @param tokenType The type of the token issued.
+     */
+    public void setTokenType(@Nonnull String tokenType) {
+        this.tokenType = tokenType;
+    }
 
     /**
      *
      * @return The lifetime in seconds of the access token.
      */
     @Nullable
-    Integer getExpiresIn();
+    public Integer getExpiresIn() {
+        return expiresIn;
+    }
+
+    /**
+     *
+     * @param expiresIn The lifetime in seconds of the access token.
+     */
+    public void setExpiresIn(@Nullable Integer expiresIn) {
+        this.expiresIn = expiresIn;
+    }
 
     /**
      *
      * @return Scope of the access token.
      */
     @Nullable
-    String getScope();
+    public String getScope() {
+        return scope;
+    }
 
     /**
+     *
+     * @param scope Scope of the access token.
+     */
+    public void setScope(@Nullable String scope) {
+        this.scope = scope;
+    }
+
+    /**
+     *
      * @return The refresh token, which can be used to obtain new access tokens using the same authorization grant.
      */
     @Nullable
-    String getRefreshToken();
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    /**
+     *
+     * @param refreshToken The refresh token, which can be used to obtain new access tokens using the same authorization grant.
+     */
+    public void setRefreshToken(@Nullable String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
 }

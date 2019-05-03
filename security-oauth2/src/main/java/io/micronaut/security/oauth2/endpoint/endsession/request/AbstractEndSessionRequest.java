@@ -25,18 +25,27 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 
-public abstract class AbstractEndSessionRequest implements EndSessionRequest {
+/**
+ * A base class to extend from to log out of an OpenID provider.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
+public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
 
-    public static final String PARAMETERS_KEY = "parameters";
+    private static final String PARAMETERS_KEY = "parameters";
 
-    @Nullable
     protected final EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder;
     protected final OauthClientConfiguration clientConfiguration;
     protected final OpenIdProviderMetadata providerMetadata;
 
-    public AbstractEndSessionRequest(@Nullable EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata
+     */
+    public AbstractEndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                      OauthClientConfiguration clientConfiguration,
                                      OpenIdProviderMetadata providerMetadata) {
         this.endSessionCallbackUrlBuilder = endSessionCallbackUrlBuilder;
@@ -50,20 +59,31 @@ public abstract class AbstractEndSessionRequest implements EndSessionRequest {
         return getTemplate().expand(getParameters(originating, authentication));
     }
 
-    protected Map<String, Object> getParameters(HttpRequest originating, Authentication authentication) {
+    private Map<String, Object> getParameters(HttpRequest originating, Authentication authentication) {
         return Collections.singletonMap(PARAMETERS_KEY, getArguments(originating, authentication));
     }
 
-    protected UriTemplate getTemplate() {
+    private UriTemplate getTemplate() {
         return UriTemplate.of(getUrl()).nest("{?" + PARAMETERS_KEY + "*}");
     }
 
+    /**
+     * @return The url of the request
+     */
     protected abstract String getUrl();
 
+    /**
+     * @param originating The originating request
+     * @param authentication The authentication
+     * @return The parameters to include in the URL
+     */
     protected abstract Map<String, Object> getArguments(HttpRequest originating, Authentication authentication);
 
-    protected Optional<String> getRedirectUri(HttpRequest originating) {
-        return Optional.ofNullable(endSessionCallbackUrlBuilder)
-                .map(builder -> builder.build(originating, null));
+    /**
+     * @param originating The originating request
+     * @return The absolute redirect URI
+     */
+    protected String getRedirectUri(HttpRequest originating) {
+        return endSessionCallbackUrlBuilder.build(originating, null);
     }
 }

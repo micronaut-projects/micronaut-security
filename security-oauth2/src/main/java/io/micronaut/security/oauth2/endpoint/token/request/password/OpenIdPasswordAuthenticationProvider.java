@@ -44,6 +44,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * An {@link AuthenticationProvider} that delegates to an OpenID provider using the
+ * password grant flow.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(OauthPasswordAuthenticationProvider.class);
@@ -55,6 +62,13 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
     private final OpenIdUserDetailsMapper openIdUserDetailsMapper;
     private final OpenIdTokenResponseValidator tokenResponseValidator;
 
+    /**
+     * @param clientConfiguration The client configuration
+     * @param openIdProviderMetadata The provider metadata
+     * @param tokenEndpointClient The token endpoint client
+     * @param openIdUserDetailsMapper The user details mapper
+     * @param tokenResponseValidator The token response validator
+     */
     public OpenIdPasswordAuthenticationProvider(OauthClientConfiguration clientConfiguration,
                                                 OpenIdProviderMetadata openIdProviderMetadata,
                                                 TokenEndpointClient tokenEndpointClient,
@@ -101,6 +115,12 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
                 });
     }
 
+    /**
+     * Builds the secure endpoint from the provider metadata
+     *
+     * @param openIdProviderMetadata The provider metadata
+     * @return The token endpoint
+     */
     protected SecureEndpoint getTokenEndpoint(OpenIdProviderMetadata openIdProviderMetadata) {
         List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
         List<AuthenticationMethod> authenticationMethods = null;

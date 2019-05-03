@@ -29,7 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Adapts from a Map to {@link AuthorizationErrorResponse}.
+ * Default implementation of {@link AuthorizationErrorResponse}
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -40,8 +40,6 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
     private final ConvertibleMultiValues<String> responseData;
 
     /**
-     * Constructs an adapter from a Map to {@link AuthorizationErrorResponse}.
-     *
      * @param request     The callback request
      * @param stateSerDes The state serializer/deserializer
      */

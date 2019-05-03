@@ -39,10 +39,9 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationRedirectUrlBuilder.class);
 
     /**
-     *
      * @param authorizationRequest The authorization request
      * @param authorizationEndpoint The authorization endpoint
-     * @return Authorization redirect url
+     * @return The authorization redirect url
      */
     @Override
     public String buildUrl(AuthorizationRequest authorizationRequest,
@@ -73,7 +72,6 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
     }
 
     /**
-     *
      * @param authorizationRequest Authentication Request
      * @return A parameter map which contains the URL variables used to construct the authorization redirect url.
      */

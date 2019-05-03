@@ -41,7 +41,7 @@ import java.text.ParseException;
 import java.util.Optional;
 
 /**
- * Default implementation of {@link OauthAuthorizationResponseHandler}.
+ * Default implementation of {@link OpenIdAuthorizationResponseHandler}.
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -57,12 +57,18 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
     private final CallbackUrlBuilder callbackUrlBuilder;
     private final @Nullable StateValidator stateValidator;
 
-
-    DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
-                                              DefaultOpenIdUserDetailsMapper userDetailsMapper,
-                                              TokenEndpointClient tokenEndpointClient,
-                                              CallbackUrlBuilder callbackUrlBuilder,
-                                              @Nullable StateValidator stateValidator) {
+    /**
+     * @param tokenResponseValidator The token response validator
+     * @param userDetailsMapper The user details mapper
+     * @param tokenEndpointClient The token endpoint client
+     * @param callbackUrlBuilder The callback url builder
+     * @param stateValidator The state validator
+     */
+    public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
+                                                     DefaultOpenIdUserDetailsMapper userDetailsMapper,
+                                                     TokenEndpointClient tokenEndpointClient,
+                                                     CallbackUrlBuilder callbackUrlBuilder,
+                                                     @Nullable StateValidator stateValidator) {
         this.tokenResponseValidator = tokenResponseValidator;
         this.defaultUserDetailsMapper = userDetailsMapper;
         this.tokenEndpointClient = tokenEndpointClient;

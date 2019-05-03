@@ -24,10 +24,25 @@ import org.reactivestreams.Publisher;
 
 import javax.annotation.Nullable;
 
+/**
+ * Responsible for handling the authorization callback response
+ * from an OpenID provider.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface OpenIdAuthorizationResponseHandler {
 
     /**
-     * @return A Http Response
+     * Receives the authorization response and ultimately
+     * returns the authentication response.
+     *
+     * @param authorizationResponse The authorization response
+     * @param clientConfiguration The client configuration
+     * @param openIdProviderMetadata The provider metadata
+     * @param userDetailsMapper The user details mapper
+     * @param tokenEndpoint The token endpoint
+     * @return An authentication response publisher
      */
     Publisher<AuthenticationResponse> handle(AuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,

@@ -20,7 +20,6 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
-import io.micronaut.http.HttpParameters;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 
@@ -29,7 +28,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Adapts from {@link HttpParameters} to {@link AuthorizationResponse}.
+ * The default implementation of {@link AuthorizationResponse} for
+ * OAuth 2.0 provider authorization responses.
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -41,8 +41,7 @@ public class DefaultAuthorizationResponse extends StateAwareAuthorizationCallbac
     private final HttpRequest<Map<String, Object>> request;
 
     /**
-     * Constructs an adapter from {@link HttpParameters} to {@link AuthorizationErrorResponse}.
-     * @param request Http Parameters
+     * @param request The request
      * @param stateSerDes State Serdes
      */
     public DefaultAuthorizationResponse(@Parameter HttpRequest<Map<String, Object>> request,

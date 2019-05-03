@@ -36,7 +36,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@link AuthenticationProvider} for Password Grant Type.
+ * An {@link AuthenticationProvider} that delegates to an OAuth 2.0 provider using the
+ * password grant flow.
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -51,10 +52,9 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
     private final OauthUserDetailsMapper userDetailsMapper;
 
     /**
-     *
-     * @param tokenEndpointClient Token Endpoint Client
-     * @param clientConfiguration OAuth 2.0 Client Configuration
-     * @param userDetailsMapper  OAuth 2.0 User Details Mapper
+     * @param tokenEndpointClient The token endpoint client
+     * @param clientConfiguration The client configuration
+     * @param userDetailsMapper  The user details mapper
      */
     public OauthPasswordAuthenticationProvider(TokenEndpointClient tokenEndpointClient,
                                                OauthClientConfiguration clientConfiguration,
@@ -62,18 +62,7 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
         this.tokenEndpointClient = tokenEndpointClient;
         this.clientConfiguration = clientConfiguration;
         this.userDetailsMapper = userDetailsMapper;
-
-        if (!clientConfiguration.getToken().isPresent()) {
-            throw new IllegalArgumentException("Missing token endpoint configuration");
-        }
-        SecureEndpointConfiguration endpointConfiguration = clientConfiguration.getToken().get();
-
-        List<AuthenticationMethod> authMethodsSupported = Collections.singletonList(endpointConfiguration.getAuthMethod()
-                .orElse(AuthenticationMethod.CLIENT_SECRET_BASIC));
-        if (!endpointConfiguration.getUrl().isPresent()) {
-            throw new IllegalArgumentException("Token endpoint URL must not be null");
-        }
-        this.secureEndpoint = new DefaultSecureEndpoint(endpointConfiguration.getUrl().get(), authMethodsSupported);
+        this.secureEndpoint = getTokenEndpoint(clientConfiguration);
     }
 
     @Override
@@ -87,5 +76,24 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
                     return Flowable.fromPublisher(userDetailsMapper.createUserDetails(response))
                             .map(AuthenticationResponse.class::cast);
                 });
+    }
+
+    /**
+     * Builds the secure endpoint from the client configuration
+     *
+     * @param clientConfiguration The client configuration
+     * @return The token endpoint
+     */
+    protected SecureEndpoint getTokenEndpoint(OauthClientConfiguration clientConfiguration) {
+        SecureEndpointConfiguration endpointConfiguration = clientConfiguration.getToken()
+                .orElseThrow(() -> new IllegalArgumentException("Token endpoint configuration is missing for provider [" + clientConfiguration.getName() + "]"));
+
+        List<AuthenticationMethod> authMethodsSupported = Collections.singletonList(endpointConfiguration.getAuthMethod()
+                .orElse(AuthenticationMethod.CLIENT_SECRET_BASIC));
+
+        String url = endpointConfiguration.getUrl().orElseThrow(() ->
+            new IllegalArgumentException("Token endpoint URL is null for provider [" + clientConfiguration.getName() + "]"));
+
+        return new DefaultSecureEndpoint(url, authMethodsSupported);
     }
 }

@@ -34,8 +34,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Provides an {@link AuthorizationRequest} by combining {@link OauthClientConfiguration},
- * {@link StateFactory}, {@link NonceProvider}.
+ * The default {@link OpenIdAuthorizationRequest} implementation.
+ *
  * @author Sergio del Amo
  * @since 1.2.0
  */
@@ -52,7 +52,6 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
     private final Supplier<String> stateSupplier;
 
     /**
-     *
      * @param request The original request prior redirect.
      * @param oauthConfiguration The OAuth 2.0 configuration
      * @param callbackUrlBuilder The callback URL builder

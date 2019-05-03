@@ -23,23 +23,29 @@ import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallb
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
  * Provides specific configuration to logout from Okta.
  *
+ * @see <a href="https://developer.okta.com/docs/api/resources/oidc/#logout">Okta Logout Endpont</a>
+ *
  * @author Sergio del Amo
  * @since 1.2.0
  */
-public class OktaEndSessionRequest extends AbstractEndSessionRequest {
+public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
 
-    public static final String PARAM_POST_LOGOUT_REDIRECT_URI = "post_logout_redirect_uri";
-    public static final String PARAM_ID_TOKEN_HINT = "id_token_hint";
+    private static final String PARAM_POST_LOGOUT_REDIRECT_URI = "post_logout_redirect_uri";
+    private static final String PARAM_ID_TOKEN_HINT = "id_token_hint";
 
-    public OktaEndSessionRequest(@Nullable EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                 OauthClientConfiguration clientConfiguration,
-                                 OpenIdProviderMetadata providerMetadata) {
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata
+     */
+    public OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                  OauthClientConfiguration clientConfiguration,
+                                  OpenIdProviderMetadata providerMetadata) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
@@ -53,13 +59,10 @@ public class OktaEndSessionRequest extends AbstractEndSessionRequest {
                                                Authentication authentication) {
         Map<String, Object> attributes = authentication.getAttributes();
         Map<String, Object> arguments = new HashMap<>();
-
         if (attributes.containsKey(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY)) {
             arguments.put(PARAM_ID_TOKEN_HINT, attributes.get(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY));
         }
-
-        getRedirectUri(originating).ifPresent(url -> arguments.put(PARAM_POST_LOGOUT_REDIRECT_URI, url));
-
+        arguments.put(PARAM_POST_LOGOUT_REDIRECT_URI, getRedirectUri(originating));
         return arguments;
     }
 

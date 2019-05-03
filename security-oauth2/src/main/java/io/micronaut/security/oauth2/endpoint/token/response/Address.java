@@ -42,12 +42,15 @@ public class Address {
     private String country;
 
     /**
-     * Address Claim constructor.
+     * Default constructor
      */
     public Address() {
 
     }
 
+    /**
+     * @param map The address data
+     */
     public Address(Map<String, Object> map) {
         if (map.containsKey(COUNTRY)) {
             this.setCountry(map.get(COUNTRY).toString());

@@ -20,18 +20,29 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 
+/**
+ * A base class that provides getters for common context properties.
+ *
+ * @param <G> The grant or body of the request
+ * @param <R> The response type
+ */
 public abstract class AbstractTokenRequestContext<G, R extends TokenResponse> implements TokenRequestContext<G, R> {
 
     protected final MediaType mediaType;
-    protected final SecureEndpoint endpoint;
+    protected final SecureEndpoint tokenEndpoint;
     protected final OauthClientConfiguration clientConfiguration;
 
+    /**
+     * @param mediaType The media type
+     * @param tokenEndpoint The token endpoint
+     * @param clientConfiguration The client configuration
+     */
     public AbstractTokenRequestContext(MediaType mediaType,
-                                       SecureEndpoint endpoint,
+                                       SecureEndpoint tokenEndpoint,
                                        OauthClientConfiguration clientConfiguration) {
 
         this.mediaType = mediaType;
-        this.endpoint = endpoint;
+        this.tokenEndpoint = tokenEndpoint;
         this.clientConfiguration = clientConfiguration;
     }
 
@@ -42,7 +53,7 @@ public abstract class AbstractTokenRequestContext<G, R extends TokenResponse> im
 
     @Override
     public SecureEndpoint getEndpoint() {
-        return endpoint;
+        return tokenEndpoint;
     }
 
     @Override

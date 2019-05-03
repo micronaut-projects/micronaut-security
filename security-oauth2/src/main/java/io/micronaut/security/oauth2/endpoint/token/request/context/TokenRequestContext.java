@@ -21,17 +21,41 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 
+/**
+ * Represents the context of a token endpoint request.
+ *
+ * @param <G> The grant or body of the request
+ * @param <R> The response type
+ */
 public interface TokenRequestContext<G, R extends TokenResponse> {
 
+    /**
+     * @return The grant or body of the request
+     */
     G getGrant();
 
+    /**
+     * @return The response argument
+     */
     Argument<R> getResponseType();
 
+    /**
+     * @return The error response argument
+     */
     Argument<?> getErrorResponseType();
 
+    /**
+     * @return The media type of the grant or body
+     */
     MediaType getMediaType();
 
+    /**
+     * @return The endpoint of which to send the request
+     */
     SecureEndpoint getEndpoint();
 
+    /**
+     * @return The client configuration
+     */
     OauthClientConfiguration getClientConfiguration();
 }

@@ -21,6 +21,7 @@ import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.exceptions.BeanInstantiationException;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
@@ -34,8 +35,8 @@ import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguratio
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
-import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest;
-import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionResolver;
+import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
+import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.grants.GrantType;
@@ -52,14 +53,15 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Factory
-public class OpenIdClientFactory {
+@Internal
+class OpenIdClientFactory {
 
     private final BeanContext beanContext;
 
     /**
      * @param beanContext The bean context
      */
-    public OpenIdClientFactory(BeanContext beanContext) {
+    OpenIdClientFactory(BeanContext beanContext) {
         this.beanContext = beanContext;
     }
 
@@ -71,7 +73,7 @@ public class OpenIdClientFactory {
      * @return The OpenID configuration
      */
     @EachBean(OpenIdClientConfiguration.class)
-    public OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
+    OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
                                                    HttpClientConfiguration defaultHttpConfiguration) {
         OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
                 .map(issuer -> {
@@ -96,17 +98,17 @@ public class OpenIdClientFactory {
      * @param userDetailsMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
-     * @param endSessionResolver The end session resolver
+     * @param endSessionEndpointResolver The end session resolver
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @return The OpenID client, or null if the client configuration does not allow it
      */
     @EachBean(OpenIdConfiguration.class)
-    public DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
+    DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                             @Parameter OpenIdProviderMetadata openIdProviderMetadata,
                                             @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                             AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                                             OpenIdAuthorizationResponseHandler authorizationResponseHandler,
-                                            EndSessionResolver endSessionResolver,
+                                            EndSessionEndpointResolver endSessionEndpointResolver,
                                             EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
         if (oauthClientConfiguration.isEnabled()) {
             Optional<OpenIdClientConfiguration> openIdClientConfiguration = oauthClientConfiguration.getOpenid();
@@ -116,9 +118,9 @@ public class OpenIdClientFactory {
                     Optional<AuthorizationEndpointConfiguration> authorization = clientConfiguration.getAuthorization();
                     if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
 
-                        EndSessionRequest endSessionRequest = null;
+                        EndSessionEndpoint endSessionEndpoint = null;
                         if (clientConfiguration.getEndSession().isEnabled()) {
-                            endSessionRequest = endSessionResolver.resolve(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
+                            endSessionEndpoint = endSessionEndpointResolver.resolve(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
                         }
 
                         return new DefaultOpenIdClient(oauthClientConfiguration,
@@ -127,7 +129,7 @@ public class OpenIdClientFactory {
                                 redirectUrlBuilder,
                                 authorizationResponseHandler,
                                 beanContext,
-                                endSessionRequest);
+                                endSessionEndpoint);
                     }
                 }
             }

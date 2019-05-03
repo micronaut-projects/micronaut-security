@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
+/**
+ * A marker contract to denote a given authorization request is
+ * not part of the OpenID standard.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface OauthAuthorizationRequest extends AuthorizationRequest {
 }
