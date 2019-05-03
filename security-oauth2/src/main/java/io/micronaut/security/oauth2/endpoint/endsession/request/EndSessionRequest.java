@@ -30,10 +30,10 @@ import javax.annotation.Nullable;
 public interface EndSessionRequest {
 
     /**
+     * @param originating The Originating HTTP Request
      * @param authentication The authentication.
      * @return The OpenID provider end session URL.
      */
     @Nullable
-    String getUrl(HttpRequest originating,
-                  Authentication authentication);
+    String getUrl(HttpRequest originating, Authentication authentication);
 }
