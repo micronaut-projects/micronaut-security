@@ -493,9 +493,9 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @ConfigurationProperties("end-session")
         public static class EndSessionConfigurationProperties implements Toggleable {
 
-            private static Boolean DEFAULT_ENABLED = false;
+            private static Boolean DEFAULT_ENABLED = true;
 
-            private boolean enabled = false;
+            private boolean enabled = DEFAULT_ENABLED;
 
             @Override
             public boolean isEnabled() {
