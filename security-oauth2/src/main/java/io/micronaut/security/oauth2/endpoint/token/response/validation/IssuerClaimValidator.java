@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.validator.JWTClaimsSetUtils;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ import javax.inject.Singleton;
  *
  * @see <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">Open ID Provider Metadata Spec</a>
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation - OpenID Connect Core Spec</a>
- * @since 1.0.0
+ * @since 1.2.0
  * @author Sergio del Amo
  */
 @Singleton

@@ -22,14 +22,26 @@ import io.micronaut.security.authentication.Authentication;
 import java.util.Optional;
 
 /**
- * OpenID Connect Client.
+ * Extends the {@link OauthClient} with OpenID specific functionality.
  *
+ * @see OauthClient
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface OpenIdClient extends OauthClient {
 
+    /**
+     * @return True if this client supports end session
+     */
     boolean supportsEndSession();
 
+    /**
+     * Redirects to the end session endpoint of an OpenID
+     * provider.
+     *
+     * @param request The current request
+     * @param authentication The current authentication
+     * @return An optional response
+     */
     Optional<HttpResponse> endSessionRedirect(HttpRequest request, Authentication authentication);
 }

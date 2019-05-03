@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * Provides an URL to end session with the OpenID provider.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface EndSessionRequest {
 

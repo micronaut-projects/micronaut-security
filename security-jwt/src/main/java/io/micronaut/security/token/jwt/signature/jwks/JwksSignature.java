@@ -70,6 +70,11 @@ public class JwksSignature implements SignatureConfiguration {
         this(jwksSignatureConfiguration.getUrl(), jwksSignatureConfiguration.getKeyType(), jwkValidator);
     }
 
+    /**
+     * @param url The JWK url
+     * @param keyType The JWK key type
+     * @param jwkValidator JWK Validator to be used.
+     */
     @Inject
     public JwksSignature(String url,
                          @Nullable KeyType keyType,

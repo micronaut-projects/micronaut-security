@@ -13,4 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * Classes related to OpenID end session endpoint requests and responses.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 package io.micronaut.security.oauth2.endpoint.endsession;

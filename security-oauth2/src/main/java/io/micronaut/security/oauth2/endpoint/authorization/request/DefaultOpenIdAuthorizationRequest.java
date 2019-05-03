@@ -37,7 +37,7 @@ import java.util.function.Supplier;
  * Provides an {@link AuthorizationRequest} by combining {@link OauthClientConfiguration},
  * {@link StateFactory}, {@link NonceProvider}.
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Prototype
 public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {

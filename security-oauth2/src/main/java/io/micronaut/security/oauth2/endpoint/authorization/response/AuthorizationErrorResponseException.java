@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * A runtime exception thrown when a Oauth 2. Error code is received from the authorization endpoint.
  *
  * @author Sergio del Amo
- * @since 1.0
+ * @since 1.2.0
  */
 public class AuthorizationErrorResponseException extends RuntimeException {
 

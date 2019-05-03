@@ -34,7 +34,6 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Authorization
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
@@ -44,6 +43,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * The default implementation of {@link OpenIdClient}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public class DefaultOpenIdClient implements OpenIdClient {
 
     private final OauthClientConfiguration clientConfiguration;
@@ -55,6 +60,15 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private final BeanContext beanContext;
     private final EndSessionRequest endSessionRequest;
 
+    /**
+     * @param clientConfiguration The client configuration
+     * @param openIdProviderMetadata The provider metadata
+     * @param userDetailsMapper The user details mapper
+     * @param redirectUrlBuilder The redirect URL builder
+     * @param authorizationResponseHandler The authorization response handler
+     * @param beanContext The bean context
+     * @param endSessionRequest The end session request
+     */
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                OpenIdProviderMetadata openIdProviderMetadata,
                                @Nullable OpenIdUserDetailsMapper userDetailsMapper,
@@ -122,10 +136,17 @@ public class DefaultOpenIdClient implements OpenIdClient {
         }
     }
 
+    /**
+     * @param responseData The response data
+     * @return True if the response indicates an error occurred.
+     */
     protected boolean isErrorCallback(ConvertibleMultiValues<String> responseData) {
         return responseData.contains("error");
     }
 
+    /**
+     * @return The token endpoint
+     */
     protected SecureEndpoint getTokenEndpoint() {
         List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
         List<AuthenticationMethod> authenticationMethods = null;

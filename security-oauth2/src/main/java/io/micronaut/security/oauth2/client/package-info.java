@@ -15,9 +15,9 @@
  */
 
 /**
- * Open ID Connect related classes.
+ * Classes related to the creation of OAuth 2.0 clients.
  *
- * @author Sergio del Amo
- * @since 1.0.0
+ * @author James Kleeh
+ * @since 1.2.0
  */
-package io.micronaut.security.oauth2.openid;
+package io.micronaut.security.oauth2.client;

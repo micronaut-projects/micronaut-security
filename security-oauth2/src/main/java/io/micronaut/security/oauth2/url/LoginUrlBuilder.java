@@ -19,9 +19,19 @@ import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 
 import javax.inject.Singleton;
 
+/**
+ * Builds a URL to log in with an OAuth 2.0 provider.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Singleton
 public class LoginUrlBuilder extends AbstractUrlBuilder {
 
+    /**
+     * @param hostResolver The host resolver
+     * @param oauthConfigurationProperties The configuration
+     */
     LoginUrlBuilder(HostResolver hostResolver,
                     OauthConfigurationProperties oauthConfigurationProperties) {
         super(hostResolver, oauthConfigurationProperties.getLoginUri());

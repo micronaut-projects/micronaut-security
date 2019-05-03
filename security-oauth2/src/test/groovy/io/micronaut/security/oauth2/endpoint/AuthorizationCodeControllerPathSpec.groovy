@@ -8,7 +8,7 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.endpoints.token.request.TokenEndpointClient
 import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpoint
 import spock.lang.AutoCleanup

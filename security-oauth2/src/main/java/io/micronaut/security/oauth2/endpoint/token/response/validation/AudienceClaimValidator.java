@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.validator.JWTClaimsSetUtils;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ import java.util.List;
  * The Client MUST validate that the aud (audience) Claim contains its client_id value registered at the Issuer identified by the iss (issuer) Claim as an audience. The aud (audience) Claim MAY contain an array with more than one element. The ID Token MUST be rejected if the ID Token does not list the Client as a valid audience, or if it contains additional audiences not trusted by the Client.
  *
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation OpenID Connect Core Spec</a>
- * @since 1.0.0
+ * @since 1.2.0
  * @author Sergio del Amo
  */
 @Singleton

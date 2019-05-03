@@ -22,14 +22,12 @@ import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -39,7 +37,7 @@ import java.util.*;
  * @see <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/logout-endpoint.html">AWS Cognito Logout Endpoint</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
 

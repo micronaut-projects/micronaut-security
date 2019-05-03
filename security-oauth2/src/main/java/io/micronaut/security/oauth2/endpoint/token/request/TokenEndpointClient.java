@@ -25,8 +25,8 @@ import javax.annotation.Nonnull;
 /**
  * Generates a Token endpoint request for an Authorization code grant.
  *
- * @since 1.0.0
  * @author Sergio del Amo
+ * @since 1.2.0
  */
 public interface TokenEndpointClient {
 

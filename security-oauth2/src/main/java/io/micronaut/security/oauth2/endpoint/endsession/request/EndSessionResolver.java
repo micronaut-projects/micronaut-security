@@ -20,7 +20,7 @@ import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
 import javax.inject.Singleton;
 import java.net.URL;

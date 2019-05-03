@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * Responsible for serialization and de-serialization of the state.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface StateSerDes {
 

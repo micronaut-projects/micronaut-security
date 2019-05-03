@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthError">Authentication Error Response</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface AuthorizationErrorResponse {
 

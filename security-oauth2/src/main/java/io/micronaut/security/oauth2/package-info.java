@@ -18,7 +18,7 @@
  * OAuth 2.0 related classes classes.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Configuration

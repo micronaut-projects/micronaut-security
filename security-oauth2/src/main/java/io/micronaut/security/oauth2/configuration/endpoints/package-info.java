@@ -15,9 +15,9 @@
  */
 
 /**
- * OAuth 2.0 routing classes.
+ * OAuth 2.0 endpoint configuration classes.
  *
  * @author Sergio del Amo
  * @since 1.2.0
  */
-package io.micronaut.security.oauth2.routes;
+package io.micronaut.security.oauth2.configuration.endpoints;

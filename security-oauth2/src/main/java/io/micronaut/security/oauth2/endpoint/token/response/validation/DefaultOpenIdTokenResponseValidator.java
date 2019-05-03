@@ -23,7 +23,7 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
@@ -40,7 +40,7 @@ import java.util.Optional;
  * Default implementation of {@link OpenIdTokenResponseValidator}.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Singleton
 public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseValidator {

@@ -15,9 +15,25 @@
  */
 package io.micronaut.security.oauth2.grants;
 
+/**
+ * A contract for a grant that requires authentication.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface SecureGrant {
 
+    /**
+     * Sets the client id in the grant.
+     *
+     * @param clientId The client id
+     */
     void setClientId(String clientId);
 
+    /**
+     * Sets the client secret in the grant.
+     *
+     * @param clientSecret The client secret
+     */
     void setClientSecret(String clientSecret);
 }

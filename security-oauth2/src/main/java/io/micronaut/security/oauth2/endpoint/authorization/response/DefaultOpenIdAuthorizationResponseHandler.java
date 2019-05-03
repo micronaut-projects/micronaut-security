@@ -27,7 +27,7 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTok
 import io.micronaut.security.oauth2.endpoint.token.response.*;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -44,7 +44,7 @@ import java.util.Optional;
  * Default implementation of {@link OauthAuthorizationResponseHandler}.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Singleton
 public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthorizationResponseHandler {

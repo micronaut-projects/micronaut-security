@@ -25,25 +25,26 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Password Grant Request.
+ * Resource Owner Password Credentials Grant.
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.3.2">Access Token Request</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PasswordGrant implements SecureGrant, AsMap {
 
-    public static final String KEY_GRANT_TYPE = "grant_type";
-    public static final String KEY_CLIENT_ID = "client_id";
-    public static final String KEY_CLIENT_SECRET = "client_secret";
-    public static final String KEY_USERNAME = "username";
-    public static final String KEY_PASSWORD = "password";
-    public static final String KEY_SCOPE = "scope";
+    private static final String KEY_GRANT_TYPE = "grant_type";
+    private static final String KEY_CLIENT_ID = "client_id";
+    private static final String KEY_CLIENT_SECRET = "client_secret";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_PASSWORD = "password";
+    private static final String KEY_SCOPE = "scope";
 
     private String grantType = GrantType.PASSWORD.toString();
     private String clientId;
@@ -53,13 +54,14 @@ public class PasswordGrant implements SecureGrant, AsMap {
     private String scope;
 
     /**
-     * Instantiate Password Grant.
+     * Default constructor.
      */
     public PasswordGrant() {
     }
 
     /**
-     * Instantiate Password Grant.
+     * @param authenticationRequest The authentication request
+     * @param clientConfiguration The client configuration
      */
     public PasswordGrant(AuthenticationRequest authenticationRequest, OauthClientConfiguration clientConfiguration) {
         username = authenticationRequest.getIdentity().toString();

@@ -21,7 +21,7 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -30,7 +30,7 @@ import java.util.*;
  * Provides specific configuration to logout from Okta.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public class OktaEndSessionRequest extends AbstractEndSessionRequest {
 

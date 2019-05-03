@@ -27,7 +27,7 @@ import javax.inject.Singleton;
  * An exception handler for {@link AuthorizationErrorResponseException}.
  *
  * @author Sergio del Amo
- * @since 1.0
+ * @since 1.2.0
  */
 @Singleton
 @Requires(classes = {AuthorizationErrorResponseException.class, ExceptionHandler.class})

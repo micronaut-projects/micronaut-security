@@ -21,7 +21,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ import java.util.*;
  *
  * @see <a href="https://auth0.com/docs/logout/guides/logout-auth0">Log Users Out of Auth0</a>
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public class Auth0EndSessionRequest extends AbstractEndSessionRequest {
 

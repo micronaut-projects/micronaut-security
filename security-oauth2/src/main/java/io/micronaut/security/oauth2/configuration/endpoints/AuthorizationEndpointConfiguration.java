@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * OAuth 2.0. Authorization Endpoint configuration.
+ * OAuth 2.0 authorization endpoint configuration.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface AuthorizationEndpointConfiguration extends EndpointConfiguration {
 

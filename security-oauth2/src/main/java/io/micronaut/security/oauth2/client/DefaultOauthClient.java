@@ -42,6 +42,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The default implementation of {@link OauthClient}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public class DefaultOauthClient implements OauthClient {
 
     private final OauthClientConfiguration clientConfiguration;
@@ -51,6 +57,13 @@ public class DefaultOauthClient implements OauthClient {
     private final BeanContext beanContext;
     private final SecureEndpoint tokenEndpoint;
 
+    /**
+     * @param clientConfiguration The client configuration
+     * @param userDetailsMapper The user details mapper
+     * @param redirectUrlBuilder The redirect URL builder
+     * @param authorizationResponseHandler The authorization response handler
+     * @param beanContext The bean context
+     */
     public DefaultOauthClient(OauthClientConfiguration clientConfiguration,
                               OauthUserDetailsMapper userDetailsMapper,
                               AuthorizationRedirectUrlBuilder redirectUrlBuilder,
@@ -102,10 +115,17 @@ public class DefaultOauthClient implements OauthClient {
         }
     }
 
+    /**
+     * @param responseData The response data
+     * @return True if the response indicates an error occurred.
+     */
     protected boolean isErrorCallback(ConvertibleMultiValues<String> responseData) {
         return responseData.contains("error");
     }
 
+    /**
+     * @return The token endpoint
+     */
     protected SecureEndpoint getTokenEndpoint() {
         String url = clientConfiguration.getToken()
                 .flatMap(EndpointConfiguration::getUrl).orElseThrow(() -> new ConfigurationException("Oauth client requires the token endpoint URL to be set in configuration"));

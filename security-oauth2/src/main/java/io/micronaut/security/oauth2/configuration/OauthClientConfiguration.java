@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Encapsulates OAuth 2.0 application configuration.
+ * OAuth 2.0 client configuration.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface OauthClientConfiguration extends Toggleable {
 
@@ -58,11 +58,20 @@ public interface OauthClientConfiguration extends Toggleable {
     @Nonnull
     List<String> getScopes();
 
+    /**
+     * @return The grant type
+     */
     @Nonnull
     GrantType getGrantType();
 
+    /**
+     * @return The optional token endpoint configuration
+     */
     Optional<SecureEndpointConfiguration> getToken();
 
+    /**
+     * @return The optional authorization endpoint configuration
+     */
     Optional<EndpointConfiguration> getAuthorization();
 
     /**

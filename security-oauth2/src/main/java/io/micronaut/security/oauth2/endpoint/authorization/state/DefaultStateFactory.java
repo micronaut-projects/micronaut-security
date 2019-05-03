@@ -30,7 +30,7 @@ import java.util.Optional;
  * request URI to redirect back to after authentication.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Singleton
 public class DefaultStateFactory implements StateFactory {

@@ -19,7 +19,7 @@ import io.micronaut.http.HttpRequest;
 
 /**
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface UrlBuilder {
 

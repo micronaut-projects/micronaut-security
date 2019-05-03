@@ -26,7 +26,7 @@ import org.reactivestreams.Publisher;
  * Handles OAuth 2.0 Authorization responses.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface OauthAuthorizationResponseHandler {
 

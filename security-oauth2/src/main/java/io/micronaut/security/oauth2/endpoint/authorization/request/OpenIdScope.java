@@ -20,7 +20,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
  * OpenID Connect scope values.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public enum OpenIdScope {
 

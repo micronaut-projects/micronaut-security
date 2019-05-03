@@ -31,7 +31,7 @@ import java.util.Optional;
  * Builds an authorization redirect url.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Singleton
 public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedirectUrlBuilder {

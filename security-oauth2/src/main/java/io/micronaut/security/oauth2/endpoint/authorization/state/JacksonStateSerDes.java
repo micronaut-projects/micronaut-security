@@ -28,7 +28,7 @@ import java.io.IOException;
  * Jackson based implementation for state serdes.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Singleton
 public class JacksonStateSerDes implements StateSerDes {

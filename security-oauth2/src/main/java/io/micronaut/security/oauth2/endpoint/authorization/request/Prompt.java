@@ -22,7 +22,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">OpenID connect / Authentication Request</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public enum Prompt {
 

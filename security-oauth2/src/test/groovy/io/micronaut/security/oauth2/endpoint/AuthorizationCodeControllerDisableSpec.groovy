@@ -6,7 +6,7 @@ import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler
 
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.openid.endpoints.token.TokenEndpoint
 import spock.lang.Shared
 import spock.lang.Specification

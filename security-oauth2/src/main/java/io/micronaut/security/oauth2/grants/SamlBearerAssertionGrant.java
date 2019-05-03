@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @see <a href="https://tools.ietf.org/html/rfc7522#section-2.1"> Using SAML Assertions as Authorization Grants</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -39,14 +39,13 @@ public class SamlBearerAssertionGrant {
     private String scope;
 
     /**
-     * Instantiates a SamlBearerAssertionGrant.
+     * Default constructor.
      */
     public SamlBearerAssertionGrant() {
 
     }
 
     /**
-     *
      * @return urn:ietf:params:oauth:grant-type:saml2-bearer
      */
     @Nonnull

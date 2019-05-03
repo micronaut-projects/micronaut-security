@@ -15,5 +15,11 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
+/**
+ * Revocation endpoint configuration.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface RevocationEndpointConfiguration extends SecureEndpointConfiguration {
 }

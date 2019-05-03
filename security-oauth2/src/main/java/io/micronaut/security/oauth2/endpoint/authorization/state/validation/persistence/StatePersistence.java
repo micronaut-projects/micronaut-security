@@ -25,7 +25,7 @@ import java.util.Optional;
  * Persists the state for later retrieval necessary for validation.
  *
  * @author James Kleeh
- * @since 1.1.0
+ * @since 1.2.0
  */
 public interface StatePersistence {
 

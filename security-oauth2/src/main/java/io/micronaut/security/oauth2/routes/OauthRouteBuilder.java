@@ -35,9 +35,26 @@ import io.micronaut.web.router.DefaultRouteBuilder;
 import javax.inject.Singleton;
 import java.util.List;
 
+/**
+ * Registers routes dynamically for OAuth 2.0 authorization
+ * redirects, authorization callbacks, and end session redirects.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Singleton
 public class OauthRouteBuilder extends DefaultRouteBuilder {
 
+    /**
+     * @param executionHandleLocator The execution handler locator
+     * @param uriNamingStrategy The URI naming strategy
+     * @param conversionService The conversion service
+     * @param beanContext The bean context
+     * @param callbackUrlBuilder The callback URL builder
+     * @param loginUrlBuilder The login URL builder
+     * @param logoutUrlBuilder The logout URL builder
+     * @param controllerList The list of controllers
+     */
     public OauthRouteBuilder(ExecutionHandleLocator executionHandleLocator,
                              UriNamingStrategy uriNamingStrategy,
                              ConversionService<?> conversionService,

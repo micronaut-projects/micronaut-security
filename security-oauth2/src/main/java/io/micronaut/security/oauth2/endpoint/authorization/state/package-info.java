@@ -15,9 +15,9 @@
  */
 
 /**
- * Classes related to OAuth2 state management.
+ * Classes related to OAuth 2.0 state management.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state;

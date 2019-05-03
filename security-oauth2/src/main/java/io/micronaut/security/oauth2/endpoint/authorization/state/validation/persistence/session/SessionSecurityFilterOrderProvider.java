@@ -26,7 +26,7 @@ import javax.inject.Singleton;
  * Sets the security filter to execute after the session filter.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Requires(missingBeans = SecurityFilterOrderProvider.class)
 @Singleton

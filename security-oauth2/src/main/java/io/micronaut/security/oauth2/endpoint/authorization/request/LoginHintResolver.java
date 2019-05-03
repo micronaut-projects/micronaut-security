@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken>ID Token login_hint description</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface LoginHintResolver {
 

@@ -18,17 +18,23 @@ package io.micronaut.security.oauth2.configuration.endpoints;
 import javax.annotation.Nonnull;
 
 /**
+ * OpenID end session configuration.
+ *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface EndSessionConfiguration {
 
+    /**
+     * @return The key that should be set in the model
+     * of view responses to the value of the end session URL.
+     */
     @Nonnull
     String getViewModelKey();
 
     /**
-     *
-     * @return the redirect uri
+     * @return The URI that the provider should redirect
+     * back to after logout.
      */
     @Nonnull
     String getRedirectUri();

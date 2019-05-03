@@ -17,26 +17,22 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.core.naming.Named;
-import io.micronaut.core.util.Toggleable;
-import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.*;
 
 import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.Optional;
 
 /**
- * Configuration for an OpenID Provider.
+ * Configuration for an OpenID client.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface OpenIdClientConfiguration extends Named {
 
     /**
-     * @return URL using the https scheme with no query or fragment component that the Open ID Provider asserts as its Issuer Identifier.
+     * @return URL that the OpenID provider asserts as its issuer identifier.
      */
     Optional<URL> getIssuer();
 
@@ -66,19 +62,41 @@ public interface OpenIdClientConfiguration extends Named {
     Optional<SecureEndpointConfiguration> getRevocation();
 
     /**
+     * https://tools.ietf.org/html/rfc7591#section-3.1
+     * https://openid.net/specs/openid-connect-registration-1_0.html#ClientRegistration
+     *
      * @return The registration endpoint configuration
      */
     Optional<EndpointConfiguration> getRegistration();
 
     /**
+     * https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
+     *
      * @return The user info endpoint configuration
      */
     Optional<EndpointConfiguration> getUserInfo();
 
+    /**
+     * https://tools.ietf.org/html/rfc6749#section-3.1
+     * https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint
+     *
+     * @return The authorization endpoint configuration
+     */
     Optional<AuthorizationEndpointConfiguration> getAuthorization();
 
+    /**
+     * https://tools.ietf.org/html/rfc6749#section-4.1.3
+     * https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint
+     *
+     * @return The token endpoint configuration
+     */
     Optional<TokenEndpointConfiguration> getToken();
 
+    /**
+     * https://openid.net/specs/openid-connect-session-1_0.html
+     *
+     * @return The end session configuration
+     */
     @Nonnull
-    Toggleable getEndSession();
+    EndSessionEndpointConfiguration getEndSession();
 }

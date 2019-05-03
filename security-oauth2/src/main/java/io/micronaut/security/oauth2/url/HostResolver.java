@@ -18,9 +18,23 @@ package io.micronaut.security.oauth2.url;
 import io.micronaut.http.HttpRequest;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+/**
+ * Resolves the host name of the current server.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface HostResolver {
 
+    /**
+     * Returns the host name of the current server with the
+     * scheme. Example http://my-url.com.
+     *
+     * @param current The current request
+     * @return The host name of the current server
+     */
     @Nonnull
-    String resolve(@Nonnull HttpRequest originating);
+    String resolve(@Nullable HttpRequest current);
 }

@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,7 +28,7 @@ import java.util.Map;
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.1.3">Access Token Request</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -48,7 +47,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
     private String code;
 
     /**
-     * Instantiate Authorization Grant.
+     * Default Constructor.
      */
     public AuthorizationCodeGrant() {
 

@@ -19,7 +19,21 @@ import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfigurat
 
 import java.util.Optional;
 
+/**
+ * Configuration for OpenID not specific to a client.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface OpenIdConfiguration {
 
+    /**
+     * @return the Callback Uri
+     */
+    String getLogoutUri();
+
+    /**
+     * @return Optional end session configuration
+     */
     Optional<EndSessionConfiguration> getEndSession();
 }

@@ -30,7 +30,7 @@ import java.util.Map;
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.4.2">Access Token Request</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -43,7 +43,7 @@ public class ClientCredentialsGrant implements AsMap {
     private String scope;
 
     /**
-     * Instantiate ClientCredentialsGrant.
+     * Default Constructor.
      */
     public ClientCredentialsGrant() {
 

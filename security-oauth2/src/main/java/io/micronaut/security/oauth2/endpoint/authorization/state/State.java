@@ -24,7 +24,7 @@ import java.net.URI;
  * Represents the state sent in the authorization request and returned in the authorization response.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface State {
 

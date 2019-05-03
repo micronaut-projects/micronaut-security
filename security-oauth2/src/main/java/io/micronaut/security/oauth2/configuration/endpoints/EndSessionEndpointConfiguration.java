@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+package io.micronaut.security.oauth2.configuration.endpoints;
+
+import io.micronaut.core.util.Toggleable;
+
 /**
- * OAuth 2.0 routing classes.
+ * End session endpoint configuration.
  *
- * @author Sergio del Amo
+ * @author James Kleeh
  * @since 1.2.0
  */
-package io.micronaut.security.oauth2.routes;
+public interface EndSessionEndpointConfiguration extends EndpointConfiguration, Toggleable {
+}

@@ -21,14 +21,48 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import org.reactivestreams.Publisher;
 
 import java.util.Map;
-import java.util.Optional;
 
+/**
+ * A contract for an OAuth 2.0 client. This interface is the
+ * base class necessary for implementing OAuth 2.0 authorization code
+ * grant behavior.
+ *
+ * Given how generic the contract is, any pattern that relies on a redirect and a
+ * callback can be implemented with the contract. It could be used
+ * for implementing authentication with non standard or non supported
+ * standard providers, including OAuth 1.0. Those types of usages
+ * are not supported by this API and future major revisions may
+ * break their functionality.
+ *
+ * The client implementations are called through the {@link io.micronaut.security.oauth2.routes.OauthController}.
+ * A controller is created for each client bean and routes for the controller
+ * are registered in the {@link io.micronaut.security.oauth2.routes.OauthRouteBuilder}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface OauthClient {
 
+    /**
+     * @return The provider name
+     */
     String getName();
 
+    /**
+     * Responsible for redirecting to the authorization endpoint.
+     *
+     * @param originating The originating request
+     * @return A response publisher
+     */
     Publisher<HttpResponse> authorizationRedirect(HttpRequest originating);
 
+    /**
+     * Responsible for receiving the authorization callback request and returning
+     * an authentication response.
+     *
+     * @param request The callback request
+     * @return The authentication response
+     */
     Publisher<AuthenticationResponse> onCallback(HttpRequest<Map<String, Object>> request);
 
 }

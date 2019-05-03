@@ -25,7 +25,7 @@ import java.util.Optional;
  * Configuration properties implementation of state validation configuraiton.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 @ConfigurationProperties(DefaultStateValidationConfiguration.PREFIX)
 public class DefaultStateValidationConfiguration implements StateValidationConfiguration {

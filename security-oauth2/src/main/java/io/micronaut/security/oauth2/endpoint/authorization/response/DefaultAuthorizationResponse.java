@@ -32,7 +32,7 @@ import java.util.Objects;
  * Adapts from {@link HttpParameters} to {@link AuthorizationResponse}.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Prototype
 public class DefaultAuthorizationResponse extends StateAwareAuthorizationCallback implements AuthorizationResponse {

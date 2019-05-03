@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  * Base class to extend from that handles state retrieval and caching.
  *
  * @author James Kleeh
- * @since 1.1.0
+ * @since 1.2.0
  */
 @Internal
 public abstract class StateAwareAuthorizationCallback {

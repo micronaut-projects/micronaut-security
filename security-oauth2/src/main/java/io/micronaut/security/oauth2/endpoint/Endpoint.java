@@ -19,17 +19,15 @@ package io.micronaut.security.oauth2.endpoint;
 import javax.annotation.Nonnull;
 
 /**
- * Interface to be implemented by OpenID endpoints' configuration
- * to convey they are reachable at a URL.
+ * An OAuth 2.0 provider endpoint.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface Endpoint {
 
     /**
-     *
-     * @return Endpoint's url.
+     * @return The endpoint URL
      */
     @Nonnull
     String getUrl();

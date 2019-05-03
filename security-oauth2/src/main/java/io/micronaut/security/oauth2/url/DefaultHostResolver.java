@@ -20,26 +20,49 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.runtime.server.EmbeddedServer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+/**
+ * Default implementation of {@link HostResolver}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Singleton
 public class DefaultHostResolver implements HostResolver {
 
     private final Provider<EmbeddedServer> embeddedServer;
 
-    DefaultHostResolver(Provider<EmbeddedServer> embeddedServer) {
+    /**
+     * @param embeddedServer The embedded server
+     */
+    public DefaultHostResolver(Provider<EmbeddedServer> embeddedServer) {
         this.embeddedServer = embeddedServer;
     }
 
+    /**
+     * Resolves the host in the following strategies in order:
+     * 1. The HOST header of the request, if not null
+     * 2. The host of the request URI, if not null
+     * 3. The host of the embedded server URI
+     *
+     * @param current The current request
+     * @return The host
+     */
     @Nonnull
-    public String resolve(@Nonnull HttpRequest originating) {
-        String host = originating.getHeaders().get(HttpHeaders.HOST);
-        if (host == null) {
-            host = embeddedServer.get().getURL().toString();
-        } else {
-            host = embeddedServer.get().getScheme() + "://" + host;
+    public String resolve(@Nullable HttpRequest current) {
+        String host = null;
+        if (current != null) {
+            host = current.getHeaders().get(HttpHeaders.HOST);
+            if (host == null) {
+                host = current.getUri().getHost();
+            }
         }
-        return host;
+        if (host == null) {
+            host = embeddedServer.get().getURL().getHost();
+        }
+        return embeddedServer.get().getScheme() + "://" + host;
     }
 }

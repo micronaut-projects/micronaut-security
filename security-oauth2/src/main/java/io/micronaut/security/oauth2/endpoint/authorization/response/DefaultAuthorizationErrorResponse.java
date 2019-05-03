@@ -32,7 +32,7 @@ import java.util.Map;
  * Adapts from a Map to {@link AuthorizationErrorResponse}.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Prototype
 public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCallback implements AuthorizationErrorResponse {

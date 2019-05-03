@@ -15,9 +15,9 @@
  */
 
 /**
- * OAuth 2.0 Grant related classes.
+ * OAuth 2.0 grant related classes.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 package io.micronaut.security.oauth2.grants;

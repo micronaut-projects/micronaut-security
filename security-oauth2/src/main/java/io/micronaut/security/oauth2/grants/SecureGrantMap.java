@@ -17,12 +17,24 @@ package io.micronaut.security.oauth2.grants;
 
 import java.util.HashMap;
 
+/**
+ * An implementation of {@link HashMap} that also implements {@link SecureGrant}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public class SecureGrantMap extends HashMap<String, String> implements SecureGrant {
 
+    /**
+     * @param initialCapacity The initial capacity
+     */
     public SecureGrantMap(int initialCapacity) {
         super(initialCapacity);
     }
 
+    /**
+     * Default constructor.
+     */
     public SecureGrantMap() {
         super();
     }

@@ -19,7 +19,6 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
-import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.grants.GrantType;
@@ -37,21 +36,16 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Creates a bean of type {@link OauthClientConfiguration} for each micronaut.security.oauth2.clients during startup of the bean context.
+ * Stores configuration of each configured OAuth 2.0 client.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Context
 @EachProperty(OauthConfigurationProperties.PREFIX + ".clients")
 public class OauthClientConfigurationProperties implements OauthClientConfiguration {
 
-    /**
-     * The default enable value.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = true;
-
+    private static final boolean DEFAULT_ENABLED = true;
     private List<String> DEFAULT_SCOPES = new ArrayList<>();
 
     private final String name;
@@ -64,30 +58,13 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private TokenEndpointConfigurationProperties token;
     private OpenIdClientConfigurationProperties openid;
 
+    /**
+     * @param name The provider name
+     */
     public OauthClientConfigurationProperties(@Parameter String name) {
         this.name = name;
     }
 
-    /**
-     * OAuth 2.0 Application Client ID.
-     * @param clientId The application's Client ID.
-     */
-    public void setClientId(@Nonnull String clientId) {
-        this.clientId = clientId;
-    }
-
-    /**
-     * OAuth 2.0 Application Client Secret. Optional.
-     * @param clientSecret The application's Client Secret.
-     */
-    public void setClientSecret(@Nullable String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    /**
-     *
-     * @return the application's Client identifier
-     */
     @Nonnull
     @Override
     public String getClientId() {
@@ -95,19 +72,29 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
+     * OAuth 2.0 client id.
      *
-     @return the application's Client secret
+     * @param clientId The client id
      */
+    public void setClientId(@Nonnull String clientId) {
+        this.clientId = clientId;
+    }
+
     @Nullable
     @Override
     public String getClientSecret() {
         return clientSecret;
     }
 
-
     /**
-     * @return true if you want to enable the {@link OauthClientConfiguration}
+     * OAuth 2.0 client secret.
+     *
+     * @param clientSecret The client secret
      */
+    public void setClientSecret(@Nullable String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
     @Override
     public boolean isEnabled() {
         return this.enabled;
@@ -116,7 +103,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     /**
      * Sets whether the {@link OauthClientConfiguration} is enabled. Default value ({@value #DEFAULT_ENABLED}).
      *
-     * @param enabled True if is enabled
+     * @param enabled The enabled flag
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -129,9 +116,9 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
-     * Sets the scopes to request.
+     * The scopes to request.
      *
-     * @param scopes
+     * @param scopes The scopes
      */
     public void setScopes(List<String> scopes) {
         this.scopes = scopes;
@@ -142,7 +129,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     public String getName() {
         return name;
     }
-
 
     @Nonnull
     @Override
@@ -159,18 +145,30 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         this.grantType = grantType;
     }
 
+    @Override
     public Optional<SecureEndpointConfiguration> getToken() {
         return Optional.ofNullable(token);
     }
 
+    /**
+     * The OAuth 2.0 token endpoint configuration
+     *
+     * @param token The token endpoint configuration
+     */
     public void setToken(TokenEndpointConfigurationProperties token) {
         this.token = token;
     }
 
+    @Override
     public Optional<EndpointConfiguration> getAuthorization() {
         return Optional.ofNullable(authorization);
     }
 
+    /**
+     * The OAuth 2.0 authorization endpoint configuration
+     *
+     * @param authorization The authorization endpoint configuration
+     */
     public void setAuthorization(AuthorizationEndpointConfigurationProperties authorization) {
         this.authorization = authorization;
     }
@@ -194,16 +192,25 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
                 OpenIdScope.PROFILE.toString());
     }
 
+    /**
+     * OAuth 2.0 authorization endpoint configuration
+     */
     @ConfigurationProperties("authorization")
     public static class AuthorizationEndpointConfigurationProperties extends DefaultEndpointConfiguration {
 
     }
 
+    /**
+     * OAuth 2.0 token endpoint configuration
+     */
     @ConfigurationProperties("token")
     public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration {
 
     }
 
+    /**
+     * OpenID client configuration.
+     */
     @ConfigurationProperties("openid")
     public static class OpenIdClientConfigurationProperties implements OpenIdClientConfiguration {
 
@@ -221,6 +228,9 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private TokenEndpointConfigurationProperties token;
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
 
+        /**
+         * @param name The provider name
+         */
         OpenIdClientConfigurationProperties(@Parameter String name) {
             this.name = name;
         }
@@ -231,12 +241,14 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             return name;
         }
 
+        @Override
         public Optional<URL> getIssuer() {
             return Optional.ofNullable(issuer);
         }
 
         /**
-         * URL using the https scheme with no query or fragment component that the Open ID provider asserts as its issuer identifier.
+         * URL using the https scheme with no query or fragment component that the
+         * Open ID provider asserts as its issuer identifier.
          *
          * @param issuer The issuer
          */
@@ -244,9 +256,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.issuer = issuer;
         }
 
-        /**
-         * @return The configuration path
-         */
         @Override
         @Nonnull
         public String getConfigurationPath() {
@@ -262,9 +271,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.configurationPath = configurationPath;
         }
 
-        /**
-         * @return The JWKS signature configuration
-         */
         @Override
         public Optional<String> getJwksUri() {
             return Optional.ofNullable(jwksUri);
@@ -284,6 +290,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             return Optional.ofNullable(introspection);
         }
 
+        /**
+         * Sets the introspection endpoint configuration.
+         *
+         * @param introspection The introspection endpoint configuration
+         */
         public void setIntrospection(IntrospectionEndpointConfigurationProperties introspection) {
             this.introspection = introspection;
         }
@@ -293,6 +304,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             return Optional.ofNullable(revocation);
         }
 
+        /**
+         * Sets the revocation endpoint configuration.
+         *
+         * @param revocation The revocation endpoint configuration
+         */
         public void setRevocation(RevocationEndpointConfigurationProperties revocation) {
             this.revocation = revocation;
         }
@@ -302,6 +318,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             return Optional.ofNullable(registration);
         }
 
+        /**
+         * Sets the registration endpoint configuration.
+         *
+         * @param registration The registration endpoint configuration
+         */
         public void setRegistration(RegistrationEndpointConfigurationProperties registration) {
             this.registration = registration;
         }
@@ -311,6 +332,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             return Optional.ofNullable(userInfo);
         }
 
+        /**
+         * Sets the user info endpoint configuration.
+         *
+         * @param userInfo The user info endpoint configuration
+         */
         public void setUserInfo(UserInfoEndpointConfigurationProperties userInfo) {
             this.userInfo = userInfo;
         }
@@ -320,6 +346,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             return Optional.ofNullable(authorization);
         }
 
+        /**
+         * Sets the authorization endpoint configuration.
+         *
+         * @param authorization The authorization endpoint configuration
+         */
         public void setAuthorization(AuthorizationEndpointConfigurationProperties authorization) {
             this.authorization = authorization;
         }
@@ -329,31 +360,57 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             return Optional.ofNullable(token);
         }
 
+        /**
+         * Sets the token endpoint configuration.
+         *
+         * @param token The token endpoint configuration
+         */
         public void setToken(TokenEndpointConfigurationProperties token) {
             this.token = token;
         }
 
+        @Override
         @Nonnull
-        public Toggleable getEndSession() {
+        public EndSessionEndpointConfiguration getEndSession() {
             return endSession;
         }
 
+        /**
+         * Sets the end session endpoint configuration.
+         *
+         * @param endSession End session endpoint configuration
+         */
         public void setEndSession(@Nonnull EndSessionConfigurationProperties endSession) {
             this.endSession = endSession;
         }
 
+        /**
+         * Introspection endpoint configuration
+         */
         @ConfigurationProperties("introspection")
         public static class IntrospectionEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements IntrospectionEndpointConfiguration { }
 
+        /**
+         * Revocation endpoint configuration
+         */
         @ConfigurationProperties("revocation")
         public static class RevocationEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements RevocationEndpointConfiguration { }
 
+        /**
+         * Registration endpoint configuration
+         */
         @ConfigurationProperties("registration")
-        public static class RegistrationEndpointConfigurationProperties extends DefaultEndpointConfiguration {}
+        public static class RegistrationEndpointConfigurationProperties extends DefaultEndpointConfiguration { }
 
+        /**
+         * User info endpoint configuration.
+         */
         @ConfigurationProperties("user-info")
         public static class UserInfoEndpointConfigurationProperties extends DefaultEndpointConfiguration { }
 
+        /**
+         * Authorization endpoint configuration.
+         */
         @ConfigurationProperties("authorization")
         public static class AuthorizationEndpointConfigurationProperties extends DefaultEndpointConfiguration implements AuthorizationEndpointConfiguration {
 
@@ -372,7 +429,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * Value that determines the authorization processing flow to be used. Default value (code). See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Determines the authorization processing flow to be used. Default value (code).
              *
              * @param responseType The response type
              */
@@ -386,7 +443,9 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * Mechanism to be used for returning Authorization Response parameters from the Authorization Endpoint. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Mechanism to be used for returning authorization rResponse parameters from the
+             * authorization endpoint.
+             *
              * @param responseMode The response mode
              */
             public void setResponseMode(@Nullable String responseMode) {
@@ -399,7 +458,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * Controls how the authentication interface is displayed. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Controls how the authentication interface is displayed.
              *
              * @param display The display
              */
@@ -413,7 +472,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * Controls how the authentication server prompts the user. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Controls how the authentication server prompts the user.
              *
              * @param prompt The prompt type
              */
@@ -427,7 +486,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * Maximum authentication age. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Maximum authentication age.
              *
              * @param maxAge Maximum authentication age.
              */
@@ -441,7 +500,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * Preferred locales for authentication. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Preferred locales for authentication.
              *
              * @param uiLocales Preferred locales
              */
@@ -455,7 +514,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * Authentication class reference values. See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+             * Authentication class reference values.
              *
              * @param acrValues Authentication class reference values
              */
@@ -464,15 +523,12 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
         }
 
+        /**
+         * Token endpoint configuration.
+         */
         @ConfigurationProperties("token")
         public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements TokenEndpointConfiguration {
-
-            /**
-             * Default content type.
-             */
-            @SuppressWarnings("WeakerAccess")
-            public static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
-
+            private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
             private MediaType contentType = DEFAULT_CONTENT_TYPE;
 
             @Nonnull
@@ -482,19 +538,22 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * The Content-Type used to communicate with the token endpoint. Default value (application/x-www-form-urlencoded).
-             * @param contentType The Content-Type
+             * The content type of token endpoint requests. Default value (application/x-www-form-urlencoded).
+             *
+             * @param contentType The content type
              */
             public void setContentType(@Nonnull MediaType contentType) {
                 this.contentType = contentType;
             }
         }
 
+        /**
+         * End session endpoint configuration.
+         */
         @ConfigurationProperties("end-session")
-        public static class EndSessionConfigurationProperties implements Toggleable {
+        public static class EndSessionConfigurationProperties extends DefaultEndpointConfiguration implements EndSessionEndpointConfiguration {
 
-            private static Boolean DEFAULT_ENABLED = true;
-
+            private static final Boolean DEFAULT_ENABLED = true;
             private boolean enabled = DEFAULT_ENABLED;
 
             @Override
@@ -502,6 +561,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
                 return enabled;
             }
 
+            /**
+             * The end session enabled flag. Default value ({@value DEFAULT_ENABLED}).
+             *
+             * @param enabled The enabled flag
+             */
             public void setEnabled(boolean enabled) {
                 this.enabled = enabled;
             }

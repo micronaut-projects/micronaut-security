@@ -32,7 +32,7 @@ import java.util.Optional;
  * Persists the state in the session.
  *
  * @author James Kleeh
- * @since 1.1.0
+ * @since 1.2.0
  */
 @Requires(beans = SessionStore.class)
 @Requires(property = DefaultStateValidationConfiguration.PREFIX + ".persistence", value = "session")

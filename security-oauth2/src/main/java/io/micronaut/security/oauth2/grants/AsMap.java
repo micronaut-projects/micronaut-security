@@ -19,16 +19,15 @@ package io.micronaut.security.oauth2.grants;
 import java.util.Map;
 
 /**
- * Indicates a class can be returned as a Map.
+ * A contract for a class convertible to a map.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface AsMap {
 
     /**
-     *
-     * @return this object as a Map
+     * @return This object as a Map
      */
     Map<String, String> toMap();
 }

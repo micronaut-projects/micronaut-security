@@ -19,8 +19,9 @@ import java.util.Optional;
 
 /**
  * Default implementation of {@link EndpointConfiguration}.
+ *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public class DefaultEndpointConfiguration implements EndpointConfiguration {
 

@@ -17,16 +17,15 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
-import io.micronaut.security.token.jwt.validator.JwtClaimsValidator;
 
 /**
  * JWT Claims Validator for ID Token.
  *
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#HybridIDTValidation2">ID Token Validation</a>
  *
- * @since 1.0.0
+ * @since 1.2.0
  * @author Sergio del Amo
  */
 public interface OpenIdClaimsValidator {

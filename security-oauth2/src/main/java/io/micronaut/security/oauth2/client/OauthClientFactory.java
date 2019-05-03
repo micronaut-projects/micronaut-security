@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2;
+package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
-import io.micronaut.security.oauth2.client.DefaultOauthClient;
-import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
@@ -28,9 +26,28 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthori
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.grants.GrantType;
 
+/**
+ * Factory to create beans related to the configuration of
+ * OAuth 2.0 clients.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Factory
-public class OauthFactory {
+public class OauthClientFactory {
 
+    /**
+     * Creates an {@link OauthClient} with the provided parameters. Relies
+     * on the {@link OauthUserDetailsMapper} to be provided by the user of this
+     * library.
+     *
+     * @param userDetailsMapper The user details mapper
+     * @param clientConfiguration The client configuration
+     * @param redirectUrlBuilder The redirect url builder
+     * @param authorizationResponseHandler The authorization response handler
+     * @param beanContext The bean context
+     * @return An oauth client
+     */
     @EachBean(OauthUserDetailsMapper.class)
     OauthClient oauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
                             @Parameter OauthClientConfiguration clientConfiguration,

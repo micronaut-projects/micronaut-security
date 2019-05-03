@@ -17,12 +17,13 @@ package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.core.util.Toggleable;
 
-import java.util.Optional;
+import javax.annotation.Nonnull;
 
 /**
  * OAuth 2.0 Configuration
+ *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface OauthConfiguration extends Toggleable {
 
@@ -30,21 +31,19 @@ public interface OauthConfiguration extends Toggleable {
      *
      * @return the login Uri
      */
+    @Nonnull
     String getLoginUri();
 
     /**
      * @return the Callback Uri
      */
+    @Nonnull
     String getCallbackUri();
-
-    /**
-     * @return the Callback Uri
-     */
-    String getLogoutUri();
 
     /**
      *
      * @return OpenID Connect Configuration
      */
-    Optional<OpenIdConfiguration> getOpenid();
+    @Nonnull
+    OpenIdConfiguration getOpenid();
 }

@@ -18,7 +18,16 @@ package io.micronaut.security.oauth2.endpoint;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A contract for an endpoint that requires authentication.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface SecureEndpoint extends Endpoint {
 
+    /**
+     * @return An optional list of supported authentication methods
+     */
     Optional<List<AuthenticationMethod>> getSupportedAuthenticationMethods();
 }

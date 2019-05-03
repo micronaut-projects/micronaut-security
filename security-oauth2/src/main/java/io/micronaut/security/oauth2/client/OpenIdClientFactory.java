@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid;
+package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.EachBean;
@@ -26,12 +26,10 @@ import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import io.micronaut.security.oauth2.client.DefaultOpenIdClient;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
@@ -39,7 +37,6 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthor
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.grants.GrantType;
 
@@ -48,21 +45,31 @@ import java.util.Collections;
 import java.util.Optional;
 
 /**
- * Factory which creates beans of type Creates a HTTP Declarative client to communicate with an OpenID connect Discovery endpoint.
- * The discovery endpoint is declared by the property micronaut.security.oauth2.openid.issuer
+ * Factory to create beans related to the configuration of
+ * OpenID clients.
  *
- * @author Sergio del Amo
- * @since 1.0.0
+ * @author James Kleeh
+ * @since 1.2.0
  */
 @Factory
-public class OpenIdFactory {
+public class OpenIdClientFactory {
 
     private final BeanContext beanContext;
 
-    public OpenIdFactory(BeanContext beanContext) {
+    /**
+     * @param beanContext The bean context
+     */
+    public OpenIdClientFactory(BeanContext beanContext) {
         this.beanContext = beanContext;
     }
 
+    /**
+     * Retrieves OpenID configuration from the provided issuer.
+     *
+     * @param clientConfiguration The client configuration
+     * @param defaultHttpConfiguration The default HTTP client configuration
+     * @return The OpenID configuration
+     */
     @EachBean(OpenIdClientConfiguration.class)
     public OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
                                                    HttpClientConfiguration defaultHttpConfiguration) {
@@ -81,6 +88,18 @@ public class OpenIdFactory {
         return openIdConfiguration;
     }
 
+    /**
+     * Creates an {@link OpenIdClient} from the provided parameters.
+     *
+     * @param oauthClientConfiguration The client configuration
+     * @param openIdProviderMetadata The OpenID provider metadata
+     * @param userDetailsMapper The user details mapper
+     * @param redirectUrlBuilder The redirect URL builder
+     * @param authorizationResponseHandler The authorization response handler
+     * @param endSessionResolver The end session resolver
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @return The OpenID client, or null if the client configuration does not allow it
+     */
     @EachBean(OpenIdConfiguration.class)
     public DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                             @Parameter OpenIdProviderMetadata openIdProviderMetadata,
@@ -88,8 +107,7 @@ public class OpenIdFactory {
                                             AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                                             OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                             EndSessionResolver endSessionResolver,
-                                            EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                            BeanContext beanContext) {
+                                            EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
         if (oauthClientConfiguration.isEnabled()) {
             Optional<OpenIdClientConfiguration> openIdClientConfiguration = oauthClientConfiguration.getOpenid();
             if (openIdClientConfiguration.map(OpenIdClientConfiguration::getIssuer).isPresent()) {
@@ -140,6 +158,11 @@ public class OpenIdFactory {
             token.getUrl().ifPresent(configuration::setTokenEndpoint);
             token.getAuthMethod().ifPresent(authMethod -> configuration.setTokenEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
         });
+
+        EndSessionEndpointConfiguration endSession = openIdClientConfiguration.getEndSession();
+        if (endSession.isEnabled()) {
+            endSession.getUrl().ifPresent(configuration::setEndSessionEndpoint);
+        }
 
     }
 

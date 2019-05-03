@@ -39,7 +39,7 @@ import java.util.List;
  * {@link AuthenticationProvider} for Password Grant Type.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public class OauthPasswordAuthenticationProvider implements AuthenticationProvider {
 

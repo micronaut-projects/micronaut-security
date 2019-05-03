@@ -26,18 +26,49 @@ import org.reactivestreams.Publisher;
 
 import java.util.Map;
 
+/**
+ * Responsible for OAuth 2.0 authorization redirect, authorization
+ * callback, and end session redirects. Each controller is
+ * associated with a single {@link OauthClient}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Secured(SecurityRule.IS_ANONYMOUS)
 public interface OauthController {
 
+    /**
+     * @return The client associated with this controller
+     */
     OauthClient getClient();
 
+    /**
+     * Performs and end session redirect to an OpenID provider.
+     *
+     * @param request The current request
+     * @param authentication The current authentication
+     * @return A redirecting http response
+     */
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Executable
     HttpResponse logout(HttpRequest request, Authentication authentication);
 
+    /**
+     * Performs an authorization redirect to an OAuth 2.0 provider.
+     *
+     * @param request The current request
+     * @return A redirecting http response
+     */
     @Executable
     Publisher<HttpResponse> login(HttpRequest request);
 
+    /**
+     * Receives the authorization callback from the OAuth 2.0 provider
+     * and responds to the user.
+     *
+     * @param request The current request
+     * @return A response
+     */
     @Executable
     Publisher<HttpResponse> callback(HttpRequest<Map<String, Object>> request);
 

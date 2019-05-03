@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid;
+package io.micronaut.security.oauth2.client;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +26,7 @@ import java.util.List;
  * @see <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">Open ID Provider Metadata Spec</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface OpenIdProviderMetadata {
 

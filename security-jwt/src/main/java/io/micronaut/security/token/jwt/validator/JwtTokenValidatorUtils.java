@@ -44,7 +44,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0.0
  */
-public class JwtTokenValidatorUtils {
+public final class JwtTokenValidatorUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwtTokenValidator.class);
 
@@ -55,6 +55,7 @@ public class JwtTokenValidatorUtils {
     /**
      * Validates the Signature of a plain JWT.
      * @param jwt a JWT Token
+     * @param signatureConfigurations The signature configurations
      * @return empty if signature configurations exists, Optional.of(jwt) if no signature configuration is available.
      */
     public static Optional<JWT> validatePlainJWTSignature(JWT jwt,
@@ -77,6 +78,7 @@ public class JwtTokenValidatorUtils {
      * Validates a Signed JWT signature.
      *
      * @param signedJWT a Signed JWT Token
+     * @param signatureConfigurations The signature configurations
      * @return empty if signature validation fails
      */
     public static Optional<JWT> validateSignedJWTSignature(SignedJWT signedJWT,
@@ -134,6 +136,8 @@ public class JwtTokenValidatorUtils {
      *
      * @param encryptedJWT a encrytped JWT Token
      * @param token the JWT token as String
+     * @param signatureConfigurations The signature configurations
+     * @param encryptionConfigurations The encryption configurations
      * @return empty if signature validation fails
      */
     public static Optional<JWT> validateEncryptedJWTSignature(@Nonnull EncryptedJWT encryptedJWT,
@@ -181,6 +185,8 @@ public class JwtTokenValidatorUtils {
      *
      * @param token A JWT token
      * @param claimsValidators a Collection of claims Validators.
+     * @param signatureConfigurations The signature configurations
+     * @param encryptionConfigurations The encryption configurations
      * @return empty if signature or claims verification failed, JWT otherwise.
      */
     public static Optional<JWT> validateJwtSignatureAndClaims(String token,
@@ -202,10 +208,12 @@ public class JwtTokenValidatorUtils {
         return Optional.empty();
     }
 
+
     /**
-     * Retuns a JWT if the signature could be verified.
-     * @param token a JWT token
-     * @return Empty if JWT signature verification failed or JWT if valid signature.
+     * @param token A JWT token string
+     * @param signatureConfigurations The signature configurations
+     * @param encryptionConfigurations The encryption configurations
+     * @return A JWT if validation succeeded
      */
     public static Optional<JWT> parseJwtIfValidSignature(String token, List<SignatureConfiguration> signatureConfigurations, List<EncryptionConfiguration> encryptionConfigurations) {
         try {

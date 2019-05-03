@@ -18,7 +18,7 @@
  * Classes related to state validation.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Configuration
 @Requires(property = DefaultStateValidationConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)

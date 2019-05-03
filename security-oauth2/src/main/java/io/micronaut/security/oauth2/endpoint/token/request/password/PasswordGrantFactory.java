@@ -25,7 +25,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapp
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.grants.GrantType;
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
 import javax.annotation.Nullable;
 

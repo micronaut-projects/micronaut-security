@@ -21,7 +21,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
@@ -114,7 +113,7 @@ public class JwtTokenValidator implements TokenValidator {
 
     /**
      * Verifies the provided claims with the provided validators.
-     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#verifyClaims(JwtClaims, Collection)} instead.
+     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#verifyClaims(io.micronaut.security.token.jwt.generator.claims.JwtClaims, Collection)} instead.
      * @param jwtClaimsSet JWT Claims
      * @param claimsValidators The claims validators
      * @return Whether the JWT claims pass every validation.
@@ -199,6 +198,7 @@ public class JwtTokenValidator implements TokenValidator {
     public boolean validate(String token, Collection<? extends JwtClaimsValidator> claimsValidators) {
         return validateJwtSignatureAndClaims(token, claimsValidators).isPresent();
     }
+
     /**
      * Validates JWT signature and Claims.
      *

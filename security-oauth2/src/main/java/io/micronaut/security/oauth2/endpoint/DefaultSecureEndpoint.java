@@ -20,12 +20,21 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * The default implementation of {@link SecureEndpoint}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public class DefaultSecureEndpoint implements SecureEndpoint {
 
     private final String url;
     private final List<AuthenticationMethod> supportedAuthenticationMethods;
 
+    /**
+     * @param url The endpoint URL
+     * @param supportedAuthenticationMethods The endpoint authentication methods
+     */
     public DefaultSecureEndpoint(@Nonnull String url,
                                  @Nullable List<AuthenticationMethod> supportedAuthenticationMethods) {
         this.url = url;

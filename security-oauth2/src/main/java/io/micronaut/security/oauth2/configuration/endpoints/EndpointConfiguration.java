@@ -17,7 +17,16 @@ package io.micronaut.security.oauth2.configuration.endpoints;
 
 import java.util.Optional;
 
+/**
+ * Endpoint configuration contract.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public interface EndpointConfiguration {
 
+    /**
+     * @return The optional endpoint url
+     */
     Optional<String> getUrl();
 }

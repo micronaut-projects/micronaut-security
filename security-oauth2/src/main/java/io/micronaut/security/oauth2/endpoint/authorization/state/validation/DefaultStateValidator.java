@@ -31,7 +31,7 @@ import java.util.Optional;
  * State validator implementation. Relies on a state persistence bean.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Requires(beans = StatePersistence.class)
 @Singleton

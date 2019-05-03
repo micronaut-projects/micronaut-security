@@ -18,7 +18,7 @@
  * Classes related to state persistence in a session.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Configuration
 @Requires(property = DefaultStateValidationConfiguration.PREFIX + ".persistence", value = "session")

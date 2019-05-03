@@ -19,9 +19,21 @@ import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 
 import javax.inject.Singleton;
 
+/**
+ * Builds a URL to send to an OAuth 2.0 provider to inform
+ * the provider of the URL to redirect back to with an
+ * authorization code.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @Singleton
 public class CallbackUrlBuilder extends AbstractUrlBuilder {
 
+    /**
+     * @param hostResolver The host resolver
+     * @param oauthConfigurationProperties The configuration
+     */
     CallbackUrlBuilder(HostResolver hostResolver,
                        OauthConfigurationProperties oauthConfigurationProperties) {
         super(hostResolver, oauthConfigurationProperties.getCallbackUri());

@@ -15,9 +15,9 @@
  */
 
 /**
- * Controllers used to receive OAuth 2.0 callbacks.
+ * Classes related to OAuth2.0 and OpenID endpoints.
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 package io.micronaut.security.oauth2.endpoint;

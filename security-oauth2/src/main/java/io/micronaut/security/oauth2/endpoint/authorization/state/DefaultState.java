@@ -25,7 +25,7 @@ import java.util.UUID;
  * Default state implementation.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public class DefaultState implements State {
 

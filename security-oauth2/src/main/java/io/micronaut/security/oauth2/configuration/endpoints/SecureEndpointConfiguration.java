@@ -23,7 +23,7 @@ import java.util.Optional;
  * Configuration extension of {@link EndpointConfiguration} for endpoints which require authentication.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface SecureEndpointConfiguration extends EndpointConfiguration {
 

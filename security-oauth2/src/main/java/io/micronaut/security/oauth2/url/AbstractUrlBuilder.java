@@ -22,11 +22,26 @@ import io.micronaut.http.uri.UriTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Base {@link UrlBuilder} class to extend from that delegates
+ * host resolution to a {@link HostResolver}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 public abstract class AbstractUrlBuilder implements UrlBuilder {
 
     private final HostResolver hostResolver;
     private final String uriTemplate;
 
+    /**
+     * Builds an absolute URL with the provider host resolver and uri
+     * template. The template may contain a {provider} variable segment
+     * that will be replaced with the given OAuth 2.0 provider name.
+     *
+     * @param hostResolver The host resolver
+     * @param uriTemplate The URI template
+     */
     AbstractUrlBuilder(HostResolver hostResolver, String uriTemplate) {
         this.hostResolver = hostResolver;
         this.uriTemplate = uriTemplate;

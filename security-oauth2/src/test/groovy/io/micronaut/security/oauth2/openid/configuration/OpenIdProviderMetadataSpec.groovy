@@ -4,7 +4,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import spock.lang.Specification
 
 class OpenIdProviderMetadataSpec extends Specification {

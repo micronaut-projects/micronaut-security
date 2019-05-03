@@ -36,6 +36,12 @@ import org.reactivestreams.Publisher;
 
 import java.util.Map;
 
+/**
+ * Default implementation of {@link OauthController}.
+ *
+ * @author James Kleeh
+ * @since 1.2.0
+ */
 @EachBean(OauthClient.class)
 public class DefaultOauthController implements OauthController {
 
@@ -43,6 +49,11 @@ public class DefaultOauthController implements OauthController {
     private final LoginHandler loginHandler;
     private final ApplicationEventPublisher eventPublisher;
 
+    /**
+     * @param oauthClient The oauth client
+     * @param loginHandler The login handler
+     * @param eventPublisher The event publisher
+     */
     DefaultOauthController(@Parameter OauthClient oauthClient,
                            RedirectingLoginhandler loginHandler,
                            ApplicationEventPublisher eventPublisher) {

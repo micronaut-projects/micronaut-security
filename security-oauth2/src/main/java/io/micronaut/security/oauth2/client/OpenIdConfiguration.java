@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.openid;
+package io.micronaut.security.oauth2.client;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -29,7 +29,7 @@ import java.util.List;
  * @see <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OpenID connect Discovery Spec</a>
  *
  * @author Sergio del Amo
- * @since 1.0.0
+ * @since 1.2.0
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)

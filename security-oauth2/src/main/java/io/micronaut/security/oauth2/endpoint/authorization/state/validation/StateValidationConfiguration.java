@@ -24,7 +24,7 @@ import java.util.Optional;
  * Configuration options for state validation.
  *
  * @author James Kleeh
- * @since 1.0.0
+ * @since 1.2.0
  */
 public interface StateValidationConfiguration extends Toggleable {
 
