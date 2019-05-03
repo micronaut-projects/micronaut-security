@@ -39,8 +39,11 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthor
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.grants.GrantType;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -81,6 +84,7 @@ public class OpenIdFactory {
     @EachBean(OpenIdConfiguration.class)
     public DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                             @Parameter OpenIdProviderMetadata openIdProviderMetadata,
+                                            @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                             AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                                             OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                             EndSessionResolver endSessionResolver,
@@ -101,6 +105,7 @@ public class OpenIdFactory {
 
                         return new DefaultOpenIdClient(oauthClientConfiguration,
                                 openIdProviderMetadata,
+                                userDetailsMapper,
                                 redirectUrlBuilder,
                                 authorizationResponseHandler,
                                 beanContext,

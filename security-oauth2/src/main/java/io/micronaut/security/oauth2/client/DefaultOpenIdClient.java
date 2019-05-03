@@ -33,6 +33,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.*;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionRequest;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -47,6 +48,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     private final OauthClientConfiguration clientConfiguration;
     private final OpenIdProviderMetadata openIdProviderMetadata;
+    private final OpenIdUserDetailsMapper userDetailsMapper;
     private final AuthorizationRedirectUrlBuilder redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
     private final SecureEndpoint tokenEndpoint;
@@ -55,12 +57,14 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                OpenIdProviderMetadata openIdProviderMetadata,
+                               @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                BeanContext beanContext,
                                @Nullable EndSessionRequest endSessionRequest) {
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
+        this.userDetailsMapper = userDetailsMapper;
         this.redirectUrlBuilder = redirectUrlBuilder;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
@@ -113,6 +117,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
                     openIdProviderMetadata,
+                    userDetailsMapper,
                     tokenEndpoint);
         }
     }

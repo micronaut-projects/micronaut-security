@@ -18,8 +18,11 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.openid.OpenIdProviderMetadata;
 import org.reactivestreams.Publisher;
+
+import javax.annotation.Nullable;
 
 public interface OpenIdAuthorizationResponseHandler {
 
@@ -29,5 +32,6 @@ public interface OpenIdAuthorizationResponseHandler {
     Publisher<AuthenticationResponse> handle(AuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,
                                              OpenIdProviderMetadata openIdProviderMetadata,
+                                             @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                              SecureEndpoint tokenEndpoint);
 }
