@@ -58,7 +58,7 @@ public class AwsCognitoEndSessionRequest extends AbstractEndSessionRequest {
     protected String getUrl() {
         String userInfoEndpoint = providerMetadata.getUserinfoEndpoint();
         if (userInfoEndpoint != null) {
-            return UriBuilder.of(providerMetadata.getUserinfoEndpoint()).replacePath("/logout").toString();
+            return UriBuilder.of(userInfoEndpoint).replacePath("/logout").toString();
         } else {
             URL url = clientConfiguration.getOpenid()
                     .flatMap(OpenIdClientConfiguration::getIssuer)
