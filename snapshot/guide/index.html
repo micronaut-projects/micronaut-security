@@ -1203,7 +1203,7 @@ Check out the <a href="http://guides.micronaut.io/micronaut-security-jwt/guide/i
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-domain</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the domain name of this Cookie. Default value ("JWT").</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the domain name of this Cookie.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-path</code></p></td>
@@ -2649,43 +2649,31 @@ public class UserController {
 
 
 <div class="paragraph">
-<p>This project eases OAuth 2.0 integration with Micronaut.</p>
+<p>Micronaut supports authentication with OAuth 2.0 servers, including support for the OpenID standard.</p>
 </div>
 <div class="paragraph">
-<p>Micronaut supports integration with authentication &amp; authorization platforms such as <a href="https://developer.okta.com">Okta</a>, <a href="https://auth0.com">Auth0</a>, <a href="https://aws.amazon.com/cognito">AWS Cognito</a>, <a href="https://www.keycloak.org">Keycloak</a>, etc.</p>
+<p>The easiest way to get started is by configuring a provider that supports OpenID. Platforms such as <a href="https://developer.okta.com">Okta</a>, <a href="https://auth0.com">Auth0</a>, <a href="https://aws.amazon.com/cognito">AWS Cognito</a>, <a href="https://www.keycloak.org">Keycloak</a>, and <a href="https://developers.google.com/identity/protocols/OpenIDConnect">Google</a> are common examples.</p>
 </div>
 <div class="paragraph">
-<p>Once you create an application client with a provider, you will get a Client ID and optionally a Client Secret.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../img/aws-cognito-appclient.png" alt="aws cognito appclient">
-</div>
+<p>Once you create an application client with a provider, you will get a client id and a client secret. The client id and secret combined with the issuer URL is all that is needed to enable authentication with an OpenID provider.</p>
 </div>
 <div class="paragraph">
-<p>The previous image shows how to get an client id and client secret with AWS Cognito. Please, note you can obtain similar credentials with other providers.</p>
-</div>
-<div class="paragraph">
-<p>Once, you get the <code>client_id</code> and <code>client_secret</code> configure the OAuth 2.0 configuration:</p>
-</div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.adoc[]</p>
-</div>
-<div class="paragraph">
-<p>For example, if you configured:</p>
+<p>For example, to configure Google as a provider:</p>
 </div>
 <div class="listingblock">
-<div class="title">src/main/resources/application.yml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
+    enabled: true
     oauth2:
-      client-secret: '${OAUTH_CLIENT_SECRET}'
-      client-id: '${OAUTH_CLIENT_ID}'</code></pre>
+      clients:
+        google:
+          enabled: false
+          client-secret: sKWpIl5AHRKh_qTM2xXBrECY
+          client-id: 943299861358-3j92fqgsqefgv2g3dpf18frumhq9haul.apps.googleusercontent.com
+          openid:
+            issuer: https://accounts.google.com</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>You can supply two environment variables <code>OAUTH_CLIENT_SECRET</code>, <code>OAUTH_CLIENT_ID</code> with the credentials you obtained from the provider to be used as values of <code>micronaut.security.oauth2.client-id</code> and <code>micronaut.security.oauth2.client-secret</code>.</p>
 </div>
 
 
@@ -2719,7 +2707,7 @@ public class UserController {
 <p>To use the <code>BUILD-SNAPSHOT</code> version of this library, check the <a href="https://docs.micronaut.io/latest/guide/index.html#usingsnapshots">documentation to use snapshots</a>.</p>
 </div>
 <div class="paragraph">
-<p>Code can be found at the <a href="https://github.com/micronaut-projects/micronaut-oauth2">micronaut-oauth2</a> repository.</p>
+<p>Code can be found at the <a href="https://github.com/micronaut-projects/micronaut-security/tree/master/security-oauth2">micronaut-security</a> repository.</p>
 </div>
 
 
