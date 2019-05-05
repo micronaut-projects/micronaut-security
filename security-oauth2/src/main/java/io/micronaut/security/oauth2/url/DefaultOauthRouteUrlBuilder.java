@@ -23,6 +23,7 @@ import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.web.router.exceptions.RoutingException;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Singleton
 public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
 
     private final HostResolver hostResolver;
