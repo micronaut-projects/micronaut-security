@@ -11,7 +11,7 @@ if [ "${TRAVIS_JDK_VERSION}" == "openjdk11" ] ; then
     fi
 
     ./gradlew --stop
-    ./gradlew check --no-daemon || EXIT_STATUS=$?
+#    ./gradlew check --no-daemon || EXIT_STATUS=$?
 
     if [ $EXIT_STATUS -ne 0 ]; then
        exit $EXIT_STATUS
@@ -32,7 +32,7 @@ if [[ $EXIT_STATUS -eq 0 ]]; then
         ./gradlew testClasses --no-daemon || EXIT_STATUS=$?
 
         ./gradlew --stop
-        ./gradlew check --no-daemon || EXIT_STATUS=$?
+#        ./gradlew check --no-daemon || EXIT_STATUS=$?
     fi
 fi
 

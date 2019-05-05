@@ -18,5 +18,5 @@ dependencies {
     testCompile "io.micronaut:micronaut-http-server-netty"
     testCompile "io.micronaut:micronaut-inject-groovy"
     testCompile 'com.sun.activation:javax.activation:1.2.0' // Java 11
-    testCompile project(":security-jwt")
+    testCompile "org.testcontainers:testcontainers:1.11.2"
 }

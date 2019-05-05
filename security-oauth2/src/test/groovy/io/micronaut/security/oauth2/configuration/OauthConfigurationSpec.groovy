@@ -13,68 +13,18 @@ class OauthConfigurationSpec extends Specification {
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
                 'micronaut.security.enabled': true,
-                'micronaut.security.oauth2.client-secret': 'YYYY',
+                'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
+                'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
         ], Environment.TEST)
 
         when:
-        context.getBean(OauthClientConfiguration)
-
-        then:
-        thrown(NoSuchBeanException)
-
-        cleanup:
-        context.close()
-    }
-
-    void "OauthConfiguration is enabled if client-id is present"() {
-        given:
-        ApplicationContext context = ApplicationContext.run([
-                (SPEC_NAME_PROPERTY): getClass().simpleName,
-                'micronaut.security.enabled': true,
-                'micronaut.security.oauth2.client-id': 'YYYY',
-        ], Environment.TEST)
-
-        when:
-        context.getBean(OauthClientConfiguration)
+        OauthClientConfiguration clientConfiguration = context.getBean(OauthClientConfiguration)
 
         then:
         noExceptionThrown()
-
-        cleanup:
-        context.close()
-    }
-
-    void "OauthConfiguration is disabled by default"() {
-        given:
-        ApplicationContext context = ApplicationContext.run([
-                (SPEC_NAME_PROPERTY): getClass().simpleName,
-                'micronaut.security.enabled': true,
-        ], Environment.TEST)
-
-        when:
-        context.getBean(OauthClientConfiguration)
-
-        then:
-        thrown(NoSuchBeanException)
-
-        cleanup:
-        context.close()
-    }
-
-
-    void "OauthConfiguration is enabled via application-xxx.yml file"() {
-        given:
-        ApplicationContext context = ApplicationContext.run([
-                (SPEC_NAME_PROPERTY): getClass().simpleName,
-                'micronaut.security.enabled': true,
-                'micronaut.security.oauth2.client-id': 'XXXXX'
-        ], Environment.TEST)
-
-        when:
-        OauthClientConfiguration oauthConfiguration = context.getBean(OauthClientConfiguration)
-
-        then:
-        oauthConfiguration.clientId == "XXXXX"
+        clientConfiguration.getName() == "foo"
+        clientConfiguration.getClientId() == "XXXX"
+        clientConfiguration.getClientSecret() == "YYYY"
 
         cleanup:
         context.close()
@@ -84,8 +34,11 @@ class OauthConfigurationSpec extends Specification {
         given:
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
-                "micronaut.security.oauth2.enabled": false,
-        ], Environment.TEST, "xxx")
+                'micronaut.security.enabled': true,
+                'micronaut.security.oauth2.enabled': false,
+                'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
+                'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
+        ], Environment.TEST)
 
         when:
         context.getBean(OauthClientConfiguration)
