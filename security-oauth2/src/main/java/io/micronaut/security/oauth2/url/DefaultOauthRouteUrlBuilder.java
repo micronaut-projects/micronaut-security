@@ -77,14 +77,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
      * @return The URL
      */
     protected URL build(@Nullable HttpRequest originating, String providerName, String uriTemplate) {
-        try {
-            return UriBuilder.of(hostResolver.resolve(originating))
-                    .path(getPath(uriTemplate, providerName))
-                    .build()
-                    .toURL();
-        } catch (MalformedURLException e) {
-            throw new RoutingException("Error building a URL for an oauth controller route", e);
-        }
+        return buildUrl(originating, getPath(uriTemplate, providerName));
     }
 
     /**
@@ -98,5 +91,17 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
         Map<String, Object> uriParams = new HashMap<>(1);
         uriParams.put("provider", providerName);
         return UriTemplate.of(uriTemplate).expand(uriParams);
+    }
+
+    @Override
+    public URL buildUrl(@Nullable HttpRequest current, String path) {
+        try {
+            return UriBuilder.of(hostResolver.resolve(current))
+                    .path(path)
+                    .build()
+                    .toURL();
+        } catch (MalformedURLException e) {
+            throw new RoutingException("Error building an absolute URL for the path", e);
+        }
     }
 }

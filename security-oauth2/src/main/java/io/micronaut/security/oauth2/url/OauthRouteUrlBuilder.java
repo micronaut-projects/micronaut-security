@@ -28,7 +28,7 @@ import java.net.URL;
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface OauthRouteUrlBuilder {
+public interface OauthRouteUrlBuilder extends AbsoluteUrlBuilder {
 
     /**
      * Builds the URL to start the OAuth 2.0 authorization code flow

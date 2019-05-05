@@ -13,26 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.endpoint.endsession.response;
+
+package io.micronaut.security.oauth2.url;
 
 import io.micronaut.http.HttpRequest;
 
+import javax.annotation.Nullable;
 import java.net.URL;
 
 /**
- * A contract for generating the URL used by OpenID
- * providers to redirect back to after logging the user out.
+ * Builds an absolute URL for the current server
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface EndSessionCallbackUrlBuilder {
+public interface AbsoluteUrlBuilder {
 
     /**
-     * Builds the URL to redirect back to
+     * Builds an absolute URL for the given path
      *
-     * @param originating The originating request
-     * @return The URL
+     * @param current The current request
+     * @param path The path
+     * @return The absolute URL
      */
-    URL build(HttpRequest originating);
+    URL buildUrl(@Nullable HttpRequest current, String path);
 }

@@ -49,7 +49,6 @@ public class DefaultOauthController implements OauthController {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthController.class);
 
-
     private final OauthClient oauthClient;
     private final LoginHandler loginHandler;
     private final ApplicationEventPublisher eventPublisher;

@@ -84,6 +84,6 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
      * @return The absolute redirect URI
      */
     protected String getRedirectUri(HttpRequest originating) {
-        return endSessionCallbackUrlBuilder.build(originating);
+        return endSessionCallbackUrlBuilder.build(originating).toString();
     }
 }

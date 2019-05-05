@@ -60,7 +60,6 @@ class OpenIdClientFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenIdClientFactory.class);
 
-
     private final BeanContext beanContext;
 
     /**

@@ -16,11 +16,11 @@
 package io.micronaut.security.oauth2.endpoint.endsession.response;
 
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
-import io.micronaut.security.oauth2.url.HostResolver;
+import io.micronaut.security.oauth2.url.AbsoluteUrlBuilder;
 
 import javax.inject.Singleton;
+import java.net.URL;
 
 /**
  * The default implementation of {@link EndSessionCallbackUrlBuilder}
@@ -31,24 +31,21 @@ import javax.inject.Singleton;
 @Singleton
 public class DefaultEndSessionCallbackUrlBuilder implements EndSessionCallbackUrlBuilder {
 
-    private final HostResolver hostResolver;
+    private final AbsoluteUrlBuilder absoluteUrlBuilder;
     private final EndSessionConfiguration endSessionConfiguration;
 
     /**
-     * @param hostResolver The host resolver
+     * @param absoluteUrlBuilder The URL builder
      * @param endSessionConfiguration The end session configuration
      */
-    public DefaultEndSessionCallbackUrlBuilder(HostResolver hostResolver,
-                                 EndSessionConfiguration endSessionConfiguration) {
-        this.hostResolver = hostResolver;
+    public DefaultEndSessionCallbackUrlBuilder(AbsoluteUrlBuilder absoluteUrlBuilder,
+                                               EndSessionConfiguration endSessionConfiguration) {
+        this.absoluteUrlBuilder = absoluteUrlBuilder;
         this.endSessionConfiguration = endSessionConfiguration;
     }
 
     @Override
-    public String build(HttpRequest originating) {
-        return UriBuilder.of(hostResolver.resolve(originating))
-                .path(endSessionConfiguration.getRedirectUri())
-                .build()
-                .toString();
+    public URL build(HttpRequest originating) {
+        return absoluteUrlBuilder.buildUrl(originating, endSessionConfiguration.getRedirectUri());
     }
 }

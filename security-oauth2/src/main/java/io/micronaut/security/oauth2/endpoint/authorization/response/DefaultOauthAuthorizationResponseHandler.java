@@ -18,7 +18,6 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.token.request.DefaultTokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
