@@ -25,7 +25,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.Authorizatio
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
-import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
+import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 
 import java.util.Map;
 
@@ -39,21 +39,21 @@ import java.util.Map;
 public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, OpenIdTokenResponse> {
 
     private final AuthorizationResponse authorizationResponse;
-    private final CallbackUrlBuilder callbackUrlBuilder;
+    private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
 
     /**
      * @param authorizationResponse The authorization response
-     * @param callbackUrlBuilder The callback URL builder
+     * @param oauthRouteUrlBuilder The oauth route URL builder
      * @param tokenEndpoint The token endpoint
      * @param clientConfiguration The client configuration
      */
     public OpenIdCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
-                                         CallbackUrlBuilder callbackUrlBuilder,
+                                         OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                          SecureEndpoint tokenEndpoint,
                                          OauthClientConfiguration clientConfiguration) {
         super(getMediaType(clientConfiguration), tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
-        this.callbackUrlBuilder = callbackUrlBuilder;
+        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
     }
 
     /**
@@ -73,8 +73,8 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     public Map<String, String> getGrant() {
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
-        codeGrant.setRedirectUri(callbackUrlBuilder
-                .build(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()));
+        codeGrant.setRedirectUri(oauthRouteUrlBuilder
+                .buildCallbackUrl(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()).toString());
         return codeGrant.toMap();
     }
 

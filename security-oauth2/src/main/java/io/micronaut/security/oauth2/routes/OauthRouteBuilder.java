@@ -28,9 +28,7 @@ import io.micronaut.inject.MethodExecutionHandle;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.oauth2.client.OpenIdClient;
-import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
-import io.micronaut.security.oauth2.url.LoginUrlBuilder;
-import io.micronaut.security.oauth2.url.LogoutUrlBuilder;
+import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import io.micronaut.web.router.DefaultRouteBuilder;
 
 import javax.inject.Singleton;
@@ -52,18 +50,14 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
      * @param uriNamingStrategy The URI naming strategy
      * @param conversionService The conversion service
      * @param beanContext The bean context
-     * @param callbackUrlBuilder The callback URL builder
-     * @param loginUrlBuilder The login URL builder
-     * @param logoutUrlBuilder The logout URL builder
+     * @param oauthRouteUrlBuilder The oauth URL builder
      * @param controllerList The list of controllers
      */
     OauthRouteBuilder(ExecutionHandleLocator executionHandleLocator,
                              UriNamingStrategy uriNamingStrategy,
                              ConversionService<?> conversionService,
                              BeanContext beanContext,
-                             CallbackUrlBuilder callbackUrlBuilder,
-                             LoginUrlBuilder loginUrlBuilder,
-                             LogoutUrlBuilder logoutUrlBuilder,
+                             OauthRouteUrlBuilder oauthRouteUrlBuilder,
                              List<OauthController> controllerList) {
         super(executionHandleLocator, uriNamingStrategy, conversionService);
 
@@ -74,12 +68,12 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
             BeanDefinition<OauthController> bd = beanContext.getBeanDefinition(OauthController.class, Qualifiers.byName(name));
 
             bd.findMethod("login", HttpRequest.class).ifPresent(m -> {
-                String loginPath = loginUrlBuilder.getPath(name);
+                String loginPath = oauthRouteUrlBuilder.buildLoginUrl(null, name).getPath();
                 buildRoute(HttpMethod.GET, loginPath, ExecutionHandle.of(controller, m));
             });
 
             bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
-                String callbackPath = callbackUrlBuilder.getPath(name);
+                String callbackPath = oauthRouteUrlBuilder.buildCallbackUrl(null, name).getPath();
                 MethodExecutionHandle<OauthController, Object> executionHandle = ExecutionHandle.of(controller, m);
                 buildRoute(HttpMethod.GET, callbackPath, executionHandle);
                 buildRoute(HttpMethod.POST, callbackPath, executionHandle).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
@@ -88,7 +82,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
             if (client instanceof OpenIdClient) {
                 if (((OpenIdClient) client).supportsEndSession()) {
                     bd.findMethod("logout", HttpRequest.class).ifPresent(m -> {
-                        String logoutPath = logoutUrlBuilder.getPath(name);
+                        String logoutPath = oauthRouteUrlBuilder.buildLogoutUrl(null, name).getPath();
                         buildRoute(HttpMethod.GET, logoutPath, ExecutionHandle.of(controller, m));
                     });
                 }

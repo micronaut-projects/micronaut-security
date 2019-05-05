@@ -21,7 +21,7 @@ import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
-import io.micronaut.security.oauth2.url.CallbackUrlBuilder;
+import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,22 +39,22 @@ public class DefaultOauthAuthorizationRequest implements OauthAuthorizationReque
 
     private final HttpRequest<?> request;
     private final OauthClientConfiguration oauthClientConfiguration;
-    private final CallbackUrlBuilder callbackUrlBuilder;
+    private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
     private final Supplier<String> stateSupplier;
 
     /**
      * @param request The callback request
      * @param oauthClientConfiguration The client configuration
-     * @param callbackUrlBuilder The callback URL builder
+     * @param oauthRouteUrlBuilder The oauth route URL builder
      * @param stateFactory The state factory
      */
     DefaultOauthAuthorizationRequest(@Parameter HttpRequest<?> request,
                                      @Parameter OauthClientConfiguration oauthClientConfiguration,
-                                     CallbackUrlBuilder callbackUrlBuilder,
+                                     OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                      @Nullable StateFactory stateFactory) {
         this.request = request;
         this.oauthClientConfiguration = oauthClientConfiguration;
-        this.callbackUrlBuilder = callbackUrlBuilder;
+        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateSupplier = SupplierUtil.memoized(() -> {
             if (stateFactory != null) {
                 return stateFactory.buildState(request);
@@ -92,6 +92,6 @@ public class DefaultOauthAuthorizationRequest implements OauthAuthorizationReque
     @Nullable
     @Override
     public String getRedirectUri() {
-        return callbackUrlBuilder.build(request, oauthClientConfiguration.getName());
+        return oauthRouteUrlBuilder.buildCallbackUrl(request, oauthClientConfiguration.getName()).toString();
     }
 }

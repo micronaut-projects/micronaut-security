@@ -13,29 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.micronaut.security.oauth2.url;
 
-import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
+import io.micronaut.http.HttpRequest;
 
-import javax.inject.Singleton;
+import javax.annotation.Nullable;
+import java.net.URL;
 
 /**
- * Builds a URL to send to an OAuth 2.0 provider to inform
- * the provider of the URL to redirect back to with an
- * authorization code.
- *
  * @author James Kleeh
  * @since 1.2.0
  */
-@Singleton
-public class CallbackUrlBuilder extends AbstractUrlBuilder {
+public interface OauthRouteUrlBuilder {
 
-    /**
-     * @param hostResolver The host resolver
-     * @param oauthConfigurationProperties The configuration
-     */
-    CallbackUrlBuilder(HostResolver hostResolver,
-                       OauthConfigurationProperties oauthConfigurationProperties) {
-        super(hostResolver, oauthConfigurationProperties.getCallbackUri());
-    }
+    URL buildLoginUrl(@Nullable HttpRequest originating, String providerName);
+
+    URL buildCallbackUrl(@Nullable HttpRequest originating, String providerName);
+
+    URL buildLogoutUrl(@Nullable HttpRequest originating, String providerName);
 }

@@ -4,7 +4,7 @@ EXIT_STATUS=0
 
 if [ "${TRAVIS_JDK_VERSION}" == "openjdk11" ] ; then
     echo "Check for branch $TRAVIS_BRANCH JDK: $TRAVIS_JDK_VERSION"
-    ./gradlew testClasses --no-daemon || EXIT_STATUS=$?
+#    ./gradlew testClasses --no-daemon || EXIT_STATUS=$?
 
     if [ $EXIT_STATUS -ne 0 ]; then
        exit $EXIT_STATUS
@@ -29,7 +29,7 @@ if [[ $EXIT_STATUS -eq 0 ]]; then
         ./gradlew pTML assemble --no-daemon || EXIT_STATUS=$?
     else
         ./gradlew --stop
-        ./gradlew testClasses --no-daemon || EXIT_STATUS=$?
+#        ./gradlew testClasses --no-daemon || EXIT_STATUS=$?
 
         ./gradlew --stop
 #        ./gradlew check --no-daemon || EXIT_STATUS=$?
