@@ -37,6 +37,8 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.*;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,6 +51,8 @@ import java.util.Map;
  * @since 1.2.0
  */
 public class DefaultOauthClient implements OauthClient {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthClient.class);
 
     private final OauthClientConfiguration clientConfiguration;
     private final OauthUserDetailsMapper userDetailsMapper;
@@ -89,6 +93,9 @@ public class DefaultOauthClient implements OauthClient {
                 .flatMap(EndpointConfiguration::getUrl)
                 .orElseThrow(() -> new ConfigurationException("Oauth client requires the authorization URL to be set in configuration"));
 
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), authorizationEndpoint);
+        }
         return Flowable.just(HttpResponse.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION,
                         redirectUrlBuilder.buildUrl(authorizationRequest, authorizationEndpoint)));
@@ -104,10 +111,16 @@ public class DefaultOauthClient implements OauthClient {
                 }).orElseGet(request::getParameters);
 
         if (isErrorCallback(responseData)) {
-            AuthorizationErrorResponse callback = beanContext.createBean(AuthorizationErrorResponse.class, request);
-            throw new AuthorizationErrorResponseException(callback);
+            AuthorizationErrorResponse errorResponse = beanContext.createBean(AuthorizationErrorResponse.class, request);
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Received an authorization error response from provider [{}]. Error: [{}]", getName(), errorResponse.getError());
+            }
+            throw new AuthorizationErrorResponseException(errorResponse);
         } else {
             AuthorizationResponse authorizationResponse = beanContext.createBean(AuthorizationResponse.class, request);
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Received a successful authorization response from provider [{}]", getName());
+            }
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
                     userDetailsMapper,

@@ -21,6 +21,8 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.net.URL;
@@ -36,6 +38,7 @@ import java.util.Optional;
 @Singleton
 public class EndSessionEndpointResolver {
 
+    private static final Logger LOG = LoggerFactory.getLogger(EndSessionEndpointResolver.class);
     private static final String OKTA = "okta";
     private static final String COGNITO = "cognito";
     private static final String AUTH0 = "auth0";
@@ -66,18 +69,39 @@ public class EndSessionEndpointResolver {
                                                 EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
 
         String providerName = oauthClientConfiguration.getName();
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Resolving the end session endpoint for provider [{}]. Looking for a bean with the provider name qualifier", providerName);
+        }
+
         EndSessionEndpoint endSessionEndpoint = beanContext.findBean(EndSessionEndpoint.class, Qualifiers.byName(providerName)).orElse(null);
 
         if (endSessionEndpoint == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No EndSessionEndpoint bean found with a name qualifier of [{}]", providerName);
+            }
             String issuer = oauthClientConfiguration.getOpenid().flatMap(OpenIdClientConfiguration::getIssuer).map(URL::toString).orElse(null);
 
             if (issuer != null) {
                 if (issuer.contains(OKTA)) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
+                    }
                     endSessionEndpoint = new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
                 } else if (issuer.contains(COGNITO)) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Resolved the AwsCognitoEndSessionEndpoint for provider [{}]", providerName);
+                    }
                     endSessionEndpoint = new AwsCognitoEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
                 } else if (issuer.contains(AUTH0)) {
-                    endSessionEndpoint = new Auth0EndSessionRequest(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Resolved the Auth0EndSessionEndpoint for provider [{}]", providerName);
+                    }
+                    endSessionEndpoint = new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
+                }
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("No EndSessionEndpoint can be resolved. Issuer is null for provider [{}]", providerName);
                 }
             }
         }

@@ -24,9 +24,11 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
+import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdTokenResponseValidator.class);
 
     private final Collection<OpenIdClaimsValidator> openIdClaimsValidators;
+    private final Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators;
     private final JwkValidator jwkValidator;
 
     /**
@@ -55,8 +58,10 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      * @param jwkValidator The JWK validator
      */
     public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
+                                               Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
                                                JwkValidator jwkValidator) {
         this.openIdClaimsValidators = idTokenValidators;
+        this.genericJwtClaimsValidators = genericJwtClaimsValidators;
         this.jwkValidator = jwkValidator;
     }
 
@@ -64,21 +69,42 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     public Optional<JWT> validate(OauthClientConfiguration clientConfiguration,
                                   OpenIdProviderMetadata openIdProviderMetadata,
                                   OpenIdTokenResponse openIdTokenResponse) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
+        }
         Optional<JWT> jwt = JwtTokenValidatorUtils.parseJwtIfValidSignature(openIdTokenResponse.getIdToken(),
                 Collections.singletonList(new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator)),
                 Collections.emptyList());
 
         if (jwt.isPresent()) {
             try {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("JWT signature validation succeeded. Validating claims...");
+                }
                 JWTClaimsSet claimsSet = jwt.get().getJWTClaimsSet();
-                if (openIdClaimsValidators.stream().allMatch(validator ->
-                                validator.validate(new JwtClaimsSetAdapter(claimsSet), clientConfiguration, openIdProviderMetadata))) {
-                    return jwt;
+                JwtClaims claims = new JwtClaimsSetAdapter(claimsSet);
+                if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims))) {
+                    if (openIdClaimsValidators.stream().allMatch(validator ->
+                            validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
+                        return jwt;
+                    } else {
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
+                        }
+                    }
+                } else {
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error("JWT generic claims validation failed for provider [{}]", clientConfiguration.getName());
+                    }
                 }
             } catch (ParseException e) {
                 if (LOG.isErrorEnabled()) {
-                    LOG.error("Failed to parse the JWT returned from the OpenID provider [" + clientConfiguration.getName() + "]", e);
+                    LOG.error("Failed to parse the JWT returned from provider [{}]", clientConfiguration.getName(), e);
                 }
+            }
+        } else {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("JWT signature validation failed for provider [{}]", clientConfiguration.getName());
             }
         }
         return Optional.empty();

@@ -26,6 +26,8 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Authorization
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.grants.GrantType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory to create beans related to the configuration of
@@ -37,6 +39,8 @@ import io.micronaut.security.oauth2.grants.GrantType;
 @Factory
 @Internal
 class OauthClientFactory {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OauthClientFactory.class);
 
     /**
      * Creates an {@link OauthClient} with the provided parameters. Relies
@@ -61,8 +65,24 @@ class OauthClientFactory {
                 if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
                     if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
                         return new DefaultOauthClient(clientConfiguration, userDetailsMapper, redirectUrlBuilder, authorizationResponseHandler, beanContext);
+                    } else {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Skipped client creation for provider [{}] because the grant type is not authorization code", clientConfiguration.getName());
+                        }
+                    }
+                } else {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Skipped client creation for provider [{}] because no token endpoint is configured", clientConfiguration.getName());
                     }
                 }
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Skipped client creation for provider [{}] because no authorization endpoint is configured", clientConfiguration.getName());
+                }
+            }
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped client creation for provider [{}] because the configuration is disabled", clientConfiguration.getName());
             }
         }
         return null;

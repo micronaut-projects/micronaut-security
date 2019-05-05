@@ -85,8 +85,15 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             SecureEndpoint tokenEndpoint) {
 
         if (stateValidator != null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Validating state found in the authorization response from provider [{}]", clientConfiguration.getName());
+            }
             State state = authorizationResponse.getState();
             stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
+        } else {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Skipping state validation, no state validator found");
+            }
         }
 
         OpenIdCodeTokenRequestContext requestContext = new OpenIdCodeTokenRequestContext(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration);
@@ -94,10 +101,16 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
         return Flowable.fromPublisher(
                 tokenEndpointClient.sendRequest(requestContext))
                 .switchMap(response -> {
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Token endpoint returned a success response. Validating the JWT");
+                    }
                     return Flowable.create(emitter -> {
                         Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response);
                         if (jwt.isPresent()) {
                             try {
+                                if (LOG.isTraceEnabled()) {
+                                    LOG.trace("Token validation succeeded. Creating a user details");
+                                }
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
                                 OpenIdUserDetailsMapper openIdUserDetailsMapper = userDetailsMapper != null ? userDetailsMapper : defaultUserDetailsMapper;
                                 emitter.onNext(openIdUserDetailsMapper.createUserDetails(clientConfiguration.getName(), response, claims));
@@ -107,6 +120,9 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                                 emitter.onError(e);
                             }
                         } else {
+                            if (LOG.isTraceEnabled()) {
+                                LOG.trace("Token validation failed. Failing authentication");
+                            }
                             //TODO: Create a more meaningful response
                             emitter.onNext(new AuthenticationFailed());
                             emitter.onComplete();

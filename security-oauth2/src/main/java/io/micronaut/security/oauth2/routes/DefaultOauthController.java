@@ -33,6 +33,8 @@ import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.oauth2.client.OpenIdClient;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -44,6 +46,9 @@ import java.util.Map;
  */
 @EachBean(OauthClient.class)
 public class DefaultOauthController implements OauthController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthController.class);
+
 
     private final OauthClient oauthClient;
     private final LoginHandler loginHandler;
@@ -69,6 +74,9 @@ public class DefaultOauthController implements OauthController {
 
     @Override
     public HttpResponse logout(HttpRequest request, Authentication authentication) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Received logout request for user [{}] and provider [{}]", authentication.getName(), oauthClient.getName());
+        }
         if (oauthClient instanceof OpenIdClient) {
             return ((OpenIdClient) oauthClient).endSessionRedirect(request, authentication).orElse(null);
         } else {
@@ -78,19 +86,32 @@ public class DefaultOauthController implements OauthController {
 
     @Override
     public Publisher<HttpResponse> login(HttpRequest request) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Received login request for provider [{}]", oauthClient.getName());
+        }
         return oauthClient.authorizationRedirect(request);
     }
 
     @Override
     public Publisher<HttpResponse> callback(HttpRequest<Map<String, Object>> request) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());
+        }
         Publisher<AuthenticationResponse> authenticationResponse = oauthClient.onCallback(request);
         return Flowable.fromPublisher(authenticationResponse).map(response -> {
+
             if (response.isAuthenticated()) {
                 UserDetails userDetails = (UserDetails) response;
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Authentication succeeded. User [{}] is now logged in", userDetails.getUsername());
+                }
                 eventPublisher.publishEvent(new LoginSuccessfulEvent(userDetails));
                 return loginHandler.loginSuccess(userDetails, request);
             } else {
                 AuthenticationFailed authenticationFailed = (AuthenticationFailed) response;
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Authentication failed: {}", authenticationFailed.getMessage().orElse("unknown reason"));
+                }
                 eventPublisher.publishEvent(new LoginFailedEvent(authenticationFailed));
                 return loginHandler.loginFailed(authenticationFailed);
             }

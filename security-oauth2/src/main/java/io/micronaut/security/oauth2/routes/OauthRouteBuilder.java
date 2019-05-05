@@ -30,6 +30,8 @@ import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.oauth2.client.OpenIdClient;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import io.micronaut.web.router.DefaultRouteBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.util.List;
@@ -44,6 +46,8 @@ import java.util.List;
 @Singleton
 @Internal
 class OauthRouteBuilder extends DefaultRouteBuilder {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OauthRouteBuilder.class);
 
     /**
      * @param executionHandleLocator The execution handler locator
@@ -69,22 +73,35 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
 
             bd.findMethod("login", HttpRequest.class).ifPresent(m -> {
                 String loginPath = oauthRouteUrlBuilder.buildLoginUrl(null, name).getPath();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Registering login route [GET: {}] for oauth configuration [{}]", loginPath, name);
+                }
                 buildRoute(HttpMethod.GET, loginPath, ExecutionHandle.of(controller, m));
             });
 
             bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
                 String callbackPath = oauthRouteUrlBuilder.buildCallbackUrl(null, name).getPath();
                 MethodExecutionHandle<OauthController, Object> executionHandle = ExecutionHandle.of(controller, m);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Registering callback route [GET: {}] for oauth configuration [{}]", callbackPath, name);
+                    LOG.debug("Registering callback route [POST: {}] for oauth configuration [{}]", callbackPath, name);
+                }
                 buildRoute(HttpMethod.GET, callbackPath, executionHandle);
                 buildRoute(HttpMethod.POST, callbackPath, executionHandle).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
             });
 
             if (client instanceof OpenIdClient) {
+
                 if (((OpenIdClient) client).supportsEndSession()) {
                     bd.findMethod("logout", HttpRequest.class).ifPresent(m -> {
                         String logoutPath = oauthRouteUrlBuilder.buildLogoutUrl(null, name).getPath();
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Registering logout route [GET: {}] for oauth configuration [{}]", logoutPath, name);
+                        }
                         buildRoute(HttpMethod.GET, logoutPath, ExecutionHandle.of(controller, m));
                     });
+                } else if (LOG.isDebugEnabled()) {
+                    LOG.debug("Skipping registration of logout route for oauth configuration [{}]. Client does not support end session", name);
                 }
             }
         });

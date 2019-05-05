@@ -18,11 +18,14 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.token.request.DefaultTokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 
@@ -34,6 +37,8 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizationResponseHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthAuthorizationResponseHandler.class);
 
     private final TokenEndpointClient tokenEndpointClient;
 
@@ -56,6 +61,9 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
         return Flowable.fromPublisher(
                 tokenEndpointClient.sendRequest(context))
                 .switchMap(response -> {
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Token endpoint returned a success response. Creating a user details");
+                    }
                     return Flowable.fromPublisher(userDetailsMapper.createUserDetails(response))
                             .map(AuthenticationResponse.class::cast);
                 });

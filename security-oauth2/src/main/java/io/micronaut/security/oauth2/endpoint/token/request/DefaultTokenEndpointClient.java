@@ -29,6 +29,8 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestC
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.SecureGrant;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
@@ -45,6 +47,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Singleton
 public class DefaultTokenEndpointClient implements TokenEndpointClient  {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultTokenEndpointClient.class);
 
     private final BeanContext beanContext;
     private final RxHttpClient defaultTokenClient;
@@ -63,6 +67,10 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     @Nonnull
     @Override
     public <G, R extends TokenResponse> Publisher<R> sendRequest(TokenRequestContext<G, R> requestContext) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Sending request to token endpoint [{}]", requestContext.getEndpoint().getUrl());
+        }
+
         MutableHttpRequest<G> request = HttpRequest.POST(
                 requestContext.getEndpoint().getUrl(),
                 requestContext.getGrant())
@@ -90,10 +98,19 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                 Collections.singletonList(AuthenticationMethod.CLIENT_SECRET_BASIC));
 
         OauthClientConfiguration clientConfiguration = requestContext.getClientConfiguration();
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("The token endpoint supports [{}] authentication methods", authMethodsSupported);
+        }
 
         if (authMethodsSupported.contains(AuthenticationMethod.CLIENT_SECRET_BASIC)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Using client_secret_basic authentication. Adding an Authorization header");
+            }
             request.basicAuth(clientConfiguration.getClientId(), clientConfiguration.getClientSecret());
         } else if (authMethodsSupported.contains(AuthenticationMethod.CLIENT_SECRET_POST)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Using client_secret_post authentication. The client_id and client_secret will be present in the body");
+            }
             request.getBody()
                     .filter(body -> body instanceof SecureGrant)
                     .map(SecureGrant.class::cast)
@@ -102,6 +119,9 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                         body.setClientSecret(clientConfiguration.getClientSecret());
                     });
         } else {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Unsupported or no authentication method. The client_id will be present in the body");
+            }
             request.getBody()
                     .filter(body -> body instanceof SecureGrant)
                     .map(SecureGrant.class::cast)

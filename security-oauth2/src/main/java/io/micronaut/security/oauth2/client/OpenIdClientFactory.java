@@ -40,6 +40,8 @@ import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoi
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.grants.GrantType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -55,6 +57,9 @@ import java.util.Optional;
 @Factory
 @Internal
 class OpenIdClientFactory {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OpenIdClientFactory.class);
+
 
     private final BeanContext beanContext;
 
@@ -74,11 +79,14 @@ class OpenIdClientFactory {
      */
     @EachBean(OpenIdClientConfiguration.class)
     OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
-                                                   HttpClientConfiguration defaultHttpConfiguration) {
+                                            HttpClientConfiguration defaultHttpConfiguration) {
         OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
                 .map(issuer -> {
                     RxHttpClient issuerClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultHttpConfiguration);
                     String configurationUrl = StringUtils.prependUri(issuer.toString(), clientConfiguration.getConfigurationPath());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", clientConfiguration.getName(), configurationUrl);
+                    }
                     try {
                         return issuerClient.toBlocking().retrieve(configurationUrl, OpenIdConfiguration.class);
                     } catch (HttpClientResponseException e) {
@@ -93,7 +101,7 @@ class OpenIdClientFactory {
     /**
      * Creates an {@link OpenIdClient} from the provided parameters.
      *
-     * @param oauthClientConfiguration The client configuration
+     * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param userDetailsMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
@@ -103,35 +111,51 @@ class OpenIdClientFactory {
      * @return The OpenID client, or null if the client configuration does not allow it
      */
     @EachBean(OpenIdConfiguration.class)
-    DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
-                                            @Parameter OpenIdProviderMetadata openIdProviderMetadata,
-                                            @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
-                                            AuthorizationRedirectUrlBuilder redirectUrlBuilder,
-                                            OpenIdAuthorizationResponseHandler authorizationResponseHandler,
-                                            EndSessionEndpointResolver endSessionEndpointResolver,
-                                            EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
-        if (oauthClientConfiguration.isEnabled()) {
-            Optional<OpenIdClientConfiguration> openIdClientConfiguration = oauthClientConfiguration.getOpenid();
+    DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration clientConfiguration,
+                                     @Parameter OpenIdProviderMetadata openIdProviderMetadata,
+                                     @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                                     AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                                     OpenIdAuthorizationResponseHandler authorizationResponseHandler,
+                                     EndSessionEndpointResolver endSessionEndpointResolver,
+                                     EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
+        if (clientConfiguration.isEnabled()) {
+            Optional<OpenIdClientConfiguration> openIdClientConfiguration = clientConfiguration.getOpenid();
             if (openIdClientConfiguration.map(OpenIdClientConfiguration::getIssuer).isPresent()) {
-                if (oauthClientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                    OpenIdClientConfiguration clientConfiguration = openIdClientConfiguration.get();
-                    Optional<AuthorizationEndpointConfiguration> authorization = clientConfiguration.getAuthorization();
+                if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
+                    OpenIdClientConfiguration openIdConfiguration = openIdClientConfiguration.get();
+                    Optional<AuthorizationEndpointConfiguration> authorization = openIdConfiguration.getAuthorization();
                     if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
 
                         EndSessionEndpoint endSessionEndpoint = null;
-                        if (clientConfiguration.getEndSession().isEnabled()) {
-                            endSessionEndpoint = endSessionEndpointResolver.resolve(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
+                        if (openIdConfiguration.getEndSession().isEnabled()) {
+                            endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
                         }
 
-                        return new DefaultOpenIdClient(oauthClientConfiguration,
+                        return new DefaultOpenIdClient(clientConfiguration,
                                 openIdProviderMetadata,
                                 userDetailsMapper,
                                 redirectUrlBuilder,
                                 authorizationResponseHandler,
                                 beanContext,
                                 endSessionEndpoint);
+                    } else {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Skipped client creation for provider [{}] because the response type is not 'code'", clientConfiguration.getName());
+                        }
+                    }
+                } else {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Skipped client creation for provider [{}] because the grant type is not 'authorization-code'", clientConfiguration.getName());
                     }
                 }
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Skipped client creation for provider [{}] because no issuer is configured", clientConfiguration.getName());
+                }
+            }
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped client creation for provider [{}] because the configuration is disabled", clientConfiguration.getName());
             }
         }
         return null;

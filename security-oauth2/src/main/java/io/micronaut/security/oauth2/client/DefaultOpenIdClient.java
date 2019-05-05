@@ -36,6 +36,8 @@ import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoi
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -50,6 +52,8 @@ import java.util.stream.Collectors;
  * @since 1.2.0
  */
 public class DefaultOpenIdClient implements OpenIdClient {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdClient.class);
 
     private final OauthClientConfiguration clientConfiguration;
     private final OpenIdProviderMetadata openIdProviderMetadata;
@@ -98,6 +102,10 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     @Override
     public Optional<HttpResponse> endSessionRedirect(HttpRequest request, Authentication authentication) {
+
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Starting end session flow to provider [{}]", getName());
+        }
         return Optional.ofNullable(endSessionEndpoint)
                 .map(esr -> esr.getUrl(request, authentication))
                 .map(url -> HttpResponse.status(HttpStatus.FOUND)
@@ -107,11 +115,14 @@ public class DefaultOpenIdClient implements OpenIdClient {
     @Override
     public Publisher<HttpResponse> authorizationRedirect(HttpRequest originating) {
         AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration);
-        String url = redirectUrlBuilder.buildUrl(authorizationRequest,
-                openIdProviderMetadata.getAuthorizationEndpoint());
+        String endpoint = openIdProviderMetadata.getAuthorizationEndpoint();
+
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), endpoint);
+        }
         return Flowable.just(
                 HttpResponse.status(HttpStatus.FOUND)
-                        .header(HttpHeaders.LOCATION, url));
+                        .header(HttpHeaders.LOCATION, redirectUrlBuilder.buildUrl(authorizationRequest, endpoint)));
     }
 
     @Override
@@ -124,10 +135,16 @@ public class DefaultOpenIdClient implements OpenIdClient {
                 }).orElseGet(request::getParameters);
 
         if (isErrorCallback(responseData)) {
-            AuthorizationErrorResponse callback = beanContext.createBean(AuthorizationErrorResponse.class, request);
-            throw new AuthorizationErrorResponseException(callback);
+            AuthorizationErrorResponse errorResponse = beanContext.createBean(AuthorizationErrorResponse.class, request);
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Received an authorization error response from provider [{}]. Error: [{}]", getName(), errorResponse.getError());
+            }
+            throw new AuthorizationErrorResponseException(errorResponse);
         } else {
             AuthorizationResponse authorizationResponse = beanContext.createBean(AuthorizationResponse.class, request);
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Received a successful authorization response from provider [{}]", getName());
+            }
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
                     openIdProviderMetadata,

@@ -16,47 +16,21 @@
 package io.micronaut.security.oauth2.endpoint.endsession.response;
 
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.uri.UriBuilder;
-import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
-import io.micronaut.security.oauth2.url.HostResolver;
-import io.micronaut.security.oauth2.url.UrlBuilder;
-
-import javax.annotation.Nullable;
-import javax.inject.Singleton;
 
 /**
- * A {@link UrlBuilder} for generating the URL used by OpenID
+ * A contract for generating the URL used by OpenID
  * providers to redirect back to after logging the user out.
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-@Singleton
-public class EndSessionCallbackUrlBuilder implements UrlBuilder {
-
-    private final HostResolver hostResolver;
-    private final EndSessionConfiguration endSessionConfiguration;
+public interface EndSessionCallbackUrlBuilder {
 
     /**
-     * @param hostResolver The host resolver
-     * @param endSessionConfiguration The end session configuration
+     * Builds the URL to redirect back to
+     *
+     * @param originating The originating request
+     * @return The URL
      */
-    EndSessionCallbackUrlBuilder(HostResolver hostResolver,
-                                 EndSessionConfiguration endSessionConfiguration) {
-        this.hostResolver = hostResolver;
-        this.endSessionConfiguration = endSessionConfiguration;
-    }
-
-    @Override
-    public String build(HttpRequest originating, @Nullable String providerName) {
-        return UriBuilder.of(hostResolver.resolve(originating))
-                .path(getPath(providerName))
-                .build()
-                .toString();
-    }
-
-    @Override
-    public String getPath(@Nullable String providerName) {
-        return endSessionConfiguration.getRedirectUri();
-    }
+    String build(HttpRequest originating);
 }

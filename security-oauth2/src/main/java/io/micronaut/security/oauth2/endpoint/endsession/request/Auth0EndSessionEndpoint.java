@@ -35,16 +35,16 @@ import java.util.*;
  * @author Sergio del Amo
  * @since 1.2.0
  */
-public class Auth0EndSessionRequest extends AbstractEndSessionRequest {
+public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
 
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata
      */
-    public Auth0EndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                  OauthClientConfiguration clientConfiguration,
-                                  OpenIdProviderMetadata providerMetadata) {
+    public Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                   OauthClientConfiguration clientConfiguration,
+                                   OpenIdProviderMetadata providerMetadata) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
