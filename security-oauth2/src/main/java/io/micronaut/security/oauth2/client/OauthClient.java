@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * The client implementations are called through the {@link io.micronaut.security.oauth2.routes.OauthController}.
  * A controller is created for each client bean and routes for the controller
- * are registered in the {@link io.micronaut.security.oauth2.routes.OauthRouteBuilder}.
+ * are registered in a route builder.
  *
  * @author James Kleeh
  * @since 1.2.0

@@ -148,22 +148,22 @@ class OpenIdClientFactory {
                                 endSessionEndpoint);
                     } else {
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Skipped client creation for provider [{}] because the response type is not 'code'", clientConfiguration.getName());
+                            LOG.debug("Skipped OpenID client creation for provider [{}] because the response type is not 'code'", clientConfiguration.getName());
                         }
                     }
                 } else {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Skipped client creation for provider [{}] because the grant type is not 'authorization-code'", clientConfiguration.getName());
+                        LOG.debug("Skipped OpenID client creation for provider [{}] because the grant type is not 'authorization-code'", clientConfiguration.getName());
                     }
                 }
             } else {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Skipped client creation for provider [{}] because no issuer is configured", clientConfiguration.getName());
+                    LOG.debug("Skipped OpenID client creation for provider [{}] because no issuer is configured", clientConfiguration.getName());
                 }
             }
         } else {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Skipped client creation for provider [{}] because the configuration is disabled", clientConfiguration.getName());
+                LOG.debug("Skipped OpenID client creation for provider [{}] because the configuration is disabled", clientConfiguration.getName());
             }
         }
         return null;

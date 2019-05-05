@@ -104,8 +104,12 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populateScope(@Nonnull AuthorizationRequest authorizationRequest,
                                  @Nonnull Map<String, Object> parameters) {
-        Optional<String> optionalStr = authorizationRequest.getScopes().stream().reduce((a, b) -> a + StringUtils.SPACE + b);
-        parameters.put(AuthorizationRequest.PARAMETER_SCOPE, optionalStr.orElse(OpenIdScope.OPENID.toString()));
+        Optional<String> optionalScope = authorizationRequest.getScopes().stream().reduce((a, b) -> a + StringUtils.SPACE + b);
+        String defaultScope = authorizationRequest instanceof OpenIdAuthorizationRequest ? OpenIdScope.OPENID.toString() : null;
+        String scope = optionalScope.orElse(defaultScope);
+        if (scope != null) {
+            parameters.put(AuthorizationRequest.PARAMETER_SCOPE, scope);
+        }
     }
 
     /**

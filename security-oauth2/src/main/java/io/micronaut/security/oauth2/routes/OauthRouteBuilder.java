@@ -58,53 +58,58 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
      * @param controllerList The list of controllers
      */
     OauthRouteBuilder(ExecutionHandleLocator executionHandleLocator,
-                             UriNamingStrategy uriNamingStrategy,
-                             ConversionService<?> conversionService,
-                             BeanContext beanContext,
-                             OauthRouteUrlBuilder oauthRouteUrlBuilder,
-                             List<OauthController> controllerList) {
+                      UriNamingStrategy uriNamingStrategy,
+                      ConversionService<?> conversionService,
+                      BeanContext beanContext,
+                      OauthRouteUrlBuilder oauthRouteUrlBuilder,
+                      List<OauthController> controllerList) {
         super(executionHandleLocator, uriNamingStrategy, conversionService);
 
-        controllerList.forEach((controller) -> {
-            OauthClient client = controller.getClient();
-            String name = client.getName();
-
-            BeanDefinition<OauthController> bd = beanContext.getBeanDefinition(OauthController.class, Qualifiers.byName(name));
-
-            bd.findMethod("login", HttpRequest.class).ifPresent(m -> {
-                String loginPath = oauthRouteUrlBuilder.buildLoginUri(name).getPath();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Registering login route [GET: {}] for oauth configuration [{}]", loginPath, name);
-                }
-                buildRoute(HttpMethod.GET, loginPath, ExecutionHandle.of(controller, m));
-            });
-
-            bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
-                String callbackPath = oauthRouteUrlBuilder.buildCallbackUri(name).getPath();
-                MethodExecutionHandle<OauthController, Object> executionHandle = ExecutionHandle.of(controller, m);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Registering callback route [GET: {}] for oauth configuration [{}]", callbackPath, name);
-                    LOG.debug("Registering callback route [POST: {}] for oauth configuration [{}]", callbackPath, name);
-                }
-                buildRoute(HttpMethod.GET, callbackPath, executionHandle);
-                buildRoute(HttpMethod.POST, callbackPath, executionHandle).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
-            });
-
-            if (client instanceof OpenIdClient) {
-
-                if (((OpenIdClient) client).supportsEndSession()) {
-                    bd.findMethod("logout", HttpRequest.class).ifPresent(m -> {
-                        String logoutPath = oauthRouteUrlBuilder.buildLogoutUri(name).getPath();
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Registering logout route [GET: {}] for oauth configuration [{}]", logoutPath, name);
-                        }
-                        buildRoute(HttpMethod.GET, logoutPath, ExecutionHandle.of(controller, m));
-                    });
-                } else if (LOG.isDebugEnabled()) {
-                    LOG.debug("Skipping registration of logout route for oauth configuration [{}]. Client does not support end session", name);
-                }
+        if (controllerList.isEmpty()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No Oauth controllers found. Skipping registration of routes");
             }
-        });
+        } else {
+            controllerList.forEach((controller) -> {
+                OauthClient client = controller.getClient();
+                String name = client.getName();
 
+                BeanDefinition<OauthController> bd = beanContext.getBeanDefinition(OauthController.class, Qualifiers.byName(name));
+
+                bd.findMethod("login", HttpRequest.class).ifPresent(m -> {
+                    String loginPath = oauthRouteUrlBuilder.buildLoginUri(name).getPath();
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Registering login route [GET: {}] for oauth configuration [{}]", loginPath, name);
+                    }
+                    buildRoute(HttpMethod.GET, loginPath, ExecutionHandle.of(controller, m));
+                });
+
+                bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
+                    String callbackPath = oauthRouteUrlBuilder.buildCallbackUri(name).getPath();
+                    MethodExecutionHandle<OauthController, Object> executionHandle = ExecutionHandle.of(controller, m);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Registering callback route [GET: {}] for oauth configuration [{}]", callbackPath, name);
+                        LOG.debug("Registering callback route [POST: {}] for oauth configuration [{}]", callbackPath, name);
+                    }
+                    buildRoute(HttpMethod.GET, callbackPath, executionHandle);
+                    buildRoute(HttpMethod.POST, callbackPath, executionHandle).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+                });
+
+                if (client instanceof OpenIdClient) {
+
+                    if (((OpenIdClient) client).supportsEndSession()) {
+                        bd.findMethod("logout", HttpRequest.class).ifPresent(m -> {
+                            String logoutPath = oauthRouteUrlBuilder.buildLogoutUri(name).getPath();
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("Registering logout route [GET: {}] for oauth configuration [{}]", logoutPath, name);
+                            }
+                            buildRoute(HttpMethod.GET, logoutPath, ExecutionHandle.of(controller, m));
+                        });
+                    } else if (LOG.isDebugEnabled()) {
+                        LOG.debug("Skipping registration of logout route for oauth configuration [{}]. Client does not support end session", name);
+                    }
+                }
+            });
+        }
     }
 }

@@ -5,13 +5,14 @@ import org.testcontainers.containers.Container
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
+import spock.lang.Specification
 
-class OpenIDIntegrationSpec {
+class OpenIDIntegrationSpec extends Specification {
 
     protected static String CLIENT_SECRET
     protected static String ISSUER
 
-    protected static GenericContainer hydra = new GenericContainer("jboss/keycloak:6.1")
+    protected static GenericContainer keycloak = new GenericContainer("jboss/keycloak:6.0.1")
             .withExposedPorts(8080)
             .withEnv([
                     KEYCLOAK_USER: 'user',
@@ -21,13 +22,13 @@ class OpenIDIntegrationSpec {
             .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*"))
 
     static {
-        hydra.start()
-        hydra.execInContainer("keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password")
-        hydra.execInContainer("keycloak/bin/kcreg.sh create -s clientId=\"myclient\" -s 'redirectUris=[\"http://localhost*\"]'")
-        Container.ExecResult result = hydra.execInContainer("keycloak/bin/kcreg.sh get \"myclient\"")
+        keycloak.start()
+        Container.ExecResult result = keycloak.execInContainer("keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "))
+        result = keycloak.execInContainer("keycloak/bin/kcreg.sh create -s clientId=\"myclient\" -s redirectUris=[\"http://localhost*\"]".split(" "))
+        result = keycloak.execInContainer("keycloak/bin/kcreg.sh get \"myclient\"".split(" "))
         Map map = new ObjectMapper().readValue(result.getStdout(), Map.class)
         CLIENT_SECRET = map.get("secret")
-        ISSUER = "http://localhost:" + hydra.getMappedPort(8080) + "/auth/realms/master"
+        ISSUER = "http://localhost:" + keycloak.getMappedPort(8080) + "/auth/realms/master"
     }
 
     protected ApplicationContext startContext(Map<String, Object> configuration = getConfiguration()) {

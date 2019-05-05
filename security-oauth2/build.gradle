@@ -6,7 +6,8 @@ dependencies {
     annotationProcessor project(":security")
     annotationProcessor "io.micronaut:micronaut-graal"
     compileOnly "io.micronaut:micronaut-inject-java"
-    compile project(":security-jwt")
+    compileOnly project(":security-jwt")
+    compile project(":security")
     compile "io.micronaut:micronaut-inject"
     compile "io.micronaut:micronaut-http-client"
     compileOnly "io.micronaut:micronaut-views"
@@ -18,4 +19,5 @@ dependencies {
     testCompile "io.micronaut:micronaut-inject-groovy"
     testCompile 'com.sun.activation:javax.activation:1.2.0' // Java 11
     testCompile "org.testcontainers:testcontainers:1.11.2"
+    testCompile project(":security-jwt")
 }
