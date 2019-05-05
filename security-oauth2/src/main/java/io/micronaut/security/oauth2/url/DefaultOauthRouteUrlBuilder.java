@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Default implementation of {@link OauthRouteUrlBuilder}
+ *
  * @author James Kleeh
  * @since 1.2.0
  */
@@ -39,6 +41,10 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     private final String callbackUriTemplate;
     private final String logoutUriTemplate;
 
+    /**
+     * @param hostResolver The host resolver
+     * @param oauthConfigurationProperties The oauth configuration
+     */
     DefaultOauthRouteUrlBuilder(HostResolver hostResolver,
                                 OauthConfigurationProperties oauthConfigurationProperties) {
         this.hostResolver = hostResolver;
@@ -62,6 +68,14 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
         return build(originating, providerName, logoutUriTemplate);
     }
 
+    /**
+     * Builds a URL with the provided arguments
+     *
+     * @param originating The originating request
+     * @param providerName The oauth provider name
+     * @param uriTemplate The URI template
+     * @return The URL
+     */
     protected URL build(@Nullable HttpRequest originating, String providerName, String uriTemplate) {
         try {
             return UriBuilder.of(hostResolver.resolve(originating))
@@ -73,6 +87,13 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
         }
     }
 
+    /**
+     * Builds the path portion of the URL
+     *
+     * @param uriTemplate The uri template
+     * @param providerName The provider name
+     * @return The URL path
+     */
     protected String getPath(String uriTemplate, String providerName) {
         Map<String, Object> uriParams = new HashMap<>(1);
         uriParams.put("provider", providerName);

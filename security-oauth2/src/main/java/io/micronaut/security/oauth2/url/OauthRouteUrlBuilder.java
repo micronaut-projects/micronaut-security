@@ -22,14 +22,38 @@ import javax.annotation.Nullable;
 import java.net.URL;
 
 /**
+ * Responsible for building URLs to routes the client will receive
+ * requests on.
+ *
  * @author James Kleeh
  * @since 1.2.0
  */
 public interface OauthRouteUrlBuilder {
 
+    /**
+     * Builds the URL to start the OAuth 2.0 authorization code flow
+     *
+     * @param originating The originating request
+     * @param providerName The oauth provider name
+     * @return The URL
+     */
     URL buildLoginUrl(@Nullable HttpRequest originating, String providerName);
 
+    /**
+     * Builds the URL to receive the OAuth 2.0 authorization callback request
+     *
+     * @param originating The originating request
+     * @param providerName The oauth provider name
+     * @return The URL
+     */
     URL buildCallbackUrl(@Nullable HttpRequest originating, String providerName);
 
+    /**
+     * Builds the URL to start the OpenID end session flow
+     *
+     * @param originating The originating request
+     * @param providerName The oauth provider name
+     * @return The URL
+     */
     URL buildLogoutUrl(@Nullable HttpRequest originating, String providerName);
 }
