@@ -72,7 +72,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
             BeanDefinition<OauthController> bd = beanContext.getBeanDefinition(OauthController.class, Qualifiers.byName(name));
 
             bd.findMethod("login", HttpRequest.class).ifPresent(m -> {
-                String loginPath = oauthRouteUrlBuilder.buildLoginUrl(null, name).getPath();
+                String loginPath = oauthRouteUrlBuilder.buildLoginUri(name).getPath();
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Registering login route [GET: {}] for oauth configuration [{}]", loginPath, name);
                 }
@@ -80,7 +80,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
             });
 
             bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
-                String callbackPath = oauthRouteUrlBuilder.buildCallbackUrl(null, name).getPath();
+                String callbackPath = oauthRouteUrlBuilder.buildCallbackUri(name).getPath();
                 MethodExecutionHandle<OauthController, Object> executionHandle = ExecutionHandle.of(controller, m);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Registering callback route [GET: {}] for oauth configuration [{}]", callbackPath, name);
@@ -94,7 +94,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
 
                 if (((OpenIdClient) client).supportsEndSession()) {
                     bd.findMethod("logout", HttpRequest.class).ifPresent(m -> {
-                        String logoutPath = oauthRouteUrlBuilder.buildLogoutUrl(null, name).getPath();
+                        String logoutPath = oauthRouteUrlBuilder.buildLogoutUri(name).getPath();
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Registering logout route [GET: {}] for oauth configuration [{}]", logoutPath, name);
                         }

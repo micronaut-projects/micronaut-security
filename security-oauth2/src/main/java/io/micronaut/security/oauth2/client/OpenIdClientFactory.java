@@ -20,6 +20,7 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Prototype;
 import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.util.StringUtils;
@@ -44,6 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -76,20 +79,27 @@ class OpenIdClientFactory {
      * @param defaultHttpConfiguration The default HTTP client configuration
      * @return The OpenID configuration
      */
-    @EachBean(OpenIdClientConfiguration.class)
+    @Prototype
     OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
                                             HttpClientConfiguration defaultHttpConfiguration) {
         OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
                 .map(issuer -> {
-                    RxHttpClient issuerClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultHttpConfiguration);
-                    String configurationUrl = StringUtils.prependUri(issuer.toString(), clientConfiguration.getConfigurationPath());
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", clientConfiguration.getName(), configurationUrl);
-                    }
+                    RxHttpClient issuerClient = null;
                     try {
-                        return issuerClient.toBlocking().retrieve(configurationUrl, OpenIdConfiguration.class);
+                        URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), clientConfiguration.getConfigurationPath()));
+                        issuerClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultHttpConfiguration);
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", clientConfiguration.getName(), configurationUrl);
+                        }
+                        return issuerClient.toBlocking().retrieve(configurationUrl.toString(), OpenIdConfiguration.class);
                     } catch (HttpClientResponseException e) {
                         throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + clientConfiguration.getName(), e);
+                    } catch (MalformedURLException e) {
+                        throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
+                    } finally {
+                        if (issuerClient != null) {
+                            issuerClient.stop();
+                        }
                     }
                 }).orElse(new OpenIdConfiguration());
 
@@ -101,7 +111,6 @@ class OpenIdClientFactory {
      * Creates an {@link OpenIdClient} from the provided parameters.
      *
      * @param clientConfiguration The client configuration
-     * @param openIdProviderMetadata The OpenID provider metadata
      * @param userDetailsMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
@@ -109,9 +118,8 @@ class OpenIdClientFactory {
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @return The OpenID client, or null if the client configuration does not allow it
      */
-    @EachBean(OpenIdConfiguration.class)
+    @EachBean(OauthClientConfiguration.class)
     DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration clientConfiguration,
-                                     @Parameter OpenIdProviderMetadata openIdProviderMetadata,
                                      @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                      AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
@@ -125,6 +133,7 @@ class OpenIdClientFactory {
                     Optional<AuthorizationEndpointConfiguration> authorization = openIdConfiguration.getAuthorization();
                     if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
 
+                        OpenIdProviderMetadata openIdProviderMetadata = beanContext.createBean(OpenIdProviderMetadata.class, openIdConfiguration);
                         EndSessionEndpoint endSessionEndpoint = null;
                         if (openIdConfiguration.getEndSession().isEnabled()) {
                             endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);

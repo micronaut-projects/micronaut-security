@@ -25,6 +25,8 @@ import io.micronaut.web.router.exceptions.RoutingException;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +70,33 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     @Override
     public URL buildLogoutUrl(@Nullable HttpRequest originating, String providerName) {
         return build(originating, providerName, logoutUriTemplate);
+    }
+
+    @Override
+    public URI buildLoginUri(String providerName) {
+        try {
+            return new URI(getPath(loginUriTemplate, providerName));
+        } catch (URISyntaxException e) {
+            throw new RoutingException("Error building a URI for the path [" + loginUriTemplate + "]", e);
+        }
+    }
+
+    @Override
+    public URI buildCallbackUri(String providerName) {
+        try {
+            return new URI(getPath(callbackUriTemplate, providerName));
+        } catch (URISyntaxException e) {
+            throw new RoutingException("Error building a URI for the path [" + callbackUriTemplate + "]", e);
+        }
+    }
+
+    @Override
+    public URI buildLogoutUri(String providerName) {
+        try {
+            return new URI(getPath(logoutUriTemplate, providerName));
+        } catch (URISyntaxException e) {
+            throw new RoutingException("Error building a URI for the path [" + logoutUriTemplate + "]", e);
+        }
     }
 
     /**

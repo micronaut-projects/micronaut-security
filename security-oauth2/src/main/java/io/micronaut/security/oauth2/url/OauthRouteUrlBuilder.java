@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.url;
 import io.micronaut.http.HttpRequest;
 
 import javax.annotation.Nullable;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -56,4 +57,28 @@ public interface OauthRouteUrlBuilder extends AbsoluteUrlBuilder {
      * @return The URL
      */
     URL buildLogoutUrl(@Nullable HttpRequest originating, String providerName);
+
+    /**
+     * Builds the URI to start the OAuth 2.0 authorization code flow
+     *
+     * @param providerName The oauth provider name
+     * @return The URL
+     */
+    URI buildLoginUri(String providerName);
+
+    /**
+     * Builds the URI to receive the OAuth 2.0 authorization callback request
+     *
+     * @param providerName The oauth provider name
+     * @return The URL
+     */
+    URI buildCallbackUri(String providerName);
+
+    /**
+     * Builds the URI to start the OpenID end session flow
+     *
+     * @param providerName The oauth provider name
+     * @return The URL
+     */
+    URI buildLogoutUri(String providerName);
 }
