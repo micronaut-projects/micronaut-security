@@ -10,60 +10,41 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.OpenIDIntegrationSpec
 import io.micronaut.security.oauth2.client.OauthClient
-import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
 import org.reactivestreams.Publisher
+import spock.lang.Specification
 
 import javax.inject.Named
 import javax.inject.Singleton
 import java.nio.charset.StandardCharsets
 
-class AuthorizationRedirectSpec extends OpenIDIntegrationSpec {
+class OauthAuthorizationRedirectSpec extends Specification {
 
-    void "test authorization redirect for openid and normal oauth"() {
+    void "test authorization redirect with just oauth"() {
         given:
-        Map config = getConfiguration()
+        Map config = new HashMap<>()
+        config.put("spec.name", OauthAuthorizationRedirectSpec.simpleName)
         config.put("micronaut.security.enabled", true)
         config.put("micronaut.security.token.jwt.enabled", true)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
-        config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
-        config.put("micronaut.security.oauth2.clients.keycloak.client-id", "myclient")
-        config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)
         config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")
         config.put("micronaut.security.oauth2.clients.twitter.token.url", "http://twitter.com/token")
         config.put("micronaut.security.oauth2.clients.twitter.client-id", "myclient")
         config.put("micronaut.security.oauth2.clients.twitter.client-secret", "mysecret")
-        ApplicationContext context = startContext(config)
-        EmbeddedServer embeddedServer = context.getBean(EmbeddedServer)
-        embeddedServer.start()
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, config)
+        ApplicationContext context = embeddedServer.getApplicationContext()
         RxHttpClient client = context.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
 
         expect:
-        context.containsBean(OpenIdClient, Qualifiers.byName("keycloak"))
-        context.containsBean(OauthClient, Qualifiers.byName("twitter"))
-        context.containsBean(OauthController, Qualifiers.byName("keycloak"))
-        context.containsBean(OauthController, Qualifiers.byName("twitter"))
+        context.findBean(OauthClient, Qualifiers.byName("twitter")).isPresent()
+        context.findBean(OauthController, Qualifiers.byName("twitter")).isPresent()
 
         when:
-        HttpResponse response = client.toBlocking().exchange("/oauth/login/keycloak")
+        HttpResponse response = client.toBlocking().exchange("/oauth/login/twitter")
         String location = URLDecoder.decode(response.header(HttpHeaders.LOCATION), StandardCharsets.UTF_8.toString())
-
-        then:
-        response.status == HttpStatus.FOUND
-        location.startsWith(ISSUER + "/protocol/openid-connect/auth")
-        location.contains("scope=openid email profile")
-        location.contains("response_type=code")
-        location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        location.contains("state={\"nonce\":\"")
-        location.contains("client_id=myclient")
-
-        when:
-        response = client.toBlocking().exchange("/oauth/login/twitter")
-        location = URLDecoder.decode(response.header(HttpHeaders.LOCATION), StandardCharsets.UTF_8.toString())
 
         then:
         response.status == HttpStatus.FOUND
@@ -80,7 +61,7 @@ class AuthorizationRedirectSpec extends OpenIDIntegrationSpec {
 
     @Singleton
     @Named("twitter")
-    @Requires(property = "spec.name", value = "OpenIdAuthorizationRedirectSpec")
+    @Requires(property = "spec.name", value = "OauthAuthorizationRedirectSpec")
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
         @Override
         Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
