@@ -174,7 +174,7 @@ class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
 
     @Singleton
     @Named("twitter")
-    @Requires(property = "spec.name", value = "AuthorizationRedirectSpec")
+    @Requires(property = "spec.name", value = "OpenIdAuthorizationRedirectSpec")
     @Requires(property = "micronaut.security.oauth2.clients.twitter")
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
         @Override
