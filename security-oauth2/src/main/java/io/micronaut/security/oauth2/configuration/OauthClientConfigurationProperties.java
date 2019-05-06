@@ -194,22 +194,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
                 OpenIdScope.PROFILE.toString());
     }
 
-    /**
-     * OAuth 2.0 authorization endpoint configuration
-     */
-    @ConfigurationProperties("authorization")
-    public static class AuthorizationEndpointConfigurationProperties extends DefaultEndpointConfiguration {
-
-    }
-
-    /**
-     * OAuth 2.0 token endpoint configuration
-     */
-    @ConfigurationProperties("token")
-    public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration {
-
-    }
-
     @Override
     public Optional<SecureEndpointConfiguration> getIntrospection() {
         return Optional.ofNullable(introspection);
@@ -236,6 +220,22 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     public void setRevocation(RevocationEndpointConfigurationProperties revocation) {
         this.revocation = revocation;
+    }
+
+    /**
+     * OAuth 2.0 authorization endpoint configuration
+     */
+    @ConfigurationProperties("authorization")
+    public static class AuthorizationEndpointConfigurationProperties extends DefaultEndpointConfiguration {
+
+    }
+
+    /**
+     * OAuth 2.0 token endpoint configuration
+     */
+    @ConfigurationProperties("token")
+    public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration {
+
     }
 
     /**
@@ -324,8 +324,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         public void setJwksUri(String jwksUri) {
             this.jwksUri = jwksUri;
         }
-
-
 
         @Override
         public Optional<EndpointConfiguration> getRegistration() {

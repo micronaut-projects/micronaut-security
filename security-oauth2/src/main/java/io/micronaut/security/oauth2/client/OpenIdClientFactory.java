@@ -75,7 +75,8 @@ class OpenIdClientFactory {
     /**
      * Retrieves OpenID configuration from the provided issuer.
      *
-     * @param clientConfiguration The client configuration
+     * @param oauthClientConfiguration The client configuration
+     * @param openIdClientConfiguration The openid client configuration
      * @param defaultHttpConfiguration The default HTTP client configuration
      * @return The OpenID configuration
      */
@@ -111,6 +112,7 @@ class OpenIdClientFactory {
     /**
      * Creates an {@link OpenIdClient} from the provided parameters.
      *
+     * @param openIdClientConfiguration The openid client configuration
      * @param clientConfiguration The client configuration
      * @param userDetailsMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
