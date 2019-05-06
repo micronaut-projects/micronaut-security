@@ -48,20 +48,6 @@ public interface OpenIdClientConfiguration extends Named {
     Optional<String> getJwksUri();
 
     /**
-     * https://tools.ietf.org/html/rfc7662.
-     *
-     * @return The introspection endpoint configuration
-     */
-    Optional<SecureEndpointConfiguration> getIntrospection();
-
-    /**
-     * https://tools.ietf.org/html/rfc7009.
-     *
-     * @return The revocation endpoint configuration
-     */
-    Optional<SecureEndpointConfiguration> getRevocation();
-
-    /**
      * https://tools.ietf.org/html/rfc7591#section-3.1
      * https://openid.net/specs/openid-connect-registration-1_0.html#ClientRegistration
      *

@@ -56,6 +56,8 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private GrantType grantType = GrantType.AUTHORIZATION_CODE;
     private AuthorizationEndpointConfigurationProperties authorization;
     private TokenEndpointConfigurationProperties token;
+    private IntrospectionEndpointConfigurationProperties introspection;
+    private RevocationEndpointConfigurationProperties revocation;
     private OpenIdClientConfigurationProperties openid;
 
     /**
@@ -208,6 +210,46 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
 
     }
 
+    @Override
+    public Optional<SecureEndpointConfiguration> getIntrospection() {
+        return Optional.ofNullable(introspection);
+    }
+
+    /**
+     * Sets the introspection endpoint configuration.
+     *
+     * @param introspection The introspection endpoint configuration
+     */
+    public void setIntrospection(IntrospectionEndpointConfigurationProperties introspection) {
+        this.introspection = introspection;
+    }
+
+    @Override
+    public Optional<SecureEndpointConfiguration> getRevocation() {
+        return Optional.ofNullable(revocation);
+    }
+
+    /**
+     * Sets the revocation endpoint configuration.
+     *
+     * @param revocation The revocation endpoint configuration
+     */
+    public void setRevocation(RevocationEndpointConfigurationProperties revocation) {
+        this.revocation = revocation;
+    }
+
+    /**
+     * Introspection endpoint configuration
+     */
+    @ConfigurationProperties("introspection")
+    public static class IntrospectionEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements IntrospectionEndpointConfiguration { }
+
+    /**
+     * Revocation endpoint configuration
+     */
+    @ConfigurationProperties("revocation")
+    public static class RevocationEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements RevocationEndpointConfiguration { }
+
     /**
      * OpenID client configuration.
      */
@@ -220,8 +262,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private URL issuer;
         private String configurationPath = DEFAULT_CONFIG_PATH;
         private String jwksUri;
-        private IntrospectionEndpointConfigurationProperties introspection;
-        private RevocationEndpointConfigurationProperties revocation;
         private RegistrationEndpointConfigurationProperties registration;
         private UserInfoEndpointConfigurationProperties userInfo;
         private AuthorizationEndpointConfigurationProperties authorization;
@@ -285,33 +325,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.jwksUri = jwksUri;
         }
 
-        @Override
-        public Optional<SecureEndpointConfiguration> getIntrospection() {
-            return Optional.ofNullable(introspection);
-        }
 
-        /**
-         * Sets the introspection endpoint configuration.
-         *
-         * @param introspection The introspection endpoint configuration
-         */
-        public void setIntrospection(IntrospectionEndpointConfigurationProperties introspection) {
-            this.introspection = introspection;
-        }
-
-        @Override
-        public Optional<SecureEndpointConfiguration> getRevocation() {
-            return Optional.ofNullable(revocation);
-        }
-
-        /**
-         * Sets the revocation endpoint configuration.
-         *
-         * @param revocation The revocation endpoint configuration
-         */
-        public void setRevocation(RevocationEndpointConfigurationProperties revocation) {
-            this.revocation = revocation;
-        }
 
         @Override
         public Optional<EndpointConfiguration> getRegistration() {
@@ -383,18 +397,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         public void setEndSession(@Nonnull EndSessionConfigurationProperties endSession) {
             this.endSession = endSession;
         }
-
-        /**
-         * Introspection endpoint configuration
-         */
-        @ConfigurationProperties("introspection")
-        public static class IntrospectionEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements IntrospectionEndpointConfiguration { }
-
-        /**
-         * Revocation endpoint configuration
-         */
-        @ConfigurationProperties("revocation")
-        public static class RevocationEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements RevocationEndpointConfiguration { }
 
         /**
          * Registration endpoint configuration

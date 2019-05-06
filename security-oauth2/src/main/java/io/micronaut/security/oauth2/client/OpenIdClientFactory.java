@@ -80,20 +80,21 @@ class OpenIdClientFactory {
      * @return The OpenID configuration
      */
     @Prototype
-    OpenIdConfiguration openIdConfiguration(@Parameter OpenIdClientConfiguration clientConfiguration,
+    OpenIdConfiguration openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
+                                            @Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                             HttpClientConfiguration defaultHttpConfiguration) {
-        OpenIdConfiguration openIdConfiguration = clientConfiguration.getIssuer()
+        OpenIdConfiguration openIdConfiguration = openIdClientConfiguration.getIssuer()
                 .map(issuer -> {
                     RxHttpClient issuerClient = null;
                     try {
-                        URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), clientConfiguration.getConfigurationPath()));
+                        URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
                         issuerClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultHttpConfiguration);
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", clientConfiguration.getName(), configurationUrl);
+                            LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                         }
                         return issuerClient.toBlocking().retrieve(configurationUrl.toString(), OpenIdConfiguration.class);
                     } catch (HttpClientResponseException e) {
-                        throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + clientConfiguration.getName(), e);
+                        throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
                     } catch (MalformedURLException e) {
                         throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
                     } finally {
@@ -103,7 +104,7 @@ class OpenIdClientFactory {
                     }
                 }).orElse(new OpenIdConfiguration());
 
-        overrideFromConfig(openIdConfiguration, clientConfiguration);
+        overrideFromConfig(openIdConfiguration, openIdClientConfiguration, oauthClientConfiguration);
         return openIdConfiguration;
     }
 
@@ -118,24 +119,23 @@ class OpenIdClientFactory {
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @return The OpenID client, or null if the client configuration does not allow it
      */
-    @EachBean(OauthClientConfiguration.class)
-    DefaultOpenIdClient openIdClient(@Parameter OauthClientConfiguration clientConfiguration,
+    @EachBean(OpenIdClientConfiguration.class)
+    DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
+                                     @Parameter OauthClientConfiguration clientConfiguration,
                                      @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                      AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                      EndSessionEndpointResolver endSessionEndpointResolver,
                                      EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
         if (clientConfiguration.isEnabled()) {
-            Optional<OpenIdClientConfiguration> openIdClientConfiguration = clientConfiguration.getOpenid();
-            if (openIdClientConfiguration.map(OpenIdClientConfiguration::getIssuer).isPresent()) {
+            if (openIdClientConfiguration.getIssuer().isPresent()) {
                 if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                    OpenIdClientConfiguration openIdConfiguration = openIdClientConfiguration.get();
-                    Optional<AuthorizationEndpointConfiguration> authorization = openIdConfiguration.getAuthorization();
+                    Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
                     if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
 
-                        OpenIdProviderMetadata openIdProviderMetadata = beanContext.createBean(OpenIdProviderMetadata.class, openIdConfiguration);
+                        OpenIdProviderMetadata openIdProviderMetadata = beanContext.createBean(OpenIdProviderMetadata.class, clientConfiguration, openIdClientConfiguration);
                         EndSessionEndpoint endSessionEndpoint = null;
-                        if (openIdConfiguration.getEndSession().isEnabled()) {
+                        if (openIdClientConfiguration.getEndSession().isEnabled()) {
                             endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
                         }
 
@@ -170,14 +170,15 @@ class OpenIdClientFactory {
     }
 
     private void overrideFromConfig(OpenIdConfiguration configuration,
-                                    OpenIdClientConfiguration openIdClientConfiguration) {
+                                    OpenIdClientConfiguration openIdClientConfiguration,
+                                    OauthClientConfiguration oauthClientConfiguration) {
         openIdClientConfiguration.getJwksUri().ifPresent(configuration::setJwksUri);
 
-        openIdClientConfiguration.getIntrospection().ifPresent(introspection -> {
+        oauthClientConfiguration.getIntrospection().ifPresent(introspection -> {
             introspection.getUrl().ifPresent(configuration::setIntrospectionEndpoint);
             introspection.getAuthMethod().ifPresent(authMethod -> configuration.setIntrospectionEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
         });
-        openIdClientConfiguration.getRevocation().ifPresent(revocation -> {
+        oauthClientConfiguration.getRevocation().ifPresent(revocation -> {
             revocation.getUrl().ifPresent(configuration::setRevocationEndpoint);
             revocation.getAuthMethod().ifPresent(authMethod -> configuration.setRevocationEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
         });

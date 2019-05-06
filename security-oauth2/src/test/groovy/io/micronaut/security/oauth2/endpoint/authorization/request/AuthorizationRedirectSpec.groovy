@@ -1,6 +1,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -8,15 +9,22 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.OpenIDIntegrationSpec
+import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
+import org.reactivestreams.Publisher
 
+import javax.inject.Named
+import javax.inject.Singleton
 import java.nio.charset.StandardCharsets
 
-class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
+class AuthorizationRedirectSpec extends OpenIDIntegrationSpec {
 
-    void "test authorization redirect with issuer with path"() {
+    void "test authorization redirect for openid and normal oauth"() {
         given:
         Map config = getConfiguration()
         config.put("micronaut.security.enabled", true)
@@ -25,6 +33,10 @@ class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
         config.put("micronaut.security.oauth2.clients.keycloak.client-id", "myclient")
         config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)
+        config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")
+        config.put("micronaut.security.oauth2.clients.twitter.token.url", "http://twitter.com/token")
+        config.put("micronaut.security.oauth2.clients.twitter.client-id", "myclient")
+        config.put("micronaut.security.oauth2.clients.twitter.client-secret", "mysecret")
         ApplicationContext context = startContext(config)
         EmbeddedServer embeddedServer = context.getBean(EmbeddedServer)
         embeddedServer.start()
@@ -32,7 +44,9 @@ class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
 
         expect:
         context.containsBean(OpenIdClient, Qualifiers.byName("keycloak"))
+        context.containsBean(OauthClient, Qualifiers.byName("twitter"))
         context.containsBean(OauthController, Qualifiers.byName("keycloak"))
+        context.containsBean(OauthController, Qualifiers.byName("twitter"))
 
         when:
         HttpResponse response = client.toBlocking().exchange("/oauth/login/keycloak")
@@ -47,8 +61,30 @@ class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
         location.contains("state={\"nonce\":\"")
         location.contains("client_id=myclient")
 
+        when:
+        response = client.toBlocking().exchange("/oauth/login/twitter")
+        location = URLDecoder.decode(response.header(HttpHeaders.LOCATION), StandardCharsets.UTF_8.toString())
+
+        then:
+        response.status == HttpStatus.FOUND
+        location.startsWith("http://twitter.com/authorize")
+        !location.contains("scope=")
+        location.contains("response_type=code")
+        location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
+        location.contains("state={\"nonce\":\"")
+        location.contains("client_id=myclient")
+
         cleanup:
         context.close()
     }
 
+    @Singleton
+    @Named("twitter")
+    @Requires(property = "spec.name", value = "OpenIdAuthorizationRedirectSpec")
+    static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
+        @Override
+        Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
+            return Flowable.just(new UserDetails("twitterUser", Collections.emptyList()))
+        }
+    }
 }
