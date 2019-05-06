@@ -46,7 +46,7 @@ public class IpPatternsRule extends AbstractSecurityRule {
     private final List<Pattern> patternList;
 
     /**
-     * @deprecated use {@link IpPatternsRule( RolesFinder , SecurityConfiguration )} instead.
+     * @deprecated use {@link #IpPatternsRule(RolesFinder, SecurityConfiguration)} instead.
      * @param tokenConfiguration Token Configuration
      * @param securityConfiguration Security Configuration
      */

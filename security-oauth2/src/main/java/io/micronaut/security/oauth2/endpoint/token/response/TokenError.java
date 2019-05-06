@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.token.response;
 
 /**
- * {@see https://tools.ietf.org/html/rfc6749#section-5.2}
+ * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2">Token Error Response</a>
  */
 public enum TokenError {
 

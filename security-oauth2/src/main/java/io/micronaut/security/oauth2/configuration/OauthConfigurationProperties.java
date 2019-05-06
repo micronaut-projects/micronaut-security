@@ -40,7 +40,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = true;
+    public static final boolean DEFAULT_ENABLED = false;
     private static final String DEFAULT_LOGIN = "/oauth/login/{provider}";
     private static final String DEFAULT_CALLBACK = "/oauth/callback/{provider}";
 

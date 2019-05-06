@@ -1,3 +1,0 @@
-https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html
-
-Download and store the corresponding public JSON Web Key (JWK) for your user pool. It is available as part of a JSON Web Key Set (JWKS). You can locate it at `https://cognito-idp.{region}.amazonaws.com/{userPoolId}/.well-known/jwks.json`

@@ -1,5 +1,6 @@
 introduction:
   title: Introduction
+whatsNew: What's New
 authenticationProviders: Authentication Providers
 securityRule:
   title: Security Rules
@@ -47,8 +48,6 @@ oauth:
   title: OAuth 2.0
   installation:
     title: Installation
-  examples:
-    title: Examples
   openid:
     title: Open ID Connect
   service-discovery:
@@ -73,12 +72,12 @@ oauth:
   providerSpecificBeans:
     title: Provider Specific Beans
   flows:
-    title: 'Flows'
+    title: Flows
     authorization-code-grant-type:
-      title: OpenID Connect Authorization code Flow
+      title: Authorization Code Grant Flow
       authorization-code-controller: Authorization Code Controller
       id-token-validator: ID Token Validator
       failure-handler: Failure Handler
       successful-handler: Successful ID Token Handler
       cookie-successful-handler: Cookie Successful ID Token Handler
-    password-grant-type: Password Grant Type
+    password-grant-type: Password Grant Flow

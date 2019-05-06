@@ -55,7 +55,7 @@ class OauthClientFactory {
      * @return An oauth client
      */
     @EachBean(OauthUserDetailsMapper.class)
-    OauthClient oauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
+    DefaultOauthClient oauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
                             @Parameter OauthClientConfiguration clientConfiguration,
                             AuthorizationRedirectUrlBuilder redirectUrlBuilder,
                             OauthAuthorizationResponseHandler authorizationResponseHandler,

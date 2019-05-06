@@ -1,6 +1,5 @@
 Micronaut supports authentication with OAuth 2.0 servers, including support for the OpenID standard.
 
-
 The easiest way to get started is by configuring a provider that supports OpenID. Platforms such as https://developer.okta.com[Okta], https://auth0.com[Auth0], https://aws.amazon.com/cognito[AWS Cognito], https://www.keycloak.org[Keycloak], and https://developers.google.com/identity/protocols/OpenIDConnect[Google] are common examples.
 
 Once you create an application client with a provider, you will get a client id and a client secret. The client id and secret combined with the issuer URL is all that is needed to enable authentication with an OpenID provider.
@@ -13,17 +12,24 @@ micronaut:
   security:
     enabled: true
     oauth2:
+      enabled: true
       clients:
         google:
-          enabled: false
-          client-secret: sKWpIl5AHRKh_qTM2xXBrECY
-          client-id: 943299861358-3j92fqgsqefgv2g3dpf18frumhq9haul.apps.googleusercontent.com
+          client-secret: <<your client secret>>
+          client-id: <<your client id>>
           openid:
             issuer: https://accounts.google.com
 ----
 
+For the full authorization code flow to work there are also some additional requirements. A api:security.handlers.RedirectingLoginHandler[] must be in the context to determine how to respond after a failed or successful login. A custom implementation can of course be provided, however the following options are available out of the box.
 
+|===
+| Type  | Configuration Required | Module
+| JWT Cookie Storage | `micronaut.security.token.jwt.cookie.enabled: true` | `micronaut-jwt`
+| Session Storage | `micronaut.security.session.enabled: true` | `micronaut-session`
+|====
 
+See the following guide for a full walk-through with Okta.
 
-
+- https://guides.micronaut.io/micronaut-oauth2-okta/guide/index.html[Authorization Code grant type flow with Micronaut and Okta].
 

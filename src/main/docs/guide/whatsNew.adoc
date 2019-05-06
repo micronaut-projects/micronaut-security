@@ -1,10 +1,5 @@
-Micronaut {version} includes the following changes:
+Micronaut Security {version} includes the following changes:
 
-=== Native Bean Validation Support
+=== New OAuth 2.0 Module
 
-Hibernate Validator is no longer a required dependency, with a new <<beanValidation,native implementation of Bean Validation>> available that is reflection free and supports reactive and AST level validations now available.
-
-=== Dependency Upgrades
-
-- Groovy `2.5.4` -> `2.5.6`
-- TODO
+Micronaut now supports OAuth 2.0 and OpenID clients. To get started see the <<oauth, section>> in the documentation.

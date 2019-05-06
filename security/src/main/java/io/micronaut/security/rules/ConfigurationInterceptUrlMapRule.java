@@ -41,7 +41,7 @@ public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
     private final List<InterceptUrlMapPattern> patternList;
 
     /**
-     * @deprecated use {@link ConfigurationInterceptUrlMapRule( RolesFinder , SecurityConfiguration)} instead.
+     * @deprecated use {@link #ConfigurationInterceptUrlMapRule(RolesFinder, SecurityConfiguration)} instead.
      * @param tokenConfiguration The Token Configuration
      * @param securityConfiguration The Security Configuration
      */

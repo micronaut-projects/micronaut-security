@@ -83,7 +83,7 @@ public class RedirectRejectionHandler implements RejectionHandler {
      *
      * @param request {@link HttpRequest} being processed
      * @param forbidden if true indicates that although the user was authenticated he did not had the necessary access privileges.
-     * @return
+     * @return A response publisher
      */
     @Override
     public Publisher<MutableHttpResponse<?>> reject(HttpRequest<?> request, boolean forbidden) {
