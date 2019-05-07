@@ -30,7 +30,7 @@ class OauthAuthorizationRedirectSpec extends Specification {
         config.put("micronaut.security.enabled", true)
         config.put("micronaut.security.token.jwt.enabled", true)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
-        config.put('micornaut.security.oauth2.enabled', true)
+        config.put('micronaut.security.oauth2.enabled', true)
         config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")
         config.put("micronaut.security.oauth2.clients.twitter.token.url", "http://twitter.com/token")
         config.put("micronaut.security.oauth2.clients.twitter.client-id", "myclient")
