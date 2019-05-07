@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>4 Authentication Strategies 1.2.0.BUILD-SNAPSHOT</title>
+    <title>5 Authentication Strategies 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -32,31 +32,34 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>2</strong><span>Authentication Providers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>3</strong><span>Security Rules</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>4</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>5</strong><span>Rejection Handling</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>6</strong><span>Token Propagation</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>7</strong><span>Built-In Security Controllers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>8</strong><span>Retrieve the authenticated user</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>10</strong><span>OAuth 2.0</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
                         </div>
                         
                     </div>
@@ -77,18 +80,18 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../guide/securityRule.html">&lt;&lt; <strong>3</strong><span>Security Rules</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/securityRule.html">&lt;&lt; <strong>4</strong><span>Security Rules</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/rejection.html"><strong>5</strong><span>Rejection Handling</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>4 Authentication Strategies</h1>
+                    <h1>5 Authentication Strategies</h1>
 
                     <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
@@ -97,52 +100,52 @@ function addJsClass() {
                 <div id="table-of-content">
                     <h2>Table of Contents</h2>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#basicAuth"><strong>4.1</strong><span>Basic Auth</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#basicAuth"><strong>5.1</strong><span>Basic Auth</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#session"><strong>4.2</strong><span>Session Authentication</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#session"><strong>5.2</strong><span>Session Authentication</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#jwt"><strong>4.3</strong><span>JSON Web Token</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#jwt"><strong>5.3</strong><span>JSON Web Token</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#reader"><strong>4.3.1</strong><span>Reading JWT Token</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#reader"><strong>5.3.1</strong><span>Reading JWT Token</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:20px"><a href="#bearerToken"><strong>4.3.1.1</strong><span>Bearer Token Reader</span></a>
+                    <div class="toc-item" style="margin-left:20px"><a href="#bearerToken"><strong>5.3.1.1</strong><span>Bearer Token Reader</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:20px"><a href="#cookieToken"><strong>4.3.1.2</strong><span>Cookie Token Reader</span></a>
+                    <div class="toc-item" style="margin-left:20px"><a href="#cookieToken"><strong>5.3.1.2</strong><span>Cookie Token Reader</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#jwtGenerator"><strong>4.3.2</strong><span>JWT Token Generation</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#jwtGenerator"><strong>5.3.2</strong><span>JWT Token Generation</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:20px"><a href="#jwtGeneratorSignature"><strong>4.3.2.1</strong><span>JWT Signature</span></a>
+                    <div class="toc-item" style="margin-left:20px"><a href="#jwtGeneratorSignature"><strong>5.3.2.1</strong><span>JWT Signature</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:20px"><a href="#jwtGeneratorEncryption"><strong>4.3.2.2</strong><span>Encrypted JWTs</span></a>
+                    <div class="toc-item" style="margin-left:20px"><a href="#jwtGeneratorEncryption"><strong>5.3.2.2</strong><span>Encrypted JWTs</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#jwtValidation"><strong>4.3.3</strong><span>JWT Token Validation</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#jwtValidation"><strong>5.3.3</strong><span>JWT Token Validation</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:20px"><a href="#jwks"><strong>4.3.3.1</strong><span>Validation with remote JWKS</span></a>
+                    <div class="toc-item" style="margin-left:20px"><a href="#jwks"><strong>5.3.3.1</strong><span>Validation with remote JWKS</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#claimsGeneration"><strong>4.3.4</strong><span>Claims Generation</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#claimsGeneration"><strong>5.3.4</strong><span>Claims Generation</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#render"><strong>4.3.5</strong><span>Token Render</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#render"><strong>5.3.5</strong><span>Token Render</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#ldap"><strong>4.4</strong><span>LDAP Authentication</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#ldap"><strong>5.4</strong><span>LDAP Authentication</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#configuration"><strong>4.4.1</strong><span>Configuration</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#configuration"><strong>5.4.1</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#extending"><strong>4.4.2</strong><span>Extending Default Behavior</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#extending"><strong>5.4.2</strong><span>Extending Default Behavior</span></a>
                     </div>
                     
                 </div>
@@ -150,7 +153,7 @@ function addJsClass() {
 
                 
 
-<h1 id="authenticationStrategies">4 Authentication Strategies</h1>
+<h1 id="authenticationStrategies">5 Authentication Strategies</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies.adoc"'>
@@ -162,7 +165,7 @@ function addJsClass() {
 
 
 
-<h2 id="basicAuth">4.1 Basic Auth</h2>
+<h2 id="basicAuth">5.1 Basic Auth</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/basicAuth.adoc"'>
@@ -265,7 +268,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-basicauth/guide/
 </div>
 
 
-<h2 id="session">4.2 Session Authentication</h2>
+<h2 id="session">5.2 Session Authentication</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/session.adoc"'>
@@ -405,7 +408,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-session/guide/in
 </div>
 
 
-<h2 id="jwt">4.3 JSON Web Token</h2>
+<h2 id="jwt">5.3 JSON Web Token</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt.adoc"'>
@@ -558,7 +561,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 </div>
 
 
-<h2 id="reader">4.3.1 Reading JWT Token</h2>
+<h2 id="reader">5.3.1 Reading JWT Token</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc"'>
@@ -570,7 +573,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 
 
 
-<h2 id="bearerToken">4.3.1.1 Bearer Token Reader</h2>
+<h2 id="bearerToken">5.3.1.1 Bearer Token Reader</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc"'>
@@ -661,7 +664,7 @@ Check out the <a href="http://guides.micronaut.io/micronaut-security-jwt/guide/i
 </div>
 
 
-<h2 id="cookieToken">4.3.1.2 Cookie Token Reader</h2>
+<h2 id="cookieToken">5.3.1.2 Cookie Token Reader</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc"'>
@@ -766,7 +769,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 </div>
 
 
-<h2 id="jwtGenerator">4.3.2 JWT Token Generation</h2>
+<h2 id="jwtGenerator">5.3.2 JWT Token Generation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
@@ -811,7 +814,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 </table>
 
 
-<h2 id="jwtGeneratorSignature">4.3.2.1 JWT Signature</h2>
+<h2 id="jwtGeneratorSignature">5.3.2.1 JWT Signature</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
@@ -899,7 +902,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 </div>
 
 
-<h2 id="jwtGeneratorEncryption">4.3.2.2 Encrypted JWTs</h2>
+<h2 id="jwtGeneratorEncryption">5.3.2.2 Encrypted JWTs</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorEncryption.adoc"'>
@@ -1058,7 +1061,7 @@ class KeyPairProvider {
 </div>
 
 
-<h2 id="jwtValidation">4.3.3 JWT Token Validation</h2>
+<h2 id="jwtValidation">5.3.3 JWT Token Validation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc"'>
@@ -1083,7 +1086,7 @@ participate as signature configurations in the JWT validation.</p>
 </div>
 
 
-<h2 id="jwks">4.3.3.1 Validation with remote JWKS</h2>
+<h2 id="jwks">5.3.3.1 Validation with remote JWKS</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc"'>
@@ -1120,7 +1123,7 @@ participate as signature configurations in the JWT validation.</p>
 </div>
 
 
-<h2 id="claimsGeneration">4.3.4 Claims Generation</h2>
+<h2 id="claimsGeneration">5.3.4 Claims Generation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc"'>
@@ -1206,7 +1209,7 @@ public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
 </div>
 
 
-<h2 id="render">4.3.5 Token Render</h2>
+<h2 id="render">5.3.5 Token Render</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/render.adoc"'>
@@ -1245,7 +1248,7 @@ Pragma: no-cache
 </div>
 
 
-<h2 id="ldap">4.4 LDAP Authentication</h2>
+<h2 id="ldap">5.4 LDAP Authentication</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/ldap.adoc"'>
@@ -1277,7 +1280,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-database-authentication-p
 </div>
 
 
-<h2 id="configuration">4.4.1 Configuration</h2>
+<h2 id="configuration">5.4.1 Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/configuration.adoc"'>
@@ -1433,7 +1436,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-database-authentication-p
 </table>
 
 
-<h2 id="extending">4.4.2 Extending Default Behavior</h2>
+<h2 id="extending">5.4.2 Extending Default Behavior</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/extending.adoc"'>
@@ -1563,9 +1566,9 @@ public class MyContextBuilder implements ContextBuilder {
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../guide/securityRule.html">&lt;&lt; <strong>3</strong><span>Security Rules</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/securityRule.html">&lt;&lt; <strong>4</strong><span>Security Rules</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../guide/rejection.html"><strong>5</strong><span>Rejection Handling</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
