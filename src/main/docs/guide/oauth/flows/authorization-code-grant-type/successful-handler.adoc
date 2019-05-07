@@ -1,3 +1,0 @@
-Once the authentication has been validated, it is to time handle the ID Token. Provide a bean of type:
-api:io.micronaut.security.oauth2.handlers.SuccessfulIdTokenAccessTokenResponseHandler[]
-

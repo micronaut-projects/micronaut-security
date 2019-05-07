@@ -1,0 +1,1 @@
+The authorization code grant flow is the most typical authentication flow with OAuth 2.0 and OpenID providers.

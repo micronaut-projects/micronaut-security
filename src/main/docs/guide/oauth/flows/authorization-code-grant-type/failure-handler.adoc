@@ -1,3 +1,0 @@
-If the validation of the api:io.micronaut.security.oauth2.openid.idtoken.IdTokenAccessTokenResponse[], an object which encapsulates the response of the token endpoint, fails a api:io.micronaut.security.oauth2.handlers.InvalidIdTokenAccessTokenResponseException[] is raised.
-
-Read https://docs.micronaut.io/latest/guide/index.html#errorHandling[Error Handling] section in the documentation to handle the exception according to your needs.

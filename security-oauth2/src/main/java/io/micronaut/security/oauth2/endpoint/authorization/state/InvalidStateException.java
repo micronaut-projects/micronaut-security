@@ -17,7 +17,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 /**
- * Exception thrown if Auth request state parameter validation fails.
+ * Exception thrown if authorization response state parameter validation fails.
  *
  * @author Sergio del Amo
  * @since 1.2.0

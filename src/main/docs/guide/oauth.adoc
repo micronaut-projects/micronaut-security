@@ -2,7 +2,7 @@ Micronaut supports authentication with OAuth 2.0 servers, including support for 
 
 The easiest way to get started is by configuring a provider that supports OpenID. Platforms such as https://developer.okta.com[Okta], https://auth0.com[Auth0], https://aws.amazon.com/cognito[AWS Cognito], https://www.keycloak.org[Keycloak], and https://developers.google.com/identity/protocols/OpenIDConnect[Google] are common examples.
 
-Once you create an application client with a provider, you will get a client id and a client secret. The client id and secret combined with the issuer URL is all that is needed to enable authentication with an OpenID provider.
+Once you create an application client with a provider, you will get a client id and a client secret. The client id and secret combined with the issuer URL is all that is needed to enable the authentication code grant flow with an OpenID provider.
 
 For example, to configure Google as a provider:
 
@@ -20,6 +20,8 @@ micronaut:
           openid:
             issuer: https://accounts.google.com
 ----
+
+For normal OAuth 2.0, different steps are required to allow for the authorization code grant flow.
 
 For the full authorization code flow to work there are also some additional requirements. A api:security.handlers.RedirectingLoginHandler[] must be in the context to determine how to respond after a failed or successful login. A custom implementation can of course be provided, however the following options are available out of the box.
 

@@ -1,0 +1,21 @@
+By default, this library will include a state parameter as described in link:https://tools.ietf.org/html/rfc6749#section-4.1.1[RFC 6749] to authentication requests. By default a JSON serialized object is stored that contains a nonce value used for validation.
+
+Because the validation of the state requires the state to be stored somewhere temporarily, state validation is only enabled if a api:security.oauth2.endpoint.authorization.state.validation.persistence.StatePersistence[] bean is present.
+
+You can provide your own implementation, however an implementation of state persistence that stores the state in an http session has been provided. It must be enabled through configuration and the necessary dependencies must be on the classpath in order for it to work.
+
+To enable state persistence with an http session:
+
+. Add a dependency to `micronaut-session`
++
+dependency:micronaut-session[]
++
+. Set the state persistence to `session`
++
+.application.yml
+----
+micronaut.security.oauth2.state.validation.persistence: session
+----
++
+
+If state validation fails, an api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.InvalidStateException[] will be thrown.

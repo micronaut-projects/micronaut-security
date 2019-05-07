@@ -1,0 +1,5 @@
+Beyond configuration, an implementation of api:security.oauth2.endpoint.token.response.OauthUserDetailsMapper[] is required by the user to be implemented. The implementation must be qualified by name that matches the name present in the client configuration.
+
+The purpose of the user details mapper is to transform the api:security.oauth2.endpoint.token.response.TokenResponse[] into a api:security.authentication.UserDetails[]. That will entail calling some endpoint the provider exposes to retrieve the user's information. Once that information is received, the user details can be populated per your requirements.
+
+Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The api:security.authentication.UserDetails[] object stores three basic properties: username, roles, and arbitrary attributes. All data stored in the user details will be retrievable in controllers that accept an api:security.authentication.Authentication[].

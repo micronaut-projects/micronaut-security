@@ -50,34 +50,29 @@ oauth:
     title: Installation
   openid:
     title: Open ID Connect
-  service-discovery:
-    title: Service Discovery
-    service-discovery-okta: Service Discovery with OKTA
-    service-discovery-cognito: Service Discovery with AWS Cognito
-    service-discovery-auth0: Service Discovery with Auth0
-    service-discovery-keycloak: Service Discovery with Keycloak
-  oauth-endpoints:
-    title: Endpoints
-    authorization:
-      title: Authorization Endpoint
-      state: State
-      idTokenHint: IDToken Hint
-      loginHint: Login Hint
-      nonce: Nonce
-    token: Token Endpoint
+  flows:
+    title: Flows
+    authorization-code:
+      title: Authorization Code
+      oauth2-authorization-code:
+        title: OAuth 2.0
+        oauth2-user-details: User Details Mapper
+      openid-authorization-code:
+        title: OpenID Connect
+        token-validation: Token Validation
+      state:
+        title: State
+        state-customization: Customization
+    password: Password
     endsession:
       title: End Session Endpoint
       logoutController: Logout Controller
       logouturl: Logout URL
-  providerSpecificBeans:
-    title: Provider Specific Beans
-  flows:
-    title: Flows
-    authorization-code-grant-type:
-      title: Authorization Code Grant Flow
-      authorization-code-controller: Authorization Code Controller
-      id-token-validator: ID Token Validator
-      failure-handler: Failure Handler
-      successful-handler: Successful ID Token Handler
-      cookie-successful-handler: Cookie Successful ID Token Handler
-    password-grant-type: Password Grant Flow
+  oauth-endpoints:
+    title: Endpoints
+    authorization:
+      title: Authorization Endpoint
+      idTokenHint: IDToken Hint
+      loginHint: Login Hint
+      nonce: Nonce
+    token: Token Endpoint

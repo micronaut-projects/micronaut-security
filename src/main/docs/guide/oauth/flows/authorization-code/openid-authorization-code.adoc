@@ -23,6 +23,3 @@ micronaut:
 <4> `issuer` url. Allows micronaut to discover the configuration of the Open ID Configuration server.
 <5> Often, ID Token will be responded as JWT tokens. You will need to enable https://docs.micronaut.io/latest/guide/index.html#jwt[Micronaut's JWT support] to validate it.
 <6> Once, validated you may want to save the JWT IDToken in a cookie. To read in subsequent requests, enable https://docs.micronaut.io/latest/guide/index.html#cookieToken[Cookie Token Reader].
-
-
-image::diagramm.png[]
