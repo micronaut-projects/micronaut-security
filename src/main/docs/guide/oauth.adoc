@@ -6,7 +6,7 @@ Once you create an application client with a provider, you will get a client id 
 
 For example, to configure Google as a provider:
 
-[source, yaml]
+[source,yaml,subs="verbatim"]
 ----
 micronaut:
   security:

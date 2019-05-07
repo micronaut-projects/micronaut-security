@@ -103,7 +103,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
-     * Sets whether the {@link OauthClientConfiguration} is enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * Sets whether the client is enabled. Default value ({@value #DEFAULT_ENABLED}).
      *
      * @param enabled The enabled flag
      */
@@ -303,7 +303,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         /**
-         * The configuration path to discover openid configuration. Default ({@value DEFAULT_CONFIG_PATH}).
+         * The configuration path to discover openid configuration. Default ({@value #DEFAULT_CONFIG_PATH}).
          *
          * @param configurationPath The configuration path
          */
@@ -443,7 +443,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * Mechanism to be used for returning authorization rResponse parameters from the
+             * Mechanism to be used for returning authorization response parameters from the
              * authorization endpoint.
              *
              * @param responseMode The response mode
@@ -562,7 +562,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * The end session enabled flag. Default value ({@value DEFAULT_ENABLED}).
+             * The end session enabled flag. Default value ({@value #DEFAULT_ENABLED}).
              *
              * @param enabled The enabled flag
              */

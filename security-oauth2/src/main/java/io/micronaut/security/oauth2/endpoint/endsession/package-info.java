@@ -20,4 +20,9 @@
  * @author James Kleeh
  * @since 1.2.0
  */
+@Configuration
+@Requires(configuration = "io.micronaut.security.token.jwt")
 package io.micronaut.security.oauth2.endpoint.endsession;
+
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;

@@ -59,12 +59,13 @@ oauth:
         oauth2-user-details: User Details Mapper
       openid-authorization-code:
         title: OpenID Connect
-        token-validation: Token Validation
+        openid-user-details: User Details Mapper
         openid-auth-parameters:
           title: Parameters
           nonce: Nonce
           login-hint: Login Hint
           id-token-hint: ID Token Hint
+        token-validation: Token Validation
       state:
         title: State
         state-customization: Customization

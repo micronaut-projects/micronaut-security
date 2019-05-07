@@ -1,25 +1,29 @@
-The following configuration illustrates a possible set up to use authorization code flow with Micronaut and a third-party OpenID Configuration authorization server.
+Adding support for authorization code flow with an OpenID provider is extremely easy with Micronaut.
+
+Here is a high level diagram of how the authorization code grant flow works with an OpenID provider.
+
+image::openid-oauth.svg[]
 
 [source,yaml]
 .src/main/resources/application.yml
 ----
 micronaut:
     security:
-        enabled: true # <1>
+        enabled: true
         oauth2:
-          client-secret: '${OAUTH_CLIENT_SECRET}'  # <2>
-          client-id: '${OAUTH_CLIENT_ID}' # <3>
-          issuer: '${OKTA_DOMAIN}/oauth2/${OKTA_AUTHSERVERID}' # <4>
-        token:
-            jwt:
-                enabled: true # <5>
-                cookie:
-                    enabled: true # <6>
+            enabled: true
+            clients:
+                okta: // <1>
+                    client-id: <<my client id>> // <2>
+                    client-secret: <<my client secret>>  // <3>
+                    openid:
+                        issuer: <<my openid issuer>> // <4>
 ----
 
-<1> Enable security
-<2> Client Secret. Your authorization server provider provides this value.
-<3> Client ID. Your authorization server provider provides this value.
-<4> `issuer` url. Allows micronaut to discover the configuration of the Open ID Configuration server.
-<5> Often, ID Token will be responded as JWT tokens. You will need to enable https://docs.micronaut.io/latest/guide/index.html#jwt[Micronaut's JWT support] to validate it.
-<6> Once, validated you may want to save the JWT IDToken in a cookie. To read in subsequent requests, enable https://docs.micronaut.io/latest/guide/index.html#cookieToken[Cookie Token Reader].
+<1> Configure a client. The name here is arbitrary
+<2> The client id
+<3> The client secret
+<4> The OpenID provider issuer
+
+The issuer URL will be used to discover the endpoints exposed by the provider. It is possible to configure the service discovery endpoint path as well as override several parts of the configuration that is returned. See the configuration reference for all options.
+

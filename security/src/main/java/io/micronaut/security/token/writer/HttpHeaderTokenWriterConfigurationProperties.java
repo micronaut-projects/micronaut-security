@@ -38,9 +38,11 @@ public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderT
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+    private static final String DEFAULT_PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
+    private static final String DEFAULT_HEADER_NAME = HttpHeaders.AUTHORIZATION;
 
-    private String prefix = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
-    private String headerName = HttpHeaders.AUTHORIZATION;
+    private String prefix = DEFAULT_PREFIX;
+    private String headerName = DEFAULT_HEADER_NAME;
     private boolean enabled = DEFAULT_ENABLED;
 
     @Override
@@ -57,7 +59,7 @@ public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderT
     }
 
     /**
-     * Value prefix for Http Header. Default value ({@value io.micronaut.http.HttpHeaderValues#AUTHORIZATION_PREFIX_BEARER}).
+     * Value prefix for Http Header. Default value ({@value #DEFAULT_PREFIX}).
      * @param prefix preffix before the header value
      */
     public void setPrefix(String prefix) {
@@ -74,7 +76,7 @@ public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderT
     }
 
     /**
-     * Http Header to be used to propagate the token. Default value {@value io.micronaut.http.HttpHeaders#AUTHORIZATION}
+     * Http Header to be used to propagate the token. Default value ({@value #DEFAULT_HEADER_NAME})
      * @param headerName HTTP header name
      */
     public void setHeaderName(String headerName) {

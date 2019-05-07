@@ -15,9 +15,11 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,9 +36,11 @@ import java.util.Map;
  * @since 1.2.0
  */
 @Singleton
+@Requires(configuration = "io.micronaut.security.token.jwt")
 public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
     @Override
+    @Nonnull
     public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         Map<String, Object> claims = new HashMap<>(openIdClaims.getClaims());
         JwtClaims.ALL_CLAIMS.forEach(claims::remove);

@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import com.nimbusds.jwt.JWT;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -47,6 +48,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Singleton
+@Requires(configuration = "io.micronaut.security.token.jwt")
 public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthorizationResponseHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdAuthorizationResponseHandler.class);

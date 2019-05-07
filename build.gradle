@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         maven { url "https://repo.grails.org/grails/core" }
+        jcenter()
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
@@ -54,6 +55,7 @@ subprojects { Project subproject ->
     repositories {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://repo.grails.org/grails/core" }
+        jcenter()
     }
     
     apply plugin: "groovy"

@@ -22,8 +22,8 @@ micronaut:
       enabled: true
       clients:
         github: // <1>
-          client-id:  // <2>
-          client-secret: // <3>
+          client-id: <<my client id>> // <2>
+          client-secret: <<my client secret>> // <3>
           scopes: // <4>
             - user:email
             - read:user
@@ -34,7 +34,7 @@ micronaut:
             auth-method: client-secret-post // <7>
 ----
 
-<1> The name here is arbitrary
+<1> Configure a client. The name here is arbitrary
 <2> The client id
 <3> The client secret
 <4> The desired scopes (OPTIONAL)

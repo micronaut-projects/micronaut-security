@@ -17,6 +17,8 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 
 import io.micronaut.security.authentication.UserDetails;
 
+import javax.annotation.Nonnull;
+
 /**
  * Responsible for converting an OpenID token response to
  * a {@link UserDetails} representing the authenticated user.
@@ -34,6 +36,7 @@ public interface OpenIdUserDetailsMapper {
      * @param openIdClaims The OpenID claims
      * @return A user details object
      */
+    @Nonnull
     UserDetails createUserDetails(String providerName,
                                   OpenIdTokenResponse tokenResponse,
                                   OpenIdClaims openIdClaims);

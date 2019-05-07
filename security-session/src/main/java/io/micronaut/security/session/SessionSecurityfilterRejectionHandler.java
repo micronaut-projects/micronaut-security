@@ -72,7 +72,10 @@ public class SessionSecurityfilterRejectionHandler implements RejectionHandler {
                     uri = "/";
                 }
                 URI location = new URI(uri);
-                return Publishers.just(HttpResponse.seeOther(location));
+                //prevent redirect loop
+                if (!request.getUri().equals(location)) {
+                    return Publishers.just(HttpResponse.seeOther(location));
+                }
             } catch (URISyntaxException e) {
                 return Publishers.just(HttpResponse.serverError());
             }
