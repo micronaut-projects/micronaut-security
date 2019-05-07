@@ -1,0 +1,5 @@
+The OpenID specification for link:https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest[authorization requests] allows for additional parameters beyond what is included in the OAuth 2.0 specification. Some of those parameters make sense to be provided by a bean and are described in this section. Other parameters are able to be controlled through configuration.
+
+Here are the configuration option for authorization request parameters:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties.adoc[]

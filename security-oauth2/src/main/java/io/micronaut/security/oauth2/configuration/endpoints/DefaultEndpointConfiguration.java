@@ -33,8 +33,7 @@ public class DefaultEndpointConfiguration implements EndpointConfiguration {
     }
 
     /**
-     *
-     * @param url endpoint's url.
+     * @param url The endpoint URL
      */
     public void setUrl(String url) {
         this.url = url;
