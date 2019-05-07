@@ -49,7 +49,7 @@ oauth:
   installation:
     title: Installation
   openid:
-    title: Open ID Connect
+    title: OpenID Connect
   flows:
     title: Flows
     authorization-code:
@@ -60,19 +60,21 @@ oauth:
       openid-authorization-code:
         title: OpenID Connect
         token-validation: Token Validation
+        openid-auth-parameters:
+          title: Parameters
+          nonce: Nonce
+          login-hint: Login Hint
+          id-token-hint: ID Token Hint
       state:
         title: State
         state-customization: Customization
     password: Password
-    endsession:
-      title: End Session Endpoint
-      logoutController: Logout Controller
-      logouturl: Logout URL
   oauth-endpoints:
     title: Endpoints
-    authorization:
-      title: Authorization Endpoint
-      idTokenHint: IDToken Hint
-      loginHint: Login Hint
-      nonce: Nonce
-    token: Token Endpoint
+    endsession:
+      title: OpenID End Session
+      post-redirect: Post Redirect
+      view-model: View Model
+    introspection: Introspection
+    revocation: Revocation
+    user-info: OpenID User Info
