@@ -17,7 +17,6 @@ package io.micronaut.security.session;
 
 import io.micronaut.security.filters.SecurityFilterOrderProvider;
 import io.micronaut.session.http.HttpSessionFilter;
-import javax.inject.Singleton;
 
 /**
  * {@link SecurityFilterOrderProvider} implementation for Session-Based Authentication.
