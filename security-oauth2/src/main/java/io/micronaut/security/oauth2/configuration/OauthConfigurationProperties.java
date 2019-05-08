@@ -34,6 +34,7 @@ import java.util.Optional;
 @Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(OauthConfigurationProperties.PREFIX)
 public class OauthConfigurationProperties implements OauthConfiguration {
+
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".oauth2";
 
     /**
@@ -116,6 +117,8 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      */
     @ConfigurationProperties("openid")
     public static class OpenIdConfigurationProperties implements OpenIdConfiguration {
+
+        public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".openid";
 
         private static final String DEFAULT_LOGOUT = "/oauth/logout/{provider}";
 

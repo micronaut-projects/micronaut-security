@@ -25,6 +25,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
+import io.micronaut.security.oauth2.endpoint.nonce.NonceFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 
 import javax.annotation.Nonnull;
@@ -46,19 +47,19 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
 
     private final HttpRequest<?> request;
     private OauthClientConfiguration oauthConfiguration;
-    private NonceProvider nonceProvider;
     private LoginHintResolver loginHintResolver;
     private IdTokenHintResolver idTokenHintResolver;
     private AuthorizationEndpointConfiguration endpointConfiguration;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
     private final Supplier<String> stateSupplier;
+    private final Supplier<String> nonceSupplier;
 
     /**
      * @param request The original request prior redirect.
      * @param oauthConfiguration The OAuth 2.0 configuration
      * @param oauthRouteUrlBuilder The oauth route URL builder
      * @param stateFactory The state provider
-     * @param nonceProvider The nonce provider
+     * @param nonceFactory The nonce provider
      * @param loginHintResolver The login hint provider
      * @param idTokenHintResolver The id token hint provider
      */
@@ -66,7 +67,7 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
                                              @Parameter OauthClientConfiguration oauthConfiguration,
                                              OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                              @Nullable StateFactory stateFactory,
-                                             @Nullable NonceProvider nonceProvider,
+                                             @Nullable NonceFactory nonceFactory,
                                              @Nullable LoginHintResolver loginHintResolver,
                                              @Nullable IdTokenHintResolver idTokenHintResolver) {
         this.request = request;
@@ -74,12 +75,18 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
         this.endpointConfiguration = oauthConfiguration.getOpenid()
                 .flatMap(OpenIdClientConfiguration::getAuthorization).orElse(null);
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
-        this.nonceProvider = nonceProvider;
         this.loginHintResolver = loginHintResolver;
         this.idTokenHintResolver = idTokenHintResolver;
         this.stateSupplier = SupplierUtil.memoized(() -> {
             if (stateFactory != null) {
                 return stateFactory.buildState(request);
+            } else {
+                return null;
+            }
+        });
+        this.nonceSupplier = SupplierUtil.memoized(() -> {
+            if (nonceFactory != null) {
+                return nonceFactory.buildNonce(request);
             } else {
                 return null;
             }
@@ -102,7 +109,7 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
     @Nullable
     @Override
     public String getNonce() {
-        return valueOrNull(nonceProvider, NonceProvider::generateNonce);
+        return nonceSupplier.get();
     }
 
     @Override

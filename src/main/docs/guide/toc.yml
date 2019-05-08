@@ -56,6 +56,7 @@ oauth:
       title: Authorization Code
       oauth2-authorization-code:
         title: OAuth 2.0
+        oauth2-configuration: Configuration
         oauth2-user-details: User Details Mapper
       openid-authorization-code:
         title: OpenID Connect

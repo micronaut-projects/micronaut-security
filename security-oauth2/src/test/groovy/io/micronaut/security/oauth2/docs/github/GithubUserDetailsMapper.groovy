@@ -1,4 +1,6 @@
-package io.micronaut.security.oauth2.docs.github;
+package io.micronaut.security.oauth2.docs.github
+
+import io.micronaut.context.annotation.Requires;
 
 //tag::clazz[]
 import io.micronaut.security.authentication.UserDetails
@@ -10,6 +12,9 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Named("github") // <1>
+//end::clazz[]
+@Requires(property = "docs.classes")
+//tag::clazz[]
 @Singleton
 class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 

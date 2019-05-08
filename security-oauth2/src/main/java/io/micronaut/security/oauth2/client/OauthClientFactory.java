@@ -56,10 +56,10 @@ class OauthClientFactory {
      */
     @EachBean(OauthUserDetailsMapper.class)
     DefaultOauthClient oauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
-                            @Parameter OauthClientConfiguration clientConfiguration,
-                            AuthorizationRedirectUrlBuilder redirectUrlBuilder,
-                            OauthAuthorizationResponseHandler authorizationResponseHandler,
-                            BeanContext beanContext) {
+                                   @Parameter OauthClientConfiguration clientConfiguration,
+                                   AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                                   OauthAuthorizationResponseHandler authorizationResponseHandler,
+                                   BeanContext beanContext) {
         if (clientConfiguration.isEnabled()) {
             if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
                 if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {

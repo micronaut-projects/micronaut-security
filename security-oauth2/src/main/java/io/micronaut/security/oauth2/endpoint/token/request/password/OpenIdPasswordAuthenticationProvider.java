@@ -96,7 +96,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
                 tokenEndpointClient.sendRequest(requestContext))
                 .switchMap(response -> {
                     return Flowable.create(emitter -> {
-                        Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response);
+                        Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
                         if (jwt.isPresent()) {
                             try {
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());

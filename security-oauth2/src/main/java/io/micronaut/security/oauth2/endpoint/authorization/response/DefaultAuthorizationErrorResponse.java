@@ -57,29 +57,26 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
     @Nonnull
     @Override
     public AuthorizationError getError() {
-        String name = getStringValue(JSON_KEY_ERROR).toUpperCase(Locale.ENGLISH);
+        String name = responseData.get(JSON_KEY_ERROR).toUpperCase(Locale.ENGLISH);
         return AuthorizationError.valueOf(name);
     }
 
     @Nullable
     @Override
     public String getErrorDescription() {
-        return getStringValue(JSON_KEY_ERROR_DESCRIPTION);
+        return responseData.get(JSON_KEY_ERROR_DESCRIPTION);
     }
 
     @Nullable
     @Override
     public String getStateValue() {
-        return getStringValue(JSON_KEY_STATE);
+        return responseData.get(JSON_KEY_STATE);
     }
 
     @Nullable
     @Override
     public String getErrorUri() {
-        return getStringValue(JSON_KEY_ERROR_URI);
+        return responseData.get(JSON_KEY_ERROR_URI);
     }
 
-    private String getStringValue(String key) {
-        return responseData.get(key);
-    }
 }

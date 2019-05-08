@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
+package io.micronaut.security.oauth2.endpoint.nonce;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
+import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties;
 
 import java.util.Optional;
 
 /**
- * Configuration properties implementation of state validation configuration.
+ * Configuration properties implementation of nonce validation configuration.
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-@ConfigurationProperties(DefaultStateValidationConfiguration.PREFIX)
-public class DefaultStateValidationConfiguration implements StateValidationConfiguration {
+@ConfigurationProperties(DefaultNonceConfiguration.PREFIX)
+public class DefaultNonceConfiguration implements NonceConfiguration {
 
-    public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".state.validation";
+    public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".nonce";
 
     private static final boolean DEFAULT_ENABLED = true;
 
@@ -43,7 +43,7 @@ public class DefaultStateValidationConfiguration implements StateValidationConfi
     }
 
     /**
-     * Sets the mechanism to persist the state for later retrieval for validation.
+     * Sets the mechanism to persist the nonce for later retrieval for validation.
      * Only "session" is supported by default.
      *
      * @param persistence The persistence mechanism
@@ -58,7 +58,7 @@ public class DefaultStateValidationConfiguration implements StateValidationConfi
     }
 
     /**
-     * Sets whether state validation is enabled. Default ({@value #DEFAULT_ENABLED}).
+     * Sets whether nonce validation is enabled. Default ({@value #DEFAULT_ENABLED}).
      *
      * @param enabled The enabled flag
      */

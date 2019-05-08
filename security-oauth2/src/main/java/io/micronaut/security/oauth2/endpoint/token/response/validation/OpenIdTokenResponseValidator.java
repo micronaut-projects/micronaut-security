@@ -21,6 +21,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -35,9 +36,11 @@ public interface OpenIdTokenResponseValidator {
      * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param openIdTokenResponse ID Token Access Token response
+     * @param nonce The persisted nonce value
      * @return true if the ID Token access response is considered valid
      */
     Optional<JWT> validate(OauthClientConfiguration clientConfiguration,
                            OpenIdProviderMetadata openIdProviderMetadata,
-                           OpenIdTokenResponse openIdTokenResponse);
+                           OpenIdTokenResponse openIdTokenResponse,
+                           @Nullable String nonce);
 }

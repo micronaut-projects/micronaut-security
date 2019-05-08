@@ -141,7 +141,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
             }
             throw new AuthorizationErrorResponseException(errorResponse);
         } else {
-            AuthorizationResponse authorizationResponse = beanContext.createBean(AuthorizationResponse.class, request);
+            OpenIdAuthorizationResponse authorizationResponse = beanContext.createBean(OpenIdAuthorizationResponse.class, request);
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Received a successful authorization response from provider [{}]", getName());
             }

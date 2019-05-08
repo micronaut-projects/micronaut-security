@@ -44,7 +44,7 @@ public interface OpenIdAuthorizationResponseHandler {
      * @param tokenEndpoint The token endpoint
      * @return An authentication response publisher
      */
-    Publisher<AuthenticationResponse> handle(AuthorizationResponse authorizationResponse,
+    Publisher<AuthenticationResponse> handle(OpenIdAuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,
                                              OpenIdProviderMetadata openIdProviderMetadata,
                                              @Nullable OpenIdUserDetailsMapper userDetailsMapper,

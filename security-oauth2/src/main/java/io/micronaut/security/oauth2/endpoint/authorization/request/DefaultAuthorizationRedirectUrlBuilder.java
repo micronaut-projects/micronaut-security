@@ -48,8 +48,8 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
                            String authorizationEndpoint) {
         Map<String, Object> arguments = instantiateParameters(authorizationRequest);
         String expandedUri = expandedUri(authorizationEndpoint, arguments);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("authorization redirect url {}", expandedUri);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Built the authorization URL [{}]", expandedUri);
         }
         return expandedUri;
     }

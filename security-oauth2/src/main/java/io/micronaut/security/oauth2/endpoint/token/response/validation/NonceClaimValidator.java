@@ -16,27 +16,38 @@
 
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
-import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 /**
- * JWT Claims Validator for ID Token.
+ * Responsible for validating the nonce claim
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#HybridIDTValidation2">ID Token Validation</a>
- *
+ * @author James Kleeh
  * @since 1.2.0
- * @author Sergio del Amo
  */
-public interface OpenIdClaimsValidator {
+@Singleton
+public class NonceClaimValidator {
 
     /**
      * @param claims ID Token Claims
      * @param clientConfiguration OAuth 2.0 Client Configuration
      * @param providerMetadata OpenID Connect provider metadata
+     * @param nonce The nonce value
      * @return Whether the JWT Claims pass validation or not.
      */
-    boolean validate(OpenIdClaims claims,
-                     OauthClientConfiguration clientConfiguration,
-                     OpenIdProviderMetadata providerMetadata);
+    public boolean validate(OpenIdClaims claims,
+                            OauthClientConfiguration clientConfiguration,
+                            OpenIdProviderMetadata providerMetadata,
+                            @Nullable String nonce) {
+        String nonceClaim = claims.getNonce();
+        if (nonceClaim != null && nonce != null) {
+            return nonceClaim.equals(nonce);
+        } else {
+            return nonceClaim == null && nonce == null;
+        }
+    }
 }

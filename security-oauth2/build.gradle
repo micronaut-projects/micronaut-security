@@ -17,7 +17,7 @@ dependencies {
     compileOnly "io.micronaut:micronaut-views"
     compileOnly "io.micronaut:micronaut-session"
 
-    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    //testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-http-client"
     testCompile "io.micronaut:micronaut-http-server-netty"
     testCompile "io.micronaut:micronaut-inject-groovy"

@@ -39,4 +39,5 @@ public interface JwtClaims extends Claims {
     String AUDIENCE        = "aud";
 
     List<String> ALL_CLAIMS = Arrays.asList(ISSUER, SUBJECT, EXPIRATION_TIME, NOT_BEFORE, ISSUED_AT, JWT_ID, AUDIENCE);
+
 }

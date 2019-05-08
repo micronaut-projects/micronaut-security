@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * An implementation of {@link OpenIdClaims} backed by an {@link JWTClaimsSet}.
@@ -234,5 +235,22 @@ public class JWTOpenIdClaims implements OpenIdClaims {
         } catch (ParseException e) {
             return null;
         }
+    }
+
+    @Nullable
+    @Override
+    public Object get(String claimName) {
+        return claimsSet.getClaim(claimName);
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> names() {
+        return claimsSet.getClaims().keySet();
+    }
+
+    @Override
+    public boolean contains(String claimName) {
+        return claimsSet.getClaims().containsKey(claimName);
     }
 }

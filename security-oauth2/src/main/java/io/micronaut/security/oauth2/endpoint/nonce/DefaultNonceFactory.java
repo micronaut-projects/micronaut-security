@@ -13,25 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.session;
 
-import io.micronaut.security.filters.SecurityFilterOrderProvider;
-import io.micronaut.session.http.HttpSessionFilter;
+package io.micronaut.security.oauth2.endpoint.nonce;
+
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.security.oauth2.endpoint.nonce.validation.persistence.NoncePersistence;
+
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
+import java.util.UUID;
 
 /**
- * {@link SecurityFilterOrderProvider} implementation for Session-Based Authentication.
- * @author Sergio del Amo
- * @deprecated Moved to {@link io.micronaut.security.filters.SessionSecurityFilterOrderProvider}
- * @since 1.0
+ * Generates a random UUID nonce
+ *
+ * @author James Kleeh
+ * @since 1.2.0
  */
-@Deprecated
-public class SessionSecurityFilterOrderProvider implements SecurityFilterOrderProvider {
+@Requires(beans = NoncePersistence.class)
+@Singleton
+public class DefaultNonceFactory implements NonceFactory {
 
-    private static final int ORDER_PADDING = 100;
-
+    @Nonnull
     @Override
-    public int getOrder() {
-        return HttpSessionFilter.ORDER + ORDER_PADDING;
+    public String buildNonce(HttpRequest<?> request) {
+        return UUID.randomUUID().toString();
     }
 }

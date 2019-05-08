@@ -17,17 +17,18 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils;
 import org.slf4j.Logger;
@@ -51,25 +52,30 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
 
     private final Collection<OpenIdClaimsValidator> openIdClaimsValidators;
     private final Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators;
+    private final NonceClaimValidator nonceClaimValidator;
     private final JwkValidator jwkValidator;
 
     /**
      * @param idTokenValidators OpenID JWT claim validators
      * @param genericJwtClaimsValidators Generic JWT claim validators
+     * @param nonceClaimValidator The nonce claim validator
      * @param jwkValidator The JWK validator
      */
     public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
                                                Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
+                                               NonceClaimValidator nonceClaimValidator,
                                                JwkValidator jwkValidator) {
         this.openIdClaimsValidators = idTokenValidators;
         this.genericJwtClaimsValidators = genericJwtClaimsValidators;
+        this.nonceClaimValidator = nonceClaimValidator;
         this.jwkValidator = jwkValidator;
     }
 
     @Override
     public Optional<JWT> validate(OauthClientConfiguration clientConfiguration,
                                   OpenIdProviderMetadata openIdProviderMetadata,
-                                  OpenIdTokenResponse openIdTokenResponse) {
+                                  OpenIdTokenResponse openIdTokenResponse,
+                                  @Nullable String nonce) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
         }
@@ -83,11 +89,14 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
                     LOG.trace("JWT signature validation succeeded. Validating claims...");
                 }
                 JWTClaimsSet claimsSet = jwt.get().getJWTClaimsSet();
-                JwtClaims claims = new JwtClaimsSetAdapter(claimsSet);
+                OpenIdClaims claims = new JWTOpenIdClaims(claimsSet);
+
                 if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims))) {
                     if (openIdClaimsValidators.stream().allMatch(validator ->
                             validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
-                        return jwt;
+                        if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
+                            return jwt;
+                        }
                     } else {
                         if (LOG.isErrorEnabled()) {
                             LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());

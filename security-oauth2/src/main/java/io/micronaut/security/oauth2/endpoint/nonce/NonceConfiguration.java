@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.endpoint.authorization.request;
+package io.micronaut.security.oauth2.endpoint.nonce;
 
-import javax.annotation.Nonnull;
+import io.micronaut.core.util.Toggleable;
+
+import java.util.Optional;
 
 /**
- * Generates a nonce. A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.
+ * Configuration options for nonce validation.
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken>ID Token Nonce description</a>
- *
- * @author Sergio del Amo
+ * @author James Kleeh
  * @since 1.2.0
  */
-public interface NonceProvider {
+public interface NonceConfiguration extends Toggleable {
 
     /**
-     *
-     * @return A nonce. A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.
+     * @return The nonce persistence mechanism
      */
-    @Nonnull
-    String generateNonce();
+    Optional<String> getPersistence();
 }

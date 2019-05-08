@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence.session;
+package io.micronaut.security.oauth2.endpoint.authorization.response;
 
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.filters.SecurityFilterOrderProvider;
-import io.micronaut.session.http.HttpSessionFilter;
-
-import javax.inject.Singleton;
+import javax.annotation.Nullable;
 
 /**
- * Sets the security filter to execute after the session filter.
+ * An extension of {@link AuthorizationResponse} that allows for
+ * retrieval of the persisted nonce value.
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-@Requires(missingBeans = SecurityFilterOrderProvider.class)
-@Singleton
-public class SessionSecurityFilterOrderProvider implements SecurityFilterOrderProvider {
+public interface OpenIdAuthorizationResponse extends AuthorizationResponse {
 
-    @Override
-    public int getOrder() {
-        return HttpSessionFilter.ORDER + 100;
-    }
+    /**
+     * @return The persisted nonce value
+     */
+    @Nullable
+    String getNonce();
 }
