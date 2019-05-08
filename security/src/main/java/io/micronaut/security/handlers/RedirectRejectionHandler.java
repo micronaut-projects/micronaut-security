@@ -93,7 +93,7 @@ public class RedirectRejectionHandler implements RejectionHandler {
                     URI location = new URI(getRedirectUri(request, forbidden).orElse("/"));
                     //prevent redirect loop
                     if (!request.getUri().equals(location)) {
-                        emitter.onNext(httpResponseWithUri(location));
+                        emitter.onNext(httpResponseWithUri(location).getHeaders().location());
                     } else {
                         emitter.onNext(HttpResponse.status(forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED));
                     }
@@ -137,11 +137,10 @@ public class RedirectRejectionHandler implements RejectionHandler {
     /**
      * Builds a HTTP Response redirection to the supplied location.
      *
-     * @param uri The Uri to redirect to
-     * @return a 303 HTTP response with the Uri as location
-     * @throws URISyntaxException if the supplied uri String cannot be used with URI.
+     * @param location The Uri to redirect to
+     * @return an HTTP response with the Uri as location
      */
-    protected MutableHttpResponse<?> httpResponseWithUri(URI location) throws URISyntaxException {
+    protected MutableHttpResponse<?> httpResponseWithUri(URI location) {
         return HttpResponseFactory.INSTANCE.status(redirectionHttpStatus())
                 .headers((headers) ->
                         headers.location(location)
