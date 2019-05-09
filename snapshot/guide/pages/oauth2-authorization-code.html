@@ -98,7 +98,10 @@ function addJsClass() {
                 <div id="table-of-content">
                     <h2>Table of Contents</h2>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#oauth2-user-details"><strong>11.1</strong><span>User Details Mapper</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#oauth2-configuration"><strong>11.1</strong><span>Configuration</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#oauth2-user-details"><strong>11.2</strong><span>User Details Mapper</span></a>
                     </div>
                     
                 </div>
@@ -126,6 +129,17 @@ function addJsClass() {
 <img src="../img/standard-oauth.svg" alt="standard oauth">
 </div>
 </div>
+
+
+<h2 id="oauth2-configuration">11.3.1.1.1 Configuration</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
 <div class="paragraph">
 <p>The minimum requirements to allow authorization with an OAuth 2.0 provider are:</p>
 </div>
@@ -157,8 +171,8 @@ function addJsClass() {
       enabled: true
       clients:
         github: <i class="conum" data-value="1"></i><b>(1)</b>
-          client-id:  <i class="conum" data-value="2"></i><b>(2)</b>
-          client-secret: <i class="conum" data-value="3"></i><b>(3)</b>
+          client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+          client-secret: &lt;&lt;my client secret&gt;&gt; <i class="conum" data-value="3"></i><b>(3)</b>
           scopes: <i class="conum" data-value="4"></i><b>(4)</b>
             - user:email
             - read:user
@@ -173,7 +187,7 @@ function addJsClass() {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The name here is arbitrary</td>
+<td>Configure a client. The name here is arbitrary</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -218,7 +232,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </div>
 
 
-<h2 id="oauth2-user-details">11.3.1.1.1 User Details Mapper</h2>
+<h2 id="oauth2-user-details">11.3.1.1.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
@@ -235,6 +249,223 @@ To disable a specific client for any given environment, set <code>enabled: false
 </div>
 <div class="paragraph">
 <p>Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> object stores three basic properties: username, roles, and arbitrary attributes. All data stored in the user details will be retrievable in controllers that accept an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
+</div>
+<div class="paragraph">
+<p>For example, here is how it might be implemented for Github.</p>
+</div>
+<div class="paragraph">
+<p>Create a class to store the response data:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+public class GithubUser {
+
+    private String login;
+    private String name;
+    private String email;
+
+    // getters and setters ...
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.annotation.JsonNaming
+import io.micronaut.core.annotation.Introspected
+
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+class GithubUser {
+
+    String login
+    String name
+    String email
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.annotation.JsonNaming
+import io.micronaut.core.annotation.Introspected
+
+@Introspected
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
+class GithubUser {
+
+    var login: String? = null
+    var name: String? = null
+    var email: String? = null
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create an HTTP client to make the request:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Header;
+import io.micronaut.http.client.annotation.Client;
+import io.reactivex.Flowable;
+
+@Header(name = "User-Agent", value = "Micronaut")
+@Client("https://api.github.com")
+public interface GithubApiClient {
+
+    @Get("/user")
+    Flowable&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Header
+import io.micronaut.http.client.annotation.Client
+import io.reactivex.Flowable
+
+@Header(name = "User-Agent", value = "Micronaut")
+@Client("https://api.github.com")
+interface GithubApiClient {
+
+    @Get("/user")
+    Flowable&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization)
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Header
+import io.micronaut.http.client.annotation.Client
+import io.reactivex.Flowable
+
+@Header(name = "User-Agent", value = "Micronaut")
+@Client("https://api.github.com")
+interface GithubApiClient {
+
+    @Get("/user")
+    fun getUser(@Header("Authorization") authorization: String): Flowable&lt;GithubUser&gt;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create the user details mapper that pulls it together:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
+import org.reactivestreams.Publisher;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.Collections;
+import java.util.List;
+
+@Named("github") <b class="conum">(1)</b>
+@Singleton
+class GithubUserDetailsMapper implements OauthUserDetailsMapper {
+
+    private final GithubApiClient apiClient;
+
+    GithubUserDetailsMapper(GithubApiClient apiClient) {
+        this.apiClient = apiClient;
+    } <b class="conum">(2)</b>
+
+    @Override
+    public Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) { <b class="conum">(3)</b>
+        return apiClient.getUser("token " + tokenResponse.getAccessToken())
+                .map(user -&gt; {
+                    List&lt;String&gt; roles = Collections.singletonList("ROLE_GITHUB");
+                    return new UserDetails(user.getLogin(), roles); <b class="conum">(4)</b>
+                });
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
+import org.reactivestreams.Publisher
+
+import javax.inject.Named
+import javax.inject.Singleton
+
+@Named("github") <b class="conum">(1)</b>
+@Singleton
+class GithubUserDetailsMapper implements OauthUserDetailsMapper {
+
+    private final GithubApiClient apiClient
+
+    GithubUserDetailsMapper(GithubApiClient apiClient) { <b class="conum">(2)</b>
+        this.apiClient = apiClient
+    }
+
+    @Override
+    Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) { <b class="conum">(3)</b>
+        apiClient.getUser("token ${tokenResponse.accessToken}")
+            .map({ user -&gt;
+                new UserDetails(user.login, ["ROLE_GITHUB"]) <b class="conum">(4)</b>
+            })
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
+import org.reactivestreams.Publisher
+
+import javax.inject.Named
+import javax.inject.Singleton
+
+@Named("github") <b class="conum">(1)</b>
+@Singleton
+internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <b class="conum">(2)</b>
+    : OauthUserDetailsMapper {
+
+    override fun createUserDetails(tokenResponse: TokenResponse): Publisher&lt;UserDetails&gt; { <b class="conum">(3)</b>
+        return apiClient.getUser("token " + tokenResponse.accessToken)
+                .map { user -&gt;
+                    UserDetails(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
+                }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The bean must have a named qualifier that matches the name in configuration.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>How the request is made to retrieve the user information is totally up to you, however in this example we&#8217;re using a declarative client.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The token endpoint response is passed to the method.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The user information is converted to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>.</td>
+</tr>
+</table>
 </div>
 
 

@@ -117,6 +117,46 @@ function addJsClass() {
 <div class="paragraph">
 <p>If you are new to OpenID Connect, we recommend watching <a href="https://www.youtube.com/watch?v=996OiexHze0">OAuth 2.0 and OpenID Connect</a> to get a better understanding.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+To use OpenID client flows, the <code>security-jwt</code> dependency must be in your build because OpenID relies on JWT tokens.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut:micronaut-jwt'</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-jwt&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Even though OpenID providers return JWT tokens, that token is not used directly to authorize requests with Micronaut. Instead a new token is created if the application is using JWT. This allows for authorization to be standardized across custom authentication providers, normal OAuth 2.0 flows, and OpenID flows. It also allows for purely session based authorization as a result of OpenID authentication.
+</td>
+</tr>
+</table>
+</div>
 
 
                 <div style="clear:both;margin-top:15px;"></div>

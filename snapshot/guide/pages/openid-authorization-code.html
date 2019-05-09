@@ -98,7 +98,7 @@ function addJsClass() {
                 <div id="table-of-content">
                     <h2>Table of Contents</h2>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#token-validation"><strong>11.1</strong><span>Token Validation</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#openid-user-details"><strong>11.1</strong><span>User Details Mapper</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0px"><a href="#openid-auth-parameters"><strong>11.2</strong><span>Parameters</span></a>
@@ -111,6 +111,9 @@ function addJsClass() {
                     </div>
                     
                     <div class="toc-item" style="margin-left:10px"><a href="#id-token-hint"><strong>11.2.3</strong><span>ID Token Hint</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#token-validation"><strong>11.3</strong><span>Token Validation</span></a>
                     </div>
                     
                 </div>
@@ -128,99 +131,246 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>The following configuration illustrates a possible set up to use authorization code flow with Micronaut and a third-party OpenID Configuration authorization server.</p>
+<p>Adding support for authorization code flow with an OpenID provider is extremely easy with Micronaut.</p>
+</div>
+<div class="paragraph">
+<p>Here is a high level diagram of how the authorization code grant flow works with an OpenID provider.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/openid-oauth.svg" alt="openid oauth">
+</div>
 </div>
 <div class="listingblock">
 <div class="title">src/main/resources/application.yml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     security:
-        enabled: true <i class="conum" data-value="1"></i><b>(1)</b>
+        enabled: true
         oauth2:
-          client-secret: '${OAUTH_CLIENT_SECRET}'  <i class="conum" data-value="2"></i><b>(2)</b>
-          client-id: '${OAUTH_CLIENT_ID}' <i class="conum" data-value="3"></i><b>(3)</b>
-          issuer: '${OKTA_DOMAIN}/oauth2/${OKTA_AUTHSERVERID}' <i class="conum" data-value="4"></i><b>(4)</b>
-        token:
-            jwt:
-                enabled: true <i class="conum" data-value="5"></i><b>(5)</b>
-                cookie:
-                    enabled: true <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+            enabled: true
+            clients:
+                okta: <i class="conum" data-value="1"></i><b>(1)</b>
+                    client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+                    client-secret: &lt;&lt;my client secret&gt;&gt;  <i class="conum" data-value="3"></i><b>(3)</b>
+                    openid:
+                        issuer: &lt;&lt;my openid issuer&gt;&gt; <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Enable security</td>
+<td>Configure a client. The name here is arbitrary</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Client Secret. Your authorization server provider provides this value.</td>
+<td>The client id</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Client ID. Your authorization server provider provides this value.</td>
+<td>The client secret</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td><code>issuer</code> url. Allows micronaut to discover the configuration of the Open ID Configuration server.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Often, ID Token will be responded as JWT tokens. You will need to enable <a href="https://docs.micronaut.io/latest/guide/index.html#jwt">Micronaut&#8217;s JWT support</a> to validate it.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Once, validated you may want to save the JWT IDToken in a cookie. To read in subsequent requests, enable <a href="https://docs.micronaut.io/latest/guide/index.html#cookieToken">Cookie Token Reader</a>.</td>
+<td>The OpenID provider issuer</td>
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>The issuer URL will be used to discover the endpoints exposed by the provider. It is possible to configure the service discovery endpoint path as well as override several parts of the configuration that is returned. See the configuration reference for all options.</p>
+</div>
 
 
-<h2 id="token-validation">11.3.1.2.1 Token Validation</h2>
+<h2 id="openid-user-details">11.3.1.2.1 User Details Mapper</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
 <div class="paragraph">
-<p>Assuming the ID Token is a JWT token, the <a href="../api/io/micronaut/security/oauth2/openid/idtoken/DefaultIdTokenAccessTokenResponseValidator.html">DefaultIdTokenAccessTokenResponseValidator</a> validates the JWT Claims against every bean of type <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> and <a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a>.</p>
+<p>Because the OpenID standard returns a JWT token in the token response, it is possible to retrieve information about the user without having to make an additional call. In addition, the data stored in the JWT is standardized so you can use the same code to retrieve that information across providers.</p>
 </div>
 <div class="paragraph">
-<p>Some <a href="../api/io/micronaut/:io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> are already registered:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="../api/io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html">ExpirationJwtClaimsValidator</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html">SubjectNotNullJwtClaimsValidator</a></p>
-</li>
-</ul>
+<p>A default implementaiton of <a href="../api/io/micronaut/security/oauth2/token/endpoint/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. It is possible however to override the default or provide an implementation specific to a provider.</p>
 </div>
 <div class="paragraph">
-<p>Some <a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> are already registered:
-and:</p>
+<p>To override the default configuration, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/token/endpoint/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/AudienceJwtClaimsValidator.html">AudienceJwtClaimsValidator</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IssuerJwtClaimsValidator.html">IssuerJwtClaimsValidator</a></p>
-</li>
-</ul>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Replaces;
+import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
+import java.util.Collections;
+
+@Singleton
+@Replaces(DefaultOpenIdUserDetailsMapper.class)
+public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    @Override
+    @Nonnull
+    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        return new UserDetails("name", Collections.emptyList());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+
+import javax.annotation.Nonnull
+import javax.inject.Singleton
+
+@Singleton
+@Replaces(DefaultOpenIdUserDetailsMapper.class)
+class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    @Override
+    @Nonnull
+    UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        new UserDetails("name", [])
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+
+import javax.inject.Singleton
+
+@Singleton
+@Replaces(DefaultOpenIdUserDetailsMapper::class)
+class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
+
+    override fun createUserDetails(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims): UserDetails {
+        return UserDetails("name", emptyList())
+    }
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Please, validate your IDToken as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a> section.</p>
+<p>To override the user detail mapping behavior for a specific provider, register a bean with a named qualifier with a value equal to the name specified in the client configuration.</p>
 </div>
-<div class="paragraph">
-<p>Remember to enable JWT support <code>micronaut.security.token.jwt.enabled=true</code>.</p>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+
+import javax.annotation.Nonnull;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.Collections;
+
+@Singleton
+@Named("okta") <b class="conum">(1)</b>
+public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    @Override
+    @Nonnull
+    public UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
+                                         OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                         OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
+        return new UserDetails("name", Collections.emptyList()); <b class="conum">(5)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+
+import javax.annotation.Nonnull
+import javax.inject.Named
+import javax.inject.Singleton
+
+@Singleton
+@Named("okta") <b class="conum">(1)</b>
+class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    @Override
+    @Nonnull
+    UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
+                                  OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                  OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
+        new UserDetails("name", []) <b class="conum">(5)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+
+import javax.inject.Named
+import javax.inject.Singleton
+
+@Singleton
+@Named("okta") <b class="conum">(1)</b>
+class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
+
+    override fun createUserDetails(providerName: String, <b class="conum">(2)</b>
+                                   tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
+                                   openIdClaims: OpenIdClaims) <b class="conum">(4)</b>
+            : UserDetails {
+        return UserDetails("name", emptyList()) <b class="conum">(5)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The named qualifier is added that matches the name in configuration</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The provider name is passed to the method. Only useful for the global version</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The full token response is available</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The JWT claims are available</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>An instance of <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> is returned</td>
+</tr>
+</table>
 </div>
 
 
@@ -263,7 +413,7 @@ and:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.authorization.response-mode</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mechanism to be used for returning authorization rResponse parameters from the
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mechanism to be used for returning authorization response parameters from the
  authorization endpoint.</p></td>
 </tr>
 <tr>
@@ -375,6 +525,53 @@ and:</p>
 </div>
 <div class="paragraph">
 <p>However, you can provide a <a href="../api/io/micronaut/security/oauth2/openid/endpoints/authorization/IdTokenHintProvider.html">IdTokenHintProvider bean</a> and it will be included in the authentication request.</p>
+</div>
+
+
+<h2 id="token-validation">11.3.1.2.3 Token Validation</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Assuming the ID Token is a JWT token, the <a href="../api/io/micronaut/security/oauth2/openid/idtoken/DefaultIdTokenAccessTokenResponseValidator.html">DefaultIdTokenAccessTokenResponseValidator</a> validates the JWT Claims against every bean of type <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> and <a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a>.</p>
+</div>
+<div class="paragraph">
+<p>Some <a href="../api/io/micronaut/:io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> are already registered:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html">ExpirationJwtClaimsValidator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html">SubjectNotNullJwtClaimsValidator</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Some <a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> are already registered:
+and:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/AudienceJwtClaimsValidator.html">AudienceJwtClaimsValidator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IssuerJwtClaimsValidator.html">IssuerJwtClaimsValidator</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Please, validate your IDToken as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a> section.</p>
+</div>
+<div class="paragraph">
+<p>Remember to enable JWT support <code>micronaut.security.token.jwt.enabled=true</code>.</p>
 </div>
 
 
