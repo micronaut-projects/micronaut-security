@@ -63,7 +63,8 @@ public class SessionNoncePersistence implements NoncePersistence {
 
     @Override
     public void persistNonce(HttpRequest<?> request, MutableHttpResponse response, String state) {
-        Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
+        Session session = SessionForRequest.find(request).orElseGet(() ->
+                SessionForRequest.create(sessionStore, request));
         session.put(SESSION_KEY, state);
     }
 }

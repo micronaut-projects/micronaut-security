@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
@@ -55,7 +56,7 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
         if (LOG.isTraceEnabled()) {
             LOG.trace("Built the authorization URL [{}]", expandedUri);
         }
-        return response;
+        return response.header(HttpHeaders.LOCATION, expandedUri);
     }
 
     /**
