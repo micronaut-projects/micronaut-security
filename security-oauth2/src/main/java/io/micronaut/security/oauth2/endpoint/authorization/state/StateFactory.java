@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 
 import javax.annotation.Nullable;
 
@@ -33,11 +34,11 @@ import javax.annotation.Nullable;
 public interface StateFactory {
 
     /**
-     *
      * @param request The original request prior redirect
+     * @param response The authorization redirect response
      * @return A state parameter. A opaque value used to maintain state between the request and the callback.
      */
     @Nullable
-    String buildState(HttpRequest<?> request);
+    String buildState(HttpRequest<?> request, MutableHttpResponse response);
 
 }

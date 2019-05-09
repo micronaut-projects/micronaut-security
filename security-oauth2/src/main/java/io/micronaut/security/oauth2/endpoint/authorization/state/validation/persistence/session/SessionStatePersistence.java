@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.state.validation.per
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.DefaultStateValidationConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence.StatePersistence;
@@ -63,7 +64,7 @@ public class SessionStatePersistence implements StatePersistence {
     }
 
     @Override
-    public void persistState(HttpRequest<?> request, State state) {
+    public void persistState(HttpRequest<?> request, MutableHttpResponse response, State state) {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
         session.put(SESSION_KEY, state);
     }

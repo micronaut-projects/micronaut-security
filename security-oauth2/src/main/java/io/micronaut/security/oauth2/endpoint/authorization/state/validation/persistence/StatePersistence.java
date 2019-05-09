@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
 import java.util.Optional;
@@ -40,8 +41,9 @@ public interface StatePersistence {
     /**
      * Persists the state for later retrieval to allow validation.
      *
-     * @param request The request
+     * @param request The login request
+     * @param response The authorization redirect response
      * @param state The state to persist
      */
-    void persistState(HttpRequest<?> request, State state);
+    void persistState(HttpRequest<?> request, MutableHttpResponse response, State state);
 }

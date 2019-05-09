@@ -48,6 +48,7 @@ public class IssuerClaimValidator implements OpenIdClaimsValidator {
             }
             return false;
         }
+        //The Issuer Identifier for the OpenID Provider (which is typically obtained during Discovery) MUST exactly match the value of the iss (issuer) Claim.
         boolean condition = issuer.equals(providerMetadata.getIssuer());
         if (!condition && LOG.isDebugEnabled()) {
             LOG.debug("JWT issuer claim does not match {}", providerMetadata.getIssuer());

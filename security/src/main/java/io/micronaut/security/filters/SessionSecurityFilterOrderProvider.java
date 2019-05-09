@@ -18,6 +18,8 @@ package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.Requires;
 
+import javax.inject.Singleton;
+
 /**
  * Ensures the security filter runs after the session filter (if present)
  *
@@ -26,6 +28,7 @@ import io.micronaut.context.annotation.Requires;
  */
 @Requires(missingBeans = SecurityFilterOrderProvider.class)
 @Requires(configuration = "io.micronaut.session")
+@Singleton
 public class SessionSecurityFilterOrderProvider implements SecurityFilterOrderProvider {
 
     private static final Integer ORDER = 100;

@@ -19,8 +19,8 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
@@ -32,8 +32,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * The default {@link OpenIdAuthorizationRequest} implementation.
@@ -47,12 +45,12 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
 
     private final HttpRequest<?> request;
     private OauthClientConfiguration oauthConfiguration;
+    private final StateFactory stateFactory;
+    private final NonceFactory nonceFactory;
     private LoginHintResolver loginHintResolver;
     private IdTokenHintResolver idTokenHintResolver;
     private AuthorizationEndpointConfiguration endpointConfiguration;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
-    private final Supplier<String> stateSupplier;
-    private final Supplier<String> nonceSupplier;
 
     /**
      * @param request The original request prior redirect.
@@ -75,23 +73,10 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
         this.endpointConfiguration = oauthConfiguration.getOpenid()
                 .flatMap(OpenIdClientConfiguration::getAuthorization).orElse(null);
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
+        this.stateFactory = stateFactory;
+        this.nonceFactory = nonceFactory;
         this.loginHintResolver = loginHintResolver;
         this.idTokenHintResolver = idTokenHintResolver;
-        this.stateSupplier = SupplierUtil.memoized(() -> {
-            if (stateFactory != null) {
-                return stateFactory.buildState(request);
-            } else {
-                return null;
-            }
-        });
-        this.nonceSupplier = SupplierUtil.memoized(() -> {
-            if (nonceFactory != null) {
-                return nonceFactory.buildNonce(request);
-            } else {
-                return null;
-            }
-        });
-
     }
 
     @Override
@@ -101,15 +86,16 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
     }
 
     @Override
-    @Nullable
-    public String getState() {
-        return stateSupplier.get();
+    public Optional<String> getState(MutableHttpResponse response) {
+        return Optional.ofNullable(stateFactory)
+                .map(sf -> sf.buildState(request, response));
     }
 
     @Nullable
     @Override
-    public String getNonce() {
-        return nonceSupplier.get();
+    public Optional<String> getNonce(MutableHttpResponse response) {
+        return Optional.ofNullable(nonceFactory)
+                .map(nf -> nf.buildNonce(request, response));
     }
 
     @Override
@@ -127,72 +113,57 @@ public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationReq
         return ResponseType.CODE.toString();
     }
 
-    @Nullable
     @Override
-    public String getRedirectUri() {
-        return oauthRouteUrlBuilder.buildCallbackUrl(request, oauthConfiguration.getName()).toString();
+    public Optional<String> getRedirectUri() {
+        return Optional.of(oauthRouteUrlBuilder.buildCallbackUrl(request, oauthConfiguration.getName()).toString());
     }
 
-    @Nullable
     @Override
-    public String getResponseMode() {
-        return optionalValueOrNull(endpointConfiguration, AuthorizationEndpointConfiguration::getResponseMode);
+    public Optional<String> getResponseMode() {
+        return Optional.ofNullable(endpointConfiguration)
+                .flatMap(AuthorizationEndpointConfiguration::getResponseMode);
     }
 
-    @Nullable
     @Override
-    public Display getDisplay() {
-        return optionalValueOrNull(endpointConfiguration, AuthorizationEndpointConfiguration::getDisplay);
+    public Optional<Display> getDisplay() {
+        return Optional.ofNullable(endpointConfiguration)
+                .flatMap(AuthorizationEndpointConfiguration::getDisplay);
     }
 
-    @Nullable
     @Override
-    public Prompt getPrompt() {
-        return optionalValueOrNull(endpointConfiguration, AuthorizationEndpointConfiguration::getPrompt);
+    public Optional<Prompt> getPrompt() {
+        return Optional.ofNullable(endpointConfiguration)
+                .flatMap(AuthorizationEndpointConfiguration::getPrompt);
     }
 
-    @Nullable
     @Override
-    public Integer getMaxAge() {
-        return optionalValueOrNull(endpointConfiguration, AuthorizationEndpointConfiguration::getMaxAge);
+    public Optional<Integer> getMaxAge() {
+        return Optional.ofNullable(endpointConfiguration)
+                .flatMap(AuthorizationEndpointConfiguration::getMaxAge);
     }
 
-    @Nullable
     @Override
-    public List<String> getUiLocales() {
-        return optionalValueOrNull(endpointConfiguration, AuthorizationEndpointConfiguration::getUiLocales);
+    public Optional<List<String>> getUiLocales() {
+        return Optional.ofNullable(endpointConfiguration)
+                .flatMap(AuthorizationEndpointConfiguration::getUiLocales);
     }
 
-    @Nullable
     @Override
-    public String getIdTokenHint() {
-        return valueOrNull(idTokenHintResolver, (resolver) -> resolver.resolve(request));
+    public Optional<String> getIdTokenHint() {
+        return Optional.ofNullable(idTokenHintResolver)
+                .map(resolver -> resolver.resolve(request));
     }
 
-    @Nullable
     @Override
-    public String getLoginHint() {
-        return valueOrNull(loginHintResolver, (resolver) -> resolver.resolve(request));
+    public Optional<String> getLoginHint() {
+        return Optional.ofNullable(loginHintResolver)
+                .map(resolver -> resolver.resolve(request));
     }
 
-    @Nullable
     @Override
-    public List<String> getAcrValues() {
-        return optionalValueOrNull(endpointConfiguration, AuthorizationEndpointConfiguration::getAcrValues);
-    }
-
-    private <T, R> R optionalValueOrNull(T provider, Function<T, Optional<R>> function) {
-        if (provider != null) {
-            return function.apply(provider).orElse(null);
-        }
-        return null;
-    }
-
-    private <T, R> R valueOrNull(T provider, Function<T, R> function) {
-        if (provider != null) {
-            return function.apply(provider);
-        }
-        return null;
+    public Optional<List<String>> getAcrValues() {
+        return Optional.ofNullable(endpointConfiguration)
+                .flatMap(AuthorizationEndpointConfiguration::getAcrValues);
     }
 
 }

@@ -17,6 +17,9 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.uri.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +37,9 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Singleton
-public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedirectUrlBuilder {
+public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirectHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationRedirectUrlBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationRedirectHandler.class);
 
     /**
      * @param authorizationRequest The authorization request
@@ -44,14 +47,15 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      * @return The authorization redirect url
      */
     @Override
-    public String buildUrl(AuthorizationRequest authorizationRequest,
-                           String authorizationEndpoint) {
-        Map<String, Object> arguments = instantiateParameters(authorizationRequest);
+    public MutableHttpResponse redirect(AuthorizationRequest authorizationRequest,
+                                        String authorizationEndpoint) {
+        MutableHttpResponse response = HttpResponse.status(HttpStatus.FOUND);
+        Map<String, Object> arguments = instantiateParameters(authorizationRequest, response);
         String expandedUri = expandedUri(authorizationEndpoint, arguments);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Built the authorization URL [{}]", expandedUri);
         }
-        return expandedUri;
+        return response;
     }
 
     /**
@@ -73,19 +77,20 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
 
     /**
      * @param authorizationRequest Authentication Request
+     * @param response Authorization Redirect Response
      * @return A parameter map which contains the URL variables used to construct the authorization redirect url.
      */
-    protected Map<String, Object> instantiateParameters(AuthorizationRequest authorizationRequest) {
+    protected Map<String, Object> instantiateParameters(AuthorizationRequest authorizationRequest, MutableHttpResponse response) {
         Map<String, Object> parameters = new HashMap<>();
         populateScope(authorizationRequest, parameters);
         populateResponseType(authorizationRequest, parameters);
         populateClientId(authorizationRequest, parameters);
         populateRedirectUri(authorizationRequest, parameters);
-        populateState(authorizationRequest, parameters);
+        populateState(authorizationRequest, parameters, response);
         if (authorizationRequest instanceof OpenIdAuthorizationRequest) {
             OpenIdAuthorizationRequest openIdAuthorizationRequest = (OpenIdAuthorizationRequest) authorizationRequest;
             populateResponseMode(openIdAuthorizationRequest, parameters);
-            populateNonce(openIdAuthorizationRequest, parameters);
+            populateNonce(openIdAuthorizationRequest, parameters, response);
             populateDisplay(openIdAuthorizationRequest, parameters);
             populatePrompt(openIdAuthorizationRequest, parameters);
             populateMaxAge(openIdAuthorizationRequest, parameters);
@@ -139,19 +144,21 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populateRedirectUri(@Nonnull AuthorizationRequest authorizationRequest,
                                        @Nonnull Map<String, Object> parameters) {
-        parameters.put(AuthorizationRequest.PARAMETER_REDIRECT_URI, authorizationRequest.getRedirectUri() != null ? authorizationRequest.getRedirectUri() : authorizationRequest.getRedirectUri());
+        authorizationRequest.getRedirectUri().ifPresent(uri ->
+                parameters.put(AuthorizationRequest.PARAMETER_REDIRECT_URI, uri));
     }
 
     /**
      *
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
+     * @param response Authorization Redirect Response
      */
     protected void populateState(@Nonnull AuthorizationRequest authorizationRequest,
-                                 @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getState() != null) {
-            parameters.put(AuthorizationRequest.PARAMETER_STATE, authorizationRequest.getState());
-        }
+                                 @Nonnull Map<String, Object> parameters,
+                                 @Nonnull MutableHttpResponse response) {
+        authorizationRequest.getState(response).ifPresent(state ->
+                parameters.put(AuthorizationRequest.PARAMETER_STATE, state));
     }
 
     /**
@@ -161,21 +168,21 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populateResponseMode(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
                                         @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getResponseMode() != null) {
-            parameters.put(OpenIdAuthorizationRequest.PARAMETER_RESPONSE_MODE, authorizationRequest.getResponseMode());
-        }
+        authorizationRequest.getResponseMode().ifPresent(rm ->
+                parameters.put(OpenIdAuthorizationRequest.PARAMETER_RESPONSE_MODE, rm));
     }
 
     /**
      *
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
+     * @param response Authorization Redirect Response
      */
     protected void populateNonce(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                 @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getNonce() != null) {
-            parameters.put(OpenIdAuthorizationRequest.PARAMETER_NONCE, authorizationRequest.getNonce());
-        }
+                                 @Nonnull Map<String, Object> parameters,
+                                 @Nonnull MutableHttpResponse response) {
+        authorizationRequest.getNonce(response).ifPresent(nonce ->
+                parameters.put(OpenIdAuthorizationRequest.PARAMETER_NONCE, nonce));
     }
 
     /**
@@ -185,9 +192,8 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populateDisplay(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
                                    @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getDisplay() != null) {
-            parameters.put(OpenIdAuthorizationRequest.PARAMETER_DISPLAY, authorizationRequest.getDisplay());
-        }
+        authorizationRequest.getDisplay().ifPresent(display ->
+                parameters.put(OpenIdAuthorizationRequest.PARAMETER_DISPLAY, display));
     }
 
     /**
@@ -197,9 +203,8 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populatePrompt(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
                                   @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getPrompt() != null) {
-            parameters.put(OpenIdAuthorizationRequest.PARAMETER_PROMPT, authorizationRequest.getPrompt().getPrompt());
-        }
+        authorizationRequest.getPrompt().ifPresent(prompt ->
+                parameters.put(OpenIdAuthorizationRequest.PARAMETER_PROMPT, prompt));
     }
 
     /**
@@ -209,9 +214,8 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populateMaxAge(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
                                   @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getMaxAge() != null) {
-            parameters.put(OpenIdAuthorizationRequest.PARAMETER_MAX_AGE, authorizationRequest.getMaxAge());
-        }
+        authorizationRequest.getMaxAge().ifPresent(maxAge ->
+                parameters.put(OpenIdAuthorizationRequest.PARAMETER_MAX_AGE, maxAge));
     }
 
     /**
@@ -221,10 +225,9 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populateUiLocales(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
                                      @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getUiLocales() != null) {
-            Optional<String> optionalUiLocales = authorizationRequest.getUiLocales().stream().reduce((a, b) -> a + StringUtils.SPACE + b);
-            optionalUiLocales.ifPresent(uiLocales -> parameters.put(OpenIdAuthorizationRequest.PARAMETER_UI_LOCALES, uiLocales));
-        }
+        authorizationRequest.getUiLocales()
+                .flatMap(uiLocales -> uiLocales.stream().reduce((a, b) -> a + StringUtils.SPACE + b))
+                .ifPresent(uiLocales -> parameters.put(OpenIdAuthorizationRequest.PARAMETER_UI_LOCALES, uiLocales));
     }
 
     /**
@@ -234,9 +237,8 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populateIdTokenHint(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
                                        @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getIdTokenHint() != null) {
-            parameters.put(OpenIdAuthorizationRequest.PARAMETER_ID_TOKEN_HINT, authorizationRequest.getIdTokenHint());
-        }
+        authorizationRequest.getIdTokenHint().ifPresent(idTokenHint ->
+                parameters.put(OpenIdAuthorizationRequest.PARAMETER_ID_TOKEN_HINT, idTokenHint));
     }
 
     /**
@@ -246,9 +248,8 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populateLoginHint(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
                                      @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getLoginHint() != null) {
-            parameters.put(OpenIdAuthorizationRequest.PARAMETER_LOGIN_HINT, authorizationRequest.getLoginHint());
-        }
+        authorizationRequest.getLoginHint().ifPresent(loginHint ->
+                parameters.put(OpenIdAuthorizationRequest.PARAMETER_LOGIN_HINT, loginHint));
     }
 
     /**
@@ -258,9 +259,8 @@ public class DefaultAuthorizationRedirectUrlBuilder implements AuthorizationRedi
      */
     protected void populateAcrValues(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
                                      @Nonnull Map<String, Object> parameters) {
-        if (authorizationRequest.getAcrValues() != null) {
-            Optional<String> optionalAcrValues = authorizationRequest.getAcrValues().stream().reduce((a, b) -> a + StringUtils.SPACE + b);
-            optionalAcrValues.ifPresent(acrValues -> parameters.put(OpenIdAuthorizationRequest.PARAMETER_ACR_VALUES, acrValues));
-        }
+        authorizationRequest.getAcrValues()
+                .flatMap(acrValues -> acrValues.stream().reduce((a, b) -> a + StringUtils.SPACE + b))
+                .ifPresent(acrValues -> parameters.put(OpenIdAuthorizationRequest.PARAMETER_ACR_VALUES, acrValues));
     }
 }

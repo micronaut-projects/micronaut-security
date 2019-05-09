@@ -19,10 +19,8 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
@@ -30,7 +28,7 @@ import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfig
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OauthAuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.response.*;
@@ -56,7 +54,7 @@ public class DefaultOauthClient implements OauthClient {
 
     private final OauthClientConfiguration clientConfiguration;
     private final OauthUserDetailsMapper userDetailsMapper;
-    private final AuthorizationRedirectUrlBuilder redirectUrlBuilder;
+    private final AuthorizationRedirectHandler redirectHandler;
     private final OauthAuthorizationResponseHandler authorizationResponseHandler;
     private final BeanContext beanContext;
     private final SecureEndpoint tokenEndpoint;
@@ -64,18 +62,18 @@ public class DefaultOauthClient implements OauthClient {
     /**
      * @param clientConfiguration The client configuration
      * @param userDetailsMapper The user details mapper
-     * @param redirectUrlBuilder The redirect URL builder
+     * @param redirectHandler The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
      */
     public DefaultOauthClient(OauthClientConfiguration clientConfiguration,
                               OauthUserDetailsMapper userDetailsMapper,
-                              AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                              AuthorizationRedirectHandler redirectHandler,
                               OauthAuthorizationResponseHandler authorizationResponseHandler,
                               BeanContext beanContext) {
         this.clientConfiguration = clientConfiguration;
         this.userDetailsMapper = userDetailsMapper;
-        this.redirectUrlBuilder = redirectUrlBuilder;
+        this.redirectHandler = redirectHandler;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
         this.tokenEndpoint = getTokenEndpoint();
@@ -96,9 +94,7 @@ public class DefaultOauthClient implements OauthClient {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), authorizationEndpoint);
         }
-        return Flowable.just(HttpResponse.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION,
-                        redirectUrlBuilder.buildUrl(authorizationRequest, authorizationEndpoint)));
+        return Flowable.just(redirectHandler.redirect(authorizationRequest, authorizationEndpoint));
     }
 
     @Override

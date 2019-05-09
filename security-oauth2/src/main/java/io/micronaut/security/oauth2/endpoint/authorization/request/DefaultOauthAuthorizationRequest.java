@@ -17,8 +17,8 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
-import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
@@ -26,7 +26,7 @@ import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 /**
  * The default implementation of {@link OauthAuthorizationRequest}.
@@ -40,7 +40,7 @@ public class DefaultOauthAuthorizationRequest implements OauthAuthorizationReque
     private final HttpRequest<?> request;
     private final OauthClientConfiguration oauthClientConfiguration;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
-    private final Supplier<String> stateSupplier;
+    private final StateFactory stateFactory;
 
     /**
      * @param request The callback request
@@ -55,14 +55,7 @@ public class DefaultOauthAuthorizationRequest implements OauthAuthorizationReque
         this.request = request;
         this.oauthClientConfiguration = oauthClientConfiguration;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
-        this.stateSupplier = SupplierUtil.memoized(() -> {
-            if (stateFactory != null) {
-                return stateFactory.buildState(request);
-            } else {
-                return null;
-            }
-        });
-
+        this.stateFactory = stateFactory;
     }
 
     @Override
@@ -72,9 +65,9 @@ public class DefaultOauthAuthorizationRequest implements OauthAuthorizationReque
     }
 
     @Override
-    @Nullable
-    public String getState() {
-        return stateSupplier.get();
+    public Optional<String> getState(MutableHttpResponse response) {
+        return Optional.ofNullable(stateFactory)
+                .map(sf -> sf.buildState(request, response));
     }
 
     @Override
@@ -89,9 +82,8 @@ public class DefaultOauthAuthorizationRequest implements OauthAuthorizationReque
         return ResponseType.CODE.toString();
     }
 
-    @Nullable
     @Override
-    public String getRedirectUri() {
-        return oauthRouteUrlBuilder.buildCallbackUrl(request, oauthClientConfiguration.getName()).toString();
+    public Optional<String> getRedirectUri() {
+        return Optional.of(oauthRouteUrlBuilder.buildCallbackUrl(request, oauthClientConfiguration.getName()).toString());
     }
 }

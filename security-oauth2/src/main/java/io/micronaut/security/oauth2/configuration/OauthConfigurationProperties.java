@@ -73,7 +73,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
 
     /**
      * The URI template that is used to initiate an OAuth 2.0
-     * authorization code grant flow.
+     * authorization code grant flow. Default value ({@value #DEFAULT_LOGIN}).
      *
      * @param loginUri The Login uri
      */
@@ -89,7 +89,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
 
     /**
      * The URI template that OAuth 2.0 providers can use to
-     * submit an authorization callback request.
+     * submit an authorization callback request. Default value ({@value #DEFAULT_CALLBACK}).
      *
      * @param callbackUri The callback Uri
      */

@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.endpoint.nonce.validation.persistence;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 
 import java.util.Optional;
 
@@ -39,8 +40,9 @@ public interface NoncePersistence {
     /**
      * Persists the nonce for later retrieval to allow validation.
      *
-     * @param request The request
+     * @param request The login request
+     * @param response The authorization redirect response
      * @param nonce The nonce to persist
      */
-    void persistNonce(HttpRequest<?> request, String nonce);
+    void persistNonce(HttpRequest<?> request, MutableHttpResponse response, String nonce);
 }

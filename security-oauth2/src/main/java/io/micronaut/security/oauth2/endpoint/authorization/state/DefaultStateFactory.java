@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence.StatePersistence;
 
@@ -49,7 +50,7 @@ public class DefaultStateFactory implements StateFactory {
 
     @Nullable
     @Override
-    public String buildState(HttpRequest<?> request) {
+    public String buildState(HttpRequest<?> request, MutableHttpResponse response) {
         Optional<HttpStatus> rejectedStatus = request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class);
         boolean unauthorized = rejectedStatus.filter(status -> status.equals(HttpStatus.UNAUTHORIZED)).isPresent();
         DefaultState state = new DefaultState();
@@ -57,7 +58,7 @@ public class DefaultStateFactory implements StateFactory {
             state.setOriginalUri(request.getUri());
         }
         if (statePersistence != null) {
-            statePersistence.persistState(request, state);
+            statePersistence.persistState(request, response, state);
         }
         return stateSerDes.serialize(state);
     }

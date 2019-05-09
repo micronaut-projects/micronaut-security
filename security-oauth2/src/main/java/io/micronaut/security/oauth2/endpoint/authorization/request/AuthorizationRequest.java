@@ -16,9 +16,11 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
+import io.micronaut.http.MutableHttpResponse;
+
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * OAuth 2.0 Authorization Request.
@@ -48,11 +50,10 @@ public interface AuthorizationRequest {
     String getClientId();
 
     /**
-     *
+     * @param response authorization redirect response
      * @return Opaque value used to maintain state between the request and the callback.
      */
-    @Nullable
-    String getState();
+    Optional<String> getState(MutableHttpResponse response);
 
     /**
      * @return OAuth 2.0 Response Type value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used.
@@ -63,7 +64,6 @@ public interface AuthorizationRequest {
     /**
      * @return Redirection URI to which the response will be sent.
      */
-    @Nullable
-    String getRedirectUri();
+    Optional<String> getRedirectUri();
 
 }

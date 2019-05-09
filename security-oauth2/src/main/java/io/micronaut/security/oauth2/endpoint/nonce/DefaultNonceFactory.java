@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.nonce;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.nonce.validation.persistence.NoncePersistence;
 
 import javax.annotation.Nonnull;
@@ -34,9 +35,20 @@ import java.util.UUID;
 @Singleton
 public class DefaultNonceFactory implements NonceFactory {
 
+    private final NoncePersistence noncePersistence;
+
+    /**
+     * @param noncePersistence The nonce persistence mechanism
+     */
+    public DefaultNonceFactory(NoncePersistence noncePersistence) {
+        this.noncePersistence = noncePersistence;
+    }
+
     @Nonnull
     @Override
-    public String buildNonce(HttpRequest<?> request) {
-        return UUID.randomUUID().toString();
+    public String buildNonce(HttpRequest<?> request, MutableHttpResponse response) {
+        String nonce = UUID.randomUUID().toString();
+        noncePersistence.persistNonce(request, response, nonce);
+        return nonce;
     }
 }

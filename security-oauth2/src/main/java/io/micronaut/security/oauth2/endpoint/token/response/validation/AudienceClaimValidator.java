@@ -44,9 +44,17 @@ public class AudienceClaimValidator implements OpenIdClaimsValidator {
                             OauthClientConfiguration clientConfiguration,
                             OpenIdProviderMetadata providerMetadata) {
         List<String> audienceList = claims.getAudience();
+
+        //The Client MUST validate that the aud (audience) Claim contains its client_id value registered at the Issuer identified by the iss (issuer) Claim as an audience.
         boolean condition = audienceList.stream().anyMatch(audience -> audience.equals(clientConfiguration.getClientId()));
-        if (!condition && LOG.isDebugEnabled()) {
-            LOG.debug("JWT audience claims does not contain {}", clientConfiguration.getClientId());
+        if (!condition && LOG.isTraceEnabled()) {
+            LOG.trace("JWT validation failed for provider [{}]. Audience claims does not contain [{}]", clientConfiguration.getName(), clientConfiguration.getClientId());
+        }
+
+        //If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is present.
+        condition = audienceList.size() > 1 && claims.getAuthorizedParty() != null;
+        if (!condition && LOG.isTraceEnabled()) {
+            LOG.trace("JWT validation failed for provider [{}]. Multiple audience claims present but no authorized party", clientConfiguration.getName());
         }
         return condition;
     }

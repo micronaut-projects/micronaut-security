@@ -30,7 +30,7 @@ import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
@@ -123,7 +123,7 @@ class OpenIdClientFactory {
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
                                      @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
-                                     AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                                     AuthorizationRedirectHandler redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                      EndSessionEndpointResolver endSessionEndpointResolver,
                                      EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {

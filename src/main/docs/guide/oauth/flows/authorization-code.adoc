@@ -1,1 +1,9 @@
 The authorization code grant flow is the most typical authentication flow with OAuth 2.0 and OpenID providers. The same main steps apply to the flow whether or not the provider supports OpenID, and is described in link:https://tools.ietf.org/html/rfc6749#section-4.1[RFC6749 - Authorization Code Grant].
+
+The OAuth 2.0 authorization code flow requires a callback endpoint. In addition, a login endpoint is available to trigger the flow. The URIs are configurable.
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.adoc[]
+
+The URI templates for login and callback have a template variable in them `{provider}`. That variable is used by the route builder to build routes for each provider that is configured. The name `provider` is special in this context and cannot be changed. The URI may be manipulated however in any way as long as the provider variable is part of the *path* of the URI.
+
+For example `/oauth/login{?provider}` is not a valid configuration because Micronaut does not consider the query segment of a URL when routing requests. The provider variable must be part of the *path*.

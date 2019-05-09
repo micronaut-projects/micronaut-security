@@ -22,7 +22,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.grants.GrantType;
@@ -57,7 +57,7 @@ class OauthClientFactory {
     @EachBean(OauthUserDetailsMapper.class)
     DefaultOauthClient oauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
                                    @Parameter OauthClientConfiguration clientConfiguration,
-                                   AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                                   AuthorizationRedirectHandler redirectUrlBuilder,
                                    OauthAuthorizationResponseHandler authorizationResponseHandler,
                                    BeanContext beanContext) {
         if (clientConfiguration.isEnabled()) {

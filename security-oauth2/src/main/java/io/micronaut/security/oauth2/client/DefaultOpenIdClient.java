@@ -31,7 +31,7 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.response.*;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
-import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.reactivex.Flowable;
@@ -58,7 +58,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private final OauthClientConfiguration clientConfiguration;
     private final OpenIdProviderMetadata openIdProviderMetadata;
     private final OpenIdUserDetailsMapper userDetailsMapper;
-    private final AuthorizationRedirectUrlBuilder redirectUrlBuilder;
+    private final AuthorizationRedirectHandler redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
     private final SecureEndpoint tokenEndpoint;
     private final BeanContext beanContext;
@@ -76,7 +76,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                OpenIdProviderMetadata openIdProviderMetadata,
                                @Nullable OpenIdUserDetailsMapper userDetailsMapper,
-                               AuthorizationRedirectUrlBuilder redirectUrlBuilder,
+                               AuthorizationRedirectHandler redirectUrlBuilder,
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                BeanContext beanContext,
                                @Nullable EndSessionEndpoint endSessionEndpoint) {
@@ -120,9 +120,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), endpoint);
         }
-        return Flowable.just(
-                HttpResponse.status(HttpStatus.FOUND)
-                        .header(HttpHeaders.LOCATION, redirectUrlBuilder.buildUrl(authorizationRequest, endpoint)));
+        return Flowable.just(redirectUrlBuilder.redirect(authorizationRequest, endpoint));
     }
 
     @Override

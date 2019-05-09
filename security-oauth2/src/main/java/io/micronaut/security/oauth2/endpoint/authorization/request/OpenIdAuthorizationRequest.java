@@ -15,8 +15,10 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
-import javax.annotation.Nullable;
+import io.micronaut.http.MutableHttpResponse;
+
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The OpenID extensions to the standard OAuth 2.0 authorization request.
@@ -39,66 +41,48 @@ public interface OpenIdAuthorizationRequest extends AuthorizationRequest {
     String PARAMETER_ACR_VALUES = "acr_values";
 
     /**
-     *
+     * @param response The authorization redirect response
      * @return String value used to associate a Client session with an ID Token, and to mitigate replay attacks.
      */
-    @Nullable
-    String getNonce();
+    Optional<String> getNonce(MutableHttpResponse response);
 
     /**
-     *
      * @return Hint to the Authorization Server about the login identifier the End-User might use to log in.
      */
-    @Nullable
-    String getLoginHint();
+    Optional<String> getLoginHint();
 
     /**
-     *
      * @return Token previously issued by the Authorization Server being passed as a hint about the End-User's current or past authenticated session with the Client. If the End-User identified by the ID Token is logged in or is logged in by the request, then the Authorization Server returns a positive response; otherwise, it SHOULD return an error, such as login_required.
      */
-    @Nullable
-    String getIdTokenHint();
-
+    Optional<String> getIdTokenHint();
 
     /**
-     *
      * @return Informs the Authorization Server of the mechanism to be used for returning parameters from the Authorization Endpoint.
      */
-    @Nullable
-    String getResponseMode();
+    Optional<String> getResponseMode();
 
     /**
-     *
      * @return ASCII string value that specifies how the Authorization Server displays the authentication and consent user interface pages to the End-User.
      */
-    @Nullable
-    Display getDisplay();
+    Optional<Display> getDisplay();
 
     /**
-     *
      * @return Space delimited, case sensitive list of ASCII string values that specifies whether the Authorization Server prompts the End-User for reauthentication and consent.
      */
-    @Nullable
-    Prompt getPrompt();
+    Optional<Prompt> getPrompt();
 
     /**
-     *
      * @return Maximum Authentication Age.
      */
-    @Nullable
-    Integer getMaxAge();
+    Optional<Integer> getMaxAge();
 
     /**
-     *
      * @return End-User's preferred languages and scripts for the user interface, represented as a space-separated list of BCP47 [RFC5646] language tag values, ordered by preference.
      */
-    @Nullable
-    List<String> getUiLocales();
+    Optional<List<String>> getUiLocales();
 
     /**
-     *
      * @return Requested Authentication Context Class Reference values.
      */
-    @Nullable
-    List<String> getAcrValues();
+    Optional<List<String>> getAcrValues();
 }

@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.micronaut.security.oauth2.endpoint.authorization.request;
+
+import io.micronaut.http.MutableHttpResponse;
 
 /**
  * Responsible for redirecting to an OAuth 2.0 provider
@@ -22,7 +25,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface AuthorizationRedirectUrlBuilder {
+public interface AuthorizationRedirectHandler {
 
     /**
      * Builds the URL string to redirect to
@@ -31,6 +34,6 @@ public interface AuthorizationRedirectUrlBuilder {
      * @param authorizationEndpoint The autorization endpoint
      * @return The URL
      */
-    String buildUrl(AuthorizationRequest authorizationRequest,
-                    String authorizationEndpoint);
+    MutableHttpResponse redirect(AuthorizationRequest authorizationRequest,
+                                 String authorizationEndpoint);
 }

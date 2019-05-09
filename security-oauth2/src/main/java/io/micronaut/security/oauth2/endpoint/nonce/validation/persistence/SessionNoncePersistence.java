@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.nonce.validation.persistence;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
@@ -61,7 +62,7 @@ public class SessionNoncePersistence implements NoncePersistence {
     }
 
     @Override
-    public void persistNonce(HttpRequest<?> request, String state) {
+    public void persistNonce(HttpRequest<?> request, MutableHttpResponse response, String state) {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
         session.put(SESSION_KEY, state);
     }

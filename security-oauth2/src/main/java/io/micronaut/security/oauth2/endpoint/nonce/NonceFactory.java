@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.endpoint.nonce;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 
 import javax.annotation.Nonnull;
 
@@ -31,9 +32,10 @@ import javax.annotation.Nonnull;
 public interface NonceFactory {
 
     /**
-     * @param request The original request prior redirect
+     * @param request The login request
+     * @param response The authorization redirect response
      * @return A nonce. A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.
      */
     @Nonnull
-    String buildNonce(HttpRequest<?> request);
+    String buildNonce(HttpRequest<?> request, MutableHttpResponse response);
 }
