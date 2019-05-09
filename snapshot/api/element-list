@@ -23,6 +23,8 @@ io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence
 io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence.session
 io.micronaut.security.oauth2.endpoint.endsession.request
 io.micronaut.security.oauth2.endpoint.endsession.response
+io.micronaut.security.oauth2.endpoint.nonce
+io.micronaut.security.oauth2.endpoint.nonce.validation.persistence
 io.micronaut.security.oauth2.endpoint.token.request
 io.micronaut.security.oauth2.endpoint.token.request.context
 io.micronaut.security.oauth2.endpoint.token.request.password
