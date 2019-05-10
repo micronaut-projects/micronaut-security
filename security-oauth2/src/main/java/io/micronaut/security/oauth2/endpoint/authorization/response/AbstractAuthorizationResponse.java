@@ -17,7 +17,6 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
-import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
@@ -28,23 +27,21 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * The default implementation of {@link AuthorizationResponse} for
- * OAuth 2.0 provider authorization responses.
+ * A base class for authorization responses to extend from
  *
- * @author Sergio del Amo
+ * @author James Kleeh
  * @since 1.2.0
  */
-@Prototype
-public class DefaultAuthorizationResponse extends StateAwareAuthorizationCallback implements AuthorizationResponse {
+public abstract class AbstractAuthorizationResponse extends StateAwareAuthorizationCallback implements AuthorizationResponse {
 
-    private final ConvertibleMultiValues<String> responseData;
-    private final HttpRequest<Map<String, Object>> request;
+    protected final ConvertibleMultiValues<String> responseData;
+    protected final HttpRequest<Map<String, Object>> request;
 
     /**
      * @param request The request
      * @param stateSerDes State Serdes
      */
-    public DefaultAuthorizationResponse(@Parameter HttpRequest<Map<String, Object>> request,
+    public AbstractAuthorizationResponse(@Parameter HttpRequest<Map<String, Object>> request,
                                         StateSerDes stateSerDes) {
         super(stateSerDes);
         this.responseData = request.getBody()

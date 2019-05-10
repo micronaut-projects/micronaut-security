@@ -113,7 +113,7 @@ public class DefaultOauthClient implements OauthClient {
             }
             throw new AuthorizationErrorResponseException(errorResponse);
         } else {
-            AuthorizationResponse authorizationResponse = beanContext.createBean(AuthorizationResponse.class, request);
+            AuthorizationResponse authorizationResponse = beanContext.createBean(OauthAuthorizationResponse.class, request);
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Received a successful authorization response from provider [{}]", getName());
             }

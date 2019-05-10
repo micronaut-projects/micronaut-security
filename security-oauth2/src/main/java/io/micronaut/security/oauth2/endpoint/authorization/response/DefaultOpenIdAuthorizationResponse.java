@@ -31,7 +31,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Prototype
-public class DefaultOpenIdAuthorizationResponse extends DefaultAuthorizationResponse implements OpenIdAuthorizationResponse {
+public class DefaultOpenIdAuthorizationResponse extends AbstractAuthorizationResponse implements OpenIdAuthorizationResponse {
 
     private final NoncePersistence noncePersistence;
 
