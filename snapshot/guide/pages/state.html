@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>11.3.1.3 State 1.2.0.BUILD-SNAPSHOT</title>
+    <title>11.3.1.3 State Parameter 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -89,24 +89,16 @@ function addJsClass() {
 
 
                 <div class="project">
-                    <h1>11.3.1.3 State</h1>
+                    <h1>11.3.1.3 State Parameter</h1>
 
                     <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
-                <div id="table-of-content">
-                    <h2>Table of Contents</h2>
-                    
-                    <div class="toc-item" style="margin-left:0px"><a href="#state-customization"><strong>11.1</strong><span>Customization</span></a>
-                    </div>
-                    
-                </div>
-                
 
                 
 
-<h2 id="state">11.3.1.3 State</h2>
+<h2 id="state">11.3.1.3 State Parameter</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
@@ -116,13 +108,61 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>By default, this library will include a state parameter as described in <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1">RFC 6749</a> to authentication requests. By default a JSON serialized object is stored that contains a nonce value used for validation.</p>
+<p>By default, this library will include a state parameter as described in <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1">RFC 6749</a> to authentication requests. A JSON serialized object is stored that contains a nonce value used for validation.</p>
 </div>
 <div class="paragraph">
-<p>Because the validation of the state requires the state to be stored somewhere temporarily, state validation is only enabled if a <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/validation/persistence/StatePersistence.html">StatePersistence</a> bean is present.</p>
+<p>Because the validation of the state requires the state to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/StatePersistence.html">StatePersistence</a> bean must be present to retrieve the state for validation. The default implementation stores the state in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>
 </div>
+<a id="io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistenceConfiguration" href="#io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistenceConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html">CookieStatePersistenceConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-domain</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the domain name of this Cookie. Default value (null).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-http-only</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-secure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-max-age</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the maximum age of the cookie. Default value (5 minutes).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ("OAUTH2_STATE").</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
-<p>You can provide your own implementation, however an implementation of state persistence that stores the state in an http session has been provided. It must be enabled through configuration and the necessary dependencies must be on the classpath in order for it to work.</p>
+<p>You can provide your own implementation, however an implementation of state persistence that stores the state in an http session has also been provided.</p>
 </div>
 <div class="paragraph">
 <p>To enable state persistence with an http session:</p>
@@ -153,26 +193,17 @@ function addJsClass() {
 <div class="listingblock">
 <div class="title">application.yml</div>
 <div class="content">
-<pre>micronaut.security.oauth2.state.validation.persistence: session</pre>
+<pre>micronaut.security.oauth2.state.persistence: session</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If state validation fails, an <a href="../api/io/micronaut/security/oauth2/openid/endpoints/authorization/state/InvalidStateException.html">InvalidStateException</a> will be thrown.</p>
+<p>If state validation fails, the user will not be authenticated.</p>
 </div>
 </li>
 </ol>
 </div>
-
-
-<h2 id="state-customization">11.3.1.3.1 Customization</h2>
-
-<div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/state/state-customization.adoc"'>
-        <i class='fa fa-pencil-square-o'></i> Improve this doc
-    </button>
-</div>
-
-
+<div class="sect2">
+<h3 id="_customization">Customization</h3>
 <div class="paragraph">
 <p>There are several interfaces that implementations can be provided for to override how the state parameter is handled.</p>
 </div>
@@ -204,14 +235,15 @@ function addJsClass() {
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/validation/DefaultStateValidator.html">DefaultStateValidator</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/validation/persistence/StatePersistence.html">StatePersistence</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/StatePersistence.html">StatePersistence</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Stores the state to be retrieved later to allow validation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None unless configured</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieNoncePersistence.html">CookieNoncePersistence</a></p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
 <p>To override the behavior of any of those beans, provide an implementation and replace the default one.</p>
+</div>
 </div>
 
 

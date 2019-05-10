@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>11.3.1.2.2 Parameters 1.2.0.BUILD-SNAPSHOT</title>
+    <title>11.3.1.2.3 Parameters 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -89,7 +89,7 @@ function addJsClass() {
 
 
                 <div class="project">
-                    <h1>11.3.1.2.2 Parameters</h1>
+                    <h1>11.3.1.2.3 Parameters</h1>
 
                     <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
@@ -112,7 +112,7 @@ function addJsClass() {
 
                 
 
-<h2 id="openid-auth-parameters">11.3.1.2.2 Parameters</h2>
+<h2 id="openid-auth-parameters">11.3.1.2.3 Parameters</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
@@ -188,7 +188,7 @@ function addJsClass() {
 </table>
 
 
-<h2 id="nonce">11.3.1.2.2.1 Nonce</h2>
+<h2 id="nonce">11.3.1.2.3.1 Nonce</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
@@ -198,27 +198,141 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>The default implementation does not provide an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">Nonce parameter</a>.</p>
-</div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>OPTIONAL. A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.</p>
-</div>
-</blockquote>
+<p>By default, this library will include a nonce parameter as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> specification in authentication requests.</p>
 </div>
 <div class="paragraph">
-<p>This library does not provide a nonce parameter. To include the nonce parameter in the authorization request</p>
+<p>Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a> bean must be present to retrieve the nonce for validation. The default implementation stores the nonce in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>
+</div>
+<a id="io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration" href="#io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html">CookieNoncePersistenceConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-domain</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the domain name of this Cookie. Default value (null).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-http-only</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-secure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-max-age</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the maximum age of the cookie. Default value (5 minutes).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ("OPENID_NONCE").</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You can provide your own implementation, however an implementation of nonce persistence that stores the nonce in an http session has also been provided.</p>
 </div>
 <div class="paragraph">
-<p>However, you can provide a <a href="../api/io/micronaut/security/oauth2/openid/endpoints/authorization/NonceProvider.html">NonceProvider bean</a> and it will be included in the authentication request.</p>
+<p>To enable state persistence with an http session:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add a dependency to <code>micronaut-session</code></p>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut:micronaut-session'</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-session&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+</li>
+<li>
+<p>Set the nonce persistence to <code>session</code></p>
+<div class="listingblock">
+<div class="title">application.yml</div>
+<div class="content">
+<pre>micronaut.security.oauth2.nonce.persistence: session</pre>
+</div>
 </div>
 <div class="paragraph">
-<p>See <a href="https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes">Nonce Notes</a> for more information on the nonce parameter.</p>
+<p>If nonce validation fails, the user will not be authenticated.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_customization">Customization</h3>
+<div class="paragraph">
+<p>There are several interfaces that implementations can be provided for to override how the nonce parameter is handled.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Responsibility</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default Implementation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/nonce/NonceFactory.html">NonceFactory</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Builds a <code>java.lang.String</code> nonce value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceFactory.html">DefaultNonceFactory</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html">OpenIdTokenResponseValidator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates the nonce claim in the token response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html">NonceClaimValidator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stores the nonce to be retrieved later to allow validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistence.html">CookieNoncePersistence</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>To override the behavior of any of those beans, provide an implementation and replace the default one.</p>
+</div>
 </div>
 
 
-<h2 id="login-hint">11.3.1.2.2.2 Login Hint</h2>
+<h2 id="login-hint">11.3.1.2.3.2 Login Hint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
@@ -228,21 +342,11 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>The default implementation does not provide an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">login hint</a>.</p>
-</div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>Hint to the Authorization Server about the login identifier the End-User might use to log in.</p>
-</div>
-</blockquote>
-</div>
-<div class="paragraph">
-<p>However, you can provide a <a href="../api/io/micronaut/security/oauth2/openid/endpoints/authorization/LoginHintProvider.html">LoginHintProvider bean</a> and it will be included in the authentication request.</p>
+<p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">login hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/LoginHintResolver.html">LoginHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
 </div>
 
 
-<h2 id="id-token-hint">11.3.1.2.2.3 ID Token Hint</h2>
+<h2 id="id-token-hint">11.3.1.2.3.3 ID Token Hint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
@@ -252,17 +356,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>The default implementation does not provide an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token hint</a>.</p>
-</div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>A Token previously issued by the Authorization Server being passed as a hint about the End-User&#8217;s current or past authenticated session with the Client.</p>
-</div>
-</blockquote>
-</div>
-<div class="paragraph">
-<p>However, you can provide a <a href="../api/io/micronaut/security/oauth2/openid/endpoints/authorization/IdTokenHintProvider.html">IdTokenHintProvider bean</a> and it will be included in the authentication request.</p>
+<p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html">IdTokenHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
 </div>
 
 

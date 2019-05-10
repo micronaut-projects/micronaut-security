@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>11.3.1.2.2.3 ID Token Hint 1.2.0.BUILD-SNAPSHOT</title>
+    <title>11.3.1.2.3.3 ID Token Hint 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -89,7 +89,7 @@ function addJsClass() {
 
 
                 <div class="project">
-                    <h1>11.3.1.2.2.3 ID Token Hint</h1>
+                    <h1>11.3.1.2.3.3 ID Token Hint</h1>
 
                     <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
@@ -98,7 +98,7 @@ function addJsClass() {
 
                 
 
-<h2 id="id-token-hint">11.3.1.2.2.3 ID Token Hint</h2>
+<h2 id="id-token-hint">11.3.1.2.3.3 ID Token Hint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
@@ -108,17 +108,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>The default implementation does not provide an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token hint</a>.</p>
-</div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>A Token previously issued by the Authorization Server being passed as a hint about the End-User&#8217;s current or past authenticated session with the Client.</p>
-</div>
-</blockquote>
-</div>
-<div class="paragraph">
-<p>However, you can provide a <a href="../api/io/micronaut/security/oauth2/openid/endpoints/authorization/IdTokenHintProvider.html">IdTokenHintProvider bean</a> and it will be included in the authentication request.</p>
+<p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html">IdTokenHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
 </div>
 
 

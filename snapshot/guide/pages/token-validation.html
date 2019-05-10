@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>11.3.1.2.3 Token Validation 1.2.0.BUILD-SNAPSHOT</title>
+    <title>11.3.1.2.4 Token Validation 1.2.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -89,7 +89,7 @@ function addJsClass() {
 
 
                 <div class="project">
-                    <h1>11.3.1.2.3 Token Validation</h1>
+                    <h1>11.3.1.2.4 Token Validation</h1>
 
                     <p><strong>Version:</strong> 1.2.0.BUILD-SNAPSHOT</p>
                 </div>
@@ -98,7 +98,7 @@ function addJsClass() {
 
                 
 
-<h2 id="token-validation">11.3.1.2.3 Token Validation</h2>
+<h2 id="token-validation">11.3.1.2.4 Token Validation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
@@ -108,40 +108,13 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>Assuming the ID Token is a JWT token, the <a href="../api/io/micronaut/security/oauth2/openid/idtoken/DefaultIdTokenAccessTokenResponseValidator.html">DefaultIdTokenAccessTokenResponseValidator</a> validates the JWT Claims against every bean of type <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> and <a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a>.</p>
+<p>A <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html">OpenIdTokenResponseValidator</a> bean is responsible for validating the JWT token. The default implementation follows the guidelines described in the OpenID Connect specification regarding <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">token validation</a> where possible.</p>
 </div>
 <div class="paragraph">
-<p>Some <a href="../api/io/micronaut/:io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> are already registered:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="../api/io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html">ExpirationJwtClaimsValidator</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html">SubjectNotNullJwtClaimsValidator</a></p>
-</li>
-</ul>
+<p>By default all implementations of <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> and <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html">OpenIdClaimsValidator</a> are used to validate the token.</p>
 </div>
 <div class="paragraph">
-<p>Some <a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a> are already registered:
-and:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/AudienceJwtClaimsValidator.html">AudienceJwtClaimsValidator</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/oauth2/openid/idtoken/validation/IssuerJwtClaimsValidator.html">IssuerJwtClaimsValidator</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Please, validate your IDToken as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a> section.</p>
-</div>
-<div class="paragraph">
-<p>Remember to enable JWT support <code>micronaut.security.token.jwt.enabled=true</code>.</p>
+<p>To allow for additional or custom  validations, register an <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html">OpenIdClaimsValidator</a> bean.</p>
 </div>
 
 
