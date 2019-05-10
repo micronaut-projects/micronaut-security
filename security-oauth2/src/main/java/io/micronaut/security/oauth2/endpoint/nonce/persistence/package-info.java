@@ -15,9 +15,9 @@
  */
 
 /**
- * Classes related to state persistence
+ * Classes related to nonce persistence
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-package io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence;
+package io.micronaut.security.oauth2.endpoint.nonce.persistence;

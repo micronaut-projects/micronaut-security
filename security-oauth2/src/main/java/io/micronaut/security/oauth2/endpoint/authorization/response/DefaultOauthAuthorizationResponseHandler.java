@@ -15,9 +15,13 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
+import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
@@ -26,6 +30,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
 /**
@@ -40,12 +45,16 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthAuthorizationResponseHandler.class);
 
     private final TokenEndpointClient tokenEndpointClient;
+    @Nullable
+    private final StateValidator stateValidator;
 
     /**
      * @param tokenEndpointClient The token endpoint client
      */
-    DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient) {
+    DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
+                                             @Nullable StateValidator stateValidator) {
         this.tokenEndpointClient = tokenEndpointClient;
+        this.stateValidator = stateValidator;
     }
 
     @Override
@@ -54,6 +63,24 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             OauthClientConfiguration clientConfiguration,
             OauthUserDetailsMapper userDetailsMapper,
             SecureEndpoint tokenEndpoint) {
+
+        if (stateValidator != null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Validating state found in the authorization response from provider [{}]", clientConfiguration.getName());
+            }
+            State state = authorizationResponse.getState();
+            try {
+                stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
+            } catch (InvalidStateException e) {
+                //TODO: Create a more meaningful response
+                return Flowable.just(new AuthenticationFailed());
+            }
+
+        } else {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Skipping state validation, no state validator found");
+            }
+        }
 
         OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration);
 

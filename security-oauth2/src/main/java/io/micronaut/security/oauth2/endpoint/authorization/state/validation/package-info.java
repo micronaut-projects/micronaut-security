@@ -20,10 +20,4 @@
  * @author James Kleeh
  * @since 1.2.0
  */
-@Configuration
-@Requires(property = DefaultStateValidationConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
-
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;

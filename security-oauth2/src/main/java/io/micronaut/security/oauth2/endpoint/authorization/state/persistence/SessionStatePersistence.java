@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence.session;
+package io.micronaut.security.oauth2.endpoint.authorization.state.persistence;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.oauth2.endpoint.authorization.state.validation.DefaultStateValidationConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence.StatePersistence;
+import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
@@ -36,7 +35,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Requires(beans = SessionStore.class)
-@Requires(property = DefaultStateValidationConfiguration.PREFIX + ".persistence", value = "session")
+@Requires(property = DefaultStateConfiguration.PREFIX + ".persistence", value = "session")
 @Singleton
 public class SessionStatePersistence implements StatePersistence {
 

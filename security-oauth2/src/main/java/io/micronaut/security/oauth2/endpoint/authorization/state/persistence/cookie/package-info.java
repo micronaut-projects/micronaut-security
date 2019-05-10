@@ -15,15 +15,15 @@
  */
 
 /**
- * Classes related to state persistence in a session.
+ * Classes related to the persistence of state in a cookie
  *
  * @author James Kleeh
  * @since 1.2.0
  */
 @Configuration
-@Requires(property = DefaultStateValidationConfiguration.PREFIX + ".persistence", value = "session")
-package io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence.session;
+@Requires(property = DefaultStateConfiguration.PREFIX + ".persistence", value = "cookie", defaultValue = "cookie")
+package io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie;
 
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.oauth2.endpoint.authorization.state.validation.DefaultStateValidationConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;

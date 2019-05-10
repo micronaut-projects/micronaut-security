@@ -16,11 +16,10 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
 
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence.StatePersistence;
+import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +32,6 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
-@Requires(beans = StatePersistence.class)
 @Singleton
 public class DefaultStateValidator implements StateValidator {
 

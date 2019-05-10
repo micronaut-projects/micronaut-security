@@ -19,7 +19,7 @@ package io.micronaut.security.oauth2.endpoint.nonce;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.oauth2.endpoint.nonce.validation.persistence.NoncePersistence;
+import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;

@@ -33,8 +33,9 @@ public class DefaultNonceConfiguration implements NonceConfiguration {
     public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".nonce";
 
     private static final boolean DEFAULT_ENABLED = true;
+    private static final String DEFAULT_PERSISTENCE = "cookie";
 
-    private String persistence;
+    private String persistence = DEFAULT_PERSISTENCE;
     private boolean enabled = DEFAULT_ENABLED;
 
     @Override
@@ -44,7 +45,7 @@ public class DefaultNonceConfiguration implements NonceConfiguration {
 
     /**
      * Sets the mechanism to persist the nonce for later retrieval for validation.
-     * Only "session" is supported by default.
+     * Supported values ("session", "cookie"). Default value ({@value #DEFAULT_PERSISTENCE}).
      *
      * @param persistence The persistence mechanism
      */
@@ -58,7 +59,7 @@ public class DefaultNonceConfiguration implements NonceConfiguration {
     }
 
     /**
-     * Sets whether nonce validation is enabled. Default ({@value #DEFAULT_ENABLED}).
+     * Sets whether a nonce parameter will be sent. Default ({@value #DEFAULT_ENABLED}).
      *
      * @param enabled The enabled flag
      */

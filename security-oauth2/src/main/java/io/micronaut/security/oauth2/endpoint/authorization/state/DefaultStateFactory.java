@@ -16,11 +16,12 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.filters.SecurityFilter;
-import io.micronaut.security.oauth2.endpoint.authorization.state.validation.persistence.StatePersistence;
+import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -34,6 +35,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Singleton
+@Requires(beans = StatePersistence.class)
 public class DefaultStateFactory implements StateFactory {
 
     private final StateSerDes stateSerDes;
@@ -43,7 +45,7 @@ public class DefaultStateFactory implements StateFactory {
      * @param stateSerDes To serialize the state
      * @param statePersistence A state persistence
      */
-    public DefaultStateFactory(StateSerDes stateSerDes, @Nullable StatePersistence statePersistence) {
+    public DefaultStateFactory(StateSerDes stateSerDes, StatePersistence statePersistence) {
         this.stateSerDes = stateSerDes;
         this.statePersistence = statePersistence;
     }
@@ -57,9 +59,7 @@ public class DefaultStateFactory implements StateFactory {
         if (unauthorized) {
             state.setOriginalUri(request.getUri());
         }
-        if (statePersistence != null) {
-            statePersistence.persistState(request, response, state);
-        }
+        statePersistence.persistState(request, response, state);
         return stateSerDes.serialize(state);
     }
 

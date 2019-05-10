@@ -1,19 +1,5 @@
-Assuming the ID Token is a JWT token, the api:io.micronaut.security.oauth2.openid.idtoken.DefaultIdTokenAccessTokenResponseValidator[] validates the JWT Claims against every bean of type api:io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator[] and api:io.micronaut.security.oauth2.openid.idtoken.validation.IdTokenClaimsValidator[].
+A api:security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator[] bean is responsible for validating the JWT token. The default implementation follows the guidelines described in the OpenID Connect specification regarding https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation[token validation] where possible.
 
-Some api::io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator[] are already registered:
+By default all implementations of api:io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator[] and api:io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdClaimsValidator[] are used to validate the token.
 
-- api:io.micronaut.security.token.jwt.validator.ExpirationJwtClaimsValidator[]
-
-- api:io.micronaut.security.token.jwt.validator.SubjectNotNullJwtClaimsValidator[]
-
-Some api:io.micronaut.security.oauth2.openid.idtoken.validation.IdTokenClaimsValidator[] are already registered:
-and: 
-
-- api:io.micronaut.security.oauth2.openid.idtoken.validation.AudienceJwtClaimsValidator[]
-
-- api:io.micronaut.security.oauth2.openid.idtoken.validation.IssuerJwtClaimsValidator[]
-
-Please, validate your IDToken as described in the https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation[ID Token Validation] section.
-
-
-Remember to enable JWT support `micronaut.security.token.jwt.enabled=true`.
+To allow for additional or custom  validations, register an api:io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdClaimsValidator[] bean.

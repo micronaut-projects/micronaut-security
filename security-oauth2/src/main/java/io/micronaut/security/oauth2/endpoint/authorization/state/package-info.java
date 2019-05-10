@@ -20,4 +20,10 @@
  * @author James Kleeh
  * @since 1.2.0
  */
+@Configuration
+@Requires(property = DefaultStateConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 package io.micronaut.security.oauth2.endpoint.authorization.state;
+
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;

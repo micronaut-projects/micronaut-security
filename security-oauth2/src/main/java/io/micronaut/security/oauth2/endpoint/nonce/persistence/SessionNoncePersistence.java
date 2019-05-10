@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.endpoint.nonce.validation.persistence;
+package io.micronaut.security.oauth2.endpoint.nonce.persistence;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;

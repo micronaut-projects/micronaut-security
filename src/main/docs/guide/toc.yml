@@ -60,6 +60,7 @@ oauth:
         oauth2-user-details: User Details Mapper
       openid-authorization-code:
         title: OpenID Connect
+        openid-configuration: Configuration
         openid-user-details: User Details Mapper
         openid-auth-parameters:
           title: Parameters
@@ -67,9 +68,7 @@ oauth:
           login-hint: Login Hint
           id-token-hint: ID Token Hint
         token-validation: Token Validation
-      state:
-        title: State
-        state-customization: Customization
+      state: State Parameter
     password: Password
   oauth-endpoints:
     title: Endpoints

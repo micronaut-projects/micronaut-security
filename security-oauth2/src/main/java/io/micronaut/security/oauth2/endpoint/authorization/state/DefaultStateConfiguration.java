@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
+package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
+import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidationConfiguration;
 
 import java.util.Optional;
 
@@ -27,14 +28,15 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
-@ConfigurationProperties(DefaultStateValidationConfiguration.PREFIX)
-public class DefaultStateValidationConfiguration implements StateValidationConfiguration {
+@ConfigurationProperties(DefaultStateConfiguration.PREFIX)
+public class DefaultStateConfiguration implements StateValidationConfiguration {
 
-    public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".state.validation";
+    public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".state";
 
     private static final boolean DEFAULT_ENABLED = true;
+    private static final String DEFAULT_PERSISTENCE = "cookie";
 
-    private String persistence;
+    private String persistence = DEFAULT_PERSISTENCE;
     private boolean enabled = DEFAULT_ENABLED;
 
     @Override
@@ -44,7 +46,7 @@ public class DefaultStateValidationConfiguration implements StateValidationConfi
 
     /**
      * Sets the mechanism to persist the state for later retrieval for validation.
-     * Only "session" is supported by default.
+     * Supported values ("session", "cookie"). Default value ({@value #DEFAULT_PERSISTENCE}).
      *
      * @param persistence The persistence mechanism
      */
@@ -58,7 +60,7 @@ public class DefaultStateValidationConfiguration implements StateValidationConfi
     }
 
     /**
-     * Sets whether state validation is enabled. Default ({@value #DEFAULT_ENABLED}).
+     * Sets whether a state parameter will be sent. Default ({@value #DEFAULT_ENABLED}).
      *
      * @param enabled The enabled flag
      */

@@ -22,6 +22,7 @@ import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext;
@@ -91,7 +92,13 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                 LOG.trace("Validating state found in the authorization response from provider [{}]", clientConfiguration.getName());
             }
             State state = authorizationResponse.getState();
-            stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
+            try {
+                stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
+            } catch (InvalidStateException e) {
+                //TODO: Create a more meaningful response
+                return Flowable.just(new AuthenticationFailed());
+            }
+
         } else {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Skipping state validation, no state validator found");

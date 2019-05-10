@@ -15,9 +15,15 @@
  */
 
 /**
- * Classes related to nonce persistence
+ * Classes related to the persistence of state in a cookie
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-package io.micronaut.security.oauth2.endpoint.nonce.validation.persistence;
+@Configuration
+@Requires(property = DefaultNonceConfiguration.PREFIX + ".persistence", value = "cookie", defaultValue = "cookie")
+package io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie;
+
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;

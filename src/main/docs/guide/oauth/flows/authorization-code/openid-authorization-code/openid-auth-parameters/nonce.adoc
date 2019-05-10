@@ -1,14 +1,36 @@
-The default implementation does not provide an https://openid.net/specs/openid-connect-core-1_0.html#IDToken[Nonce parameter].
+By default, this library will include a nonce parameter as described in the https://openid.net/specs/openid-connect-core-1_0.html#IDToken[OpenID Connect] specification in authentication requests.
 
-____
-OPTIONAL. A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.
-____
+Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[] bean must be present to retrieve the nonce for validation. The default implementation stores the nonce in an HTTP cookie. To configure how the cookie is built, see the following configuration options:
 
-This library does not provide a nonce parameter. To include the nonce parameter in the authorization request
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration.adoc[]
 
-However, you can provide a api:io.micronaut.security.oauth2.openid.endpoints.authorization.NonceProvider[NonceProvider bean] and it will be included in the authentication request.
+You can provide your own implementation, however an implementation of nonce persistence that stores the nonce in an http session has also been provided.
 
+To enable state persistence with an http session:
 
+. Add a dependency to `micronaut-session`
++
+dependency:micronaut-session[]
++
+. Set the nonce persistence to `session`
++
+.application.yml
+----
+micronaut.security.oauth2.nonce.persistence: session
+----
++
 
-See link:https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes[Nonce Notes] for more information on the nonce parameter.
+If nonce validation fails, the user will not be authenticated.
 
+=== Customization
+
+There are several interfaces that implementations can be provided for to override how the nonce parameter is handled.
+
+|===
+|Interface |Responsibility |Default Implementation
+|api:security.oauth2.endpoint.nonce.NonceFactory[] |Builds a `java.lang.String` nonce value |api:security.oauth2.endpoint.nonce.DefaultNonceFactory[]
+|api:security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator[] |Validates the nonce claim in the token response |api:security.oauth2.endpoint.token.response.validation.NonceClaimValidator[]
+|api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[] |Stores the nonce to be retrieved later to allow validation |api:security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistence[]
+|===
+
+To override the behavior of any of those beans, provide an implementation and replace the default one.

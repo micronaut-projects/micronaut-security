@@ -14,35 +14,36 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.endpoint.nonce.validation.persistence;
+package io.micronaut.security.oauth2.endpoint.authorization.state.persistence;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
 import java.util.Optional;
 
 /**
- * Persists the nonce for later retrieval necessary for validation.
+ * Persists the state for later retrieval necessary for validation.
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface NoncePersistence {
+public interface StatePersistence {
 
     /**
-     * Retrieves and removes the nonce from persistence.
+     * Retrieves and removes the state from persistence.
      *
      * @param request The request
-     * @return The optional nonce
+     * @return The optional state
      */
-    Optional<String> retrieveNonce(HttpRequest<?> request);
+    Optional<State> retrieveState(HttpRequest<?> request);
 
     /**
-     * Persists the nonce for later retrieval to allow validation.
+     * Persists the state for later retrieval to allow validation.
      *
      * @param request The login request
      * @param response The authorization redirect response
-     * @param nonce The nonce to persist
+     * @param state The state to persist
      */
-    void persistNonce(HttpRequest<?> request, MutableHttpResponse response, String nonce);
+    void persistState(HttpRequest<?> request, MutableHttpResponse response, State state);
 }

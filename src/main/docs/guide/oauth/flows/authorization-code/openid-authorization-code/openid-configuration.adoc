@@ -1,0 +1,38 @@
+The requirements to allow authorization with an OpenID provider are:
+
+* Configuration of the client id and secret
+* Configuration of the issuer
+
+[source,yaml]
+.src/main/resources/application.yml
+----
+micronaut:
+    security:
+        enabled: true
+        oauth2:
+            enabled: true
+            clients:
+                okta: // <1>
+                    client-id: <<my client id>> // <2>
+                    client-secret: <<my client secret>>  // <3>
+                    openid:
+                        issuer: <<my openid issuer>> // <4>
+----
+
+<1> Configure a client. The name here is arbitrary
+<2> The client id
+<3> The client secret
+<4> The OpenID provider issuer
+
+The issuer URL will be used to discover the endpoints exposed by the provider.
+
+TIP: To disable a specific client for any given environment, set `enabled: false` within the client configuration.
+
+See the following tables for the configuration options:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$RegistrationEndpointConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties.adoc[]

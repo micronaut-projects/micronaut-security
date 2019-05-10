@@ -1,8 +1,10 @@
-By default, this library will include a state parameter as described in link:https://tools.ietf.org/html/rfc6749#section-4.1.1[RFC 6749] to authentication requests. By default a JSON serialized object is stored that contains a nonce value used for validation.
+By default, this library will include a state parameter as described in link:https://tools.ietf.org/html/rfc6749#section-4.1.1[RFC 6749] to authentication requests. A JSON serialized object is stored that contains a nonce value used for validation.
 
-Because the validation of the state requires the state to be stored somewhere temporarily, state validation is only enabled if a api:security.oauth2.endpoint.authorization.state.validation.persistence.StatePersistence[] bean is present.
+Because the validation of the state requires the state to be stored somewhere temporarily, a api:security.oauth2.endpoint.authorization.state.persistence.StatePersistence[] bean must be present to retrieve the state for validation. The default implementation stores the state in an HTTP cookie. To configure how the cookie is built, see the following configuration options:
 
-You can provide your own implementation, however an implementation of state persistence that stores the state in an http session has been provided. It must be enabled through configuration and the necessary dependencies must be on the classpath in order for it to work.
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistenceConfiguration.adoc[]
+
+You can provide your own implementation, however an implementation of state persistence that stores the state in an http session has also been provided.
 
 To enable state persistence with an http session:
 
@@ -14,8 +16,22 @@ dependency:micronaut-session[]
 +
 .application.yml
 ----
-micronaut.security.oauth2.state.validation.persistence: session
+micronaut.security.oauth2.state.persistence: session
 ----
 +
 
-If state validation fails, an api:io.micronaut.security.oauth2.openid.endpoints.authorization.state.InvalidStateException[] will be thrown.
+If state validation fails, the user will not be authenticated.
+
+=== Customization
+
+There are several interfaces that implementations can be provided for to override how the state parameter is handled.
+
+|===
+|Interface |Responsibility |Default Implementation
+|api:security.oauth2.endpoint.authorization.state.StateFactory[] |Builds a api:security.oauth2.endpoint.authorization.state.State[] |api:security.oauth2.endpoint.authorization.state.DefaultStateFactory[]
+|api:security.oauth2.endpoint.authorization.state.StateSerDes[] |Serializes and de-serializes the state object for use in the authorization request |api:security.oauth2.endpoint.authorization.state.JacksonStateSerDes[]
+|api:security.oauth2.endpoint.authorization.state.validation.StateValidator[] |Validates the state received in the authorization response |api:security.oauth2.endpoint.authorization.state.validation.DefaultStateValidator[]
+|api:security.oauth2.endpoint.authorization.state.persistence.StatePersistence[] |Stores the state to be retrieved later to allow validation |api:security.oauth2.endpoint.authorization.state.persistence.cookie.CookieNoncePersistence[]
+|===
+
+To override the behavior of any of those beans, provide an implementation and replace the default one.
