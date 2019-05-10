@@ -52,10 +52,13 @@ public class AudienceClaimValidator implements OpenIdClaimsValidator {
         }
 
         //If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is present.
-        condition = audienceList.size() > 1 && claims.getAuthorizedParty() != null;
-        if (!condition && LOG.isTraceEnabled()) {
-            LOG.trace("JWT validation failed for provider [{}]. Multiple audience claims present but no authorized party", clientConfiguration.getName());
+        if (audienceList.size() > 1) {
+            condition = claims.getAuthorizedParty() != null;
+            if (!condition && LOG.isTraceEnabled()) {
+                LOG.trace("JWT validation failed for provider [{}]. Multiple audience claims present but no authorized party", clientConfiguration.getName());
+            }
         }
+
         return condition;
     }
 

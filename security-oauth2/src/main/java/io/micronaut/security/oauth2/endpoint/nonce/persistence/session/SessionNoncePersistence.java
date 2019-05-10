@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package io.micronaut.security.oauth2.endpoint.authorization.state.persistence;
+package io.micronaut.security.oauth2.endpoint.nonce.persistence.session;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;
+import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
+import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
@@ -35,26 +35,25 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Requires(beans = SessionStore.class)
-@Requires(property = DefaultStateConfiguration.PREFIX + ".persistence", value = "session")
 @Singleton
-public class SessionStatePersistence implements StatePersistence {
+public class SessionNoncePersistence implements NoncePersistence {
 
-    private static final String SESSION_KEY = "oauth2State";
+    private static final String SESSION_KEY = "openIdNonce";
 
     private final SessionStore<Session> sessionStore;
 
     /**
      * @param sessionStore The session store
      */
-    public SessionStatePersistence(SessionStore<Session> sessionStore) {
+    public SessionNoncePersistence(SessionStore<Session> sessionStore) {
         this.sessionStore = sessionStore;
     }
 
     @Override
-    public Optional<State> retrieveState(HttpRequest<?> request) {
+    public Optional<String> retrieveNonce(HttpRequest<?> request) {
         return SessionForRequest.find(request)
                 .flatMap(session -> {
-                    Optional<State> state = session.get(SESSION_KEY, State.class);
+                    Optional<String> state = session.get(SESSION_KEY, String.class);
                     if (state.isPresent()) {
                         session.remove(SESSION_KEY);
                     }
@@ -63,8 +62,9 @@ public class SessionStatePersistence implements StatePersistence {
     }
 
     @Override
-    public void persistState(HttpRequest<?> request, MutableHttpResponse response, State state) {
-        Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
+    public void persistNonce(HttpRequest<?> request, MutableHttpResponse response, String state) {
+        Session session = SessionForRequest.find(request).orElseGet(() ->
+                SessionForRequest.create(sessionStore, request));
         session.put(SESSION_KEY, state);
     }
 }
