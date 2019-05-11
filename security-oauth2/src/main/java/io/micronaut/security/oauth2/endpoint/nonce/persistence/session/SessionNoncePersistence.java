@@ -19,7 +19,6 @@ package io.micronaut.security.oauth2.endpoint.nonce.persistence.session;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
