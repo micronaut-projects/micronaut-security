@@ -30,7 +30,6 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.oauth2.client.OpenIdClient;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
-import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import io.micronaut.web.router.DefaultRouteBuilder;
 import org.slf4j.Logger;
