@@ -20,12 +20,14 @@ io.micronaut.security.oauth2.endpoint.authorization.response
 io.micronaut.security.oauth2.endpoint.authorization.state
 io.micronaut.security.oauth2.endpoint.authorization.state.persistence
 io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie
+io.micronaut.security.oauth2.endpoint.authorization.state.persistence.session
 io.micronaut.security.oauth2.endpoint.authorization.state.validation
 io.micronaut.security.oauth2.endpoint.endsession.request
 io.micronaut.security.oauth2.endpoint.endsession.response
 io.micronaut.security.oauth2.endpoint.nonce
 io.micronaut.security.oauth2.endpoint.nonce.persistence
 io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie
+io.micronaut.security.oauth2.endpoint.nonce.persistence.session
 io.micronaut.security.oauth2.endpoint.token.request
 io.micronaut.security.oauth2.endpoint.token.request.context
 io.micronaut.security.oauth2.endpoint.token.request.password
