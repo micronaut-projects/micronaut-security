@@ -11,6 +11,7 @@ io.micronaut.security.endpoints
 io.micronaut.security.event
 io.micronaut.security.filters
 io.micronaut.security.handlers
+io.micronaut.security.oauth2
 io.micronaut.security.oauth2.client
 io.micronaut.security.oauth2.configuration
 io.micronaut.security.oauth2.configuration.endpoints
