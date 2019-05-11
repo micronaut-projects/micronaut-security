@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -175,26 +175,13 @@ implements <a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUr
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>java.net.URI</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/url/DefaultOauthRouteUrlBuilder.html#buildLogoutUri-java.lang.String-">buildLogoutUri</a></span>(java.lang.String&nbsp;providerName)</code>
-<div class="block">Builds the URI to start the OpenID end session flow</div>
-</td>
-</tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>java.net.URL</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/url/DefaultOauthRouteUrlBuilder.html#buildLogoutUrl-io.micronaut.http.HttpRequest-java.lang.String-">buildLogoutUrl</a></span>(io.micronaut.http.HttpRequest&nbsp;originating,
-              java.lang.String&nbsp;providerName)</code>
-<div class="block">Builds the URL to start the OpenID end session flow</div>
-</td>
-</tr>
-<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.net.URL</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/url/DefaultOauthRouteUrlBuilder.html#buildUrl-io.micronaut.http.HttpRequest-java.lang.String-">buildUrl</a></span>(io.micronaut.http.HttpRequest&nbsp;current,
         java.lang.String&nbsp;path)</code>
 <div class="block">Builds an absolute URL for the given path</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/url/DefaultOauthRouteUrlBuilder.html#getPath-java.lang.String-java.lang.String-">getPath</a></span>(java.lang.String&nbsp;uriTemplate,
        java.lang.String&nbsp;providerName)</code>
@@ -267,28 +254,6 @@ implements <a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUr
 </dl>
 </li>
 </ul>
-<a name="buildLogoutUrl-io.micronaut.http.HttpRequest-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>buildLogoutUrl</h4>
-<pre>public&nbsp;java.net.URL&nbsp;buildLogoutUrl(@Nullable
-                                   io.micronaut.http.HttpRequest&nbsp;originating,
-                                   java.lang.String&nbsp;providerName)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html#buildLogoutUrl-io.micronaut.http.HttpRequest-java.lang.String-">OauthRouteUrlBuilder</a></code></span></div>
-<div class="block">Builds the URL to start the OpenID end session flow</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html#buildLogoutUrl-io.micronaut.http.HttpRequest-java.lang.String-">buildLogoutUrl</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>originating</code> - The originating request</dd>
-<dd><code>providerName</code> - The oauth provider name</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>The URL</dd>
-</dl>
-</li>
-</ul>
 <a name="buildLoginUri-java.lang.String-">
 <!--   -->
 </a>
@@ -320,25 +285,6 @@ implements <a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUr
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html#buildCallbackUri-java.lang.String-">buildCallbackUri</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>providerName</code> - The oauth provider name</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>The URL</dd>
-</dl>
-</li>
-</ul>
-<a name="buildLogoutUri-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>buildLogoutUri</h4>
-<pre>public&nbsp;java.net.URI&nbsp;buildLogoutUri(java.lang.String&nbsp;providerName)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html#buildLogoutUri-java.lang.String-">OauthRouteUrlBuilder</a></code></span></div>
-<div class="block">Builds the URI to start the OpenID end session flow</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html#buildLogoutUri-java.lang.String-">buildLogoutUri</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>providerName</code> - The oauth provider name</dd>
 <dt><span class="returnLabel">Returns:</span></dt>

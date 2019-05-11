@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -161,19 +161,6 @@ extends <a href="../../../../../io/micronaut/security/oauth2/url/AbsoluteUrlBuil
 <div class="block">Builds the URL to start the OAuth 2.0 authorization code flow</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>java.net.URI</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html#buildLogoutUri-java.lang.String-">buildLogoutUri</a></span>(java.lang.String&nbsp;providerName)</code>
-<div class="block">Builds the URI to start the OpenID end session flow</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>java.net.URL</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html#buildLogoutUrl-io.micronaut.http.HttpRequest-java.lang.String-">buildLogoutUrl</a></span>(io.micronaut.http.HttpRequest&nbsp;originating,
-              java.lang.String&nbsp;providerName)</code>
-<div class="block">Builds the URL to start the OpenID end session flow</div>
-</td>
-</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.io.micronaut.security.oauth2.url.AbsoluteUrlBuilder">
@@ -234,25 +221,6 @@ extends <a href="../../../../../io/micronaut/security/oauth2/url/AbsoluteUrlBuil
 </dl>
 </li>
 </ul>
-<a name="buildLogoutUrl-io.micronaut.http.HttpRequest-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>buildLogoutUrl</h4>
-<pre>java.net.URL&nbsp;buildLogoutUrl(@Nullable
-                            io.micronaut.http.HttpRequest&nbsp;originating,
-                            java.lang.String&nbsp;providerName)</pre>
-<div class="block">Builds the URL to start the OpenID end session flow</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>originating</code> - The originating request</dd>
-<dd><code>providerName</code> - The oauth provider name</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>The URL</dd>
-</dl>
-</li>
-</ul>
 <a name="buildLoginUri-java.lang.String-">
 <!--   -->
 </a>
@@ -272,27 +240,11 @@ extends <a href="../../../../../io/micronaut/security/oauth2/url/AbsoluteUrlBuil
 <a name="buildCallbackUri-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>buildCallbackUri</h4>
 <pre>java.net.URI&nbsp;buildCallbackUri(java.lang.String&nbsp;providerName)</pre>
 <div class="block">Builds the URI to receive the OAuth 2.0 authorization callback request</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>providerName</code> - The oauth provider name</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>The URL</dd>
-</dl>
-</li>
-</ul>
-<a name="buildLogoutUri-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>buildLogoutUri</h4>
-<pre>java.net.URI&nbsp;buildLogoutUri(java.lang.String&nbsp;providerName)</pre>
-<div class="block">Builds the URI to start the OpenID end session flow</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>providerName</code> - The oauth provider name</dd>

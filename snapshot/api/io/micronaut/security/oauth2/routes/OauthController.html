@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6};
+var methods = {"i0":6,"i1":6,"i2":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -47,7 +47,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../io/micronaut/security/oauth2/routes/DefaultOauthController.html" title="class in io.micronaut.security.oauth2.routes"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../io/micronaut/security/oauth2/routes/EndSessionController.html" title="interface in io.micronaut.security.oauth2.routes"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
@@ -149,13 +149,6 @@ public interface <span class="typeNameLabel">OauthController</span></pre>
 <div class="block">Performs an authorization redirect to an OAuth 2.0 provider.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>io.micronaut.http.HttpResponse</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/routes/OauthController.html#logout-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-">logout</a></span>(io.micronaut.http.HttpRequest&nbsp;request,
-      <a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
-<div class="block">Performs and end session redirect to an OpenID provider.</div>
-</td>
-</tr>
 </table>
 </li>
 </ul>
@@ -181,26 +174,6 @@ public interface <span class="typeNameLabel">OauthController</span></pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The client associated with this controller</dd>
-</dl>
-</li>
-</ul>
-<a name="logout-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>logout</h4>
-<pre><a href="../../../../../io/micronaut/security/annotation/Secured.html" title="annotation in io.micronaut.security.annotation">@Secured</a>(<a href="../../../../../io/micronaut/security/annotation/Secured.html#value--">value</a>="isAuthenticated()")
- @Executable
-io.micronaut.http.HttpResponse&nbsp;logout(io.micronaut.http.HttpRequest&nbsp;request,
-                                                                                       <a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
-<div class="block">Performs and end session redirect to an OpenID provider.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>request</code> - The current request</dd>
-<dd><code>authentication</code> - The current authentication</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>A redirecting http response</dd>
 </dl>
 </li>
 </ul>
@@ -266,7 +239,7 @@ org.reactivestreams.Publisher&lt;io.micronaut.http.HttpResponse&gt;&nbsp;callbac
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../io/micronaut/security/oauth2/routes/DefaultOauthController.html" title="class in io.micronaut.security.oauth2.routes"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../io/micronaut/security/oauth2/routes/EndSessionController.html" title="interface in io.micronaut.security.oauth2.routes"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
