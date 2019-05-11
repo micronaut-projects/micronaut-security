@@ -120,7 +120,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
 
         public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".openid";
 
-        private static final String DEFAULT_LOGOUT = "/oauth/logout/{provider}";
+        private static final String DEFAULT_LOGOUT = "/oauth/logout";
 
         private String logoutUri = DEFAULT_LOGOUT;
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
@@ -131,7 +131,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         }
 
         /**
-         * The URI template used to log out of an OpenID provider. Default value ({@value DEFAULT_LOGOUT}).
+         * The URI used to log out of an OpenID provider. Default value ({@value DEFAULT_LOGOUT}).
          *
          * @param logoutUri The logout uri
          */

@@ -49,14 +49,6 @@ public interface OauthRouteUrlBuilder extends AbsoluteUrlBuilder {
      */
     URL buildCallbackUrl(@Nullable HttpRequest originating, String providerName);
 
-    /**
-     * Builds the URL to start the OpenID end session flow
-     *
-     * @param originating The originating request
-     * @param providerName The oauth provider name
-     * @return The URL
-     */
-    URL buildLogoutUrl(@Nullable HttpRequest originating, String providerName);
 
     /**
      * Builds the URI to start the OAuth 2.0 authorization code flow
@@ -74,11 +66,4 @@ public interface OauthRouteUrlBuilder extends AbsoluteUrlBuilder {
      */
     URI buildCallbackUri(String providerName);
 
-    /**
-     * Builds the URI to start the OpenID end session flow
-     *
-     * @param providerName The oauth provider name
-     * @return The URL
-     */
-    URI buildLogoutUri(String providerName);
 }

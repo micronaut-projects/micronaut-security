@@ -13,31 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.endpoint.token.response;
 
-import io.micronaut.security.authentication.UserDetails;
-import org.reactivestreams.Publisher;
+package io.micronaut.security.oauth2;
+
+import io.micronaut.security.authentication.Authentication;
+
+import java.util.Optional;
 
 /**
- * A contract for mapping an OAuth 2.0 token endpoint
- * response to a {@link UserDetails} object.
+ * Resolves the OAuth 2.0 provider that authenticated the logged in user.
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface OauthUserDetailsMapper {
+public interface ProviderResolver {
 
     /**
-     * A key to be stored in the user details to denote which
-     * provider authenticated the user.
-     */
-    String PROVIDER_KEY = "oauth2Provider";
-
-    /**
-     * Convert the token response into a user details.
+     * Resolves the provider
      *
-     * @param tokenResponse The token response
-     * @return The user details
+     * @param authentication The authentication
+     * @return An optional provider name
      */
-    Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse);
+    Optional<String> resolveProvider(Authentication authentication);
 }

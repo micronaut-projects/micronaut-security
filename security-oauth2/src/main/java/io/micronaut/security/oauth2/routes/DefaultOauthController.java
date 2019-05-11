@@ -21,7 +21,6 @@ import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
@@ -30,7 +29,6 @@ import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.handlers.RedirectingLoginhandler;
 import io.micronaut.security.oauth2.client.OauthClient;
-import io.micronaut.security.oauth2.client.OpenIdClient;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -69,18 +67,6 @@ public class DefaultOauthController implements OauthController {
     @Override
     public OauthClient getClient() {
         return oauthClient;
-    }
-
-    @Override
-    public HttpResponse logout(HttpRequest request, Authentication authentication) {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Received logout request for user [{}] and provider [{}]", authentication.getName(), oauthClient.getName());
-        }
-        if (oauthClient instanceof OpenIdClient) {
-            return ((OpenIdClient) oauthClient).endSessionRedirect(request, authentication).orElse(null);
-        } else {
-            return null;
-        }
     }
 
     @Override

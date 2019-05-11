@@ -79,10 +79,10 @@ class OpenIdClientFactory {
      * @return The OpenID configuration
      */
     @Prototype
-    OpenIdConfiguration openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
-                                            @Parameter OpenIdClientConfiguration openIdClientConfiguration,
-                                            HttpClientConfiguration defaultHttpConfiguration) {
-        OpenIdConfiguration openIdConfiguration = openIdClientConfiguration.getIssuer()
+    DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
+                                                      @Parameter OpenIdClientConfiguration openIdClientConfiguration,
+                                                      HttpClientConfiguration defaultHttpConfiguration) {
+        DefaultOpenIdProviderMetadata providerMetadata = openIdClientConfiguration.getIssuer()
                 .map(issuer -> {
                     RxHttpClient issuerClient = null;
                     try {
@@ -91,7 +91,7 @@ class OpenIdClientFactory {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                         }
-                        return issuerClient.toBlocking().retrieve(configurationUrl.toString(), OpenIdConfiguration.class);
+                        return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
                     } catch (HttpClientResponseException e) {
                         throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
                     } catch (MalformedURLException e) {
@@ -101,10 +101,10 @@ class OpenIdClientFactory {
                             issuerClient.stop();
                         }
                     }
-                }).orElse(new OpenIdConfiguration());
+                }).orElse(new DefaultOpenIdProviderMetadata());
 
-        overrideFromConfig(openIdConfiguration, openIdClientConfiguration, oauthClientConfiguration);
-        return openIdConfiguration;
+        overrideFromConfig(providerMetadata, openIdClientConfiguration, oauthClientConfiguration);
+        return providerMetadata;
     }
 
     /**
@@ -169,7 +169,7 @@ class OpenIdClientFactory {
         return null;
     }
 
-    private void overrideFromConfig(OpenIdConfiguration configuration,
+    private void overrideFromConfig(DefaultOpenIdProviderMetadata configuration,
                                     OpenIdClientConfiguration openIdClientConfiguration,
                                     OauthClientConfiguration oauthClientConfiguration) {
         openIdClientConfiguration.getJwksUri().ifPresent(configuration::setJwksUri);
@@ -198,7 +198,5 @@ class OpenIdClientFactory {
         if (endSession.isEnabled()) {
             endSession.getUrl().ifPresent(configuration::setEndSessionEndpoint);
         }
-
     }
-
 }

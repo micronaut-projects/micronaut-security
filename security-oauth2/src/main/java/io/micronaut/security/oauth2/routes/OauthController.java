@@ -19,7 +19,6 @@ import io.micronaut.context.annotation.Executable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.rules.SecurityRule;
 import org.reactivestreams.Publisher;
@@ -41,17 +40,6 @@ public interface OauthController {
      * @return The client associated with this controller
      */
     OauthClient getClient();
-
-    /**
-     * Performs and end session redirect to an OpenID provider.
-     *
-     * @param request The current request
-     * @param authentication The current authentication
-     * @return A redirecting http response
-     */
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Executable
-    HttpResponse logout(HttpRequest request, Authentication authentication);
 
     /**
      * Performs an authorization redirect to an OAuth 2.0 provider.

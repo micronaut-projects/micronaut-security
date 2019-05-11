@@ -13,37 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.client;
 
+package io.micronaut.security.oauth2.routes;
+
+import io.micronaut.context.annotation.Executable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.rules.SecurityRule;
 
 import java.util.Optional;
 
 /**
- * Extends the {@link OauthClient} with OpenID specific functionality.
+ * Handles a log out request that redirects to an OpenID provider
  *
- * @see OauthClient
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface OpenIdClient extends OauthClient {
+public interface EndSessionController {
 
     /**
-     * @return True if this client supports end session
-     */
-    boolean supportsEndSession();
-
-    /**
-     * Redirects to the end session endpoint of an OpenID
-     * provider. Returns an empty optional if the provider
-     * does not support end session or an {@link io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint}
-     * could not be resolved for the provider.
+     * Performs and end session redirect to an OpenID provider.
      *
      * @param request The current request
      * @param authentication The current authentication
-     * @return An optional response
+     * @return A redirecting http response
      */
-    Optional<HttpResponse> endSessionRedirect(HttpRequest request, Authentication authentication);
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Executable
+    Optional<HttpResponse> endSession(HttpRequest request, Authentication authentication);
 }

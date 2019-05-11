@@ -43,7 +43,6 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     private final HostResolver hostResolver;
     private final String loginUriTemplate;
     private final String callbackUriTemplate;
-    private final String logoutUriTemplate;
 
     /**
      * @param hostResolver The host resolver
@@ -54,7 +53,6 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
         this.hostResolver = hostResolver;
         this.loginUriTemplate = oauthConfigurationProperties.getLoginUri();
         this.callbackUriTemplate = oauthConfigurationProperties.getCallbackUri();
-        this.logoutUriTemplate = oauthConfigurationProperties.getOpenid().getLogoutUri();
     }
 
     @Override
@@ -65,11 +63,6 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     @Override
     public URL buildCallbackUrl(@Nullable HttpRequest originating, String providerName) {
         return build(originating, providerName, callbackUriTemplate);
-    }
-
-    @Override
-    public URL buildLogoutUrl(@Nullable HttpRequest originating, String providerName) {
-        return build(originating, providerName, logoutUriTemplate);
     }
 
     @Override
@@ -87,15 +80,6 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
             return new URI(getPath(callbackUriTemplate, providerName));
         } catch (URISyntaxException e) {
             throw new RoutingException("Error building a URI for the path [" + callbackUriTemplate + "]", e);
-        }
-    }
-
-    @Override
-    public URI buildLogoutUri(String providerName) {
-        try {
-            return new URI(getPath(logoutUriTemplate, providerName));
-        } catch (URISyntaxException e) {
-            throw new RoutingException("Error building a URI for the path [" + logoutUriTemplate + "]", e);
         }
     }
 
