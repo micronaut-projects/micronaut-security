@@ -25,6 +25,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
+
 /**
  * Authorized party claim validation
  *
@@ -32,6 +34,7 @@ import org.slf4j.LoggerFactory;
  * @since 1.2.0
  */
 @Requires(property = OauthConfigurationProperties.OpenIdConfigurationProperties.PREFIX + ".claims-azp", notEquals = StringUtils.FALSE)
+@Singleton
 public class AuthorizedPartyClaimValidator implements OpenIdClaimsValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthorizedPartyClaimValidator.class);
