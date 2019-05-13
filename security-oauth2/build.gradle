@@ -17,9 +17,10 @@ dependencies {
     compileOnly "io.micronaut:micronaut-views"
     compileOnly "io.micronaut:micronaut-session"
 
-    //testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+
     testCompile "io.micronaut:micronaut-http-client"
     testCompile "io.micronaut:micronaut-http-server-netty"
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-inject-groovy"
     testCompile 'com.sun.activation:javax.activation:1.2.0' // Java 11
     testCompile "org.testcontainers:testcontainers:1.11.2"
