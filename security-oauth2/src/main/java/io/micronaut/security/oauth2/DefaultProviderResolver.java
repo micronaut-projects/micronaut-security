@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 
+import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
@@ -27,6 +28,7 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Singleton
 public class DefaultProviderResolver implements ProviderResolver {
 
     @Override
