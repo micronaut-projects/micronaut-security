@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
  */
 @Factory
 @Internal
-class PasswordGrantFactory {
+public class PasswordGrantFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(PasswordGrantFactory.class);
 
@@ -65,7 +65,7 @@ class PasswordGrantFactory {
      * @return The authentication provider
      */
     @EachBean(OauthClientConfiguration.class)
-    AuthenticationProvider passwordGrantProvider(
+    public AuthenticationProvider passwordGrantProvider(
             @Parameter OauthClientConfiguration clientConfiguration,
             @Parameter @Nullable OauthUserDetailsMapper userDetailsMapper,
             @Parameter @Nullable OpenIdUserDetailsMapper openIdUserDetailsMapper,

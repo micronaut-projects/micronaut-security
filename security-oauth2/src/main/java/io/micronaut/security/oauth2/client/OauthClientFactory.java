@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 @Factory
 @Internal
-class OauthClientFactory {
+public class OauthClientFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(OauthClientFactory.class);
 
@@ -55,11 +55,11 @@ class OauthClientFactory {
      * @return An oauth client
      */
     @EachBean(OauthUserDetailsMapper.class)
-    DefaultOauthClient oauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
-                                   @Parameter OauthClientConfiguration clientConfiguration,
-                                   AuthorizationRedirectHandler redirectUrlBuilder,
-                                   OauthAuthorizationResponseHandler authorizationResponseHandler,
-                                   BeanContext beanContext) {
+    public DefaultOauthClient oauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
+                                          @Parameter OauthClientConfiguration clientConfiguration,
+                                          AuthorizationRedirectHandler redirectUrlBuilder,
+                                          OauthAuthorizationResponseHandler authorizationResponseHandler,
+                                          BeanContext beanContext) {
         if (clientConfiguration.isEnabled()) {
             if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
                 if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {

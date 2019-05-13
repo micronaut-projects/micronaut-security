@@ -52,8 +52,8 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
      * @param tokenEndpointClient The token endpoint client
      * @param stateValidator The state validator
      */
-    DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
-                                             @Nullable StateValidator stateValidator) {
+    public DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
+                                                    @Nullable StateValidator stateValidator) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.stateValidator = stateValidator;
     }

@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @Singleton
 @Internal
-class OauthRouteBuilder extends DefaultRouteBuilder {
+public class OauthRouteBuilder extends DefaultRouteBuilder {
 
     private static final Logger LOG = LoggerFactory.getLogger(OauthRouteBuilder.class);
 
@@ -61,7 +61,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
      * @param oauthRouteUrlBuilder The oauth URL builder
      * @param controllerList The list of controllers
      */
-    OauthRouteBuilder(ExecutionHandleLocator executionHandleLocator,
+    public OauthRouteBuilder(ExecutionHandleLocator executionHandleLocator,
                       UriNamingStrategy uriNamingStrategy,
                       ConversionService<?> conversionService,
                       BeanContext beanContext,

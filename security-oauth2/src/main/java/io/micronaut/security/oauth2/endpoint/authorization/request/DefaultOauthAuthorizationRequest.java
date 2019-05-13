@@ -48,10 +48,10 @@ public class DefaultOauthAuthorizationRequest implements OauthAuthorizationReque
      * @param oauthRouteUrlBuilder The oauth route URL builder
      * @param stateFactory The state factory
      */
-    DefaultOauthAuthorizationRequest(@Parameter HttpRequest<?> request,
-                                     @Parameter OauthClientConfiguration oauthClientConfiguration,
-                                     OauthRouteUrlBuilder oauthRouteUrlBuilder,
-                                     @Nullable StateFactory stateFactory) {
+    public DefaultOauthAuthorizationRequest(@Parameter HttpRequest<?> request,
+                                            @Parameter OauthClientConfiguration oauthClientConfiguration,
+                                            OauthRouteUrlBuilder oauthRouteUrlBuilder,
+                                            @Nullable StateFactory stateFactory) {
         this.request = request;
         this.oauthClientConfiguration = oauthClientConfiguration;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
