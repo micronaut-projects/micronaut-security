@@ -1,0 +1,5 @@
+It is possible to configure the introspection endpoint URL for OAuth 2.0 and OpenID providers, however Micronaut currently does not use this configuration in any way.
+
+See the following configuration table:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties.adoc[]

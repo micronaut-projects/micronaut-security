@@ -41,6 +41,7 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.2.0
  */
+//tag::clazz[]
 public interface OauthClient {
 
     /**
@@ -66,3 +67,4 @@ public interface OauthClient {
     Publisher<AuthenticationResponse> onCallback(HttpRequest<Map<String, Object>> request);
 
 }
+//end::clazz[]

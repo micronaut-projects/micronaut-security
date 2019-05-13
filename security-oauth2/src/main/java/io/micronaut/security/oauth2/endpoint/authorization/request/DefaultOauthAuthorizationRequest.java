@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -35,7 +36,8 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Prototype
-public class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
+@Internal
+class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
 
     private final HttpRequest<?> request;
     private final OauthClientConfiguration oauthClientConfiguration;

@@ -72,10 +72,9 @@ oauth:
     password: Password
   oauth-endpoints:
     title: Endpoints
-    endsession:
-      title: OpenID End Session
-      post-redirect: Post Redirect
-      view-model: View Model
+    endsession: OpenID End Session
     introspection: Introspection
     revocation: Revocation
     user-info: OpenID User Info
+  custom-client: Custom Clients
+

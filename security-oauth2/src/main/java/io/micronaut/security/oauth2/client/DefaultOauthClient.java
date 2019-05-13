@@ -111,7 +111,7 @@ public class DefaultOauthClient implements OauthClient {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Received an authorization error response from provider [{}]. Error: [{}]", getName(), errorResponse.getError());
             }
-            throw new AuthorizationErrorResponseException(errorResponse);
+            return Flowable.error(new AuthorizationErrorResponseException(errorResponse));
         } else {
             AuthorizationResponse authorizationResponse = beanContext.createBean(OauthAuthorizationResponse.class, request);
             if (LOG.isTraceEnabled()) {

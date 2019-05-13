@@ -1,17 +1,22 @@
-A logout process may look like the one displayed in the next image:
+Part of the OpenID Connect specification includes a draft document titled https://openid.net/specs/openid-connect-session-1_0.html[Session Management]. Because the specification is a draft, some providers have implemented it differently or not at all. See the following diagram for how end session works with default configuration:
 
-image::logout-diagramm.png[]
+image::openid-end-session.svg[]
 
-Ending the session in the authorization server provider is not standard.
+If any configured OpenID provider supports end session behavior, a route will be registered that responds to `/oauth/logout` and redirects to the provider to log the user out. A parameter is also sent to the provider that indicates what URL the provider should redirect the user to after logging out. The default URL is `/logout` which will cause the local authentication to also be cleared and a final redirect issued according to the api:security.handlers.LogoutHandler[].
 
-Micronaut provides several beans which are loaded by default.
+All of the above is configurable through `micronaut.security.oauth2.openid`:
 
-The authorization server's end session url is provided by an implementation of api:io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionUrlProvider[]. By default, api:io.micronaut.security.oauth2.openid.endpoints.endsession.DefaultEndSessionUrlProvider[] is used.
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties.adoc[]
 
-Micronaut attempts to create a valid configuration by default but you can always control the end-session endpoint configuration:
+To enable the usage of the `/logout` endpoint, see the section on the <<logout, Logout Endpoint>>.
 
-However, if the default values do not suffice, you can configure the communication with the authorization endpoint:
+IMPORTANT: The `get-allowed` configuration option must be set to `true` because the OpenID provider will issue a redirect which is a GET request.
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfigurationProperties.adoc[]
+This library supports end session for Auth0, AWS Cognito, and Okta out of the box. The api:security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver[] is responsible for determining which api:security.oauth2.endpoint.endsession.request.EndSessionEndpoint[] will be used for a given provider, if any.
 
-Several <<providerSpecificBeans, Provider Specific beans>> related to end session endpoint configuration are provided.
+Before choosing any of the default providers, the endpoint resolver will first look for an api:security.oauth2.endpoint.endsession.request.EndSessionEndpoint[] bean with a named qualifier that matches the name of the client in configuration. If no bean is found then the default endpoints will be matched against the issuer URL.
+
+If for example you are using one of the providers that is supported out of the box and you don't want the end session support, it is possible to disable it per client.
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties.adoc[]

@@ -19,14 +19,15 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 
 /**
+ * Responsible for logging the user out and returning
+ * an appropriate response.
  *
  * @author Sergio del Amo
- * @since 1.0
+ * @since 1.0.0
  */
 public interface LogoutHandler {
 
     /**
-     *
      * @param request The {@link HttpRequest} being executed
      * @return An HttpResponse built after the user logs out
      */

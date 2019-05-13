@@ -14,7 +14,6 @@ dependencies {
     compile project(":security")
     compile "io.micronaut:micronaut-inject"
     compile "io.micronaut:micronaut-http-client"
-    compileOnly "io.micronaut:micronaut-views"
     compileOnly "io.micronaut:micronaut-session"
 
     //testAnnotationProcessor "io.micronaut:micronaut-inject-java"

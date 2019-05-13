@@ -131,7 +131,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         }
 
         /**
-         * The URI used to log out of an OpenID provider. Default value ({@value DEFAULT_LOGOUT}).
+         * The URI used to log out of an OpenID provider. Default value ({@value #DEFAULT_LOGOUT}).
          *
          * @param logoutUri The logout uri
          */
@@ -159,25 +159,9 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         @ConfigurationProperties("end-session")
         public static class EndSessionConfigurationProperties implements EndSessionConfiguration {
 
-            private static final String DEFAULT_VIEW_MODEL_KEY = "endSessionUrl";
+            private static final String DEFAULT_REDIRECT_URI = "/logout";
 
-            private String viewModelKey = DEFAULT_VIEW_MODEL_KEY;
-            private String redirectUri = "/logout";
-
-            @Override
-            @Nonnull
-            public String getViewModelKey() {
-                return viewModelKey;
-            }
-
-            /**
-             * The key to reference the end session URL in a view. Default value ({@value #DEFAULT_VIEW_MODEL_KEY}).
-             *
-             * @param viewModelKey The view model key
-             */
-            public void setViewModelKey(String viewModelKey) {
-                this.viewModelKey = viewModelKey;
-            }
+            private String redirectUri = DEFAULT_REDIRECT_URI;
 
             @Override
             @Nonnull
@@ -186,7 +170,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             }
 
             /**
-             * The URI the OpenID provider should redirect to after logging out.
+             * The URI the OpenID provider should redirect to after logging out. Default value ({@value #DEFAULT_REDIRECT_URI}).
              *
              * @param redirectUri Redirect uri
              */

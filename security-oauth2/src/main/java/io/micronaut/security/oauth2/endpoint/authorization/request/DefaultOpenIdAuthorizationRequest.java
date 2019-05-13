@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -41,7 +42,8 @@ import java.util.Optional;
  */
 @Prototype
 @Requires(configuration = "io.micronaut.security.token.jwt")
-public class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
+@Internal
+class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
 
     private final HttpRequest<?> request;
     private OauthClientConfiguration oauthConfiguration;

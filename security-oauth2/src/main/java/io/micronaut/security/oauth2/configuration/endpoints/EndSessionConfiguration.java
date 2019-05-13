@@ -26,13 +26,6 @@ import javax.annotation.Nonnull;
 public interface EndSessionConfiguration {
 
     /**
-     * @return The key that should be set in the model
-     * of view responses to the value of the end session URL.
-     */
-    @Nonnull
-    String getViewModelKey();
-
-    /**
      * @return The URI that the provider should redirect
      * back to after logout.
      */

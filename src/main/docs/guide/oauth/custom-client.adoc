@@ -1,0 +1,14 @@
+The center of the OAuth 2.0 authorization code grant support is the api:security.oauth2.client.OauthClient[] for standard OAuth 2.0 and api:security.oauth2.client.OpenIdClient[] for OpenID. The current implementation builds clients based on configuration. It is possible however to register a custom client and that client will automatically have the routes associated with it to enable the authorization code grant flow.
+
+The api:security.oauth2.client.OauthClient[] interface is simple and only requires three methods.
+
+[source,java]
+----
+include::security-oauth2/src/main/java/io/micronaut/security/oauth2/client/OauthClient.java[indent=0,tag=clazz]
+----
+
+* The `getName` method is used to build the URLs used to trigger the client methods
+* The `authorizationRedirect` method returns a response that redirects to the provider
+* The `onCallback` method receives a callback authorization response and returns a response including either an authentication failure or the user details.
+
+Because of how generic this interface is, it is possible to implement authentication for any provider that follows the redirect / redirect back pattern. For example one could implement support for OAuth 1.0a providers (looking at you, twitter).
