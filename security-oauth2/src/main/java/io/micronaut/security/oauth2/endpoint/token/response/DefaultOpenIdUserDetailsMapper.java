@@ -46,6 +46,10 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
         JwtClaims.ALL_CLAIMS.forEach(claims::remove);
         claims.put(OauthUserDetailsMapper.PROVIDER_KEY, providerName);
         claims.put(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY, tokenResponse.getIdToken());
+        claims.put(OpenIdUserDetailsMapper.ACCESS_TOKEN_KEY, tokenResponse.getAccessToken());
+        if (tokenResponse.getRefreshToken() != null) {
+            claims.put(OpenIdUserDetailsMapper.REFRESH_TOKEN_KEY, tokenResponse.getRefreshToken());
+        }
         return new UserDetails(openIdClaims.getSubject(), Collections.emptyList(), claims);
     }
 
