@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 
 import javax.annotation.Nullable;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.nimbusds.jwt.JWT;
@@ -25,12 +26,13 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils;
+import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +47,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@Named("claimsvalidator")
 @Singleton
 public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseValidator {
 
@@ -72,52 +75,51 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     }
 
     @Override
-    public Optional<JWT> validate(OauthClientConfiguration clientConfiguration,
-                                  OpenIdProviderMetadata openIdProviderMetadata,
-                                  OpenIdTokenResponse openIdTokenResponse,
-                                  @Nullable String nonce) {
+    public Publisher<Boolean> validate(OauthClientConfiguration clientConfiguration,
+                                       OpenIdProviderMetadata openIdProviderMetadata,
+                                       String token,
+                                       @Nullable String nonce) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
         }
-        Optional<JWT> jwt = JwtTokenValidatorUtils.parseJwtIfValidSignature(openIdTokenResponse.getIdToken(),
+        Optional<JWT> jwt = JwtTokenValidatorUtils.parseJwtIfValidSignature(token,
                 Collections.singletonList(new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator)),
                 Collections.emptyList());
 
-        if (jwt.isPresent()) {
-            try {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("JWT signature validation succeeded. Validating claims...");
-                }
-                JWTClaimsSet claimsSet = jwt.get().getJWTClaimsSet();
-                OpenIdClaims claims = new JWTOpenIdClaims(claimsSet);
-
-                if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims))) {
-                    if (openIdClaimsValidators.stream().allMatch(validator ->
-                            validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
-                        if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
-                            return jwt;
-                        }
-                    } else {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
-                        }
-                    }
-                } else {
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("JWT generic claims validation failed for provider [{}]", clientConfiguration.getName());
-                    }
-                }
-            } catch (ParseException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Failed to parse the JWT returned from provider [{}]", clientConfiguration.getName(), e);
-                }
-            }
-        } else {
+        if (!jwt.isPresent()) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("JWT signature validation failed for provider [{}]", clientConfiguration.getName());
             }
+            return Flowable.just(false);
         }
-        return Optional.empty();
+        try {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("JWT signature validation succeeded. Validating claims...");
+            }
+            JWTClaimsSet claimsSet = jwt.get().getJWTClaimsSet();
+            OpenIdClaims claims = new JWTOpenIdClaims(claimsSet);
+
+            if (!genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims))) {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("JWT generic claims validation failed for provider [{}]", clientConfiguration.getName());
+                }
+                return Flowable.just(false);
+            }
+            if (!openIdClaimsValidators.stream().allMatch(validator ->
+                validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
+                }
+                return Flowable.just(false);
+            }
+            return Flowable.just(nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce));
+
+        } catch (ParseException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Failed to parse the JWT returned from provider [{}]", clientConfiguration.getName(), e);
+            }
+        }
+        return Flowable.just(false);
     }
 
 }

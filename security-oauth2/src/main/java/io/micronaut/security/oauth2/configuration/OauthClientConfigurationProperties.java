@@ -20,15 +20,24 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.http.MediaType;
-import io.micronaut.security.oauth2.configuration.endpoints.*;
-import io.micronaut.security.oauth2.grants.GrantType;
+import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.DefaultEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.IntrospectionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.RevocationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
+import io.micronaut.security.oauth2.grants.GrantType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.Pattern;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -257,9 +266,16 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     public static class OpenIdClientConfigurationProperties implements OpenIdClientConfiguration {
 
         private static final String DEFAULT_CONFIG_PATH = "/.well-known/openid-configuration";
+
+        public static final String DEFAULT_TOKEN_VALIDATOR = "claimsvalidator";
+
         private final String name;
 
         private URL issuer;
+
+        @Pattern(regexp = "claimsvalidator|introspection")
+        private String tokenValidator = DEFAULT_TOKEN_VALIDATOR;
+
         private String configurationPath = DEFAULT_CONFIG_PATH;
         private String jwksUri;
         private RegistrationEndpointConfigurationProperties registration;
@@ -284,6 +300,23 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @Override
         public Optional<URL> getIssuer() {
             return Optional.ofNullable(issuer);
+        }
+
+        /**
+         *
+         * @return the {@link io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator} bean name qualifier to use.
+         */
+        @Override
+        public String getTokenValidator() {
+            return tokenValidator;
+        }
+
+        /**
+         *
+         * @param tokenValidator {@link io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator} bean name qualifier.
+         */
+        public void setTokenValidator(String tokenValidator) {
+            this.tokenValidator = tokenValidator;
         }
 
         /**

@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -30,10 +31,10 @@ import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
-import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -95,24 +96,33 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
         return Flowable.fromPublisher(
                 tokenEndpointClient.sendRequest(requestContext))
                 .switchMap(response -> {
-                    return Flowable.create(emitter -> {
-                        Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
-                        if (jwt.isPresent()) {
+                    String token = getToken(response);
+                    Flowable<Boolean> validationFlowable = Flowable.fromPublisher(tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, token, null));
+                    return validationFlowable.map(isValid -> {
+                        if (isValid) {
                             try {
-                                OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                                emitter.onNext(openIdUserDetailsMapper.createUserDetails(clientConfiguration.getName(), response, claims));
-                                emitter.onComplete();
+                                JWT jwt = JWTParser.parse(token);
+                                OpenIdClaims claims = new JWTOpenIdClaims(jwt.getJWTClaimsSet());
+                                return openIdUserDetailsMapper.createUserDetails(clientConfiguration.getName(), response, claims);
                             } catch (ParseException e) {
-                                //Should never happen as validation succeeded
-                                emitter.onError(e);
+                                if (LOG.isErrorEnabled()) {
+                                    LOG.error("parse exception parsing {}", token);
+                                }
                             }
-                        } else {
-                            //TODO: Create a more meaningful response
-                            emitter.onNext(new AuthenticationFailed());
-                            emitter.onComplete();
                         }
-                    }, BackpressureStrategy.ERROR);
+                        return new AuthenticationFailed();
+                    });
                 });
+    }
+
+    /**
+     *
+     * @param response OpenID token response.
+     * @return the token to be validated
+     */
+    protected String getToken(OpenIdTokenResponse response) {
+        return response.getIdToken();
+
     }
 
     /**

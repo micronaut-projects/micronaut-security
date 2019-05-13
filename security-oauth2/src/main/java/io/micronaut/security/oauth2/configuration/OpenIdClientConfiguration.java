@@ -37,6 +37,12 @@ public interface OpenIdClientConfiguration extends Named {
     Optional<URL> getIssuer();
 
     /**
+     *
+     * @return the {@link io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator} bean name qualifier to use.
+     */
+    String getTokenValidator();
+
+    /**
      * @return The OpenID configuration path
      */
     String getConfigurationPath();

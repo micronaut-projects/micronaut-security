@@ -20,14 +20,15 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
+import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidatorResolver;
 import io.micronaut.security.oauth2.grants.GrantType;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +62,7 @@ public class PasswordGrantFactory {
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param tokenEndpointClient The token endpoint client
      * @param defaultOpenIdUserDetailsMapper The default OpenID user details mapper
-     * @param tokenResponseValidator The OpenID token response validator
+     * @param openIdTokenResponseValidatorResolver {@link OpenIdTokenResponseValidator} bean Resolver
      * @return The authentication provider
      */
     @EachBean(OauthClientConfiguration.class)
@@ -72,7 +73,7 @@ public class PasswordGrantFactory {
             @Parameter @Nullable OpenIdProviderMetadata openIdProviderMetadata,
             TokenEndpointClient tokenEndpointClient,
             @Nullable DefaultOpenIdUserDetailsMapper defaultOpenIdUserDetailsMapper,
-            @Nullable OpenIdTokenResponseValidator tokenResponseValidator) {
+            OpenIdTokenResponseValidatorResolver openIdTokenResponseValidatorResolver) {
 
         if (!clientConfiguration.isEnabled()) {
             if (LOG.isDebugEnabled()) {
@@ -102,6 +103,8 @@ public class PasswordGrantFactory {
             }
             return new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, userDetailsMapper);
         }
+        OpenIdTokenResponseValidator tokenResponseValidator = openIdTokenResponseValidatorResolver.getTokenResponseValidator(clientConfiguration);
+
         if (openIdProviderMetadata == null || tokenResponseValidator == null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Skipped password grant flow for provider [{}] because no provider metadata and token validator could be found", clientConfiguration.getName());
