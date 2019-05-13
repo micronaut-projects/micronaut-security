@@ -8,6 +8,11 @@ import spock.lang.Unroll
 
 class AudienceClaimValidatorSpec extends ApplicationContextSpecification {
 
+    void "AudienceClaimValidator bean exists"() {
+        expect:
+        applicationContext.containsBean(AudienceClaimValidator)
+    }
+
     @Unroll("#description")
     void "audience claims validator"(String clientId,
                                      List<String> audience,
