@@ -16,8 +16,11 @@
 
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,7 @@ import org.slf4j.LoggerFactory;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(property = OauthConfigurationProperties.OpenIdConfigurationProperties.PREFIX + ".claims-azp", notEquals = StringUtils.FALSE)
 public class AuthorizedPartyClaimValidator implements OpenIdClaimsValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthorizedPartyClaimValidator.class);
