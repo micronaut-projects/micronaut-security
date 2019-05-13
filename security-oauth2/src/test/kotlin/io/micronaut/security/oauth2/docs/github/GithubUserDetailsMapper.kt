@@ -1,6 +1,7 @@
 package io.micronaut.security.oauth2.docs.github
 
 //tag::clazz[]
+import io.micronaut.context.annotation.Requires
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
@@ -8,7 +9,10 @@ import org.reactivestreams.Publisher
 
 import javax.inject.Named
 import javax.inject.Singleton
+//end::clazz[]
 
+@Requires(property = "docs.classes")
+//tag::clazz[]
 @Named("github") // <1>
 @Singleton
 internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) // <2>
