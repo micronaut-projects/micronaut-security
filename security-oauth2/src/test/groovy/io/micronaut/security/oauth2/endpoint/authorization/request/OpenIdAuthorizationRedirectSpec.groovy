@@ -17,6 +17,7 @@ import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
+import org.junit.Assume
 import org.reactivestreams.Publisher
 
 import javax.inject.Named
@@ -27,6 +28,8 @@ class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
 
     void "test authorization redirect for openid and normal oauth"() {
         given:
+        Assume.assumeTrue(keycloakStarted)
+
         Map config = getConfiguration()
         config.put("micronaut.security.enabled", true)
         config.put("micronaut.security.token.jwt.enabled", true)
@@ -82,6 +85,7 @@ class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
 
     void "test authorization redirect with openid and oauth disabled"() {
         given:
+        Assume.assumeTrue(keycloakStarted)
         Map config = getConfiguration()
         config.put("micronaut.security.enabled", true)
         config.put("micronaut.security.token.jwt.enabled", true)
@@ -132,6 +136,7 @@ class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
 
     void "test authorization redirect with just openid"() {
         given:
+        Assume.assumeTrue(keycloakStarted)
         Map config = getConfiguration()
         config.put("micronaut.security.enabled", true)
         config.put("micronaut.security.token.jwt.enabled", true)
