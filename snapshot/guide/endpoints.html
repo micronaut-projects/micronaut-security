@@ -200,7 +200,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>You can enable <code>LogoutController</code> with configuration property:</p>
+<p>You can enable the logout endpoint with configuration:</p>
 </div>
 <a id="io.micronaut.security.endpoints.LogoutControllerConfigurationProperties" href="#io.micronaut.security.endpoints.LogoutControllerConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
@@ -236,7 +236,7 @@ function addJsClass() {
 </tbody>
 </table>
 <div class="paragraph">
-<p>Each bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> gets invoked.</p>
+<p>The behavior of the controller is delegated to a <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> implementation. There are default implementations provided for JWT Cookie and Session based authentication storage.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -245,7 +245,7 @@ function addJsClass() {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you are using JWT authentication, you may not need to invoke the <code>/logout</code> endpoint. Since logging out normally means simply deleting access, refresh JWT tokens at the client side.
+If you are using JWT authentication not stored in a cookie, you may not need to invoke the <code>/logout</code> endpoint. Since logging out normally means simply deleting the JWT token int the client.
 </td>
 </tr>
 </table>
@@ -254,7 +254,7 @@ If you are using JWT authentication, you may not need to invoke the <code>/logou
 <h2 id="_logout_endpoint_invocation_example">Logout Endpoint invocation example</h2>
 <div class="sectionbody">
 <div class="listingblock">
-<div class="title">Login Endpoint invocation example</div>
+<div class="title">Logout endpoint invocation example</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X "POST" "http://localhost:8080/logout"</code></pre>
 </div>

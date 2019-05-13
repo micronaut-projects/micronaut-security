@@ -95,17 +95,6 @@ function addJsClass() {
                 </div>
 
                 
-                <div id="table-of-content">
-                    <h2>Table of Contents</h2>
-                    
-                    <div class="toc-item" style="margin-left:0px"><a href="#post-redirect"><strong>11.1</strong><span>Post Redirect</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0px"><a href="#view-model"><strong>11.2</strong><span>View Model</span></a>
-                    </div>
-                    
-                </div>
-                
 
                 
 
@@ -119,107 +108,117 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>A logout process may look like the one displayed in the next image:</p>
+<p>Part of the OpenID Connect specification includes a draft document titled <a href="https://openid.net/specs/openid-connect-session-1_0.html">Session Management</a>. Because the specification is a draft, some providers have implemented it differently or not at all. See the following diagram for how end session works with default configuration:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../img/logout-diagramm.png" alt="logout diagramm">
+<img src="../img/openid-end-session.svg" alt="openid end session">
 </div>
 </div>
 <div class="paragraph">
-<p>Ending the session in the authorization server provider is not standard.</p>
+<p>If any configured OpenID provider supports end session behavior, a route will be registered that responds to <code>/oauth/logout</code> and redirects to the provider to log the user out. A parameter is also sent to the provider that indicates what URL the provider should redirect the user to after logging out. The default URL is <code>/logout</code> which will cause the local authentication to also be cleared and a final redirect issued according to the <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a>.</p>
 </div>
 <div class="paragraph">
-<p>Micronaut provides several beans which are loaded by default.</p>
+<p>All of the above is configurable through <code>micronaut.security.oauth2.openid</code>:</p>
 </div>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.logout-uri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI used to log out of an OpenID provider. Default value ("/oauth/logout").</p></td>
+</tr>
+</tbody>
+</table>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.end-session.redirect-uri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI the OpenID provider should redirect to after logging out. Default value ("/logout").</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
-<p>The authorization server&#8217;s end session url is provided by an implementation of <a href="../api/io/micronaut/security/oauth2/openid/endpoints/endsession/EndSessionUrlProvider.html">EndSessionUrlProvider</a>. By default, <a href="../api/io/micronaut/security/oauth2/openid/endpoints/endsession/DefaultEndSessionUrlProvider.html">DefaultEndSessionUrlProvider</a> is used.</p>
+<p>To enable the usage of the <code>/logout</code> endpoint, see the section on the <a href="#logout">Logout Endpoint</a>.</p>
 </div>
-<div class="paragraph">
-<p>Micronaut attempts to create a valid configuration by default but you can always control the end-session endpoint configuration:</p>
-</div>
-<div class="paragraph">
-<p>However, if the default values do not suffice, you can configure the communication with the authorization endpoint:</p>
-</div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.openid.endpoints.endsession.EndSessionEndpointConfigurationProperties.adoc[]</p>
-</div>
-<div class="paragraph">
-<p>Several <a href="#providerSpecificBeans">Provider Specific beans</a> related to end session endpoint configuration are provided.</p>
-</div>
-
-
-<h2 id="post-redirect">11.4.1.1 Post Redirect</h2>
-
-<div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/endsession/post-redirect.adoc"'>
-        <i class='fa fa-pencil-square-o'></i> Improve this doc
-    </button>
-</div>
-
-
-<div class="paragraph">
-<p>You will need to enable the <a href="https://docs.micronaut.io/latest/guide/index.html#logout">Logout Controller</a> and accept GET requests.</p>
-</div>
-<div class="listingblock">
-<div class="title">src/main/resources/application.yml</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-    security:
-        ...
-        ..
-        .
-        endpoints:
-            logout:
-                enabled: true <i class="conum" data-value="1"></i><b>(1)</b>
-                get-allowed: true <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
+<div class="admonitionblock important">
 <table>
 <tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Enable <a href="https://docs.micronaut.io/latest/guide/index.html#logout">Logout Controller</a>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Accept HTTP GET requests to the logout controller endpoint.</td>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>get-allowed</code> configuration option must be set to <code>true</code> because the OpenID provider will issue a redirect which is a GET request.
+</td>
 </tr>
 </table>
 </div>
-
-
-<h2 id="view-model">11.4.1.2 View Model</h2>
-
-<div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/endsession/view-model.adoc"'>
-        <i class='fa fa-pencil-square-o'></i> Improve this doc
-    </button>
-</div>
-
-
 <div class="paragraph">
-<p>If you are using <a href="https://docs.micronaut.io/latest/guide/index.html#views">Server side view rendering</a> support in Micronaut, the <a href="../api/io/micronaut/security/oauth2/openid/endpoints/endsession/EndsessionViewModelProcessor.html">EndsessionViewModelProcessor</a> injects into the model the logout url of the authorization server correctly configured.</p>
+<p>This library supports end session for Auth0, AWS Cognito, and Okta out of the box. The <a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpointResolver.html">EndSessionEndpointResolver</a> is responsible for determining which <a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html">EndSessionEndpoint</a> will be used for a given provider, if any.</p>
 </div>
 <div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/travis/build/micronaut-projects/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.openid.endpoints.endsession.EndsessionViewModelProcessorConfigurationProperties.adoc[]</p>
+<p>Before choosing any of the default providers, the endpoint resolver will first look for an <a href="../api/io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html">EndSessionEndpoint</a> bean with a named qualifier that matches the name of the client in configuration. If no bean is found then the default endpoints will be matched against the issuer URL.</p>
 </div>
 <div class="paragraph">
-<p>Next code snippets shows a Velocity view which contains a link to logout.</p>
+<p>If for example you are using one of the providers that is supported out of the box and you don&#8217;t want the end session support, it is possible to disable it per client.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-velocity hljs" data-lang="velocity">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;title&gt;Logout/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;a href="${endsessionurl}"&gt;Logout&lt;/a&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
-</div>
-</div>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The end session enabled flag. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
+</tr>
+</tbody>
+</table>
 
 
                 <div style="clear:both;margin-top:15px;"></div>
