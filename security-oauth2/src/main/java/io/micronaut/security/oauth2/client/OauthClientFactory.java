@@ -60,31 +60,30 @@ public class OauthClientFactory {
                                           AuthorizationRedirectHandler redirectUrlBuilder,
                                           OauthAuthorizationResponseHandler authorizationResponseHandler,
                                           BeanContext beanContext) {
-        if (clientConfiguration.isEnabled()) {
-            if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
-                if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
-                    if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                        return new DefaultOauthClient(clientConfiguration, userDetailsMapper, redirectUrlBuilder, authorizationResponseHandler, beanContext);
-                    } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Skipped client creation for provider [{}] because the grant type is not authorization code", clientConfiguration.getName());
-                        }
-                    }
-                } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Skipped client creation for provider [{}] because no token endpoint is configured", clientConfiguration.getName());
-                    }
-                }
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Skipped client creation for provider [{}] because no authorization endpoint is configured", clientConfiguration.getName());
-                }
-            }
-        } else {
+        if (!clientConfiguration.isEnabled()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Skipped client creation for provider [{}] because the configuration is disabled", clientConfiguration.getName());
             }
+            return null;
         }
-        return null;
+        if (!clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped client creation for provider [{}] because no authorization endpoint is configured", clientConfiguration.getName());
+            }
+            return null;
+        }
+        if (!clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped client creation for provider [{}] because no token endpoint is configured", clientConfiguration.getName());
+            }
+            return null;
+        }
+        if (clientConfiguration.getGrantType() != GrantType.AUTHORIZATION_CODE) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped client creation for provider [{}] because the grant type is not authorization code", clientConfiguration.getName());
+            }
+            return null;
+        }
+        return new DefaultOauthClient(clientConfiguration, userDetailsMapper, redirectUrlBuilder, authorizationResponseHandler, beanContext);
     }
 }

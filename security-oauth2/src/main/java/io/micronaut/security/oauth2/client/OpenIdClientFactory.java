@@ -127,46 +127,45 @@ class OpenIdClientFactory {
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                      EndSessionEndpointResolver endSessionEndpointResolver,
                                      EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
-        if (clientConfiguration.isEnabled()) {
-            if (openIdClientConfiguration.getIssuer().isPresent()) {
-                if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                    Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
-                    if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
-
-                        OpenIdProviderMetadata openIdProviderMetadata = beanContext.createBean(OpenIdProviderMetadata.class, clientConfiguration, openIdClientConfiguration);
-                        EndSessionEndpoint endSessionEndpoint = null;
-                        if (openIdClientConfiguration.getEndSession().isEnabled()) {
-                            endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
-                        }
-
-                        return new DefaultOpenIdClient(clientConfiguration,
-                                openIdProviderMetadata,
-                                userDetailsMapper,
-                                redirectUrlBuilder,
-                                authorizationResponseHandler,
-                                beanContext,
-                                endSessionEndpoint);
-                    } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Skipped OpenID client creation for provider [{}] because the response type is not 'code'", clientConfiguration.getName());
-                        }
-                    }
-                } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Skipped OpenID client creation for provider [{}] because the grant type is not 'authorization-code'", clientConfiguration.getName());
-                    }
-                }
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Skipped OpenID client creation for provider [{}] because no issuer is configured", clientConfiguration.getName());
-                }
-            }
-        } else {
+        if (!clientConfiguration.isEnabled()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Skipped OpenID client creation for provider [{}] because the configuration is disabled", clientConfiguration.getName());
             }
+            return null;
         }
-        return null;
+        if (!openIdClientConfiguration.getIssuer().isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped OpenID client creation for provider [{}] because no issuer is configured", clientConfiguration.getName());
+            }
+            return null;
+        }
+        if (clientConfiguration.getGrantType() != GrantType.AUTHORIZATION_CODE) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped OpenID client creation for provider [{}] because the grant type is not 'authorization-code'", clientConfiguration.getName());
+            }
+            return null;
+        }
+        Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
+
+        if (!(!authorization.isPresent() || (authorization.get().getResponseType() == ResponseType.CODE))) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped OpenID client creation for provider [{}] because the response type is not 'code'", clientConfiguration.getName());
+            }
+            return null;
+        }
+        OpenIdProviderMetadata openIdProviderMetadata = beanContext.createBean(OpenIdProviderMetadata.class, clientConfiguration, openIdClientConfiguration);
+        EndSessionEndpoint endSessionEndpoint = null;
+        if (openIdClientConfiguration.getEndSession().isEnabled()) {
+            endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
+        }
+
+        return new DefaultOpenIdClient(clientConfiguration,
+                openIdProviderMetadata,
+                userDetailsMapper,
+                redirectUrlBuilder,
+                authorizationResponseHandler,
+                beanContext,
+                endSessionEndpoint);
     }
 
     private void overrideFromConfig(DefaultOpenIdProviderMetadata configuration,
