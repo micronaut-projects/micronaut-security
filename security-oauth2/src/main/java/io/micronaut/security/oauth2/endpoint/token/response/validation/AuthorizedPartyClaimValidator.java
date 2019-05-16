@@ -22,12 +22,15 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
+
 /**
  * Authorized party claim validation
  *
  * @author James Kleeh
  * @since 1.2.0
  */
+@Singleton
 public class AuthorizedPartyClaimValidator implements OpenIdClaimsValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthorizedPartyClaimValidator.class);
