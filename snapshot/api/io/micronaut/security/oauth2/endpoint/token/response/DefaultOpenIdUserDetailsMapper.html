@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -178,10 +178,28 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/t
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>protected java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#buildAttributes-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">buildAttributes</a></span>(java.lang.String&nbsp;providerName,
+               <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;tokenResponse,
+               <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a>&nbsp;openIdClaims)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#createUserDetails-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">createUserDetails</a></span>(java.lang.String&nbsp;providerName,
                  <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;tokenResponse,
                  <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a>&nbsp;openIdClaims)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>protected java.util.List&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#getRoles-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">getRoles</a></span>(java.lang.String&nbsp;providerName,
+        <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;tokenResponse,
+        <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a>&nbsp;openIdClaims)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>protected java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#getUsername-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">getUsername</a></span>(java.lang.String&nbsp;providerName,
+           <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;tokenResponse,
+           <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a>&nbsp;openIdClaims)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -225,7 +243,7 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/t
 <a name="createUserDetails-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>createUserDetails</h4>
 <pre>@Nonnull
@@ -241,6 +259,63 @@ public&nbsp;<a href="../../../../../../../io/micronaut/security/authentication/U
 <dd><code>openIdClaims</code> - The OpenID claims</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A user details object</dd>
+</dl>
+</li>
+</ul>
+<a name="buildAttributes-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>buildAttributes</h4>
+<pre>protected&nbsp;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;buildAttributes(java.lang.String&nbsp;providerName,
+                                                                           <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;tokenResponse,
+                                                                           <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a>&nbsp;openIdClaims)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>providerName</code> - The OpenID provider name</dd>
+<dd><code>tokenResponse</code> - The token response</dd>
+<dd><code>openIdClaims</code> - The OpenID claims</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The attributes to set in the <a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><code>UserDetails</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="getRoles-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getRoles</h4>
+<pre>protected&nbsp;java.util.List&lt;java.lang.String&gt;&nbsp;getRoles(java.lang.String&nbsp;providerName,
+                                                    <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;tokenResponse,
+                                                    <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a>&nbsp;openIdClaims)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>providerName</code> - The OpenID provider name</dd>
+<dd><code>tokenResponse</code> - The token response</dd>
+<dd><code>openIdClaims</code> - The OpenID claims</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The roles to set in the <a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><code>UserDetails</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="getUsername-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getUsername</h4>
+<pre>protected&nbsp;java.lang.String&nbsp;getUsername(java.lang.String&nbsp;providerName,
+                                       <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&nbsp;tokenResponse,
+                                       <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a>&nbsp;openIdClaims)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>providerName</code> - The OpenID provider name</dd>
+<dd><code>tokenResponse</code> - The token response</dd>
+<dd><code>openIdClaims</code> - The OpenID claims</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The username to set in the <a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><code>UserDetails</code></a></dd>
 </dl>
 </li>
 </ul>

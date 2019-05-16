@@ -110,6 +110,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html#AbstractTokenRequestContext-io.micronaut.http.MediaType-io.micronaut.security.oauth2.endpoint.SecureEndpoint-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-">AbstractTokenRequestContext(MediaType, SecureEndpoint, OauthClientConfiguration)</a></span> - Constructor for class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">AbstractTokenRequestContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#ACCESS_TOKEN_KEY">ACCESS_TOKEN_KEY</a></span> - Static variable in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthUserDetailsMapper</a></dt>
+<dd>
+<div class="block">A key to be stored in the user details to store the
+ access token returned by the provider.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render"><span class="typeNameLink">AccessRefreshToken</span></a> - Class in <a href="io/micronaut/security/token/jwt/render/package-summary.html">io.micronaut.security.token.jwt.render</a></dt>
 <dd>
 <div class="block">Stores the combination of access and refresh tokens.</div>
@@ -487,6 +492,8 @@
 <dd>
 <div class="block">Builds a URL with the provided arguments</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#buildAttributes-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">buildAttributes(String, OpenIdTokenResponse, OpenIdClaims)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdUserDetailsMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/url/DefaultOauthRouteUrlBuilder.html#buildCallbackUri-java.lang.String-">buildCallbackUri(String)</a></span> - Method in class io.micronaut.security.oauth2.url.<a href="io/micronaut/security/oauth2/url/DefaultOauthRouteUrlBuilder.html" title="class in io.micronaut.security.oauth2.url">DefaultOauthRouteUrlBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html#buildCallbackUri-java.lang.String-">buildCallbackUri(String)</a></span> - Method in interface io.micronaut.security.oauth2.url.<a href="io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a></dt>
@@ -2514,6 +2521,8 @@
 <dd>
 <div class="block">roles getter.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#getRoles-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">getRoles(String, OpenIdTokenResponse, OpenIdClaims)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdUserDetailsMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/rules/AbstractSecurityRule.html#getRoles-java.util.Map-">getRoles(Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/AbstractSecurityRule.html" title="class in io.micronaut.security.rules">AbstractSecurityRule</a></dt>
 <dd>
 <div class="block">Appends <a href="io/micronaut/security/rules/SecurityRule.html#IS_ANONYMOUS"><code>SecurityRule.IS_ANONYMOUS</code></a> if not authenticated.</div>
@@ -2778,6 +2787,8 @@
 <dd>
 <div class="block">username getter.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#getUsername-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">getUsername(String, OpenIdTokenResponse, OpenIdClaims)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdUserDetailsMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html#getUsername--">getUsername()</a></span> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/render/BearerAccessRefreshToken.html#getUsername--">getUsername()</a></span> - Method in class io.micronaut.security.token.jwt.render.<a href="io/micronaut/security/token/jwt/render/BearerAccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">BearerAccessRefreshToken</a></dt>
@@ -4346,6 +4357,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/RedirectRejectionHandlerConfigurationProperties.html#RedirectRejectionHandlerConfigurationProperties--">RedirectRejectionHandlerConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/RedirectRejectionHandlerConfigurationProperties.html" title="class in io.micronaut.security.handlers">RedirectRejectionHandlerConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#REFRESH_TOKEN_KEY">REFRESH_TOKEN_KEY</a></span> - Static variable in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthUserDetailsMapper</a></dt>
+<dd>
+<div class="block">A key to be stored in the user details to store the
+ refresh token returned by the provider.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.jwt.event"><span class="typeNameLink">RefreshTokenGeneratedEvent</span></a> - Class in <a href="io/micronaut/security/token/jwt/event/package-summary.html">io.micronaut.security.token.jwt.event</a></dt>
 <dd>
 <div class="block">Triggered when a JWT refresh token is generated.</div>
