@@ -44,8 +44,8 @@ abstract class ApplicationContextSpecification extends Specification {
     }
 
     Map<String, Object> getConfiguration() {
-	            [
-        'micronaut.security.enabled': true,
+        [
+                'micronaut.security.enabled': true,
                 'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.bearer.enabled': false,
                 'micronaut.security.token.jwt.cookie.enabled': true,
@@ -53,6 +53,6 @@ abstract class ApplicationContextSpecification extends Specification {
                 'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
                 'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
                 'micronaut.security.oauth2.clients.foo.openid.issuer': getIssuer(),
-	            ]
+        ]
     }
 }
