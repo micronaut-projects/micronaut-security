@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,15 +43,47 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
     @Override
     @Nonnull
     public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        Map<String, Object> claims = buildAttributes(providerName, tokenResponse, openIdClaims);
+        List<String> roles = getRoles(providerName, tokenResponse, openIdClaims);
+        String username = getUsername(providerName, tokenResponse, openIdClaims);
+        return new UserDetails(username, roles, claims);
+    }
+
+    /**
+     * @param providerName The OpenID provider name
+     * @param tokenResponse The token response
+     * @param openIdClaims The OpenID claims
+     * @return The attributes to set in the {@link UserDetails}
+     */
+    protected Map<String, Object> buildAttributes(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         Map<String, Object> claims = new HashMap<>(openIdClaims.getClaims());
         JwtClaims.ALL_CLAIMS.forEach(claims::remove);
         claims.put(OauthUserDetailsMapper.PROVIDER_KEY, providerName);
-        claims.put(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY, tokenResponse.getIdToken());
-        claims.put(OpenIdUserDetailsMapper.ACCESS_TOKEN_KEY, tokenResponse.getAccessToken());
+        claims.put(OauthUserDetailsMapper.ACCESS_TOKEN_KEY, tokenResponse.getAccessToken());
         if (tokenResponse.getRefreshToken() != null) {
-            claims.put(OpenIdUserDetailsMapper.REFRESH_TOKEN_KEY, tokenResponse.getRefreshToken());
+            claims.put(OauthUserDetailsMapper.REFRESH_TOKEN_KEY, tokenResponse.getRefreshToken());
         }
-        return new UserDetails(openIdClaims.getSubject(), Collections.emptyList(), claims);
+        return claims;
+    }
+
+    /**
+     * @param providerName The OpenID provider name
+     * @param tokenResponse The token response
+     * @param openIdClaims The OpenID claims
+     * @return The roles to set in the {@link UserDetails}
+     */
+    protected List<String> getRoles(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        return Collections.emptyList();
+    }
+
+    /**
+     * @param providerName The OpenID provider name
+     * @param tokenResponse The token response
+     * @param openIdClaims The OpenID claims
+     * @return The username to set in the {@link UserDetails}
+     */
+    protected String getUsername(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        return openIdClaims.getSubject();
     }
 
 }

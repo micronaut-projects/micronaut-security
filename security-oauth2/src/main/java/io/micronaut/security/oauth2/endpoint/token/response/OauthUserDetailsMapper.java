@@ -34,6 +34,18 @@ public interface OauthUserDetailsMapper {
     String PROVIDER_KEY = "oauth2Provider";
 
     /**
+     * A key to be stored in the user details to store the
+     * access token returned by the provider.
+     */
+    String ACCESS_TOKEN_KEY = "accessToken";
+
+    /**
+     * A key to be stored in the user details to store the
+     * refresh token returned by the provider.
+     */
+    String REFRESH_TOKEN_KEY = "refreshToken";
+
+    /**
      * Convert the token response into a user details.
      *
      * @param tokenResponse The token response

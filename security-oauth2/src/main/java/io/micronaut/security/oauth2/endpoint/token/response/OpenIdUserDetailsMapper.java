@@ -29,8 +29,6 @@ import javax.annotation.Nonnull;
 public interface OpenIdUserDetailsMapper {
 
     String OPENID_TOKEN_KEY = "openIdToken";
-    String ACCESS_TOKEN_KEY = "accessToken";
-    String REFRESH_TOKEN_KEY = "refreshToken";
 
     /**
      * @param providerName The OpenID provider name
