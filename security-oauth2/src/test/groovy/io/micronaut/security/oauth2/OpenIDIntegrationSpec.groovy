@@ -23,14 +23,14 @@ class OpenIDIntegrationSpec extends Specification {
                             DB_VENDOR: 'H2',
                     ])
                     .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*"))
+            keycloakLoaded = true
             keycloak.start()
             Container.ExecResult result = keycloak.execInContainer("keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "))
             result = keycloak.execInContainer("keycloak/bin/kcreg.sh create -s clientId=\"myclient\" -s redirectUris=[\"http://localhost*\"]".split(" "))
             result = keycloak.execInContainer("keycloak/bin/kcreg.sh get \"myclient\"".split(" "))
             Map map = new ObjectMapper().readValue(result.getStdout(), Map.class)
             CLIENT_SECRET = map.get("secret")
-            ISSUER = "http://localhost:" + keycloak.getMappedPort(8080) + "/auth/realms/master"
-            keycloakLoaded = true
+            ISSUER = "http://localhost:" + keycloak.getMappedPort(8080) + "/auth/realms/master"          
         } catch(Exception e) {
             keycloakLoaded = false
         }
