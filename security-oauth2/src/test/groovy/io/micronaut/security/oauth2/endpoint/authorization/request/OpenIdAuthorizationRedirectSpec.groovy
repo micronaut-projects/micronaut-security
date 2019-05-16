@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets
 
 class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
 
+    @spock.lang.Requires({OpenIDIntegrationSpec.keycloakLoaded})
     void "test authorization redirect for openid and normal oauth"() {
         given:
         Map config = getConfiguration()
@@ -80,6 +81,7 @@ class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
         context.close()
     }
 
+    @spock.lang.Requires({OpenIDIntegrationSpec.keycloakLoaded})
     void "test authorization redirect with openid and oauth disabled"() {
         given:
         Map config = getConfiguration()
@@ -130,6 +132,7 @@ class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
         context.close()
     }
 
+    @spock.lang.Requires({OpenIDIntegrationSpec.keycloakLoaded})
     void "test authorization redirect with just openid"() {
         given:
         Map config = getConfiguration()
