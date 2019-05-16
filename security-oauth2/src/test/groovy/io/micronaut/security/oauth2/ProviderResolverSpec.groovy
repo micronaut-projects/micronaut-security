@@ -1,9 +1,18 @@
 package io.micronaut.security.oauth2
 
-class ProviderResolverSpec extends ApplicationContextSpecification {
+import io.micronaut.context.ApplicationContext
+import spock.lang.Specification
 
-    void "ProviderResolver bean exists"() {
+class ProviderResolverSpec extends Specification {
+
+    void "test a provider resolver implementation exists"() {
+        given:
+        ApplicationContext ctx = ApplicationContext.run([
+                'micronaut.security.enabled': true,
+                'micronaut.security.oauth2.enabled': true
+        ])
+
         expect:
-        applicationContext.containsBean(ProviderResolver)
+        ctx.containsBean(ProviderResolver)
     }
 }
