@@ -30,6 +30,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import io.micronaut.http.server.hostresolver.HostResolver;
 
 /**
  * Default implementation of {@link OauthRouteUrlBuilder}
