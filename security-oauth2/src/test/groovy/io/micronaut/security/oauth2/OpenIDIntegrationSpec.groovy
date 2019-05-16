@@ -5,23 +5,24 @@ import org.testcontainers.containers.Container
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
+import spock.lang.IgnoreIf
 import spock.lang.Specification
 
 class OpenIDIntegrationSpec extends Specification {
 
     protected static String CLIENT_SECRET
     protected static String ISSUER
-
-    protected static GenericContainer keycloak = new GenericContainer("jboss/keycloak:6.0.1")
-            .withExposedPorts(8080)
-            .withEnv([
-                    KEYCLOAK_USER: 'user',
-                    KEYCLOAK_PASSWORD: 'password',
-                    DB_VENDOR: 'H2',
-            ])
-            .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*"))
+    protected static GenericContainer keycloak
 
     static {
+        keycloak = new GenericContainer("jboss/keycloak:6.0.1")
+                .withExposedPorts(8080)
+                .withEnv([
+                        KEYCLOAK_USER: 'user',
+                        KEYCLOAK_PASSWORD: 'password',
+                        DB_VENDOR: 'H2',
+                ])
+                .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*"))
         keycloak.start()
         Container.ExecResult result = keycloak.execInContainer("keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "))
         result = keycloak.execInContainer("keycloak/bin/kcreg.sh create -s clientId=\"myclient\" -s redirectUris=[\"http://localhost*\"]".split(" "))

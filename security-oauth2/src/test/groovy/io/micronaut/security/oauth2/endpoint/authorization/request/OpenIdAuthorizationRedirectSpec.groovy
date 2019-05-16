@@ -18,6 +18,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapp
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
 import org.reactivestreams.Publisher
+import spock.lang.IgnoreIf
 
 import javax.inject.Named
 import javax.inject.Singleton
