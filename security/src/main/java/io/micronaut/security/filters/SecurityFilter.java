@@ -117,7 +117,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
                 } else {
                     request.setAttribute(AUTHENTICATION, null);
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Failure to authenticate request. {} {}.", method, path);
+                        LOG.debug("No Authentication fetched for request. {} {}.", method, path);
                     }
                 }
             })
