@@ -124,6 +124,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
 
         private String logoutUri = DEFAULT_LOGOUT;
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
+        private ClaimsValidationConfigurationProperties claimsValidator = new ClaimsValidationConfigurationProperties();
 
         @Override
         public String getLogoutUri() {
@@ -154,6 +155,22 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         }
 
         /**
+         *
+         * @return Claims Validator Configuration
+         */
+        public ClaimsValidationConfigurationProperties getClaimsValidator() {
+            return claimsValidator;
+        }
+
+        /**
+         *
+         * @param claimsValidator Claims Validator Configuration
+         */
+        public void setClaimsValidator(ClaimsValidationConfigurationProperties claimsValidator) {
+            this.claimsValidator = claimsValidator;
+        }
+
+        /**
          * End session configuration
          */
         @ConfigurationProperties("end-session")
@@ -176,6 +193,63 @@ public class OauthConfigurationProperties implements OauthConfiguration {
              */
             public void setRedirectUri(String redirectUri) {
                 this.redirectUri = redirectUri;
+            }
+        }
+
+        /**
+         * Claims Validator configuration.
+         */
+        @ConfigurationProperties(ClaimsValidationConfigurationProperties.PREFIX)
+        public static class ClaimsValidationConfigurationProperties implements OpenIdClaimsValidationConfiguration {
+
+            public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".claims-validation";
+
+            private static final boolean DEFAULT_ISSUER_ENABLED = true;
+            private static final boolean DEFAULT_AUDIENCE_ENABLED = true;
+            private static final boolean DEFAULT_AUTHORIZED_PARTY_ENABLED = true;
+
+            private boolean issuer = DEFAULT_ISSUER_ENABLED;
+            private boolean audience = DEFAULT_AUDIENCE_ENABLED;
+            private boolean authorizedParty = DEFAULT_AUTHORIZED_PARTY_ENABLED;
+
+            @Override
+            public boolean getIssuer() {
+                return issuer;
+            }
+
+            /**
+             * @param issuer Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator}
+             *               is enabled. Default value ({@value #DEFAULT_ISSUER_ENABLED}).
+             */
+            public void setIssuer(boolean issuer) {
+                this.issuer = issuer;
+            }
+
+            @Override
+            public boolean getAudience() {
+                return audience;
+            }
+
+            /**
+             * @param audience Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.AudienceClaimValidator}
+             *                 is enabled. Default value ({@value #DEFAULT_AUDIENCE_ENABLED}).
+             */
+            public void setAudience(boolean audience) {
+                this.audience = audience;
+            }
+
+
+            @Override
+            public boolean getAuthorizedParty() {
+                return authorizedParty;
+            }
+
+            /**
+             * @param authorizedParty Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.AuthorizedPartyClaimValidator}
+             *                        is enabled. Default value ({@value #DEFAULT_AUTHORIZED_PARTY_ENABLED}).
+             */
+            public void setAuthorizedParty(boolean authorizedParty) {
+                this.authorizedParty = authorizedParty;
             }
         }
 
