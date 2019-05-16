@@ -37,7 +37,7 @@ import java.util.List;
  * @since 1.2.0
  * @author Sergio del Amo
  */
-@Requires(property = OauthConfigurationProperties.OpenIdConfigurationProperties.OpenIdClaimsConfigurationProperties.PREFIX + ".audience", notEquals = StringUtils.FALSE)
+@Requires(property = OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.PREFIX + ".audience", notEquals = StringUtils.FALSE)
 @Singleton
 public class AudienceClaimValidator implements OpenIdClaimsValidator {
 

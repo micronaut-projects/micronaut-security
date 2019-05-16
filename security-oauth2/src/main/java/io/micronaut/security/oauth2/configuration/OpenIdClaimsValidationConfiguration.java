@@ -16,25 +16,24 @@
 package io.micronaut.security.oauth2.configuration;
 
 /**
+ * Configuration to determine if a claim validation is enabled
+ *
  * @author Sergio del Amo
  * @since 1.2.0
  */
-public interface OpenIdClaimsConfiguration {
+public interface OpenIdClaimsValidationConfiguration {
 
     /**
-     *
      * @return Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator} is enabled.
      */
     boolean getIssuer();
 
     /**
-     *
      * @return Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.AudienceClaimValidator} is enabled.
      */
     boolean getAudience();
 
     /**
-     *
      * @return Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.AuthorizedPartyClaimValidator} is enabled.
      */
     boolean getAuthorizedParty();

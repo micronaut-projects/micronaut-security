@@ -33,7 +33,7 @@ import javax.inject.Singleton;
  * @author James Kleeh
  * @since 1.2.0
  */
-@Requires(property = OauthConfigurationProperties.OpenIdConfigurationProperties.OpenIdClaimsConfigurationProperties.PREFIX + ".authorized-party", notEquals = StringUtils.FALSE)
+@Requires(property = OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.PREFIX + ".authorized-party", notEquals = StringUtils.FALSE)
 @Singleton
 public class AuthorizedPartyClaimValidator implements OpenIdClaimsValidator {
 

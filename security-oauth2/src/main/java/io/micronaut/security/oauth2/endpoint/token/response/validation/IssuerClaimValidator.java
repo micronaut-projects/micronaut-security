@@ -35,7 +35,7 @@ import javax.inject.Singleton;
  * @since 1.2.0
  * @author Sergio del Amo
  */
-@Requires(property = OauthConfigurationProperties.OpenIdConfigurationProperties.OpenIdClaimsConfigurationProperties.PREFIX + ".issuer", notEquals = StringUtils.FALSE)
+@Requires(property = OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.PREFIX + ".issuer", notEquals = StringUtils.FALSE)
 @Singleton
 public class IssuerClaimValidator implements OpenIdClaimsValidator {
 
