@@ -30,7 +30,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import io.micronaut.http.server.hostresolver.HostResolver;
+import io.micronaut.http.server.util.HttpHostResolver;
 
 /**
  * Default implementation of {@link OauthRouteUrlBuilder}
@@ -41,7 +41,7 @@ import io.micronaut.http.server.hostresolver.HostResolver;
 @Singleton
 public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
 
-    private final HostResolver hostResolver;
+    private final HttpHostResolver hostResolver;
     private final String loginUriTemplate;
     private final String callbackUriTemplate;
 
@@ -49,7 +49,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
      * @param hostResolver The host resolver
      * @param oauthConfigurationProperties The oauth configuration
      */
-    DefaultOauthRouteUrlBuilder(HostResolver hostResolver,
+    DefaultOauthRouteUrlBuilder(HttpHostResolver hostResolver,
                                 OauthConfigurationProperties oauthConfigurationProperties) {
         this.hostResolver = hostResolver;
         this.loginUriTemplate = oauthConfigurationProperties.getLoginUri();
