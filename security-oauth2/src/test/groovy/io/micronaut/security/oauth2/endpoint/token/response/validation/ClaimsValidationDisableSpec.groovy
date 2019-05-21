@@ -20,6 +20,9 @@ class ClaimsValidationDisableSpec extends Specification {
 
         then:
         noExceptionThrown()
+        
+        cleanup:
+        ctx.close()
     }
 
     void "test disabling claim validators"() {
@@ -37,5 +40,8 @@ class ClaimsValidationDisableSpec extends Specification {
         !ctx.findBean(IssuerClaimValidator).isPresent()
         !ctx.findBean(AuthorizedPartyClaimValidator).isPresent()
         !ctx.findBean(AudienceClaimValidator).isPresent()
+       
+        cleanup:
+        ctx.close()
     }
 }
