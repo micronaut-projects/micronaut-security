@@ -133,7 +133,6 @@ class JwtCookieAuthenticationSpec extends GebSpec {
         rsp.body().contains('sherlock')
     }
 
-    @Requires({sys['geb.env']})
     def "verify jwt cookie authentication works"() {
         given:
         browser.baseUrl = "http://localhost:${embeddedServer.port}"

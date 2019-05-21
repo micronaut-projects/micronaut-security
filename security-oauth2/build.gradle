@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.energizedwork.webdriver-binaries:webdriver-binaries-gradle-plugin:$webdriverBinariesVersion"
+    }
+}
+
 plugins {
     id "org.jetbrains.kotlin.jvm" version "1.3.20"
 }
@@ -26,4 +35,6 @@ dependencies {
     testCompile project(":security-jwt")
 }
 
+apply from: "${rootProject.projectDir}/gradle/geb.gradle"
+apply from: "${rootProject.projectDir}/gradle/webdriverbinaries.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

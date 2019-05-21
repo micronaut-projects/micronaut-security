@@ -49,7 +49,6 @@ class HomePageSpec extends Specification {
         tokenGenerator.generateToken(claims)
     }
 
-    @Requires({sys['geb.env']})
     def "check websocket connects"() {
         given:
         Browser browser = new Browser()
@@ -78,7 +77,8 @@ class HomePageSpec extends Specification {
         browser.at(WebSocketsHomePage)
 
         and:
-        new PollingConditions().eventually {
+        new PollingConditions(timeout: 3).eventually {
+            println homePage.status()
             homePage.receivedMessages() == ['joined!']
             !homePage.sentMessages()
         }

@@ -5,8 +5,8 @@ import geb.module.Textarea
 
 class WebSocketsHomePage extends Page {
 
-    static final String RECEIVED = 'RECEIVED:'
-    static final String SENT = 'SENT:'
+    static final String RECEIVED = 'Received:'
+    static final String SENT = 'Sent:'
 
     static url = '/'
 

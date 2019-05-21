@@ -22,7 +22,11 @@ window.onload = function() {
 
   // Show a connected message when the WebSocket is opened.
   socket.onopen = function(event) {
-    socketStatus.innerHTML = 'Connected to: ' + event.currentTarget.URL;
+    if (event) { //undefined due to https://github.com/HtmlUnit/htmlunit/issues/43
+      socketStatus.innerHTML = 'Connected to: ' + event.currentTarget.URL;
+    } else {
+      socketStatus.innerHTML = 'Connected!'
+    }
     socketStatus.className = 'open';
   };
 
