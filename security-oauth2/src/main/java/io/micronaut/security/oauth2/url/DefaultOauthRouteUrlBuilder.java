@@ -66,7 +66,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     }
 
     @Override
-    public URI buildLoginUri(String providerName) {
+    public URI buildLoginUri(@Nullable String providerName) {
         try {
             return new URI(getPath(loginUriTemplate, providerName));
         } catch (URISyntaxException e) {
@@ -75,7 +75,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     }
 
     @Override
-    public URI buildCallbackUri(String providerName) {
+    public URI buildCallbackUri(@Nullable String providerName) {
         try {
             return new URI(getPath(callbackUriTemplate, providerName));
         } catch (URISyntaxException e) {
