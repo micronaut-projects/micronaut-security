@@ -23,5 +23,5 @@ package io.micronaut.security.handlers;
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface RedirectingLoginhandler extends LoginHandler {
+public interface RedirectingLoginHandler extends LoginHandler {
 }
