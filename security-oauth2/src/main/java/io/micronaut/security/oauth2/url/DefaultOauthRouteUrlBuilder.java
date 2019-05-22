@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.url;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
@@ -40,7 +41,7 @@ import java.util.Map;
 @Singleton
 public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
 
-    private final HostResolver hostResolver;
+    private final HttpHostResolver hostResolver;
     private final String loginUriTemplate;
     private final String callbackUriTemplate;
 
@@ -48,7 +49,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
      * @param hostResolver The host resolver
      * @param oauthConfigurationProperties The oauth configuration
      */
-    DefaultOauthRouteUrlBuilder(HostResolver hostResolver,
+    DefaultOauthRouteUrlBuilder(HttpHostResolver hostResolver,
                                 OauthConfigurationProperties oauthConfigurationProperties) {
         this.hostResolver = hostResolver;
         this.loginUriTemplate = oauthConfigurationProperties.getLoginUri();
