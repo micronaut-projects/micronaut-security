@@ -90,13 +90,13 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     }
 
     /**
-     * The default authentication provider for an OAuth 2.0 authorication code grant flow.
-     * @return
+     * The default authentication provider for an OAuth 2.0 authorization code grant flow.
+     *
+     * @param defaultProvider The default authentication provider
      */
     public void setDefaultProvider(String defaultProvider) {
         this.defaultProvider = defaultProvider;
     }
-
 
     @Override
     @Nullable
@@ -254,7 +254,6 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             public void setAudience(boolean audience) {
                 this.audience = audience;
             }
-
 
             @Override
             public boolean getAuthorizedParty() {
