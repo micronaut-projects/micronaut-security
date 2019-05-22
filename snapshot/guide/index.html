@@ -3027,7 +3027,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <p>The purpose of the user details mapper is to transform the <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html">TokenResponse</a> into a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. That will entail calling some endpoint the provider exposes to retrieve the user&#8217;s information. Once that information is received, the user details can be populated per your requirements.</p>
 </div>
 <div class="paragraph">
-<p>Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> object stores three basic properties: username, roles, and arbitrary attributes. All data stored in the user details will be retrievable in controllers that accept an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
+<p>Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> object stores three basic properties: <code>username</code>, <code>roles</code>, and arbitrary <code>attributes</code>. All data stored in the user details will be retrievable in controllers that accept an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
 </div>
 <div class="paragraph">
 <p>For example, here is how it might be implemented for Github.</p>
@@ -3561,10 +3561,10 @@ To disable a specific client for any given environment, set <code>enabled: false
 <p>Because the OpenID standard returns a JWT token in the token response, it is possible to retrieve information about the user without having to make an additional call. In addition, the data stored in the JWT is standardized so you can use the same code to retrieve that information across providers.</p>
 </div>
 <div class="paragraph">
-<p>A default implementaiton of <a href="../api/io/micronaut/security/oauth2/token/endpoint/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. It is possible however to override the default or provide an implementation specific to a provider.</p>
+<p>A default implementaiton of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. It is possible however to override the default or provide an implementation specific to a provider.</p>
 </div>
 <div class="paragraph">
-<p>To override the default configuration, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/token/endpoint/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
+<p>To override the default configuration, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
@@ -3826,7 +3826,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 
 
 <div class="paragraph">
-<p>By default, this library will include a nonce parameter as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> specification in authentication requests.</p>
+<p>By default, this library will include a <code>nonce</code> parameter as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> specification in authentication requests.</p>
 </div>
 <div class="paragraph">
 <p>Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a> bean must be present to retrieve the nonce for validation. The default implementation stores the nonce in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>
@@ -4018,7 +4018,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 
 
 <div class="paragraph">
-<p>By default, this library will include a state parameter as described in <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1">RFC 6749</a> to authentication requests. A JSON serialized object is stored that contains a nonce value used for validation.</p>
+<p>By default, this library will include a <code>state</code> parameter as described in <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1">RFC 6749</a> to authentication requests. A JSON serialized object is stored that contains a nonce value used for validation.</p>
 </div>
 <div class="paragraph">
 <p>Because the validation of the state requires the state to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/StatePersistence.html">StatePersistence</a> bean must be present to retrieve the state for validation. The default implementation stores the state in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>
@@ -4147,7 +4147,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/StatePersistence.html">StatePersistence</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Stores the state to be retrieved later to allow validation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieNoncePersistence.html">CookieNoncePersistence</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistence.html">CookieStatePersistence</a></p></td>
 </tr>
 </tbody>
 </table>

@@ -437,10 +437,10 @@ To disable a specific client for any given environment, set <code>enabled: false
 <p>Because the OpenID standard returns a JWT token in the token response, it is possible to retrieve information about the user without having to make an additional call. In addition, the data stored in the JWT is standardized so you can use the same code to retrieve that information across providers.</p>
 </div>
 <div class="paragraph">
-<p>A default implementaiton of <a href="../api/io/micronaut/security/oauth2/token/endpoint/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. It is possible however to override the default or provide an implementation specific to a provider.</p>
+<p>A default implementaiton of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. It is possible however to override the default or provide an implementation specific to a provider.</p>
 </div>
 <div class="paragraph">
-<p>To override the default configuration, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/token/endpoint/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
+<p>To override the default configuration, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
@@ -702,7 +702,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 
 
 <div class="paragraph">
-<p>By default, this library will include a nonce parameter as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> specification in authentication requests.</p>
+<p>By default, this library will include a <code>nonce</code> parameter as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> specification in authentication requests.</p>
 </div>
 <div class="paragraph">
 <p>Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a> bean must be present to retrieve the nonce for validation. The default implementation stores the nonce in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>

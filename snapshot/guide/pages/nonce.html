@@ -108,7 +108,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>By default, this library will include a nonce parameter as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> specification in authentication requests.</p>
+<p>By default, this library will include a <code>nonce</code> parameter as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> specification in authentication requests.</p>
 </div>
 <div class="paragraph">
 <p>Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a> bean must be present to retrieve the nonce for validation. The default implementation stores the nonce in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>

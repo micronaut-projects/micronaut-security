@@ -108,7 +108,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>By default, this library will include a state parameter as described in <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1">RFC 6749</a> to authentication requests. A JSON serialized object is stored that contains a nonce value used for validation.</p>
+<p>By default, this library will include a <code>state</code> parameter as described in <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1">RFC 6749</a> to authentication requests. A JSON serialized object is stored that contains a nonce value used for validation.</p>
 </div>
 <div class="paragraph">
 <p>Because the validation of the state requires the state to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/StatePersistence.html">StatePersistence</a> bean must be present to retrieve the state for validation. The default implementation stores the state in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>
@@ -237,7 +237,7 @@ function addJsClass() {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/StatePersistence.html">StatePersistence</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Stores the state to be retrieved later to allow validation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieNoncePersistence.html">CookieNoncePersistence</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistence.html">CookieStatePersistence</a></p></td>
 </tr>
 </tbody>
 </table>
