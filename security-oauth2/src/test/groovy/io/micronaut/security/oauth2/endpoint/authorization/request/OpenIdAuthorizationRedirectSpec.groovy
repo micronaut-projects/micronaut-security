@@ -18,13 +18,13 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapp
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
 import org.reactivestreams.Publisher
-import spock.lang.IgnoreIf
+import spock.lang.Specification
 
 import javax.inject.Named
 import javax.inject.Singleton
 import java.nio.charset.StandardCharsets
 
-class OpenIdAuthorizationRedirectSpec extends OpenIDIntegrationSpec {
+class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDIntegrationSpec {
 
     void "test authorization redirect for openid and normal oauth"() {
         given:
