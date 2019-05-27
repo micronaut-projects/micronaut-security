@@ -23,6 +23,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -42,12 +43,13 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = false;
-    private static final String DEFAULT_LOGIN = "/oauth/login/{provider}";
-    private static final String DEFAULT_CALLBACK = "/oauth/callback/{provider}";
+    private static final String DEFAULT_LOGIN = "/oauth/login{/provider}";
+    private static final String DEFAULT_CALLBACK = "/oauth/callback{/provider}";
 
     private boolean enabled = DEFAULT_ENABLED;
     private String callbackUri = DEFAULT_CALLBACK;
     private String loginUri = DEFAULT_LOGIN;
+    private String defaultProvider = null;
 
     private OpenIdConfigurationProperties openid = new OpenIdConfigurationProperties();
 
@@ -85,6 +87,21 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     @Nonnull
     public String getCallbackUri() {
         return callbackUri;
+    }
+
+    /**
+     * The default authentication provider for an OAuth 2.0 authorization code grant flow.
+     *
+     * @param defaultProvider The default authentication provider
+     */
+    public void setDefaultProvider(String defaultProvider) {
+        this.defaultProvider = defaultProvider;
+    }
+
+    @Override
+    @Nullable
+    public Optional<String> getDefaultProvider() {
+        return Optional.ofNullable(defaultProvider);
     }
 
     /**
@@ -237,7 +254,6 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             public void setAudience(boolean audience) {
                 this.audience = audience;
             }
-
 
             @Override
             public boolean getAuthorizedParty() {

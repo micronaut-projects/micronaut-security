@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.configuration;
 import io.micronaut.core.util.Toggleable;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * OAuth 2.0 Configuration
@@ -39,6 +40,11 @@ public interface OauthConfiguration extends Toggleable {
      */
     @Nonnull
     String getCallbackUri();
+
+    /**
+     * @return the default authorization provider
+     */
+    Optional<String> getDefaultProvider();
 
     /**
      *

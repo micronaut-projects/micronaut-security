@@ -80,6 +80,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
             controllerList.forEach((controller) -> {
                 OauthClient client = controller.getClient();
                 String name = client.getName();
+                boolean isDefaultProvider = oauthConfiguration.getDefaultProvider().filter(provider -> provider.equals(name)).isPresent();
 
                 BeanDefinition<OauthController> bd = beanContext.getBeanDefinition(OauthController.class, Qualifiers.byName(name));
 
@@ -89,6 +90,13 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                         LOG.debug("Registering login route [GET: {}] for oauth configuration [{}]", loginPath, name);
                     }
                     buildRoute(HttpMethod.GET, loginPath, ExecutionHandle.of(controller, m));
+                    if (isDefaultProvider) {
+                        final String defaultLoginPath = oauthRouteUrlBuilder.buildLoginUri(null).getPath();
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Registering default login route [GET: {}] for oauth configuration [{}]", defaultLoginPath, name);
+                        }
+                        buildRoute(HttpMethod.GET, defaultLoginPath, ExecutionHandle.of(controller, m));
+                    }
                 });
 
                 bd.findMethod("callback", HttpRequest.class).ifPresent(m -> {
@@ -100,6 +108,16 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                     }
                     buildRoute(HttpMethod.GET, callbackPath, executionHandle);
                     buildRoute(HttpMethod.POST, callbackPath, executionHandle).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+
+                    if (isDefaultProvider) {
+                        final String defaultCallbackPath = oauthRouteUrlBuilder.buildCallbackUri(null).getPath();
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Registering default callback route [GET: {}] for oauth configuration [{}]", defaultCallbackPath, name);
+                            LOG.debug("Registering default callback route [POST: {}] for oauth configuration [{}]", defaultCallbackPath, name);
+                        }
+                        buildRoute(HttpMethod.GET, defaultCallbackPath, executionHandle);
+                        buildRoute(HttpMethod.POST, defaultCallbackPath, executionHandle).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+                    }
                 });
 
                 if (client instanceof OpenIdClient) {
