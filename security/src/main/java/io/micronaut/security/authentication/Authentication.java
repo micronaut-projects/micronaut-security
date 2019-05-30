@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.0
  */
-public interface Authentication extends Principal {
+public interface Authentication extends Principal, Serializable {
 
     /**
      * @return Any additional attributes in the authentication

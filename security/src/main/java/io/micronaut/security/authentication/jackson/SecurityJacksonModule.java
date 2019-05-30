@@ -37,15 +37,8 @@ public class SecurityJacksonModule extends SimpleModule {
      */
     public SecurityJacksonModule() {
         super("micronaut.security");
-    }
-
-    /**
-     * Customizes the module.
-     */
-    @PostConstruct
-    protected void customize() {
         SimpleAbstractTypeResolver resolver = new SimpleAbstractTypeResolver();
         resolver.addMapping(Authentication.class, DefaultAuthentication.class);
-        this.setAbstractTypes(resolver);
+        this._abstractTypes = resolver;
     }
 }
