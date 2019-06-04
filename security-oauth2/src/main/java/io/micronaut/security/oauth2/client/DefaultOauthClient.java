@@ -16,12 +16,16 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.annotation.EachBean;
+import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.oauth2.client.condition.OauthClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
@@ -48,6 +52,8 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.2.0
  */
+@EachBean(OauthUserDetailsMapper.class)
+@Requires(condition = OauthClientCondition.class)
 public class DefaultOauthClient implements OauthClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthClient.class);
@@ -66,8 +72,8 @@ public class DefaultOauthClient implements OauthClient {
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
      */
-    public DefaultOauthClient(OauthClientConfiguration clientConfiguration,
-                              OauthUserDetailsMapper userDetailsMapper,
+    public DefaultOauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
+                              @Parameter OauthClientConfiguration clientConfiguration,
                               AuthorizationRedirectHandler redirectHandler,
                               OauthAuthorizationResponseHandler authorizationResponseHandler,
                               BeanContext beanContext) {
