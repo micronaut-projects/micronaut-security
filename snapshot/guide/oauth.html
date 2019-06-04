@@ -252,14 +252,14 @@ function addJsClass() {
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut.configuration:micronaut-oauth2:1.2.0.BUILD-SNAPSHOT'</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut.configuration:micronaut-security-oauth2:1.2.0.BUILD-SNAPSHOT'</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.configuration&lt;/groupId&gt;
-    &lt;artifactId&gt;micronaut-oauth2&lt;/artifactId&gt;
+    &lt;artifactId&gt;micronaut-security-oauth2&lt;/artifactId&gt;
     &lt;version&gt;1.2.0.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
@@ -387,13 +387,18 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.callback-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The URI template that OAuth 2.0 providers can use to
- submit an authorization callback request. Default value ("/oauth/callback/{provider}").</p></td>
+ submit an authorization callback request. Default value ("/oauth/callback{/provider}").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.login-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The URI template that is used to initiate an OAuth 2.0
- authorization code grant flow. Default value ("/oauth/login/{provider}").</p></td>
+ authorization code grant flow. Default value ("/oauth/login{/provider}").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.default-provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default authentication provider for an OAuth 2.0 authorization code grant flow.</p></td>
 </tr>
 </tbody>
 </table>
@@ -402,6 +407,18 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 </div>
 <div class="paragraph">
 <p>For example <code>/oauth/login{?provider}</code> is not a valid configuration because Micronaut does not consider the query segment of a URL when routing requests. The provider variable must be part of the <strong>path</strong>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+It is possible to designate a default provider. The value of the configuration must match one of the client names. The default provider will have the same uri template, but with <code>null</code> passed as the provider parameter. By default that will result in <code>/oauth/login</code> being redirected to the default provider authentication page.
+</td>
+</tr>
+</table>
 </div>
 
 
