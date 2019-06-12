@@ -28,6 +28,9 @@ dependencies {
     testCompile "io.micronaut:micronaut-inject-groovy"
     testCompile "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-http-server-netty"
+    testCompile "io.micronaut:micronaut-multitenancy"
+    testCompile "io.micronaut:micronaut-views"
+    testRuntime "org.apache.velocity:velocity-engine-core:2.0"
 }
 
 apply from: "${rootProject.projectDir}/gradle/geb.gradle"
