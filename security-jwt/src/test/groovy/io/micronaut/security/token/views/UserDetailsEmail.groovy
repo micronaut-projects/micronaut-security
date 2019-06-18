@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.authentication;
+package io.micronaut.security.token.views
 
-import javax.annotation.Nonnull;
-import java.io.Serializable;
-import java.security.Principal;
-import java.util.Map;
+import groovy.transform.CompileStatic
+import io.micronaut.security.authentication.UserDetails
 
-/**
- * Represents the state of an authentication.
- *
- * @author James Kleeh
- * @since 1.0
- */
-public interface Authentication extends Principal, Serializable {
+@CompileStatic
+class UserDetailsEmail extends UserDetails  {
+    String email
 
-    /**
-     * @return Any additional attributes in the authentication
-     */
-    @Nonnull
-    Map<String, Object> getAttributes();
+    UserDetailsEmail(String username, Collection<String> roles, String email) {
+        super(username, roles)
+        this.email = email
+    }
+
+    @Override
+    Map<String, Object> getAttributes(String rolesKey, String usernameKey) {
+        Map<String, Object> attributes = super.getAttributes(rolesKey, usernameKey)
+        attributes.put("email", email)
+        attributes
+    }
+
 }

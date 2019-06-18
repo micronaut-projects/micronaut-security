@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.authentication;
+package io.micronaut.security.token.multitenancy.principal
 
-import javax.annotation.Nonnull;
-import java.io.Serializable;
-import java.security.Principal;
-import java.util.Map;
+import io.micronaut.context.annotation.Requires
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.client.annotation.Client
 
-/**
- * Represents the state of an authentication.
- *
- * @author James Kleeh
- * @since 1.0
- */
-public interface Authentication extends Principal, Serializable {
+@Client("books")
+@Requires(property = 'spec.name', value = 'multitenancy.principal.gateway')
+interface BooksClient extends BookFetcher {
 
-    /**
-     * @return Any additional attributes in the authentication
-     */
-    @Nonnull
-    Map<String, Object> getAttributes();
+    @Get("/api/books")
+    List<String> findAll()
 }

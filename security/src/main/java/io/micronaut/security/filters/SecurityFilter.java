@@ -50,7 +50,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     /**
      * The attribute used to store the authentication object in the request.
      */
-    public static final CharSequence AUTHENTICATION = HttpAttributes.PRINCIPAL;
+    public static final CharSequence AUTHENTICATION = HttpAttributes.PRINCIPAL.toString();
 
     /**
      * The attribute used to store if the request was rejected and why.

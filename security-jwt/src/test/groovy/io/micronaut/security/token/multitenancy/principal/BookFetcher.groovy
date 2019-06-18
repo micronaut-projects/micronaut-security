@@ -13,24 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.authentication;
+package io.micronaut.security.token.multitenancy.principal
 
-import javax.annotation.Nonnull;
-import java.io.Serializable;
-import java.security.Principal;
-import java.util.Map;
-
-/**
- * Represents the state of an authentication.
- *
- * @author James Kleeh
- * @since 1.0
- */
-public interface Authentication extends Principal, Serializable {
-
-    /**
-     * @return Any additional attributes in the authentication
-     */
-    @Nonnull
-    Map<String, Object> getAttributes();
+interface BookFetcher {
+    List<String> findAll()
 }

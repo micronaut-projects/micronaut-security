@@ -1,4 +1,4 @@
-/*
+#*
  * Copyright 2017-2019 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package io.micronaut.security.authentication;
+ *#
+##tag::html[]
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Books</title>
+</head>
+<body>
+    #if( $security )
+      <h1>User: ${security['name']} email: ${security['attributes']['email']}</h1>
+    #end
 
-import javax.annotation.Nonnull;
-import java.io.Serializable;
-import java.security.Principal;
-import java.util.Map;
+    #foreach($book in $books)
+      $book
+    #end
 
-/**
- * Represents the state of an authentication.
- *
- * @author James Kleeh
- * @since 1.0
- */
-public interface Authentication extends Principal, Serializable {
+    #if( $securitycustom )
+    <h1>Custom: ${securitycustom['name']}</span></h1>
+    #end
 
-    /**
-     * @return Any additional attributes in the authentication
-     */
-    @Nonnull
-    Map<String, Object> getAttributes();
-}
+</body>
+</html>
+##end::html[]
