@@ -27,6 +27,7 @@ import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.grants.GrantType;
 
@@ -56,7 +57,8 @@ public class OpenIdClientCondition implements Condition {
                     OpenIdClientConfiguration openIdClientConfiguration = clientConfiguration.getOpenid().get();
 
                     if (clientConfiguration.isEnabled()) {
-                        if (openIdClientConfiguration.getIssuer().isPresent()) {
+
+                        if (openIdClientConfiguration.getIssuer().isPresent() || endpointsManuallyConfigured(openIdClientConfiguration)) {
                             if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
                                 Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
                                 if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
@@ -78,5 +80,10 @@ public class OpenIdClientCondition implements Condition {
             }
         }
         return true;
+    }
+
+    private boolean endpointsManuallyConfigured(OpenIdClientConfiguration openIdClientConfiguration) {
+        return openIdClientConfiguration.getAuthorization().map(AuthorizationEndpointConfiguration::getUrl).isPresent() &&
+                openIdClientConfiguration.getToken().map(TokenEndpointConfiguration::getUrl).isPresent();
     }
 }
