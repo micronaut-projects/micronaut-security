@@ -27,6 +27,7 @@ import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.grants.GrantType;
 
@@ -57,7 +58,7 @@ public class OpenIdClientCondition implements Condition {
 
                     if (clientConfiguration.isEnabled()) {
 
-                        if (openIdClientConfiguration.getIssuer().isPresent() || areTokenAndAuthorizationEndpointsConfigured(openIdClientConfiguration)) {
+                        if (openIdClientConfiguration.getIssuer().isPresent() || endpointsManuallyConfigured(openIdClientConfiguration)) {
                             if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
                                 Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
                                 if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
@@ -81,10 +82,8 @@ public class OpenIdClientCondition implements Condition {
         return true;
     }
 
-    private boolean areTokenAndAuthorizationEndpointsConfigured(OpenIdClientConfiguration openIdClientConfiguration) {
-        return openIdClientConfiguration.getAuthorization().isPresent() &&
-                openIdClientConfiguration.getAuthorization().get().getUrl().isPresent() &&
-                openIdClientConfiguration.getToken().isPresent() &&
-                openIdClientConfiguration.getToken().get().getUrl().isPresent();
+    private boolean endpointsManuallyConfigured(OpenIdClientConfiguration openIdClientConfiguration) {
+        return openIdClientConfiguration.getAuthorization().map(AuthorizationEndpointConfiguration::getUrl).isPresent() &&
+                openIdClientConfiguration.getToken().map(TokenEndpointConfiguration::getUrl).isPresent();
     }
 }
