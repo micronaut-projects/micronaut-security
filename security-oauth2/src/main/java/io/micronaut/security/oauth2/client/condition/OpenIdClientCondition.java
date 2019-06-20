@@ -56,7 +56,8 @@ public class OpenIdClientCondition implements Condition {
                     OpenIdClientConfiguration openIdClientConfiguration = clientConfiguration.getOpenid().get();
 
                     if (clientConfiguration.isEnabled()) {
-                        if (openIdClientConfiguration.getIssuer().isPresent()) {
+
+                        if (openIdClientConfiguration.getIssuer().isPresent() || areTokenAndAuthorizationEndpointsConfigured(openIdClientConfiguration)) {
                             if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
                                 Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
                                 if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
@@ -78,5 +79,12 @@ public class OpenIdClientCondition implements Condition {
             }
         }
         return true;
+    }
+
+    private boolean areTokenAndAuthorizationEndpointsConfigured(OpenIdClientConfiguration openIdClientConfiguration) {
+        return openIdClientConfiguration.getAuthorization().isPresent() &&
+                openIdClientConfiguration.getAuthorization().get().getUrl().isPresent() &&
+                openIdClientConfiguration.getToken().isPresent() &&
+                openIdClientConfiguration.getToken().get().getUrl().isPresent();
     }
 }
