@@ -98,6 +98,10 @@ public class EndSessionEndpointResolver {
                         LOG.debug("Resolved the Auth0EndSessionEndpoint for provider [{}]", providerName);
                     }
                     endSessionEndpoint = new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
+                } else {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("No EndSessionEndpoint can be resolved. The issuer for provider [{}] does not match any of the providers supported by default", providerName);
+                    }
                 }
             } else {
                 if (LOG.isDebugEnabled()) {
