@@ -53,8 +53,14 @@ class OauthAuthorizationRedirectSpec extends Specification {
         !location.contains("scope=")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
-        location.contains("state={\"nonce\":\"")
         location.contains("client_id=myclient")
+
+        when:
+        String sublocation = location.substring(location.indexOf('state=') + 'state='.length())
+        sublocation = sublocation.substring(0, sublocation.indexOf('&client_id='))
+
+        then:
+        new String(Base64.getUrlDecoder().decode(sublocation)).startsWith("{\"nonce\":\"")
 
         cleanup:
         context.close()

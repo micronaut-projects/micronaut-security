@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Base64;
 
 /**
  * Jackson based implementation for state serdes.
@@ -45,8 +46,10 @@ public class JacksonStateSerDes implements StateSerDes {
     }
 
     @Override
-    public State deserialize(String state) {
+    public State deserialize(String base64State) {
         try {
+            byte[] decodedBytes = Base64.getUrlDecoder().decode(base64State);
+            String state = new String(decodedBytes);
             return objectMapper.readValue(state, DefaultState.class);
         } catch (IOException e) {
             if (LOG.isErrorEnabled()) {
@@ -59,7 +62,8 @@ public class JacksonStateSerDes implements StateSerDes {
     @Override
     public String serialize(State state) {
         try {
-            return objectMapper.writeValueAsString(state);
+            String originalInput = objectMapper.writeValueAsString(state);
+            return Base64.getEncoder().encodeToString(originalInput.getBytes());
         } catch (JsonProcessingException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Failed to serialize the authorization request state to JSON", e);
