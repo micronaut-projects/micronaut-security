@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultStateValidator.class)
 public interface StateValidator {
 
     /**

@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.url;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 
 import javax.annotation.Nullable;
@@ -29,6 +30,7 @@ import java.net.URL;
  * @author James Kleeh
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultOauthRouteUrlBuilder.class)
 public interface OauthRouteUrlBuilder extends AbsoluteUrlBuilder {
 
     /**

@@ -36,4 +36,15 @@ public interface OpenIdConfiguration {
      * @return Optional end session configuration
      */
     Optional<EndSessionConfiguration> getEndSession();
+
+    /**
+     * @return Claims validation configuration
+     */
+    OpenIdClaimsValidationConfiguration getClaimsValidation();
+
+    /**
+     * @return Claims configuration
+     */
+    OpenIdAdditionalClaimsConfiguration getAdditionalClaims();
+
 }

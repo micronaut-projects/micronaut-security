@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 import javax.annotation.Nonnull;
@@ -40,6 +41,12 @@ import java.util.Map;
 @Requires(configuration = "io.micronaut.security.token.jwt")
 public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
+    private final OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration;
+
+    DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration) {
+        this.openIdAdditionalClaimsConfiguration = openIdAdditionalClaimsConfiguration;
+    }
+
     @Override
     @Nonnull
     public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
@@ -59,9 +66,13 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
         Map<String, Object> claims = new HashMap<>(openIdClaims.getClaims());
         JwtClaims.ALL_CLAIMS.forEach(claims::remove);
         claims.put(OauthUserDetailsMapper.PROVIDER_KEY, providerName);
-        claims.put(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY, tokenResponse.getIdToken());
-        claims.put(OauthUserDetailsMapper.ACCESS_TOKEN_KEY, tokenResponse.getAccessToken());
-        if (tokenResponse.getRefreshToken() != null) {
+        if (openIdAdditionalClaimsConfiguration.isJwt()) {
+            claims.put(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY, tokenResponse.getIdToken());
+        }
+        if (openIdAdditionalClaimsConfiguration.isAccessToken()) {
+            claims.put(OauthUserDetailsMapper.ACCESS_TOKEN_KEY, tokenResponse.getAccessToken());
+        }
+        if (openIdAdditionalClaimsConfiguration.isRefreshToken() && tokenResponse.getRefreshToken() != null) {
             claims.put(OauthUserDetailsMapper.REFRESH_TOKEN_KEY, tokenResponse.getRefreshToken());
         }
         return claims;

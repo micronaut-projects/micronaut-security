@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.endsession.response;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 
 import java.net.URL;
@@ -26,6 +27,7 @@ import java.net.URL;
  * @author James Kleeh
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultEndSessionCallbackUrlBuilder.class)
 public interface EndSessionCallbackUrlBuilder {
 
     /**

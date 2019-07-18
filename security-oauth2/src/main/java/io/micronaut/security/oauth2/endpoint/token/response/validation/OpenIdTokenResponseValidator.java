@@ -17,6 +17,7 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import com.nimbusds.jwt.JWT;
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
@@ -30,6 +31,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultOpenIdTokenResponseValidator.class)
 public interface OpenIdTokenResponseValidator {
 
     /**

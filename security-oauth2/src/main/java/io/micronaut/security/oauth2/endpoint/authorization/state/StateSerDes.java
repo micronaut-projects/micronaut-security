@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
+import io.micronaut.context.annotation.DefaultImplementation;
+
 import javax.annotation.Nullable;
 
 /**
@@ -24,6 +26,7 @@ import javax.annotation.Nullable;
  * @author James Kleeh
  * @since 1.2.0
  */
+@DefaultImplementation(JacksonStateSerDes.class)
 public interface StateSerDes {
 
     /**

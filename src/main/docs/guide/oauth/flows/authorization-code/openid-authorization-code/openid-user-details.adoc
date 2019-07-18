@@ -1,8 +1,12 @@
 Because the OpenID standard returns a JWT token in the token response, it is possible to retrieve information about the user without having to make an additional call. In addition, the data stored in the JWT is standardized so you can use the same code to retrieve that information across providers.
 
-A default implementaiton of api:security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper[] has been provided for you to map the JWT token to a api:security.authentication.UserDetails[]. It is possible however to override the default or provide an implementation specific to a provider.
+A default implementation of api:security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper[] has been provided for you to map the JWT token to a api:security.authentication.UserDetails[]. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.
 
-To override the default configuration, register a bean that replaces api:security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper[].
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties.adoc[]
+
+If the default implementation is not sufficient, it is possible to override the global default or provide an implementation specific to a provider.
+
+To override the global default mapper, register a bean that replaces api:security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper[].
 
 snippet::io.micronaut.security.oauth2.docs.openid.GlobalOpenIdUserDetailsMapper[tags="clazz", project="security-oauth2"]
 

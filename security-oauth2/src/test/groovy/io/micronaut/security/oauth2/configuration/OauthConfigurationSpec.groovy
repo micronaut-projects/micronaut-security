@@ -49,4 +49,42 @@ class OauthConfigurationSpec extends Specification {
         cleanup:
         context.close()
     }
+
+    void "test configuration binding"() {
+        given:
+        ApplicationContext context = ApplicationContext.run([
+                (SPEC_NAME_PROPERTY): getClass().simpleName,
+                'micronaut.security.enabled': true,
+                'micronaut.security.oauth2.enabled': true,
+                'micronaut.security.oauth2.callback-uri': '/a/b/{provider}',
+                'micronaut.security.oauth2.login-uri': '/a/c/{provider}',
+                'micronaut.security.oauth2.default-provider': 'foo',
+                'micronaut.security.oauth2.openid.logout-uri': '/test/logout',
+                'micronaut.security.oauth2.openid.end-session.redirect-uri': '/test/home',
+                'micronaut.security.oauth2.openid.claims-validation.issuer': false,
+                'micronaut.security.oauth2.openid.claims-validation.audience': false,
+                'micronaut.security.oauth2.openid.claims-validation.authorized-party': false,
+                'micronaut.security.oauth2.openid.additional-claims.jwt': true,
+                'micronaut.security.oauth2.openid.additional-claims.access-token': true,
+                'micronaut.security.oauth2.openid.additional-claims.refresh-token': true,
+        ], Environment.TEST)
+
+        when:
+        OauthConfiguration config = context.getBean(OauthConfiguration)
+
+        then:
+        noExceptionThrown()
+        config.isEnabled()
+        config.getCallbackUri() == "/a/b/{provider}"
+        config.getLoginUri() == "/a/c/{provider}"
+        config.getDefaultProvider().get() == "foo"
+        config.getOpenid().getLogoutUri() == "/test/logout"
+        config.getOpenid().getEndSession().map({es -> es.getRedirectUri()}).get() == "/test/home"
+        !config.getOpenid().getClaimsValidation().isIssuer()
+        !config.getOpenid().getClaimsValidation().isAudience()
+        !config.getOpenid().getClaimsValidation().isAuthorizedParty()
+        config.getOpenid().getAdditionalClaims().isJwt()
+        config.getOpenid().getAdditionalClaims().isAccessToken()
+        config.getOpenid().getAdditionalClaims().isRefreshToken()
+    }
 }

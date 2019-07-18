@@ -141,7 +141,8 @@ public class OauthConfigurationProperties implements OauthConfiguration {
 
         private String logoutUri = DEFAULT_LOGOUT;
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
-        private ClaimsValidationConfigurationProperties claimsValidator = new ClaimsValidationConfigurationProperties();
+        private ClaimsValidationConfigurationProperties claimsValidation = new ClaimsValidationConfigurationProperties();
+        private AdditionalClaimsConfigurationProperties additionalClaims = new AdditionalClaimsConfigurationProperties();
 
         @Override
         public String getLogoutUri() {
@@ -172,19 +173,29 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         }
 
         /**
-         *
          * @return Claims Validator Configuration
          */
-        public ClaimsValidationConfigurationProperties getClaimsValidator() {
-            return claimsValidator;
+        public ClaimsValidationConfigurationProperties getClaimsValidation() {
+            return claimsValidation;
         }
 
         /**
-         *
          * @param claimsValidator Claims Validator Configuration
          */
-        public void setClaimsValidator(ClaimsValidationConfigurationProperties claimsValidator) {
-            this.claimsValidator = claimsValidator;
+        public void setClaimsValidation(ClaimsValidationConfigurationProperties claimsValidator) {
+            this.claimsValidation = claimsValidator;
+        }
+
+        @Override
+        public AdditionalClaimsConfigurationProperties getAdditionalClaims() {
+            return additionalClaims;
+        }
+
+        /**
+         * @param claims The Claims Configuration
+         */
+        public void setAdditionalClaims(AdditionalClaimsConfigurationProperties claims) {
+            this.additionalClaims = claims;
         }
 
         /**
@@ -216,7 +227,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         /**
          * Claims Validator configuration.
          */
-        @ConfigurationProperties(ClaimsValidationConfigurationProperties.PREFIX)
+        @ConfigurationProperties("claims-validation")
         public static class ClaimsValidationConfigurationProperties implements OpenIdClaimsValidationConfiguration {
 
             public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".claims-validation";
@@ -230,7 +241,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             private boolean authorizedParty = DEFAULT_AUTHORIZED_PARTY_ENABLED;
 
             @Override
-            public boolean getIssuer() {
+            public boolean isIssuer() {
                 return issuer;
             }
 
@@ -243,7 +254,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             }
 
             @Override
-            public boolean getAudience() {
+            public boolean isAudience() {
                 return audience;
             }
 
@@ -256,7 +267,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             }
 
             @Override
-            public boolean getAuthorizedParty() {
+            public boolean isAuthorizedParty() {
                 return authorizedParty;
             }
 
@@ -269,5 +280,62 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             }
         }
 
+        /**
+         * Claims configuration.
+         */
+        @ConfigurationProperties("additional-claims")
+        public static class AdditionalClaimsConfigurationProperties implements OpenIdAdditionalClaimsConfiguration {
+
+            public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".additional-claims";
+
+            private boolean jwt;
+            private boolean accessToken;
+            private boolean refreshToken;
+
+            @Override
+            public boolean isJwt() {
+                return jwt;
+            }
+
+            /**
+             * Set to true if the original JWT from the provider should be included in the Micronaut JWT.
+             * Default value (false).
+             *
+             * @param jwt The jwt
+             */
+            public void setJwt(boolean jwt) {
+                this.jwt = jwt;
+            }
+
+            @Override
+            public boolean isAccessToken() {
+                return accessToken;
+            }
+
+            /**
+             * Set to true if the original access token from the provider should be included in the Micronaut JWT.
+             * Default value (false).
+             *
+             * @param accessToken Access token
+             */
+            public void setAccessToken(boolean accessToken) {
+                this.accessToken = accessToken;
+            }
+
+            @Override
+            public boolean isRefreshToken() {
+                return refreshToken;
+            }
+
+            /**
+             * Set to true if the original refresh token from the provider should be included in the Micronaut JWT.
+             * Default value (false).
+             *
+             * @param refreshToken Refresh token
+             */
+            public void setRefreshToken(boolean refreshToken) {
+                this.refreshToken = refreshToken;
+            }
+        }
     }
 }

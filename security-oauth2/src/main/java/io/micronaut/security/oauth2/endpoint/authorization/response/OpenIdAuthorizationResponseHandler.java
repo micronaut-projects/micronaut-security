@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @author James Kleeh
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultOpenIdAuthorizationResponseHandler.class)
 public interface OpenIdAuthorizationResponseHandler {
 
     /**

@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.endpoint.nonce;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultNonceFactory.class)
 public interface NonceFactory {
 
     /**

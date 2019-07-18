@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
@@ -29,6 +30,7 @@ import org.reactivestreams.Publisher;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultOauthAuthorizationResponseHandler.class)
 public interface OauthAuthorizationResponseHandler {
 
     /**

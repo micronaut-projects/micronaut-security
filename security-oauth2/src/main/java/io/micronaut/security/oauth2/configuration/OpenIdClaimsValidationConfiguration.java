@@ -26,15 +26,15 @@ public interface OpenIdClaimsValidationConfiguration {
     /**
      * @return Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator} is enabled.
      */
-    boolean getIssuer();
+    boolean isIssuer();
 
     /**
      * @return Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.AudienceClaimValidator} is enabled.
      */
-    boolean getAudience();
+    boolean isAudience();
 
     /**
      * @return Whether {@link io.micronaut.security.oauth2.endpoint.token.response.validation.AuthorizedPartyClaimValidator} is enabled.
      */
-    boolean getAuthorizedParty();
+    boolean isAuthorizedParty();
 }

@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.endpoint.token.request;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultTokenEndpointClient.class)
 public interface TokenEndpointClient {
 
     /**

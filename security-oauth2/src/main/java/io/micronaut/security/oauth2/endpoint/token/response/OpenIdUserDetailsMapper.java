@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.authentication.UserDetails;
 
 import javax.annotation.Nonnull;
@@ -26,6 +27,7 @@ import javax.annotation.Nonnull;
  * @author James Kleeh
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultOpenIdUserDetailsMapper.class)
 public interface OpenIdUserDetailsMapper {
 
     String OPENID_TOKEN_KEY = "openIdToken";

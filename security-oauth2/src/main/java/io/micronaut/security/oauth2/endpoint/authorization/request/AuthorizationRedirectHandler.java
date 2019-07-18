@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.MutableHttpResponse;
 
 /**
@@ -25,6 +26,7 @@ import io.micronaut.http.MutableHttpResponse;
  * @author James Kleeh
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultAuthorizationRedirectHandler.class)
 public interface AuthorizationRedirectHandler {
 
     /**

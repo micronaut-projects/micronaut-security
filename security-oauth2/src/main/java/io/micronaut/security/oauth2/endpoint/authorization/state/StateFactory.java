@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@DefaultImplementation(DefaultStateFactory.class)
 public interface StateFactory {
 
     /**
