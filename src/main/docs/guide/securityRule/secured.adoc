@@ -1,4 +1,4 @@
-As illustrated below, you can use link:{api}/io/micronaut/security/Secured.html[Secured] annotation to configure
+As illustrated below, you can use link:{api}/io/micronaut/security/annotation/Secured.html[Secured] annotation to configure
 access at link:{api}/io/micronaut/http/annotation/Controller.html[Controller] or Controller's Action level.
 
 [source, groovy]
