@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * OAuth 2.0 and Open ID authentication error response codes.
  *
@@ -56,6 +58,7 @@ public enum AuthorizationError {
      * @return An errorCode code.
      */
     @Override
+    @JsonValue
     public String toString() {
         return errorCode;
     }
