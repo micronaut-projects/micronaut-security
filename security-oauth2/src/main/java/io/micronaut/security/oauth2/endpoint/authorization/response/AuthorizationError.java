@@ -16,6 +16,8 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * OAuth 2.0 and Open ID authentication error response codes.
  *
@@ -38,6 +40,7 @@ public enum AuthorizationError {
     INVALID_REQUEST_URI("invalid_request_uri"),
     REQUEST_NOT_SUPPORTED("request_not_supported"),
     REQUEST_URI_NOT_SUPPORTED("request_uri_not_supported"),
+    REDIRECT_URI_MISMATCH("redirect_uri_mismatch"),
     REGISTRATION_NOT_SUPPORTED("registration_not_supported");
 
     private String errorCode;
@@ -55,6 +58,7 @@ public enum AuthorizationError {
      * @return An errorCode code.
      */
     @Override
+    @JsonValue
     public String toString() {
         return errorCode;
     }

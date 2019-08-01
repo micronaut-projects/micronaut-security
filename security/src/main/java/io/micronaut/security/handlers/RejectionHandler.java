@@ -30,7 +30,7 @@ public interface RejectionHandler {
     /**
      *
      * @param request {@link HttpRequest} being processed
-     * @param forbidden if true indicates that although the user was authenticated he did not had the necessary access privileges.
+     * @param forbidden if true indicates that although the user was authenticated they did not have the necessary access privileges.
      * @return Return a HTTP Response
      */
     Publisher<MutableHttpResponse<?>> reject(HttpRequest<?> request, boolean forbidden);

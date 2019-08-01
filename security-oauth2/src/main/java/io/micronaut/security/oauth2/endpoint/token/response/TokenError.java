@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2">Token Error Response</a>
  */
@@ -41,6 +43,7 @@ public enum TokenError {
      * @return An errorCode code.
      */
     @Override
+    @JsonValue
     public String toString() {
         return errorCode;
     }
