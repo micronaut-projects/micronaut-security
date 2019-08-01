@@ -454,7 +454,7 @@ either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
 
 
 <div class="paragraph">
-<p>As illustrated below, you can use <a href="../api/io/micronaut/security/Secured.html">Secured</a> annotation to configure
+<p>As illustrated below, you can use <a href="../api/io/micronaut/security/annotation/Secured.html">Secured</a> annotation to configure
 access at <a href="../api/io/micronaut/http/annotation/Controller.html">Controller</a> or Controller&#8217;s Action level.</p>
 </div>
 <div class="listingblock">
@@ -2791,14 +2791,14 @@ To use OpenID client flows, the <code>security-jwt</code> dependency must be in 
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut:micronaut-jwt'</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut:micronaut-security-jwt'</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
-    &lt;artifactId&gt;micronaut-jwt&lt;/artifactId&gt;
+    &lt;artifactId&gt;micronaut-security-jwt&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -3578,10 +3578,61 @@ To disable a specific client for any given environment, set <code>enabled: false
 <p>Because the OpenID standard returns a JWT token in the token response, it is possible to retrieve information about the user without having to make an additional call. In addition, the data stored in the JWT is standardized so you can use the same code to retrieve that information across providers.</p>
 </div>
 <div class="paragraph">
-<p>A default implementaiton of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. It is possible however to override the default or provide an implementation specific to a provider.</p>
+<p>A default implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.</p>
+</div>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.additional-claims.jwt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the original JWT from the provider should be included in the Micronaut JWT.
+ Default value (false).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.additional-claims.access-token</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the original access token from the provider should be included in the Micronaut JWT.
+ Default value (false).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.additional-claims.refresh-token</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the original refresh token from the provider should be included in the Micronaut JWT.
+ Default value (false).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Enabling all of the above with cookie JWT storage has been known to cause issues with Keycloak due to their tokens being very large and causing the resulting cookie to be larger than what browsers allow.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>To override the default configuration, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
+<p>If the default implementation is not sufficient, it is possible to override the global default or provide an implementation specific to a provider.</p>
+</div>
+<div class="paragraph">
+<p>To override the global default mapper, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
@@ -4290,11 +4341,6 @@ This example above is not intended to be a complete configuration reference
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.logout-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The URI used to log out of an OpenID provider. Default value ("/oauth/logout").</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.claims-validator</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$ClaimsValidationConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Claims Validator Configuration</p></td>
 </tr>
 </tbody>
 </table>

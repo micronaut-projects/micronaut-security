@@ -887,10 +887,61 @@ To disable a specific client for any given environment, set <code>enabled: false
 <p>Because the OpenID standard returns a JWT token in the token response, it is possible to retrieve information about the user without having to make an additional call. In addition, the data stored in the JWT is standardized so you can use the same code to retrieve that information across providers.</p>
 </div>
 <div class="paragraph">
-<p>A default implementaiton of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. It is possible however to override the default or provide an implementation specific to a provider.</p>
+<p>A default implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.</p>
+</div>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.additional-claims.jwt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the original JWT from the provider should be included in the Micronaut JWT.
+ Default value (false).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.additional-claims.access-token</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the original access token from the provider should be included in the Micronaut JWT.
+ Default value (false).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.additional-claims.refresh-token</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the original refresh token from the provider should be included in the Micronaut JWT.
+ Default value (false).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Enabling all of the above with cookie JWT storage has been known to cause issues with Keycloak due to their tokens being very large and causing the resulting cookie to be larger than what browsers allow.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>To override the default configuration, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
+<p>If the default implementation is not sufficient, it is possible to override the global default or provide an implementation specific to a provider.</p>
+</div>
+<div class="paragraph">
+<p>To override the global default mapper, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
