@@ -43,7 +43,12 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
     private final OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration;
 
-    DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration) {
+    /**
+     * Default constructor.
+     *
+     * @param openIdAdditionalClaimsConfiguration The additional claims configuration
+     */
+    public DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration) {
         this.openIdAdditionalClaimsConfiguration = openIdAdditionalClaimsConfiguration;
     }
 

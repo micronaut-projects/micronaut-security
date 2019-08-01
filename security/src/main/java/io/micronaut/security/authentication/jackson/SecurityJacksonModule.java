@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.DefaultAuthentication;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
 /**
