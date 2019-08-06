@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>7 Built-In Security Controllers 1.1.1</title>
+    <title>8 Built-In Security Controllers 1.2.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -32,28 +32,34 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>2</strong><span>Authentication Providers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>3</strong><span>Security Rules</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>4</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>5</strong><span>Rejection Handling</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>6</strong><span>Token Propagation</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>7</strong><span>Built-In Security Controllers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>8</strong><span>Retrieve the authenticated user</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>9</strong><span>Security Events</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
                         </div>
                         
                     </div>
@@ -74,36 +80,36 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../guide/tokenPropagation.html">&lt;&lt; <strong>6</strong><span>Token Propagation</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/tokenPropagation.html">&lt;&lt; <strong>7</strong><span>Token Propagation</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/retrievingAuthenticatedUser.html"><strong>8</strong><span>Retrieve the authenticated user</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>7 Built-In Security Controllers</h1>
+                    <h1>8 Built-In Security Controllers</h1>
 
-                    <p><strong>Version:</strong> 1.1.1</p>
+                    <p><strong>Version:</strong> 1.2.0</p>
                 </div>
 
                 
                 <div id="table-of-content">
                     <h2>Table of Contents</h2>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#login"><strong>7.1</strong><span>Login Controller</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#login"><strong>8.1</strong><span>Login Controller</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#logout"><strong>7.2</strong><span>Logout Controller</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#logout"><strong>8.2</strong><span>Logout Controller</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#refresh"><strong>7.3</strong><span>Refresh Controller</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#refresh"><strong>8.3</strong><span>Refresh Controller</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#keys"><strong>7.4</strong><span>Keys Controller</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#keys"><strong>8.4</strong><span>Keys Controller</span></a>
                     </div>
                     
                 </div>
@@ -111,7 +117,7 @@ function addJsClass() {
 
                 
 
-<h1 id="endpoints">7 Built-In Security Controllers</h1>
+<h1 id="endpoints">8 Built-In Security Controllers</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints.adoc"'>
@@ -123,7 +129,7 @@ function addJsClass() {
 
 
 
-<h2 id="login">7.1 Login Controller</h2>
+<h2 id="login">8.1 Login Controller</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/login.adoc"'>
@@ -184,7 +190,7 @@ function addJsClass() {
 </div>
 
 
-<h2 id="logout">7.2 Logout Controller</h2>
+<h2 id="logout">8.2 Logout Controller</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/logout.adoc"'>
@@ -194,7 +200,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>You can enable <code>LogoutController</code> with configuration property:</p>
+<p>You can enable the logout endpoint with configuration:</p>
 </div>
 <a id="io.micronaut.security.endpoints.LogoutControllerConfigurationProperties" href="#io.micronaut.security.endpoints.LogoutControllerConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
@@ -230,7 +236,7 @@ function addJsClass() {
 </tbody>
 </table>
 <div class="paragraph">
-<p>Each bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> gets invoked.</p>
+<p>The behavior of the controller is delegated to a <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> implementation. There are default implementations provided for JWT Cookie and Session based authentication storage.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -239,7 +245,7 @@ function addJsClass() {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you are using JWT authentication, you may not need to invoke the <code>/logout</code> endpoint. Since logging out normally means simply deleting access, refresh JWT tokens at the client side.
+If you are using JWT authentication not stored in a cookie, you may not need to invoke the <code>/logout</code> endpoint. Since logging out normally means simply deleting the JWT token int the client.
 </td>
 </tr>
 </table>
@@ -248,7 +254,7 @@ If you are using JWT authentication, you may not need to invoke the <code>/logou
 <h2 id="_logout_endpoint_invocation_example">Logout Endpoint invocation example</h2>
 <div class="sectionbody">
 <div class="listingblock">
-<div class="title">Login Endpoint invocation example</div>
+<div class="title">Logout endpoint invocation example</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X "POST" "http://localhost:8080/logout"</code></pre>
 </div>
@@ -257,7 +263,7 @@ If you are using JWT authentication, you may not need to invoke the <code>/logou
 </div>
 
 
-<h2 id="refresh">7.3 Refresh Controller</h2>
+<h2 id="refresh">8.3 Refresh Controller</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/refresh.adoc"'>
@@ -350,7 +356,7 @@ See <a href="https://tools.ietf.org/html/rfc6749#section-10.4">section 10.4 of t
 </div>
 
 
-<h2 id="keys">7.4 Keys Controller</h2>
+<h2 id="keys">8.4 Keys Controller</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/keys.adoc"'>
@@ -415,9 +421,9 @@ This controller can only be enabled if you are using JWT authentication.
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../guide/tokenPropagation.html">&lt;&lt; <strong>6</strong><span>Token Propagation</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/tokenPropagation.html">&lt;&lt; <strong>7</strong><span>Token Propagation</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../guide/retrievingAuthenticatedUser.html"><strong>8</strong><span>Retrieve the authenticated user</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
