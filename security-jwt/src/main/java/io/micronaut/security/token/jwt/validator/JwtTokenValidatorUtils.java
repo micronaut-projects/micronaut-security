@@ -46,7 +46,7 @@ import java.util.Optional;
  */
 public final class JwtTokenValidatorUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JwtTokenValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JwtTokenValidatorUtils.class);
 
     private JwtTokenValidatorUtils() {
 
@@ -232,8 +232,8 @@ public final class JwtTokenValidatorUtils {
             }
 
         } catch (final ParseException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Cannot decrypt / verify JWT: {}", e.getMessage());
+            if (LOG.isDebug()) {
+                LOG.debug("Cannot decrypt / verify JWT: {}", e.getMessage());
             }
         }
         return Optional.empty();
