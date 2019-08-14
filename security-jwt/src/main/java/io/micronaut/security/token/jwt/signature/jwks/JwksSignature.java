@@ -209,4 +209,37 @@ public class JwksSignature implements SignatureConfiguration {
     public int getRefreshJwksAttempts() {
         return DEFAULT_REFRESH_JWKS_ATTEMPTS;
     }
+    
+    
+    /**
+     *
+     * @return A JSON Web Key Validator.
+     */
+    public JwkValidator getJwkValidator() {
+        return jwkValidator;
+    }
+
+    /**
+     *
+     * @return a JSON Web Key Set.
+     */
+    public JWKSet getJwkSet() {
+        return jwkSet;
+    }
+
+    /**
+     *
+     * @return the Key Type.
+     */
+    public KeyType getKeyType() {
+        return keyType;
+    }
+
+    /**
+     *
+     * @return The JSON Web Key Set (JWKS) URL.
+     */
+    public String getUrl() {
+        return url;
+    }
 }
