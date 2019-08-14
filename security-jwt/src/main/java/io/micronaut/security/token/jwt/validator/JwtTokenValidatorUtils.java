@@ -232,7 +232,7 @@ public final class JwtTokenValidatorUtils {
             }
 
         } catch (final ParseException e) {
-            if (LOG.isDebug()) {
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Cannot decrypt / verify JWT: {}", e.getMessage());
             }
         }
