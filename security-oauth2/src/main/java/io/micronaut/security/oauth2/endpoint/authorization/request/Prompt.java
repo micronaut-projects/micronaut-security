@@ -45,7 +45,8 @@ public enum Prompt {
      *
      * @return OpenID connect Prompt parameter
      */
-    public String getPrompt() {
+    @Override
+    public String toString() {
         return prompt;
     }
 }
