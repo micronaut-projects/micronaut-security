@@ -75,7 +75,7 @@ class OpenIdClientFactory {
      * @param defaultHttpConfiguration The default HTTP client configuration
      * @return The OpenID configuration
      */
-    @Prototype
+    @EachBean(OpenIdClientConfiguration.class)
     DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                                       @Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                                       HttpClientConfiguration defaultHttpConfiguration) {
