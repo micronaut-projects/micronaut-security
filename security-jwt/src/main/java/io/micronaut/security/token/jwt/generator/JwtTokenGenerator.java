@@ -126,7 +126,7 @@ public class JwtTokenGenerator implements TokenGenerator {
     /**
      *
      * @param userDetails Authenticated user's representation.
-     * @param expiration The amount of time in milliseconds until the token expires
+     * @param expiration The amount of time in seconds until the token expires
      * @return JWT token
      */
     @Override
