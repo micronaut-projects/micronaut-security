@@ -21,7 +21,7 @@ import io.micronaut.security.authentication.Authentication;
 import javax.inject.Singleton;
 import java.security.Principal;
 import java.util.Optional;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Default implementation of {@link io.micronaut.security.utils.SecurityService}. It uses {@link ServerRequestContext#currentRequest()} to retrieve the {@link io.micronaut.security.authentication.Authentication} object if any.
@@ -89,9 +89,10 @@ public class DefaultSecurityService implements SecurityService {
         return getAuthentication().map(authentication -> {
             if (authentication.getAttributes() != null && authentication.getAttributes().containsKey(rolesKey)) {
                 Object authorities = authentication.getAttributes().get(rolesKey);
-                if (authorities instanceof List) {
-                    return ((List) authorities).contains(role);
-                } else if (authorities instanceof String) {
+                if (authorities instanceof Collection) {
+                    return ((Collection) authorities).contains(role);
+                }
+                else if (authorities instanceof String) {
                     return ((String) authorities).equalsIgnoreCase(role);
                 }
             }
