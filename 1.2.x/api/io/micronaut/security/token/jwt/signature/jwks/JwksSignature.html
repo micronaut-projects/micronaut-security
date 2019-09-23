@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -185,34 +185,18 @@ implements <a href="../../../../../../../io/micronaut/security/token/jwt/signatu
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>com.nimbusds.jose.jwk.JWKSet</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getJwkSet--">getJwkSet</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getJwkValidator--">getJwkValidator</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>com.nimbusds.jose.jwk.KeyType</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getKeyType--">getKeyType</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i3" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getRefreshJwksAttempts--">getRefreshJwksAttempts</a></span>()</code>
 <div class="block">Returns the number of attempts to refresh the cached JWKS.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getUrl--">getUrl</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i5" class="rowColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected com.nimbusds.jose.jwk.JWKSet</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#loadJwkSet-java.lang.String-">loadJwkSet</a></span>(java.lang.String&nbsp;url)</code>
 <div class="block">Instantiates a JWKSet for a give url.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>protected java.util.List&lt;com.nimbusds.jose.jwk.JWK&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#matches-com.nimbusds.jwt.SignedJWT-com.nimbusds.jose.jwk.JWKSet-int-">matches</a></span>(com.nimbusds.jwt.SignedJWT&nbsp;jwt,
        com.nimbusds.jose.jwk.JWKSet&nbsp;jwkSet,
@@ -220,24 +204,24 @@ implements <a href="../../../../../../../io/micronaut/security/token/jwt/signatu
 <div class="block">Calculates a list of JWK matches for a JWT.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#supportedAlgorithmsMessage--">supportedAlgorithmsMessage</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#supports-com.nimbusds.jose.JWSAlgorithm-">supports</a></span>(com.nimbusds.jose.JWSAlgorithm&nbsp;algorithm)</code>
 <div class="block">Whether this signature configuration supports this algorithm.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#verify-java.util.List-com.nimbusds.jwt.SignedJWT-">verify</a></span>(java.util.List&lt;com.nimbusds.jose.jwk.JWK&gt;&nbsp;matches,
       com.nimbusds.jwt.SignedJWT&nbsp;jwt)</code>
 <div class="block">returns true if any JWK match is able to verify the JWT signature.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#verify-com.nimbusds.jwt.SignedJWT-">verify</a></span>(com.nimbusds.jwt.SignedJWT&nbsp;jwt)</code>
 <div class="block">Verify a signed JWT.</div>
@@ -444,7 +428,7 @@ public&nbsp;JwksSignature(java.lang.String&nbsp;url,
 <a name="getRefreshJwksAttempts--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>getRefreshJwksAttempts</h4>
 <pre>public&nbsp;int&nbsp;getRefreshJwksAttempts()</pre>
@@ -452,58 +436,6 @@ public&nbsp;JwksSignature(java.lang.String&nbsp;url,
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Number of attempts to refresh the cached JWKS.</dd>
-</dl>
-</li>
-</ul>
-<a name="getJwkValidator--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getJwkValidator</h4>
-<pre>public&nbsp;<a href="../../../../../../../io/micronaut/security/token/jwt/signature/jwks/JwkValidator.html" title="interface in io.micronaut.security.token.jwt.signature.jwks">JwkValidator</a>&nbsp;getJwkValidator()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>A JSON Web Key Validator.</dd>
-</dl>
-</li>
-</ul>
-<a name="getJwkSet--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getJwkSet</h4>
-<pre>public&nbsp;com.nimbusds.jose.jwk.JWKSet&nbsp;getJwkSet()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a JSON Web Key Set.</dd>
-</dl>
-</li>
-</ul>
-<a name="getKeyType--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getKeyType</h4>
-<pre>public&nbsp;com.nimbusds.jose.jwk.KeyType&nbsp;getKeyType()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the Key Type.</dd>
-</dl>
-</li>
-</ul>
-<a name="getUrl--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getUrl</h4>
-<pre>public&nbsp;java.lang.String&nbsp;getUrl()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>The JSON Web Key Set (JWKS) URL.</dd>
 </dl>
 </li>
 </ul>
