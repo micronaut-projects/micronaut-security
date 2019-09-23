@@ -4,7 +4,7 @@ include::{includedir}configurationProperties/io.micronaut.security.endpoints.Log
 
 The behavior of the controller is delegated to a link:{api}/io/micronaut/security/handlers/LogoutHandler.html[LogoutHandler] implementation. There are default implementations provided for JWT Cookie and Session based authentication storage.
 
-TIP: If you are using JWT authentication not stored in a cookie, you may not need to invoke the `/logout` endpoint. Since logging out normally means simply deleting the JWT token int the client.
+TIP: If you are using JWT authentication not stored in a cookie, you may not need to invoke the `/logout` endpoint. Since logging out normally means simply deleting the JWT token in the client.
 
 == Logout Endpoint invocation example
 
