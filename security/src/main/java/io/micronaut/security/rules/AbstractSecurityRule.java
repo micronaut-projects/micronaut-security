@@ -19,6 +19,8 @@ import io.micronaut.security.token.DefaultRolesFinder;
 import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ import java.util.Map;
  * @since 1.0
  */
 public abstract class AbstractSecurityRule implements SecurityRule {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractSecurityRule.class);
 
     private final RolesFinder rolesFinder;
 
@@ -91,8 +95,14 @@ public abstract class AbstractSecurityRule implements SecurityRule {
         requiredRoles = new ArrayList<>(requiredRoles);
         requiredRoles.retainAll(grantedRoles);
         if (requiredRoles.isEmpty()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("None of the given roles [{}] matched the required roles [{}]. Rejecting the request", grantedRoles, requiredRoles);
+            }
             return SecurityRuleResult.REJECTED;
         } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("The given roles [{}] matched one or more of the required roles [{}]. Allowing the request", grantedRoles, requiredRoles);
+            }
             return SecurityRuleResult.ALLOWED;
         }
     }

@@ -20,9 +20,12 @@ import io.micronaut.core.util.PathMatcher;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.InterceptUrlMapPattern;
+import io.micronaut.security.handlers.RedirectRejectionHandler;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.web.router.RouteMatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -40,6 +43,7 @@ import java.util.function.Predicate;
  */
 abstract class InterceptUrlMapRule extends AbstractSecurityRule {
 
+    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
     /**
      * The order of the rule.
      */
@@ -97,10 +101,21 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
 
         // if we don't get an exact match try to find a match by the uri pattern
         if (!matchedPattern.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No url map pattern exact match found for path [{}] and method [{}]. Searching in patterns with no defined method.", path, httpMethod);
+            }
             matchedPattern = getPatternList()
                     .stream()
                     .filter(uriPatternMatchOnly)
                     .findFirst();
+
+            if (LOG.isDebugEnabled()) {
+                if (matchedPattern.isPresent()) {
+                    LOG.debug("Url map pattern found for path [{}]. Comparing roles.", path);
+                } else {
+                    LOG.debug("No url map pattern match found for path [{}]. Returning unknown.", path);
+                }
+            }
         }
 
         return matchedPattern
