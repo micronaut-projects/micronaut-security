@@ -75,7 +75,7 @@ class OpenIdClientFactory {
      * @param defaultHttpConfiguration The default HTTP client configuration
      * @return The OpenID configuration
      */
-    @Prototype
+    @EachBean(OpenIdClientConfiguration.class)
     DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                                       @Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                                       HttpClientConfiguration defaultHttpConfiguration) {
@@ -120,13 +120,12 @@ class OpenIdClientFactory {
     @Requires(condition = OpenIdClientCondition.class)
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
+                                     @Parameter DefaultOpenIdProviderMetadata openIdProviderMetadata,
                                      @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                      AuthorizationRedirectHandler redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                      EndSessionEndpointResolver endSessionEndpointResolver,
                                      EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
-
-        OpenIdProviderMetadata openIdProviderMetadata = beanContext.createBean(OpenIdProviderMetadata.class, clientConfiguration, openIdClientConfiguration);
         EndSessionEndpoint endSessionEndpoint = null;
         if (openIdClientConfiguration.getEndSession().isEnabled()) {
             endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
