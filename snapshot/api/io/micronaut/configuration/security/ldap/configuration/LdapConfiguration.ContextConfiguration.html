@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -184,28 +184,39 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#getManagerPassword--">getManagerPassword</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#getProperties--">getProperties</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#getServer--">getServer</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#setFactory-java.lang.String-">setFactory</a></span>(java.lang.String&nbsp;factory)</code>
 <div class="block">Sets the context factory class.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#setManagerDn-java.lang.String-">setManagerDn</a></span>(java.lang.String&nbsp;managerDn)</code>
 <div class="block">Sets the manager DN.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#setManagerPassword-java.lang.String-">setManagerPassword</a></span>(java.lang.String&nbsp;managerPassword)</code>
 <div class="block">Sets the manager password.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#setProperties-java.util.Map-">setProperties</a></span>(java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</code>
+<div class="block"><<<<<<< HEAD
+ Any additional properties that should be passed to <code>InitialDirContext.InitialDirContext(java.util.Hashtable)</code>.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html#setServer-java.lang.String-">setServer</a></span>(java.lang.String&nbsp;server)</code>
 <div class="block">Sets the server URL.</div>
@@ -369,7 +380,7 @@ extends java.lang.Object</pre>
 <a name="setFactory-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setFactory</h4>
 <pre>public&nbsp;void&nbsp;setFactory(java.lang.String&nbsp;factory)</pre>
@@ -377,6 +388,37 @@ extends java.lang.Object</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>factory</code> - The factory class</dd>
+</dl>
+</li>
+</ul>
+<a name="getProperties--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getProperties</h4>
+<pre>public&nbsp;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;getProperties()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Any additional properties</dd>
+</dl>
+</li>
+</ul>
+<a name="setProperties-java.util.Map-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setProperties</h4>
+<pre>public&nbsp;void&nbsp;setProperties(java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</pre>
+<div class="block"><<<<<<< HEAD
+ Any additional properties that should be passed to <code>InitialDirContext.InitialDirContext(java.util.Hashtable)</code>.
+=======
+ Any additional properties that should be passed to <code>InitialDirContext.InitialDirContext(Hashtable)</code>.
+>>>>>>> 1.2.x</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>properties</code> - The additional properties</dd>
 </dl>
 </li>
 </ul>

@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -163,22 +163,26 @@ implements <a href="../../../../../../io/micronaut/configuration/security/ldap/c
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextConfigurationContextSettings.html#getDn--">getDn</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextConfigurationContextSettings.html#getAdditionalProperties--">getAdditionalProperties</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextConfigurationContextSettings.html#getFactory--">getFactory</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextConfigurationContextSettings.html#getDn--">getDn</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextConfigurationContextSettings.html#getPassword--">getPassword</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextConfigurationContextSettings.html#getFactory--">getFactory</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextConfigurationContextSettings.html#getPassword--">getPassword</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextConfigurationContextSettings.html#getPooled--">getPooled</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextConfigurationContextSettings.html#getUrl--">getUrl</a></span>()</code>&nbsp;</td>
 </tr>
@@ -305,7 +309,7 @@ implements <a href="../../../../../../io/micronaut/configuration/security/ldap/c
 <a name="getPassword--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getPassword</h4>
 <pre>public&nbsp;java.lang.String&nbsp;getPassword()</pre>
@@ -314,6 +318,21 @@ implements <a href="../../../../../../io/micronaut/configuration/security/ldap/c
 <dd><code><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextSettings.html#getPassword--">getPassword</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextSettings.html" title="interface in io.micronaut.configuration.security.ldap.context">ContextSettings</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The password to bind with</dd>
+</dl>
+</li>
+</ul>
+<a name="getAdditionalProperties--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getAdditionalProperties</h4>
+<pre>public&nbsp;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;getAdditionalProperties()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextSettings.html#getAdditionalProperties--">getAdditionalProperties</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/configuration/security/ldap/context/ContextSettings.html" title="interface in io.micronaut.configuration.security.ldap.context">ContextSettings</a></code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Any additional properties</dd>
 </dl>
 </li>
 </ul>
