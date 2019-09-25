@@ -24,7 +24,6 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -232,7 +231,7 @@ public class LdapConfiguration implements Toggleable {
         }
 
         /**
-         * Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(Hashtable)}.
+         * Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.
          *
          * @param properties The additional properties
          */

@@ -37,13 +37,12 @@ import java.util.Map;
  */
 @Singleton
 public class SensitiveEndpointRule implements SecurityRule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
-
     /**
      * The order of the rule.
      */
     public static final Integer ORDER = 0;
+
+    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
 
     /**
      * A map where the key represents the method of an endpoint

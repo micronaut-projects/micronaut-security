@@ -20,7 +20,6 @@ import io.micronaut.core.util.PathMatcher;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.InterceptUrlMapPattern;
-import io.micronaut.security.handlers.RedirectRejectionHandler;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.web.router.RouteMatch;
@@ -43,11 +42,12 @@ import java.util.function.Predicate;
  */
 abstract class InterceptUrlMapRule extends AbstractSecurityRule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
     /**
      * The order of the rule.
      */
     public static final Integer ORDER = 0;
+
+    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
 
     private final AntPathMatcher pathMatcher;
 

@@ -41,12 +41,12 @@ import java.util.stream.Collectors;
 @Singleton
 public class IpPatternsRule extends AbstractSecurityRule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
-
     /**
      * The order of the rule.
      */
     public static final Integer ORDER = SecuredAnnotationRule.ORDER - 100;
+
+    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
 
     private final List<Pattern> patternList;
 
