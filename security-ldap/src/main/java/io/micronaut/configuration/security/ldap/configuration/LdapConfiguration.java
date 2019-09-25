@@ -24,6 +24,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -158,7 +159,7 @@ public class LdapConfiguration implements Toggleable {
         private String managerDn;
         private String managerPassword;
         private String factory = DEFAULT_FACTORY;
-        private Map<String, Object> properties;
+        private Map<String, Object> properties = Collections.emptyMap();
 
         /**
          * @return The ldap server URL
