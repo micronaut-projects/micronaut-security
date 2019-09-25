@@ -23,6 +23,8 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -42,11 +44,16 @@ public class DefaultContextBuilder implements ContextBuilder {
                 contextSettings.getUrl(),
                 contextSettings.getDn(),
                 contextSettings.getPassword(),
-                contextSettings.getPooled());
+                contextSettings.getPooled(),
+                contextSettings.getAdditionalProperties());
     }
 
     @Override
     public DirContext build(String factory, String server, String user, String password, boolean pooled) throws NamingException {
+        return build(factory, server, user, password, pooled, Collections.emptyMap());
+    }
+
+    private DirContext build(String factory, String server, String user, String password, boolean pooled, Map<String, Object> additionalProperties) throws NamingException {
         Properties props = new Properties();
         props.put(Context.INITIAL_CONTEXT_FACTORY, factory);
         props.put(Context.PROVIDER_URL, server);
@@ -56,7 +63,9 @@ public class DefaultContextBuilder implements ContextBuilder {
         if (pooled) {
             props.put("com.sun.jndi.ldap.connect.pool", "true");
         }
-
+        if (!additionalProperties.isEmpty()) {
+            props.putAll(additionalProperties);
+        }
         return new InitialDirContext(props);
     }
 
