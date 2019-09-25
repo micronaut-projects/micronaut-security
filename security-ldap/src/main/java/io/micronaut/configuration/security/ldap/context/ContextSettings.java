@@ -15,6 +15,9 @@
  */
 package io.micronaut.configuration.security.ldap.context;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * Contract to hold settings for creating an LDAP context.
  *
@@ -47,4 +50,11 @@ public interface ContextSettings {
      * @return The password to bind with
      */
     String getPassword();
+
+    /**
+     * @return Any additional properties
+     */
+    default Map<String, Object> getAdditionalProperties() {
+        return Collections.emptyMap();
+    }
 }

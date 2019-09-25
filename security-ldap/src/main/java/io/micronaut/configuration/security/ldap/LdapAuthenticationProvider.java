@@ -52,7 +52,6 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
     private final ContextBuilder contextBuilder;
     private final ContextAuthenticationMapper contextAuthenticationMapper;
     private final LdapGroupProcessor ldapGroupProcessor;
-    private DirContext managerContext;
 
     /**
      * @param configuration               The configuration to use to authenticate
@@ -82,21 +81,20 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
             LOG.debug("Starting authentication with configuration [{}]", configuration.getName());
         }
 
-        if (managerContext == null) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Attempting to initialize manager context");
+        }
+        DirContext managerContext;
+        try {
+            managerContext = contextBuilder.build(configuration.getManagerSettings());
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Attempting to initialize manager context");
+                LOG.debug("Manager context initialized successfully");
             }
-            try {
-                this.managerContext = contextBuilder.build(configuration.getManagerSettings());
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Manager context initialized successfully");
-                }
-            } catch (NamingException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e);
-                }
-                return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN));
+        } catch (NamingException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e);
             }
+            return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN));
         }
 
         if (LOG.isDebugEnabled()) {
@@ -167,12 +165,12 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
             if (e instanceof AuthenticationException) {
                 response = new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
             }
+        } finally {
+            contextBuilder.close(managerContext);
         }
         return Flowable.just(response);
     }
 
     @Override
-    public void close() {
-        contextBuilder.close(managerContext);
-    }
+    public void close() { }
 }

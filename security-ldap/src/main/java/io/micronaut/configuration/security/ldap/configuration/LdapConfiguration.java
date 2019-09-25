@@ -24,6 +24,9 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 /**
  * Configuration for LDAP authentication.
  *
@@ -155,6 +158,7 @@ public class LdapConfiguration implements Toggleable {
         private String managerDn;
         private String managerPassword;
         private String factory = DEFAULT_FACTORY;
+        private Map<String, Object> properties;
 
         /**
          * @return The ldap server URL
@@ -218,6 +222,22 @@ public class LdapConfiguration implements Toggleable {
          */
         public void setFactory(String factory) {
             this.factory = factory;
+        }
+
+        /**
+         * @return Any additional properties
+         */
+        public Map<String, Object> getProperties() {
+            return properties;
+        }
+
+        /**
+         * Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(Hashtable)}.
+         *
+         * @param properties The additional properties
+         */
+        public void setProperties(Map<String, Object> properties) {
+            this.properties = properties;
         }
     }
 

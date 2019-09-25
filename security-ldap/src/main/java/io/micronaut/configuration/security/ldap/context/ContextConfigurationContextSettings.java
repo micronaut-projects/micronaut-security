@@ -17,6 +17,8 @@ package io.micronaut.configuration.security.ldap.context;
 
 import io.micronaut.configuration.security.ldap.configuration.LdapConfiguration;
 
+import java.util.Map;
+
 /**
  * Implementation of {@link ContextSettings} that derives its values from
  * an instance of {@link LdapConfiguration}.
@@ -77,5 +79,10 @@ public class ContextConfigurationContextSettings implements ContextSettings {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public Map<String, Object> getAdditionalProperties() {
+        return contextConfiguration.getProperties();
     }
 }
