@@ -220,7 +220,7 @@
         <h1>Micronaut Security</h1>
         <p></p>
         <p>Official Security Solution for Micronaut</p>
-        <p><strong>Version:</strong> 1.2.0</p>
+        <p><strong>Version:</strong> 1.2.1</p>
     </div>
     
 
@@ -327,7 +327,7 @@ compile "io.micronaut:micronaut-security"</code></pre>
 
 
 <div class="paragraph">
-<p>Micronaut Security 1.2.0 includes the following changes:</p>
+<p>Micronaut Security 1.2.1 includes the following changes:</p>
 </div>
 <div class="sect2">
 <h3 id="_new_oauth_2_0_module">New OAuth 2.0 Module</h3>
@@ -1350,7 +1350,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 <a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorConfiguration.html">RSASignatureGeneratorConfiguration</a>,
 <a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureGeneratorConfiguration.html">ECSignatureGeneratorConfiguration</a>,
 <a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html">ECSignatureConfiguration</a>, or
-<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a>.</p>
+<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html">SecretSignature</a>.</p>
 </div>
 <div class="paragraph">
 <p>You can setup a <code>SecretSignatureConfiguration</code> named <code>generator</code> easily via configuration properties:</p>
@@ -1864,6 +1864,11 @@ Read the <a href="http://guides.micronaut.io/micronaut-database-authentication-p
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context factory class. Default "com.sun.jndi.ldap.LdapCtxFactory"</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.properties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.</p></td>
+</tr>
 </tbody>
 </table>
 <a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration$SearchConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration$SearchConfiguration">&#128279;</a>
@@ -2342,7 +2347,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-token-propagation/guide/i
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you are using JWT authentication not stored in a cookie, you may not need to invoke the <code>/logout</code> endpoint. Since logging out normally means simply deleting the JWT token int the client.
+If you are using JWT authentication not stored in a cookie, you may not need to invoke the <code>/logout</code> endpoint. Since logging out normally means simply deleting the JWT token in the client.
 </td>
 </tr>
 </table>
@@ -2735,7 +2740,7 @@ public class UserController {
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut.configuration:micronaut-security-oauth2:1.2.0'</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut.configuration:micronaut-security-oauth2:1.2.1'</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2743,7 +2748,7 @@ public class UserController {
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.configuration&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-oauth2&lt;/artifactId&gt;
-    &lt;version&gt;1.2.0&lt;/version&gt;
+    &lt;version&gt;1.2.1&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
