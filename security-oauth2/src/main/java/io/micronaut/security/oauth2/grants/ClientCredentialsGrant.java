@@ -46,11 +46,9 @@ public class ClientCredentialsGrant implements AsMap {
      * Default Constructor.
      */
     public ClientCredentialsGrant() {
-
     }
 
     /**
-     *
      * @return client_credentials
      */
     @Nonnull
@@ -59,7 +57,6 @@ public class ClientCredentialsGrant implements AsMap {
     }
 
     /**
-     *
      * @return Requested scope values for the access token.
      */
     @Nullable
@@ -68,7 +65,6 @@ public class ClientCredentialsGrant implements AsMap {
     }
 
     /**
-     *
      * @param scope Requested scope values for the access token.
      */
     public void setScope(@Nullable String scope) {
@@ -76,7 +72,6 @@ public class ClientCredentialsGrant implements AsMap {
     }
 
     /**
-     *
      * @return this object as a Map
      */
     @Override
