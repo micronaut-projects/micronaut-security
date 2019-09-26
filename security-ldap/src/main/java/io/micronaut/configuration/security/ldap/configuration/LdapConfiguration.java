@@ -232,11 +232,7 @@ public class LdapConfiguration implements Toggleable {
         }
 
         /**
-<<<<<<< HEAD
          * Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.
-=======
-         * Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(Hashtable)}.
->>>>>>> 1.2.x
          *
          * @param properties The additional properties
          */
