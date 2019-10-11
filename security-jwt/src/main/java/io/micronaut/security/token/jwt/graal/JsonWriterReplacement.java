@@ -32,6 +32,7 @@ import java.io.IOException;
  * @author graemerocher
  * @since 1.2.2
  */
+//CHECKSTYLE:OFF
 @Internal
 @TargetClass(className = "net.minidev.json.reader.JsonWriter")
 final class JsonWriterReplacement {
@@ -48,3 +49,4 @@ final class BeansWriterASMReplacement {
         new BeansWriter().writeJSONString(value, out, compression);
     }
 }
+//CHECKSTYLE:ON
