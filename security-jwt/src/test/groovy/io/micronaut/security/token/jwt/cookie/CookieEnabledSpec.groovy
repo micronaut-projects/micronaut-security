@@ -19,9 +19,6 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.token.jwt.bearer.AccessRefreshTokenLoginHandler
-import io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties
-import io.micronaut.security.token.jwt.bearer.BearerTokenReader
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification

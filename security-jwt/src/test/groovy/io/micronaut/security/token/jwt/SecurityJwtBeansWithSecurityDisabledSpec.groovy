@@ -20,8 +20,8 @@ import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.jwt.bearer.AccessRefreshTokenLoginHandler
-import io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties
-import io.micronaut.security.token.jwt.bearer.BearerTokenReader
+import io.micronaut.security.token.bearer.BearerTokenConfigurationProperties
+import io.micronaut.security.token.bearer.BearerTokenReader
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties
 import io.micronaut.security.token.jwt.converters.EncryptionMethodConverter
 import io.micronaut.security.token.jwt.converters.JWEAlgorithmConverter
