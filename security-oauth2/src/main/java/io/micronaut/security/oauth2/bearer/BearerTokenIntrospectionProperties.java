@@ -24,6 +24,7 @@ public class BearerTokenIntrospectionProperties implements TokenIntrospectionCon
     private URL url;
     private String tokenParam = "token";
     private Map<String, String> tokenHintsParameters = Collections.emptyMap();
+    private IntrospectionCredentials credentials = new IntrospectionCredentials();
 
     @Override
     public URL getUrl() {
@@ -50,5 +51,35 @@ public class BearerTokenIntrospectionProperties implements TokenIntrospectionCon
 
     public void setTokenParam(String tokenParam) {
         this.tokenParam = tokenParam;
+    }
+
+    public IntrospectionCredentials getCredentials() {
+        return this.credentials;
+    }
+
+    public void setCredentials(IntrospectionCredentials credentials) {
+        this.credentials = credentials;
+    }
+
+    @ConfigurationProperties("credentials")
+    public static class IntrospectionCredentials {
+        private String clientId;
+        private String clientSecret;
+
+        public String getClientId() {
+            return this.clientId;
+        }
+
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
+        }
+
+        public String getClientSecret() {
+            return this.clientSecret;
+        }
+
+        public void setClientSecret(String clientSecret) {
+            this.clientSecret = clientSecret;
+        }
     }
 }

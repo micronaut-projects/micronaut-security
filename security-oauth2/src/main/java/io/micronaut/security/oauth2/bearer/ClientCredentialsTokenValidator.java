@@ -1,9 +1,11 @@
 package io.micronaut.security.oauth2.bearer;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.authentication.Authentication;
@@ -23,9 +25,11 @@ import java.util.StringJoiner;
 /**
  * Token validator that uses OAuth 2.0 Token Introspection endpoint to validate token and authorize access.
  *
- * @see https://tools.ietf.org/html/rfc7662
+ * @author svishnyakoff
+ * @see <a href="https://tools.ietf.org/html/rfc7662">rfc7662</a>
  */
 @Singleton
+@Internal
 public class ClientCredentialsTokenValidator implements TokenValidator {
 
     static final String OAUTH_TOKEN_AUTHORIZATION_CONFIG = "micronaut.security.token.oauth2.bearer";
@@ -33,6 +37,7 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
     private static final Logger LOG = LoggerFactory.getLogger(ClientCredentialsTokenValidator.class);
 
     private final BearerTokenIntrospectionProperties introspectionConfiguration;
+    private final IntrospectionEndpointAuthStrategy authStrategy;
     private final RxHttpClient oauthIntrospectionClient;
     private final List<TokenIntrospectionHandler> introspectionHandlers;
 
@@ -43,8 +48,10 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
     @Inject
     public ClientCredentialsTokenValidator(BearerTokenIntrospectionProperties introspectionConfiguration,
                                            List<TokenIntrospectionHandler> introspectedTokenValidators,
+                                           IntrospectionEndpointAuthStrategy authStrategy,
                                            @Client("${micronaut.security.token.oauth2.bearer.introspection.url}") RxHttpClient httpClient) {
         this.introspectionConfiguration = introspectionConfiguration;
+        this.authStrategy = authStrategy;
         this.oauthIntrospectionClient = httpClient;
         this.introspectionHandlers = introspectedTokenValidators;
     }
@@ -56,9 +63,11 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
             throw new IllegalArgumentException("Bearer token cannot be null or empty");
         }
 
-        HttpRequest<String> request = HttpRequest
+        MutableHttpRequest<String> request = HttpRequest
                 .POST("/", tokenIntrospectionRequestBody(token))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+
+        request = authStrategy.authorizeRequest(request);
 
         return oauthIntrospectionClient.exchange(request, Argument.of(Map.class, String.class, Object.class)).flatMap(response -> {
             if (response.status() == HttpStatus.UNAUTHORIZED) {
@@ -70,21 +79,25 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
                 return Flowable.empty();
             }
 
-            Map<String, Object> introspectionMetadata;
             try {
-                introspectionMetadata = (Map<String, Object>) response.body();
+                Map<String, Object> introspectionMetadata = (Map<String, Object>) response.body();
+
+                if (introspectionMetadata == null) {
+                    LOG.error("Introspection endpoint return empty body. Valid json is expected.");
+                    return Flowable.empty();
+                }
+
+                Optional<IntrospectedToken> activeToken = introspectionHandlers.stream()
+                        .map(validator -> validator.handle(introspectionMetadata))
+                        .filter(IntrospectedToken::isActive)
+                        .findFirst();
+
+                return activeToken.map(Flowable::just).orElse(Flowable.empty());
             }
             catch (Exception e) {
                 LOG.error("Token introspection url must return valid json response");
                 return Flowable.empty();
             }
-
-            Optional<IntrospectedToken> activeToken = introspectionHandlers.stream()
-                    .map(validator -> validator.handle(introspectionMetadata))
-                    .filter(IntrospectedToken::isActive)
-                    .findFirst();
-
-            return activeToken.map(Flowable::just).orElse(Flowable.empty());
         });
     }
 
