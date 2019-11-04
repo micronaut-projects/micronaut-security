@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.bearer;
+package io.micronaut.security.token.jwt.bearer;
 
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader;
 import io.micronaut.security.token.reader.HttpHeaderTokenReader;
 import io.micronaut.security.token.reader.TokenReader;
+
+import javax.inject.Singleton;
 
 /**
  * Reads JWT token from {@link io.micronaut.http.HttpHeaders#AUTHORIZATION} header. e.g. Bearer XXXXX.
@@ -24,10 +29,17 @@ import io.micronaut.security.token.reader.TokenReader;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(property = BearerTokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@Singleton
 public class BearerTokenReader extends HttpHeaderTokenReader implements TokenReader {
 
+    /*
+     *
+     * The order of the TokenReader.
+     */
+    public static final Integer ORDER = JwtCookieTokenReader.ORDER - 100;
+
     protected final BearerTokenConfiguration bearerTokenConfiguration;
-    private final int order;
 
     /**
      *
@@ -35,16 +47,6 @@ public class BearerTokenReader extends HttpHeaderTokenReader implements TokenRea
      */
     public BearerTokenReader(BearerTokenConfiguration bearerTokenConfiguration) {
         this.bearerTokenConfiguration = bearerTokenConfiguration;
-        this.order = 0;
-    }
-
-    /**
-     *
-     * @param bearerTokenConfiguration Instance of {@link BearerTokenConfiguration}
-     */
-    public BearerTokenReader(BearerTokenConfiguration bearerTokenConfiguration, int order) {
-        this.bearerTokenConfiguration = bearerTokenConfiguration;
-        this.order = order;
     }
 
     @Override
@@ -59,6 +61,6 @@ public class BearerTokenReader extends HttpHeaderTokenReader implements TokenRea
 
     @Override
     public int getOrder() {
-        return order;
+        return ORDER;
     }
 }

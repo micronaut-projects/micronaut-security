@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.bearer;
+package io.micronaut.security.token.jwt.bearer;
 
+import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.http.HttpHeaders;
+import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 /**
  * Default implementation of {@link BearerTokenConfiguration}.
@@ -24,7 +28,11 @@ import io.micronaut.http.HttpHeaders;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(property = BearerTokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@ConfigurationProperties(BearerTokenConfigurationProperties.PREFIX)
 public class BearerTokenConfigurationProperties implements BearerTokenConfiguration {
+
+    public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".bearer";
 
     public static final boolean DEFAULT_ENABLED = true;
 
@@ -58,7 +66,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
     }
 
     /**
-     * Sets the header name to use. Default value {@value HttpHeaders#AUTHORIZATION}.
+     * Sets the header name to use. Default value {@value io.micronaut.http.HttpHeaders#AUTHORIZATION}.
      *
      * @param headerName The header name to use
      */
@@ -67,7 +75,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
     }
 
     /**
-     * Sets the prefix to use for the auth token. Default value {@value HttpHeaderValues#AUTHORIZATION_PREFIX_BEARER}.
+     * Sets the prefix to use for the auth token. Default value {@value io.micronaut.http.HttpHeaderValues#AUTHORIZATION_PREFIX_BEARER}.
      * @param prefix The prefix to use
      */
     public void setPrefix(String prefix) {

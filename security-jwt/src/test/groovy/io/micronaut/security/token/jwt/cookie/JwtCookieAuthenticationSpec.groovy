@@ -28,10 +28,11 @@ import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.endpoints.LogoutController
-import io.micronaut.security.token.bearer.BearerTokenReader
+import io.micronaut.security.token.jwt.bearer.BearerTokenReader
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import spock.lang.AutoCleanup
+import spock.lang.Requires
 import spock.lang.Shared
 
 class JwtCookieAuthenticationSpec extends GebSpec {

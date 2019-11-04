@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.bearer
+package io.micronaut.security.token.jwt.bearer
 
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
