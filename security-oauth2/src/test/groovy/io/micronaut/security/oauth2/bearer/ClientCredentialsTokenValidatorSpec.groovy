@@ -4,27 +4,28 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpRequest
 import io.micronaut.http.client.RxHttpClient
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
+import io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethod
+import io.micronaut.security.oauth2.grants.GrantType
 import io.reactivex.Flowable
 import spock.lang.Specification
 
 class ClientCredentialsTokenValidatorSpec extends Specification {
 
-    def tokenIntrospectionConfiguration = new BearerTokenIntrospectionProperties()
     TokenIntrospectionHandler tokenIntrospectionHandler = Mock()
     def introspectionHandlers = [tokenIntrospectionHandler]
     RxHttpClient client = Mock()
-    IntrospectionEndpointAuthStrategy authStrategy = Mock()
 
     ClientCredentialsTokenValidator validator;
 
     void setup() {
-        validator = new ClientCredentialsTokenValidator(tokenIntrospectionConfiguration, introspectionHandlers, authStrategy, client)
+        validator = new ClientCredentialsTokenValidator(introspectionHandlers, oauthConfiguration(), client)
     }
 
     def "unauthorized access to introspection endpoint"() {
 
         setup:
-        authStrategy.authorizeRequest(_) >> {MutableHttpRequest request -> request}
         client.exchange(*_) >> Flowable.just(HttpResponse.unauthorized())
 
         when:
@@ -37,7 +38,6 @@ class ClientCredentialsTokenValidatorSpec extends Specification {
     def "5xx for a call to introspection endpoint"() {
 
         setup:
-        authStrategy.authorizeRequest(_) >> {MutableHttpRequest request -> request}
         client.exchange(*_) >> Flowable.just(HttpResponse.serverError())
 
         when:
@@ -50,7 +50,6 @@ class ClientCredentialsTokenValidatorSpec extends Specification {
     def "introspection endpoint does not return valid body"() {
 
         setup:
-        authStrategy.authorizeRequest(_) >> {MutableHttpRequest request -> request}
         client.exchange(*_) >> Flowable.just(HttpResponse.ok())
 
         when:
@@ -64,7 +63,6 @@ class ClientCredentialsTokenValidatorSpec extends Specification {
 
         setup:
         def authentication = IntrospectedToken.createActiveAuthentication("user", [], [:])
-        authStrategy.authorizeRequest(_) >> {MutableHttpRequest request -> request}
         client.exchange(*_) >> Flowable.just(HttpResponse.ok(["active": true]).contentType(MediaType.APPLICATION_JSON_TYPE))
         tokenIntrospectionHandler.handle(_) >> authentication
 
@@ -73,5 +71,20 @@ class ClientCredentialsTokenValidatorSpec extends Specification {
 
         then:
         Flowable.fromPublisher(validationResult).test().assertValue(authentication)
+    }
+
+    private static oauthConfiguration() {
+        def introspectionProperties = new OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties()
+
+        def properties = new OauthClientConfigurationProperties()
+        properties.clientId = "id"
+        properties.clientSecret = "secret"
+        properties.introspection = introspectionProperties
+        properties.grantType = GrantType.CLIENT_CREDENTIALS
+
+        introspectionProperties.url = "http://localhost"
+        introspectionProperties.authMethod = AuthenticationMethod.CLIENT_SECRET_BASIC
+
+        return properties
     }
 }

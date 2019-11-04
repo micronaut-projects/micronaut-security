@@ -11,6 +11,8 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethod
+import io.micronaut.security.oauth2.grants.GrantType
 import io.micronaut.security.rules.SecurityRule
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -25,8 +27,10 @@ class ClientCredentialsAuthorizationSpec extends Specification {
     Map<String, Object> serverConf = [
             'micronaut.security.enabled': 'true',
             'micronaut.security.oauth2.enabled': 'true',
-            'micronaut.security.token.oauth2.bearer.enabled': 'true',
-            'micronaut.security.token.oauth2.bearer.introspection.url': "http://localhost:${dynamicPort}/auth/token/introspection",
+            'micronaut.security.token.jwt.enabled': 'true',
+            'micronaut.security.oauth2.clients.authservice.grantType': GrantType.CLIENT_CREDENTIALS,
+            'micronaut.security.oauth2.clients.authservice.introspection.authMethod': AuthenticationMethod.NONE,
+            'micronaut.security.oauth2.clients.authservice.introspection.url': "http://localhost:${dynamicPort}/auth/token/introspection",
             'micronaut.server.port': dynamicPort,
             'mockserver.path': ''
     ]
@@ -39,7 +43,7 @@ class ClientCredentialsAuthorizationSpec extends Specification {
 
     def "verify server oauth authorization and authentication"() {
         given:
-        def client = server.getApplicationContext().createBean(RxHttpClient.class, server.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
+        def client = server.getApplicationContext().createBean(RxHttpClient.class, server.getURL())
 
         when:
         def response = client.toBlocking().retrieve(HttpRequest.GET('/oauth2/client-credentials')

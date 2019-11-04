@@ -1,5 +1,6 @@
 package io.micronaut.security.oauth2.bearer;
 
+import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
@@ -7,8 +8,13 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.RxHttpClient;
-import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.IntrospectionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.token.validator.TokenValidator;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -36,24 +42,37 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientCredentialsTokenValidator.class);
 
-    private final BearerTokenIntrospectionProperties introspectionConfiguration;
-    private final IntrospectionEndpointAuthStrategy authStrategy;
+    private final OauthClientConfiguration clientConfiguration;
     private final RxHttpClient oauthIntrospectionClient;
     private final List<TokenIntrospectionHandler> introspectionHandlers;
+    private final String introspectionUrl;
+    private final AuthenticationMethod authMethod;
+    private final IntrospectionEndpointConfiguration introspectionConfiguration;
 
     /**
-     * @param introspectionConfiguration  configuration of oauth2 introspection endpoint.
+     * @param oauthClientConfigurations   oauth client configuration list. One configuration with CLIENT CREDENTIALS grant
+     *                                    type is required in order this validator was operational
      * @param introspectedTokenValidators list of handlers that will proceed token introspection metadata.
+     * @param beanContext                 bean context
      */
     @Inject
-    public ClientCredentialsTokenValidator(BearerTokenIntrospectionProperties introspectionConfiguration,
-                                           List<TokenIntrospectionHandler> introspectedTokenValidators,
-                                           IntrospectionEndpointAuthStrategy authStrategy,
-                                           @Client("${micronaut.security.token.oauth2.bearer.introspection.url}") RxHttpClient httpClient) {
-        this.introspectionConfiguration = introspectionConfiguration;
-        this.authStrategy = authStrategy;
+    public ClientCredentialsTokenValidator(List<TokenIntrospectionHandler> introspectedTokenValidators,
+                                           List<OauthClientConfiguration> oauthClientConfigurations,
+                                           BeanContext beanContext) {
+
+        this(introspectedTokenValidators, getClientCredentialsConfiguration(oauthClientConfigurations),
+             beanContext.createBean(RxHttpClient.class, getIntrospectionUrl(oauthClientConfigurations)));
+    }
+
+    public ClientCredentialsTokenValidator(List<TokenIntrospectionHandler> introspectedTokenValidators,
+                                           OauthClientConfiguration oauthClientConfigurations,
+                                           RxHttpClient httpClient) {
         this.oauthIntrospectionClient = httpClient;
         this.introspectionHandlers = introspectedTokenValidators;
+        this.clientConfiguration = oauthClientConfigurations;
+        this.introspectionUrl = clientConfiguration.getIntrospection().flatMap(EndpointConfiguration::getUrl).get();
+        this.authMethod = clientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getAuthMethod).get();
+        this.introspectionConfiguration = clientConfiguration.getIntrospection().get();
     }
 
     @Override
@@ -64,10 +83,10 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
         }
 
         MutableHttpRequest<String> request = HttpRequest
-                .POST("/", tokenIntrospectionRequestBody(token))
+                .POST(introspectionUrl, tokenIntrospectionRequestBody(token))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
 
-        request = authStrategy.authorizeRequest(request);
+        secureRequest(request);
 
         return oauthIntrospectionClient.exchange(request, Argument.of(Map.class, String.class, Object.class)).flatMap(response -> {
             if (response.status() == HttpStatus.UNAUTHORIZED) {
@@ -101,6 +120,15 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
         });
     }
 
+    private <T> MutableHttpRequest<T> secureRequest(MutableHttpRequest<T> request) {
+        if (authMethod == AuthenticationMethod.CLIENT_SECRET_BASIC) {
+            LOG.debug("Adding basic authorization to introspection request");
+            request.basicAuth(clientConfiguration.getClientId(), clientConfiguration.getClientSecret());
+        }
+
+        return request;
+    }
+
     private String tokenIntrospectionRequestBody(String token) {
         String tokenParam = introspectionConfiguration.getTokenParam() + "=" + token;
         StringJoiner joiner = new StringJoiner("&");
@@ -111,5 +139,20 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
                 .forEach(joiner::add);
 
         return joiner.toString();
+    }
+
+    private static OauthClientConfiguration getClientCredentialsConfiguration(List<OauthClientConfiguration> clientConfigurations) {
+        return clientConfigurations.stream()
+                .filter(conf -> conf.getGrantType() == GrantType.CLIENT_CREDENTIALS)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Oauth client configuration with grant type CLIENT CREDENTIALS is required"));
+    }
+
+    private static String getIntrospectionUrl(List<OauthClientConfiguration> clientConfigurations) {
+        return getClientCredentialsConfiguration(clientConfigurations)
+                .getIntrospection()
+                .get()
+                .getUrl()
+                .orElseThrow(() -> new RuntimeException("Introspection url is not provided"));
     }
 }

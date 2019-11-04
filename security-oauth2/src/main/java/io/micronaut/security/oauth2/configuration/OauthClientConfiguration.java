@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.IntrospectionEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.grants.GrantType;
 
@@ -83,7 +84,7 @@ public interface OauthClientConfiguration extends Toggleable {
      *
      * @return The introspection endpoint configuration
      */
-    Optional<SecureEndpointConfiguration> getIntrospection();
+    Optional<IntrospectionEndpointConfiguration> getIntrospection();
 
     /**
      * https://tools.ietf.org/html/rfc7009.

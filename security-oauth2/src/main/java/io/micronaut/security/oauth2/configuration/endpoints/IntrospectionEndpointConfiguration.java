@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
+import java.util.Map;
+
 /**
  * Introspection endpoint configuration.
  *
@@ -22,4 +24,15 @@ package io.micronaut.security.oauth2.configuration.endpoints;
  * @since 1.2.0
  */
 public interface IntrospectionEndpointConfiguration extends SecureEndpointConfiguration {
+
+    /**
+     * @return Additional parameters that will be passed in call to introspection endpoint.
+     */
+    Map<String, String> getTokenHintsParameters();
+
+    /**
+     * @return Name of the token parameter that is used during the call to token introspection endpoint.
+     * Default name if not provided "token"
+     */
+    String getTokenParam();
 }

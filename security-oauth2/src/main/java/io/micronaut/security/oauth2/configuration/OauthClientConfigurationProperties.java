@@ -32,7 +32,9 @@ import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -195,7 +197,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     @Override
-    public Optional<SecureEndpointConfiguration> getIntrospection() {
+    public Optional<IntrospectionEndpointConfiguration> getIntrospection() {
         return Optional.ofNullable(introspection);
     }
 
@@ -242,7 +244,28 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      * Introspection endpoint configuration
      */
     @ConfigurationProperties("introspection")
-    public static class IntrospectionEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements IntrospectionEndpointConfiguration { }
+    public static class IntrospectionEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements IntrospectionEndpointConfiguration {
+        private String tokenParam = "token";
+        private Map<String, String> tokenHintsParameters = Collections.emptyMap();
+
+        @Override
+        public Map<String, String> getTokenHintsParameters() {
+            return tokenHintsParameters;
+        }
+
+        @Override
+        public String getTokenParam() {
+            return tokenParam;
+        }
+
+        public void setTokenParam(String tokenParam) {
+            this.tokenParam = tokenParam;
+        }
+
+        public void setTokenHintsParameters(Map<String, String> tokenHintsParameters) {
+            this.tokenHintsParameters = tokenHintsParameters;
+        }
+    }
 
     /**
      * Revocation endpoint configuration
