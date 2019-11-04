@@ -18,7 +18,6 @@ package io.micronaut.security.filters;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.CollectionUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,10 +37,18 @@ public class SessionSecurityFilterOrderProvider implements SecurityFilterOrderPr
     private static final Integer ORDER = 100;
     private final BeanContext beanContext;
 
+    /**
+     * Default constructor. Added for backward compatibility.
+     */
     public SessionSecurityFilterOrderProvider() {
         this.beanContext = null;
     }
 
+    /**
+     * Injected constructor.
+     *
+     * @param beanContext The bean context
+     */
     @Inject
     public SessionSecurityFilterOrderProvider(BeanContext beanContext) {
         this.beanContext = beanContext;
@@ -53,7 +60,7 @@ public class SessionSecurityFilterOrderProvider implements SecurityFilterOrderPr
             return ORDER;
         }
 
-        boolean configurationPresent = Stream.of( "io.micronaut.configuration.metrics.micrometer", "io.micronaut.session")
+        boolean configurationPresent = Stream.of("io.micronaut.configuration.metrics.micrometer", "io.micronaut.session")
                 .map(beanContext::findBeanConfiguration)
                 .anyMatch(Optional::isPresent);
 
