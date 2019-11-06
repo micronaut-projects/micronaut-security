@@ -1,5 +1,7 @@
 package io.micronaut.security.oauth2.bearer;
 
+import io.micronaut.context.annotation.DefaultImplementation;
+
 import java.util.Map;
 
 /**
@@ -11,6 +13,7 @@ import java.util.Map;
  *
  * Developers can implement this interface if they need to support custom introspection response.
  */
+@DefaultImplementation(DefaultTokenIntrospectionHandler.class)
 public interface TokenIntrospectionHandler {
 
     /**

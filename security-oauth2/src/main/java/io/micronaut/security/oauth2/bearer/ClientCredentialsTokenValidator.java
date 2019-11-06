@@ -1,5 +1,7 @@
 package io.micronaut.security.oauth2.bearer;
 
+import io.micronaut.cache.CacheManager;
+import io.micronaut.cache.SyncCache;
 import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.type.Argument;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Token validator that uses OAuth 2.0 Token Introspection endpoint to validate token and authorize access.
@@ -48,6 +51,7 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
     private final String introspectionUrl;
     private final AuthenticationMethod authMethod;
     private final IntrospectionEndpointConfiguration introspectionConfiguration;
+    private final SyncCache<Object> cache;
 
     /**
      * @param oauthClientConfigurations   oauth client configuration list. One configuration with CLIENT CREDENTIALS grant
@@ -58,14 +62,18 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
     @Inject
     public ClientCredentialsTokenValidator(List<TokenIntrospectionHandler> introspectedTokenValidators,
                                            List<OauthClientConfiguration> oauthClientConfigurations,
+                                           CacheManager<Object> cacheManager,
                                            BeanContext beanContext) {
 
-        this(introspectedTokenValidators, getClientCredentialsConfiguration(oauthClientConfigurations),
+        this(introspectedTokenValidators,
+             getClientCredentialsConfiguration(oauthClientConfigurations),
+             cacheManager,
              beanContext.createBean(RxHttpClient.class, getIntrospectionUrl(oauthClientConfigurations)));
     }
 
     public ClientCredentialsTokenValidator(List<TokenIntrospectionHandler> introspectedTokenValidators,
                                            OauthClientConfiguration oauthClientConfigurations,
+                                           CacheManager<Object> cacheManager,
                                            RxHttpClient httpClient) {
         this.oauthIntrospectionClient = httpClient;
         this.introspectionHandlers = introspectedTokenValidators;
@@ -73,6 +81,14 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
         this.introspectionUrl = clientConfiguration.getIntrospection().flatMap(EndpointConfiguration::getUrl).get();
         this.authMethod = clientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getAuthMethod).get();
         this.introspectionConfiguration = clientConfiguration.getIntrospection().get();
+
+        if (cacheManager.getCacheNames().contains(this.clientConfiguration.getName())) {
+            this.cache = cacheManager.getCache(this.clientConfiguration.getName());
+        }
+        else {
+            this.cache = null;
+        }
+
     }
 
     @Override
@@ -80,6 +96,22 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
 
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Bearer token cannot be null or empty");
+        }
+
+        if (cache != null) {
+            Optional<IntrospectedToken> cachedTokenIntrospection = cache.get(token, IntrospectedToken.class);
+
+            if (cachedTokenIntrospection.isPresent()) {
+                IntrospectedToken tokenIntrospection = cachedTokenIntrospection.get();
+
+                long currentTimestamp = TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+
+                if (currentTimestamp < tokenIntrospection.getTokenExpirationTime()) {
+                    return Flowable.just(tokenIntrospection);
+                }
+
+                cache.invalidate(token);
+            }
         }
 
         MutableHttpRequest<String> request = HttpRequest
@@ -110,6 +142,10 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
                         .map(validator -> validator.handle(introspectionMetadata))
                         .filter(IntrospectedToken::isActive)
                         .findFirst();
+
+                if (cache != null) {
+                    activeToken.ifPresent(authenticatedToken -> cache.put(token, authenticatedToken));
+                }
 
                 return activeToken.map(Flowable::just).orElse(Flowable.empty());
             }

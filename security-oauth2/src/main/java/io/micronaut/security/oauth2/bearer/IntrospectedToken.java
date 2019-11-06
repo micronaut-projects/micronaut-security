@@ -15,14 +15,19 @@ import java.util.Map;
  */
 public class IntrospectedToken implements Authentication {
 
-    private static final IntrospectedToken INACTIVE_TOKEN = new IntrospectedToken(false, "", Collections.emptyList(), Collections.emptyMap());
+    private static final IntrospectedToken INACTIVE_TOKEN = new IntrospectedToken(false, "", Collections.emptyList(), 0, 0, Collections.emptyMap());
     private final boolean isActive;
     private final String username;
+    private final int iat;
+    private final int exp;
     private final Map<String, Object> attributes;
 
-    private IntrospectedToken(boolean isActive, String username, List<String> scopes, Map<String, Object> attributes){
+    private IntrospectedToken(boolean isActive, String username, List<String> scopes, int tokenIssuingTime,
+                              int tokenExpirationTime, Map<String, Object> attributes){
         this.isActive = isActive;
         this.username = username;
+        this.iat = tokenIssuingTime;
+        this.exp = tokenExpirationTime;
 
         Map<String, Object> attr = new HashMap<>();
         attr.putAll(attributes);
@@ -38,8 +43,9 @@ public class IntrospectedToken implements Authentication {
      * @param attributes token introspection attributes
      * @return Active token
      */
-    public static IntrospectedToken createActiveAuthentication(String username, List<String> scopes, Map<String, Object> attributes) {
-        return new IntrospectedToken(true, username, scopes, attributes);
+    public static IntrospectedToken createActiveAuthentication(String username, List<String> scopes, int iat, int exp,
+                                                               Map<String, Object> attributes) {
+        return new IntrospectedToken(true, username, scopes, iat, exp, attributes);
     }
 
     /**
@@ -66,5 +72,20 @@ public class IntrospectedToken implements Authentication {
      */
     public boolean isActive() {
         return isActive;
+    }
+
+    /**
+     * @return Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was
+     * originally issued
+     */
+    public int getTokenIssueTime() {
+        return this.iat;
+    }
+
+    /**
+     * @return Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token expire
+     */
+    public int getTokenExpirationTime() {
+        return this.exp;
     }
 }

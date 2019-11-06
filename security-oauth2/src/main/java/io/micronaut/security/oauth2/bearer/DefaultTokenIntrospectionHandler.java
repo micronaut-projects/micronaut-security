@@ -27,7 +27,11 @@ public class DefaultTokenIntrospectionHandler implements TokenIntrospectionHandl
                 .map(Arrays::asList)
                 .orElse(Collections.emptyList());
         String username = Objects.toString(tokenIntrospection.get("username"), "unknown");
+        Integer issuingTimestamp = Optional.ofNullable((Integer)tokenIntrospection.get("iat")).orElse(0);
+        Integer expirationTimestamp = Optional.ofNullable((Integer)tokenIntrospection.get("exp")).orElse(0);
 
-        return isActive ? createActiveAuthentication(username, roles, tokenIntrospection) : createInactiveAuthentication();
+        return isActive
+                ? createActiveAuthentication(username, roles, issuingTimestamp, expirationTimestamp, tokenIntrospection)
+                : createInactiveAuthentication();
     }
 }

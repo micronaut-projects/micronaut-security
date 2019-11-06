@@ -1,10 +1,10 @@
 package io.micronaut.security.oauth2.bearer
 
+import io.micronaut.cache.CacheManager
+import io.micronaut.cache.SyncCache
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
-import io.micronaut.http.MutableHttpRequest
 import io.micronaut.http.client.RxHttpClient
-import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod
 import io.micronaut.security.oauth2.grants.GrantType
@@ -15,12 +15,16 @@ class ClientCredentialsTokenValidatorSpec extends Specification {
 
     TokenIntrospectionHandler tokenIntrospectionHandler = Mock()
     def introspectionHandlers = [tokenIntrospectionHandler]
+    CacheManager<Object> cacheManager = Mock()
+    SyncCache<Object> cache = Mock()
     RxHttpClient client = Mock()
 
     ClientCredentialsTokenValidator validator;
 
     void setup() {
-        validator = new ClientCredentialsTokenValidator(introspectionHandlers, oauthConfiguration(), client)
+        cacheManager.getCache(_ as String) >> cache
+        cacheManager.getCacheNames() >> []
+        validator = new ClientCredentialsTokenValidator(introspectionHandlers, oauthConfiguration(), cacheManager, client)
     }
 
     def "unauthorized access to introspection endpoint"() {
@@ -62,7 +66,7 @@ class ClientCredentialsTokenValidatorSpec extends Specification {
     def "successful token validation"() {
 
         setup:
-        def authentication = IntrospectedToken.createActiveAuthentication("user", [], [:])
+        def authentication = IntrospectedToken.createActiveAuthentication("user", [], 0, 0, [:])
         client.exchange(*_) >> Flowable.just(HttpResponse.ok(["active": true]).contentType(MediaType.APPLICATION_JSON_TYPE))
         tokenIntrospectionHandler.handle(_) >> authentication
 
@@ -73,10 +77,47 @@ class ClientCredentialsTokenValidatorSpec extends Specification {
         Flowable.fromPublisher(validationResult).test().assertValue(authentication)
     }
 
+    def "token retrospection retrieved from cache"() {
+
+        setup:
+        int expirationTime = System.currentTimeSeconds() + 100
+        def authentication = IntrospectedToken.createActiveAuthentication("user", [], 0, expirationTime, [:])
+
+        when:
+        this.validator = new ClientCredentialsTokenValidator(introspectionHandlers, oauthConfiguration(), cacheManager, client)
+        def validationResult = validator.validateToken("some token")
+
+        then:
+        cacheManager.getCacheNames() >> ["authService"]
+        cache.get("some token", IntrospectedToken) >> Optional.of(authentication)
+
+        Flowable.fromPublisher(validationResult).test().assertValue(authentication)
+    }
+
+    def "cache expired, retrieve token from authorization service"() {
+
+        setup:
+        int expirationTime = System.currentTimeSeconds() - 100
+        def authentication = IntrospectedToken.createActiveAuthentication("user", [], 0, expirationTime, [:])
+        client.exchange(*_) >> Flowable.just(HttpResponse.ok(["active": true]).contentType(MediaType.APPLICATION_JSON_TYPE))
+        tokenIntrospectionHandler.handle(_) >> authentication
+
+        when:
+        this.validator = new ClientCredentialsTokenValidator(introspectionHandlers, oauthConfiguration(), cacheManager, client)
+        def validationResult = validator.validateToken("some token")
+
+        then:
+
+        cacheManager.getCacheNames() >> ["authService"]
+        cache.get("some token", IntrospectedToken) >> Optional.of(authentication)
+
+        Flowable.fromPublisher(validationResult).test().assertValue(authentication)
+    }
+
     private static oauthConfiguration() {
         def introspectionProperties = new OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties()
 
-        def properties = new OauthClientConfigurationProperties()
+        def properties = new OauthClientConfigurationProperties('authService')
         properties.clientId = "id"
         properties.clientSecret = "secret"
         properties.introspection = introspectionProperties
