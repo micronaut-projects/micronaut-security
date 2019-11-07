@@ -39,8 +39,6 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,7 +51,6 @@ import java.util.concurrent.TimeUnit;
  * @author svishnyakoff
  * @see <a href="https://tools.ietf.org/html/rfc7662">rfc7662</a>
  */
-@Singleton
 @Internal
 public class ClientCredentialsTokenValidator implements TokenValidator {
 
@@ -71,21 +68,20 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
 
     /**
      * @param introspectedTokenValidators list of handlers that will proceed token introspection metadata.
-     * @param oauthClientConfigurations   oauth client configuration list. One configuration with CLIENT CREDENTIALS grant
-     *                                    type is required in order this validator was operational
+     * @param clientConfiguration         oauth client configuration with "client credentials" grant
      * @param cacheManager                cache manager
      * @param beanContext                 bean context
      */
-    @Inject
     public ClientCredentialsTokenValidator(List<TokenIntrospectionHandler> introspectedTokenValidators,
-                                           List<OauthClientConfiguration> oauthClientConfigurations,
+                                           OauthClientConfiguration clientConfiguration,
                                            CacheManager<Object> cacheManager,
                                            BeanContext beanContext) {
 
         this(introspectedTokenValidators,
-             getClientCredentialsConfiguration(oauthClientConfigurations),
+             clientConfiguration,
              cacheManager,
-             beanContext.createBean(RxHttpClient.class, getIntrospectionUrl(oauthClientConfigurations)));
+             beanContext.createBean(RxHttpClient.class, clientConfiguration.getIntrospection().get().getUrl()
+                     .orElseThrow(() -> new IllegalArgumentException("Introspection url is missing"))));
     }
 
     /**
