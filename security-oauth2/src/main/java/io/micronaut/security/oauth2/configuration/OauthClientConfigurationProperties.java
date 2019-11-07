@@ -258,10 +258,18 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             return tokenParam;
         }
 
+        /**
+         * Custom parameter name that will be used to send token to introspection endpoint.
+         * @param tokenParam token parameter name
+         */
         public void setTokenParam(String tokenParam) {
             this.tokenParam = tokenParam;
         }
 
+        /**
+         * Add additional parameters that will be send along with token
+         * @param tokenHintsParameters additional hint parameters
+         */
         public void setTokenHintsParameters(Map<String, String> tokenHintsParameters) {
             this.tokenHintsParameters = tokenHintsParameters;
         }

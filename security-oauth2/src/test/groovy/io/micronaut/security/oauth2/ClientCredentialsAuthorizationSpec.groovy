@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017-2019 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.micronaut.security.oauth2
 
 import io.micronaut.context.ApplicationContext
@@ -25,14 +41,14 @@ class ClientCredentialsAuthorizationSpec extends Specification {
 
     @Shared
     Map<String, Object> serverConf = [
-            'micronaut.security.enabled': 'true',
-            'micronaut.security.oauth2.enabled': 'true',
-            'micronaut.security.token.jwt.enabled': 'true',
-            'micronaut.security.oauth2.clients.authservice.grantType': GrantType.CLIENT_CREDENTIALS,
+            'micronaut.security.enabled'                                            : 'true',
+            'micronaut.security.oauth2.enabled'                                     : 'true',
+            'micronaut.security.token.jwt.enabled'                                  : 'true',
+            'micronaut.security.oauth2.clients.authservice.grantType'               : GrantType.CLIENT_CREDENTIALS,
             'micronaut.security.oauth2.clients.authservice.introspection.authMethod': AuthenticationMethod.NONE,
-            'micronaut.security.oauth2.clients.authservice.introspection.url': "http://localhost:${dynamicPort}/auth/token/introspection",
-            'micronaut.server.port': dynamicPort,
-            'mockserver.path': ''
+            'micronaut.security.oauth2.clients.authservice.introspection.url'       : "http://localhost:${dynamicPort}/auth/token/introspection",
+            'micronaut.server.port'                                                 : dynamicPort,
+            'mockserver.path'                                                       : ''
     ]
 
 

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017-2019 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.micronaut.security.oauth2.bearer;
 
 import io.micronaut.cache.CacheManager;
@@ -54,9 +70,10 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
     private final SyncCache<Object> cache;
 
     /**
+     * @param introspectedTokenValidators list of handlers that will proceed token introspection metadata.
      * @param oauthClientConfigurations   oauth client configuration list. One configuration with CLIENT CREDENTIALS grant
      *                                    type is required in order this validator was operational
-     * @param introspectedTokenValidators list of handlers that will proceed token introspection metadata.
+     * @param cacheManager                cache manager
      * @param beanContext                 bean context
      */
     @Inject
@@ -71,6 +88,13 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
              beanContext.createBean(RxHttpClient.class, getIntrospectionUrl(oauthClientConfigurations)));
     }
 
+    /**
+     * @param oauthClientConfigurations   oauth client configuration list. One configuration with CLIENT CREDENTIALS grant
+     *                                    type is required in order this validator was operational
+     * @param introspectedTokenValidators list of handlers that will proceed token introspection metadata.
+     * @param cacheManager                cache manager
+     * @param httpClient                  http client used to call introspection endpoint
+     */
     public ClientCredentialsTokenValidator(List<TokenIntrospectionHandler> introspectedTokenValidators,
                                            OauthClientConfiguration oauthClientConfigurations,
                                            CacheManager<Object> cacheManager,
@@ -84,8 +108,7 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
 
         if (cacheManager.getCacheNames().contains(this.clientConfiguration.getName())) {
             this.cache = cacheManager.getCache(this.clientConfiguration.getName());
-        }
-        else {
+        } else {
             this.cache = null;
         }
 
@@ -120,40 +143,39 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
 
         secureRequest(request);
 
-        return oauthIntrospectionClient.exchange(request, Argument.of(Map.class, String.class, Object.class)).flatMap(response -> {
-            if (response.status() == HttpStatus.UNAUTHORIZED) {
-                LOG.error("Authorization service requires valid credentials to call introspection endpoint");
-                return Flowable.empty();
-            }
-            else if (response.status() != HttpStatus.OK) {
-                LOG.error("Request to introspection endpoint failed with: {}" , response.getStatus().getCode());
-                return Flowable.empty();
-            }
+        return oauthIntrospectionClient.exchange(request, Argument.of(Map.class, String.class, Object.class))
+                .flatMap(response -> {
+                    if (response.status() == HttpStatus.UNAUTHORIZED) {
+                        LOG.error("Authorization service requires valid credentials to call introspection endpoint");
+                        return Flowable.empty();
+                    } else if (response.status() != HttpStatus.OK) {
+                        LOG.error("Request to introspection endpoint failed with: {}", response.getStatus().getCode());
+                        return Flowable.empty();
+                    }
 
-            try {
-                Map<String, Object> introspectionMetadata = (Map<String, Object>) response.body();
+                    try {
+                        Map<String, Object> introspectionMetadata = (Map<String, Object>) response.body();
 
-                if (introspectionMetadata == null) {
-                    LOG.error("Introspection endpoint return empty body. Valid json is expected.");
-                    return Flowable.empty();
-                }
+                        if (introspectionMetadata == null) {
+                            LOG.error("Introspection endpoint return empty body. Valid json is expected.");
+                            return Flowable.empty();
+                        }
 
-                Optional<IntrospectedToken> activeToken = introspectionHandlers.stream()
-                        .map(validator -> validator.handle(introspectionMetadata))
-                        .filter(IntrospectedToken::isActive)
-                        .findFirst();
+                        Optional<IntrospectedToken> activeToken = introspectionHandlers.stream()
+                                .map(validator -> validator.handle(introspectionMetadata))
+                                .filter(IntrospectedToken::isActive)
+                                .findFirst();
 
-                if (cache != null) {
-                    activeToken.ifPresent(authenticatedToken -> cache.put(token, authenticatedToken));
-                }
+                        if (cache != null) {
+                            activeToken.ifPresent(authenticatedToken -> cache.put(token, authenticatedToken));
+                        }
 
-                return activeToken.map(Flowable::just).orElse(Flowable.empty());
-            }
-            catch (Exception e) {
-                LOG.error("Token introspection url must return valid json response");
-                return Flowable.empty();
-            }
-        });
+                        return activeToken.map(Flowable::just).orElse(Flowable.empty());
+                    } catch (Exception e) {
+                        LOG.error("Token introspection url must return valid json response");
+                        return Flowable.empty();
+                    }
+                });
     }
 
     private <T> MutableHttpRequest<T> secureRequest(MutableHttpRequest<T> request) {
@@ -171,17 +193,19 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
         joiner.add(tokenParam);
 
         introspectionConfiguration.getTokenHintsParameters().entrySet().stream()
-                .map(entry -> entry.getKey()+ "=" + entry.getValue())
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
                 .forEach(joiner::add);
 
         return joiner.toString();
     }
 
-    private static OauthClientConfiguration getClientCredentialsConfiguration(List<OauthClientConfiguration> clientConfigurations) {
+    private static OauthClientConfiguration getClientCredentialsConfiguration(
+            List<OauthClientConfiguration> clientConfigurations) {
         return clientConfigurations.stream()
                 .filter(conf -> conf.getGrantType() == GrantType.CLIENT_CREDENTIALS)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Oauth client configuration with grant type CLIENT CREDENTIALS is required"));
+                .orElseThrow(() -> new IllegalStateException(
+                        "Oauth client configuration with grant type CLIENT CREDENTIALS is required"));
     }
 
     private static String getIntrospectionUrl(List<OauthClientConfiguration> clientConfigurations) {
