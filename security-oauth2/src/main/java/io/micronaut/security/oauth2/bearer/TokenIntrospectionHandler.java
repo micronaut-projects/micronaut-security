@@ -28,6 +28,9 @@ import java.util.Map;
  * that does not conform the defined RFC or may be were introduced before RFC is published.
  * <p>
  * Developers can implement this interface if they need to support custom introspection response.
+ *
+ * @author svishnyakoff
+ * @since 1.3.0
  */
 @DefaultImplementation(DefaultTokenIntrospectionHandler.class)
 public interface TokenIntrospectionHandler {

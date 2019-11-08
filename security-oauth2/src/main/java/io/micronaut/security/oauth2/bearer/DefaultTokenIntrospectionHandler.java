@@ -25,7 +25,7 @@ import static io.micronaut.security.oauth2.bearer.IntrospectedToken.createInacti
 /**
  * Implements token introspection handling defined in <a href="https://tools.ietf.org/html/rfc7662">rfc7662</a>.
  * <p>
- * Token considered valid if the introspection response has <code>"active"="true"</code> parameter
+ * Token considered active if the introspection response has <code>"active"="true"</code> parameter
  */
 @Singleton
 public class DefaultTokenIntrospectionHandler implements TokenIntrospectionHandler {

@@ -32,7 +32,6 @@ import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguratio
 import io.micronaut.security.oauth2.configuration.endpoints.IntrospectionEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
-import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.token.validator.TokenValidator;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -85,19 +84,18 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
     }
 
     /**
-     * @param oauthClientConfigurations   oauth client configuration list. One configuration with CLIENT CREDENTIALS grant
-     *                                    type is required in order this validator was operational
+     * @param oauthClientConfiguration    oauth client configuration with "client credentials" grant
      * @param introspectedTokenValidators list of handlers that will proceed token introspection metadata.
      * @param cacheManager                cache manager
      * @param httpClient                  http client used to call introspection endpoint
      */
     public ClientCredentialsTokenValidator(List<TokenIntrospectionHandler> introspectedTokenValidators,
-                                           OauthClientConfiguration oauthClientConfigurations,
+                                           OauthClientConfiguration oauthClientConfiguration,
                                            CacheManager<Object> cacheManager,
                                            RxHttpClient httpClient) {
         this.oauthIntrospectionClient = httpClient;
         this.introspectionHandlers = introspectedTokenValidators;
-        this.clientConfiguration = oauthClientConfigurations;
+        this.clientConfiguration = oauthClientConfiguration;
         this.introspectionUrl = clientConfiguration.getIntrospection().flatMap(EndpointConfiguration::getUrl).get();
         this.authMethod = clientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getAuthMethod).get();
         this.introspectionConfiguration = clientConfiguration.getIntrospection().get();
@@ -193,22 +191,5 @@ public class ClientCredentialsTokenValidator implements TokenValidator {
                 .forEach(joiner::add);
 
         return joiner.toString();
-    }
-
-    private static OauthClientConfiguration getClientCredentialsConfiguration(
-            List<OauthClientConfiguration> clientConfigurations) {
-        return clientConfigurations.stream()
-                .filter(conf -> conf.getGrantType() == GrantType.CLIENT_CREDENTIALS)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(
-                        "Oauth client configuration with grant type CLIENT CREDENTIALS is required"));
-    }
-
-    private static String getIntrospectionUrl(List<OauthClientConfiguration> clientConfigurations) {
-        return getClientCredentialsConfiguration(clientConfigurations)
-                .getIntrospection()
-                .get()
-                .getUrl()
-                .orElseThrow(() -> new RuntimeException("Introspection url is not provided"));
     }
 }

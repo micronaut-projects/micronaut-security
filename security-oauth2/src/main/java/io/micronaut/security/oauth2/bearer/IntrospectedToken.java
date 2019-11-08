@@ -36,25 +36,24 @@ public final class IntrospectedToken implements Authentication {
                                                                                   Collections.emptyMap());
     private final boolean isActive;
     private final String username;
-    private final int iat;
-    private final int exp;
+    private final int issuingTime;
+    private final int expirationTime;
     private final Map<String, Object> attributes;
 
     /**
-     *
-     * @param isActive flag that tells if token is active. If it is expired or fetching failed, the flag should be false
-     * @param username user name token is issued for
-     * @param scopes token scopes
-     * @param tokenIssuingTime time when token was issued in seconds
+     * @param isActive            flag that tells if token is active. If it is expired or fetching failed, the flag should be false
+     * @param username            user name token is issued for
+     * @param scopes              token scopes
+     * @param tokenIssuingTime    time when token was issued in seconds
      * @param tokenExpirationTime time when token expire
-     * @param attributes all the introspection data received from authorization service
+     * @param attributes          all the introspection data received from authorization service
      */
     private IntrospectedToken(boolean isActive, String username, List<String> scopes, int tokenIssuingTime,
                               int tokenExpirationTime, Map<String, Object> attributes) {
         this.isActive = isActive;
         this.username = username;
-        this.iat = tokenIssuingTime;
-        this.exp = tokenExpirationTime;
+        this.issuingTime = tokenIssuingTime;
+        this.expirationTime = tokenExpirationTime;
 
         Map<String, Object> attr = new HashMap<>();
         attr.putAll(attributes);
@@ -110,13 +109,13 @@ public final class IntrospectedToken implements Authentication {
      * originally issued
      */
     public int getTokenIssueTime() {
-        return this.iat;
+        return this.issuingTime;
     }
 
     /**
      * @return Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token expire
      */
     public int getTokenExpirationTime() {
-        return this.exp;
+        return this.expirationTime;
     }
 }

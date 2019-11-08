@@ -16,7 +16,7 @@
 
 
 /**
- * Classes implementing server authorization based on bearer token.
+ * Classes implementing server authorization based on oauth2 bearer token.
  *
  * @author svishnyakoff
  * @since 1.3.0
