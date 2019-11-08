@@ -24,7 +24,7 @@ import java.util.Map;
  * Handler responsible for processing token introspection metadata.
  * <p>
  * While token introspection endpoint and it's response are standardized in scope of
- * <a href="https://tools.ietf.org/html/rfc7662"> rfc7662 <a/> there are known <a href="https://stackoverflow.com/questions/12296017/how-to-validate-an-oauth-2-0-access-token-for-a-resource-server">custom solutions</a>
+ * <a href="https://tools.ietf.org/html/rfc7662">rfc7662</a> there are known <a href="https://stackoverflow.com/questions/12296017/how-to-validate-an-oauth-2-0-access-token-for-a-resource-server">custom solutions</a>
  * that does not conform the defined RFC or may be were introduced before RFC is published.
  * <p>
  * Developers can implement this interface if they need to support custom introspection response.
