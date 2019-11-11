@@ -89,26 +89,20 @@ public final class JwtTokenValidatorUtils {
 
         final JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();
         for (final SignatureConfiguration config : signatureConfigurations) {
-            if (config.supports(algorithm)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Using signature configuration: {}", config.toString());
-                }
-                try {
-                    if (config.verify(signedJWT)) {
-                        return Optional.of(signedJWT);
-                    } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("JWT Signature verification failed: {}", signedJWT.getParsedString());
-                        }
-                    }
-                } catch (final JOSEException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Using signature configuration: {}", config.toString());
+            }
+            try {
+                if (config.verify(signedJWT)) {
+                    return Optional.of(signedJWT);
+                } else {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Verification fails with signature configuration: {}, passing to the next one", config);
+                        LOG.debug("JWT Signature verification failed: {}", signedJWT.getParsedString());
                     }
                 }
-            } else {
+            } catch (final JOSEException e) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("{}", config.supportedAlgorithmsMessage());
+                    LOG.debug("Verification fails with signature configuration: {}, passing to the next one", config);
                 }
             }
         }
