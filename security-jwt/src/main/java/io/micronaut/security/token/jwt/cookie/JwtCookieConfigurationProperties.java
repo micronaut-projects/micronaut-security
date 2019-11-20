@@ -82,6 +82,10 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_LOGINFAILURETARGETURL = "/";
 
+    public static final Boolean DEFAULT_LOGIN_REDIRECT = true;
+
+    public static final Boolean DEFAULT_LOGOUT_REDIRECT = true;
+
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
@@ -92,6 +96,8 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     private String cookieName = DEFAULT_COOKIENAME;
     private String loginSuccessTargetUrl = DEFAULT_LOGINSUCCESSTARGETURL;
     private String loginFailureTargetUrl = DEFAULT_LOGINFAILURETARGETURL;
+    private Boolean loginRedirect = DEFAULT_LOGIN_REDIRECT;
+    private Boolean logoutRedirect = DEFAULT_LOGOUT_REDIRECT;
 
     /**
      *
@@ -115,6 +121,16 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     @Override
     public String getLoginFailureTargetUrl() {
         return loginFailureTargetUrl;
+    }
+
+    @Override
+    public Boolean isLoginRedirect() {
+        return loginRedirect;
+    }
+
+    @Override
+    public Boolean isLogoutRedirect() {
+        return logoutRedirect;
     }
 
     /**
@@ -145,6 +161,14 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
         if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
             this.loginFailureTargetUrl = loginFailureTargetUrl;
         }
+    }
+
+    public void setLoginRedirect(Boolean loginRedirect) {
+        this.loginRedirect = loginRedirect;
+    }
+
+    public void setLogoutRedirect(Boolean logoutRedirect) {
+        this.logoutRedirect = logoutRedirect;
     }
 
     /**

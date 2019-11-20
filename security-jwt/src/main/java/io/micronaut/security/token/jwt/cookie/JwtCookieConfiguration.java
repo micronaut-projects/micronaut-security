@@ -42,4 +42,8 @@ public interface JwtCookieConfiguration extends CookieConfiguration, Toggleable 
      * @return String to be parsed into a URI which represents where the user is redirected to after a failed login.
      */
     String getLoginFailureTargetUrl();
+
+    Boolean isLoginRedirect();
+
+    Boolean isLogoutRedirect();
 }
