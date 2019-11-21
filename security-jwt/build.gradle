@@ -9,7 +9,7 @@ buildscript {
 
 ext {
     nimbusJoseJwtVersion = '7.0.1'
-    bouncyCastleVersion = '1.53'
+    bouncyCastleVersion = '1.64'
 }
 
 dependencies {
