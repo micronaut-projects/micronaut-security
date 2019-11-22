@@ -30,7 +30,7 @@ dependencies {
     testCompile "io.micronaut:micronaut-http-server-netty"
     testCompile "io.micronaut:micronaut-multitenancy"
     testCompile "io.micronaut:micronaut-views"
-    testRuntime "org.apache.velocity:velocity-engine-core:2.0"
+    testRuntime "org.apache.velocity:velocity-engine-core:2.1"
 }
 
 apply from: "${rootProject.projectDir}/gradle/geb.gradle"
