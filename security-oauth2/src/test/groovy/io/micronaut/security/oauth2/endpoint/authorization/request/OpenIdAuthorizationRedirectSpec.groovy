@@ -61,7 +61,8 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        location.contains("state={\"nonce\":\"")
+
+        stateParser(location).contains("{\"nonce\":\"")
         location.contains("client_id=myclient")
 
         when:
@@ -74,7 +75,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         !location.contains("scope=")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
-        location.contains("state={\"nonce\":\"")
+        stateParser(location).contains("{\"nonce\":\"")
         location.contains("client_id=myclient")
 
         cleanup:
@@ -117,7 +118,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        location.contains("state={\"nonce\":\"")
+        stateParser(location).contains("{\"nonce\":\"")
         location.contains("client_id=myclient")
 
         when:
@@ -162,7 +163,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        location.contains("state={\"nonce\":\"")
+        stateParser(location).contains("{\"nonce\":\"")
         location.contains("client_id=myclient")
 
         when:
@@ -185,5 +186,11 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
             return Flowable.just(new UserDetails("twitterUser", Collections.emptyList()))
         }
+    }
+
+    private String stateParser(String location) {
+        String sublocation = location.substring(location.indexOf('state=') + 'state='.length())
+        sublocation = sublocation.substring(0, sublocation.indexOf('&client_id='))
+        new String(Base64.getUrlDecoder().decode(sublocation))
     }
 }
