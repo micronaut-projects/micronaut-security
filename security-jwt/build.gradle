@@ -8,7 +8,7 @@ buildscript {
 }
 
 ext {
-    nimbusJoseJwtVersion = '7.0.1'
+    nimbusJoseJwtVersion = '8.2.1'
     bouncyCastleVersion = '1.64'
 }
 
