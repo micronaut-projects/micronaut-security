@@ -10,12 +10,13 @@ import spock.lang.Specification
 
 trait OpenIDIntegrationSpec {
 
+    static final String CLIENT_ID = "myclient"
     static String CLIENT_SECRET
     static String ISSUER
     static GenericContainer keycloak
 
     static {
-        keycloak = new GenericContainer("jboss/keycloak:6.0.1")
+        keycloak = new GenericContainer("jboss/keycloak:8.0.0")
                 .withExposedPorts(8080)
                 .withEnv([
                         KEYCLOAK_USER: 'user',
@@ -24,9 +25,9 @@ trait OpenIDIntegrationSpec {
                 ])
                 .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*"))
         keycloak.start()
-        Container.ExecResult result = keycloak.execInContainer("keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "))
-        result = keycloak.execInContainer("keycloak/bin/kcreg.sh create -s clientId=myclient -s redirectUris=[\"http://localhost*\"]".split(" "))
-        result = keycloak.execInContainer("keycloak/bin/kcreg.sh get myclient".split(" "))
+        keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "))
+        keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh create -s clientId=$CLIENT_ID -s redirectUris=[\"http://localhost*\"]".split(" "))
+        Container.ExecResult result = keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh get $CLIENT_ID".split(" "))
         Map map = new ObjectMapper().readValue(result.getStdout(), Map.class)
         CLIENT_SECRET = map.get("secret")
         ISSUER = "http://localhost:" + keycloak.getMappedPort(8080) + "/auth/realms/master"
