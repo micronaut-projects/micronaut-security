@@ -165,9 +165,13 @@ public class DefaultOpenIdClient implements OpenIdClient {
     protected SecureEndpoint getTokenEndpoint() {
         List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
         List<AuthenticationMethod> authenticationMethods = null;
+        List<String> knownAuthenticationMethods = Arrays.stream(AuthenticationMethod.values())
+                .map(AuthenticationMethod::toString)
+                .collect(Collectors.toList());
         if (authMethodsSupported != null) {
             authenticationMethods = authMethodsSupported.stream()
                     .map(String::toUpperCase)
+                    .filter(knownAuthenticationMethods::contains)
                     .map(AuthenticationMethod::valueOf)
                     .collect(Collectors.toList());
         }
