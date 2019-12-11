@@ -16,25 +16,58 @@
 
 package io.micronaut.security.filters;
 
+import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Requires;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
- * Ensures the security filter runs after the session filter (if present)
+ * Ensures the security filter runs after the session filter (if present) and the metrics filter (if present)
  *
  * @author James Kleeh
  * @since 1.2.0
  */
 @Requires(missingBeans = SecurityFilterOrderProvider.class)
-@Requires(configuration = "io.micronaut.session")
 @Singleton
 public class SessionSecurityFilterOrderProvider implements SecurityFilterOrderProvider {
 
     private static final Integer ORDER = 100;
+    private final BeanContext beanContext;
+
+    /**
+     * Default constructor. Added for backward compatibility.
+     */
+    public SessionSecurityFilterOrderProvider() {
+        this.beanContext = null;
+    }
+
+    /**
+     * Injected constructor.
+     *
+     * @param beanContext The bean context
+     */
+    @Inject
+    public SessionSecurityFilterOrderProvider(BeanContext beanContext) {
+        this.beanContext = beanContext;
+    }
 
     @Override
     public int getOrder() {
-        return ORDER;
+        if (beanContext == null) {
+            return ORDER;
+        }
+
+        boolean configurationPresent = Stream.of("io.micronaut.configuration.metrics.micrometer", "io.micronaut.session")
+                .map(beanContext::findBeanConfiguration)
+                .anyMatch(Optional::isPresent);
+
+        if (configurationPresent) {
+            return ORDER;
+        } else {
+            return 0;
+        }
     }
 }
