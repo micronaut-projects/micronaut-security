@@ -20,10 +20,10 @@ import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
-import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 
 import java.util.Map;
 
@@ -37,28 +37,27 @@ import java.util.Map;
 public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, TokenResponse> {
 
     private final AuthorizationResponse authorizationResponse;
-    private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
 
     /**
      * @param authorizationResponse The authorization response
      * @param tokenEndpoint The token endpoint
      * @param clientConfiguration The client configuration
-     * @param oauthRouteUrlBuilder The Oauth route builder
      */
     public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                         SecureEndpoint tokenEndpoint,
-                                        OauthClientConfiguration clientConfiguration, OauthRouteUrlBuilder oauthRouteUrlBuilder) {
+                                        OauthClientConfiguration clientConfiguration) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
-        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
     }
 
     @Override
     public Map<String, String> getGrant() {
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
-        codeGrant.setRedirectUri(oauthRouteUrlBuilder
-                .buildCallbackUrl(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()).toString());
+        State state = authorizationResponse.getState();
+        if (state != null && state.getRedirectUri() != null) {
+            codeGrant.setRedirectUri(authorizationResponse.getState().getRedirectUri().toString());
+        }
         return codeGrant.toMap();
     }
 

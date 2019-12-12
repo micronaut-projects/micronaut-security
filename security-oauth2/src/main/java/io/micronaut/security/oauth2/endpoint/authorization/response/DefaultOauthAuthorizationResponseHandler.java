@@ -25,7 +25,6 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.validation.Stat
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
-import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -46,21 +45,17 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthAuthorizationResponseHandler.class);
 
     private final TokenEndpointClient tokenEndpointClient;
-    private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
 
     @Nullable
     private final StateValidator stateValidator;
 
     /**
      * @param tokenEndpointClient The token endpoint client
-     * @param oauthRouteUrlBuilder The Oauth route builder
      * @param stateValidator The state validator
      */
     DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
-                                             OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                              @Nullable StateValidator stateValidator) {
         this.tokenEndpointClient = tokenEndpointClient;
-        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateValidator = stateValidator;
     }
 
@@ -89,7 +84,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             }
         }
 
-        OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration, oauthRouteUrlBuilder);
+        OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration);
 
         return Flowable.fromPublisher(
                 tokenEndpointClient.sendRequest(context))

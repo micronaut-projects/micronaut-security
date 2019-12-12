@@ -39,4 +39,10 @@ public interface State {
      */
     @Nonnull
     String getNonce();
+
+    /**
+     * @return The URI to redirect to
+     */
+    @Nullable
+    URI getRedirectUri();
 }
