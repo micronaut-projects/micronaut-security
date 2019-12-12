@@ -91,7 +91,7 @@ public class DefaultSecurityService implements SecurityService {
                 Object authorities = authentication.getAttributes().get(rolesKey);
                 if (authorities instanceof Collection) {
                     return ((Collection) authorities).contains(role);
-                }  else if (authorities instanceof String) {
+                } else if (authorities instanceof String) {
                     return ((String) authorities).equalsIgnoreCase(role);
                 }
             }

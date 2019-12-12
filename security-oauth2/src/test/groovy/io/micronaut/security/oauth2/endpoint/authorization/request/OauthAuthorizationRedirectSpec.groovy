@@ -10,6 +10,7 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.OpenIDIntegrationSpec
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
@@ -56,11 +57,11 @@ class OauthAuthorizationRedirectSpec extends Specification {
         location.contains("client_id=myclient")
 
         when:
-        String sublocation = location.substring(location.indexOf('state=') + 'state='.length())
-        sublocation = sublocation.substring(0, sublocation.indexOf('&client_id='))
+        String parsedLocation = OpenIdAuthorizationRedirectSpec.stateParser(location)
 
         then:
-        new String(Base64.getUrlDecoder().decode(sublocation)).startsWith("{\"nonce\":\"")
+        parsedLocation.contains('"nonce":"')
+        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/twitter"')
 
         cleanup:
         context.close()

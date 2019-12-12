@@ -73,7 +73,7 @@ subprojects { Project subproject ->
     targetCompatibility = '1.8'
     compileJava.options.compilerArgs.add '-parameters'
     compileTestJava.options.compilerArgs.add '-parameters'
-    apply from: rootProject.file('gradle/publishing.gradle')
+    apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-build/v1.0.0/publishing.gradle"
     
     
     jar {

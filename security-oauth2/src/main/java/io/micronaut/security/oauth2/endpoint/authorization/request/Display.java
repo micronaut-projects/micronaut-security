@@ -63,4 +63,9 @@ public enum Display {
     public String getDisplay() {
         return display;
     }
+
+    @Override
+    public String toString() {
+        return display;
+    }
 }

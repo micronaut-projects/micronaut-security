@@ -17,6 +17,7 @@ import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
+import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Specification
 
@@ -34,11 +35,11 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
         config.put('micronaut.security.oauth2.enabled', true)
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
-        config.put("micronaut.security.oauth2.clients.keycloak.client-id", "myclient")
+        config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)
         config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")
         config.put("micronaut.security.oauth2.clients.twitter.token.url", "http://twitter.com/token")
-        config.put("micronaut.security.oauth2.clients.twitter.client-id", "myclient")
+        config.put("micronaut.security.oauth2.clients.twitter.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.twitter.client-secret", "mysecret")
         ApplicationContext context = startContext(config)
         EmbeddedServer embeddedServer = context.getBean(EmbeddedServer)
@@ -62,12 +63,15 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
 
-        stateParser(location).contains("{\"nonce\":\"")
-        location.contains("client_id=myclient")
+        String parsedLocation = stateParser(location)
+        parsedLocation.contains('"nonce":"')
+        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
+        location.contains("client_id=$CLIENT_ID")
 
         when:
         response = client.toBlocking().exchange("/oauth/login/twitter")
         location = URLDecoder.decode(response.header(HttpHeaders.LOCATION), StandardCharsets.UTF_8.toString())
+        parsedLocation = stateParser(location)
 
         then:
         response.status == HttpStatus.FOUND
@@ -75,8 +79,9 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         !location.contains("scope=")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
-        stateParser(location).contains("{\"nonce\":\"")
-        location.contains("client_id=myclient")
+        parsedLocation.contains('"nonce":"')
+        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/twitter"')
+        location.contains("client_id=$CLIENT_ID")
 
         cleanup:
         context.close()
@@ -90,11 +95,11 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
         config.put('micronaut.security.oauth2.enabled', true)
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
-        config.put("micronaut.security.oauth2.clients.keycloak.client-id", "myclient")
+        config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)
         config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")
         config.put("micronaut.security.oauth2.clients.twitter.token.url", "http://twitter.com/token")
-        config.put("micronaut.security.oauth2.clients.twitter.client-id", "myclient")
+        config.put("micronaut.security.oauth2.clients.twitter.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.twitter.client-secret", "mysecret")
         config.put("micronaut.security.oauth2.clients.twitter.enabled", false)
         ApplicationContext context = startContext(config)
@@ -118,8 +123,10 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        stateParser(location).contains("{\"nonce\":\"")
-        location.contains("client_id=myclient")
+        String parsedLocation = stateParser(location)
+        parsedLocation.contains('"nonce":"')
+        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
+        location.contains("client_id=$CLIENT_ID")
 
         when:
         client.toBlocking().exchange("/oauth/login/twitter")
@@ -140,7 +147,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
         config.put('micronaut.security.oauth2.enabled', true)
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
-        config.put("micronaut.security.oauth2.clients.keycloak.client-id", "myclient")
+        config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)
         ApplicationContext context = startContext(config)
         EmbeddedServer embeddedServer = context.getBean(EmbeddedServer)
@@ -163,8 +170,10 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        stateParser(location).contains("{\"nonce\":\"")
-        location.contains("client_id=myclient")
+        String parsedLocation = stateParser(location)
+        parsedLocation.contains('"nonce":"')
+        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
+        location.contains("client_id=$CLIENT_ID")
 
         when:
         client.toBlocking().exchange("/oauth/login/twitter")
@@ -188,9 +197,10 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         }
     }
 
-    private String stateParser(String location) {
+    static String stateParser(String location) {
         String sublocation = location.substring(location.indexOf('state=') + 'state='.length())
         sublocation = sublocation.substring(0, sublocation.indexOf('&client_id='))
         new String(Base64.getUrlDecoder().decode(sublocation))
     }
+
 }
