@@ -15,10 +15,9 @@
  */
 package io.micronaut.security.authentication;
 
-import javax.annotation.Nonnull;
-import java.io.Serializable;
 import java.security.Principal;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 /**
  * Represents the state of an authentication.
@@ -26,7 +25,7 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.0
  */
-public interface Authentication extends Principal, Serializable {
+public interface Authentication extends Principal {
 
     /**
      * @return Any additional attributes in the authentication
