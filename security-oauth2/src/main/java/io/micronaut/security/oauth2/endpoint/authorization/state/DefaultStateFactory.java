@@ -20,7 +20,9 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.filters.SecurityFilter;
+import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 
 import javax.annotation.Nullable;
@@ -50,17 +52,27 @@ public class DefaultStateFactory implements StateFactory {
         this.statePersistence = statePersistence;
     }
 
+    @SuppressWarnings("rawtypes")
     @Nullable
     @Override
     public String buildState(HttpRequest<?> request, MutableHttpResponse response) {
+        return buildState(request, response, null);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Nullable
+    @Override
+    public String buildState(HttpRequest<?> request, MutableHttpResponse response, @Nullable AuthorizationRequest authorizationRequest) {
         Optional<HttpStatus> rejectedStatus = request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class);
         boolean unauthorized = rejectedStatus.filter(status -> status.equals(HttpStatus.UNAUTHORIZED)).isPresent();
         DefaultState state = new DefaultState();
         if (unauthorized) {
             state.setOriginalUri(request.getUri());
         }
+        if (authorizationRequest != null && authorizationRequest.getRedirectUri().isPresent()) {
+            state.setRedirectUri(UriBuilder.of(authorizationRequest.getRedirectUri().get()).build());
+        }
         statePersistence.persistState(request, response, state);
         return stateSerDes.serialize(state);
     }
-
 }

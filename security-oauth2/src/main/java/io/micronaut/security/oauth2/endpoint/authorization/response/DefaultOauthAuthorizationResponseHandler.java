@@ -45,6 +45,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthAuthorizationResponseHandler.class);
 
     private final TokenEndpointClient tokenEndpointClient;
+
     @Nullable
     private final StateValidator stateValidator;
 
