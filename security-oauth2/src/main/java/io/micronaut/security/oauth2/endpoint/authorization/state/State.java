@@ -16,8 +16,6 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
-import io.micronaut.http.uri.UriBuilder;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URI;
