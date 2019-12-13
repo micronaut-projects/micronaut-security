@@ -69,7 +69,7 @@ class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
     @Override
     public Optional<String> getState(MutableHttpResponse response) {
         return Optional.ofNullable(stateFactory)
-                .map(sf -> sf.buildState(request, response));
+                .map(sf -> sf.buildState(request, response, this));
     }
 
     @Override

@@ -53,7 +53,7 @@ class OauthAuthorizationRedirectSpec extends Specification {
         !location.contains("scope=")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
-        location.contains("state={\"nonce\":\"")
+        location.contains("\"nonce\":\"")
         location.contains("client_id=myclient")
 
         cleanup:

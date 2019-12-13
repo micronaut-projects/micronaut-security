@@ -61,7 +61,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        location.contains("state={\"nonce\":\"")
+        location.contains("\"nonce\":\"")
         location.contains("client_id=myclient")
 
         when:
@@ -74,7 +74,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         !location.contains("scope=")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
-        location.contains("state={\"nonce\":\"")
+        location.contains("\"nonce\":\"")
         location.contains("client_id=myclient")
 
         cleanup:
@@ -117,7 +117,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        location.contains("state={\"nonce\":\"")
+        location.contains("\"nonce\":\"")
         location.contains("client_id=myclient")
 
         when:
@@ -162,7 +162,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        location.contains("state={\"nonce\":\"")
+        location.contains("\"nonce\":\"")
         location.contains("client_id=myclient")
 
         when:
