@@ -20,6 +20,7 @@ import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
@@ -53,6 +54,10 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
     public Map<String, String> getGrant() {
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
+        State state = authorizationResponse.getState();
+        if (state != null && state.getRedirectUri() != null) {
+            codeGrant.setRedirectUri(authorizationResponse.getState().getRedirectUri().toString());
+        }
         return codeGrant.toMap();
     }
 

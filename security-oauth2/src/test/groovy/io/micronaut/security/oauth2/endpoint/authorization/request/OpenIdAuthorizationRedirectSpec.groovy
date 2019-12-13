@@ -17,6 +17,7 @@ import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
+import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Specification
 
@@ -62,12 +63,15 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
 
-        stateParser(location).contains("{\"nonce\":\"")
+        String parsedLocation = stateParser(location)
+        parsedLocation.contains('"nonce":"')
+        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
         location.contains("client_id=$CLIENT_ID")
 
         when:
         response = client.toBlocking().exchange("/oauth/login/twitter")
         location = URLDecoder.decode(response.header(HttpHeaders.LOCATION), StandardCharsets.UTF_8.toString())
+        parsedLocation = stateParser(location)
 
         then:
         response.status == HttpStatus.FOUND
@@ -75,7 +79,8 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         !location.contains("scope=")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
-        stateParser(location).contains("{\"nonce\":\"")
+        parsedLocation.contains('"nonce":"')
+        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/twitter"')
         location.contains("client_id=$CLIENT_ID")
 
         cleanup:
@@ -118,7 +123,9 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        stateParser(location).contains("{\"nonce\":\"")
+        String parsedLocation = stateParser(location)
+        parsedLocation.contains('"nonce":"')
+        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
         location.contains("client_id=$CLIENT_ID")
 
         when:
@@ -163,7 +170,9 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        stateParser(location).contains("{\"nonce\":\"")
+        String parsedLocation = stateParser(location)
+        parsedLocation.contains('"nonce":"')
+        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
         location.contains("client_id=$CLIENT_ID")
 
         when:
@@ -188,9 +197,10 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         }
     }
 
-    private String stateParser(String location) {
+    static String stateParser(String location) {
         String sublocation = location.substring(location.indexOf('state=') + 'state='.length())
         sublocation = sublocation.substring(0, sublocation.indexOf('&client_id='))
         new String(Base64.getUrlDecoder().decode(sublocation))
     }
+
 }

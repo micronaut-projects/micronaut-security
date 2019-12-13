@@ -5,8 +5,6 @@ import org.testcontainers.containers.Container
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
-import spock.lang.IgnoreIf
-import spock.lang.Specification
 
 trait OpenIDIntegrationSpec {
 

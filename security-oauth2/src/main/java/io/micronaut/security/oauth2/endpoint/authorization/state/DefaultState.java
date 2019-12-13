@@ -30,6 +30,7 @@ import java.util.UUID;
 public class DefaultState implements State {
 
     private URI originalUri;
+    private URI redirectUri;
     private String nonce = UUID.randomUUID().toString();
 
     @Override
@@ -56,6 +57,19 @@ public class DefaultState implements State {
      */
     public void setNonce(String nonce) {
         this.nonce = nonce;
+    }
+
+    @Nullable
+    @Override
+    public URI getRedirectUri() {
+        return redirectUri;
+    }
+
+    /**
+     * @param redirectUri the URI to redirect to
+     */
+    public void setRedirectUri(URI redirectUri) {
+        this.redirectUri = redirectUri;
     }
 
     @Override
