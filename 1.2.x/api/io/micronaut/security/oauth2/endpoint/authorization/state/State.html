@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var methods = {"i0":6,"i1":6,"i2":18};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -124,7 +124,7 @@ var activeTableTab = "activeTableTab";
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -136,6 +136,10 @@ var activeTableTab = "activeTableTab";
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.net.URI</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/State.html#getOriginalUri--">getOriginalUri</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>default java.net.URI</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/State.html#getRedirectUri--">getRedirectUri</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -169,7 +173,7 @@ java.net.URI&nbsp;getOriginalUri()</pre>
 <a name="getNonce--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getNonce</h4>
 <pre>@Nonnull
@@ -177,6 +181,20 @@ java.lang.String&nbsp;getNonce()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A nonce value</dd>
+</dl>
+</li>
+</ul>
+<a name="getRedirectUri--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getRedirectUri</h4>
+<pre>@Nullable
+default&nbsp;java.net.URI&nbsp;getRedirectUri()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The URI to redirect to</dd>
 </dl>
 </li>
 </ul>
