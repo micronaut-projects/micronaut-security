@@ -66,7 +66,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
             return HttpResponse.serverError();
         }
         Cookie cookie = cookieOptional.get();
-        return loginSuccessWithCookies(Arrays.asList(cookie, cookie));       
+        return loginSuccessWithCookies(Arrays.asList(cookie));       
     }
 
     @Override
@@ -79,6 +79,12 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
         }
     }
     
+    /**
+     *
+     * @param userDetails Authenticated user's representation.
+     * @param request The {@link HttpRequest} being executed
+     * @return A Cookie containing the JWT or an empty optional.
+     */
     protected Optional<Cookie> accessTokenCookie(UserDetails userDetails, HttpRequest<?> request) {
         Optional<AccessRefreshToken> accessRefreshTokenOptional = accessRefreshTokenGenerator.generate(userDetails);
         if (accessRefreshTokenOptional.isPresent()) {
@@ -96,6 +102,11 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
         return Optional.empty();
     }
 
+    /**
+     *
+     * @param cookies Cookies to be added to the response
+     * @return A 303 HTTP Response with cookies
+     */
     protected HttpResponse loginSuccessWithCookies(List<Cookie> cookies) {
         try {
             URI location = new URI(jwtCookieConfiguration.getLoginSuccessTargetUrl());
@@ -109,3 +120,4 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
         }
     }
 }
+
