@@ -18,4 +18,4 @@ Micronaut security classes generate several link:{api}/io/micronaut/context/even
 
 |===
 
-To learn how to listen for events, see the <<contextEvents, Context Events>> section of the documentation.
+To learn how to listen for events, see the https://docs.micronaut.io/latest/guide/index.html#contextEvents[Context Events] section of the documentation.
