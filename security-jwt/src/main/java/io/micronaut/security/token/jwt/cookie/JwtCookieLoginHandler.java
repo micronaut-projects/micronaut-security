@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.UserDetails;
@@ -30,6 +31,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  *
@@ -62,7 +65,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
         if (!cookieOptional.isPresent()) {
             return HttpResponse.serverError();
         }
-        Cookie cookie = cookieOptional.get()
+        Cookie cookie = cookieOptional.get();
         return loginSuccessWithCookies(Arrays.asList(cookie, cookie));       
     }
 
@@ -102,7 +105,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
             }
             return mutableHttpResponse;
         } catch (URISyntaxException e) {
-            return HttpResponse.serverError()
+            return HttpResponse.serverError();
         }
     }
 }
