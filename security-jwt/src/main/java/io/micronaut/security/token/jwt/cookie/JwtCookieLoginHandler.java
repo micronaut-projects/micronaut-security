@@ -57,7 +57,26 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
-    public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+    public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {        
+        Optional<Cookie> cookieOptional = accessTokenCookie(userDetails, request);
+        if (!cookieOptional.isPresent()) {
+            return HttpResponse.serverError();
+        }
+        Cookie cookie = cookieOptional.get()
+        return loginSuccessWithCookies(Arrays.asList(cookie, cookie));       
+    }
+
+    @Override
+    public HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+        try {
+            URI location = new URI(jwtCookieConfiguration.getLoginFailureTargetUrl());
+            return HttpResponse.seeOther(location);
+        } catch (URISyntaxException e) {
+            return HttpResponse.serverError();
+        }
+    }
+    
+    protected Optional<Cookie> accessTokenCookie(UserDetails userDetails, HttpRequest<?> request) {
         Optional<AccessRefreshToken> accessRefreshTokenOptional = accessRefreshTokenGenerator.generate(userDetails);
         if (accessRefreshTokenOptional.isPresent()) {
 
@@ -69,24 +88,21 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
             } else {
                 cookie.maxAge(jwtGeneratorConfiguration.getAccessTokenExpiration());
             }
-            try {
-                URI location = new URI(jwtCookieConfiguration.getLoginSuccessTargetUrl());
-                return HttpResponse.seeOther(location).cookie(cookie);
-            } catch (URISyntaxException e) {
-                return HttpResponse.serverError();
-            }
-
+            return Optional.of(cookie);
         }
-        return HttpResponse.serverError();
+        return Optional.empty();
     }
 
-    @Override
-    public HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+    protected HttpResponse loginSuccessWithCookies(List<Cookie> cookies) {
         try {
-            URI location = new URI(jwtCookieConfiguration.getLoginFailureTargetUrl());
-            return HttpResponse.seeOther(location);
+            URI location = new URI(jwtCookieConfiguration.getLoginSuccessTargetUrl());
+            MutableHttpResponse mutableHttpResponse = HttpResponse.seeOther(location);
+            for (Cookie cookie : cookies) {
+                mutableHttpResponse = mutableHttpResponse.cookie(cookie);
+            }
+            return mutableHttpResponse;
         } catch (URISyntaxException e) {
-            return HttpResponse.serverError();
+            return HttpResponse.serverError()
         }
     }
 }
