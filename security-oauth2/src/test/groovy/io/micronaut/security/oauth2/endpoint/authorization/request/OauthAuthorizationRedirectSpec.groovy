@@ -16,6 +16,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
 import org.reactivestreams.Publisher
 import spock.lang.Specification
+import spock.util.concurrent.PollingConditions
 
 import javax.inject.Named
 import javax.inject.Singleton
@@ -38,6 +39,10 @@ class OauthAuthorizationRedirectSpec extends Specification {
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, config)
         ApplicationContext context = embeddedServer.getApplicationContext()
         RxHttpClient client = context.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
+        PollingConditions conditions = new PollingConditions(timeout: 10)
+        conditions.eventually {
+            assert embeddedServer.isRunning()
+        }
 
         expect:
         context.findBean(OauthClient, Qualifiers.byName("twitter")).isPresent()
