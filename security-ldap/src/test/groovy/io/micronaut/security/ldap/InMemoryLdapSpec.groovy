@@ -45,13 +45,13 @@ abstract class InMemoryLdapSpec extends Specification {
             sslConfiguration.getKeyStore().setType("PKCS12")
             sslConfiguration.setCiphers(["TLS_DH_anon_WITH_AES_128_CBC_SHA"] as String[])
 
-            def builder = new SslBuilder<Object>(sslConfiguration, new ResourceResolver()) {
+            def builder = new SslBuilder<Object>(new ResourceResolver()) {
                 TrustManagerFactory getTrust() {
-                    getTrustManagerFactory()
+                    getTrustManagerFactory(sslConfiguration)
                 }
 
                 @Override
-                Optional<Object> build() {
+                Optional<Object> build(SslConfiguration sslConfig) {
                     return null
                 }
             }
