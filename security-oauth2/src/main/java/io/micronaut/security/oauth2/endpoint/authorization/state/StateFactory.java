@@ -52,7 +52,6 @@ public interface StateFactory {
      * @param response The authorization redirect response
      * @param authorizationRequest the {@link AuthorizationRequest}
      * @return A state parameter. An opaque value used to maintain state between the request and the callback.
-     * @return
      */
     @SuppressWarnings("rawtypes")
     default String buildState(HttpRequest<?> request, MutableHttpResponse response, @Nullable AuthorizationRequest authorizationRequest) {
