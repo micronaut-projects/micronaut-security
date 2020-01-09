@@ -828,9 +828,8 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 <a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a> specification.</p>
 </div>
 <div class="paragraph">
-<p>To enable a JWT signature in token generation, you need to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorConfiguration.html">RSASignatureGeneratorConfiguration</a>,
-<a href="../api/io/micronaut/security/token/jwt/signature/ec/ECSignatureGeneratorConfiguration.html">ECSignatureGeneratorConfiguration</a>,
-<a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a> qualified with name <code>generator</code>.</p>
+<p>To enable a JWT signature in token generation, you need to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a>
+qualified with name <code>generator</code>.</p>
 </div>
 <div class="paragraph">
 <p>To verify signed JWT tokens, you need to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html">RSASignatureConfiguration</a>,
@@ -897,6 +896,33 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>Signal that the secret is Base64 encoded</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A programmatic setup of a RSA signature generation may look like</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Factory
+class MySignatureGeneratorConfigurationFactory {
+    @Bean
+    @Named("generator") <i class="conum" data-value="1"></i><b>(1)</b>
+    SignatureGeneratorConfiguration signatureGeneratorConfiguration(RSASignatureGeneratorConfiguration configuration) {<i class="conum" data-value="2"></i><b>(2)</b>
+        return new RSASignatureGenerator(configuration)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Name the SignatureGeneratorConfiguration <code>generator</code> to make it participate in JWT token generation.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Register an additional bean of type RSASignatureGeneratorConfiguration which is injected here</td>
 </tr>
 </table>
 </div>
