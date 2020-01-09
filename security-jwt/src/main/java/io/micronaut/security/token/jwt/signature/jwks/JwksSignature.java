@@ -154,7 +154,7 @@ public class JwksSignature implements SignatureConfiguration {
             return JWKSet.load(new URL(url));
         } catch (IOException | ParseException e) {
             if (LOG.isErrorEnabled()) {
-                LOG.error("Exception loading JWK. The JwksSignature will not be used to verify a JWT if further refresh attempts fail", e);
+                LOG.error("Exception loading JWK from " + url + ". The JwksSignature will not be used to verify a JWT if further refresh attempts fail", e);
             }
         }
 
