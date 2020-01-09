@@ -1,9 +1,8 @@
 Micronaut security capabilities use signed JWT’s as specified by the
 https://tools.ietf.org/html/rfc7515[JSON Web Signature] specification.
 
-To enable a JWT signature in token generation, you need to have in your app a bean of type link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorConfiguration.html[RSASignatureGeneratorConfiguration],
-link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureGeneratorConfiguration.html[ECSignatureGeneratorConfiguration],
-link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration] qualified with name `generator`.
+To enable a JWT signature in token generation, you need to have in your app a bean of type link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration]
+qualified with name `generator`.
 
 To verify signed JWT tokens, you need to have in your app a bean of type link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html[RSASignatureConfiguration],
 link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorConfiguration.html[RSASignatureGeneratorConfiguration],
@@ -30,3 +29,13 @@ include::{testssecurityjwt}/base64/JwtBase64Spec.groovy[indent=0, tag=yamlconfig
 
 <1> Secret Base64 encoded
 <2> Signal that the secret is Base64 encoded
+
+A programmatic setup of a RSA signature generation may look like
+
+[source, groovy]
+----
+include::{testssecurityjwt}/signandencrypt/MySignatureGeneratorConfigurationFactory.groovy[indent=0, tag=clazz]
+----
+
+<1> Name the SignatureGeneratorConfiguration `generator` to make it participate in JWT token generation.
+<2> Register an additional bean of type RSASignatureGeneratorConfiguration which is injected here
