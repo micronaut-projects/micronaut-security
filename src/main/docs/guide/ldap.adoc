@@ -7,3 +7,6 @@ compile "io.micronaut.configuration:micronaut-security-ldap"
 ----
 
 TIP: Read the http://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html#securityLdap[LDAP and Database authentication providers] to see an example.
+
+LDAP authentication can be globally disabled by setting `micronaut.security.ldap.enabled` to `false`, or on a provider
+basis, eg `micronaut.security.ldap.default.enabled: false`.
