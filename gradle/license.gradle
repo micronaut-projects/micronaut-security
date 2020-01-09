@@ -35,6 +35,7 @@ license {
     exclude '**/io/micronaut/http/netty/stream/package-info.java'
     exclude '**/io/micronaut/http/uri/QueryStringDecoder.java'
     exclude '**/build-info.properties'
+    exclude '**/native-image.properties'
     exclude '**/git.properties'
     exclude '**/othergit.properties'
 }
