@@ -31,4 +31,11 @@ public interface TokenPropagationConfiguration extends Toggleable, OutgointReque
      * @return Path to be matched by Token Propagation Filter.
      */
     String getPath();
+
+    /**
+     * @return whether to overwrite existing token headers. Defaults to true.
+     */
+    default boolean isOverwrite() {
+        return true;
+    }
 }

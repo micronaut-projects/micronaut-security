@@ -23,7 +23,7 @@ import io.micronaut.core.util.Toggleable;
  * @author Sergio del Amo
  * @since 1.0
  */
-interface HttpHeaderTokenWriterConfiguration extends Toggleable {
+public interface HttpHeaderTokenWriterConfiguration extends Toggleable {
 
     /**
      *

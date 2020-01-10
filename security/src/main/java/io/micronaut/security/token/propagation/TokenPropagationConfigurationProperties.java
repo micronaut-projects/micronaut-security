@@ -43,6 +43,8 @@ public class TokenPropagationConfigurationProperties implements TokenPropagation
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_PATH = "/**";
 
+    private static final boolean DEFAULT_OVERWRITE = true;
+
     private boolean enabled = DEFAULT_ENABLED;
 
     private String serviceIdRegex;
@@ -54,6 +56,8 @@ public class TokenPropagationConfigurationProperties implements TokenPropagation
     private Pattern uriPattern;
 
     private String path = DEFAULT_PATH;
+
+    private boolean overwrite = DEFAULT_OVERWRITE;
 
     /**
      * @return a regular expression to match the service.
@@ -131,5 +135,17 @@ public class TokenPropagationConfigurationProperties implements TokenPropagation
             uriPattern = Pattern.compile(this.uriRegex);
         }
         return uriPattern;
+    }
+
+    @Override
+    public boolean isOverwrite() {
+        return overwrite;
+    }
+
+    /**
+     * @param overwrite whether to overwrite existing token headers.
+     */
+    public void setOverwrite(boolean overwrite) {
+        this.overwrite = overwrite;
     }
 }
