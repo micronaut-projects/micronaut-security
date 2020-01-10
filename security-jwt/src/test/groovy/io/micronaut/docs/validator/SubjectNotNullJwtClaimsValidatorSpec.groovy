@@ -24,7 +24,7 @@ import spock.lang.Specification
 
 class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
 
-    void "by default SubjectNotNullJwtClaimsValidator is enabled"() {
+    void "by default SubjectNotNullJwtClaimsValidator is disabled"() {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : SubjectNotNullJwtClaimsValidatorSpec.simpleName,
@@ -37,20 +37,20 @@ class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
         embeddedServer.applicationContext.getBean(SubjectNotNullJwtClaimsValidator)
 
         then:
-        noExceptionThrown()
+        thrown(NoSuchBeanException)
 
         cleanup:
         embeddedServer.close()
     }
 
 
-    void "you can disable SubjectNotNullJwtClaimsValidator if you set micronaut.security.token.jwt.claims-validators.subject=false"() {
+    void "you can enable SubjectNotNullJwtClaimsValidator if you set micronaut.security.token.jwt.claims-validators.subject=true"() {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : SubjectNotNullJwtClaimsValidatorSpec.simpleName,
                 'micronaut.security.enabled': true,
                 'micronaut.security.token.jwt.enabled': true,
-                'micronaut.security.token.jwt.claims-validators.subject-not-null': false
+                'micronaut.security.token.jwt.claims-validators.subject-not-null': true
 
         ], Environment.TEST)
 
@@ -58,7 +58,7 @@ class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
         embeddedServer.applicationContext.getBean(SubjectNotNullJwtClaimsValidator)
 
         then:
-        thrown(NoSuchBeanException)
+        noExceptionThrown()
 
         cleanup:
         embeddedServer.close()
