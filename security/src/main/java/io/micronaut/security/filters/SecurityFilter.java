@@ -16,13 +16,11 @@
 
 package io.micronaut.security.filters;
 
-import io.micronaut.http.HttpAttributes;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.*;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
+import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.handlers.RejectionHandler;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
@@ -33,6 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -98,7 +99,13 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
         String method = request.getMethod().toString();
         String path = request.getPath();
-        RouteMatch routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+        if (hasMultipleSecureAnnotations(routeMatch)) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("The route [" + path + "] has multiple security annotations. Please use either @Secured or javax.annotation.security annotations (@RolesAllowed, @PermitAll or @DenyAll)");
+            }
+            return Flowable.just(HttpResponse.serverError());
+        }
 
         return Flowable.fromIterable(authenticationFetchers)
             .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
@@ -124,6 +131,18 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
             .toFlowable()
             .flatMap(authentication -> checkRules(request, chain, routeMatch, authentication.getAttributes(), true))
             .switchIfEmpty(Flowable.defer(() -> checkRules(request, chain, routeMatch, null, false)));
+    }
+
+    private boolean hasMultipleSecureAnnotations(RouteMatch<?> routeMatch) {
+        if (routeMatch != null) {
+            return routeMatch.isAnnotationPresent(Secured.class) && (
+                        routeMatch.isAnnotationPresent(RolesAllowed.class) ||
+                        routeMatch.isAnnotationPresent(PermitAll.class) ||
+                        routeMatch.isAnnotationPresent(DenyAll.class)
+            );
+        } else {
+            return false;
+        }
     }
 
     /**
