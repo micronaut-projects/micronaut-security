@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.routes;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -34,7 +35,9 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Provider;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Default implementation of {@link OauthController}.
@@ -47,7 +50,7 @@ public class DefaultOauthController implements OauthController {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthController.class);
 
-    private final OauthClient oauthClient;
+    private final Supplier<OauthClient> oauthClient;
     private final LoginHandler loginHandler;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -56,33 +59,33 @@ public class DefaultOauthController implements OauthController {
      * @param loginHandler The login handler
      * @param eventPublisher The event publisher
      */
-    DefaultOauthController(@Parameter OauthClient oauthClient,
+    DefaultOauthController(@Parameter Provider<OauthClient> oauthClient,
                            RedirectingLoginHandler loginHandler,
                            ApplicationEventPublisher eventPublisher) {
-        this.oauthClient = oauthClient;
+        this.oauthClient = SupplierUtil.memoized(oauthClient::get);
         this.loginHandler = loginHandler;
         this.eventPublisher = eventPublisher;
     }
 
     @Override
     public OauthClient getClient() {
-        return oauthClient;
+        return oauthClient.get();
     }
 
     @Override
     public Publisher<HttpResponse> login(HttpRequest request) {
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Received login request for provider [{}]", oauthClient.getName());
+            LOG.trace("Received login request for provider [{}]", oauthClient.get().getName());
         }
-        return oauthClient.authorizationRedirect(request);
+        return oauthClient.get().authorizationRedirect(request);
     }
 
     @Override
     public Publisher<HttpResponse> callback(HttpRequest<Map<String, Object>> request) {
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());
+            LOG.trace("Received callback from oauth provider [{}]", oauthClient.get().getName());
         }
-        Publisher<AuthenticationResponse> authenticationResponse = oauthClient.onCallback(request);
+        Publisher<AuthenticationResponse> authenticationResponse = oauthClient.get().onCallback(request);
         return Flowable.fromPublisher(authenticationResponse).map(response -> {
 
             if (response.isAuthenticated()) {
@@ -101,7 +104,6 @@ public class DefaultOauthController implements OauthController {
                 return loginHandler.loginFailed(authenticationFailed);
             }
         }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
-
     }
 
 }
