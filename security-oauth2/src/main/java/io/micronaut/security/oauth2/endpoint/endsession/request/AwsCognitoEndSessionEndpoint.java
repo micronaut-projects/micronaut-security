@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Provides specific configuration to logout from AWS Cognito.
@@ -55,9 +56,20 @@ public class AwsCognitoEndSessionEndpoint extends AbstractEndSessionRequest {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata supplier
+     */
+    public AwsCognitoEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                        OauthClientConfiguration clientConfiguration,
+                                        Supplier<OpenIdProviderMetadata> providerMetadata) {
+        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
+    }
+
     @Override
     protected String getUrl() {
-        String userInfoEndpoint = providerMetadata.getUserinfoEndpoint();
+        String userInfoEndpoint = providerMetadataSupplier.get().getUserinfoEndpoint();
         if (userInfoEndpoint != null) {
             return UriBuilder.of(userInfoEndpoint).replacePath("/logout").toString();
         } else {

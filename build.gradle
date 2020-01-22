@@ -28,7 +28,7 @@ plugins {
 apply plugin: 'org.aim42.htmlSanityCheck'
 
 repositories {
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://oss.jfrog.org/oss-snapshot-local" }
     maven { url "https://repo.grails.org/grails/core" }
 }
 
@@ -53,7 +53,7 @@ subprojects { Project subproject ->
     }
 
     repositories {
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.jfrog.org/oss-snapshot-local" }
         maven { url "https://repo.grails.org/grails/core" }
         jcenter()
     }

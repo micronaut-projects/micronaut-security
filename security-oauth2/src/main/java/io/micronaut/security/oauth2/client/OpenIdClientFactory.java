@@ -20,6 +20,7 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.*;
 import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
@@ -40,9 +41,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import javax.inject.Provider;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.function.Supplier;
 
 /**
  * Factory to create beans related to the configuration of
@@ -109,6 +112,7 @@ class OpenIdClientFactory {
      *
      * @param openIdClientConfiguration The openid client configuration
      * @param clientConfiguration The client configuration
+     * @param openIdProviderMetadata The open id provider metadata
      * @param userDetailsMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
@@ -120,19 +124,20 @@ class OpenIdClientFactory {
     @Requires(condition = OpenIdClientCondition.class)
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
-                                     @Parameter DefaultOpenIdProviderMetadata openIdProviderMetadata,
+                                     @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
                                      @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                      AuthorizationRedirectHandler redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                      EndSessionEndpointResolver endSessionEndpointResolver,
                                      EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
+        Supplier<OpenIdProviderMetadata> metadataSupplier = SupplierUtil.memoized(openIdProviderMetadata::get);
         EndSessionEndpoint endSessionEndpoint = null;
         if (openIdClientConfiguration.getEndSession().isEnabled()) {
-            endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
+            endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, metadataSupplier, endSessionCallbackUrlBuilder).orElse(null);
         }
 
         return new DefaultOpenIdClient(clientConfiguration,
-                openIdProviderMetadata,
+                metadataSupplier,
                 userDetailsMapper,
                 redirectUrlBuilder,
                 authorizationResponseHandler,

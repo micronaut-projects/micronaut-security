@@ -25,6 +25,7 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * A base class to extend from to log out of an OpenID provider.
@@ -38,7 +39,13 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
 
     protected final EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder;
     protected final OauthClientConfiguration clientConfiguration;
+
+    /**
+     * @deprecated Use {@link #providerMetadataSupplier} instead.
+     */
+    @Deprecated
     protected final OpenIdProviderMetadata providerMetadata;
+    protected final Supplier<OpenIdProviderMetadata> providerMetadataSupplier;
 
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
@@ -48,9 +55,22 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
     public AbstractEndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                      OauthClientConfiguration clientConfiguration,
                                      OpenIdProviderMetadata providerMetadata) {
+        this(endSessionCallbackUrlBuilder, clientConfiguration, () -> providerMetadata);
+    }
+
+
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata supplier
+     */
+    public AbstractEndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                     OauthClientConfiguration clientConfiguration,
+                                     Supplier<OpenIdProviderMetadata> providerMetadata) {
         this.endSessionCallbackUrlBuilder = endSessionCallbackUrlBuilder;
         this.clientConfiguration = clientConfiguration;
-        this.providerMetadata = providerMetadata;
+        this.providerMetadata = null;
+        this.providerMetadataSupplier = providerMetadata;
     }
 
     @Nullable
