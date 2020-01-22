@@ -63,6 +63,7 @@ class SecurityViewModelProcessorSpec extends Specification {
                 'micronaut.views.thymeleaf.enabled': false,
                 'micronaut.views.velocity.enabled': true,
                 'micronaut.views.freemarker.enabled': false,
+                'micronaut.views.soy.enabled': false,
         ])
         HttpClient httpClient = HttpClient.create(embeddedServer.URL)
 
@@ -110,6 +111,7 @@ class SecurityViewModelProcessorSpec extends Specification {
                 'micronaut.views.thymeleaf.enabled': false,
                 'micronaut.views.velocity.enabled': true,
                 'micronaut.views.freemarker.enabled': false,
+                'micronaut.views.soy.enabled': false,
         ])
         HttpClient httpClient = HttpClient.create(embeddedServer.URL)
 
