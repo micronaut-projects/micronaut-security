@@ -69,51 +69,21 @@ public class EndSessionEndpointResolver {
                                                 OpenIdProviderMetadata openIdProviderMetadata,
                                                 EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
 
-        String providerName = oauthClientConfiguration.getName();
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Resolving the end session endpoint for provider [{}]. Looking for a bean with the provider name qualifier", providerName);
-        }
-
-        EndSessionEndpoint endSessionEndpoint = beanContext.findBean(EndSessionEndpoint.class, Qualifiers.byName(providerName)).orElse(null);
-
-        if (endSessionEndpoint == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No EndSessionEndpoint bean found with a name qualifier of [{}]", providerName);
-            }
-            String issuer = oauthClientConfiguration.getOpenid().flatMap(OpenIdClientConfiguration::getIssuer).map(URL::toString).orElse(null);
-
-            if (issuer != null) {
-                if (issuer.contains(OKTA)) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
-                    }
-                    endSessionEndpoint = new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
-                } else if (issuer.contains(COGNITO)) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Resolved the AwsCognitoEndSessionEndpoint for provider [{}]", providerName);
-                    }
-                    endSessionEndpoint = new AwsCognitoEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
-                } else if (issuer.contains(AUTH0)) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Resolved the Auth0EndSessionEndpoint for provider [{}]", providerName);
-                    }
-                    endSessionEndpoint = new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
-                } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("No EndSessionEndpoint can be resolved. The issuer for provider [{}] does not match any of the providers supported by default", providerName);
-                    }
-                }
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("No EndSessionEndpoint can be resolved. Issuer is null for provider [{}]", providerName);
-                }
-            }
-        }
-
-        return Optional.ofNullable(endSessionEndpoint);
+        return resolve(oauthClientConfiguration, () -> openIdProviderMetadata, endSessionCallbackUrlBuilder);
     }
 
+    /**
+     * Attempts to resolve an end session request in the
+     * following order:
+     *
+     * 1. A bean lookup with the a name qualifier of the provider name
+     * 2. Comparing the issuer URL to a supported list of providers
+     *
+     * @param oauthClientConfiguration The client configuration
+     * @param openIdProviderMetadata The provider metadata supplier
+     * @param endSessionCallbackUrlBuilder The end session callback builder
+     * @return An optional end session request
+     */
     public Optional<EndSessionEndpoint> resolve(OauthClientConfiguration oauthClientConfiguration,
                                                 Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
                                                 EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {

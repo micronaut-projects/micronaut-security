@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpHeaders;
@@ -61,7 +62,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private final OpenIdUserDetailsMapper userDetailsMapper;
     private final AuthorizationRedirectHandler redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
-    private final SecureEndpoint tokenEndpoint;
+    private final Supplier<SecureEndpoint> tokenEndpoint;
     private final BeanContext beanContext;
     private final EndSessionEndpoint endSessionEndpoint;
 
@@ -88,7 +89,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
         this.endSessionEndpoint = endSessionEndpoint;
-        this.tokenEndpoint = getTokenEndpoint();
+        this.tokenEndpoint = SupplierUtil.memoized(this::getTokenEndpoint);
     }
 
     /**
@@ -114,7 +115,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
         this.endSessionEndpoint = endSessionEndpoint;
-        this.tokenEndpoint = getTokenEndpoint();
+        this.tokenEndpoint = SupplierUtil.memoized(this::getTokenEndpoint);
     }
 
     @Override
@@ -174,7 +175,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
                     clientConfiguration,
                     openIdProviderMetadata.get(),
                     userDetailsMapper,
-                    tokenEndpoint);
+                    tokenEndpoint.get());
         }
     }
 
