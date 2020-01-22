@@ -251,6 +251,7 @@ allprojects {
 
     tasks.withType(Test) {
         maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        forkEvery = 100
     }
 }
 
