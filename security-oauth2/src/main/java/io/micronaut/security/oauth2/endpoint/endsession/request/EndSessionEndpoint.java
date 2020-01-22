@@ -18,7 +18,6 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
 import javax.annotation.Nullable;
 
@@ -36,5 +35,5 @@ public interface EndSessionEndpoint {
      * @return The OpenID provider end session URL.
      */
     @Nullable
-    String getUrl(HttpRequest originating, Authentication authentication, OpenIdProviderMetadata openIdProviderMetadata);
+    String getUrl(HttpRequest originating, Authentication authentication);
 }

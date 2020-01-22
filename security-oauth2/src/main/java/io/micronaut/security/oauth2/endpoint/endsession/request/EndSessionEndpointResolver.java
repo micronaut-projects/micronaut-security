@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.inject.qualifiers.Qualifiers;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
@@ -61,12 +60,12 @@ public class EndSessionEndpointResolver {
      * 2. Comparing the issuer URL to a supported list of providers
      *
      * @param oauthClientConfiguration The client configuration
-     * @param openIdProviderMetadataFetcher The provider metadata fetcher
+     * @param openIdProviderMetadata The provider metadata
      * @param endSessionCallbackUrlBuilder The end session callback builder
      * @return An optional end session request
      */
     public Optional<EndSessionEndpoint> resolve(OauthClientConfiguration oauthClientConfiguration,
-                                                OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher,
+                                                OpenIdProviderMetadata openIdProviderMetadata,
                                                 EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
 
         String providerName = oauthClientConfiguration.getName();
@@ -88,17 +87,17 @@ public class EndSessionEndpointResolver {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
                     }
-                    endSessionEndpoint = new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration);
+                    endSessionEndpoint = new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
                 } else if (issuer.contains(COGNITO)) {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Resolved the AwsCognitoEndSessionEndpoint for provider [{}]", providerName);
                     }
-                    endSessionEndpoint = new AwsCognitoEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration);
+                    endSessionEndpoint = new AwsCognitoEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
                 } else if (issuer.contains(AUTH0)) {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Resolved the Auth0EndSessionEndpoint for provider [{}]", providerName);
                     }
-                    endSessionEndpoint = new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration);
+                    endSessionEndpoint = new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
                 } else {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("No EndSessionEndpoint can be resolved. The issuer for provider [{}] does not match any of the providers supported by default", providerName);
