@@ -47,7 +47,7 @@ class OpenIdClientFactorySpec extends Specification {
     @Shared
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
-    @PendingFeature
+    //@PendingFeature
     void "starting an app does not call eagerly .well-known/openid-configuration"() {
         when:
         OpenIdConfigurationController openIdConfigurationController = authServer.applicationContext.getBean(OpenIdConfigurationController)

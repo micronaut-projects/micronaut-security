@@ -24,6 +24,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMap
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Provides specific configuration to logout from Okta.
@@ -49,9 +50,15 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
+    public OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                  OauthClientConfiguration clientConfiguration,
+                                  Supplier<OpenIdProviderMetadata> providerMetadata) {
+        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
+    }
+
     @Override
     protected String getUrl() {
-        return providerMetadata.getEndSessionEndpoint();
+        return providerMetadataSupplier.get().getEndSessionEndpoint();
     }
 
     @Override

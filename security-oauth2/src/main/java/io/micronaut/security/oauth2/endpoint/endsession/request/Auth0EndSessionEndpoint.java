@@ -26,6 +26,7 @@ import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallb
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Provides specific configuration to logout from Auth0.
@@ -45,6 +46,12 @@ public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
     public Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                    OauthClientConfiguration clientConfiguration,
                                    OpenIdProviderMetadata providerMetadata) {
+        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
+    }
+
+    public Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                        OauthClientConfiguration clientConfiguration,
+                                        Supplier<OpenIdProviderMetadata> providerMetadata) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
