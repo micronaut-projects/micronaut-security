@@ -56,9 +56,14 @@ public class AwsCognitoEndSessionEndpoint extends AbstractEndSessionRequest {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata supplier
+     */
     public AwsCognitoEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                  OauthClientConfiguration clientConfiguration,
-                                  Supplier<OpenIdProviderMetadata> providerMetadata) {
+                                        OauthClientConfiguration clientConfiguration,
+                                        Supplier<OpenIdProviderMetadata> providerMetadata) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 

@@ -112,6 +112,7 @@ class OpenIdClientFactory {
      *
      * @param openIdClientConfiguration The openid client configuration
      * @param clientConfiguration The client configuration
+     * @param openIdProviderMetadata The open id provider metadata
      * @param userDetailsMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler

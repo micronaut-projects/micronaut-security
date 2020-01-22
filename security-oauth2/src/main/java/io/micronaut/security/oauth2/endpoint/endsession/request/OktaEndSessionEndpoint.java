@@ -50,6 +50,11 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata supplier
+     */
     public OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                   OauthClientConfiguration clientConfiguration,
                                   Supplier<OpenIdProviderMetadata> providerMetadata) {

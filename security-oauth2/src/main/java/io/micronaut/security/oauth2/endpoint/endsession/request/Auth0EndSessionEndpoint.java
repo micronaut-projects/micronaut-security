@@ -49,9 +49,14 @@ public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata supplier
+     */
     public Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                        OauthClientConfiguration clientConfiguration,
-                                        Supplier<OpenIdProviderMetadata> providerMetadata) {
+                                   OauthClientConfiguration clientConfiguration,
+                                   Supplier<OpenIdProviderMetadata> providerMetadata) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 

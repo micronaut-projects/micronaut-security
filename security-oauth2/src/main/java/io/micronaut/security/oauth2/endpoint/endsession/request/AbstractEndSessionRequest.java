@@ -55,17 +55,14 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
     public AbstractEndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                      OauthClientConfiguration clientConfiguration,
                                      OpenIdProviderMetadata providerMetadata) {
-        this.endSessionCallbackUrlBuilder = endSessionCallbackUrlBuilder;
-        this.clientConfiguration = clientConfiguration;
-        this.providerMetadata = providerMetadata;
-        this.providerMetadataSupplier = () -> providerMetadata;
+        this(endSessionCallbackUrlBuilder, clientConfiguration, () -> providerMetadata);
     }
 
 
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
-     * @param providerMetadata The provider metadata
+     * @param providerMetadata The provider metadata supplier
      */
     public AbstractEndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                      OauthClientConfiguration clientConfiguration,
