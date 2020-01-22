@@ -14,6 +14,7 @@ import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
+import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Specification
 
