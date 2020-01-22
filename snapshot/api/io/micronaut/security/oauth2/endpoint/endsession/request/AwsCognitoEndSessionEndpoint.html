@@ -144,7 +144,7 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;io.micronaut.security.oauth2.endpoint.endsession.request.<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">AbstractEndSessionRequest</a></h3>
-<code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#clientConfiguration">clientConfiguration</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#endSessionCallbackUrlBuilder">endSessionCallbackUrlBuilder</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#providerMetadata">providerMetadata</a></code></li>
+<code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#clientConfiguration">clientConfiguration</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#endSessionCallbackUrlBuilder">endSessionCallbackUrlBuilder</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#providerMetadata">providerMetadata</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#providerMetadataSupplier">providerMetadataSupplier</a></code></li>
 </ul>
 </li>
 </ul>
@@ -163,6 +163,11 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AwsCognitoEndSessionEndpoint.html#AwsCognitoEndSessionEndpoint-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.client.OpenIdProviderMetadata-">AwsCognitoEndSessionEndpoint</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
                             <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
                             <a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;providerMetadata)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AwsCognitoEndSessionEndpoint.html#AwsCognitoEndSessionEndpoint-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-">AwsCognitoEndSessionEndpoint</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
+                            <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+                            java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;providerMetadata)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -220,7 +225,7 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <a name="AwsCognitoEndSessionEndpoint-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.client.OpenIdProviderMetadata-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>AwsCognitoEndSessionEndpoint</h4>
 <pre>public&nbsp;AwsCognitoEndSessionEndpoint(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
@@ -231,6 +236,23 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <dd><code>endSessionCallbackUrlBuilder</code> - The end session callback URL builder</dd>
 <dd><code>clientConfiguration</code> - The client configuration</dd>
 <dd><code>providerMetadata</code> - The provider metadata</dd>
+</dl>
+</li>
+</ul>
+<a name="AwsCognitoEndSessionEndpoint-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>AwsCognitoEndSessionEndpoint</h4>
+<pre>public&nbsp;AwsCognitoEndSessionEndpoint(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
+                                    <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+                                    java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;providerMetadata)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>endSessionCallbackUrlBuilder</code> - The end session callback URL builder</dd>
+<dd><code>clientConfiguration</code> - The client configuration</dd>
+<dd><code>providerMetadata</code> - The provider metadata supplier</dd>
 </dl>
 </li>
 </ul>

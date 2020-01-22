@@ -153,7 +153,15 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/e
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#providerMetadata">providerMetadata</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#providerMetadata">providerMetadata</a></span></code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#providerMetadataSupplier"><code>providerMetadataSupplier</code></a> instead.</span></div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#providerMetadataSupplier">providerMetadataSupplier</a></span></code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -173,6 +181,11 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/e
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#AbstractEndSessionRequest-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.client.OpenIdProviderMetadata-">AbstractEndSessionRequest</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
                          <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
                          <a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;providerMetadata)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#AbstractEndSessionRequest-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-">AbstractEndSessionRequest</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
+                         <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+                         java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;providerMetadata)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -250,10 +263,21 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/e
 <a name="providerMetadata">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>providerMetadata</h4>
-<pre>protected final&nbsp;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a> providerMetadata</pre>
+<pre>@Deprecated
+protected final&nbsp;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a> providerMetadata</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#providerMetadataSupplier"><code>providerMetadataSupplier</code></a> instead.</span></div>
+</li>
+</ul>
+<a name="providerMetadataSupplier">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>providerMetadataSupplier</h4>
+<pre>protected final&nbsp;java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt; providerMetadataSupplier</pre>
 </li>
 </ul>
 </li>
@@ -267,7 +291,7 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/e
 <a name="AbstractEndSessionRequest-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.client.OpenIdProviderMetadata-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>AbstractEndSessionRequest</h4>
 <pre>public&nbsp;AbstractEndSessionRequest(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
@@ -278,6 +302,23 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/e
 <dd><code>endSessionCallbackUrlBuilder</code> - The end session callback URL builder</dd>
 <dd><code>clientConfiguration</code> - The client configuration</dd>
 <dd><code>providerMetadata</code> - The provider metadata</dd>
+</dl>
+</li>
+</ul>
+<a name="AbstractEndSessionRequest-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>AbstractEndSessionRequest</h4>
+<pre>public&nbsp;AbstractEndSessionRequest(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
+                                 <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+                                 java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;providerMetadata)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>endSessionCallbackUrlBuilder</code> - The end session callback URL builder</dd>
+<dd><code>clientConfiguration</code> - The client configuration</dd>
+<dd><code>providerMetadata</code> - The provider metadata supplier</dd>
 </dl>
 </li>
 </ul>

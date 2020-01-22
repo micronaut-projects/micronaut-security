@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -164,6 +164,17 @@ extends java.lang.Object</pre>
  1.</div>
 </td>
 </tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpointResolver.html#resolve-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-">resolve</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;oauthClientConfiguration,
+       java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata,
+       <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder)</code>
+<div class="block">Attempts to resolve an end session request in the
+ following order:
+
+ 1.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -210,7 +221,7 @@ extends java.lang.Object</pre>
 <a name="resolve-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.client.OpenIdProviderMetadata-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>resolve</h4>
 <pre>public&nbsp;java.util.Optional&lt;<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&gt;&nbsp;resolve(<a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;oauthClientConfiguration,
@@ -225,6 +236,30 @@ extends java.lang.Object</pre>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>oauthClientConfiguration</code> - The client configuration</dd>
 <dd><code>openIdProviderMetadata</code> - The provider metadata</dd>
+<dd><code>endSessionCallbackUrlBuilder</code> - The end session callback builder</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>An optional end session request</dd>
+</dl>
+</li>
+</ul>
+<a name="resolve-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>resolve</h4>
+<pre>public&nbsp;java.util.Optional&lt;<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&gt;&nbsp;resolve(<a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;oauthClientConfiguration,
+                                                      java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;openIdProviderMetadata,
+                                                      <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder)</pre>
+<div class="block">Attempts to resolve an end session request in the
+ following order:
+
+ 1. A bean lookup with the a name qualifier of the provider name
+ 2. Comparing the issuer URL to a supported list of providers</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>oauthClientConfiguration</code> - The client configuration</dd>
+<dd><code>openIdProviderMetadata</code> - The provider metadata supplier</dd>
 <dd><code>endSessionCallbackUrlBuilder</code> - The end session callback builder</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>An optional end session request</dd>
