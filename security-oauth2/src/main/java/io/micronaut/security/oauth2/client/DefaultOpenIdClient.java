@@ -16,12 +16,14 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -56,17 +58,18 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdClient.class);
 
     private final OauthClientConfiguration clientConfiguration;
-    private final OpenIdProviderMetadata openIdProviderMetadata;
+    private final OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher;
+    private OpenIdProviderMetadata openIdProviderMetadata;
     private final OpenIdUserDetailsMapper userDetailsMapper;
     private final AuthorizationRedirectHandler redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
-    private final SecureEndpoint tokenEndpoint;
+    private SecureEndpoint tokenEndpoint;
     private final BeanContext beanContext;
     private final EndSessionEndpoint endSessionEndpoint;
 
     /**
      * @param clientConfiguration The client configuration
-     * @param openIdProviderMetadata The provider metadata
+     * @param openIdProviderMetadataFetcher The provider metadata fetcher
      * @param userDetailsMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
@@ -74,20 +77,19 @@ public class DefaultOpenIdClient implements OpenIdClient {
      * @param endSessionEndpoint The end session request
      */
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
-                               OpenIdProviderMetadata openIdProviderMetadata,
+                               OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher,
                                @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                AuthorizationRedirectHandler redirectUrlBuilder,
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                BeanContext beanContext,
                                @Nullable EndSessionEndpoint endSessionEndpoint) {
         this.clientConfiguration = clientConfiguration;
-        this.openIdProviderMetadata = openIdProviderMetadata;
+        this.openIdProviderMetadataFetcher = openIdProviderMetadataFetcher;
         this.userDetailsMapper = userDetailsMapper;
         this.redirectUrlBuilder = redirectUrlBuilder;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
         this.endSessionEndpoint = endSessionEndpoint;
-        this.tokenEndpoint = getTokenEndpoint();
     }
 
     @Override
@@ -107,15 +109,17 @@ public class DefaultOpenIdClient implements OpenIdClient {
             LOG.trace("Starting end session flow to provider [{}]", getName());
         }
         return Optional.ofNullable(endSessionEndpoint)
-                .map(esr -> esr.getUrl(request, authentication))
+                .map(esr -> esr.getUrl(request, authentication, getOpenIdProviderMetadata()))
                 .map(url -> HttpResponse.status(HttpStatus.FOUND)
                         .header(HttpHeaders.LOCATION, url));
     }
 
+
+
     @Override
     public Publisher<HttpResponse> authorizationRedirect(HttpRequest originating) {
         AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration);
-        String endpoint = openIdProviderMetadata.getAuthorizationEndpoint();
+        String endpoint = getOpenIdProviderMetadata().getAuthorizationEndpoint();
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), endpoint);
@@ -145,9 +149,9 @@ public class DefaultOpenIdClient implements OpenIdClient {
             }
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
-                    openIdProviderMetadata,
+                    getOpenIdProviderMetadata(),
                     userDetailsMapper,
-                    tokenEndpoint);
+                    getTokenEndpoint());
         }
     }
 
@@ -163,14 +167,28 @@ public class DefaultOpenIdClient implements OpenIdClient {
      * @return The token endpoint
      */
     protected SecureEndpoint getTokenEndpoint() {
-        List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
-        List<AuthenticationMethod> authenticationMethods = null;
-        if (authMethodsSupported != null) {
-            authenticationMethods = authMethodsSupported.stream()
-                    .map(String::toUpperCase)
-                    .map(AuthenticationMethod::valueOf)
-                    .collect(Collectors.toList());
+        if (tokenEndpoint == null) {
+            List<String> authMethodsSupported = getOpenIdProviderMetadata().getTokenEndpointAuthMethodsSupported();
+            List<AuthenticationMethod> authenticationMethods = null;
+            if (authMethodsSupported != null) {
+                authenticationMethods = authMethodsSupported.stream()
+                        .map(String::toUpperCase)
+                        .map(AuthenticationMethod::valueOf)
+                        .collect(Collectors.toList());
+            }
+            tokenEndpoint = new DefaultSecureEndpoint(getOpenIdProviderMetadata().getTokenEndpoint(), authenticationMethods);
         }
-        return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), authenticationMethods);
+        return tokenEndpoint;
+    }
+
+    public OpenIdProviderMetadata getOpenIdProviderMetadata() {
+        if (openIdProviderMetadata == null) {
+            Optional<OpenIdProviderMetadata> openIdProviderMetadataOpt = openIdProviderMetadataFetcher.fetchOpenIdProviderMetadataByQualifier(Qualifiers.byName(clientConfiguration.getName()));
+            if (!openIdProviderMetadataOpt.isPresent()) {
+                throw new ConfigurationException("open id provider metadata for " + clientConfiguration.getName() + " could not be fetched");
+            }
+            this.openIdProviderMetadata = openIdProviderMetadataOpt.get();
+        }
+        return openIdProviderMetadata;
     }
 }

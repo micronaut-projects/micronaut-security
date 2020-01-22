@@ -40,16 +40,14 @@ public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
-     * @param providerMetadata The provider metadata
      */
     public Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                   OauthClientConfiguration clientConfiguration,
-                                   OpenIdProviderMetadata providerMetadata) {
-        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
+                                   OauthClientConfiguration clientConfiguration) {
+        super(endSessionCallbackUrlBuilder, clientConfiguration);
     }
 
     @Override
-    protected String getUrl() {
+    protected String getUrl(OpenIdProviderMetadata openIdProviderMetadata) {
         URL url = clientConfiguration.getOpenid()
                 .flatMap(OpenIdClientConfiguration::getIssuer)
                 .get();

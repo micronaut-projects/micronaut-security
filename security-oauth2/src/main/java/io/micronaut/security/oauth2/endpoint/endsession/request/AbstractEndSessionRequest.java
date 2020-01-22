@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
@@ -38,39 +39,35 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
 
     protected final EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder;
     protected final OauthClientConfiguration clientConfiguration;
-    protected final OpenIdProviderMetadata providerMetadata;
 
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
-     * @param providerMetadata The provider metadata
      */
     public AbstractEndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                     OauthClientConfiguration clientConfiguration,
-                                     OpenIdProviderMetadata providerMetadata) {
+                                     OauthClientConfiguration clientConfiguration) {
         this.endSessionCallbackUrlBuilder = endSessionCallbackUrlBuilder;
         this.clientConfiguration = clientConfiguration;
-        this.providerMetadata = providerMetadata;
     }
 
     @Nullable
     @Override
-    public String getUrl(HttpRequest originating, Authentication authentication) {
-        return getTemplate().expand(getParameters(originating, authentication));
+    public String getUrl(HttpRequest originating, Authentication authentication, OpenIdProviderMetadata openIdProviderMetadata) {
+        return getTemplate(openIdProviderMetadata).expand(getParameters(originating, authentication));
     }
 
     private Map<String, Object> getParameters(HttpRequest originating, Authentication authentication) {
         return Collections.singletonMap(PARAMETERS_KEY, getArguments(originating, authentication));
     }
 
-    private UriTemplate getTemplate() {
-        return UriTemplate.of(getUrl()).nest("{?" + PARAMETERS_KEY + "*}");
+    private UriTemplate getTemplate(OpenIdProviderMetadata openIdProviderMetadata) {
+        return UriTemplate.of(getUrl(openIdProviderMetadata)).nest("{?" + PARAMETERS_KEY + "*}");
     }
 
     /**
      * @return The url of the request
      */
-    protected abstract String getUrl();
+    protected abstract String getUrl(OpenIdProviderMetadata openIdProviderMetadata);
 
     /**
      * @param originating The originating request

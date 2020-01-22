@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
@@ -41,17 +42,15 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
-     * @param providerMetadata The provider metadata
      */
     public OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                  OauthClientConfiguration clientConfiguration,
-                                  OpenIdProviderMetadata providerMetadata) {
-        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
+                                  OauthClientConfiguration clientConfiguration) {
+        super(endSessionCallbackUrlBuilder, clientConfiguration);
     }
 
     @Override
-    protected String getUrl() {
-        return providerMetadata.getEndSessionEndpoint();
+    protected String getUrl(OpenIdProviderMetadata openIdProviderMetadata) {
+        return openIdProviderMetadata.getEndSessionEndpoint();
     }
 
     @Override

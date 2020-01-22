@@ -68,43 +68,6 @@ class OpenIdClientFactory {
     }
 
     /**
-     * Retrieves OpenID configuration from the provided issuer.
-     *
-     * @param oauthClientConfiguration The client configuration
-     * @param openIdClientConfiguration The openid client configuration
-     * @param defaultHttpConfiguration The default HTTP client configuration
-     * @return The OpenID configuration
-     */
-    @EachBean(OpenIdClientConfiguration.class)
-    DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
-                                                      @Parameter OpenIdClientConfiguration openIdClientConfiguration,
-                                                      HttpClientConfiguration defaultHttpConfiguration) {
-        DefaultOpenIdProviderMetadata providerMetadata = openIdClientConfiguration.getIssuer()
-                .map(issuer -> {
-                    RxHttpClient issuerClient = null;
-                    try {
-                        URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
-                        issuerClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultHttpConfiguration);
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
-                        }
-                        return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
-                    } catch (HttpClientResponseException e) {
-                        throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
-                    } catch (MalformedURLException e) {
-                        throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
-                    } finally {
-                        if (issuerClient != null) {
-                            issuerClient.stop();
-                        }
-                    }
-                }).orElse(new DefaultOpenIdProviderMetadata());
-
-        overrideFromConfig(providerMetadata, openIdClientConfiguration, oauthClientConfiguration);
-        return providerMetadata;
-    }
-
-    /**
      * Creates an {@link OpenIdClient} from the provided parameters.
      *
      * @param openIdClientConfiguration The openid client configuration
@@ -120,19 +83,19 @@ class OpenIdClientFactory {
     @Requires(condition = OpenIdClientCondition.class)
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
-                                     @Parameter DefaultOpenIdProviderMetadata openIdProviderMetadata,
                                      @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                                     OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher,
                                      AuthorizationRedirectHandler redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                      EndSessionEndpointResolver endSessionEndpointResolver,
                                      EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
         EndSessionEndpoint endSessionEndpoint = null;
         if (openIdClientConfiguration.getEndSession().isEnabled()) {
-            endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder).orElse(null);
+            endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, openIdProviderMetadataFetcher, endSessionCallbackUrlBuilder).orElse(null);
         }
 
         return new DefaultOpenIdClient(clientConfiguration,
-                openIdProviderMetadata,
+                openIdProviderMetadataFetcher,
                 userDetailsMapper,
                 redirectUrlBuilder,
                 authorizationResponseHandler,
@@ -140,34 +103,5 @@ class OpenIdClientFactory {
                 endSessionEndpoint);
     }
 
-    private void overrideFromConfig(DefaultOpenIdProviderMetadata configuration,
-                                    OpenIdClientConfiguration openIdClientConfiguration,
-                                    OauthClientConfiguration oauthClientConfiguration) {
-        openIdClientConfiguration.getJwksUri().ifPresent(configuration::setJwksUri);
 
-        oauthClientConfiguration.getIntrospection().ifPresent(introspection -> {
-            introspection.getUrl().ifPresent(configuration::setIntrospectionEndpoint);
-            introspection.getAuthMethod().ifPresent(authMethod -> configuration.setIntrospectionEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
-        });
-        oauthClientConfiguration.getRevocation().ifPresent(revocation -> {
-            revocation.getUrl().ifPresent(configuration::setRevocationEndpoint);
-            revocation.getAuthMethod().ifPresent(authMethod -> configuration.setRevocationEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
-        });
-
-        openIdClientConfiguration.getRegistration()
-                .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setRegistrationEndpoint);
-        openIdClientConfiguration.getUserInfo()
-                .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setUserinfoEndpoint);
-        openIdClientConfiguration.getAuthorization()
-                .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setAuthorizationEndpoint);
-        openIdClientConfiguration.getToken().ifPresent(token -> {
-            token.getUrl().ifPresent(configuration::setTokenEndpoint);
-            token.getAuthMethod().ifPresent(authMethod -> configuration.setTokenEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
-        });
-
-        EndSessionEndpointConfiguration endSession = openIdClientConfiguration.getEndSession();
-        if (endSession.isEnabled()) {
-            endSession.getUrl().ifPresent(configuration::setEndSessionEndpoint);
-        }
-    }
 }
