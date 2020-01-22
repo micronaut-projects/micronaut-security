@@ -68,7 +68,15 @@
 </a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 <div class="header">
+<p>@Configuration
+ @Requires(property="micronaut.security.ldap.enabled",
+          notEquals="false")
+</p>
 <h1 title="Package" class="title">Package&nbsp;io.micronaut.configuration.security.ldap</h1>
+<div class="docSummary">
+<div class="block">LDAP authentication support</div>
+</div>
+<p>See:&nbsp;<a href="#package.description">Description</a></p>
 </div>
 <div class="contentContainer">
 <ul class="blockList">
@@ -111,10 +119,27 @@
  <a href="../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.html" title="class in io.micronaut.configuration.security.ldap.configuration"><code>LdapConfiguration</code></a>.</div>
 </td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../../../../io/micronaut/configuration/security/ldap/LdapAuthenticationProviderFactory.html" title="class in io.micronaut.configuration.security.ldap">LdapAuthenticationProviderFactory</a></td>
+<td class="colLast">
+<div class="block">Factory to create an LDAP authentication provider if the configuration is enabled.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
 </ul>
+<a name="package.description">
+<!--   -->
+</a>
+<h2 title="Package io.micronaut.configuration.security.ldap Description">Package io.micronaut.configuration.security.ldap Description</h2>
+<div class="block">LDAP authentication support</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.0</dd>
+<dt><span class="simpleTagLabel">Author:</span></dt>
+<dd>Sergio del Amo, James Kleeh, Álvaro Sánchez-Mariscal</dd>
+</dl>
 </div>
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
 <div class="bottomNav"><a name="navbar.bottom">

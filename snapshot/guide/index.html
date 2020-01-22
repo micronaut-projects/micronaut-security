@@ -439,7 +439,7 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 </div>
 </div>
 <div class="paragraph">
-<p>In the previous code, the <a href="../apiio/micronaut/security/rules/IpPatternsRule.html">IpPatternsRule</a> rejects traffic not coming
+<p>In the previous code, the <a href="../api/io/micronaut/security/rules/IpPatternsRule.html">IpPatternsRule</a> rejects traffic not coming
 either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
 </div>
 
@@ -1817,6 +1817,10 @@ Read the <a href="http://guides.micronaut.io/micronaut-database-authentication-p
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>LDAP authentication can be globally disabled by setting <code>micronaut.security.ldap.enabled</code> to <code>false</code>, or on a provider
+basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
+</div>
 
 
 <h2 id="configuration">5.4.1 Configuration</h2>
@@ -2219,8 +2223,8 @@ that token to other requests in your network.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The previous configuration, configures a <a href="../apiio/micronaut/security/token/writer/HttpHeaderTokenWriter.html">HttpHeaderTokenWriter</a> and a
-and a propagation filter, <a href="../apiio/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a>, which
+<p>The previous configuration, configures a <a href="../api/io/micronaut/security/token/writer/HttpHeaderTokenWriter.html">HttpHeaderTokenWriter</a> and a
+and a propagation filter, <a href="../api/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a>, which
 will propagate the security token seamlessly.</p>
 </div>
 <div class="paragraph">
