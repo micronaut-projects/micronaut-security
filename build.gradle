@@ -61,7 +61,6 @@ subprojects { Project subproject ->
     apply plugin: "groovy"
     apply plugin: "java"
     apply plugin: "io.spring.dependency-management"
-    
 
     dependencyManagement {
         imports {
