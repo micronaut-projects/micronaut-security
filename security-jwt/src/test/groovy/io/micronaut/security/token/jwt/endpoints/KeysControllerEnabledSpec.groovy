@@ -33,7 +33,7 @@ class KeysControllerEnabledSpec extends Specification {
                 'spec.name'                                          : KeysControllerEnabledSpec.simpleName,
                 'micronaut.security.enabled'                         : true,
                 'micronaut.security.token.jwt.enabled'               : true,
-                'micronaut.security.token.jwt.endpoints.keys.enabled': false,
+                'micronaut.security.endpoints.keys.enabled'          : false,
 
         ], Environment.TEST)
 
