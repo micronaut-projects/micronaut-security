@@ -151,7 +151,11 @@ public class JwksSignature implements SignatureConfiguration {
      * @param url JSON Web Key Set Url.
      * @return a JWKSet or null if there was an error.
      */
+    @Nullable
     protected JWKSet loadJwkSet(String url) {
+        if (url == null) {
+            return null;
+        }
         try {
             return JWKSet.load(new URL(url));
         } catch (IOException | ParseException e) {

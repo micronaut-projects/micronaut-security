@@ -3,9 +3,10 @@ package io.micronaut.security.oauth2.e2e
 import geb.spock.GebSpec
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.oauth2.ConfigurationFixture
 import io.micronaut.security.oauth2.OpenIDIntegrationSpec
 
-class OpenIdAuthorizationCodeSpec extends GebSpec implements OpenIDIntegrationSpec {
+class OpenIdAuthorizationCodeSpec extends GebSpec implements OpenIDIntegrationSpec, ConfigurationFixture {
 
     void "test a full login"() {
         given:
@@ -37,15 +38,15 @@ class OpenIdAuthorizationCodeSpec extends GebSpec implements OpenIDIntegrationSp
 
     @Override
     Map<String, Object> getConfiguration() {
-        Map<String, Object> config = OpenIDIntegrationSpec.super.getConfiguration()
-        config.put("micronaut.security.enabled", true)
-        config.put("micronaut.security.token.jwt.enabled", true)
-        config.put("micronaut.security.token.jwt.cookie.enabled", true)
-        config.put('micronaut.security.oauth2.enabled', true)
-        config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
-        config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)
-        config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)
-        return config
+        OpenIDIntegrationSpec.super.getConfiguration() +
+                oauth2Config +
+                [
+                        "micronaut.security.token.jwt.cookie.enabled" : true,
+                        "micronaut.security.oauth2.clients.keycloak.openid.issuer" : ISSUER,
+                        "micronaut.security.oauth2.clients.keycloak.client-id" : CLIENT_ID,
+                        "micronaut.security.oauth2.clients.keycloak.client-secret" : CLIENT_SECRET,
+                        "micronaut.security.token.jwt.signatures.secret.generator.secret" : 'pleaseChangeThisSecretForANewOne',
+        ] as Map<String, Object>
     }
 
 }
