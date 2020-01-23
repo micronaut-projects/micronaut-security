@@ -24,6 +24,7 @@ jobs:
       if: success()
       uses: micronaut-projects/github-pages-deploy-action@master
       env:
+        BETA: true
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         BASE_BRANCH: master 
         BRANCH: gh-pages 

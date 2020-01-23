@@ -1,5 +1,5 @@
 Micronaut Security {version} includes the following changes:
 
-=== New OAuth 2.0 Module
+=== Startup Time Improvements
 
-Micronaut now supports OAuth 2.0 and OpenID clients. To get started see the <<oauth, section>> in the documentation.
+For users of the OAuth module, you should see an improvement in startup time because the loading of the provider metadata is now done lazily.

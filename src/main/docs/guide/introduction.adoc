@@ -1,5 +1,7 @@
 Micronaut Security is a fully featured and customizable security solution for your applications.
 
+NOTE: This module requires Micronaut 1.3.x.
+
 == Getting Started
 
 [TIP]
