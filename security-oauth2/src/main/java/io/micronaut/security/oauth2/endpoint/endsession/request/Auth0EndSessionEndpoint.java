@@ -39,10 +39,12 @@ import java.util.function.Supplier;
 public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
 
     /**
+     * @deprecated use {@link #Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)} instead.
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata
      */
+    @Deprecated
     public Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                    OauthClientConfiguration clientConfiguration,
                                    OpenIdProviderMetadata providerMetadata) {
