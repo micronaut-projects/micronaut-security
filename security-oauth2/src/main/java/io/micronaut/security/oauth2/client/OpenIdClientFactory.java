@@ -17,7 +17,10 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
-import io.micronaut.context.annotation.*;
+import io.micronaut.context.annotation.EachBean;
+import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.async.SupplierUtil;
