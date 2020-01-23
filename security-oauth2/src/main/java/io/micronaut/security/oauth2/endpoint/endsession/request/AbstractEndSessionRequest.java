@@ -48,10 +48,12 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
     protected final Supplier<OpenIdProviderMetadata> providerMetadataSupplier;
 
     /**
+     * @deprecated Use {@link #AbstractEndSessionRequest(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)} instead.
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata
      */
+    @Deprecated
     public AbstractEndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                      OauthClientConfiguration clientConfiguration,
                                      OpenIdProviderMetadata providerMetadata) {

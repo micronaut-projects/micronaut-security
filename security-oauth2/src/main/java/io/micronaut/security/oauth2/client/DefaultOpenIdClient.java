@@ -67,6 +67,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private final EndSessionEndpoint endSessionEndpoint;
 
     /**
+     * @deprecated use {@link #DefaultOpenIdClient(OauthClientConfiguration, Supplier, OpenIdUserDetailsMapper, AuthorizationRedirectHandler, OpenIdAuthorizationResponseHandler, BeanContext, EndSessionEndpoint)} instead.
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
      * @param userDetailsMapper The user details mapper
@@ -75,6 +76,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
      * @param beanContext The bean context
      * @param endSessionEndpoint The end session request
      */
+    @Deprecated
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                OpenIdProviderMetadata openIdProviderMetadata,
                                @Nullable OpenIdUserDetailsMapper userDetailsMapper,
