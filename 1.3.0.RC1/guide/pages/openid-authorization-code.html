@@ -1,0 +1,650 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script src="/cdn-cgi/apps/head/3cOPSgo5Omz84ycX7CvigfX4cpw.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-82213539-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-82213539-2');
+    </script>
+    <title>11.3.1.2 OpenID Connect 1.3.0.RC1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <div class="navTitle">
+        
+        Micronaut Security
+    </div>
+    <div class="navLinks">
+        <ul>
+            <li>
+                <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                    <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                    <div id="nav-summary-childs" style="display:none;">
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="separator selected">
+                <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>10</strong><span>Security Events</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+
+
+                <div class="project">
+                    <h1>11.3.1.2 OpenID Connect</h1>
+
+                    <p><strong>Version:</strong> 1.3.0.RC1</p>
+                </div>
+
+                
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#openid-configuration"><strong>11.1</strong><span>Configuration</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#openid-user-details"><strong>11.2</strong><span>User Details Mapper</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#openid-auth-parameters"><strong>11.3</strong><span>Parameters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#nonce"><strong>11.3.1</strong><span>Nonce</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#login-hint"><strong>11.3.2</strong><span>Login Hint</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#id-token-hint"><strong>11.3.3</strong><span>ID Token Hint</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#token-validation"><strong>11.4</strong><span>Token Validation</span></a>
+                    </div>
+                    
+                </div>
+                
+
+                
+
+<h2 id="openid-authorization-code">11.3.1.2 OpenID Connect</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Adding support for authorization code flow with an OpenID provider is extremely easy with Micronaut.</p>
+</div>
+<div class="paragraph">
+<p>Here is a high level diagram of how the authorization code grant flow works with an OpenID provider.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/openid-oauth.svg" alt="openid oauth">
+</div>
+</div>
+
+
+<h2 id="openid-configuration">11.3.1.2.1 Configuration</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The requirements to allow authorization with an OpenID provider are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Configuration of the client id and secret</p>
+</li>
+<li>
+<p>Configuration of the issuer</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    security:
+        enabled: true
+        oauth2:
+            enabled: true
+            clients:
+                okta: <i class="conum" data-value="1"></i><b>(1)</b>
+                    client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+                    client-secret: &lt;&lt;my client secret&gt;&gt;  <i class="conum" data-value="3"></i><b>(3)</b>
+                    openid:
+                        issuer: &lt;&lt;my openid issuer&gt;&gt; <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Configure a client. The name here is arbitrary</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The client id</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The client secret</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The OpenID provider issuer</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The issuer URL will be used to discover the endpoints exposed by the provider.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+To disable a specific client for any given environment, set <code>enabled: false</code> within the client configuration.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>See the following tables for the configuration options:</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$RegistrationEndpointConfigurationProperties.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties.adoc[]</p>
+</div>
+
+
+<h2 id="openid-user-details">11.3.1.2.2 User Details Mapper</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Because the OpenID standard returns a JWT token in the token response, it is possible to retrieve information about the user without having to make an additional call. In addition, the data stored in the JWT is standardized so you can use the same code to retrieve that information across providers.</p>
+</div>
+<div class="paragraph">
+<p>A default implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties.adoc[]</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Enabling all of the above with cookie JWT storage has been known to cause issues with Keycloak due to their tokens being very large and causing the resulting cookie to be larger than what browsers allow.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If the default implementation is not sufficient, it is possible to override the global default or provide an implementation specific to a provider.</p>
+</div>
+<div class="paragraph">
+<p>To override the global default mapper, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Replaces;
+import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
+import java.util.Collections;
+
+@Singleton
+@Replaces(DefaultOpenIdUserDetailsMapper.class)
+public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    @Override
+    @Nonnull
+    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        return new UserDetails("name", Collections.emptyList());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+
+import javax.annotation.Nonnull
+import javax.inject.Singleton
+
+@Singleton
+@Replaces(DefaultOpenIdUserDetailsMapper.class)
+class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    @Override
+    @Nonnull
+    UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        new UserDetails("name", [])
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+
+import javax.inject.Singleton
+
+@Singleton
+@Replaces(DefaultOpenIdUserDetailsMapper::class)
+class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
+
+    override fun createUserDetails(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims): UserDetails {
+        return UserDetails("name", emptyList())
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To override the user detail mapping behavior for a specific provider, register a bean with a named qualifier with a value equal to the name specified in the client configuration.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+
+import javax.annotation.Nonnull;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.Collections;
+
+@Singleton
+@Named("okta") <b class="conum">(1)</b>
+public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    @Override
+    @Nonnull
+    public UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
+                                         OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                         OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
+        return new UserDetails("name", Collections.emptyList()); <b class="conum">(5)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+
+import javax.annotation.Nonnull
+import javax.inject.Named
+import javax.inject.Singleton
+
+@Singleton
+@Named("okta") <b class="conum">(1)</b>
+class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    @Override
+    @Nonnull
+    UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
+                                  OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                  OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
+        new UserDetails("name", []) <b class="conum">(5)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+
+import javax.inject.Named
+import javax.inject.Singleton
+
+@Singleton
+@Named("okta") <b class="conum">(1)</b>
+class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
+
+    override fun createUserDetails(providerName: String, <b class="conum">(2)</b>
+                                   tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
+                                   openIdClaims: OpenIdClaims) <b class="conum">(4)</b>
+            : UserDetails {
+        return UserDetails("name", emptyList()) <b class="conum">(5)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The named qualifier is added that matches the name in configuration</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The provider name is passed to the method. Only useful for the global version</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The full token response is available</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The JWT claims are available</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>An instance of <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> is returned</td>
+</tr>
+</table>
+</div>
+
+
+<h2 id="openid-auth-parameters">11.3.1.2.3 Parameters</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The OpenID specification for <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">authorization requests</a> allows for additional parameters beyond what is included in the OAuth 2.0 specification. Some of those parameters make sense to be provided by a bean and are described in this section. Other parameters are able to be controlled through configuration.</p>
+</div>
+<div class="paragraph">
+<p>Here are the configuration option for authorization request parameters:</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties.adoc[]</p>
+</div>
+
+
+<h2 id="nonce">11.3.1.2.3.1 Nonce</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>By default, this library will include a <code>nonce</code> parameter as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> specification in authentication requests.</p>
+</div>
+<div class="paragraph">
+<p>Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a> bean must be present to retrieve the nonce for validation. The default implementation stores the nonce in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>You can provide your own implementation, however an implementation of nonce persistence that stores the nonce in an http session has also been provided.</p>
+</div>
+<div class="paragraph">
+<p>To enable state persistence with an http session:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add a dependency to <code>micronaut-session</code></p>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="gradle">compile <span class="hljs-string">'io.micronaut:micronaut-session'</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-session&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+</li>
+<li>
+<p>Set the nonce persistence to <code>session</code></p>
+<div class="listingblock">
+<div class="title">application.yml</div>
+<div class="content">
+<pre>micronaut.security.oauth2.nonce.persistence: session</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If nonce validation fails, the user will not be authenticated.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_customization">Customization</h3>
+<div class="paragraph">
+<p>There are several interfaces that implementations can be provided for to override how the nonce parameter is handled.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Responsibility</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default Implementation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/nonce/NonceFactory.html">NonceFactory</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Builds a <code>java.lang.String</code> nonce value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceFactory.html">DefaultNonceFactory</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html">OpenIdTokenResponseValidator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates the nonce claim in the token response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html">NonceClaimValidator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stores the nonce to be retrieved later to allow validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistence.html">CookieNoncePersistence</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>To override the behavior of any of those beans, provide an implementation and replace the default one.</p>
+</div>
+</div>
+
+
+<h2 id="login-hint">11.3.1.2.3.2 Login Hint</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">login hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/LoginHintResolver.html">LoginHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
+</div>
+
+
+<h2 id="id-token-hint">11.3.1.2.3.3 ID Token Hint</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html">IdTokenHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
+</div>
+
+
+<h2 id="token-validation">11.3.1.2.4 Token Validation</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>A <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html">OpenIdTokenResponseValidator</a> bean is responsible for validating the JWT token. The default implementation follows the guidelines described in the OpenID Connect specification regarding <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">token validation</a> where possible.</p>
+</div>
+<div class="paragraph">
+<p>By default all implementations of <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a> and <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html">OpenIdClaimsValidator</a> are used to validate the token.</p>
+</div>
+<div class="paragraph">
+<p>To allow for additional or custom  validations, register an <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html">OpenIdClaimsValidator</a> bean.</p>
+</div>
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>10</strong><span>Security Events</span></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
