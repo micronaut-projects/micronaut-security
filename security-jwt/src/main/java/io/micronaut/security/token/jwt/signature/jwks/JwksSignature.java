@@ -83,12 +83,14 @@ public class JwksSignature implements SignatureConfiguration {
         if (LOG.isDebugEnabled()) {
             LOG.debug("JWT validation URL: {}", url);
         }
-        this.jwkSet = loadJwkSet(url);
         this.keyType = keyType;
         this.jwkValidator = jwkValidator;
     }
 
     private Optional<JWKSet> getJWKSet() {
+        if (jwkSet == null) {
+            this.jwkSet = loadJwkSet(getUrl());
+        }
         return Optional.ofNullable(jwkSet);
     }
 
@@ -184,8 +186,7 @@ public class JwksSignature implements SignatureConfiguration {
         ).select(jwkSet);
 
         if (refreshKeysAttempts > 0 && matches.isEmpty()) {
-            this.jwkSet = loadJwkSet(url);
-            return matches(jwt, jwkSet, refreshKeysAttempts - 1);
+            return matches(jwt, getJWKSet().orElse(null), refreshKeysAttempts - 1);
         }
         return matches;
     }
