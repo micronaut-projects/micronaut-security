@@ -145,7 +145,11 @@ implements <a href="../../../../../io/micronaut/security/oauth2/client/OpenIdCli
                    <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRedirectHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRedirectHandler</a>&nbsp;redirectUrlBuilder,
                    <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponseHandler</a>&nbsp;authorizationResponseHandler,
                    io.micronaut.context.BeanContext&nbsp;beanContext,
-                   <a href="../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&nbsp;endSessionEndpoint)</code>&nbsp;</td>
+                   <a href="../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&nbsp;endSessionEndpoint)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">use <a href="../../../../../io/micronaut/security/oauth2/client/DefaultOpenIdClient.html#DefaultOpenIdClient-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper-io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler-io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler-io.micronaut.context.BeanContext-io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint-"><code>DefaultOpenIdClient(OauthClientConfiguration, Supplier, OpenIdUserDetailsMapper, AuthorizationRedirectHandler, OpenIdAuthorizationResponseHandler, BeanContext, EndSessionEndpoint)</code></a> instead.</span></div>
+</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/client/DefaultOpenIdClient.html#DefaultOpenIdClient-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper-io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler-io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler-io.micronaut.context.BeanContext-io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint-">DefaultOpenIdClient</a></span>(<a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
@@ -236,15 +240,17 @@ implements <a href="../../../../../io/micronaut/security/oauth2/client/OpenIdCli
 <ul class="blockList">
 <li class="blockList">
 <h4>DefaultOpenIdClient</h4>
-<pre>public&nbsp;DefaultOpenIdClient(<a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
-                           <a href="../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
-                           @Nullable
-                           <a href="../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdUserDetailsMapper</a>&nbsp;userDetailsMapper,
-                           <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRedirectHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRedirectHandler</a>&nbsp;redirectUrlBuilder,
-                           <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponseHandler</a>&nbsp;authorizationResponseHandler,
-                           io.micronaut.context.BeanContext&nbsp;beanContext,
-                           @Nullable
-                           <a href="../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&nbsp;endSessionEndpoint)</pre>
+<pre>@Deprecated
+public&nbsp;DefaultOpenIdClient(<a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+                                       <a href="../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;openIdProviderMetadata,
+                                       @Nullable
+                                       <a href="../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdUserDetailsMapper</a>&nbsp;userDetailsMapper,
+                                       <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRedirectHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRedirectHandler</a>&nbsp;redirectUrlBuilder,
+                                       <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OpenIdAuthorizationResponseHandler</a>&nbsp;authorizationResponseHandler,
+                                       io.micronaut.context.BeanContext&nbsp;beanContext,
+                                       @Nullable
+                                       <a href="../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/EndSessionEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.request">EndSessionEndpoint</a>&nbsp;endSessionEndpoint)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use <a href="../../../../../io/micronaut/security/oauth2/client/DefaultOpenIdClient.html#DefaultOpenIdClient-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper-io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler-io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler-io.micronaut.context.BeanContext-io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint-"><code>DefaultOpenIdClient(OauthClientConfiguration, Supplier, OpenIdUserDetailsMapper, AuthorizationRedirectHandler, OpenIdAuthorizationResponseHandler, BeanContext, EndSessionEndpoint)</code></a> instead.</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clientConfiguration</code> - The client configuration</dd>

@@ -180,7 +180,11 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/e
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#AbstractEndSessionRequest-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.client.OpenIdProviderMetadata-">AbstractEndSessionRequest</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
                          <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
-                         <a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;providerMetadata)</code>&nbsp;</td>
+                         <a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;providerMetadata)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#AbstractEndSessionRequest-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-"><code>AbstractEndSessionRequest(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)</code></a> instead.</span></div>
+</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#AbstractEndSessionRequest-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-">AbstractEndSessionRequest</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
@@ -294,9 +298,11 @@ protected final&nbsp;<a href="../../../../../../../io/micronaut/security/oauth2/
 <ul class="blockList">
 <li class="blockList">
 <h4>AbstractEndSessionRequest</h4>
-<pre>public&nbsp;AbstractEndSessionRequest(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
-                                 <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
-                                 <a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;providerMetadata)</pre>
+<pre>@Deprecated
+public&nbsp;AbstractEndSessionRequest(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
+                                             <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+                                             <a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&nbsp;providerMetadata)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/AbstractEndSessionRequest.html#AbstractEndSessionRequest-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-"><code>AbstractEndSessionRequest(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)</code></a> instead.</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>endSessionCallbackUrlBuilder</code> - The end session callback URL builder</dd>
