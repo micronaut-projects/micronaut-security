@@ -20,6 +20,8 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -35,11 +37,12 @@ import java.util.Map;
  */
 @Singleton
 public class SensitiveEndpointRule implements SecurityRule {
-
     /**
      * The order of the rule.
      */
     public static final Integer ORDER = 0;
+
+    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
 
     /**
      * A map where the key represents the method of an endpoint
@@ -66,8 +69,14 @@ public class SensitiveEndpointRule implements SecurityRule {
             if (endpointMethods.containsKey(method)) {
                 Boolean sensitive = endpointMethods.get(method);
                 if (claims == null && sensitive) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("The endpoint method [{}] is sensitive and no authentication was found. Rejecting the request", method);
+                    }
                     return SecurityRuleResult.REJECTED;
                 } else {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("The endpoint method [{}] is not sensitive or the request was authenticated. Allowing the request", method);
+                    }
                     return SecurityRuleResult.ALLOWED;
                 }
             }

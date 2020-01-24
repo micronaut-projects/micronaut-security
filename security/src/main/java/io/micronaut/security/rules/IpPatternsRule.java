@@ -21,6 +21,9 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.web.router.RouteMatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,6 +45,8 @@ public class IpPatternsRule extends AbstractSecurityRule {
      * The order of the rule.
      */
     public static final Integer ORDER = SecuredAnnotationRule.ORDER - 100;
+
+    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
 
     private final List<Pattern> patternList;
 
@@ -84,13 +89,23 @@ public class IpPatternsRule extends AbstractSecurityRule {
     public SecurityRuleResult check(HttpRequest request, @Nullable RouteMatch routeMatch, @Nullable Map<String, Object> claims) {
 
         if (patternList.isEmpty()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No IP patterns provided. Skipping host address check.");
+            }
             return SecurityRuleResult.UNKNOWN;
         } else {
+            String hostAddress = request.getRemoteAddress().getAddress().getHostAddress();
             if (patternList.stream().anyMatch(pattern ->
                     pattern.pattern().equals(SecurityConfigurationProperties.ANYWHERE) ||
-                    pattern.matcher(request.getRemoteAddress().getAddress().getHostAddress()).matches())) {
+                    pattern.matcher(hostAddress).matches())) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("One or more of the IP patterns matched the host address [{}]. Continuing request processing.", hostAddress);
+                }
                 return SecurityRuleResult.UNKNOWN;
             } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("None of the IP patterns [{}] matched the host address [{}]. Rejecting the request.", patternList.stream().map(Pattern::pattern).collect(Collectors.toList()), hostAddress);
+                }
                 return SecurityRuleResult.REJECTED;
             }
         }

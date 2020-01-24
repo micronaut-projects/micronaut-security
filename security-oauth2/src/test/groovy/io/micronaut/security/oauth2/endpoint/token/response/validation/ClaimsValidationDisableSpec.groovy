@@ -1,17 +1,14 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.security.oauth2.ConfigurationFixture
 import spock.lang.Specification
 
-class ClaimsValidationDisableSpec extends Specification {
+class ClaimsValidationDisableSpec extends Specification implements ConfigurationFixture {
 
     void "test claim validators are enabled by default"() {
         given:
-        ApplicationContext ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
-                'micronaut.security.oauth2.enabled': true
-        ])
+        ApplicationContext ctx = ApplicationContext.run(oauth2Config)
 
         when:
         ctx.getBean(IssuerClaimValidator)
@@ -27,10 +24,7 @@ class ClaimsValidationDisableSpec extends Specification {
 
     void "test disabling claim validators"() {
         given:
-        ApplicationContext ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
-                'micronaut.security.oauth2.enabled': true,
+        ApplicationContext ctx = ApplicationContext.run(oauth2Config + [
                 'micronaut.security.oauth2.openid.claims-validation.issuer': false,
                 'micronaut.security.oauth2.openid.claims-validation.audience': false,
                 'micronaut.security.oauth2.openid.claims-validation.authorized-party': false

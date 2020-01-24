@@ -20,7 +20,6 @@ import io.micronaut.configuration.security.ldap.context.ContextBuilder;
 import io.micronaut.configuration.security.ldap.context.LdapSearchResult;
 import io.micronaut.configuration.security.ldap.context.LdapSearchService;
 import io.micronaut.configuration.security.ldap.group.LdapGroupProcessor;
-import io.micronaut.context.annotation.EachBean;
 import io.micronaut.security.authentication.*;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -42,7 +41,6 @@ import java.util.Set;
  * @author James Kleeh
  * @since 1.0
  */
-@EachBean(LdapConfiguration.class)
 public class LdapAuthenticationProvider implements AuthenticationProvider, Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(LdapAuthenticationProvider.class);

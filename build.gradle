@@ -10,8 +10,8 @@ buildscript {
         classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
         classpath 'io.github.groovylang.groovydoc:groovydoc-gradle-plugin:1.0.1'
         classpath "gradle.plugin.org.aim42:htmlSanityCheck:$htmlSanityCheckVersion"
-        classpath "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
-        classpath 'javax.xml.bind:jaxb-api:2.2.8'
+        classpath "org.codehaus.groovy.modules.http-builder:http-builder:0.7.2"
+        classpath 'javax.xml.bind:jaxb-api:2.3.1'
         classpath "io.micronaut.docs:micronaut-docs-asciidoc-extensions:$micronautDocsVersion"
         classpath "io.micronaut.docs:micronaut-docs-gradle-plugins:$micronautDocsVersion", {
             exclude module:'shadow'
@@ -22,13 +22,13 @@ buildscript {
 
 plugins {
     id 'com.github.hierynomus.license' version '0.15.0' apply false
-    id 'com.github.ben-manes.versions' version '0.21.0'
+    id 'com.github.ben-manes.versions' version '0.27.0'
 }
 
 apply plugin: 'org.aim42.htmlSanityCheck'
 
 repositories {
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://oss.jfrog.org/oss-snapshot-local" }
     maven { url "https://repo.grails.org/grails/core" }
 }
 
@@ -53,7 +53,7 @@ subprojects { Project subproject ->
     }
 
     repositories {
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.jfrog.org/oss-snapshot-local" }
         maven { url "https://repo.grails.org/grails/core" }
         jcenter()
     }
@@ -73,7 +73,7 @@ subprojects { Project subproject ->
     targetCompatibility = '1.8'
     compileJava.options.compilerArgs.add '-parameters'
     compileTestJava.options.compilerArgs.add '-parameters'
-    apply from: rootProject.file('gradle/publishing.gradle')
+    apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-build/v1.0.0/publishing.gradle"
     
     
     jar {
@@ -125,8 +125,8 @@ subprojects { Project subproject ->
         testCompile("org.spockframework:spock-core:${spockVersion}") {
             exclude module:'groovy-all'
         }
-        testCompile "cglib:cglib-nodep:2.2.2"
-        testCompile "org.objenesis:objenesis:1.4"
+        testCompile "cglib:cglib-nodep:3.3.0"
+        testCompile "org.objenesis:objenesis:3.1"
 
         testRuntime "ch.qos.logback:logback-classic:1.2.3"
         testCompile "org.codehaus.groovy:groovy-test:$groovyVersion"
@@ -248,6 +248,11 @@ allprojects {
         }
     }
     apply from: rootProject.file('gradle/license.gradle')
+
+    tasks.withType(Test) {
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        forkEvery = 100
+    }
 }
 
 htmlSanityCheck {

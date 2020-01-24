@@ -18,8 +18,9 @@ package io.micronaut.security.oauth2.endpoint;
 
 /**
  * Client Authentication methods that are used by Clients to authenticate to the Authorization Server when using the Token Endpoint.
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication">Client Authentication</a>
  *
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication">Client Authentication</a>
+ * @see <a href="https://datatracker.ietf.org/doc/html/draft-campbell-oauth-mtls">Mutual TLS Profiles for OAuth Clients</a>
  * @author Sergio del Amo
  * @since 1.2.0
  */
@@ -29,6 +30,7 @@ public enum AuthenticationMethod {
     CLIENT_SECRET_BASIC("client_secret_basic"),
     CLIENT_SECRET_JWT("client_secret_jwt"),
     PRIVATE_KEY_JWT("private_key_jwt"),
+    TLS_CLIENT_AUTH("tls_client_auth"),
     NONE("none");
 
     private String authMethod;

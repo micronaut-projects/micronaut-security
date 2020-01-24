@@ -40,9 +40,11 @@ public interface StateFactory {
      * @param request The original request prior redirect
      * @param response The authorization redirect response
      * @return A state parameter. An opaque value used to maintain state between the request and the callback.
+     * @deprecated use {@link #buildState(HttpRequest, MutableHttpResponse, AuthorizationRequest)}
      */
     @SuppressWarnings("rawtypes")
     @Nullable
+    @Deprecated
     String buildState(HttpRequest<?> request, MutableHttpResponse response);
 
     /**

@@ -12,8 +12,8 @@ You can configure token propagation to achieve that.
 include::{testssecurity}/security/token/propagation/TokenPropagationSpec.groovy[tag=yamlconfig,indent=0]
 ----
 
-The previous configuration, configures a link:{api}io/micronaut/security/token/writer/HttpHeaderTokenWriter.html[HttpHeaderTokenWriter] and a
-and a propagation filter, link:{api}io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html[TokenPropagationHttpClientFilter], which
+The previous configuration, configures a link:{api}/io/micronaut/security/token/writer/HttpHeaderTokenWriter.html[HttpHeaderTokenWriter] and a
+and a propagation filter, link:{api}/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html[TokenPropagationHttpClientFilter], which
 will propagate the security token seamlessly.
 
 If you use <<serviceDiscovery, Service Discovery>> features, you can use the service id in your service id regular expression:
