@@ -7,31 +7,26 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.oauth2.ConfigurationFixture
 import io.micronaut.security.rules.SecurityRule
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
-class OpenIdClientFactorySpec extends Specification {
+class OpenIdClientFactorySpec extends Specification implements ConfigurationFixture {
 
     @Shared
     int authServerPort = SocketUtils.findAvailableTcpPort()
 
     Map<String, Object> getAuthServerConfiguration() {
-        [
+        oauth2Config + [
                 'micronaut.server.port': authServerPort,
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
-                'micronaut.security.oauth2.enabled': true,
                 'spec.name':'AuthServerOpenIdClientFactorySpec'
         ] as Map<String, Object>
     }
 
     Map<String, Object> getConfiguration() {
-        [
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
-                'micronaut.security.oauth2.enabled': true,
+        oauth2Config + [
                 'micronaut.security.token.jwt.bearer.enabled': true,
                 'micronaut.security.token.jwt.cookie.enabled': true,
                 'micronaut.security.oauth2.clients.okta.openid.issuer': "http://localhost:${authServerPort}/oauth2/default",

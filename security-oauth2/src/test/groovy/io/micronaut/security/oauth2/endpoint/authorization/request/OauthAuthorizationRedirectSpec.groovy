@@ -10,6 +10,7 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.ConfigurationFixture
 import io.micronaut.security.oauth2.OpenIDIntegrationSpec
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
@@ -24,16 +25,14 @@ import javax.inject.Named
 import javax.inject.Singleton
 import java.nio.charset.StandardCharsets
 
-class OauthAuthorizationRedirectSpec extends Specification {
+class OauthAuthorizationRedirectSpec extends Specification implements ConfigurationFixture {
 
     void "test authorization redirect with just oauth"() {
         given:
         Map config = new HashMap<>()
+        config.putAll(oauth2Config)
         config.put("spec.name", OauthAuthorizationRedirectSpec.simpleName)
-        config.put("micronaut.security.enabled", true)
-        config.put("micronaut.security.token.jwt.enabled", true)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
-        config.put('micronaut.security.oauth2.enabled', true)
         config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")
         config.put("micronaut.security.oauth2.clients.twitter.token.url", "http://twitter.com/token")
         config.put("micronaut.security.oauth2.clients.twitter.client-id", "myclient")

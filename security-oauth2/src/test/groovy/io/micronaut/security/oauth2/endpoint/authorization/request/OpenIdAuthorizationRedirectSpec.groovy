@@ -11,6 +11,7 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.ConfigurationFixture
 import io.micronaut.security.oauth2.OpenIDIntegrationSpec
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
@@ -26,15 +27,13 @@ import javax.inject.Named
 import javax.inject.Singleton
 import java.nio.charset.StandardCharsets
 
-class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDIntegrationSpec {
+class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDIntegrationSpec, ConfigurationFixture {
 
     void "test authorization redirect for openid and normal oauth"() {
         given:
         Map config = getConfiguration()
-        config.put("micronaut.security.enabled", true)
-        config.put("micronaut.security.token.jwt.enabled", true)
+        config.putAll(oauth2Config)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
-        config.put('micronaut.security.oauth2.enabled', true)
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
         config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)
@@ -94,10 +93,8 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
     void "test authorization redirect with openid and oauth disabled"() {
         given:
         Map config = getConfiguration()
-        config.put("micronaut.security.enabled", true)
-        config.put("micronaut.security.token.jwt.enabled", true)
+        config.putAll(oauth2Config)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
-        config.put('micronaut.security.oauth2.enabled', true)
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
         config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)

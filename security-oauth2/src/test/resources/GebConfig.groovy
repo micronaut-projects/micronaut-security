@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,13 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 
+// default is to use htmlunit
+driver = {
+    HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver()
+    htmlUnitDriver.javascriptEnabled = true
+    htmlUnitDriver
+}
+
 environments {
     chrome { driver = { new ChromeDriver() } }
 
@@ -29,7 +36,12 @@ environments {
         }
     }
 
-    htmlunit { driver = { new HtmlUnitDriver(true) } }
+    // default is to use htmlunit
+    driver = {
+        HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver()
+        htmlUnitDriver.javascriptEnabled = true
+        htmlUnitDriver
+    }
 
     firefox { driver = { new FirefoxDriver() } }
 }
