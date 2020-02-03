@@ -83,12 +83,14 @@ public class JwksSignature implements SignatureConfiguration {
         if (LOG.isDebugEnabled()) {
             LOG.debug("JWT validation URL: {}", url);
         }
-        this.jwkSet = loadJwkSet(url);
         this.keyType = keyType;
         this.jwkValidator = jwkValidator;
     }
 
     private Optional<JWKSet> getJWKSet() {
+        if (jwkSet == null) {
+            this.jwkSet = loadJwkSet(getUrl());
+        }
         return Optional.ofNullable(jwkSet);
     }
 
@@ -149,7 +151,11 @@ public class JwksSignature implements SignatureConfiguration {
      * @param url JSON Web Key Set Url.
      * @return a JWKSet or null if there was an error.
      */
+    @Nullable
     protected JWKSet loadJwkSet(String url) {
+        if (url == null) {
+            return null;
+        }
         try {
             return JWKSet.load(new URL(url));
         } catch (IOException | ParseException e) {
@@ -173,19 +179,21 @@ public class JwksSignature implements SignatureConfiguration {
      * @return a List of JSON Web Keys
      */
     protected List<JWK> matches(SignedJWT jwt, @Nullable JWKSet jwkSet, int refreshKeysAttempts) {
+        List<JWK> matches = Collections.emptyList();
+        if (jwkSet != null) {
+            JWKMatcher.Builder builder = new JWKMatcher.Builder();
+            if (keyType != null) {
+                builder = builder.keyType(keyType);
+            }
+            String keyId = jwt.getHeader().getKeyID();
+            if (keyId !=null) {
+                builder = builder.keyID(keyId);
+            }
 
-        String keyId = jwt.getHeader().getKeyID();
-
-        List<JWK> matches = new JWKSelector(
-                new JWKMatcher.Builder()
-                        .keyType(keyType)
-                        .keyID(keyId)
-                        .build()
-        ).select(jwkSet);
-
+            matches = new JWKSelector(builder.build()).select(jwkSet);
+        }
         if (refreshKeysAttempts > 0 && matches.isEmpty()) {
-            this.jwkSet = loadJwkSet(url);
-            return matches(jwt, jwkSet, refreshKeysAttempts - 1);
+            return matches(jwt, getJWKSet().orElse(null), refreshKeysAttempts - 1);
         }
         return matches;
     }
