@@ -20,8 +20,8 @@ dependencies {
     testCompile "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
 
     testCompile "io.micronaut:micronaut-http-client"
-    testCompile "io.micronaut:micronaut-inject-groovy"
-    testCompile "io.micronaut:micronaut-inject-java"
+    testCompileOnly "io.micronaut:micronaut-inject-groovy"
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut:micronaut-http-server-netty"
     testCompile "io.micronaut:micronaut-multitenancy"
     testCompile "io.micronaut:micronaut-views"

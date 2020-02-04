@@ -37,6 +37,7 @@ import java.time.Duration
 
 @Stepwise
 class TokenPropagationSpec extends Specification {
+
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
     @Shared
