@@ -16,7 +16,6 @@
 package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -26,11 +25,10 @@ import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import io.micronaut.http.util.OutgoingHttpRequestProcessor;
-import io.micronaut.security.token.writer.HttpHeaderTokenWriterConfiguration;
+import io.micronaut.security.token.reader.TokenReader;
 import io.micronaut.security.token.writer.TokenWriter;
 import org.reactivestreams.Publisher;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
@@ -48,35 +46,23 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
     protected final TokenPropagationConfiguration tokenPropagationConfiguration;
     protected final TokenWriter tokenWriter;
     protected final OutgoingHttpRequestProcessor outgoingHttpRequestProcessor;
-    protected HttpHeaderTokenWriterConfiguration httpHeaderTokenWriterConfiguration;
+    protected final TokenReader tokenReader;
 
     /**
      *
      * @param tokenWriter bean responsible of writing the token to the target request
      * @param tokenPropagationConfiguration JWT Propagation configuration
      * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
+     * @param tokenReader the token reader
      */
     public TokenPropagationHttpClientFilter(TokenWriter tokenWriter,
                                             TokenPropagationConfiguration tokenPropagationConfiguration,
-                                            OutgoingHttpRequestProcessor outgoingHttpRequestProcessor) {
-        this(tokenPropagationConfiguration, tokenWriter, outgoingHttpRequestProcessor, null);
-    }
-
-    /**
-     *
-     * @param tokenPropagationConfiguration JWT Propagation configuration
-     * @param tokenWriter bean responsible of writing the token to the target request
-     * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
-     * @param httpHeaderTokenWriterConfiguration HTTP header token writer configuration
-     */
-    public TokenPropagationHttpClientFilter(TokenPropagationConfiguration tokenPropagationConfiguration,
-                                            TokenWriter tokenWriter,
                                             OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
-                                            @Nullable HttpHeaderTokenWriterConfiguration httpHeaderTokenWriterConfiguration) {
+                                            TokenReader tokenReader) {
         this.tokenPropagationConfiguration = tokenPropagationConfiguration;
         this.tokenWriter = tokenWriter;
         this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
-        this.httpHeaderTokenWriterConfiguration = httpHeaderTokenWriterConfiguration;
+        this.tokenReader = tokenReader;
     }
 
     /**
@@ -128,10 +114,6 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
     }
 
     private boolean hasExistingToken(MutableHttpRequest<?> targetRequest) {
-        String headerName = HttpHeaders.AUTHORIZATION;
-        if (httpHeaderTokenWriterConfiguration != null) {
-            headerName = httpHeaderTokenWriterConfiguration.getHeaderName();
-        }
-        return targetRequest.getHeaders().get(headerName) != null;
+        return tokenReader.findToken(targetRequest).isPresent();
     }
 }
