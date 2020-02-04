@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,11 @@ public interface StateFactory {
      * @param request The original request prior redirect
      * @param response The authorization redirect response
      * @return A state parameter. An opaque value used to maintain state between the request and the callback.
+     * @deprecated use {@link #buildState(HttpRequest, MutableHttpResponse, AuthorizationRequest)}
      */
     @SuppressWarnings("rawtypes")
     @Nullable
+    @Deprecated
     String buildState(HttpRequest<?> request, MutableHttpResponse response);
 
     /**

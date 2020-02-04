@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpHeaders;
@@ -43,6 +44,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -56,13 +58,41 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdClient.class);
 
     private final OauthClientConfiguration clientConfiguration;
-    private final OpenIdProviderMetadata openIdProviderMetadata;
+    private final Supplier<OpenIdProviderMetadata> openIdProviderMetadata;
     private final OpenIdUserDetailsMapper userDetailsMapper;
     private final AuthorizationRedirectHandler redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
-    private final SecureEndpoint tokenEndpoint;
+    private final Supplier<SecureEndpoint> tokenEndpoint;
     private final BeanContext beanContext;
     private final EndSessionEndpoint endSessionEndpoint;
+
+    /**
+     * @deprecated use {@link #DefaultOpenIdClient(OauthClientConfiguration, Supplier, OpenIdUserDetailsMapper, AuthorizationRedirectHandler, OpenIdAuthorizationResponseHandler, BeanContext, EndSessionEndpoint)} instead.
+     * @param clientConfiguration The client configuration
+     * @param openIdProviderMetadata The provider metadata
+     * @param userDetailsMapper The user details mapper
+     * @param redirectUrlBuilder The redirect URL builder
+     * @param authorizationResponseHandler The authorization response handler
+     * @param beanContext The bean context
+     * @param endSessionEndpoint The end session request
+     */
+    @Deprecated
+    public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
+                               OpenIdProviderMetadata openIdProviderMetadata,
+                               @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                               AuthorizationRedirectHandler redirectUrlBuilder,
+                               OpenIdAuthorizationResponseHandler authorizationResponseHandler,
+                               BeanContext beanContext,
+                               @Nullable EndSessionEndpoint endSessionEndpoint) {
+        this.clientConfiguration = clientConfiguration;
+        this.openIdProviderMetadata = () -> openIdProviderMetadata;
+        this.userDetailsMapper = userDetailsMapper;
+        this.redirectUrlBuilder = redirectUrlBuilder;
+        this.authorizationResponseHandler = authorizationResponseHandler;
+        this.beanContext = beanContext;
+        this.endSessionEndpoint = endSessionEndpoint;
+        this.tokenEndpoint = SupplierUtil.memoized(this::getTokenEndpoint);
+    }
 
     /**
      * @param clientConfiguration The client configuration
@@ -74,7 +104,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
      * @param endSessionEndpoint The end session request
      */
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
-                               OpenIdProviderMetadata openIdProviderMetadata,
+                               Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
                                @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                AuthorizationRedirectHandler redirectUrlBuilder,
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
@@ -87,7 +117,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
         this.endSessionEndpoint = endSessionEndpoint;
-        this.tokenEndpoint = getTokenEndpoint();
+        this.tokenEndpoint = SupplierUtil.memoized(this::getTokenEndpoint);
     }
 
     @Override
@@ -115,7 +145,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     @Override
     public Publisher<HttpResponse> authorizationRedirect(HttpRequest originating) {
         AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration);
-        String endpoint = openIdProviderMetadata.getAuthorizationEndpoint();
+        String endpoint = openIdProviderMetadata.get().getAuthorizationEndpoint();
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), endpoint);
@@ -145,9 +175,9 @@ public class DefaultOpenIdClient implements OpenIdClient {
             }
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
-                    openIdProviderMetadata,
+                    openIdProviderMetadata.get(),
                     userDetailsMapper,
-                    tokenEndpoint);
+                    tokenEndpoint.get());
         }
     }
 
@@ -163,7 +193,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
      * @return The token endpoint
      */
     protected SecureEndpoint getTokenEndpoint() {
-        List<String> authMethodsSupported = openIdProviderMetadata.getTokenEndpointAuthMethodsSupported();
+        List<String> authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethodsSupported();
         List<AuthenticationMethod> authenticationMethods = null;
         if (authMethodsSupported != null) {
             authenticationMethods = authMethodsSupported.stream()
@@ -171,6 +201,6 @@ public class DefaultOpenIdClient implements OpenIdClient {
                     .map(AuthenticationMethod::valueOf)
                     .collect(Collectors.toList());
         }
-        return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), authenticationMethods);
+        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), authenticationMethods);
     }
 }

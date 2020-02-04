@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpHeaders;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpRequest;
@@ -42,8 +43,8 @@ import static io.micronaut.security.filters.SecurityFilter.TOKEN;
  */
 @Filter("${" + TokenPropagationConfigurationProperties.PREFIX + ".path:/**}")
 @Requires(beans = {TokenWriter.class, TokenPropagationConfiguration.class})
-@Requires(property = TokenPropagationConfigurationProperties.PREFIX + ".enabled")
-public class TokenPropagationHttpClientFilter implements HttpClientFilter  {
+@Requires(property = TokenPropagationConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+public class TokenPropagationHttpClientFilter implements HttpClientFilter {
     protected final TokenPropagationConfiguration tokenPropagationConfiguration;
     protected final TokenWriter tokenWriter;
     protected final OutgoingHttpRequestProcessor outgoingHttpRequestProcessor;

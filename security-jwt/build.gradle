@@ -1,15 +1,10 @@
-buildscript {
-    repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-    dependencies {
-        classpath "gradle.plugin.com.energizedwork.webdriver-binaries:webdriver-binaries-gradle-plugin:$webdriverBinariesVersion"
-    }
+plugins {
+    id "com.github.erdi.webdriver-binaries" version "2.2"
 }
 
 ext {
-    nimbusJoseJwtVersion = '7.0.1'
-    bouncyCastleVersion = '1.53'
+    nimbusJoseJwtVersion = '8.5'
+    bouncyCastleVersion = '1.64'
 }
 
 dependencies {
@@ -30,7 +25,7 @@ dependencies {
     testCompile "io.micronaut:micronaut-http-server-netty"
     testCompile "io.micronaut:micronaut-multitenancy"
     testCompile "io.micronaut:micronaut-views"
-    testRuntime "org.apache.velocity:velocity-engine-core:2.0"
+    testRuntime "org.apache.velocity:velocity-engine-core:2.2"
 }
 
 apply from: "${rootProject.projectDir}/gradle/geb.gradle"

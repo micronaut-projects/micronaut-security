@@ -3,7 +3,7 @@ group "io.micronaut.configuration"
 dependencies {
     compile project(":security")
 
-    testCompile "com.unboundid:unboundid-ldapsdk:4.0.7"
+    testCompile "com.unboundid:unboundid-ldapsdk:4.0.14"
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallb
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Provides specific configuration to logout from Auth0.
@@ -38,13 +39,26 @@ import java.util.*;
 public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
 
     /**
+     * @deprecated use {@link #Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)} instead.
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata
      */
+    @Deprecated
     public Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                    OauthClientConfiguration clientConfiguration,
                                    OpenIdProviderMetadata providerMetadata) {
+        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
+    }
+
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata supplier
+     */
+    public Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                   OauthClientConfiguration clientConfiguration,
+                                   Supplier<OpenIdProviderMetadata> providerMetadata) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.web.router.RouteMatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -44,6 +46,8 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
      * The order of the rule.
      */
     public static final Integer ORDER = 0;
+
+    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
 
     private final AntPathMatcher pathMatcher;
 
@@ -97,10 +101,21 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
 
         // if we don't get an exact match try to find a match by the uri pattern
         if (!matchedPattern.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No url map pattern exact match found for path [{}] and method [{}]. Searching in patterns with no defined method.", path, httpMethod);
+            }
             matchedPattern = getPatternList()
                     .stream()
                     .filter(uriPatternMatchOnly)
                     .findFirst();
+
+            if (LOG.isDebugEnabled()) {
+                if (matchedPattern.isPresent()) {
+                    LOG.debug("Url map pattern found for path [{}]. Comparing roles.", path);
+                } else {
+                    LOG.debug("No url map pattern match found for path [{}]. Returning unknown.", path);
+                }
+            }
         }
 
         return matchedPattern

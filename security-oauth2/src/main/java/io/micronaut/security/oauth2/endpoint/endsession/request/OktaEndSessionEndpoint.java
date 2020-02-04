@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMap
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Provides specific configuration to logout from Okta.
@@ -39,19 +40,32 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
     private static final String PARAM_ID_TOKEN_HINT = "id_token_hint";
 
     /**
+     * @deprecated use {@link #OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)} instead.
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata
      */
+    @Deprecated
     public OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                   OauthClientConfiguration clientConfiguration,
                                   OpenIdProviderMetadata providerMetadata) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 
+    /**
+     * @param endSessionCallbackUrlBuilder The end session callback URL builder
+     * @param clientConfiguration The client configuration
+     * @param providerMetadata The provider metadata supplier
+     */
+    public OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                  OauthClientConfiguration clientConfiguration,
+                                  Supplier<OpenIdProviderMetadata> providerMetadata) {
+        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
+    }
+
     @Override
     protected String getUrl() {
-        return providerMetadata.getEndSessionEndpoint();
+        return providerMetadataSupplier.get().getEndSessionEndpoint();
     }
 
     @Override

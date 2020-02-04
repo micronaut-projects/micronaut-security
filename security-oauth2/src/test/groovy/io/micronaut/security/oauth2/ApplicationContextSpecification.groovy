@@ -8,7 +8,7 @@ import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
-abstract class ApplicationContextSpecification extends Specification {
+abstract class ApplicationContextSpecification extends Specification implements ConfigurationFixture {
     @Shared
     int mockOpenIdHttpServerPort = SocketUtils.findAvailableTcpPort()
 
@@ -23,7 +23,7 @@ abstract class ApplicationContextSpecification extends Specification {
             'micronaut.server.port': mockOpenIdHttpServerPort,
             'mockserver.url': mockOpenIdHttpServerUrl,
             'mockserver.path': mockServerPath,
-            ]
+            ] as Map<String, Object>
 
     String getMockServerPath() {
         ''
@@ -44,12 +44,9 @@ abstract class ApplicationContextSpecification extends Specification {
     }
 
     Map<String, Object> getConfiguration() {
-        [
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
+        oauth2Config + [
                 'micronaut.security.token.jwt.bearer.enabled': false,
                 'micronaut.security.token.jwt.cookie.enabled': true,
-                'micronaut.security.oauth2.enabled': true,
                 'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
                 'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
                 'micronaut.security.oauth2.clients.foo.openid.issuer': getIssuer(),

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.UserDetails;
@@ -30,6 +31,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  *
@@ -57,27 +60,13 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
-    public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
-        Optional<AccessRefreshToken> accessRefreshTokenOptional = accessRefreshTokenGenerator.generate(userDetails);
-        if (accessRefreshTokenOptional.isPresent()) {
-
-            Cookie cookie = Cookie.of(jwtCookieConfiguration.getCookieName(), accessRefreshTokenOptional.get().getAccessToken());
-            cookie.configure(jwtCookieConfiguration, request.isSecure());
-            Optional<TemporalAmount> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
-            if (cookieMaxAge.isPresent()) {
-                cookie.maxAge(cookieMaxAge.get());
-            } else {
-                cookie.maxAge(jwtGeneratorConfiguration.getAccessTokenExpiration());
-            }
-            try {
-                URI location = new URI(jwtCookieConfiguration.getLoginSuccessTargetUrl());
-                return HttpResponse.seeOther(location).cookie(cookie);
-            } catch (URISyntaxException e) {
-                return HttpResponse.serverError();
-            }
-
+    public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {        
+        Optional<Cookie> cookieOptional = accessTokenCookie(userDetails, request);
+        if (!cookieOptional.isPresent()) {
+            return HttpResponse.serverError();
         }
-        return HttpResponse.serverError();
+        Cookie cookie = cookieOptional.get();
+        return loginSuccessWithCookies(Arrays.asList(cookie));       
     }
 
     @Override
@@ -89,4 +78,46 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
             return HttpResponse.serverError();
         }
     }
+    
+    /**
+     *
+     * @param userDetails Authenticated user's representation.
+     * @param request The {@link HttpRequest} being executed
+     * @return A Cookie containing the JWT or an empty optional.
+     */
+    protected Optional<Cookie> accessTokenCookie(UserDetails userDetails, HttpRequest<?> request) {
+        Optional<AccessRefreshToken> accessRefreshTokenOptional = accessRefreshTokenGenerator.generate(userDetails);
+        if (accessRefreshTokenOptional.isPresent()) {
+
+            Cookie cookie = Cookie.of(jwtCookieConfiguration.getCookieName(), accessRefreshTokenOptional.get().getAccessToken());
+            cookie.configure(jwtCookieConfiguration, request.isSecure());
+            Optional<TemporalAmount> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
+            if (cookieMaxAge.isPresent()) {
+                cookie.maxAge(cookieMaxAge.get());
+            } else {
+                cookie.maxAge(jwtGeneratorConfiguration.getAccessTokenExpiration());
+            }
+            return Optional.of(cookie);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     *
+     * @param cookies Cookies to be added to the response
+     * @return A 303 HTTP Response with cookies
+     */
+    protected HttpResponse loginSuccessWithCookies(List<Cookie> cookies) {
+        try {
+            URI location = new URI(jwtCookieConfiguration.getLoginSuccessTargetUrl());
+            MutableHttpResponse mutableHttpResponse = HttpResponse.seeOther(location);
+            for (Cookie cookie : cookies) {
+                mutableHttpResponse = mutableHttpResponse.cookie(cookie);
+            }
+            return mutableHttpResponse;
+        } catch (URISyntaxException e) {
+            return HttpResponse.serverError();
+        }
+    }
 }
+
