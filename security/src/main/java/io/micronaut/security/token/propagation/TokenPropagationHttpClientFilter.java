@@ -29,6 +29,7 @@ import io.micronaut.security.token.reader.TokenReader;
 import io.micronaut.security.token.writer.TokenWriter;
 import org.reactivestreams.Publisher;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
@@ -40,7 +41,7 @@ import static io.micronaut.security.filters.SecurityFilter.TOKEN;
  * @since 1.0
  */
 @Filter("${" + TokenPropagationConfigurationProperties.PREFIX + ".path:/**}")
-@Requires(beans = {TokenWriter.class, TokenPropagationConfiguration.class})
+@Requires(beans = {TokenWriter.class, TokenPropagationConfiguration.class, TokenReader.class})
 @Requires(property = TokenPropagationConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 public class TokenPropagationHttpClientFilter implements HttpClientFilter {
     protected final TokenPropagationConfiguration tokenPropagationConfiguration;
@@ -53,8 +54,21 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
      * @param tokenWriter bean responsible of writing the token to the target request
      * @param tokenPropagationConfiguration JWT Propagation configuration
      * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
+     */
+    public TokenPropagationHttpClientFilter(TokenWriter tokenWriter,
+                                            TokenPropagationConfiguration tokenPropagationConfiguration,
+                                            OutgoingHttpRequestProcessor outgoingHttpRequestProcessor) {
+        this(tokenWriter, tokenPropagationConfiguration, outgoingHttpRequestProcessor, null);
+    }
+
+    /**
+     *
+     * @param tokenWriter bean responsible of writing the token to the target request
+     * @param tokenPropagationConfiguration JWT Propagation configuration
+     * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
      * @param tokenReader the token reader
      */
+    @Inject
     public TokenPropagationHttpClientFilter(TokenWriter tokenWriter,
                                             TokenPropagationConfiguration tokenPropagationConfiguration,
                                             OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
