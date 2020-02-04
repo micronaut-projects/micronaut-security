@@ -2,7 +2,16 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>11.4 Endpoints 1.2.3</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script src="/cdn-cgi/apps/head/3cOPSgo5Omz84ycX7CvigfX4cpw.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-82213539-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-82213539-2');
+    </script>
+    <title>11.4 Endpoints 1.3.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -91,7 +100,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>11.4 Endpoints</h1>
 
-                    <p><strong>Version:</strong> 1.2.3</p>
+                    <p><strong>Version:</strong> 1.3.0</p>
                 </div>
 
                 
@@ -150,52 +159,10 @@ function addJsClass() {
 <div class="paragraph">
 <p>All of the above is configurable through <code>micronaut.security.oauth2.openid</code>:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.logout-uri</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The URI used to log out of an OpenID provider. Default value ("/oauth/logout").</p></td>
-</tr>
-</tbody>
-</table>
-<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.end-session.redirect-uri</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The URI the OpenID provider should redirect to after logging out. Default value ("/logout").</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties.adoc[]</p>
+</div>
 <div class="paragraph">
 <p>To enable the usage of the <code>/logout</code> endpoint, see the section on the <a href="#logout">Logout Endpoint</a>.</p>
 </div>
@@ -220,34 +187,9 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>If for example you are using one of the providers that is supported out of the box and you don&#8217;t want the end session support, it is possible to disable it per client.</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The end session enabled flag. Default value (true).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties.adoc[]</p>
+</div>
 
 
 <h2 id="introspection">11.4.2 Introspection</h2>
@@ -265,34 +207,9 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>See the following configuration table:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection.auth-method</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html">AuthenticationMethod</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication Method</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties.adoc[]</p>
+</div>
 
 
 <h2 id="revocation">11.4.3 Revocation</h2>
@@ -310,34 +227,9 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>See the following configuration table:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation.auth-method</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html">AuthenticationMethod</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication Method</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties.adoc[]</p>
+</div>
 
 
 <h2 id="user-info">11.4.4 OpenID User Info</h2>
@@ -355,29 +247,9 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>See the following configuration table:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.user-info.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties.adoc[]</p>
+</div>
 
 
                 <div style="clear:both;margin-top:15px;"></div>
