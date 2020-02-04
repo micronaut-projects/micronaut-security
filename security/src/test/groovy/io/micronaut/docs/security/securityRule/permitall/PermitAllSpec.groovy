@@ -23,9 +23,11 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.AutoCleanup
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
+@Ignore("annotation mappers are not on the annotation processor classpath")
 class PermitAllSpec extends Specification {
 
     @Shared
