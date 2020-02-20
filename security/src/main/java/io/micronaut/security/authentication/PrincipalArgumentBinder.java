@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.bind.ArgumentBinder;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
@@ -47,9 +46,11 @@ public class PrincipalArgumentBinder implements TypedRequestArgumentBinder<Princ
             final Optional<Principal> existing = source.getUserPrincipal();
             if (existing.isPresent()) {
                 return () -> existing;
+            } else {
+                return BindingResult.EMPTY;
             }
+        } else {
+            return BindingResult.UNSATISFIED;
         }
-
-        return ArgumentBinder.BindingResult.EMPTY;
     }
 }
