@@ -55,7 +55,7 @@ public abstract class AbstractSecurityRule implements SecurityRule {
      * @param rolesFinder Roles Parser
      */
     @Inject
-    AbstractSecurityRule(RolesFinder rolesFinder) {
+    public AbstractSecurityRule(RolesFinder rolesFinder) {
         this.rolesFinder = rolesFinder;
     }
 
