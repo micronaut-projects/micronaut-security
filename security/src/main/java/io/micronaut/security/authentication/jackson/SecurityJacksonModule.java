@@ -17,6 +17,7 @@ package io.micronaut.security.authentication.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.micronaut.core.annotation.TypeHint;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.DefaultAuthentication;
 
@@ -29,6 +30,9 @@ import javax.inject.Singleton;
  * @since 1.0
  */
 @Singleton
+@TypeHint(typeNames = {
+        "com.fasterxml.jackson.databind.PropertyNamingStrategy$SnakeCaseStrategy"
+})
 public class SecurityJacksonModule extends SimpleModule {
 
     /**
