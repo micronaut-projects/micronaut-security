@@ -48,8 +48,8 @@ public class DefaultJwkValidator implements JwkValidator {
             try {
                 return jwt.verify(verifier.get());
             } catch (JOSEException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("JOSEException when verifying jwt", e);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("JOSEException when verifying jwt", e);
                 }
             }
         }

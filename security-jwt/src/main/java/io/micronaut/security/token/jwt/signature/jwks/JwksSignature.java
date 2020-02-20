@@ -207,7 +207,6 @@ public class JwksSignature implements SignatureConfiguration {
      */
     protected boolean verify(List<JWK> matches, SignedJWT jwt) {
         return matches.stream().anyMatch(jwk -> jwkValidator.validate(jwt, jwk));
-
     }
 
     /**

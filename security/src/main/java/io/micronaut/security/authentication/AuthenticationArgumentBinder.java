@@ -46,9 +46,11 @@ public class AuthenticationArgumentBinder implements TypedRequestArgumentBinder<
             final Optional<Authentication> existing = source.getUserPrincipal(Authentication.class);
             if (existing.isPresent()) {
                 return () -> existing;
+            } else {
+                return BindingResult.EMPTY;
             }
+        } else {
+            return BindingResult.UNSATISFIED;
         }
-
-        return ArgumentBinder.BindingResult.EMPTY;
     }
 }
