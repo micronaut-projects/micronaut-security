@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
+import io.micronaut.core.annotation.Introspected;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URI;
@@ -27,6 +28,7 @@ import java.util.UUID;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Introspected
 public class DefaultState implements State {
 
     private URI originalUri;
