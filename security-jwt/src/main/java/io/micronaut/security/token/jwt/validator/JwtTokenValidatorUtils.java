@@ -37,6 +37,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Utility methods to validate JWT signatures and claims.
@@ -88,26 +89,53 @@ public final class JwtTokenValidatorUtils {
         }
 
         final JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();
-        for (final SignatureConfiguration config : signatureConfigurations) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Using signature configuration: {}", config.toString());
+
+        for (final SignatureConfiguration config : signatureConfigurations.stream()
+                .filter(c -> c.supports(algorithm))
+                .collect(Collectors.toList())) {
+            Optional<JWT> jwt = verifySignedJWTWithSignatureConfiguration(config, signedJWT);
+            if (jwt.isPresent()) {
+                return jwt;
             }
-            try {
-                if (config.verify(signedJWT)) {
-                    return Optional.of(signedJWT);
-                } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("JWT Signature verification failed: {}", signedJWT.getParsedString());
-                    }
-                }
-            } catch (final JOSEException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Verification fails with signature configuration: {}, passing to the next one", config);
-                }
+        }
+        for (final SignatureConfiguration config : signatureConfigurations.stream()
+                .filter(c -> !c.supports(algorithm))
+                .collect(Collectors.toList())) {
+            Optional<JWT> jwt = verifySignedJWTWithSignatureConfiguration(config, signedJWT);
+            if (jwt.isPresent()) {
+                return jwt;
             }
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug("No signature algorithm found for JWT: {}", signedJWT.getParsedString());
+        }
+        return Optional.empty();
+    }
+
+    /**
+     *
+     * Validates a Signed JWT signature against a signature configuration.
+     *
+     * @param signedJWT a Signed JWT Token
+     * @param config The signature configuration
+     * @return empty if signature validation fails
+     */
+    public static Optional<JWT> verifySignedJWTWithSignatureConfiguration(SignatureConfiguration config, SignedJWT signedJWT) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using signature configuration: {}", config.toString());
+        }
+        try {
+            if (config.verify(signedJWT)) {
+                return Optional.of(signedJWT);
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("JWT Signature verification failed: {}", signedJWT.getParsedString());
+                }
+            }
+        } catch (final JOSEException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Verification fails with signature configuration: {}, passing to the next one", config);
+            }
         }
         return Optional.empty();
     }
