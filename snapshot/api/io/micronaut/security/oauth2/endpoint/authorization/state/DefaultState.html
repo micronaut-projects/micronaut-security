@@ -107,14 +107,14 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/State.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">State</a></dd>
+<dd><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">MutableState</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/State.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">State</a></dd>
 </dl>
 <hr>
 <br>
 <pre>@Introspected
 public class <span class="typeNameLabel">DefaultState</span>
 extends java.lang.Object
-implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/State.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">State</a></pre>
+implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">MutableState</a></pre>
 <div class="block">Default state implementation.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -268,6 +268,8 @@ public&nbsp;java.lang.String&nbsp;getNonce()</pre>
 <h4>setOriginalUri</h4>
 <pre>public&nbsp;void&nbsp;setOriginalUri(java.net.URI&nbsp;originalUri)</pre>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html#setOriginalUri-java.net.URI-">setOriginalUri</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">MutableState</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>originalUri</code> - The original URI</dd>
 </dl>
@@ -281,6 +283,8 @@ public&nbsp;java.lang.String&nbsp;getNonce()</pre>
 <h4>setNonce</h4>
 <pre>public&nbsp;void&nbsp;setNonce(java.lang.String&nbsp;nonce)</pre>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html#setNonce-java.lang.String-">setNonce</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">MutableState</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>nonce</code> - The nonce</dd>
 </dl>
@@ -310,6 +314,8 @@ public&nbsp;java.net.URI&nbsp;getRedirectUri()</pre>
 <h4>setRedirectUri</h4>
 <pre>public&nbsp;void&nbsp;setRedirectUri(java.net.URI&nbsp;redirectUri)</pre>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html#setRedirectUri-java.net.URI-">setRedirectUri</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">MutableState</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>redirectUri</code> - the URI to redirect to</dd>
 </dl>
