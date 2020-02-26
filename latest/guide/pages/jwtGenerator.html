@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>5.3.2 JWT Token Generation 1.3.0</title>
+    <title>5.3.2 JWT Token Generation 1.3.1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -102,7 +102,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>5.3.2 JWT Token Generation</h1>
 
-                    <p><strong>Version:</strong> 1.3.0</p>
+                    <p><strong>Version:</strong> 1.3.1</p>
                 </div>
 
                 
@@ -119,8 +119,7 @@ function addJsClass() {
                 
 
                 
-
-<h2 id="jwtGenerator">5.3.2 JWT Token Generation</h2>
+<h2 id="jwtGenerator"><a class="anchor" href="#jwtGenerator"></a>5.3.2 JWT Token Generation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
@@ -135,12 +134,36 @@ function addJsClass() {
 <div class="paragraph">
 <p>The following configuration options are available:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html">JwtGeneratorConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refresh token expiration. By default refresh tokens, do not expire.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value (3600).</p></td>
+</tr>
+</tbody>
+</table>
 
-
-<h2 id="jwtGeneratorSignature">5.3.2.1 JWT Signature</h2>
+<h2 id="jwtGeneratorSignature"><a class="anchor" href="#jwtGeneratorSignature"></a>5.3.2.1 JWT Signature</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
@@ -253,8 +276,7 @@ class MySignatureGeneratorConfigurationFactory {
 </table>
 </div>
 
-
-<h2 id="jwtGeneratorEncryption">5.3.2.2 Encrypted JWTs</h2>
+<h2 id="jwtGeneratorEncryption"><a class="anchor" href="#jwtGeneratorEncryption"></a>5.3.2.2 Encrypted JWTs</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorEncryption.adoc"'>

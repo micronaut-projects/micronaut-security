@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>11.4.1 OpenID End Session 1.3.0</title>
+    <title>11.4.1 OpenID End Session 1.3.1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -100,14 +100,13 @@ function addJsClass() {
                 <div class="project">
                     <h1>11.4.1 OpenID End Session</h1>
 
-                    <p><strong>Version:</strong> 1.3.0</p>
+                    <p><strong>Version:</strong> 1.3.1</p>
                 </div>
 
                 
 
                 
-
-<h2 id="endsession">11.4.1 OpenID End Session</h2>
+<h2 id="endsession"><a class="anchor" href="#endsession"></a>11.4.1 OpenID End Session</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
@@ -130,10 +129,52 @@ function addJsClass() {
 <div class="paragraph">
 <p>All of the above is configurable through <code>micronaut.security.oauth2.openid</code>:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties.adoc[]
-Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.logout-uri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI used to log out of an OpenID provider. Default value ("/oauth/logout").</p></td>
+</tr>
+</tbody>
+</table>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.end-session.redirect-uri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI the OpenID provider should redirect to after logging out. Default value ("/logout").</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>To enable the usage of the <code>/logout</code> endpoint, see the section on the <a href="#logout">Logout Endpoint</a>.</p>
 </div>
@@ -158,9 +199,34 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>If for example you are using one of the providers that is supported out of the box and you don&#8217;t want the end session support, it is possible to disable it per client.</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The end session enabled flag. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
+</tr>
+</tbody>
+</table>
 
 
                 <div style="clear:both;margin-top:15px;"></div>

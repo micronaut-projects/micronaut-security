@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>5.3 JSON Web Token 1.3.0</title>
+    <title>5.3 JSON Web Token 1.3.1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -102,7 +102,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>5.3 JSON Web Token</h1>
 
-                    <p><strong>Version:</strong> 1.3.0</p>
+                    <p><strong>Version:</strong> 1.3.1</p>
                 </div>
 
                 
@@ -143,8 +143,7 @@ function addJsClass() {
                 
 
                 
-
-<h2 id="jwt">5.3 JSON Web Token</h2>
+<h2 id="jwt"><a class="anchor" href="#jwt"></a>5.3 JSON Web Token</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt.adoc"'>
@@ -221,9 +220,29 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <div class="paragraph">
 <p>The following configuration properties are available to customize JWT based authentication behaviour:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.config.JwtConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.config.JwtConfigurationProperties" href="#io.micronaut.security.token.jwt.config.JwtConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/config/JwtConfigurationProperties.html">JwtConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value (false).</p></td>
+</tr>
+</tbody>
+</table>
 <div class="sect1">
 <h2 id="_what_does_a_jwt_look_like">What does a JWT look like?</h2>
 <div class="sectionbody">
@@ -276,8 +295,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 </div>
 </div>
 
-
-<h2 id="reader">5.3.1 Reading JWT Token</h2>
+<h2 id="reader"><a class="anchor" href="#reader"></a>5.3.1 Reading JWT Token</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc"'>
@@ -288,8 +306,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 
 
 
-
-<h2 id="bearerToken">5.3.1.1 Bearer Token Reader</h2>
+<h2 id="bearerToken"><a class="anchor" href="#bearerToken"></a>5.3.1.1 Bearer Token Reader</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc"'>
@@ -309,9 +326,39 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <div class="paragraph">
 <p>The following configuration properties are available to customize how the Bearer Token will be read:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/bearer/BearerTokenConfigurationProperties.html">BearerTokenConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set whether to enable bearer token authentication. Default value true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.header-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the header name to use. Default value {@value io.micronaut.http.HttpHeaders#AUTHORIZATION}.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.prefix</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the prefix to use for the auth token. Default value {@value io.micronaut.http.HttpHeaderValues#AUTHORIZATION_PREFIX_BEARER}.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="sect1">
 <h2 id="_sending_tokens_in_the_request">Sending tokens in the request</h2>
 <div class="sectionbody">
@@ -349,8 +396,7 @@ Check out the <a href="http://guides.micronaut.io/micronaut-security-jwt/guide/i
 </div>
 </div>
 
-
-<h2 id="cookieToken">5.3.1.2 Cookie Token Reader</h2>
+<h2 id="cookieToken"><a class="anchor" href="#cookieToken"></a>5.3.1.2 Cookie Token Reader</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc"'>
@@ -373,9 +419,74 @@ Check out the <a href="http://guides.micronaut.io/micronaut-security-jwt/guide/i
 <div class="paragraph">
 <p>Reading tokens from Cookies is disabled by default. Note that using JWT tokens from cookies requires JWT Authentication to be enabled.</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties" href="#io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html">JwtCookieConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-domain</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the domain name of this Cookie.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ("/".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-http-only</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value (true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-secure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value (true.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-max-age</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the maximum age of the cookie.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT cookie based security is enabled. Default value (false).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.logout-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the logout target URL. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ("JWT").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-success-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the login success target URL. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-failure-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the login failure target URL. Default value ("/").</p></td>
+</tr>
+</tbody>
+</table>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -389,8 +500,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 </table>
 </div>
 
-
-<h2 id="jwtGenerator">5.3.2 JWT Token Generation</h2>
+<h2 id="jwtGenerator"><a class="anchor" href="#jwtGenerator"></a>5.3.2 JWT Token Generation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
@@ -405,12 +515,36 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 <div class="paragraph">
 <p>The following configuration options are available:</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties.adoc[]</p>
-</div>
+<a id="io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html">JwtGeneratorConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refresh token expiration. By default refresh tokens, do not expire.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value (3600).</p></td>
+</tr>
+</tbody>
+</table>
 
-
-<h2 id="jwtGeneratorSignature">5.3.2.1 JWT Signature</h2>
+<h2 id="jwtGeneratorSignature"><a class="anchor" href="#jwtGeneratorSignature"></a>5.3.2.1 JWT Signature</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
@@ -523,8 +657,7 @@ class MySignatureGeneratorConfigurationFactory {
 </table>
 </div>
 
-
-<h2 id="jwtGeneratorEncryption">5.3.2.2 Encrypted JWTs</h2>
+<h2 id="jwtGeneratorEncryption"><a class="anchor" href="#jwtGeneratorEncryption"></a>5.3.2.2 Encrypted JWTs</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorEncryption.adoc"'>
@@ -682,8 +815,7 @@ class KeyPairProvider {
 </div>
 </div>
 
-
-<h2 id="jwtValidation">5.3.3 JWT Token Validation</h2>
+<h2 id="jwtValidation"><a class="anchor" href="#jwtValidation"></a>5.3.3 JWT Token Validation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc"'>
@@ -707,8 +839,7 @@ participate as signature configurations in the JWT validation.</p>
 <a href="../api/io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html">SecretEncryptionConfiguration</a> participate as encryption configurations in the JWT validation.</p>
 </div>
 
-
-<h2 id="jwks">5.3.3.1 Validation with remote JWKS</h2>
+<h2 id="jwks"><a class="anchor" href="#jwks"></a>5.3.3.1 Validation with remote JWKS</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc"'>
@@ -744,8 +875,7 @@ participate as signature configurations in the JWT validation.</p>
 <p>If you want to expose your own JWK Set, read the <a href="#keys">Keys Controller</a> section.</p>
 </div>
 
-
-<h2 id="claimsGeneration">5.3.4 Claims Generation</h2>
+<h2 id="claimsGeneration"><a class="anchor" href="#claimsGeneration"></a>5.3.4 Claims Generation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc"'>
@@ -830,8 +960,7 @@ public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
 </div>
 </div>
 
-
-<h2 id="render">5.3.5 Token Render</h2>
+<h2 id="render"><a class="anchor" href="#render"></a>5.3.5 Token Render</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/render.adoc"'>
