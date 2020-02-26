@@ -65,7 +65,7 @@ public class DefaultStateFactory implements StateFactory {
     public String buildState(HttpRequest<?> request, MutableHttpResponse response, @Nullable AuthorizationRequest authorizationRequest) {
         Optional<HttpStatus> rejectedStatus = request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class);
         boolean unauthorized = rejectedStatus.filter(status -> status.equals(HttpStatus.UNAUTHORIZED)).isPresent();
-        DefaultState state = new DefaultState();
+        MutableState state = createInitialState();
         if (unauthorized) {
             state.setOriginalUri(request.getUri());
         }
@@ -74,5 +74,12 @@ public class DefaultStateFactory implements StateFactory {
         }
         statePersistence.persistState(request, response, state);
         return stateSerDes.serialize(state);
+    }
+
+    /**
+     * @return The mutable state to further modify
+     */
+    protected MutableState createInitialState() {
+        return new DefaultState();
     }
 }

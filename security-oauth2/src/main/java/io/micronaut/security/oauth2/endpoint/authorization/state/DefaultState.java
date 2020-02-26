@@ -29,7 +29,7 @@ import java.util.UUID;
  * @since 1.2.0
  */
 @Introspected
-public class DefaultState implements State {
+public class DefaultState implements MutableState {
 
     private URI originalUri;
     private URI redirectUri;
