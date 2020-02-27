@@ -44,15 +44,6 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
     public static final Integer ORDER = ConfigurationInterceptUrlMapRule.ORDER - 100;
 
     /**
-     * @deprecated use {@link #SecuredAnnotationRule(RolesFinder)} instead.
-     * @param tokenConfiguration Token Configuration.
-     */
-    @Deprecated
-    public SecuredAnnotationRule(TokenConfiguration tokenConfiguration) {
-        super(tokenConfiguration);
-    }
-
-    /**
      *
      * @param rolesFinder Roles Parser
      */

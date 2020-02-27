@@ -59,12 +59,6 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_LOGOUTTARGETURL = "/";
 
-    /**
-     * The default value to disable rejection handler.
-     */
-    @Deprecated
-    @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_LEGACYREJECTIONHANDLER = true;
 
     private String loginSuccessTargetUrl = DEFAULT_LOGINSUCCESSTARGETURL;
     private String loginFailureTargetUrl = DEFAULT_LOGINFAILURETARGETURL;
@@ -72,22 +66,6 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     private String unauthorizedTargetUrl;
     private String forbiddenTargetUrl;
     private boolean enabled = DEFAULT_ENABLED;
-
-    @Deprecated
-    private boolean legacyRejectionHandler = DEFAULT_LEGACYREJECTIONHANDLER;
-
-    @Override
-    public boolean isLegacyRejectionHandler() {
-        return legacyRejectionHandler;
-    }
-
-    /**
-     * Decides whether the deprecated {@link SessionSecurityFilterOrderProvider} is loaded, instead of the new {@link io.micronaut.security.handlers.RedirectRejectionHandler}. Defaults to ({@value #DEFAULT_LEGACYREJECTIONHANDLER}).
-     * @param legacyRejectionHandler whether the deprecated {@link SessionSecurityFilterOrderProvider} is loaded
-     */
-    public void setLegacyRejectionHandler(boolean legacyRejectionHandler) {
-        this.legacyRejectionHandler = legacyRejectionHandler;
-    }
     
     @Override
     public boolean isEnabled() {

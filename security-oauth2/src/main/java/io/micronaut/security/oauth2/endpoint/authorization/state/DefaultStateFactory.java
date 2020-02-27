@@ -55,23 +55,19 @@ public class DefaultStateFactory implements StateFactory {
     @SuppressWarnings("rawtypes")
     @Nullable
     @Override
-    public String buildState(HttpRequest<?> request, MutableHttpResponse response) {
-        return buildState(request, response, null);
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Nullable
-    @Override
     public String buildState(HttpRequest<?> request, MutableHttpResponse response, @Nullable AuthorizationRequest authorizationRequest) {
         Optional<HttpStatus> rejectedStatus = request.getAttribute(SecurityFilter.REJECTION, HttpStatus.class);
-        boolean unauthorized = rejectedStatus.filter(status -> status.equals(HttpStatus.UNAUTHORIZED)).isPresent();
         MutableState state = createInitialState();
-        if (unauthorized) {
-            state.setOriginalUri(request.getUri());
-        }
-        if (authorizationRequest != null && authorizationRequest.getRedirectUri().isPresent()) {
-            state.setRedirectUri(UriBuilder.of(authorizationRequest.getRedirectUri().get()).build());
-        }
+
+       rejectedStatus.filter(status -> status.equals(HttpStatus.UNAUTHORIZED)).ifPresent(status ->
+               state.setOriginalUri(request.getUri()));
+
+        Optional.ofNullable(authorizationRequest)
+                .flatMap(AuthorizationRequest::getRedirectUri)
+                .map(UriBuilder::of)
+                .map(UriBuilder::build)
+                .ifPresent(state::setRedirectUri);
+
         statePersistence.persistState(request, response, state);
         return stateSerDes.serialize(state);
     }

@@ -67,34 +67,6 @@ public class DefaultOpenIdClient implements OpenIdClient {
     private final EndSessionEndpoint endSessionEndpoint;
 
     /**
-     * @deprecated use {@link #DefaultOpenIdClient(OauthClientConfiguration, Supplier, OpenIdUserDetailsMapper, AuthorizationRedirectHandler, OpenIdAuthorizationResponseHandler, BeanContext, EndSessionEndpoint)} instead.
-     * @param clientConfiguration The client configuration
-     * @param openIdProviderMetadata The provider metadata
-     * @param userDetailsMapper The user details mapper
-     * @param redirectUrlBuilder The redirect URL builder
-     * @param authorizationResponseHandler The authorization response handler
-     * @param beanContext The bean context
-     * @param endSessionEndpoint The end session request
-     */
-    @Deprecated
-    public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
-                               OpenIdProviderMetadata openIdProviderMetadata,
-                               @Nullable OpenIdUserDetailsMapper userDetailsMapper,
-                               AuthorizationRedirectHandler redirectUrlBuilder,
-                               OpenIdAuthorizationResponseHandler authorizationResponseHandler,
-                               BeanContext beanContext,
-                               @Nullable EndSessionEndpoint endSessionEndpoint) {
-        this.clientConfiguration = clientConfiguration;
-        this.openIdProviderMetadata = () -> openIdProviderMetadata;
-        this.userDetailsMapper = userDetailsMapper;
-        this.redirectUrlBuilder = redirectUrlBuilder;
-        this.authorizationResponseHandler = authorizationResponseHandler;
-        this.beanContext = beanContext;
-        this.endSessionEndpoint = endSessionEndpoint;
-        this.tokenEndpoint = SupplierUtil.memoized(this::getTokenEndpoint);
-    }
-
-    /**
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
      * @param userDetailsMapper The user details mapper

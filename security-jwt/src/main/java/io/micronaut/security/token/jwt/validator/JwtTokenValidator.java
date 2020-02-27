@@ -73,25 +73,6 @@ public class JwtTokenValidator implements TokenValidator {
     }
 
     /**
-     *
-     * Deprecated Constructor.
-     *
-     * @deprecated Use {@link JwtTokenValidator#JwtTokenValidator(Collection, Collection, Collection, JwtAuthenticationFactory)} instead.
-     * @param signatureConfigurations List of Signature configurations which are used to attempt validation.
-     * @param encryptionConfigurations List of Encryption configurations which are used to attempt validation.
-     */
-    @Deprecated
-    public JwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
-                             Collection<EncryptionConfiguration> encryptionConfigurations) {
-        this(signatureConfigurations,
-                encryptionConfigurations,
-                Collections.singleton(new ExpirationJwtClaimsValidator()),
-                new DefaultJwtAuthenticationFactory());
-    }
-
-
-
-    /**
      * Validates the Signature of a plain JWT.
      * @param jwt a JWT Token
      * @return empty if signature configurations exists, Optional.of(jwt) if no signature configuration is available.
@@ -107,38 +88,8 @@ public class JwtTokenValidator implements TokenValidator {
      * @param signedJWT a Signed JWT Token
      * @return empty if signature validation fails
      */
-    public  Optional<JWT> validateSignedJWTSignature(SignedJWT signedJWT) {
+    public Optional<JWT> validateSignedJWTSignature(SignedJWT signedJWT) {
         return JwtTokenValidatorUtils.validateSignedJWTSignature(signedJWT, signatureConfigurations);
-    }
-
-    /**
-     * Verifies the provided claims with the provided validators.
-     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#verifyClaims(io.micronaut.security.token.jwt.generator.claims.JwtClaims, Collection)} instead.
-     * @param jwtClaimsSet JWT Claims
-     * @param claimsValidators The claims validators
-     * @return Whether the JWT claims pass every validation.
-     */
-    @Deprecated
-    public boolean verifyClaims(JWTClaimsSet jwtClaimsSet, Collection<? extends JwtClaimsValidator> claimsValidators) {
-        return JwtTokenValidatorUtils.verifyClaims(new JwtClaimsSetAdapter(jwtClaimsSet), claimsValidators);
-    }
-
-    /**
-     *
-     * Validates a encrypted JWT Signature.
-     *
-     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#validateEncryptedJWTSignature(EncryptedJWT, String, List, List)}
-     *
-     * @param encryptedJWT a encrytped JWT Token
-     * @param token the JWT token as String
-     * @return empty if signature validation fails
-     */
-    @Deprecated
-    public Optional<JWT> validateEncryptedJWTSignature(EncryptedJWT encryptedJWT, String token) {
-        return JwtTokenValidatorUtils.validateEncryptedJWTSignature(encryptedJWT,
-                token,
-                signatureConfigurations,
-                encryptionConfigurations);
     }
 
     /**
@@ -163,7 +114,9 @@ public class JwtTokenValidator implements TokenValidator {
      * @return empty if signature or claims verification failed, An Authentication otherwise.
      */
     public Optional<Authentication> authenticationIfValidJwtSignatureAndClaims(String token, Collection<? extends JwtClaimsValidator> claimsValidators) {
-        Optional<JWT> jwt = validateJwtSignatureAndClaims(token, claimsValidators);
+        Optional<JWT> jwt = JwtTokenValidatorUtils.validateJwtSignatureAndClaims(token, claimsValidators,
+                signatureConfigurations,
+                encryptionConfigurations);
         if (jwt.isPresent()) {
             return jwtAuthenticationFactory.createAuthentication(jwt.get());
         }
@@ -177,7 +130,10 @@ public class JwtTokenValidator implements TokenValidator {
      * @return empty if signature or claims verification failed, JWT otherwise.
      */
     public Optional<JWT> validateJwtSignatureAndClaims(String token) {
-        return validateJwtSignatureAndClaims(token, genericJwtClaimsValidators);
+        return JwtTokenValidatorUtils.validateJwtSignatureAndClaims(token,
+                genericJwtClaimsValidators,
+                signatureConfigurations,
+                encryptionConfigurations);
     }
 
     /**
@@ -196,37 +152,10 @@ public class JwtTokenValidator implements TokenValidator {
      * @return true if signature or claims verification passed
      */
     public boolean validate(String token, Collection<? extends JwtClaimsValidator> claimsValidators) {
-        return validateJwtSignatureAndClaims(token, claimsValidators).isPresent();
-    }
-
-    /**
-     * Validates JWT signature and Claims.
-     *
-     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#validateJwtSignatureAndClaims(String, Collection, List, List)} instead.
-     * @param token A JWT token
-     * @param claimsValidators a Collection of claims Validators.
-     * @return empty if signature or claims verification failed, JWT otherwise.
-     */
-    @Deprecated
-    public Optional<JWT> validateJwtSignatureAndClaims(String token, Collection<? extends JwtClaimsValidator> claimsValidators) {
         return JwtTokenValidatorUtils.validateJwtSignatureAndClaims(token,
                 claimsValidators,
                 signatureConfigurations,
-                encryptionConfigurations);
-    }
-
-    /**
-     * Returns a JWT if the signature could be verified.
-     *
-     * @deprecated use {@link io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils#parseJwtIfValidSignature(String, List, List)}
-     * @param token a JWT token
-     * @return Empty if JWT signature verification failed or JWT if valid signature.
-     */
-    @Deprecated
-    public Optional<JWT> parseJwtIfValidSignature(String token) {
-        return JwtTokenValidatorUtils.parseJwtIfValidSignature(token,
-                signatureConfigurations,
-                encryptionConfigurations);
+                encryptionConfigurations).isPresent();
     }
 
 

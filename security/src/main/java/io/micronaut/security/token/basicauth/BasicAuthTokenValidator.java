@@ -58,16 +58,6 @@ public class BasicAuthTokenValidator implements TokenValidator {
     private final String rolesKeyName;
 
     /**
-     * @deprecated Use {@link #BasicAuthTokenValidator(Authenticator, TokenConfiguration)}
-     * @param authenticator The Authenticator
-     */
-    @Deprecated
-    public BasicAuthTokenValidator(Authenticator authenticator) {
-        this.authenticator = authenticator;
-        this.rolesKeyName = TokenConfiguration.DEFAULT_ROLES_NAME;
-    }
-
-    /**
      * @param authenticator The Authenticator
      * @param tokenConfiguration The Token configuration.
      */

@@ -46,19 +46,6 @@ public class AwsCognitoEndSessionEndpoint extends AbstractEndSessionRequest {
     private static final String PARAM_LOGOUT_URI = "logout_uri";
 
     /**
-     * @deprecated use {@link #AwsCognitoEndSessionEndpoint(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)} instead.
-     * @param endSessionCallbackUrlBuilder The end session callback URL builder
-     * @param clientConfiguration The client configuration
-     * @param providerMetadata The provider metadata
-     */
-    @Deprecated
-    public AwsCognitoEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                        OauthClientConfiguration clientConfiguration,
-                                        OpenIdProviderMetadata providerMetadata) {
-        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
-    }
-
-    /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata supplier

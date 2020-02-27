@@ -54,9 +54,4 @@ public interface SecuritySessionConfiguration extends Toggleable {
      */
     String getForbiddenTargetUrl();
 
-    /**
-     *
-     * @return If true the deprecated {@link SessionSecurityFilterOrderProvider} is loaded, instead of the new {@link io.micronaut.security.handlers.RedirectRejectionHandler}
-     */
-    boolean isLegacyRejectionHandler();
 }

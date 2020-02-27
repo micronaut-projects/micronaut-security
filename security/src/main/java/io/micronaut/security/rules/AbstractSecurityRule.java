@@ -42,16 +42,6 @@ public abstract class AbstractSecurityRule implements SecurityRule {
     private final RolesFinder rolesFinder;
 
     /**
-     * @deprecated use {@link AbstractSecurityRule( RolesFinder )} instead.
-     * @param tokenConfiguration General Token Configuration
-     */
-    @Deprecated
-    AbstractSecurityRule(TokenConfiguration tokenConfiguration) {
-        this.rolesFinder = new DefaultRolesFinder(tokenConfiguration);
-    }
-
-    /**
-     *
      * @param rolesFinder Roles Parser
      */
     @Inject

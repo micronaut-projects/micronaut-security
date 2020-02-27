@@ -39,15 +39,6 @@ public class AuthenticationUserDetailsAdapter implements Authentication {
         this.rolesKey = rolesKey;
     }
 
-    /**
-     *
-     * @param userDetails Authenticated user's representation.
-     */
-    @Deprecated
-    public AuthenticationUserDetailsAdapter(UserDetails userDetails) {
-        this(userDetails, "roles");
-    }
-
     @Override
     @Nonnull
     public Map<String, Object> getAttributes() {

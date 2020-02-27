@@ -35,9 +35,7 @@ class RejectionHandlerResolutionSpec extends Specification {
     ]
 
     void "RedirectRejectionHandler is the default rejection handler resolved"() {
-        Map<String, Object> conf = [
-            'micronaut.security.session.legacy-rejection-handler': false
-        ]
+        Map<String, Object> conf = [:]
         conf.putAll(config)
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, conf, Environment.TEST)
         ApplicationContext context = embeddedServer.applicationContext

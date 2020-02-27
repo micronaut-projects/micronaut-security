@@ -35,14 +35,6 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
-    /**
-     * The default roles name.
-     * @deprecated Use {@link TokenConfiguration#DEFAULT_ROLES_NAME} instead
-     */
-    @SuppressWarnings("WeakerAccess")
-    @Deprecated
-    public static final String DEFAULT_ROLES_NAME = TokenConfiguration.DEFAULT_ROLES_NAME;
-
     private boolean enabled = DEFAULT_ENABLED;
     private String rolesName = TokenConfiguration.DEFAULT_ROLES_NAME;
 

@@ -6,6 +6,8 @@ import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 
+import java.time.Duration
+
 trait OpenIDIntegrationSpec {
 
     static final String CLIENT_ID = "myclient"
@@ -21,7 +23,7 @@ trait OpenIDIntegrationSpec {
                         KEYCLOAK_PASSWORD: 'password',
                         DB_VENDOR: 'H2',
                 ])
-                .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*"))
+                .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*").withStartupTimeout(Duration.ofMinutes(2)))
         keycloak.start()
         keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "))
         keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh create -s clientId=$CLIENT_ID -s redirectUris=[\"http://localhost*\"]".split(" "))

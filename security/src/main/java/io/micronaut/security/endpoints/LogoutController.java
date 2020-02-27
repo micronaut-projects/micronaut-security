@@ -65,19 +65,6 @@ public class LogoutController {
     }
 
     /**
-     *
-     * @param logoutHandler A collaborator which helps to build HTTP response if user logout.
-     * @param eventPublisher The application event publisher
-     */
-    @Deprecated
-    public LogoutController(@Nullable LogoutHandler logoutHandler,
-                            ApplicationEventPublisher eventPublisher) {
-        this.logoutHandler = logoutHandler;
-        this.eventPublisher = eventPublisher;
-        this.getAllowed = LogoutControllerConfigurationProperties.DEFAULT_GETALLOWED;
-    }
-
-    /**
      * POST endpoint for Logout Controller.
      *
      * @param request The {@link HttpRequest} being executed

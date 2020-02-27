@@ -13,7 +13,7 @@ class AuthenticationSerializationSpec extends Specification {
 
         when:
         UserDetails userDetails = new UserDetails("john", ["X", "Y"], [attr1: 1, attr2: 2])
-        byte[] data = serializer.serialize(new AuthenticationUserDetailsAdapter(userDetails)).get()
+        byte[] data = serializer.serialize(new AuthenticationUserDetailsAdapter(userDetails, "roles")).get()
         Authentication deserialized = serializer.deserialize(data, Authentication).get()
 
         then:
@@ -40,7 +40,7 @@ class AuthenticationSerializationSpec extends Specification {
 
         when:
         UserDetails userDetails = new UserDetails("john", ["X", "Y"], [attr1: 1, attr2: 2])
-        byte[] data = serializer.serialize(new AuthenticationUserDetailsAdapter(userDetails)).get()
+        byte[] data = serializer.serialize(new AuthenticationUserDetailsAdapter(userDetails, "roles")).get()
         Authentication deserialized = serializer.deserialize(data, Authentication).get()
 
         then:

@@ -51,22 +51,6 @@ public class IpPatternsRule extends AbstractSecurityRule {
     private final List<Pattern> patternList;
 
     /**
-     * @deprecated use {@link #IpPatternsRule(RolesFinder, SecurityConfiguration)} instead.
-     * @param tokenConfiguration Token Configuration
-     * @param securityConfiguration Security Configuration
-     */
-    @Deprecated
-    public IpPatternsRule(TokenConfiguration tokenConfiguration,
-                          SecurityConfiguration securityConfiguration) {
-        super(tokenConfiguration);
-        this.patternList = securityConfiguration.getIpPatterns()
-                        .stream()
-                        .map(Pattern::compile)
-                        .collect(Collectors.toList());
-    }
-
-    /**
-     *
      * @param rolesFinder Roles Parser
      * @param securityConfiguration Security Configuration
      */

@@ -40,19 +40,6 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
     private static final String PARAM_ID_TOKEN_HINT = "id_token_hint";
 
     /**
-     * @deprecated use {@link #OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)} instead.
-     * @param endSessionCallbackUrlBuilder The end session callback URL builder
-     * @param clientConfiguration The client configuration
-     * @param providerMetadata The provider metadata
-     */
-    @Deprecated
-    public OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                  OauthClientConfiguration clientConfiguration,
-                                  OpenIdProviderMetadata providerMetadata) {
-        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
-    }
-
-    /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata supplier

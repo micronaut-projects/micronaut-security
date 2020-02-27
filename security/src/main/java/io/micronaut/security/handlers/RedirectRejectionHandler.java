@@ -123,20 +123,6 @@ public class RedirectRejectionHandler implements RejectionHandler {
     /**
      * Builds a HTTP Response redirection to the supplied location.
      *
-     * @param uri The Uri to redirect to
-     * @return a 303 HTTP response with the Uri as location
-     * @throws URISyntaxException if the supplied uri String cannot be used with URI.
-     * @deprecated Use {@link #httpResponseWithUri(URI)} instead
-     */
-    @Deprecated
-    protected MutableHttpResponse<?> httpResponseWithUri(String uri) throws URISyntaxException {
-        URI location = new URI(uri);
-        return httpResponseWithUri(location);
-    }
-
-    /**
-     * Builds a HTTP Response redirection to the supplied location.
-     *
      * @param location The Uri to redirect to
      * @return an HTTP response with the Uri as location
      */

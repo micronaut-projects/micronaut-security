@@ -53,9 +53,7 @@ class SecuritySessionBeansWithSecuritySessionDisabledSpec extends Specification 
                 SecuritySessionConfigurationProperties,
                 SessionAuthenticationFetcher,
                 SessionLoginHandler,
-                SessionLogoutHandler,
-                SessionSecurityFilterOrderProvider,
-                SessionSecurityfilterRejectionHandler,
+                SessionLogoutHandler
         ]
 
         description = clazz.name

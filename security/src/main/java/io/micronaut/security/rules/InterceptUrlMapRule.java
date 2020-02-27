@@ -52,17 +52,6 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
     private final AntPathMatcher pathMatcher;
 
     /**
-     * @deprecated use {@link InterceptUrlMapRule( RolesFinder )} instead.
-     * @param tokenConfiguration The Token configuration.
-     */
-    @Deprecated
-    public InterceptUrlMapRule(TokenConfiguration tokenConfiguration) {
-        super(tokenConfiguration);
-        this.pathMatcher = PathMatcher.ANT;
-    }
-
-    /**
-     *
      * @param rolesFinder Roles Parser
      */
     @Inject

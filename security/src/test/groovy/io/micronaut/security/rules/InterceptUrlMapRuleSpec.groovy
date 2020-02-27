@@ -18,26 +18,27 @@ package io.micronaut.security.rules
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.config.InterceptUrlMapPattern
+import io.micronaut.security.token.Claims
 import io.micronaut.security.token.DefaultRolesFinder
+import io.micronaut.security.token.RolesFinder
 import io.micronaut.security.token.config.TokenConfiguration
 import spock.lang.Issue
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import javax.annotation.Nonnull
+
 class InterceptUrlMapRuleSpec extends Specification {
 
     @Unroll
     void "test query arguments are ignored by matching logic"() {
-
-        given: 'a token configuration'
-        TokenConfiguration configuration = Mock()
-
-        and: 'the expected mock behaviour'
-        (0..1) * configuration.rolesName >> "roles"
-        0 * _
-
-        and:
-        SecurityRule rule = new InterceptUrlMapRule(configuration) {
+        given:
+        SecurityRule rule = new InterceptUrlMapRule(new RolesFinder() {
+            @Override
+            List<String> findInClaims(@Nonnull Claims claims) {
+                claims.get("roles")
+            }
+        }) {
             @Override
             protected List<InterceptUrlMapPattern> getPatternList() {
                 [new InterceptUrlMapPattern("/foo", ["ROLE_ADMIN"], HttpMethod.GET)]

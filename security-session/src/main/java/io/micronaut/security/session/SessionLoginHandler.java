@@ -44,23 +44,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
 
     protected final SessionStore<Session> sessionStore;
     protected final SecuritySessionConfiguration securitySessionConfiguration;
-
-    @Nullable
     private final String rolesKeyName;
-
-    /**
-     * Constructor.
-     * @deprecated use {@link #SessionLoginHandler(SecuritySessionConfiguration, SessionStore, TokenConfiguration)}
-     * @param securitySessionConfiguration Security Session Configuration
-     * @param sessionStore The session store
-     */
-    @Deprecated
-    public SessionLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,
-                               SessionStore<Session> sessionStore) {
-        this.securitySessionConfiguration = securitySessionConfiguration;
-        this.sessionStore = sessionStore;
-        this.rolesKeyName = null;
-    }
 
     /**
      * Constructor.

@@ -69,21 +69,6 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
         this.tokenValidators = tokenValidators;
     }
 
-    /**
-     * @deprecated Use {@link #TokenAuthenticationFetcher(Collection, TokenResolver, ApplicationEventPublisher)} instead.
-     * A {@link TokenResolver} can be created using {@link DefaultTokenResolver#DefaultTokenResolver(Collection)}.
-     *
-     * @param tokenValidators The list of {@link TokenValidator} which attempt to validate the request
-     * @param tokenReaders    The list {@link TokenReader} which attempt to read the request
-     * @param eventPublisher  The Application event publisher
-     */
-    @Deprecated
-    public TokenAuthenticationFetcher(Collection<TokenValidator> tokenValidators,
-                                      Collection<TokenReader> tokenReaders,
-                                      ApplicationEventPublisher eventPublisher) {
-        this(tokenValidators, new DefaultTokenResolver(tokenReaders), eventPublisher);
-    }
-
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
 

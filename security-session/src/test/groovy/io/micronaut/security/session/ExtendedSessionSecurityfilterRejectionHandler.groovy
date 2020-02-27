@@ -17,19 +17,22 @@ package io.micronaut.security.session
 
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.MutableHttpResponse
+import io.micronaut.security.handlers.RedirectRejectionHandler
+import io.micronaut.security.handlers.RejectionHandler
+import org.reactivestreams.Publisher
+
 import javax.inject.Singleton
 
 @Requires(property = 'spec.name', value = "RejectionHandlerResolutionSpec")
 @Singleton
-@Replaces(SessionSecurityfilterRejectionHandler)
-class ExtendedSessionSecurityfilterRejectionHandler extends SessionSecurityfilterRejectionHandler {
+@Replaces(RedirectRejectionHandler)
+class ExtendedSessionSecurityfilterRejectionHandler implements RejectionHandler {
 
-    /**
-     * Constructor.
-     *
-     * @param securitySessionConfiguration Security Session Configuration session store
-     */
-    ExtendedSessionSecurityfilterRejectionHandler(SecuritySessionConfiguration securitySessionConfiguration) {
-        super(securitySessionConfiguration)
+
+    @Override
+    Publisher<MutableHttpResponse<?>> reject(HttpRequest<?> request, boolean forbidden) {
+        return null
     }
 }
