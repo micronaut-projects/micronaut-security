@@ -113,6 +113,9 @@ public class IpPatternsRule extends AbstractSecurityRule {
                     return SecurityRuleResult.REJECTED;
                 }
             } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Request remote address was not found. Continuing request processing.");
+                }
                 return SecurityRuleResult.UNKNOWN;
             }
         }
