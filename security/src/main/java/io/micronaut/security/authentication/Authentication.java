@@ -29,6 +29,13 @@ import java.util.Map;
 public interface Authentication extends Principal, Serializable {
 
     /**
+     * In order to correctly implement the {@link Serializable} specification, this map
+     * should be {@link Map<String, Serializable>}, however that would place a burden on
+     * those not requiring serialization, forcing their values to conform to that spec.
+     *
+     * This is left intentionally as Object in order to meet both use cases and those
+     * requiring serialization must ensure all values in the map implement {@link Serializable}.
+     *
      * @return Any additional attributes in the authentication
      */
     @Nonnull
