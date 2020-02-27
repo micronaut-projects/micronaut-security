@@ -84,6 +84,32 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
         embeddedServer.close()
     }
 
+    void "test logging out without credentials"() {
+        given:
+        Map<String, Object> m = new HashMap<>()
+        m.putAll(config)
+        m.put('micronaut.security.endpoints.logout.get-allowed', true)
+
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m, Environment.TEST)
+        RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+
+        when:
+        client.toBlocking().exchange(HttpRequest.POST('/logout', ""))
+
+        then:
+        noExceptionThrown()
+
+        when:
+        client.toBlocking().exchange(HttpRequest.GET("/logout"))
+
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        client.close()
+        embeddedServer.close()
+    }
+
     @Requires(property = 'spec.name', value = 'logoutcontrollerallowedmethodsspec')
     @Singleton
     static class CustomLogoutHandler implements LogoutHandler {
