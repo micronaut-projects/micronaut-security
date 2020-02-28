@@ -54,4 +54,8 @@ public interface SecuritySessionConfiguration extends Toggleable {
      */
     String getForbiddenTargetUrl();
 
+    /**
+     * @return True if a redirect should occur when a request is rejected
+     */
+    boolean isRedirectOnRejection();
 }

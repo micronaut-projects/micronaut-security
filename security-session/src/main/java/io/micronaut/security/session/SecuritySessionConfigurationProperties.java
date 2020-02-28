@@ -17,12 +17,7 @@ package io.micronaut.security.session;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import io.micronaut.security.handlers.ForbiddenRejectionUriProvider;
-import io.micronaut.security.handlers.UnauthorizedRejectionUriProvider;
-
-import java.util.Optional;
 
 /**
  * Implementation of {@link SecuritySessionConfiguration}. Session-based Authentication configuration properties.
@@ -30,9 +25,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @ConfigurationProperties(SecuritySessionConfigurationProperties.PREFIX)
-public class SecuritySessionConfigurationProperties implements SecuritySessionConfiguration,
-        UnauthorizedRejectionUriProvider,
-        ForbiddenRejectionUriProvider {
+public class SecuritySessionConfigurationProperties implements SecuritySessionConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".session";
 
     /**
@@ -59,12 +52,27 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_LOGOUTTARGETURL = "/";
 
+    /**
+     * The default unauthorized rejection target URL.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final String DEFAULT_UNAUTHORIZEDTARGETURL = "/";
+
+    /**
+     * The default forbidden rejection target URL.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final String DEFAULT_FORBIDDENTARGETURL = "/";
+
+    private static final Boolean DEFAULT_REDIRECT_ON_REJECTION = true;
+
 
     private String loginSuccessTargetUrl = DEFAULT_LOGINSUCCESSTARGETURL;
     private String loginFailureTargetUrl = DEFAULT_LOGINFAILURETARGETURL;
     private String logoutTargetUrl = DEFAULT_LOGOUTTARGETURL;
-    private String unauthorizedTargetUrl;
-    private String forbiddenTargetUrl;
+    private String unauthorizedTargetUrl = DEFAULT_UNAUTHORIZEDTARGETURL;
+    private String forbiddenTargetUrl = DEFAULT_FORBIDDENTARGETURL;
+    private boolean redirectOnRejection = DEFAULT_REDIRECT_ON_REJECTION;
     private boolean enabled = DEFAULT_ENABLED;
     
     @Override
@@ -161,27 +169,18 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
         this.enabled = enabled;
     }
 
-    /**
-     * @return A uri to redirect to when a user tries to access a secured resource without authentication.
-     */
-    public Optional<String> getUnauthorizedRedirectUri() {
-        return Optional.ofNullable(unauthorizedTargetUrl);
-    }
-
     @Override
-    public Optional<String> getUnauthorizedRedirectUri(HttpRequest<?> request) {
-        return getUnauthorizedRedirectUri();
+    public boolean isRedirectOnRejection() {
+        return redirectOnRejection;
     }
 
     /**
-     * @return A uri to redirect to when an authenticated user tries to access a resource for which he does not have the required authorization level.
+     * Sets whether a redirect should occur on an authorization failure.
+     * Default value ({@value #DEFAULT_REDIRECT_ON_REJECTION}).
+     *
+     * @param redirectOnRejection True if a redirect should occur
      */
-    public Optional<String> getForbiddenRedirectUri() {
-        return Optional.ofNullable(forbiddenTargetUrl);
-    }
-
-    @Override
-    public Optional<String> getForbiddenRedirectUri(HttpRequest<?> request) {
-        return getForbiddenRedirectUri();
+    public void setRedirectOnRejection(boolean redirectOnRejection) {
+        this.redirectOnRejection = redirectOnRejection;
     }
 }
