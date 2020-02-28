@@ -33,5 +33,5 @@ public interface AuthenticationProvider {
      * @param authenticationRequest The request to authenticate
      * @return A publisher that emits 0 or 1 responses
      */
-    Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest);
+    Publisher<AuthenticationResponse> authenticate(AuthenticationRequest<?, ?> authenticationRequest);
 }
