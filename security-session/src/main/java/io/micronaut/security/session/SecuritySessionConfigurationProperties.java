@@ -32,7 +32,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
 
     /**
      * The default login success target URL.

@@ -32,7 +32,6 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.2.0
  */
-@Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(OauthConfigurationProperties.PREFIX)
 public class OauthConfigurationProperties implements OauthConfiguration {
 
@@ -42,7 +41,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
     private static final String DEFAULT_LOGIN = "/oauth/login{/provider}";
     private static final String DEFAULT_CALLBACK = "/oauth/callback{/provider}";
 

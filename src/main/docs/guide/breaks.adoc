@@ -9,3 +9,7 @@ This section will document breaking changes that may happen during milestone or 
 * The entire `RejectionHandler` API and its dependents have been removed in favor of using the built in exception handling API in Micronaut. An api:security.authentication.AuthorizationException[] will now be emitted when access to a resource has been rejected. Default exception handlers have been created to mimic the previous behavior. If you haven't overridden any of this API or manipulated it through settings there should be no change in behavior.
 
 * The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]
+
+* Modules are now enabled by default. The configuration keys `micronaut.security.enabled`, `micronaut.security.token.jwt.enabled`, `micronaut.security.oauth2.enabled`, and `micronaut.security.session.enabled` are now all `true` by default.
+
+
