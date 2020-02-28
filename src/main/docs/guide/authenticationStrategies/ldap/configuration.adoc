@@ -4,3 +4,9 @@ include::{includedir}configurationProperties/io.micronaut.configuration.security
 include::{includedir}configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration$ContextConfiguration.adoc[]
 include::{includedir}configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration$SearchConfiguration.adoc[]
 include::{includedir}configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration$GroupConfiguration.adoc[]
+
+TIP: To connect to an LDAP server with SSL, set the standard Java system properties to the values appropriate for your server.
+```
+-Djavax.net.ssl.trustStore="<path to truststore file>"
+-Djavax.net.ssl.trustStorePassword="<passphrase for truststore>"
+```

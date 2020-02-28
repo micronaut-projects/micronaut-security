@@ -73,7 +73,7 @@ public class LogoutController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public HttpResponse index(HttpRequest<?> request, Authentication authentication) {
+    public HttpResponse index(HttpRequest<?> request, @Nullable Authentication authentication) {
         return handleLogout(request, authentication);
     }
 
@@ -85,7 +85,7 @@ public class LogoutController {
      * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
      */
     @Get
-    public HttpResponse indexGet(HttpRequest<?> request, Authentication authentication) {
+    public HttpResponse indexGet(HttpRequest<?> request, @Nullable Authentication authentication) {
         if (!getAllowed) {
            return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);
         }
@@ -99,8 +99,10 @@ public class LogoutController {
      * @param authentication {@link Authentication} instance for current user
      * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
      */
-    protected HttpResponse handleLogout(HttpRequest<?> request, Authentication authentication) {
-        eventPublisher.publishEvent(new LogoutEvent(authentication));
+    protected HttpResponse handleLogout(HttpRequest<?> request, @Nullable Authentication authentication) {
+        if (authentication != null) {
+            eventPublisher.publishEvent(new LogoutEvent(authentication));
+        }
         if (logoutHandler != null) {
             return logoutHandler.logout(request);
         }
