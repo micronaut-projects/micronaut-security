@@ -17,6 +17,8 @@ package io.micronaut.docs.security.securityRule.intercepturlmap
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
+import io.micronaut.http.HttpStatus
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.testutils.YamlAsciidocTagCleaner
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.RxHttpClient
@@ -44,10 +46,15 @@ micronaut:
           - isAuthenticated() # <2>
       -
         pattern: /books/grails
-        http-method: GET
+        http-method: POST
         access:
           - ROLE_GRAILS # <3>
           - ROLE_GROOVY
+      - 
+        pattern: /books/grails
+        http-method: PUT
+        access: 
+          - ROLE_ADMIN        
 '''//end::yamlconfig[]
 
     @Shared
@@ -66,8 +73,13 @@ micronaut:
                             ],
                             [
                                     pattern: '/books/grails',
-                                    'http-method': 'GET',
+                                    'http-method': 'POST',
                                     access: ['ROLE_GRAILS', 'ROLE_GROOVY']
+                            ],
+                            [
+                                    pattern: '/books/grails',
+                                    'http-method': 'PUT',
+                                    access: ['ROLE_ADMIN']
                             ],
                     ]
             ]
@@ -80,7 +92,7 @@ micronaut:
             'endpoints.health.enabled'                 : true,
             'endpoints.health.sensitive'               : false,
             'micronaut.security.token.basic-auth.enabled'           : true,
-    ] << ipPatternsMap
+    ] << flatten(ipPatternsMap)
 
     @Shared
     @AutoCleanup
@@ -92,18 +104,48 @@ micronaut:
 
     void "test accessing a non sensitive endpoint without authentication"() {
         when:
-        client.toBlocking().exchange(HttpRequest.GET("/books")
-                .basicAuth("user", "password"))
+        def resp = client.toBlocking().exchange(HttpRequest.GET("/books")
+                .basicAuth("user", "password"), String)
 
         then:
         noExceptionThrown()
+        resp.body() == "Index Action"
 
         when:
-        client.toBlocking().exchange(HttpRequest.GET("/books/grails")
-                .basicAuth("user", "password"))
+        resp = client.toBlocking().exchange(HttpRequest.GET("/books"), String)
+
+        then:
+        def ex = thrown(HttpClientResponseException)
+        ex.status == HttpStatus.UNAUTHORIZED
+
+        when:
+        resp = client.toBlocking().exchange(HttpRequest.GET("/books/grails"), String)
+
+        then:
+        ex = thrown(HttpClientResponseException)
+        ex.status == HttpStatus.UNAUTHORIZED //no rule in place, so rejected
+
+        when:
+        resp = client.toBlocking().exchange(HttpRequest.GET("/books/grails").basicAuth("admin", "password"), String)
+
+        then:
+        ex = thrown(HttpClientResponseException)
+        ex.status == HttpStatus.FORBIDDEN //no rule in place, so rejected
+
+        when:
+        resp = client.toBlocking().exchange(HttpRequest.POST("/books/grails", "").basicAuth("admin", "password"), String)
+
+        then:
+        ex = thrown(HttpClientResponseException)
+        ex.status == HttpStatus.FORBIDDEN //lacks required roles
+
+        when:
+        resp = client.toBlocking().exchange(HttpRequest.PUT("/books/grails", "")
+                .basicAuth("admin", "password"), String)
 
         then:
         noExceptionThrown()
+        resp.body() == "Grails Action"
 
         when:
         Map m = new Yaml().load(cleanYamlAsciidocTag(yamlConfig))
