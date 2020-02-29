@@ -19,8 +19,6 @@ class ServerWebSocketOnOpenBindsHeaderSpec extends Specification {
     @Shared
     Map<String, Object> conf = [
             'spec.name': 'websockets-on-open-header',
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
     ]
 

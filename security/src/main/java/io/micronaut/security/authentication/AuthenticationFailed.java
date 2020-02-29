@@ -37,6 +37,13 @@ public class AuthenticationFailed implements AuthenticationResponse {
     }
 
     /**
+     * @param message The custom authentication failure message
+     */
+    public AuthenticationFailed(String message) {
+        this.authenticationFailure = AuthenticationFailureReason.CUSTOM;
+        this.message = message;
+    }
+    /**
      * @param authenticationFailure AuthenticationFailure enum which represents the failure reason
      */
     public AuthenticationFailed(AuthenticationFailureReason authenticationFailure) {
@@ -62,6 +69,11 @@ public class AuthenticationFailed implements AuthenticationResponse {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public Optional<UserDetails> getUserDetails() {
+        return Optional.empty();
     }
 
     /**

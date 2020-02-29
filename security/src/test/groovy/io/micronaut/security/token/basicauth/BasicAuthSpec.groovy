@@ -34,8 +34,7 @@ class BasicAuthSpec extends Specification  {
             'spec.name': 'basicauth',
             'endpoints.beans.enabled': true,
             'endpoints.beans.sensitive': true,
-            'micronaut.security.enabled': true,
-    ], Environment.TEST)
+            ], Environment.TEST)
 
     @Shared
     @AutoCleanup

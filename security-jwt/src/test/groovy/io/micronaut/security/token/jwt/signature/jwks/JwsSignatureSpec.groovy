@@ -59,8 +59,6 @@ class JwsSignatureSpec extends Specification implements JwtFixture {
     void "JwsSignature does not verify a RSA256 signed JWT, which was generated with a different signature, even if both the JwsSiganture and the JWT support the same algorithm"() {
         given:
         ApplicationContext context = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.signatures.jwks.awscognito.url':  "http://localhost:${embeddedServer.getPort()}/keys",
         ], Environment.TEST)
 

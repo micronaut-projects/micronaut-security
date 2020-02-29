@@ -71,8 +71,6 @@ class PrincipalTenantResolverSpec extends Specification {
                 'micronaut.server.port'                       : gormPort,
                 (SPEC_NAME_PROPERTY)                          : 'multitenancy.principal.gorm',
 
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
                 'micronaut.multitenancy.tenantresolver.principal.enabled': true,
 
@@ -104,9 +102,7 @@ class PrincipalTenantResolverSpec extends Specification {
         given:
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY): 'multitenancy.principal.gateway',
-                'micronaut.security.enabled': true,
                 'micronaut.security.endpoints.login.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
                 'micronaut.http.services.books.url': "http://localhost:${gormPort}",
                 'micronaut.security.token.writer.header.enabled': true,

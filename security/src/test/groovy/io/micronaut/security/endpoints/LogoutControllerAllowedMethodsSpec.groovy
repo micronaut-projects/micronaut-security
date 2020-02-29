@@ -43,7 +43,6 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
     @Shared
     Map<String, Object> config = [
             'spec.name': 'logoutcontrollerallowedmethodsspec',
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.logout.enabled': true,
     ]
 
@@ -124,7 +123,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
     static class CustomAuthenticationProvider implements AuthenticationProvider {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             return Flowable.just(new UserDetails("user", []))
         }
     }

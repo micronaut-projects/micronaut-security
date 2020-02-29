@@ -16,6 +16,7 @@
 package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -31,8 +32,9 @@ import java.util.Arrays;
 @Requires(property = "spec.name", value = "tokenpropagation.gateway")
 @Singleton
 public class SampleAuthenticationProvider implements AuthenticationProvider {
+
     @Override
-    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         if (authenticationRequest.getIdentity() == null) {
             return Flowable.just(new AuthenticationFailed());
         }

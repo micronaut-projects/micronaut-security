@@ -107,16 +107,6 @@ public class UserDetails implements AuthenticationResponse {
         this.roles = roles;
     }
 
-    @Override
-    public boolean isAuthenticated() {
-        return true;
-    }
-
-    @Override
-    public Optional<String> getMessage() {
-        return Optional.empty();
-    }
-
     /**
      * Sets user's attributes.
      * @param attributes User's attributes.
@@ -142,5 +132,15 @@ public class UserDetails implements AuthenticationResponse {
     @Override
     public int hashCode() {
         return username.hashCode();
+    }
+
+    @Override
+    public Optional<UserDetails> getUserDetails() {
+        return Optional.of(this);
+    }
+
+    @Override
+    public Optional<String> getMessage() {
+        return Optional.empty();
     }
 }

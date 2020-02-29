@@ -30,7 +30,6 @@ class EndpointWithPrincipalAndSensitivityOverrideSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'sensitive',
-            'micronaut.security.enabled': true,
             'endpoints.defaultendpoint.sensitive': false,
 
     ], Environment.TEST)

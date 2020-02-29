@@ -21,6 +21,7 @@ import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
@@ -45,7 +46,6 @@ class LoginControllerPathConfigurableSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'loginpathconfigurable',
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.login.enabled': true,
             'micronaut.security.endpoints.login.path': '/auth',
     ], Environment.TEST)
@@ -78,12 +78,12 @@ class LoginControllerPathConfigurableSpec extends Specification {
     static class CustomLoginHandler implements LoginHandler {
 
         @Override
-        HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+        MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
             HttpResponse.ok()
         }
 
         @Override
-        HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+        MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
             HttpResponse.unauthorized()
         }
     }
@@ -93,7 +93,7 @@ class LoginControllerPathConfigurableSpec extends Specification {
     static class CustomAuthenticationProvider implements AuthenticationProvider {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             return Flowable.just(new UserDetails("user", []))
         }
     }

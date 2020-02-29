@@ -24,8 +24,6 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.handlers.RedirectRejectionHandler
-import io.micronaut.security.handlers.RejectionHandler
 import io.micronaut.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
@@ -37,21 +35,18 @@ class SessionAuthenticationSpec extends GebSpec implements YamlAsciidocTagCleane
 //tag::yamlconfig[]
 micronaut:
   security:
-    enabled: true
     endpoints:
       login:
         enabled: true
       logout:
         enabled: true
     session:
-      enabled: true
       login-failure-target-url: /login/authFailed
 '''//end::yamlconfig[]
 
     @Shared
     Map<String, Object> configMap = ['micronaut': [
             'security': [
-                    'enabled': true,
                     'endpoints': [
                             'login': [
                                     'enabled': true,
@@ -61,7 +56,6 @@ micronaut:
                             ],
                     ],
                     'session': [
-                            'enabled': true,
                             'login-failure-target-url': '/login/authFailed',
                     ]
             ]
@@ -198,14 +192,5 @@ micronaut:
         rsp.status().code == 200
         rsp.body()
         rsp.body().contains('sherlock')
-    }
-
-    def "verifies default RejectionHandler is RedirectRejectionHandler"() {
-        when:
-        RejectionHandler rejectionHandler = context.getBean(RejectionHandler)
-
-        then:
-        noExceptionThrown()
-        rejectionHandler instanceof RedirectRejectionHandler
     }
 }

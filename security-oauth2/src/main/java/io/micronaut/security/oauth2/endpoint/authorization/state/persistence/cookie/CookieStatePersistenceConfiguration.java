@@ -120,7 +120,7 @@ public class CookieStatePersistenceConfiguration implements CookieConfiguration 
     }
 
     @Override
-    public Optional<TemporalAmount> getCookieMaxAge() {
+    public Optional<Duration> getCookieMaxAge() {
         return Optional.ofNullable(cookieMaxAge);
     }
 

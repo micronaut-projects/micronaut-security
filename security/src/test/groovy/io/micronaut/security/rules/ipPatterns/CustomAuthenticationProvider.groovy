@@ -16,6 +16,7 @@
 package io.micronaut.security.rules.ipPatterns
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
@@ -30,7 +31,7 @@ import javax.inject.Singleton
 class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
-    Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+    Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
     }
 }

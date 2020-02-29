@@ -40,7 +40,6 @@ class JwksSignature500Spec extends Specification implements JwtFixture {
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             (SPEC_NAME_PROPERTY) : 'jwkssignature500spec',
             // need to turn this on due to io.micronaut.security.token.jwt.package-info.java
-            'micronaut.security.enabled': true,
             'micronaut.security.token.jwt.enabled': true
 
     ], Environment.TEST)
@@ -48,8 +47,6 @@ class JwksSignature500Spec extends Specification implements JwtFixture {
     void "if the remote JWKS endpoint throws 500, the JwksSignature handles it and it does not crash"() {
         given:
         ApplicationContext context = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.signatures.jwks.awscognito.url':  "http://localhost:${embeddedServer.getPort()}/keys",
         ], Environment.TEST)
 

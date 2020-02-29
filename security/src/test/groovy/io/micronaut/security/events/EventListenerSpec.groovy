@@ -22,6 +22,7 @@ import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
@@ -52,7 +53,6 @@ class EventListenerSpec extends Specification {
             'spec.name': "io.micronaut.security.events.EventListenerSpec",
             'endpoints.beans.enabled': true,
             'endpoints.beans.sensitive': true,
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.login.enabled': true,
             'micronaut.security.endpoints.logout.enabled': true,
     ], Environment.TEST)
@@ -166,7 +166,7 @@ class EventListenerSpec extends Specification {
     static class CustomAuthenticationProvider implements AuthenticationProvider {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             System.out.println(authenticationRequest.identity)
             System.out.println(authenticationRequest.secret)
             if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
@@ -183,12 +183,12 @@ class EventListenerSpec extends Specification {
     static class CustomLoginHandler implements LoginHandler {
 
         @Override
-        HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+        MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
             HttpResponse.ok()
         }
 
         @Override
-        HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+        MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
             HttpResponse.unauthorized()
         }
     }

@@ -37,7 +37,6 @@ class RejectionHandlerOverrideSpec extends Specification implements Authorizatio
     ApplicationContext context = ApplicationContext.run(
         [
             'spec.name': 'rejection-handler',
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.login.enabled': true,
         ], Environment.TEST)
 

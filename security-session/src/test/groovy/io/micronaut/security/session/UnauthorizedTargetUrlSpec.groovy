@@ -33,8 +33,6 @@ class UnauthorizedTargetUrlSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : UnauthorizedTargetUrlSpec.simpleName,
-            'micronaut.security.enabled': true,
-            'micronaut.security.session.enabled': true,
             'micronaut.security.session.unauthorized-target-url': '/login/auth',
             'micronaut.security.intercept-url-map': [
                     [pattern: '/login/auth', httpMethod: 'GET', access: ['isAnonymous()']]

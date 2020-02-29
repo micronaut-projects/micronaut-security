@@ -29,7 +29,6 @@ class HttpHeaderTokenWriterDisabledSpec extends Specification {
 
     @Shared
     @AutoCleanup ApplicationContext context = ApplicationContext.run([
-            'micronaut.security.enabled': true,
             (SPEC_NAME_PROPERTY):getClass().simpleName
     ], Environment.TEST)
 

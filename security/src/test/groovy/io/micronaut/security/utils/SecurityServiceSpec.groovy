@@ -33,8 +33,7 @@ class SecurityServiceSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             (SPEC_NAME_PROPERTY): SecurityServiceSpec.class.simpleName,
-            'micronaut.security.enabled': true,
-    ], Environment.TEST)
+            ], Environment.TEST)
 
     @Shared
     @AutoCleanup

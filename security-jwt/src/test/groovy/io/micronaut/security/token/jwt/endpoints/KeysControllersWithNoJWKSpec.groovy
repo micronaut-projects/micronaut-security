@@ -14,8 +14,6 @@ class KeysControllersWithNoJWKSpec extends Specification {
     @Shared
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.endpoints.keys.enabled': true
     ])
 

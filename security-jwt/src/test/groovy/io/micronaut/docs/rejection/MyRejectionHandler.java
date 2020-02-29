@@ -19,24 +19,22 @@ import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.handlers.HttpStatusCodeRejectionHandler;
-import io.reactivex.Flowable;
-import org.reactivestreams.Publisher;
+import io.micronaut.security.authentication.AuthorizationException;
+import io.micronaut.security.authentication.HttpStatusAuthorizationExceptionHandler;
 
 import javax.inject.Singleton;
 
 @Requires(property = "spec.name", value = "rejection-handler")
 //tag::clazz[]
 @Singleton
-@Replaces(HttpStatusCodeRejectionHandler.class)
-public class MyRejectionHandler extends HttpStatusCodeRejectionHandler {
+@Replaces(HttpStatusAuthorizationExceptionHandler.class)
+public class MyRejectionHandler extends HttpStatusAuthorizationExceptionHandler {
 
     @Override
-    public Publisher<MutableHttpResponse<?>> reject(HttpRequest<?> request, boolean forbidden) {
+    public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationException exception) {
         //Let the HttpStatusCodeRejectionHandler create the initial request
         //then add a header
-        return Flowable.fromPublisher(super.reject(request, forbidden))
-                .map(response -> response.header("X-Reason", "Example Header"));
+        return super.handle(request, exception).header("X-Reason", "Example Header");
     }
 }
 //end::clazz[]

@@ -29,8 +29,6 @@ class BearerEnabledSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : BearerEnabledSpec.simpleName,
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.token.jwt.bearer.enabled': false,
 
     ], Environment.TEST)

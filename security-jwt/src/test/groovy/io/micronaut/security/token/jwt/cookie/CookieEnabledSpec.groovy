@@ -32,8 +32,6 @@ class CookieEnabledSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : CookieEnabledSpec.simpleName,
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.token.jwt.cookie.enabled': false,
 
     ], Environment.TEST)

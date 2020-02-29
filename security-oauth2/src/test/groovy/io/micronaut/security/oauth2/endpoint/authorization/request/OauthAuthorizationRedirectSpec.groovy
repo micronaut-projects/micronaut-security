@@ -25,12 +25,11 @@ import javax.inject.Named
 import javax.inject.Singleton
 import java.nio.charset.StandardCharsets
 
-class OauthAuthorizationRedirectSpec extends Specification implements ConfigurationFixture {
+class OauthAuthorizationRedirectSpec extends Specification {
 
     void "test authorization redirect with just oauth"() {
         given:
         Map config = new HashMap<>()
-        config.putAll(oauth2Config)
         config.put("spec.name", OauthAuthorizationRedirectSpec.simpleName)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
         config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")

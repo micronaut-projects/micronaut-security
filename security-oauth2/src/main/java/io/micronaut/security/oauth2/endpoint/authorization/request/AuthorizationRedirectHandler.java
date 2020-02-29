@@ -36,6 +36,6 @@ public interface AuthorizationRedirectHandler {
      * @param authorizationEndpoint The autorization endpoint
      * @return The URL
      */
-    MutableHttpResponse redirect(AuthorizationRequest authorizationRequest,
-                                 String authorizationEndpoint);
+    MutableHttpResponse<?> redirect(AuthorizationRequest authorizationRequest,
+                                    String authorizationEndpoint);
 }

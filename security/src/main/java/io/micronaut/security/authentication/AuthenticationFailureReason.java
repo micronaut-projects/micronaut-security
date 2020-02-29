@@ -46,8 +46,14 @@ public enum AuthenticationFailureReason {
      * Failure when the cause is the user's password expired.
      */
     PASSWORD_EXPIRED,
+
     /**
      * An unknown failure.
      */
-    UNKNOWN
+    UNKNOWN,
+
+    /**
+     * An custom error.
+     */
+    CUSTOM
 }

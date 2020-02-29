@@ -30,8 +30,7 @@ class ServerRequestContextReactiveSpec extends Specification {
 
     @Shared @AutoCleanup EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'ServerRequestContextReactiveSpec',
-            'micronaut.security.enabled': true,
-    ])
+            ])
 
     @Shared @AutoCleanup RxHttpClient httpClient =
             embeddedServer.getApplicationContext().createBean(RxHttpClient.class, embeddedServer.URL)

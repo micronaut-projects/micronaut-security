@@ -213,7 +213,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      * @return The max age to use for the cookie
      */
     @Override
-    public Optional<TemporalAmount> getCookieMaxAge() {
+    public Optional<Duration> getCookieMaxAge() {
         return Optional.ofNullable(cookieMaxAge);
     }
 

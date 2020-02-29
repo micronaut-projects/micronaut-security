@@ -58,7 +58,6 @@ endpoints:
     @Shared
     Map<String, Object> config = [
             'spec.name': 'docbuiltinendpoints',
-            'micronaut.security.enabled': true,
             'micronaut.security.token.enabled': true,
     ] << flatten(endpointsMap)
 

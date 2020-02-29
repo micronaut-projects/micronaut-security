@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.signature.rsagenerationvalidation;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -32,7 +33,7 @@ import java.util.Collections;
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
             return Flowable.just(new UserDetails("user", Collections.emptyList()));
         }

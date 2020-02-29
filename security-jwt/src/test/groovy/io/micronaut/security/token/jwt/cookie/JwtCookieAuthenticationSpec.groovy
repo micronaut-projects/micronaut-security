@@ -43,10 +43,8 @@ class JwtCookieAuthenticationSpec extends GebSpec {
             [
                     'spec.name': 'jwtcookie',
                     'micronaut.http.client.followRedirects': false,
-                    'micronaut.security.enabled': true,
                     'micronaut.security.endpoints.login.enabled': true,
                     'micronaut.security.endpoints.logout.enabled': true,
-                    'micronaut.security.token.jwt.enabled': true,
                     'micronaut.security.token.jwt.bearer.enabled': false,
                     'micronaut.security.token.jwt.cookie.enabled': true,
                     'micronaut.security.token.jwt.cookie.login-failure-target-url': '/login/authFailed',

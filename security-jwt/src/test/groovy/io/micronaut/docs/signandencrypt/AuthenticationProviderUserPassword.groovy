@@ -16,6 +16,7 @@
 package io.micronaut.docs.signandencrypt
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -31,8 +32,8 @@ import javax.inject.Singleton
 class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
-    Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-        if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+    Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+        if (authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password') {
             return Flowable.just(new UserDetails('user', []))
         }
         return Flowable.just(new AuthenticationFailed())

@@ -15,7 +15,10 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.http.HttpRequest;
 import org.reactivestreams.Publisher;
+
+import javax.annotation.Nullable;
 
 /**
  * Defines an authentication provider.
@@ -30,8 +33,9 @@ public interface AuthenticationProvider {
      * Authenticates a user with the given request. If a successful authentication is
      * returned, the object must be an instance of {@link UserDetails}.
      *
-     * @param authenticationRequest The request to authenticate
+     * @param httpRequest The http request
+     * @param authenticationRequest The credentials to authenticate
      * @return A publisher that emits 0 or 1 responses
      */
-    Publisher<AuthenticationResponse> authenticate(AuthenticationRequest<?, ?> authenticationRequest);
+    Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest);
 }

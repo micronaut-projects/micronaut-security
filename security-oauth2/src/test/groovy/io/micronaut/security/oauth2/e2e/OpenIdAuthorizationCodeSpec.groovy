@@ -6,7 +6,7 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.oauth2.ConfigurationFixture
 import io.micronaut.security.oauth2.OpenIDIntegrationSpec
 
-class OpenIdAuthorizationCodeSpec extends GebSpec implements OpenIDIntegrationSpec, ConfigurationFixture {
+class OpenIdAuthorizationCodeSpec extends GebSpec implements OpenIDIntegrationSpec {
 
     void "test a full login"() {
         given:
@@ -38,9 +38,7 @@ class OpenIdAuthorizationCodeSpec extends GebSpec implements OpenIDIntegrationSp
 
     @Override
     Map<String, Object> getConfiguration() {
-        OpenIDIntegrationSpec.super.getConfiguration() +
-                oauth2Config +
-                [
+        OpenIDIntegrationSpec.super.getConfiguration() + [
                         "micronaut.security.token.jwt.cookie.enabled" : true,
                         "micronaut.security.oauth2.clients.keycloak.openid.issuer" : ISSUER,
                         "micronaut.security.oauth2.clients.keycloak.client-id" : CLIENT_ID,

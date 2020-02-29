@@ -29,7 +29,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -79,7 +78,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -106,7 +104,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -132,7 +129,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("member.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.foo.enabled': true,
                 'micronaut.security.ldap.foo.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.foo.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -173,7 +169,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -201,7 +196,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -231,7 +225,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         s.startListening()
         s2.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.basic.enabled': true,
                 'micronaut.security.ldap.basic.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.basic.context.managerDn': "cn=admin,dc=example,dc=com",

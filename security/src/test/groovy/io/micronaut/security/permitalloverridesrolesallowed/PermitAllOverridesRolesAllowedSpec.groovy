@@ -33,8 +33,7 @@ class PermitAllOverridesRolesAllowedSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             (SPEC_NAME_PROPERTY): PermitAllOverridesRolesAllowedSpec.class.simpleName,
-            'micronaut.security.enabled': true,
-    ], Environment.TEST)
+            ], Environment.TEST)
 
     @Shared
     @AutoCleanup

@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.routes;
 import io.micronaut.context.BeanContext;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.ProviderResolver;
@@ -61,7 +62,7 @@ public class DefaultEndSessionController implements EndSessionController {
      * @return A redirecting http response
      */
     @Override
-    public Optional<HttpResponse> endSession(HttpRequest request, Authentication authentication) {
+    public Optional<MutableHttpResponse<?>> endSession(HttpRequest<?> request, Authentication authentication) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received logout request for user [{}]", authentication.getName());
         }

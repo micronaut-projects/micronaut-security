@@ -25,7 +25,7 @@ class BasicAuthTokenValidatorSpec extends Specification {
         ApplicationContext applicationContext = ApplicationContext.run()
 
         expect:
-        !applicationContext.containsBean(BasicAuthTokenValidator)
+        applicationContext.containsBean(BasicAuthTokenValidator)
 
         cleanup:
         applicationContext.close()
@@ -56,7 +56,6 @@ class BasicAuthTokenValidatorSpec extends Specification {
     def "BasicAuthTokenValidator is loaded if micronaut.security.token.basic-auth.enabled=false"() {
         given:
         ApplicationContext applicationContext = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.token.basic-auth.enabled': false
         ])
 

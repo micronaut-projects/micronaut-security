@@ -19,6 +19,7 @@ import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
@@ -98,7 +99,7 @@ public class JwtTokenValidator implements TokenValidator {
      * @return Publishes {@link Authentication} based on the JWT or empty if the validation fails.
      */
     @Override
-    public Publisher<Authentication> validateToken(String token) {
+    public Publisher<Authentication> validateToken(HttpRequest<?> request, String token) {
         Optional<Authentication> authentication = authenticationIfValidJwtSignatureAndClaims(token, genericJwtClaimsValidators);
         if (authentication.isPresent()) {
             return Flowable.just(authentication.get());

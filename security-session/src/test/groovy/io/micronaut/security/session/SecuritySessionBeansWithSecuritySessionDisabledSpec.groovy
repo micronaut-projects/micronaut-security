@@ -31,7 +31,6 @@ class SecuritySessionBeansWithSecuritySessionDisabledSpec extends Specification 
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : SecuritySessionBeansWithSecuritySessionDisabledSpec.simpleName,
-            'micronaut.security.enabled': true,
             'micronaut.security.session.enabled': false,
     ], Environment.TEST)
 

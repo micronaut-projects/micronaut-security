@@ -33,8 +33,7 @@ class AuthorizationWithoutInterceptUrlMapSpec extends Specification  {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'authorization',
-            'micronaut.security.enabled': true,
-    ], Environment.TEST)
+            ], Environment.TEST)
 
     @Shared @AutoCleanup RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
 

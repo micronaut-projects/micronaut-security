@@ -46,10 +46,8 @@ class OauthControllerSpec extends Specification {
     ApplicationContext context = ApplicationContext.run(
             [
                     'spec.name': 'endpoints',
-                    'micronaut.security.enabled': true,
                     'micronaut.security.endpoints.login.enabled': true,
                     'micronaut.security.endpoints.oauth.enabled': true,
-                    'micronaut.security.token.jwt.enabled': true,
                     'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa'
             ], Environment.TEST)
 
@@ -95,8 +93,8 @@ class OauthControllerSpec extends Specification {
 
         when:
         TokenValidator tokenValidator = context.getBean(JwtTokenValidator.class)
-        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(refreshRsp.body().accessToken)).blockingFirst().getAttributes()
-        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(originalAccessToken)).blockingFirst().getAttributes()
+        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(null, refreshRsp.body().accessToken)).blockingFirst().getAttributes()
+        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(null, originalAccessToken)).blockingFirst().getAttributes()
         List<String> expectedClaims = [JwtClaims.SUBJECT,
                                        JwtClaims.ISSUED_AT,
                                        JwtClaims.EXPIRATION_TIME,

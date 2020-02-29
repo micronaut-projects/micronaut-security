@@ -19,10 +19,7 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
-import io.micronaut.http.HttpHeaders;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
+import io.micronaut.http.*;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -103,7 +100,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     }
 
     @Override
-    public Optional<HttpResponse> endSessionRedirect(HttpRequest request, Authentication authentication) {
+    public Optional<MutableHttpResponse<?>> endSessionRedirect(HttpRequest<?> request, Authentication authentication) {
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting end session flow to provider [{}]", getName());
@@ -115,7 +112,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     }
 
     @Override
-    public Publisher<HttpResponse> authorizationRedirect(HttpRequest originating) {
+    public Publisher<MutableHttpResponse<?>> authorizationRedirect(HttpRequest<?> originating) {
         AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration);
         String endpoint = openIdProviderMetadata.get().getAuthorizationEndpoint();
 

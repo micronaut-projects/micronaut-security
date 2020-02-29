@@ -43,7 +43,6 @@ class LogoutControllerPathConfigurableSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'logoutpathconfigurable',
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.logout.enabled': true,
             'micronaut.security.endpoints.logout.path': '/salir',
     ], Environment.TEST)
@@ -84,7 +83,7 @@ class LogoutControllerPathConfigurableSpec extends Specification {
     static class CustomAuthenticationProvider implements AuthenticationProvider {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             return Flowable.just(new UserDetails("user", []))
         }
     }

@@ -17,15 +17,21 @@ package io.micronaut.security.handlers
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
+import io.reactivex.Flowable
+import org.reactivestreams.Publisher
 
 import javax.inject.Singleton
 
 @Requires(property = "spec.name", value = "RedirectRejectionHandlerSpec")
 @Singleton
-class CustomUnauthorizedRejectionUriProvider implements UnauthorizedRejectionUriProvider {
+class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
-    Optional<String> getUnauthorizedRedirectUri(HttpRequest<?> request) {
-        Optional.of("/login")
+    Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+        return Flowable.just(new UserDetails("sherlock", Collections.emptyList()))
     }
 }

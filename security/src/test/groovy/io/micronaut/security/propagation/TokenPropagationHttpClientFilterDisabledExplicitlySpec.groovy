@@ -28,7 +28,6 @@ class TokenPropagationHttpClientFilterDisabledExplicitlySpec extends Specificati
 
     @Shared
     @AutoCleanup ApplicationContext context = ApplicationContext.run([
-            'micronaut.security.enabled': true,
             'micronaut.security.token.writer.header.enabled': true,
             'micronaut.security.token.propagation.enabled': false,
             (SPEC_NAME_PROPERTY):getClass().simpleName

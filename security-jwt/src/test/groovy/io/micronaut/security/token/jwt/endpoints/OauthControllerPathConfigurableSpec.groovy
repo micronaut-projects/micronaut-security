@@ -32,8 +32,6 @@ class OauthControllerPathConfigurableSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'refreshpathconfigurable',
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.endpoints.oauth.enabled': true,
             'micronaut.security.endpoints.oauth.path': '/newtoken',
     ], Environment.TEST)

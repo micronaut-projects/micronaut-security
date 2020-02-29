@@ -33,8 +33,7 @@ class PermitAllSpec extends Specification {
     @Shared
     Map<String, Object> config = [
             'spec.name': 'docpermitall',
-            'micronaut.security.enabled': true,
-    ]
+            ]
 
     @Shared
     @AutoCleanup

@@ -17,7 +17,8 @@ package io.micronaut.security.session;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.filters.SecurityFilter;
@@ -27,7 +28,6 @@ import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
@@ -62,7 +62,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
-    public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+    public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
         session.put(SecurityFilter.AUTHENTICATION, new AuthenticationUserDetailsAdapter(userDetails, rolesKeyName));
         try {
@@ -74,7 +74,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
-    public HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+    public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
         try {
             URI location = new URI(securitySessionConfiguration.getLoginFailureTargetUrl());
             return HttpResponse.seeOther(location);

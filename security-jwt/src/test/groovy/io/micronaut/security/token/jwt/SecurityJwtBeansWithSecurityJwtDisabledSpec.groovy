@@ -58,7 +58,6 @@ class SecurityJwtBeansWithSecurityJwtDisabledSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : SecurityJwtBeansWithSecurityJwtDisabledSpec.simpleName,
-            'micronaut.security.enabled': true,
             'micronaut.security.token.jwt.enabled': false,
     ], Environment.TEST)
 

@@ -19,7 +19,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.token.jwt.generator.JwtGeneratorConfiguration;
@@ -29,6 +29,8 @@ import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 import java.util.List;
@@ -60,7 +62,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
-    public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {        
+    public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
         Optional<Cookie> cookieOptional = accessTokenCookie(userDetails, request);
         if (!cookieOptional.isPresent()) {
             return HttpResponse.serverError();
@@ -70,7 +72,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
-    public HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+    public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
         try {
             URI location = new URI(jwtCookieConfiguration.getLoginFailureTargetUrl());
             return HttpResponse.seeOther(location);
@@ -91,7 +93,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
 
             Cookie cookie = Cookie.of(jwtCookieConfiguration.getCookieName(), accessRefreshTokenOptional.get().getAccessToken());
             cookie.configure(jwtCookieConfiguration, request.isSecure());
-            Optional<TemporalAmount> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
+            Optional<Duration> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
             if (cookieMaxAge.isPresent()) {
                 cookie.maxAge(cookieMaxAge.get());
             } else {
@@ -107,10 +109,10 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
      * @param cookies Cookies to be added to the response
      * @return A 303 HTTP Response with cookies
      */
-    protected HttpResponse loginSuccessWithCookies(List<Cookie> cookies) {
+    protected MutableHttpResponse<?> loginSuccessWithCookies(List<Cookie> cookies) {
         try {
             URI location = new URI(jwtCookieConfiguration.getLoginSuccessTargetUrl());
-            MutableHttpResponse mutableHttpResponse = HttpResponse.seeOther(location);
+            MutableHttpResponse<?> mutableHttpResponse = HttpResponse.seeOther(location);
             for (Cookie cookie : cookies) {
                 mutableHttpResponse = mutableHttpResponse.cookie(cookie);
             }

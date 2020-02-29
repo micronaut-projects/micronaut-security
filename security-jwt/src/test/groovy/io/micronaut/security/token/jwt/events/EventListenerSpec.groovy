@@ -44,8 +44,6 @@ class EventListenerSpec extends Specification {
             'spec.name': "io.micronaut.security.token.jwt.events.EventListenerSpec",
             'endpoints.beans.enabled': true,
             'endpoints.beans.sensitive': true,
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
             'micronaut.security.endpoints.login.enabled': true,
     ], Environment.TEST)
@@ -90,7 +88,7 @@ class EventListenerSpec extends Specification {
     static class CustomAuthenticationProvider implements AuthenticationProvider {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
                 return Flowable.just(new UserDetails('user', []))
             }

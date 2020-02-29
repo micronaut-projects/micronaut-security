@@ -32,7 +32,6 @@ class IpPatternSpec extends Specification implements YamlAsciidocTagCleaner {
 //tag::yamlconfig[]
 micronaut:
   security:
-    enabled: true
     ip-patterns:
       - 127.0.0.1
       - 192.168.1.*
@@ -42,7 +41,6 @@ micronaut:
     @Shared
     Map<String, Object> ipPatternsMap = ['micronaut': [
             'security': [
-                    'enabled'    : true,
                     'ip-patterns' : ['127.0.0.1', '192.168.1.*']
             ]
         ]

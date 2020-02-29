@@ -27,12 +27,11 @@ import javax.inject.Named
 import javax.inject.Singleton
 import java.nio.charset.StandardCharsets
 
-class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDIntegrationSpec, ConfigurationFixture {
+class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDIntegrationSpec {
 
     void "test authorization redirect for openid and normal oauth"() {
         given:
         Map config = getConfiguration()
-        config.putAll(oauth2Config)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
         config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)
@@ -93,7 +92,6 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
     void "test authorization redirect with openid and oauth disabled"() {
         given:
         Map config = getConfiguration()
-        config.putAll(oauth2Config)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
         config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)

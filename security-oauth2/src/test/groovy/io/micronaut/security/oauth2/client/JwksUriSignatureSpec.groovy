@@ -318,7 +318,7 @@ class JwksUriSignatureSpec extends Specification {
     @Singleton
     static class AuthServerAAuthenticationProvider implements AuthenticationProvider {
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
         }
     }
@@ -326,7 +326,7 @@ class JwksUriSignatureSpec extends Specification {
     @Singleton
     static class AuthServerBAuthenticationProvider implements AuthenticationProvider {
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
         }
     }

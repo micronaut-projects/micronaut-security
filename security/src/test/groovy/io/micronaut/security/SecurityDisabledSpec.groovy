@@ -21,6 +21,7 @@ import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.AuthenticationArgumentBinder
 import io.micronaut.security.authentication.AuthenticationExceptionHandler
+import io.micronaut.security.authentication.HttpStatusAuthorizationExceptionHandler
 import io.micronaut.security.authentication.PrincipalArgumentBinder
 import io.micronaut.security.config.InterceptUrlMapConverter
 import io.micronaut.security.config.SecurityConfigurationProperties
@@ -29,7 +30,6 @@ import io.micronaut.security.endpoints.LoginControllerConfigurationProperties
 import io.micronaut.security.endpoints.LogoutController
 import io.micronaut.security.endpoints.LogoutControllerConfigurationProperties
 import io.micronaut.security.filters.SecurityFilter
-import io.micronaut.security.handlers.HttpStatusCodeRejectionHandler
 import io.micronaut.security.rules.ConfigurationInterceptUrlMapRule
 import io.micronaut.security.rules.IpPatternsRule
 import io.micronaut.security.rules.SecuredAnnotationRule
@@ -80,7 +80,7 @@ class SecurityDisabledSpec extends Specification {
                 LoginControllerConfigurationProperties,
                 LogoutController,
                 LogoutControllerConfigurationProperties,
-                HttpStatusCodeRejectionHandler,
+                HttpStatusAuthorizationExceptionHandler,
                 ConfigurationInterceptUrlMapRule,
                 IpPatternsRule,
                 SecuredAnnotationRule,
@@ -95,7 +95,6 @@ class SecurityDisabledSpec extends Specification {
                 HttpHeaderTokenWriterConfigurationProperties,
                 TokenAuthenticationFetcher,
                 DefaultSecurityService,
-
         ]
 
         description = clazz.name

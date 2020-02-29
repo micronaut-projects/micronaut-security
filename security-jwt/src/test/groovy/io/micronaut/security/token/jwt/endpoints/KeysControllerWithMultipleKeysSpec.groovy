@@ -13,9 +13,7 @@ class KeysControllerWithMultipleKeysSpec extends Specification {
 
     @Shared
     Map<String, Object> conf = [
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.keys.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'spec.name': 'keyscontrollerwithmultiplekeys'
     ]
 

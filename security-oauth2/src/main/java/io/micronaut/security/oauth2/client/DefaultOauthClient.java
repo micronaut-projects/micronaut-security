@@ -24,6 +24,7 @@ import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.client.condition.OauthClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -91,7 +92,7 @@ public class DefaultOauthClient implements OauthClient {
     }
 
     @Override
-    public Publisher<HttpResponse> authorizationRedirect(HttpRequest originating) {
+    public Publisher<MutableHttpResponse<?>> authorizationRedirect(HttpRequest<?> originating) {
         AuthorizationRequest authorizationRequest = beanContext.createBean(OauthAuthorizationRequest.class, originating, clientConfiguration);
         String authorizationEndpoint = clientConfiguration.getAuthorization()
                 .flatMap(EndpointConfiguration::getUrl)

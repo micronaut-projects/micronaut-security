@@ -10,9 +10,7 @@ For example, to configure Google as a provider:
 ----
 micronaut:
   security:
-    enabled: true
     oauth2:
-      enabled: true
       clients:
         google:
           client-secret: <<your client secret>>
@@ -28,7 +26,7 @@ For the full authorization code flow to work there are also some additional requ
 |===
 | Type  | Configuration Required | Module
 | JWT Cookie Storage | `micronaut.security.token.jwt.cookie.enabled: true` | `micronaut-jwt`
-| Session Storage | `micronaut.security.session.enabled: true` | `micronaut-session`
+| Session Storage |  | `micronaut-session`
 |====
 
 See the following guide for a full walk-through with Okta.

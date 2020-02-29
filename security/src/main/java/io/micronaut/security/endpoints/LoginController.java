@@ -18,10 +18,7 @@ package io.micronaut.security.endpoints;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MediaType;
+import io.micronaut.http.*;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
@@ -79,18 +76,17 @@ public class LoginController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public Single<HttpResponse> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
-        Flowable<AuthenticationResponse> authenticationResponseFlowable = Flowable.fromPublisher(authenticator.authenticate(usernamePasswordCredentials));
+    public Single<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
+        Flowable<AuthenticationResponse> authenticationResponseFlowable = Flowable.fromPublisher(authenticator.authenticate(request, usernamePasswordCredentials));
 
         return authenticationResponseFlowable.map(authenticationResponse -> {
             if (authenticationResponse.isAuthenticated()) {
-                UserDetails userDetails = (UserDetails) authenticationResponse;
+                UserDetails userDetails = authenticationResponse.getUserDetails().get();
                 eventPublisher.publishEvent(new LoginSuccessfulEvent(userDetails));
                 return loginHandler.loginSuccess(userDetails, request);
             } else {
-                AuthenticationFailed authenticationFailed = (AuthenticationFailed) authenticationResponse;
-                eventPublisher.publishEvent(new LoginFailedEvent(authenticationFailed));
-                return loginHandler.loginFailed(authenticationFailed);
+                eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
+                return loginHandler.loginFailed(authenticationResponse);
             }
         }).first(HttpResponse.status(HttpStatus.UNAUTHORIZED));
     }

@@ -20,7 +20,6 @@ The example below defines that all HTTP requests to URIs matching the pattern `/
 ----
 micronaut:
   security:
-    enabled: true
     intercept-url-map:
       - pattern: /v1/myResource/**
         httpMethod: GET // <1>

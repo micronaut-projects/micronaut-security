@@ -43,10 +43,8 @@ class SignSecretEncryptRSASpec extends Specification implements AuthorizationUti
 #tag::yamlconfig[]
 micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           secret:
             generator: 
@@ -62,10 +60,8 @@ micronaut:
     Map<String, Object> configMap = [
             'micronaut': [
                     'security': [
-                            'enabled': true,
                             'token': [
                                     'jwt': [
-                                        'enabled': true,
                                         'signatures': [
                                                 'secret': [
                                                         'generator': [

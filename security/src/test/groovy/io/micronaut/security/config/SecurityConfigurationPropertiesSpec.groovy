@@ -27,7 +27,6 @@ class SecurityConfigurationPropertiesSpec extends Specification {
     void "test configuring security with missing access key"() {
         given:
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.intercept-url-map': [
                         [pattern: '/health']
         ]], Environment.TEST)

@@ -130,7 +130,6 @@ class TokenPropagationSpec extends Specification {
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY): 'tokenpropagation.gateway',
                 'micronaut.application.name': 'gateway',
-                'micronaut.security.enabled': true,
                 'micronaut.http.services.books.url': "http://localhost:${booksPort}",
                 'micronaut.http.services.inventory.url': "http://localhost:${inventoryPort}",
                 'micronaut.security.endpoints.login.enabled': true,

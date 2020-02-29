@@ -32,8 +32,6 @@ class SessionReUseSpec extends Specification {
     void "test the same session is reused through login/logout/login"() {
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : SessionReUseSpec.simpleName,
-                'micronaut.security.enabled': true,
-                'micronaut.security.session.enabled': true,
                 'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.security.endpoints.logout.enabled': true,
         ], Environment.TEST)
@@ -106,7 +104,7 @@ class SessionReUseSpec extends Specification {
     @Requires(property = "spec.name", value = "SessionReUseSpec")
     static class AuthenticationProviderUserPassword implements AuthenticationProvider  { // <2>
         @Override
-        public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             if ( authenticationRequest.getIdentity().equals("sherlock") &&
                     authenticationRequest.getSecret().equals("password") ) {
                 UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>());

@@ -34,7 +34,6 @@ class LoginControllerValidationSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'loginpathconfigurable',
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.login.enabled': true,
     ], Environment.TEST)
 

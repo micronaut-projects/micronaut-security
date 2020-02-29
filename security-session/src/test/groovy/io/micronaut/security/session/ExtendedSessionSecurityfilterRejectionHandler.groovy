@@ -19,20 +19,18 @@ import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
-import io.micronaut.security.handlers.RedirectRejectionHandler
-import io.micronaut.security.handlers.RejectionHandler
-import org.reactivestreams.Publisher
+import io.micronaut.http.server.exceptions.ExceptionHandler
+import io.micronaut.security.authentication.AuthenticationException
 
 import javax.inject.Singleton
 
 @Requires(property = 'spec.name', value = "RejectionHandlerResolutionSpec")
 @Singleton
-@Replaces(RedirectRejectionHandler)
-class ExtendedSessionSecurityfilterRejectionHandler implements RejectionHandler {
-
+@Replaces(RedirectingAuthorizationExceptionHandler)
+class ExtendedSessionSecurityfilterRejectionHandler implements ExceptionHandler<AuthenticationException, MutableHttpResponse<?>> {
 
     @Override
-    Publisher<MutableHttpResponse<?>> reject(HttpRequest<?> request, boolean forbidden) {
+    MutableHttpResponse<?> handle(HttpRequest request, AuthenticationException exception) {
         return null
     }
 }

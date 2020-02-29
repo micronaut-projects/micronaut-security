@@ -29,8 +29,6 @@ class OauthControllerEnabledSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : OauthControllerEnabledSpec.simpleName,
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.token.jwt.endpoints.oauth.enabled': false,
 
     ], Environment.TEST)

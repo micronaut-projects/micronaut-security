@@ -26,7 +26,6 @@ import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
-import io.micronaut.security.handlers.RejectionHandler;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;

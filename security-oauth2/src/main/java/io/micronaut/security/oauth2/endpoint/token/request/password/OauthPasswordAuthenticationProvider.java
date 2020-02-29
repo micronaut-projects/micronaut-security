@@ -16,6 +16,7 @@
 
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -66,7 +67,7 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 

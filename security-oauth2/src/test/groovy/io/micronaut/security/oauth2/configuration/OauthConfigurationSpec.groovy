@@ -12,8 +12,6 @@ class OauthConfigurationSpec extends Specification {
         given:
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
-                'micronaut.security.enabled': true,
-                'micronaut.security.oauth2.enabled': true,
                 'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
                 'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
         ], Environment.TEST)
@@ -31,11 +29,10 @@ class OauthConfigurationSpec extends Specification {
         context.close()
     }
 
-    void "OauthConfiguration is disabled by default"() {
+    void "OauthConfiguration is enabled by default"() {
         given:
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
-                'micronaut.security.enabled': true,
                 'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
                 'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
         ], Environment.TEST)
@@ -44,7 +41,7 @@ class OauthConfigurationSpec extends Specification {
         context.getBean(OauthClientConfiguration)
 
         then:
-        thrown(NoSuchBeanException)
+        noExceptionThrown()
 
         cleanup:
         context.close()
@@ -54,8 +51,6 @@ class OauthConfigurationSpec extends Specification {
         given:
         ApplicationContext context = ApplicationContext.run([
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
-                'micronaut.security.enabled': true,
-                'micronaut.security.oauth2.enabled': true,
                 'micronaut.security.oauth2.callback-uri': '/a/b/{provider}',
                 'micronaut.security.oauth2.login-uri': '/a/c/{provider}',
                 'micronaut.security.oauth2.default-provider': 'foo',

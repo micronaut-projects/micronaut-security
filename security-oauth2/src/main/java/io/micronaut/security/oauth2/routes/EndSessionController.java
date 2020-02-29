@@ -19,6 +19,7 @@ package io.micronaut.security.oauth2.routes;
 import io.micronaut.context.annotation.Executable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
@@ -42,5 +43,5 @@ public interface EndSessionController {
      */
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Executable
-    Optional<HttpResponse> endSession(HttpRequest request, Authentication authentication);
+    Optional<MutableHttpResponse<?>> endSession(HttpRequest<?> request, Authentication authentication);
 }

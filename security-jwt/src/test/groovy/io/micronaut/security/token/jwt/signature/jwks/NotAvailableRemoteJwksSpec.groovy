@@ -41,6 +41,7 @@ import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import spock.lang.Retry
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -52,33 +53,31 @@ import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
 class NotAvailableRemoteJwksSpec extends Specification {
+
     private static final Logger LOG = LoggerFactory.getLogger(NotAvailableRemoteJwksSpec.class)
 
-    @Shared
-    int authServerPort = SocketUtils.findAvailableTcpPort()
-
-    Map<String, Object> getConfiguration() {
-        [
-        'spec.name': 'NotAvailableRemoteJwksSpec',
-        'micronaut.security.enabled'                         : true,
-        'micronaut.security.token.jwt.enabled'               : true,
-        'micronaut.security.token.jwt.signatures.jwks.foo.url': "http://localhost:${authServerPort}/keys",
-        'micronaut.http.client.read-timeout': '1s',
-        ]
-    }
-
-    Map<String, Object> getAuthServerConfiguration() {
-        [
-                'micronaut.server.port': authServerPort,
-                'spec.name': 'AuthServerNotAvailableRemoteJwksSpec',
-                'micronaut.security.enabled'                         : true,
-                'micronaut.security.token.jwt.enabled'               : true,
-                'micronaut.security.endpoints.login.enabled': true,
-                'micronaut.security.endpoints.keys.enabled': true,
-        ]
-    }
-
+    @Retry
     void "start an app, validation fails if remote jwks down. If the jwks endpoint goes live validation works"() {
+        given:
+        int authServerPort = SocketUtils.findAvailableTcpPort()
+
+        Map<String, Object> configuration =
+            [
+                    'spec.name': 'NotAvailableRemoteJwksSpec',
+                    'micronaut.security.token.jwt.signatures.jwks.foo.url': "http://localhost:${authServerPort}/keys",
+                    'micronaut.http.client.read-timeout': '1s',
+            ]
+
+
+        Map<String, Object> authServerConfiguration =
+            [
+                    'micronaut.server.port': authServerPort,
+                    'spec.name': 'AuthServerNotAvailableRemoteJwksSpec',
+                    'micronaut.security.endpoints.login.enabled': true,
+                    'micronaut.security.endpoints.keys.enabled': true,
+            ]
+
+
         when: 'start auth server and expose an endpoint with JKWS'
         EmbeddedServer authEmbeddedServer = ApplicationContext.run(EmbeddedServer, authServerConfiguration)
         BlockingHttpClient authServerClient = authEmbeddedServer.applicationContext.createBean(HttpClient, authEmbeddedServer.URL).toBlocking()
@@ -204,7 +203,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
     @Singleton
     static class MockAuthenticationProvider implements AuthenticationProvider {
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
         }
     }

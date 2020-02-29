@@ -32,7 +32,6 @@ class InterceptUrlMapSpec extends Specification implements YamlAsciidocTagCleane
 //tag::yamlconfig[]
 micronaut:
   security:
-    enabled: true
     intercept-url-map:
       -
         pattern: /images/*
@@ -108,6 +107,7 @@ micronaut:
 
         when:
         Map m = new Yaml().load(cleanYamlAsciidocTag(yamlConfig))
+
         then:
         m == ipPatternsMap
     }

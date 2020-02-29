@@ -30,7 +30,6 @@ class LogoutControllerEnabledSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : LogoutControllerEnabledSpec.simpleName,
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.logout.enabled': false,
 
     ], Environment.TEST)

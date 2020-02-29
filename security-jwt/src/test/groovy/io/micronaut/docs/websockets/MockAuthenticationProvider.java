@@ -1,6 +1,7 @@
 package io.micronaut.docs.websockets;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class MockAuthenticationProvider implements AuthenticationProvider {
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flowable.just(new UserDetails("john", new ArrayList<>()));
     }
 }

@@ -38,9 +38,7 @@ class AccessRefreshTokenLoginHandlerSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'accessrefershtokenloginhandler',
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.login.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
             ], Environment.TEST)
 

@@ -19,7 +19,6 @@ class HomePageSpec extends Specification {
     @Shared
     Map<String, Object> conf = [
             'spec.name': 'websockets',
-            'micronaut.security.enabled': true,
             'micronaut.security.intercept-url-map': [
                     [
                             pattern: '/assets/*',
@@ -27,7 +26,6 @@ class HomePageSpec extends Specification {
                             'access': ['isAnonymous()']
                     ]
             ],
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
             'micronaut.router.static-resources.default.enabled': true,
             'micronaut.router.static-resources.default.mapping': '/assets/**',

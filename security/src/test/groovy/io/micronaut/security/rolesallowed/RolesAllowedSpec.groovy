@@ -35,8 +35,7 @@ class RolesAllowedSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             (SPEC_NAME_PROPERTY): RolesAllowedSpec.class.simpleName,
-            'micronaut.security.enabled': true,
-    ], Environment.TEST)
+            ], Environment.TEST)
 
     @Shared
     @AutoCleanup

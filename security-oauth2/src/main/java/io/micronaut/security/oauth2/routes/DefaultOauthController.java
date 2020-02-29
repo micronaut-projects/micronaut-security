@@ -21,6 +21,7 @@ import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
@@ -70,7 +71,7 @@ public class DefaultOauthController implements OauthController {
     }
 
     @Override
-    public Publisher<HttpResponse> login(HttpRequest request) {
+    public Publisher<MutableHttpResponse<?>> login(HttpRequest<?> request) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received login request for provider [{}]", oauthClient.getName());
         }
@@ -78,7 +79,7 @@ public class DefaultOauthController implements OauthController {
     }
 
     @Override
-    public Publisher<HttpResponse> callback(HttpRequest<Map<String, Object>> request) {
+    public Publisher<MutableHttpResponse<?>> callback(HttpRequest<Map<String, Object>> request) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());
         }

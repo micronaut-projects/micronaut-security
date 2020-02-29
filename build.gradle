@@ -53,9 +53,9 @@ subprojects { Project subproject ->
     }
 
     repositories {
-        maven { url "https://oss.jfrog.org/oss-snapshot-local" }
-        maven { url "https://repo.grails.org/grails/core" }
         jcenter()
+        maven { url "https://repo.grails.org/grails/core" }
+        maven { url "https://oss.jfrog.org/oss-snapshot-local" }
     }
     
     apply plugin: "groovy"

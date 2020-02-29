@@ -32,7 +32,6 @@ class IpAuthorizationApprovedSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'ipPatterns',
-            'micronaut.security.enabled': true,
             'micronaut.security.ip-patterns': ['10.10.0.48']
     ], Environment.TEST)
 

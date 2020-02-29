@@ -37,11 +37,9 @@ class AccessTokenExpirationSpec extends Specification {
     ApplicationContext context = ApplicationContext.run(
             [
                     'spec.name': 'accesstokenexpiration',
-                    'micronaut.security.enabled': true,
                     'endpoints.beans.enabled': true,
                     'endpoints.beans.sensitive': true,
                     'micronaut.security.endpoints.login.enabled': true,
-                    'micronaut.security.token.jwt.enabled': true,
                     'micronaut.security.token.jwt.generator.access-token-expiration': 5,
                     'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne'
             ], Environment.TEST)

@@ -20,9 +20,8 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.security.authentication.AuthenticationException;
-import io.micronaut.security.authentication.AuthenticationFailed;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.*;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
@@ -51,7 +50,7 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     }
 
     @Override
-    public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+    public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
         Optional<AccessRefreshToken> accessRefreshTokenOptional = accessRefreshTokenGenerator.generate(userDetails);
         if (accessRefreshTokenOptional.isPresent()) {
             return HttpResponse.ok(accessRefreshTokenOptional.get());
@@ -60,7 +59,7 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     }
 
     @Override
-    public HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+    public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
         throw new AuthenticationException(authenticationFailed.getMessage().orElse(null));
     }
 }

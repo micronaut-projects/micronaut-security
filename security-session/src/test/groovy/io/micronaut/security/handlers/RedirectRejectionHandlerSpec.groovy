@@ -35,7 +35,8 @@ class RedirectRejectionHandlerSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': RedirectRejectionHandlerSpec.simpleName,
-            'micronaut.security.enabled': true,
+            'micronaut.security.session.unauthorized-target-url': '/login',
+            'micronaut.security.session.forbidden-target-url': '/forbidden'
     ], Environment.TEST)
 
     @Shared

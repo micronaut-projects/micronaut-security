@@ -20,6 +20,7 @@ import io.micronaut.configuration.security.ldap.context.ContextBuilder;
 import io.micronaut.configuration.security.ldap.context.LdapSearchResult;
 import io.micronaut.configuration.security.ldap.context.LdapSearchService;
 import io.micronaut.configuration.security.ldap.group.LdapGroupProcessor;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.*;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -71,7 +72,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         String username = authenticationRequest.getIdentity().toString();
         String password = authenticationRequest.getSecret().toString();
 

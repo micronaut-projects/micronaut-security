@@ -16,6 +16,7 @@
 package io.micronaut.docs.jwtclaimsoverride;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -31,7 +32,7 @@ import java.util.Collections;
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flowable.just(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
     }
 }

@@ -36,10 +36,8 @@ micronaut:
     application:
         name: gateway
     security:
-        enabled: true
         token:
             jwt:
-                enabled: true
                 signatures:
                     secret:
                         generator:
@@ -66,10 +64,8 @@ micronaut:
                             'name': 'gateway',
                     ],
                     'security': [
-                            'enabled': true,
                             'token': [
                                     'jwt': [
-                                            'enabled': true,
                                             'signatures': [
                                                     'secret': [
                                                         'generator': [

@@ -34,8 +34,7 @@ class CorsPreflightRequestSpec extends Specification {
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'corspreflightrequest',
             'micronaut.server.cors.enabled': true,
-            'micronaut.security.enabled': true,
-    ], Environment.TEST)
+            ], Environment.TEST)
 
     @AutoCleanup
     @Shared

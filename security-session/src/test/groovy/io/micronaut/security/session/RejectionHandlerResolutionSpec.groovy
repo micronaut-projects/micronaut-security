@@ -18,9 +18,10 @@ package io.micronaut.security.session
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.http.server.exceptions.ExceptionHandler
+import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.handlers.RedirectRejectionHandler
-import io.micronaut.security.handlers.RejectionHandler
+import io.micronaut.security.authentication.AuthenticationException
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -30,9 +31,7 @@ class RejectionHandlerResolutionSpec extends Specification {
 
     @Shared
     Map<String, Object> config = [
-            'micronaut.security.enabled': true,
-            'micronaut.security.session.enabled': true,
-    ]
+            ]
 
     void "RedirectRejectionHandler is the default rejection handler resolved"() {
         Map<String, Object> conf = [:]
@@ -47,11 +46,11 @@ class RejectionHandlerResolutionSpec extends Specification {
         thrown(NoSuchBeanException)
 
         when:
-        RejectionHandler rejectionHandler = context.getBean(RejectionHandler)
+        ExceptionHandler exceptionHandler = context.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthenticationException, Object))
 
         then:
         noExceptionThrown()
-        rejectionHandler instanceof RedirectRejectionHandler
+        exceptionHandler instanceof RedirectingAuthorizationExceptionHandler
 
         cleanup:
         context.close()
@@ -76,11 +75,11 @@ class RejectionHandlerResolutionSpec extends Specification {
         noExceptionThrown()
 
         when:
-        RejectionHandler rejectionHandler = context.getBean(RejectionHandler)
+        ExceptionHandler exceptionHandler = context.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthenticationException, Object))
 
         then:
         noExceptionThrown()
-        rejectionHandler instanceof ExtendedSessionSecurityfilterRejectionHandler
+        exceptionHandler instanceof ExtendedSessionSecurityfilterRejectionHandler
 
         cleanup:
         context.close()

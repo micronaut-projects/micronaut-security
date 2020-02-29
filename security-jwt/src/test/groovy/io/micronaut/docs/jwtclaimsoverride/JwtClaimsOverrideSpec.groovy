@@ -39,9 +39,7 @@ class JwtClaimsOverrideSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'jwtclaimsoverride',
-            'micronaut.security.enabled': true,
             'micronaut.security.endpoints.login.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne'
     ], Environment.TEST)
 
@@ -64,7 +62,7 @@ class JwtClaimsOverrideSpec extends Specification {
 
         when:
         String accessToken = rsp.body.get().accessToken
-        Authentication authentication = Flowable.fromPublisher(tokenValidator.validateToken(accessToken)).blockingFirst()
+        Authentication authentication = Flowable.fromPublisher(tokenValidator.validateToken(null, accessToken)).blockingFirst()
         println authentication.getAttributes()
 
         then:
