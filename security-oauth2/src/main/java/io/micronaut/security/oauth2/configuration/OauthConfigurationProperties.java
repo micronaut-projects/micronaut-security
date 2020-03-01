@@ -17,8 +17,6 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 

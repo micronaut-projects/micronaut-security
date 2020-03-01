@@ -43,6 +43,7 @@ public class AuthenticationFailed implements AuthenticationResponse {
         this.authenticationFailure = AuthenticationFailureReason.CUSTOM;
         this.message = message;
     }
+
     /**
      * @param authenticationFailure AuthenticationFailure enum which represents the failure reason
      */

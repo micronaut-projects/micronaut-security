@@ -108,8 +108,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
                                 emitter.onError(e);
                             }
                         } else {
-                            //TODO: Create a more meaningful response
-                            emitter.onNext(new AuthenticationFailed());
+                            emitter.onNext(new AuthenticationFailed("JWT validation failed"));
                             emitter.onComplete();
                         }
                     }, BackpressureStrategy.ERROR);

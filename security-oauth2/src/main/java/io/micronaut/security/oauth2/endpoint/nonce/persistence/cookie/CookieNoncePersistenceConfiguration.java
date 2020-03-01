@@ -23,7 +23,6 @@ import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.time.Duration;
-import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 /**

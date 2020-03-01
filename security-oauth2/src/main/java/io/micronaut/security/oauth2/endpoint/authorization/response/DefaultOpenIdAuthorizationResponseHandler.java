@@ -95,8 +95,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             try {
                 stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
             } catch (InvalidStateException e) {
-                //TODO: Create a more meaningful response
-                return Flowable.just(new AuthenticationFailed());
+                return Flowable.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
             }
 
         } else {
@@ -134,8 +133,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                             if (LOG.isTraceEnabled()) {
                                 LOG.trace("Token validation failed. Failing authentication");
                             }
-                            //TODO: Create a more meaningful response
-                            emitter.onNext(new AuthenticationFailed());
+                            emitter.onNext(new AuthenticationFailed("JWT validation failed"));
                             emitter.onComplete();
                         }
                     }, BackpressureStrategy.ERROR);

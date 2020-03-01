@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.annotation.Executable;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.oauth2.client.OauthClient;

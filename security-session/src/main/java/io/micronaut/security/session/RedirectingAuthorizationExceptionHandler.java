@@ -26,6 +26,13 @@ import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * An {@link io.micronaut.http.server.exceptions.ExceptionHandler} for {@link AuthorizationException} that
+ * redirects to a configured URI.
+ *
+ * @author James Kleeh
+ * @since 2.0.0
+ */
 @Singleton
 @Replaces(HttpStatusAuthorizationExceptionHandler.class)
 public class RedirectingAuthorizationExceptionHandler extends HttpStatusAuthorizationExceptionHandler {
@@ -34,7 +41,10 @@ public class RedirectingAuthorizationExceptionHandler extends HttpStatusAuthoriz
 
     private final SecuritySessionConfiguration configuration;
 
-    RedirectingAuthorizationExceptionHandler(SecuritySessionConfiguration configuration) {
+    /**
+     * @param configuration The session configuration
+     */
+    public RedirectingAuthorizationExceptionHandler(SecuritySessionConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -73,6 +83,11 @@ public class RedirectingAuthorizationExceptionHandler extends HttpStatusAuthoriz
                 .anyMatch(mediaType -> mediaType.equals(MediaType.TEXT_HTML_TYPE));
     }
 
+    /**
+     * @param request The request
+     * @param exception The exception
+     * @return The URI to redirect to
+     */
     protected String getRedirectUri(HttpRequest<?> request, AuthorizationException exception) {
         String uri = exception.isForbidden() ? configuration.getForbiddenTargetUrl() :
                 configuration.getUnauthorizedTargetUrl();

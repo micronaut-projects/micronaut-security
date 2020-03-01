@@ -26,6 +26,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  */
 @ConfigurationProperties(SecuritySessionConfigurationProperties.PREFIX)
 public class SecuritySessionConfigurationProperties implements SecuritySessionConfiguration {
+
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".session";
 
     /**
@@ -65,7 +66,6 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     public static final String DEFAULT_FORBIDDENTARGETURL = "/";
 
     private static final Boolean DEFAULT_REDIRECT_ON_REJECTION = true;
-
 
     private String loginSuccessTargetUrl = DEFAULT_LOGINSUCCESSTARGETURL;
     private String loginFailureTargetUrl = DEFAULT_LOGINFAILURETARGETURL;

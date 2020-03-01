@@ -20,8 +20,6 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.event.TokenValidatedEvent;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import io.micronaut.security.token.reader.DefaultTokenResolver;
-import io.micronaut.security.token.reader.TokenReader;
 import io.micronaut.security.token.reader.TokenResolver;
 import io.micronaut.security.token.validator.TokenValidator;
 import io.reactivex.Flowable;

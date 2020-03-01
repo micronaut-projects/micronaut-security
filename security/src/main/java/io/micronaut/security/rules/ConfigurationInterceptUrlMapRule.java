@@ -18,7 +18,6 @@ package io.micronaut.security.rules;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.security.token.config.TokenConfiguration;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

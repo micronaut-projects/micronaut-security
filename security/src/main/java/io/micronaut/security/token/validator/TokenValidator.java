@@ -16,7 +16,6 @@
 package io.micronaut.security.token.validator;
 
 import io.micronaut.core.order.Ordered;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
 

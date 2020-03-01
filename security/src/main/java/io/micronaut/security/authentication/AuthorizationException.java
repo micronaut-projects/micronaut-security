@@ -17,20 +17,36 @@ package io.micronaut.security.authentication;
 
 import javax.annotation.Nullable;
 
+/**
+ * Exception thrown when access to a protected resource is denied.
+ *
+ * @author James Kleeh
+ * @since 2.0.0
+ */
 public class AuthorizationException extends RuntimeException {
 
     private final Authentication authentication;
     private final boolean forbidden;
 
+    /**
+     * @param authentication The authentication that was denied, null if unauthorized
+     */
     public AuthorizationException(@Nullable Authentication authentication) {
         this.authentication = authentication;
         this.forbidden = authentication != null;
     }
 
+    /**
+     * @return True if the request was authenticated
+     */
     public boolean isForbidden() {
         return forbidden;
     }
 
+    /**
+     * @return The authentication used in the request
+     */
+    @Nullable
     public Authentication getAuthentication() {
         return authentication;
     }

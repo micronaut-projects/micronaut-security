@@ -22,7 +22,6 @@ import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.time.Duration;
-import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 /**

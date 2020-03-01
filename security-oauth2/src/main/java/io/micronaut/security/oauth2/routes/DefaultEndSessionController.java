@@ -18,7 +18,6 @@ package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.authentication.Authentication;
