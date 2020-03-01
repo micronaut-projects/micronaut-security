@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory
 import spock.lang.Retry
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.util.concurrent.PollingConditions
 
 import javax.inject.Named
 import javax.inject.Singleton
@@ -106,6 +107,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
 
         when: 'Stop auth server, start server which uses the remote JWKS (Json Web Key Set) exposed by the auth server'
         authEmbeddedServer.stop()
+        authServerClient.close()
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
         then:
@@ -120,12 +122,15 @@ class NotAvailableRemoteJwksSpec extends Specification {
         e.status == HttpStatus.UNAUTHORIZED
 
         when: 'start auth server'
-        authEmbeddedServer.start()
-        authServerClient.exchange(HttpRequest.GET('/keys'))
+        authEmbeddedServer = ApplicationContext.run(EmbeddedServer, authServerConfiguration)
+        authServerClient = authEmbeddedServer.applicationContext.createBean(HttpClient, authEmbeddedServer.URL).toBlocking()
+
+        PollingConditions pollingConditions = new PollingConditions()
 
         then:
-        noExceptionThrown()
-        rsp.status() == HttpStatus.OK
+        pollingConditions.eventually {
+            authServerClient.exchange(HttpRequest.GET('/keys')).status() == HttpStatus.OK
+        }
 
         when: 'authentication should work since JWKS endpoint is up'
         HttpResponse<String> usernameRsp = client.exchange(HttpRequest.GET('/username').bearerAuth(jwt), String)
@@ -138,6 +143,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
         cleanup:
         embeddedServer.close()
         authEmbeddedServer.close()
+        authServerClient.close()
     }
 
     @Requires(property = 'spec.name', value = 'NotAvailableRemoteJwksSpec')
@@ -157,30 +163,24 @@ class NotAvailableRemoteJwksSpec extends Specification {
     @Requires(property = 'spec.name', value = 'AuthServerNotAvailableRemoteJwksSpec')
     @Singleton
     static class AuthServerJwkProvider implements JwkProvider, RSASignatureGeneratorConfiguration {
-        JWK jwk
+        private static JWK jwk
+
+        //storing this statically to use the same key across restarts
+        static {
+            jwk = new RSAKeyGenerator(2048)
+                    .algorithm(JWSAlgorithm.RS256)
+                    .keyUse(KeyUse.SIGNATURE) // indicate the intended use of the key
+                    .keyID(UUID.randomUUID().toString()) // give the key a unique ID
+                    .generate();
+        }
+
 
         AuthServerJwkProvider() {
-            this.jwk = generateJwk()
         }
 
         @Override
         List<JWK> retrieveJsonWebKeys() {
             [jwk.toPublicJWK()]
-        }
-
-        JWK generateJwk() {
-            try {
-                return new RSAKeyGenerator(2048)
-                        .algorithm(jwsAlgorithm)
-                        .keyUse(KeyUse.SIGNATURE) // indicate the intended use of the key
-                        .keyID(UUID.randomUUID().toString()) // give the key a unique ID
-                        .generate();
-            } catch (JOSEException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("error while generating a JWK");
-                }
-            }
-            return null
         }
 
         @Override

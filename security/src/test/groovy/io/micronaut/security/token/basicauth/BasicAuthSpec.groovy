@@ -22,6 +22,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.authentication.BasicAuthAuthenticationFetcher
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -40,10 +41,9 @@ class BasicAuthSpec extends Specification  {
     @AutoCleanup
     RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
 
-    void "test /beans is not accesible if you don't supply Basic Auth in HTTP Header Authorization"() {
+    void "test /beans is not accessible if you don't supply Basic Auth in HTTP Header Authorization"() {
         expect:
-        embeddedServer.applicationContext.getBean(BasicAuthTokenReader.class)
-        embeddedServer.applicationContext.getBean(BasicAuthTokenValidator.class)
+        embeddedServer.applicationContext.getBean(BasicAuthAuthenticationFetcher.class)
         embeddedServer.applicationContext.getBean(AuthenticationProviderUserPassword.class)
 
         when:
@@ -57,8 +57,7 @@ class BasicAuthSpec extends Specification  {
 
     void "test /beans is not accesible if you don't supply a valid Base64 encoded token in the Basic Auth in HTTP Header Authorization"() {
         expect:
-        embeddedServer.applicationContext.getBean(BasicAuthTokenReader.class)
-        embeddedServer.applicationContext.getBean(BasicAuthTokenValidator.class)
+        embeddedServer.applicationContext.getBean(BasicAuthAuthenticationFetcher.class)
         embeddedServer.applicationContext.getBean(AuthenticationProviderUserPassword.class)
 
         when:
@@ -73,8 +72,7 @@ class BasicAuthSpec extends Specification  {
 
     void "test /beans is secured but accesible if you supply valid credentials with Basic Auth"() {
         expect:
-        embeddedServer.applicationContext.getBean(BasicAuthTokenReader.class)
-        embeddedServer.applicationContext.getBean(BasicAuthTokenValidator.class)
+        embeddedServer.applicationContext.getBean(BasicAuthAuthenticationFetcher.class)
         embeddedServer.applicationContext.getBean(AuthenticationProviderUserPassword.class)
 
         when:
@@ -88,8 +86,7 @@ class BasicAuthSpec extends Specification  {
 
     void "test /beans is not accesible if you valid Base64 encoded token but authentication fails"() {
         expect:
-        embeddedServer.applicationContext.getBean(BasicAuthTokenReader.class)
-        embeddedServer.applicationContext.getBean(BasicAuthTokenValidator.class)
+        embeddedServer.applicationContext.getBean(BasicAuthAuthenticationFetcher.class)
         embeddedServer.applicationContext.getBean(AuthenticationProviderUserPassword.class)
 
         when:

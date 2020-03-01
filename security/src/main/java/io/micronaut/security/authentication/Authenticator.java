@@ -16,7 +16,9 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.http.HttpRequest;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,63 +65,24 @@ public class Authenticator {
         if (LOG.isDebugEnabled()) {
             LOG.debug(authenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
-        Iterator<AuthenticationProvider> providerIterator = authenticationProviders.iterator();
-        if (providerIterator.hasNext()) {
-            Flowable<AuthenticationProvider> providerFlowable = Flowable.just(providerIterator.next());
-            AtomicReference<AuthenticationResponse> lastFailure = new AtomicReference<>();
-            return attemptAuthenticationRequest(request, authenticationRequest, providerIterator, providerFlowable, lastFailure);
-        } else {
-            return Flowable.empty();
-        }
-    }
+        AtomicReference<Throwable> lastError = new AtomicReference<>();
 
-    private Flowable<AuthenticationResponse> attemptAuthenticationRequest(
-            HttpRequest<?> request,
-            AuthenticationRequest<?, ?> authenticationRequest,
-            Iterator<AuthenticationProvider> providerIterator,
-            Flowable<AuthenticationProvider> providerFlowable,
-            AtomicReference<AuthenticationResponse> lastFailure) {
-
-        return providerFlowable.switchMap(authenticationProvider -> {
-            Flowable<AuthenticationResponse> responseFlowable = Flowable.fromPublisher(authenticationProvider.authenticate(request, authenticationRequest));
-            Flowable<AuthenticationResponse> authenticationAttemptFlowable = responseFlowable.switchMap(authenticationResponse -> {
-                if (authenticationResponse.isAuthenticated()) {
-                    return Flowable.just(authenticationResponse);
-                } else {
-                    lastFailure.set(authenticationResponse);
-                    if (providerIterator.hasNext()) {
-                        // recurse
-                        return attemptAuthenticationRequest(
-                                request,
-                                authenticationRequest,
-                                providerIterator,
-                                Flowable.just(providerIterator.next()),
-                                lastFailure);
-                    } else {
-                        return Flowable.just(authenticationResponse);
-                    }
-                }
-            });
-            return authenticationAttemptFlowable.onErrorResumeNext(throwable -> {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Authentication provider threw exception", throwable);
-                }
-                if (providerIterator.hasNext()) {
-                    // recurse
-                    return attemptAuthenticationRequest(
-                            request,
-                            authenticationRequest,
-                            providerIterator,
-                            Flowable.just(providerIterator.next()),
-                            lastFailure);
-                } else {
-                    AuthenticationResponse lastFailureResponse = lastFailure.get();
-                    if (lastFailureResponse != null) {
-                        return Flowable.just(lastFailureResponse);
-                    }
+        Flowable<AuthenticationResponse> authentication = Flowable.mergeDelayError(authenticationProviders.stream()
+                .map(auth -> auth.authenticate(request, authenticationRequest))
+                .map(Flowable::fromPublisher)
+                .map(flow -> flow.onErrorResumeNext(t -> {
+                    lastError.set(t);
                     return Flowable.empty();
-                }
-            });
-        });
+                }))
+                .collect(Collectors.toList()));
+
+        return authentication.take(1).switchIfEmpty(Flowable.create((emitter) -> {
+            Throwable error = lastError.get();
+            if (error != null) {
+                emitter.onError(error);
+            } else {
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.ERROR));
     }
 }

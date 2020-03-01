@@ -22,6 +22,7 @@ import io.micronaut.http.server.exceptions.ExceptionHandler
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.AuthenticationException
+import io.micronaut.security.authentication.AuthorizationException
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -29,14 +30,9 @@ class RejectionHandlerResolutionSpec extends Specification {
 
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
-    @Shared
-    Map<String, Object> config = [
-            ]
 
     void "RedirectRejectionHandler is the default rejection handler resolved"() {
-        Map<String, Object> conf = [:]
-        conf.putAll(config)
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, conf, Environment.TEST)
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [:], Environment.TEST)
         ApplicationContext context = embeddedServer.applicationContext
 
         when:
@@ -46,7 +42,7 @@ class RejectionHandlerResolutionSpec extends Specification {
         thrown(NoSuchBeanException)
 
         when:
-        ExceptionHandler exceptionHandler = context.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthenticationException, Object))
+        ExceptionHandler exceptionHandler = context.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthorizationException, Object))
 
         then:
         noExceptionThrown()
@@ -64,7 +60,6 @@ class RejectionHandlerResolutionSpec extends Specification {
         Map<String, Object> conf = [
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
         ]
-        conf.putAll(config)
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, conf, Environment.TEST)
         ApplicationContext context = embeddedServer.applicationContext
 
@@ -75,7 +70,7 @@ class RejectionHandlerResolutionSpec extends Specification {
         noExceptionThrown()
 
         when:
-        ExceptionHandler exceptionHandler = context.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthenticationException, Object))
+        ExceptionHandler exceptionHandler = context.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthorizationException, Object))
 
         then:
         noExceptionThrown()

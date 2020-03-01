@@ -12,10 +12,14 @@ This section will document breaking changes that may happen during milestone or 
 
 * Modules are now enabled by default. The configuration keys `micronaut.security.enabled`, `micronaut.security.token.jwt.enabled`, `micronaut.security.oauth2.enabled`, and `micronaut.security.session.enabled` are now all `true` by default.
 
-* The api:security.handlers.LoginHandler[] API has changed to accept a generic api:security.authentication.AuthenticationResponse[] object. This was changed because previously if the authentication failed the response was assumed to be an api:security.authentication.AuthenticationFailed[] instance even though the authentication API does not require it.
+* The api:security.handlers.LoginHandler[] API has changed to accept an api:security.authentication.AuthenticationResponse[] object instead of an api:security.authentication.AuthenticationFailed[].
 
-* The api:security.authentication.AuthenticationProvider[] and api:security.token.validator.TokenValidator[] APIs have changed to include the HTTP request as a parameter.
+* The api:security.authentication.AuthenticationProvider[] API has changed to include the HTTP request as a parameter.
 
 * Several APIs that lacked generics have been changed to add them. For example `HttpRequest` -> `HttpRequest<?>`.
 
-* Several APIs have been changed to return mutable http responses.
+* Several APIs have been changed to return api:http.MutableHttpResponse[] instead of api:http.HttpResponse[].
+
+* Previously api:security.authentication.AuthenticationProvider[]s were allowed to return hot observables, meaning the logic to authenticate the user could be done upon execution of the method. Allowing for that behavior caused the logic to execute the authenticators to be difficult to maintain. Now providers must return cold observables. The `authenticate` method will be executed for every authentication provider for every authentication request. If you were previously doing the authentication work then using something like `Flowable.just`, you must use something like `Flowable.create` to create a cold observable.
+
+* Basic authentication configuration has moved from `micronaut.security.token.basic-auth` to `micronaut.security.basic-auth`. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a `TokenValidatedEvent` was triggered as a result of basic authentication, however that is no longer the case.

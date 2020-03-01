@@ -92,7 +92,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
         if (tokenValidatorIterator.hasNext()) {
             TokenValidator tokenValidator = tokenValidatorIterator.next();
             return Flowable.just(tokenString).switchMap(tokenValue ->
-                Flowable.fromPublisher(tokenValidator.validateToken(request, tokenValue)).map(authentication -> {
+                Flowable.fromPublisher(tokenValidator.validateToken(tokenValue)).map(authentication -> {
                     request.setAttribute(TOKEN, tokenValue);
                     eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
                     return authentication;

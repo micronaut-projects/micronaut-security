@@ -93,8 +93,8 @@ class OauthControllerSpec extends Specification {
 
         when:
         TokenValidator tokenValidator = context.getBean(JwtTokenValidator.class)
-        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(null, refreshRsp.body().accessToken)).blockingFirst().getAttributes()
-        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(null, originalAccessToken)).blockingFirst().getAttributes()
+        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(refreshRsp.body().accessToken)).blockingFirst().getAttributes()
+        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(originalAccessToken)).blockingFirst().getAttributes()
         List<String> expectedClaims = [JwtClaims.SUBJECT,
                                        JwtClaims.ISSUED_AT,
                                        JwtClaims.EXPIRATION_TIME,

@@ -31,7 +31,6 @@ class AuthenticatorSpec extends Specification {
 
         then:
         thrown(NoSuchElementException)
-
     }
 
     def "if any authentication provider throws exception, continue with authentication"() {
@@ -55,7 +54,7 @@ class AuthenticatorSpec extends Specification {
     def "if no authentication provider can authentication, the last error is sent back"() {
         given:
         def authProviderFailed = Stub(AuthenticationProvider) {
-            authenticate(_) >> Flowable.just( new AuthenticationFailed() )
+            authenticate(_, _) >> Flowable.just( new AuthenticationFailed() )
         }
         Authenticator authenticator = new Authenticator([authProviderFailed])
 

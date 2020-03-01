@@ -60,7 +60,6 @@ micronaut:
     @Shared
     Map<String, Object> ipPatternsMap = ['micronaut': [
             'security': [
-                    'enabled'    : true,
                     'intercept-url-map' : [
                             [
                                     pattern: '/images/*',

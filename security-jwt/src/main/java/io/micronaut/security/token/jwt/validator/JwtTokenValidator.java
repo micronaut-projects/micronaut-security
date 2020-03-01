@@ -99,7 +99,7 @@ public class JwtTokenValidator implements TokenValidator {
      * @return Publishes {@link Authentication} based on the JWT or empty if the validation fails.
      */
     @Override
-    public Publisher<Authentication> validateToken(HttpRequest<?> request, String token) {
+    public Publisher<Authentication> validateToken(String token) {
         Optional<Authentication> authentication = authenticationIfValidJwtSignatureAndClaims(token, genericJwtClaimsValidators);
         if (authentication.isPresent()) {
             return Flowable.just(authentication.get());

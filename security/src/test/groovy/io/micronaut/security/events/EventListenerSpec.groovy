@@ -83,17 +83,6 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    def "accessing a secured endpoints, validates Basic auth token and triggers TokenValidatedEvent"() {
-        when:
-        HttpRequest request = HttpRequest.GET("/beans").basicAuth("user", "password")
-        client.toBlocking().exchange(request)
-
-        then:
-        new PollingConditions().eventually {
-            embeddedServer.applicationContext.getBean(TokenValidatedEventListener).events.size() == 1
-        }
-    }
-
     def "invoking logout triggers LogoutEvent"() {
         when:
         HttpRequest request = HttpRequest.POST("/logout", "").basicAuth("user", "password")

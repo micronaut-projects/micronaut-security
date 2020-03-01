@@ -34,5 +34,5 @@ public interface TokenValidator extends Ordered {
      * @param token The token string
      * @return The authentication or {@link java.util.Optional#empty} if the validation fails
      */
-    Publisher<Authentication> validateToken(HttpRequest<?> request, String token);
+    Publisher<Authentication> validateToken(String token);
 }

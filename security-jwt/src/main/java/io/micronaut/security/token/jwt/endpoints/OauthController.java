@@ -78,12 +78,12 @@ public class OauthController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public Single<HttpResponse<AccessRefreshToken>> index(HttpRequest<?> request, @Valid TokenRefreshRequest tokenRefreshRequest) {
+    public Single<HttpResponse<AccessRefreshToken>> index(@Valid TokenRefreshRequest tokenRefreshRequest) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("grantType: {} refreshToken: {}", tokenRefreshRequest.getGrantType(), tokenRefreshRequest.getRefreshToken());
         }
 
-        Flowable<Authentication> authenticationFlowable = Flowable.fromPublisher(tokenValidator.validateToken(request, tokenRefreshRequest.getRefreshToken()));
+        Flowable<Authentication> authenticationFlowable = Flowable.fromPublisher(tokenValidator.validateToken(tokenRefreshRequest.getRefreshToken()));
         return authenticationFlowable.map((Function<Authentication, HttpResponse<AccessRefreshToken>>) authentication -> {
             Map<String, Object> claims = authentication.getAttributes();
             Optional<AccessRefreshToken> accessRefreshToken = accessRefreshTokenGenerator.generate(tokenRefreshRequest.getRefreshToken(), claims);
