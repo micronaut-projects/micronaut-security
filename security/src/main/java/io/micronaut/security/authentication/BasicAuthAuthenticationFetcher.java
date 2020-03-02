@@ -18,6 +18,7 @@ package io.micronaut.security.authentication;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.reactivex.Flowable;
@@ -40,7 +41,7 @@ import java.util.Optional;
 public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
 
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthAuthenticationFetcher.class);
-    private static final String PREFIX = "Basic ";
+    private static final String PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC + " ";
     private final Authenticator authenticator;
     private final BasicAuthAuthenticationConfiguration configuration;
 
