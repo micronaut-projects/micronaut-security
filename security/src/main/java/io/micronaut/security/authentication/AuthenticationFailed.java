@@ -37,11 +37,19 @@ public class AuthenticationFailed implements AuthenticationResponse {
     }
 
     /**
-     * @param authenticationFailure AuthenticationFailure enum which represents the failure reason
+     * @param authenticationFailure The failure reason
      */
     public AuthenticationFailed(AuthenticationFailureReason authenticationFailure) {
         this.authenticationFailure = authenticationFailure;
         this.message = createMessage(authenticationFailure);
+    }
+
+    /**
+     * @param message The authentication failure description
+     */
+    public AuthenticationFailed(String message) {
+        this.authenticationFailure = AuthenticationFailureReason.CUSTOM;
+        this.message = message;
     }
 
     /**

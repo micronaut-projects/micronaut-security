@@ -49,5 +49,9 @@ public enum AuthenticationFailureReason {
     /**
      * An unknown failure.
      */
-    UNKNOWN
+    UNKNOWN,
+    /**
+     * An custom failure.
+     */
+    CUSTOM
 }

@@ -24,7 +24,12 @@ import org.reactivestreams.Publisher;
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated This class will be removed in a future version and replaced with exception
+ * handlers for {@link io.micronaut.security.authentication.AuthorizationException}. Replace the
+ * {@link io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler} with your own
+ * implementation instead of this class.
  */
+@Deprecated
 public interface RejectionHandler {
 
     /**

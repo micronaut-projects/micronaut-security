@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.http.HttpRequest;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -52,8 +53,21 @@ public class Authenticator {
      *
      * @param authenticationRequest Represents a request to authenticate.
      * @return A publisher that emits {@link AuthenticationResponse} objects
+     * @deprecated Use {@link #authenticate(HttpRequest, AuthenticationRequest)} instead.
      */
+    @Deprecated
     public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        return authenticate(null, authenticationRequest);
+    }
+
+    /**
+     * Authenticates the user with the provided credentials.
+     *
+     * @param request The HTTP request
+     * @param authenticationRequest Represents a request to authenticate.
+     * @return A publisher that emits {@link AuthenticationResponse} objects
+     */
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> request, AuthenticationRequest<?, ?> authenticationRequest) {
         if (this.authenticationProviders == null) {
             return Flowable.empty();
         }
@@ -64,19 +78,20 @@ public class Authenticator {
         if (providerIterator.hasNext()) {
             Flowable<AuthenticationProvider> providerFlowable = Flowable.just(providerIterator.next());
             AtomicReference<AuthenticationResponse> lastFailure = new AtomicReference<>();
-            return attemptAuthenticationRequest(authenticationRequest, providerIterator, providerFlowable, lastFailure);
+            return attemptAuthenticationRequest(request, authenticationRequest, providerIterator, providerFlowable, lastFailure);
         } else {
             return Flowable.empty();
         }
     }
 
     private Flowable<AuthenticationResponse> attemptAuthenticationRequest(
+            HttpRequest<?> request,
         AuthenticationRequest authenticationRequest,
         Iterator<AuthenticationProvider> providerIterator,
         Flowable<AuthenticationProvider> providerFlowable, AtomicReference<AuthenticationResponse> lastFailure) {
 
         return providerFlowable.switchMap(authenticationProvider -> {
-            Flowable<AuthenticationResponse> responseFlowable = Flowable.fromPublisher(authenticationProvider.authenticate(authenticationRequest));
+            Flowable<AuthenticationResponse> responseFlowable = Flowable.fromPublisher(authenticationProvider.authenticate(request, authenticationRequest));
             Flowable<AuthenticationResponse> authenticationAttemptFlowable = responseFlowable.switchMap(authenticationResponse -> {
                 if (authenticationResponse.isAuthenticated()) {
                     return Flowable.just(authenticationResponse);
@@ -84,6 +99,7 @@ public class Authenticator {
                     lastFailure.set(authenticationResponse);
                     // recurse
                     return attemptAuthenticationRequest(
+                            request,
                         authenticationRequest,
                         providerIterator,
                         Flowable.just(providerIterator.next()),
@@ -100,6 +116,7 @@ public class Authenticator {
                 if (providerIterator.hasNext()) {
                     // recurse
                     return attemptAuthenticationRequest(
+                            request,
                         authenticationRequest,
                         providerIterator,
                         Flowable.just(providerIterator.next()),

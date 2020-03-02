@@ -25,7 +25,9 @@ import java.util.List;
  * @author Sergio del Amo
  * @author Graeme Rocher
  * @since 1.0
+ * @deprecated This class will be removed in a future version
  */
+@Deprecated
 public interface AuthoritiesFetcher {
 
     /**

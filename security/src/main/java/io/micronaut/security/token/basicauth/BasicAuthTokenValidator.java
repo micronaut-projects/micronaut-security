@@ -41,9 +41,11 @@ import java.util.Optional;
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated Will be changed to be an authentication fetcher in a future release.
  */
 @Requires(property = BasicAuthTokenReaderConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Singleton
+@Deprecated
 public class BasicAuthTokenValidator implements TokenValidator {
 
     /**

@@ -30,6 +30,7 @@ import io.micronaut.security.token.config.TokenConfigurationProperties;
  */
 @Requires(property = TokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @ConfigurationProperties(BasicAuthTokenReaderConfigurationProperties.PREFIX)
+@Deprecated
 public class BasicAuthTokenReaderConfigurationProperties implements BasicAuthTokenReaderConfiguration {
 
     public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".basic-auth";

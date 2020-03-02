@@ -20,7 +20,9 @@ package io.micronaut.security.authentication.providers;
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated This class will be removed in a future version
  */
+@Deprecated
 public interface UserState {
 
     /**

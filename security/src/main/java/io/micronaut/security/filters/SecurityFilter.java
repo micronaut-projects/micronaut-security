@@ -16,6 +16,7 @@
 
 package io.micronaut.security.filters;
 
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
@@ -23,6 +24,8 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.handlers.RejectionHandler;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
@@ -32,7 +35,9 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -71,21 +76,35 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
 
     protected final Collection<SecurityRule> securityRules;
     protected final Collection<AuthenticationFetcher> authenticationFetchers;
-    protected final RejectionHandler rejectionHandler;
 
     /**
      * @param securityRules               The list of rules that will allow or reject the request
      * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
      * @param rejectionHandler            Bean which handles routes which need to be rejected
      * @param securityFilterOrderProvider filter order provider
+     * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityFilterOrderProvider)} instead
      */
+    @Deprecated
     public SecurityFilter(Collection<SecurityRule> securityRules,
                           Collection<AuthenticationFetcher> authenticationFetchers,
                           RejectionHandler rejectionHandler,
                           @Nullable SecurityFilterOrderProvider securityFilterOrderProvider) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
-        this.rejectionHandler = rejectionHandler;
+        this.order = securityFilterOrderProvider != null ? securityFilterOrderProvider.getOrder() : 0;
+    }
+
+    /**
+     * @param securityRules               The list of rules that will allow or reject the request
+     * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
+     * @param securityFilterOrderProvider filter order provider
+     */
+    @Inject
+    public SecurityFilter(Collection<SecurityRule> securityRules,
+                          Collection<AuthenticationFetcher> authenticationFetchers,
+                          @Nullable SecurityFilterOrderProvider securityFilterOrderProvider) {
+        this.securityRules = securityRules;
+        this.authenticationFetchers = authenticationFetchers;
         this.order = securityFilterOrderProvider != null ? securityFilterOrderProvider.getOrder() : 0;
     }
 
@@ -132,17 +151,17 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
      * @param request The request
      * @param chain The server chain
      * @param routeMatch The route match
-     * @param attributes The authentication attributes
-     * @param forbidden Whether a rejection should be forbidden
+     * @param authentication The authentication
      * @return A response publisher
      */
     protected Publisher<MutableHttpResponse<?>> checkRules(HttpRequest<?> request,
                                                            ServerFilterChain chain,
-                                                           @Nullable RouteMatch routeMatch,
-                                                           @Nullable Map<String, Object> attributes,
-                                                           boolean forbidden) {
+                                                           @Nullable RouteMatch<?> routeMatch,
+                                                           @Nullable Authentication authentication) {
+        boolean forbidden = authentication != null;
         String method = request.getMethod().toString();
         String path = request.getPath();
+        Map<String, Object> attributes = authentication != null ? authentication.getAttributes() : null;
         for (SecurityRule rule : securityRules) {
             SecurityRuleResult result = rule.check(request, routeMatch, attributes);
             if (result == SecurityRuleResult.REJECTED) {
@@ -150,7 +169,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
                     LOG.debug("Unauthorized request {} {}. The rule provider {} rejected the request.", method, path, rule.getClass().getName());
                 }
                 request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
-                return rejectionHandler.reject(request, forbidden);
+                return Publishers.just(new AuthorizationException(authentication));
             }
             if (result == SecurityRuleResult.ALLOWED) {
                 if (LOG.isDebugEnabled()) {
@@ -165,6 +184,37 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
         }
         //no rule found for the given request, reject
         request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
-        return rejectionHandler.reject(request, forbidden);
+        return Publishers.just(new AuthorizationException(authentication));
+    }
+
+    /**
+     * Check the security rules against the provided arguments.
+     *
+     * @param request The request
+     * @param chain The server chain
+     * @param routeMatch The route match
+     * @param attributes The authentication attributes
+     * @param forbidden Whether a rejection should be forbidden
+     * @return A response publisher
+     * @deprecated Use {@link #checkRules(HttpRequest, ServerFilterChain, RouteMatch, Authentication)} instead
+     */
+    @Deprecated
+    protected Publisher<MutableHttpResponse<?>> checkRules(HttpRequest<?> request,
+                                                           ServerFilterChain chain,
+                                                           @Nullable RouteMatch routeMatch,
+                                                           @Nullable Map<String, Object> attributes,
+                                                           boolean forbidden) {
+        return checkRules(request, chain, routeMatch, forbidden ? new Authentication() {
+            @Nonnull
+            @Override
+            public Map<String, Object> getAttributes() {
+                return attributes;
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+        } : null);
     }
 }

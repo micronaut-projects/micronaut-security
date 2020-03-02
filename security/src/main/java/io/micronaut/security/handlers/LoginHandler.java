@@ -17,7 +17,9 @@ package io.micronaut.security.handlers;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 
 /**
@@ -38,6 +40,20 @@ public interface LoginHandler {
      *
      * @param authenticationFailed Object encapsulates the Login failure
      * @return An HTTP Response. Eg. a redirect or 401 response
+     * @deprecated Use {@link #loginFailed(AuthenticationResponse)} instead.
      */
+    @Deprecated
     HttpResponse loginFailed(AuthenticationFailed authenticationFailed);
+
+    /**
+     * @param authenticationResponse Object encapsulates the Login failure
+     * @return An HTTP Response. Eg. a redirect or 401 response
+     */
+    default MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationResponse) {
+        if (authenticationResponse.getMessage().isPresent()) {
+            return (MutableHttpResponse<?>) loginFailed(new AuthenticationFailed(authenticationResponse.getMessage().get()));
+        } else {
+            return (MutableHttpResponse<?>) loginFailed(new AuthenticationFailed());
+        }
+    }
 }

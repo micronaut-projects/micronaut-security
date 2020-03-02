@@ -33,9 +33,12 @@ import java.util.List;
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated This class will be removed in a future version. Copy the logic into your own class
+ * to maintain the same behavior.
  */
 @Requires(beans = {UserFetcher.class, PasswordEncoder.class, AuthoritiesFetcher.class})
 @Singleton
+@Deprecated
 public class DelegatingAuthenticationProvider implements AuthenticationProvider {
 
     protected final UserFetcher userFetcher;
