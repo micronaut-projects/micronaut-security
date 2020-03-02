@@ -27,7 +27,6 @@ import io.micronaut.security.authentication.UserDetails;
 public interface LoginHandler {
 
     /**
-     *
      * @param userDetails Authenticated user's representation.
      * @param request The {@link HttpRequest} being executed
      * @return An HTTP Response. Eg. a redirect or an JWT token rendered to the response
@@ -35,9 +34,8 @@ public interface LoginHandler {
     MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request);
 
     /**
-     *
-     * @param authenticationFailed Object encapsulates the Login failure
+     * @param authenticationResponse Object encapsulates the Login failure
      * @return An HTTP Response. Eg. a redirect or 401 response
      */
-    MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed);
+    MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationResponse);
 }

@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,6 +80,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
      * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
      * @param securityFilterOrderProvider filter order provider
      */
+    @Inject
     public SecurityFilter(Collection<SecurityRule> securityRules,
                           Collection<AuthenticationFetcher> authenticationFetchers,
                           @Nullable SecurityFilterOrderProvider securityFilterOrderProvider) {
@@ -96,7 +98,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
         String method = request.getMethod().toString();
         String path = request.getPath();
-        RouteMatch routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
 
         return Flowable.fromIterable(authenticationFetchers)
             .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
@@ -135,7 +137,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
      */
     protected Publisher<MutableHttpResponse<?>> checkRules(HttpRequest<?> request,
                                                            ServerFilterChain chain,
-                                                           @Nullable RouteMatch routeMatch,
+                                                           @Nullable RouteMatch<?> routeMatch,
                                                            @Nullable Authentication authentication) {
         boolean forbidden = authentication != null;
         String method = request.getMethod().toString();

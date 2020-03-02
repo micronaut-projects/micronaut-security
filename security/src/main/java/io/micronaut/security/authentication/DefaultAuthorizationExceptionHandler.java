@@ -24,13 +24,13 @@ import io.micronaut.http.server.exceptions.ExceptionHandler;
 import javax.inject.Singleton;
 
 /**
- * Handles an {@link AuthorizationException} by returning an empty response with the appropriate status
+ * Provides the default behavior for responding to an {@link AuthorizationException}.
  *
  * @author James Kleeh
- * @since 2.0.0
+ * @since 1.4.0
  */
 @Singleton
-public class HttpStatusAuthorizationExceptionHandler implements ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> {
+public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> {
 
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationException exception) {

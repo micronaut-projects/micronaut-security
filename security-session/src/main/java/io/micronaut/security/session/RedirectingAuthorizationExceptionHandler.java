@@ -18,7 +18,7 @@ package io.micronaut.security.session;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.*;
 import io.micronaut.security.authentication.AuthorizationException;
-import io.micronaut.security.authentication.HttpStatusAuthorizationExceptionHandler;
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +34,8 @@ import java.net.URISyntaxException;
  * @since 2.0.0
  */
 @Singleton
-@Replaces(HttpStatusAuthorizationExceptionHandler.class)
-public class RedirectingAuthorizationExceptionHandler extends HttpStatusAuthorizationExceptionHandler {
+@Replaces(DefaultAuthorizationExceptionHandler.class)
+public class RedirectingAuthorizationExceptionHandler extends DefaultAuthorizationExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RedirectingAuthorizationExceptionHandler.class);
 

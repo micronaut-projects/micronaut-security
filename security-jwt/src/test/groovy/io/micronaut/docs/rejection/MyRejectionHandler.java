@@ -20,15 +20,15 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthorizationException;
-import io.micronaut.security.authentication.HttpStatusAuthorizationExceptionHandler;
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
 
 import javax.inject.Singleton;
 
 @Requires(property = "spec.name", value = "rejection-handler")
 //tag::clazz[]
 @Singleton
-@Replaces(HttpStatusAuthorizationExceptionHandler.class)
-public class MyRejectionHandler extends HttpStatusAuthorizationExceptionHandler {
+@Replaces(DefaultAuthorizationExceptionHandler.class)
+public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
 
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationException exception) {

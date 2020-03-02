@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  * Exception thrown when access to a protected resource is denied.
  *
  * @author James Kleeh
- * @since 2.0.0
+ * @since 1.4.0
  */
 public class AuthorizationException extends RuntimeException {
 

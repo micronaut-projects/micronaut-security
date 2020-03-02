@@ -23,7 +23,7 @@ import io.micronaut.security.authentication.AuthenticationArgumentBinder
 import io.micronaut.security.authentication.AuthenticationExceptionHandler
 import io.micronaut.security.authentication.BasicAuthAuthenticationConfiguration
 import io.micronaut.security.authentication.BasicAuthAuthenticationFetcher
-import io.micronaut.security.authentication.HttpStatusAuthorizationExceptionHandler
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
 import io.micronaut.security.authentication.PrincipalArgumentBinder
 import io.micronaut.security.config.InterceptUrlMapConverter
 import io.micronaut.security.config.SecurityConfigurationProperties
@@ -79,7 +79,7 @@ class SecurityDisabledSpec extends Specification {
                 LoginControllerConfigurationProperties,
                 LogoutController,
                 LogoutControllerConfigurationProperties,
-                HttpStatusAuthorizationExceptionHandler,
+                DefaultAuthorizationExceptionHandler,
                 ConfigurationInterceptUrlMapRule,
                 IpPatternsRule,
                 SecuredAnnotationRule,

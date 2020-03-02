@@ -52,8 +52,8 @@ public class Authenticator {
     /**
      * Authenticates the user with the provided credentials.
      *
-     * @param request The current request
-     * @param authenticationRequest The authentication credentials
+     * @param request The HTTP request
+     * @param authenticationRequest Represents a request to authenticate.
      * @return A publisher that emits {@link AuthenticationResponse} objects
      */
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> request, AuthenticationRequest<?, ?> authenticationRequest) {
