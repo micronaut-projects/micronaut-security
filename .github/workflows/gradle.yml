@@ -23,7 +23,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v1
       with:
-        java-version: ${{ matrix.java }}   
+        java-version: ${{ matrix.java }}
     - name: Build with Gradle
       run: ./gradlew check --parallel --continue
     - name: Publish to JFrog OSS
