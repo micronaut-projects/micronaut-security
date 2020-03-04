@@ -37,10 +37,10 @@ class AuthenticatorSpec extends Specification {
     def "if any authentication provider throws exception, continue with authentication"() {
         given:
         def authProviderExceptionRaiser = Stub(AuthenticationProvider) {
-            authenticate(_) >> { Flowable.error( new Exception('Authentication provider raised exception') ) }
+            authenticate(_, _) >> { Flowable.error( new Exception('Authentication provider raised exception') ) }
         }
         def authProviderOK = Stub(AuthenticationProvider) {
-            authenticate(_) >> Flowable.just(new UserDetails('admin', []))
+            authenticate(_, _) >> Flowable.just(new UserDetails('admin', []))
         }
         Authenticator authenticator = new Authenticator([authProviderExceptionRaiser, authProviderOK])
 
@@ -55,7 +55,7 @@ class AuthenticatorSpec extends Specification {
     def "if no authentication provider can authentication, the last error is sent back"() {
         given:
         def authProviderFailed = Stub(AuthenticationProvider) {
-            authenticate(_) >> Flowable.just( new AuthenticationFailed() )
+            authenticate(_, _) >> Flowable.just( new AuthenticationFailed() )
         }
         Authenticator authenticator = new Authenticator([authProviderFailed])
 
