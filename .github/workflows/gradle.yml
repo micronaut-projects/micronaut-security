@@ -2,10 +2,10 @@ name: Java CI
 on:
   push:
     branches:
-    - 1.4.x
+    - master
   pull_request:
     branches:
-    - 1.4.x
+    - master
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,7 +37,7 @@ jobs:
       uses: micronaut-projects/github-pages-deploy-action@master
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        BASE_BRANCH: 1.4.x
+        BASE_BRANCH: master
         BRANCH: gh-pages 
         FOLDER: build/docs
         BETA: true

@@ -2,7 +2,7 @@ name: Java Branch CI
 on:
   push:
     branches-ignore:
-      - 1.4.x
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
