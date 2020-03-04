@@ -28,6 +28,7 @@ import io.micronaut.http.util.OutgoingHttpRequestProcessor;
 import io.micronaut.security.token.writer.TokenWriter;
 import org.reactivestreams.Publisher;
 import java.util.Optional;
+import java.util.UUID;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
 
@@ -41,6 +42,7 @@ import static io.micronaut.security.filters.SecurityFilter.TOKEN;
 @Requires(beans = {TokenWriter.class, TokenPropagationConfiguration.class})
 @Requires(property = TokenPropagationConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 public class TokenPropagationHttpClientFilter implements HttpClientFilter {
+
     protected final TokenPropagationConfiguration tokenPropagationConfiguration;
     protected final TokenWriter tokenWriter;
     protected final OutgoingHttpRequestProcessor outgoingHttpRequestProcessor;
@@ -67,16 +69,20 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
      */
     @Override
     public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> targetRequest, ClientFilterChain chain) {
-
+        String id = UUID.randomUUID().toString();
+        System.out.println(id + ": Filtering ... " + targetRequest.getUri().toString());
         if (!outgoingHttpRequestProcessor.shouldProcessRequest(tokenPropagationConfiguration, targetRequest)) {
+            System.out.println(id + ": Doesn't match!");
             return chain.proceed(targetRequest);
         }
 
         Optional<HttpRequest<Object>> current = ServerRequestContext.currentRequest();
         if (current.isPresent()) {
+            System.out.println(id + ": Current request is present");
             HttpRequest<Object> currentRequest = current.get();
-            return doFilter(targetRequest, chain, currentRequest);
+            return doFilter(targetRequest, chain, currentRequest, id);
         } else {
+            System.out.println(id + ": Current request is NOT present");
             return chain.proceed(targetRequest);
         }
     }
@@ -88,15 +94,23 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
      * @param currentRequest The original request which triggered during its execution the invocation of this HttpClientFilter
      * @return The publisher of the response
      */
-    public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> targetRequest, ClientFilterChain chain, HttpRequest<Object> currentRequest) {
+    public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> targetRequest, ClientFilterChain chain, HttpRequest<Object> currentRequest, String id) {
         Optional<Object> token = currentRequest.getAttribute(TOKEN);
         if (token.isPresent()) {
+            System.out.println(id + ": Token is present");
+
             Object obj = token.get();
             if (obj instanceof String) {
+                System.out.println(id + ": Token is a string");
                 String tokenValue = (String) obj;
                 tokenWriter.writeToken(targetRequest, tokenValue);
+                System.out.println(id + ": Header: " + targetRequest.getHeaders().get("Authorization"));
                 return chain.proceed(targetRequest);
+            } else {
+                System.out.println(id + ": Token is NOT a string");
             }
+        } else {
+            System.out.println(id + ": Token is NOT present");
         }
         return chain.proceed(targetRequest);
     }
