@@ -74,8 +74,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             try {
                 stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
             } catch (InvalidStateException e) {
-                //TODO: Create a more meaningful response
-                return Flowable.just(new AuthenticationFailed());
+                return Flowable.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
             }
 
         } else {

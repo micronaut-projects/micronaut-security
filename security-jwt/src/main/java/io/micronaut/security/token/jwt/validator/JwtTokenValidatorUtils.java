@@ -43,7 +43,9 @@ import java.util.Optional;
  *
  * @author Sergio del Amo
  * @since 1.0.0
+ * @deprecated Use {@link JwtValidator} instead
  */
+@Deprecated
 public final class JwtTokenValidatorUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwtTokenValidatorUtils.class);

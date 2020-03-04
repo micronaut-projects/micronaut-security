@@ -44,7 +44,7 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
             return Optional.of(new AuthenticationJWTClaimsSetAdapter(claimSet));
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
-                LOG.error("ParseException creating authentication", e.getMessage());
+                LOG.error("ParseException creating authentication", e);
             }
         }
         return Optional.empty();
