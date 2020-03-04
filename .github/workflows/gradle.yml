@@ -3,13 +3,9 @@ on:
   push:
     branches:
     - 1.3.x
-    - 1.4.x
-    - master
   pull_request:
     branches:
     - 1.3.x
-    - 1.4.x
-    - master
 jobs:
   build:
     runs-on: ubuntu-latest

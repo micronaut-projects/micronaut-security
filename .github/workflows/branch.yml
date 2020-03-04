@@ -4,8 +4,6 @@ on:
   push:
     branches-ignore:
       - 1.3.x
-      - 1.4.x
-      - master
 jobs:
   build:
     runs-on: ubuntu-latest
