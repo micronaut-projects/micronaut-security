@@ -29,7 +29,7 @@ import java.security.interfaces.ECPrivateKey;
 /**
  * Elliptic curve signature generator. Extends {@link io.micronaut.security.token.jwt.signature.ec.ECSignature} adding the ability to sign JWT.
  *
- * @see <a href="http://connect2id.com/products/nimbus-jose-jwt/examples/jwt-with-ec-signature">JSON Web Token (JWT) with EC signature</a>
+ * @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/jwt-with-ec-signature">JSON Web Token (JWT) with EC signature</a>
  *
  * @author Sergio del Amo
  * @since 1.0

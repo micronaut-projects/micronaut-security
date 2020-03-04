@@ -24,4 +24,4 @@ The code snippet below illustrates how to send credentials using the `basicAuth`
 include::{testssecurity}/security/token/basicauth/BasicAuthSpec.groovy[tag=basicAuth, indent=0]
 ----
 
-TIP: Read the http://guides.micronaut.io/micronaut-security-basicauth/guide/index.html[Basic Authentication Micronaut Guide] to learn more.
+TIP: Read the https://guides.micronaut.io/micronaut-security-basicauth/guide/index.html[Basic Authentication Micronaut Guide] to learn more.

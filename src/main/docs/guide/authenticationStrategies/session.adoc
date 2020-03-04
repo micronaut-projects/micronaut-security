@@ -34,4 +34,4 @@ include::{includedir}configurationProperties/io.micronaut.security.session.Secur
 include::{testssecuritysession}/security/session/SessionAuthenticationSpec.groovy[tag=yamlconfig,indent=0]
 ----
 
-TIP: Read the http://guides.micronaut.io/micronaut-security-session/guide/index.html[Session-Based Authentication Micronaut Guide] to learn more.
+TIP: Read the https://guides.micronaut.io/micronaut-security-session/guide/index.html[Session-Based Authentication Micronaut Guide] to learn more.

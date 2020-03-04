@@ -31,7 +31,7 @@ import java.security.interfaces.RSAPrivateKey;
 
 /**
  * RSA signature Generator. Expands {@link RSASignature} to add methods to sign JWT.
- * @see <a href="http://connect2id.com/products/nimbus-jose-jwt/examples/jwt-with-rsa-signature">JSON Web Token (JWT) with RSA signature</a>
+ * @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/jwt-with-rsa-signature">JSON Web Token (JWT) with RSA signature</a>
  *
  * @author Sergio del Amo
  * @since 1.0
