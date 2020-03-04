@@ -29,12 +29,14 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import spock.lang.AutoCleanup
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
 import java.time.Duration
 
+@Ignore
 class TokenPropagationSpec extends Specification {
 
     static final SPEC_NAME_PROPERTY = 'spec.name'
