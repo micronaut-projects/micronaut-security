@@ -65,6 +65,8 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#oauth"><strong>11</strong><span>OAuth 2.0</span></a></div>
                                 
+                                <div class="toc-item" style="margin-left:0"><a href="#breaks"><strong>12</strong><span>Breaking Changes</span></a></div>
+                                
                             </div>
                         </div>
                     </li>
@@ -212,6 +214,8 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>11.5</strong><span>Custom Clients</span></a></div>
         
+        <div class="toc-item" style="margin-left:0px" id="toc-item-breaks"><a href="#breaks"><strong>12</strong><span>Breaking Changes</span></a></div>
+        
         </div>
     </div>
     
@@ -220,7 +224,7 @@
         <h1>Micronaut Security</h1>
         <p></p>
         <p>Official Security Solution for Micronaut</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-security/snapshot/guide/index.html'>1.3.2.BUILD-SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.1/guide/index.html'>1.3.1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.0/guide/index.html'>1.3.0</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.0.RC1/guide/index.html'>1.3.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.3/guide/index.html'>1.2.3</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.2/guide/index.html'>1.2.2</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.0.RC1/guide/index.html'>1.2.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.1.1/guide/index.html'>1.1.1</option></select></p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-security/snapshot/guide/index.html'>2.0.0.BUILD-SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.1/guide/index.html'>1.3.1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.0/guide/index.html'>1.3.0</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.0.RC1/guide/index.html'>1.3.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.3/guide/index.html'>1.2.3</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.2/guide/index.html'>1.2.2</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.0.RC1/guide/index.html'>1.2.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.1.1/guide/index.html'>1.1.1</option></select></p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -302,7 +306,7 @@ compile "io.micronaut:micronaut-security"</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If Security is enabled. Default value false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If Security is enabled. Default value true</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.intercept-url-map</code></p></td>
@@ -337,7 +341,7 @@ compile "io.micronaut:micronaut-security"</code></pre>
 
 
 <div class="paragraph">
-<p>Micronaut Security 1.3.2.BUILD-SNAPSHOT includes the following changes:</p>
+<p>Micronaut Security 2.0.0.BUILD-SNAPSHOT includes the following changes:</p>
 </div>
 <div class="sect2">
 <h3 id="_startup_time_improvements">Startup Time Improvements</h3>
@@ -367,7 +371,7 @@ compile "io.micronaut:micronaut-security"</code></pre>
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
-    public Publisher&lt;AuthenticationResponse&gt; authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
         if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
             return Flowable.just(new UserDetails("user", new ArrayList&lt;&gt;()));
         }
@@ -399,7 +403,7 @@ in environments such as the one described in the following diagram.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html">LDAP and Database authentication providers</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html">LDAP and Database authentication providers</a> to learn more.
 </td>
 </tr>
 </table>
@@ -439,7 +443,6 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     ip-patterns:
       - 127.0.0.1
       - 192.168.1.*</code></pre>
@@ -560,7 +563,6 @@ public class ExampleController {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     intercept-url-map:
       -
         pattern: /images/*
@@ -573,10 +575,15 @@ public class ExampleController {
           - isAuthenticated() <i class="conum" data-value="2"></i><b>(2)</b>
       -
         pattern: /books/grails
-        http-method: GET
+        http-method: POST
         access:
           - ROLE_GRAILS <i class="conum" data-value="3"></i><b>(3)</b>
-          - ROLE_GROOVY</code></pre>
+          - ROLE_GROOVY
+      -
+        pattern: /books/grails
+        http-method: PUT
+        access:
+          - ROLE_ADMIN</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -609,7 +616,6 @@ and an optional HTTP method.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     intercept-url-map:
       - pattern: /v1/myResource/**
         httpMethod: GET <i class="conum" data-value="1"></i><b>(1)</b>
@@ -690,17 +696,7 @@ and an optional HTTP method.</p>
 
 
 <div class="paragraph">
-<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64.</p>
-</div>
-<div class="paragraph">
-<p>Once you enable Micronaut security, Basic Auth is enabled by default.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-  security:
-    enabled: true</code></pre>
-</div>
+<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default.</p>
 </div>
 <div class="paragraph">
 <p>The following sequence illustrates the authentication flow:</p>
@@ -733,42 +729,6 @@ which attempts to validate them.</p>
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">HttpRequest request = HttpRequest.GET("/home").basicAuth('sherlock', 'password')</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The following configuration properties are available to customize basic authentication behaviour:</p>
-</div>
-<a id="io.micronaut.security.token.basicauth.BasicAuthTokenReaderConfigurationProperties" href="#io.micronaut.security.token.basicauth.BasicAuthTokenReaderConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/basicauth/BasicAuthTokenReaderConfigurationProperties.html">BasicAuthTokenReaderConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.basic-auth.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/token/basicauth/BasicAuthTokenReader.html">BasicAuthTokenReader</a>. Default value true.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.basic-auth.header-name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Http Header name. Default value {@value io.micronaut.http.HttpHeaders#AUTHORIZATION}.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.basic-auth.prefix</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Http Header value prefix. Default value {@value io.micronaut.http.HttpHeaderValues#AUTHORIZATION_PREFIX_BASIC}.</p></td>
-</tr>
-</tbody>
-</table>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -776,7 +736,7 @@ which attempts to validate them.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-security-basicauth/guide/index.html">Basic Authentication Micronaut Guide</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-security-basicauth/guide/index.html">Basic Authentication Micronaut Guide</a> to learn more.
 </td>
 </tr>
 </table>
@@ -877,14 +837,15 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the forbidden target URL.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.redirect-on-rejection</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the session config is enabled. Default value (false).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether a redirect should occur on an authorization failure.
+ Default value (true).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.legacy-rejection-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Decides whether the deprecated {@link SessionSecurityFilterOrderProvider} is loaded, instead of the new <a href="../api/io/micronaut/security/handlers/RedirectRejectionHandler.html">RedirectRejectionHandler</a>. Defaults to (true).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the session config is enabled. Default value (true).</p></td>
 </tr>
 </tbody>
 </table>
@@ -895,14 +856,12 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     endpoints:
       login:
         enabled: true
       logout:
         enabled: true
     session:
-      enabled: true
       login-failure-target-url: /login/authFailed</code></pre>
 </div>
 </div>
@@ -913,7 +872,7 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-security-session/guide/index.html">Session-Based Authentication Micronaut Guide</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-security-session/guide/index.html">Session-Based Authentication Micronaut Guide</a> to learn more.
 </td>
 </tr>
 </table>
@@ -1017,7 +976,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value (false).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value (true).</p></td>
 </tr>
 </tbody>
 </table>
@@ -1166,7 +1125,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0MjI5OTU5MjIsInN1YiI6Imppb
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Check out the <a href="http://guides.micronaut.io/micronaut-security-jwt/guide/index.html">Micronaut JWT Authentication guide</a> for a tutorial on Micronaut&#8217;s JWT support.
+Check out the <a href="https://guides.micronaut.io/micronaut-security-jwt/guide/index.html">Micronaut JWT Authentication guide</a> for a tutorial on Micronaut&#8217;s JWT support.
 </td>
 </tr>
 </table>
@@ -1272,7 +1231,7 @@ Check out the <a href="http://guides.micronaut.io/micronaut-security-jwt/guide/i
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide/index.html">Micronaut JWT Authentication with Cookies</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-security-jwt-cookie/guide/index.html">Micronaut JWT Authentication with Cookies</a> to learn more.
 </td>
 </tr>
 </table>
@@ -1353,10 +1312,8 @@ qualified with name <code>generator</code>.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           secret:
             generator:
@@ -1383,10 +1340,8 @@ qualified with name <code>generator</code>.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           secret:
             generator:
@@ -1465,10 +1420,8 @@ class MySignatureGeneratorConfigurationFactory {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           secret:
             generator:
@@ -1636,10 +1589,8 @@ participate as signature configurations in the JWT validation.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           jwks:
             awscognito:
@@ -1705,7 +1656,7 @@ fulfil your needs you can provide your own <a href="#replaces">replacement</a> o
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
-    public Publisher&lt;AuthenticationResponse&gt; authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
         return Flowable.just(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
     }
 }</code></pre>
@@ -1801,7 +1752,7 @@ Pragma: no-cache
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html#securityLdap">LDAP and Database authentication providers</a> to see an example.
+Read the <a href="https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html#securityLdap">LDAP and Database authentication providers</a> to see an example.
 </td>
 </tr>
 </table>
@@ -1970,6 +1921,24 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+To connect to an LDAP server with SSL, set the standard Java system properties to the values appropriate for your server.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>-Djavax.net.ssl.trustStore="&lt;path to truststore file&gt;"
+-Djavax.net.ssl.trustStorePassword="&lt;passphrase for truststore&gt;"</code></pre>
+</div>
+</div>
 
 <h2 id="extending"><a class="anchor" href="#extending"></a>5.4.2 Extending Default Behavior</h2>
 
@@ -2129,15 +2098,14 @@ public class MyContextBuilder implements ContextBuilder {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
-@Replaces(HttpStatusCodeRejectionHandler.class)
-public class MyRejectionHandler extends HttpStatusCodeRejectionHandler {
+@Replaces(DefaultAuthorizationExceptionHandler.class)
+public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
 
     @Override
-    public Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; reject(HttpRequest&lt;?&gt; request, boolean forbidden) {
+    public MutableHttpResponse&lt;?&gt; handle(HttpRequest request, AuthorizationException exception) {
         //Let the HttpStatusCodeRejectionHandler create the initial request
         //then add a header
-        return Flowable.fromPublisher(super.reject(request, forbidden))
-                .map(response -&gt; response.header("X-Reason", "Example Header"));
+        return super.handle(request, exception).header("X-Reason", "Example Header");
     }
 }</code></pre>
 </div>
@@ -2188,10 +2156,8 @@ that token to other requests in your network.</p>
     application:
         name: gateway
     security:
-        enabled: true
         token:
             jwt:
-                enabled: true
                 signatures:
                     secret:
                         generator:
@@ -2227,7 +2193,7 @@ will propagate the security token seamlessly.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-token-propagation/guide/index.html">Token Propagation tutorial</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-token-propagation/guide/index.html">Token Propagation tutorial</a> to learn more.
 </td>
 </tr>
 </table>
@@ -2691,9 +2657,7 @@ public class UserController {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     oauth2:
-      enabled: true
       clients:
         google:
           client-secret: &lt;&lt;your client secret&gt;&gt;
@@ -2727,7 +2691,7 @@ public class UserController {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Session Storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.enabled: true</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-session</code></p></td>
 </tr>
 </tbody>
@@ -2746,7 +2710,7 @@ public class UserController {
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.configuration:micronaut-security-oauth2:1.3.2.BUILD-SNAPSHOT")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.configuration:micronaut-security-oauth2:2.0.0.BUILD-SNAPSHOT")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2754,7 +2718,7 @@ public class UserController {
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.configuration&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-oauth2&lt;/artifactId&gt;
-    &lt;version&gt;1.3.2.BUILD-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;2.0.0.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -2873,7 +2837,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the OAuth 2.0 support is enabled. Default value (false).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the OAuth 2.0 support is enabled. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.callback-uri</code></p></td>
@@ -2969,9 +2933,7 @@ It is possible to designate a default provider. The value of the configuration m
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     oauth2:
-      enabled: true
       clients:
         github: <i class="conum" data-value="1"></i><b>(1)</b>
           client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
@@ -3318,9 +3280,7 @@ internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     security:
-        enabled: true
         oauth2:
-            enabled: true
             clients:
                 okta: <i class="conum" data-value="1"></i><b>(1)</b>
                     client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
@@ -4573,7 +4533,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
      * @param originating The originating request
      * @return A response publisher
      */
-    Publisher&lt;HttpResponse&gt; authorizationRedirect(HttpRequest originating);
+    Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; authorizationRedirect(HttpRequest&lt;?&gt; originating);
 
     /**
      * Responsible for receiving the authorization callback request and returning
@@ -4602,6 +4562,61 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </div>
 <div class="paragraph">
 <p>Because of how generic this interface is, it is possible to implement authentication for any provider that follows the redirect / redirect back pattern. For example one could implement support for OAuth 1.0a providers (looking at you, twitter).</p>
+</div>
+
+<h1 id="breaks"><a class="anchor" href="#breaks"></a>12 Breaking Changes</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/breaks.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x &#8594; 2.x.x).</p>
+</div>
+<div class="sect1">
+<h2 id="_2_0_0">2.0.0</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>All deprecations present in 1.3.x have been removed.</p>
+</li>
+<li>
+<p>The legacy rejection handler in the session module, which was enabled by default, has been removed. The setting <code>micronaut.security.session.legacy-rejection-handler</code> no longer has any effect and is equivalent to the behavior of <code>false</code> in previous versions.</p>
+</li>
+<li>
+<p>The entire <code>RejectionHandler</code> API and its dependents have been removed in favor of using the built in exception handling API in Micronaut. An <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a> will now be emitted when access to a resource has been rejected. Default exception handlers have been created to mimic the previous behavior. If you haven&#8217;t overridden any of this API or manipulated it through settings there should be no change in behavior.</p>
+</li>
+<li>
+<p>The <code>DelegatingAuthenticationProvider</code> and it&#8217;s related interfaces has been removed. If you provided implementations for <code>UserFetcher</code>, <code>UserState</code>, <code>PasswordEncoder</code>, and <code>AuthoritiesFetcher</code>, integrate them into your own implementation of <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a></p>
+</li>
+<li>
+<p>Modules are now enabled by default. The configuration keys <code>micronaut.security.enabled</code>, <code>micronaut.security.token.jwt.enabled</code>, <code>micronaut.security.oauth2.enabled</code>, and <code>micronaut.security.session.enabled</code> are now all <code>true</code> by default.</p>
+</li>
+<li>
+<p>The <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> API has changed to accept an <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> object instead of an <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>.</p>
+</li>
+<li>
+<p>The <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a> API has changed to include the HTTP request as a parameter.</p>
+</li>
+<li>
+<p>Several APIs that lacked generics have been changed to add them. For example <code>HttpRequest</code> &#8594; <code>HttpRequest&lt;?&gt;</code>.</p>
+</li>
+<li>
+<p>Several APIs have been changed to return <a href="../api/io/micronaut/http/MutableHttpResponse.html">MutableHttpResponse</a> instead of <a href="../api/io/micronaut/http/HttpResponse.html">HttpResponse</a>.</p>
+</li>
+<li>
+<p>Previously <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s were allowed to return hot observables, meaning the logic to authenticate the user could be done upon execution of the method. Allowing for that behavior caused the logic to execute the authenticators to be difficult to maintain. Now providers must return cold observables. The <code>authenticate</code> method will be executed for every authentication provider for every authentication request. If you were previously doing the authentication work then using something like <code>Flowable.just</code>, you must use something like <code>Flowable.create</code> to create a cold observable.</p>
+</li>
+<li>
+<p>Basic authentication configuration has moved from <code>micronaut.security.token.basic-auth</code> to <code>micronaut.security.basic-auth</code>. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a <code>TokenValidatedEvent</code> was triggered as a result of basic authentication, however that is no longer the case.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 
     </div>
