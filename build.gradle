@@ -4,14 +4,12 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "org.grails:grails-docs:$grailsVersion"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
         classpath 'io.github.groovylang.groovydoc:groovydoc-gradle-plugin:1.0.1'
         classpath "gradle.plugin.org.aim42:htmlSanityCheck:$htmlSanityCheckVersion"
-        classpath "org.codehaus.groovy.modules.http-builder:http-builder:0.7.2"
-        classpath 'javax.xml.bind:jaxb-api:2.3.1'
+        classpath "io.spring.nohttp:nohttp-gradle:0.0.4.RELEASE"
         classpath "io.micronaut.docs:micronaut-docs-asciidoc-extensions:$micronautDocsVersion"
         classpath "io.micronaut.docs:micronaut-docs-gradle-plugins:$micronautDocsVersion", {
             exclude module:'shadow'
@@ -43,45 +41,40 @@ ext {
 
 subprojects { Project subproject ->
 
-    version rootProject.projectVersion
-    group "io.micronaut"
-
-    ext {
-        userOrg = "grails"
-        isGrailsPlugin = false
-        isBuildSnapshot = version.toString().endsWith("-SNAPSHOT")
-    }
-
     repositories {
         jcenter()
         maven { url "https://repo.grails.org/grails/core" }
         maven { url "https://oss.jfrog.org/oss-snapshot-local" }
     }
-    
-    apply plugin: "groovy"
-    apply plugin: "java"
-    apply plugin: "io.spring.dependency-management"
 
-    dependencyManagement {
-        imports {
-            mavenBom "io.micronaut:micronaut-bom:$micronautVersion"
-        }
+    apply plugin: "io.spring.nohttp"
+    apply plugin:"groovy"
+    apply plugin:"java-library"
+
+
+    version project.projectVersion
+    group "io.micronaut"
+
+    ext {
+        isConfiguration = false
+        isBuildSnapshot = version.toString().endsWith("-SNAPSHOT")
     }
-    
+
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
-    compileJava.options.compilerArgs.add '-parameters'
-    compileTestJava.options.compilerArgs.add '-parameters'
+
     apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-build/v1.0.0/publishing.gradle"
-    
-    
+
+
     jar {
         manifest {
             attributes('Automatic-Module-Name': "${subproject.group}.${subproject.name}".replaceAll('[^\\w\\.\\$_]', "_"))
             attributes('Implementation-Version': projectVersion)
-            attributes('Implementation-Title': 'Micronaut')
+            attributes('Implementation-Title': title)
         }
     }
+
+    bintray.publish = true
 
     tasks.withType(Test) {
         jvmArgs '-Duser.country=US'
@@ -94,8 +87,8 @@ subprojects { Project subproject ->
             System.out.flush()
         }
 
-        reports.html.enabled = !System.getenv("TRAVIS")
-        reports.junitXml.enabled = !System.getenv("TRAVIS")
+        reports.html.enabled = !System.getenv("GITHUB_ACTIONS")
+        reports.junitXml.enabled = !System.getenv("GITHUB_ACTIONS")
 
         systemProperty "micronaut.cloud.platform", "OTHER"
     }
@@ -111,24 +104,31 @@ subprojects { Project subproject ->
             }
         }
     }
-    
     dependencies {
+        annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+        testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+        implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+        api platform("io.micronaut:micronaut-bom:$micronautVersion")
+
         documentation "org.codehaus.groovy:groovy-templates:$groovyVersion"
         documentation "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
 
         annotationProcessor "io.micronaut:micronaut-inject-java"
         annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
         annotationProcessor "io.micronaut:micronaut-graal"
-        compile "io.micronaut:micronaut-inject"
-        
-        testCompile("org.spockframework:spock-core:${spockVersion}") {
+
+        api "io.micronaut:micronaut-inject"
+
+        testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module:'groovy-all'
         }
-        testCompile "cglib:cglib-nodep:3.3.0"
-        testCompile "org.objenesis:objenesis:3.1"
 
-        testRuntime "ch.qos.logback:logback-classic:1.2.3"
-        testCompile "org.codehaus.groovy:groovy-test:$groovyVersion"
+        testImplementation "io.micronaut:micronaut-inject-groovy"
+        testImplementation "cglib:cglib-nodep:3.3.0"
+        testImplementation "org.objenesis:objenesis:3.1"
+
+        testRuntimeOnly "ch.qos.logback:logback-classic:1.2.3"
+        testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
     }
 
     groovydoc {
@@ -140,8 +140,8 @@ subprojects { Project subproject ->
     apply plugin: 'checkstyle'
 
     checkstyle {
-        toolVersion = 8.10
-        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        toolVersion = 8.16
+        configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 
         // Per submodule
         maxErrors = 0
@@ -151,6 +151,15 @@ subprojects { Project subproject ->
     }
 
     checkstyleTest.enabled = false
+
+    tasks.withType(GroovyCompile) {
+        groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+    }
+
+    tasks.withType(JavaCompile){
+        options.encoding = "UTF-8"
+        options.compilerArgs.add('-parameters')
+    }
 }
 
 apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-docs/v${micronautDocsVersion}/gradle/docs.gradle"
