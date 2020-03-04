@@ -43,7 +43,7 @@ ext {
 
 subprojects { Project subproject ->
 
-    version project.projectVersion
+    version rootProject.projectVersion
     group "io.micronaut"
 
     ext {
