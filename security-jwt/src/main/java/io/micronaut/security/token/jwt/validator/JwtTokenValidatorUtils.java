@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -90,17 +91,19 @@ public final class JwtTokenValidatorUtils {
 
         final JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();
 
-        for (final SignatureConfiguration config : signatureConfigurations.stream()
+        List<SignatureConfiguration> supportedSignatureConfigurations = signatureConfigurations.stream()
                 .filter(c -> c.supports(algorithm))
-                .collect(Collectors.toList())) {
+                .collect(Collectors.toList());
+
+        for (final SignatureConfiguration config : supportedSignatureConfigurations) {
             Optional<JWT> jwt = verifySignedJWTWithSignatureConfiguration(config, signedJWT);
             if (jwt.isPresent()) {
                 return jwt;
             }
         }
-        for (final SignatureConfiguration config : signatureConfigurations.stream()
-                .filter(c -> !c.supports(algorithm))
-                .collect(Collectors.toList())) {
+        List<SignatureConfiguration> unsupportedSignatureConfigurations = new ArrayList<>(signatureConfigurations);
+        unsupportedSignatureConfigurations.removeAll(supportedSignatureConfigurations);
+        for (final SignatureConfiguration config : unsupportedSignatureConfigurations) {
             Optional<JWT> jwt = verifySignedJWTWithSignatureConfiguration(config, signedJWT);
             if (jwt.isPresent()) {
                 return jwt;
