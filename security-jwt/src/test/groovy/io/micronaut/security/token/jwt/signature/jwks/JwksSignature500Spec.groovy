@@ -39,8 +39,6 @@ class JwksSignature500Spec extends Specification implements JwtFixture {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             (SPEC_NAME_PROPERTY) : 'jwkssignature500spec',
-            // need to turn this on due to io.micronaut.security.token.jwt.package-info.java
-            'micronaut.security.token.jwt.enabled': true
 
     ], Environment.TEST)
 
