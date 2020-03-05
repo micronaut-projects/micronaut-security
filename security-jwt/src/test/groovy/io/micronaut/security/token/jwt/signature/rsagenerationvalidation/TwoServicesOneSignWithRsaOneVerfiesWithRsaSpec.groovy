@@ -100,7 +100,6 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         Map booksConfig = [
                 (SPEC_NAME_PROPERTY)                          : 'rsajwtbooks',
                 'micronaut.server.port'                       : -1,
-                'micronaut.security.enabled'                  : true,
                 'micronaut.security.token.jwt.enabled'        : true,
         ]
 
@@ -136,7 +135,6 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         given:
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY)                        : 'rsajwtgateway',
-                'micronaut.security.enabled'                : true,
                 'micronaut.security.token.jwt.enabled'      : true,
                 'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.http.services.books.url'         : "http://localhost:${booksPort}",

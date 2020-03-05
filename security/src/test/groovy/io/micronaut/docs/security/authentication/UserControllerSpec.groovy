@@ -31,7 +31,6 @@ class UserControllerSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             "spec.name": "authenticationparam",
-            "micronaut.security.enabled": true,
     ], Environment.TEST)
 
     @Shared

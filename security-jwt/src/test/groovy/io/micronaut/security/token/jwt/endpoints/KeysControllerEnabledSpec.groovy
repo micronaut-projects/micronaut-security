@@ -31,7 +31,6 @@ class KeysControllerEnabledSpec extends Specification {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                                          : KeysControllerEnabledSpec.simpleName,
-                'micronaut.security.enabled'                         : true,
                 'micronaut.security.token.jwt.enabled'               : true,
                 'micronaut.security.token.jwt.endpoints.keys.enabled': false,
 

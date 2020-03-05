@@ -42,7 +42,7 @@ import javax.inject.Singleton
 class HealthSensitivitySpec extends Specification {
 
     @Unroll
-    void "If endpoints.health.sensitive=true #description => 401"(boolean security, String description) {
+    void "If endpoints.health.sensitive=true #description => 401"(Boolean security, String description) {
         given:
         Map m = [
                 'spec.name'                            : 'healthsensitivity',
@@ -50,7 +50,7 @@ class HealthSensitivitySpec extends Specification {
                 'endpoints.health.disk-space.threshold': '9999GB',
                 'endpoints.health.sensitive'           : true,
         ]
-        if (security) {
+        if (security != null) {
             m['micronaut.security.enabled'] = security
         }
 
@@ -71,8 +71,8 @@ class HealthSensitivitySpec extends Specification {
         rxClient.close()
 
         where:
-        security << [true, false]
-        description = security ? 'with security but unauthenticated' : 'without security'
+        security << [null, true, false]
+        description = security == null ? 'with default security enabled' : (security ? 'with security but unauthenticated' : 'without security')
     }
 
     @Unroll
@@ -140,8 +140,7 @@ class HealthSensitivitySpec extends Specification {
             'spec.name'                            : 'healthsensitivity',
             'endpoints.health.enabled'             : true,
             'endpoints.health.sensitive'           : false,
-            'endpoints.health.detailsVisible'      : 'AUTHENTICATED',
-            'micronaut.security.enabled'           : true])
+            'endpoints.health.detailsVisible'      : 'AUTHENTICATED'])
         URL server = embeddedServer.getURL()
         RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
 
@@ -177,8 +176,7 @@ class HealthSensitivitySpec extends Specification {
                 'spec.name'                            : 'healthsensitivity',
                 'endpoints.health.enabled'             : true,
                 'endpoints.health.sensitive'           : false,
-                'endpoints.health.detailsVisible'      : 'ANONYMOUS',
-                'micronaut.security.enabled'           : true])
+                'endpoints.health.detailsVisible'      : 'ANONYMOUS'])
         URL server = embeddedServer.getURL()
         RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
 
@@ -204,8 +202,7 @@ class HealthSensitivitySpec extends Specification {
                 'spec.name'                            : 'healthsensitivity',
                 'endpoints.health.enabled'             : true,
                 'endpoints.health.sensitive'           : false,
-                'endpoints.health.detailsVisible'      : 'NEVER',
-                'micronaut.security.enabled'           : true])
+                'endpoints.health.detailsVisible'      : 'NEVER'])
         URL server = embeddedServer.getURL()
         RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
 
