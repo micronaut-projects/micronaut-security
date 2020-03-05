@@ -10,7 +10,6 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.ConfigurationFixture
 import io.micronaut.security.oauth2.OpenIDIntegrationSpec
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper

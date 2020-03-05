@@ -2,7 +2,6 @@ package io.micronaut.security.oauth2.client.condition
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import io.micronaut.security.oauth2.ConfigurationFixture
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient
 import spock.lang.Specification
 

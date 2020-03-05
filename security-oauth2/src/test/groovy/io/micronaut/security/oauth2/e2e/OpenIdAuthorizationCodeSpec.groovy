@@ -3,7 +3,6 @@ package io.micronaut.security.oauth2.e2e
 import geb.spock.GebSpec
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.oauth2.ConfigurationFixture
 import io.micronaut.security.oauth2.OpenIDIntegrationSpec
 
 class OpenIdAuthorizationCodeSpec extends GebSpec implements OpenIDIntegrationSpec {
