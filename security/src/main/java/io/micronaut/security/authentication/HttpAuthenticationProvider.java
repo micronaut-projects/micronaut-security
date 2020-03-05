@@ -15,28 +15,23 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.http.HttpRequest;
 import org.reactivestreams.Publisher;
 
 /**
- * Defines an authentication provider.
+ * Authenticates the authentication request within the context of
+ * an http request.
  *
- * @author Sergio del Amo
- * @author Graeme Rocher
- * @since 1.0
+ * @author James Kleeh
+ * @since 1.4.0
  */
-public interface AuthenticationProvider {
+public interface HttpAuthenticationProvider extends AuthenticationProvider {
 
-    /**
-     * Authenticates a user with the given request. If a successful authentication is
-     * returned, the object must be an instance of {@link UserDetails}.
-     *
-     * @param authenticationRequest The request to authenticate
-     * @return A publisher that emits 0 or 1 responses
-     * @deprecated Use {@link #authenticate(HttpRequest, AuthenticationRequest)} instead.
-     */
-    @Deprecated
-    Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest);
+    @Override
+    default Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+        return Publishers.just(new UnsupportedOperationException("This authentication provider requires the request context"));
+    }
 
     /**
      * Authenticates a user with the given request. If a successful authentication is
@@ -46,7 +41,5 @@ public interface AuthenticationProvider {
      * @param authenticationRequest The request to authenticate
      * @return A publisher that emits 0 or 1 responses
      */
-    default Publisher<AuthenticationResponse> authenticate(HttpRequest<?> request, AuthenticationRequest<?, ?> authenticationRequest) {
-        return authenticate(authenticationRequest);
-    }
+    Publisher<AuthenticationResponse> authenticate(HttpRequest<?> request, AuthenticationRequest<?, ?> authenticationRequest);
 }
