@@ -40,7 +40,7 @@ public interface OauthRouteUrlBuilder extends AbsoluteUrlBuilder {
      * @param providerName The oauth provider name
      * @return The URL
      */
-    URL buildLoginUrl(@Nullable HttpRequest originating, String providerName);
+    URL buildLoginUrl(@Nullable HttpRequest<?> originating, String providerName);
 
     /**
      * Builds the URL to receive the OAuth 2.0 authorization callback request
@@ -49,7 +49,7 @@ public interface OauthRouteUrlBuilder extends AbsoluteUrlBuilder {
      * @param providerName The oauth provider name
      * @return The URL
      */
-    URL buildCallbackUrl(@Nullable HttpRequest originating, String providerName);
+    URL buildCallbackUrl(@Nullable HttpRequest<?> originating, String providerName);
 
 
     /**

@@ -45,7 +45,7 @@ public class DefaultEndSessionCallbackUrlBuilder implements EndSessionCallbackUr
     }
 
     @Override
-    public URL build(HttpRequest originating) {
+    public URL build(HttpRequest<?> originating) {
         return absoluteUrlBuilder.buildUrl(originating, endSessionConfiguration.getRedirectUri());
     }
 }

@@ -70,7 +70,7 @@ public class IpPatternsRule extends AbstractSecurityRule {
     }
 
     @Override
-    public SecurityRuleResult check(HttpRequest request, @Nullable RouteMatch routeMatch, @Nullable Map<String, Object> claims) {
+    public SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
 
         if (patternList.isEmpty()) {
             if (LOG.isDebugEnabled()) {

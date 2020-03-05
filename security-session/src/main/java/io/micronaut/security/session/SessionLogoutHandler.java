@@ -18,6 +18,7 @@ package io.micronaut.security.session;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.session.Session;
@@ -47,7 +48,7 @@ public class SessionLogoutHandler implements LogoutHandler {
     }
 
     @Override
-    public HttpResponse logout(HttpRequest<?> request) {
+    public MutableHttpResponse<?> logout(HttpRequest<?> request) {
         MutableConvertibleValues<Object> attrs = request.getAttributes();
         Optional<Session> existing = attrs.get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class);
         if (existing.isPresent()) {

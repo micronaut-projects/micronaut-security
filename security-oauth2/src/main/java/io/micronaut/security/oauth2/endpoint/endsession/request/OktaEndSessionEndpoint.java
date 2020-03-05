@@ -56,7 +56,7 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
     }
 
     @Override
-    protected Map<String, Object> getArguments(HttpRequest originating,
+    protected Map<String, Object> getArguments(HttpRequest<?> originating,
                                                Authentication authentication) {
         Map<String, Object> attributes = authentication.getAttributes();
         Map<String, Object> arguments = new HashMap<>();

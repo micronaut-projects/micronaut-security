@@ -23,6 +23,7 @@ import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
@@ -113,7 +114,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
     @Singleton
     static class CustomLogoutHandler implements LogoutHandler {
         @Override
-        HttpResponse logout(HttpRequest<?> request) {
+        MutableHttpResponse<?> logout(HttpRequest<?> request) {
             return HttpResponse.ok()
         }
     }

@@ -70,7 +70,7 @@ public class AwsCognitoEndSessionEndpoint extends AbstractEndSessionRequest {
     }
 
     @Override
-    protected Map<String, Object> getArguments(HttpRequest originating,
+    protected Map<String, Object> getArguments(HttpRequest<?> originating,
                                                Authentication authentication) {
         Map<String, Object> arguments = new HashMap<>();
         arguments.put(PARAM_CLIENT_ID, clientConfiguration.getClientId());

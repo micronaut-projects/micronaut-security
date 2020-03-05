@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.handlers.LogoutHandler;
 
@@ -43,7 +44,7 @@ public class JwtCookieClearerLogoutHandler implements LogoutHandler {
     }
 
     @Override
-    public HttpResponse logout(HttpRequest<?> request) {
+    public MutableHttpResponse<?> logout(HttpRequest<?> request) {
         Optional<Cookie> maybeCookie = request.getCookies().findCookie(jwtCookieConfiguration.getCookieName());
         try {
             URI location = new URI(jwtCookieConfiguration.getLogoutTargetUrl());

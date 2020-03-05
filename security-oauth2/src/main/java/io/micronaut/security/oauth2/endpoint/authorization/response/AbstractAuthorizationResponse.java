@@ -66,7 +66,7 @@ public abstract class AbstractAuthorizationResponse extends StateAwareAuthorizat
 
     @Nonnull
     @Override
-    public HttpRequest getCallbackRequest() {
+    public HttpRequest<?> getCallbackRequest() {
         return request;
     }
 }

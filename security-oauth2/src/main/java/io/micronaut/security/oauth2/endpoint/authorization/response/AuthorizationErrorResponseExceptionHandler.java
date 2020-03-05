@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 
 import javax.inject.Singleton;
@@ -29,10 +30,10 @@ import javax.inject.Singleton;
  * @since 1.2.0
  */
 @Singleton
-public class AuthorizationErrorResponseExceptionHandler implements ExceptionHandler<AuthorizationErrorResponseException, HttpResponse> {
+public class AuthorizationErrorResponseExceptionHandler implements ExceptionHandler<AuthorizationErrorResponseException, MutableHttpResponse<?>> {
 
     @Override
-    public HttpResponse handle(HttpRequest request, AuthorizationErrorResponseException exception) {
+    public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationErrorResponseException exception) {
         return HttpResponse.badRequest(exception.getAuthorizationErrorResponse());
     }
 }

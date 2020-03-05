@@ -35,5 +35,5 @@ public interface EndSessionEndpoint {
      * @return The OpenID provider end session URL.
      */
     @Nullable
-    String getUrl(HttpRequest originating, Authentication authentication);
+    String getUrl(HttpRequest<?> originating, Authentication authentication);
 }

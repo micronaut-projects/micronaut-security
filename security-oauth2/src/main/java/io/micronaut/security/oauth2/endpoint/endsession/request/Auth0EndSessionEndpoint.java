@@ -58,7 +58,7 @@ public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
     }
 
     @Override
-    protected Map<String, Object> getArguments(HttpRequest originating,
+    protected Map<String, Object> getArguments(HttpRequest<?> originating,
                                                Authentication authentication) {
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("client_id", clientConfiguration.getClientId());

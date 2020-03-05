@@ -52,5 +52,5 @@ public interface AuthorizationResponse {
      * @return The authorization callback request
      */
     @Nonnull
-    HttpRequest getCallbackRequest();
+    HttpRequest<?> getCallbackRequest();
 }

@@ -56,11 +56,11 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
 
     @Nullable
     @Override
-    public String getUrl(HttpRequest originating, Authentication authentication) {
+    public String getUrl(HttpRequest<?> originating, Authentication authentication) {
         return getTemplate().expand(getParameters(originating, authentication));
     }
 
-    private Map<String, Object> getParameters(HttpRequest originating, Authentication authentication) {
+    private Map<String, Object> getParameters(HttpRequest<?> originating, Authentication authentication) {
         return Collections.singletonMap(PARAMETERS_KEY, getArguments(originating, authentication));
     }
 
@@ -78,13 +78,13 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
      * @param authentication The authentication
      * @return The parameters to include in the URL
      */
-    protected abstract Map<String, Object> getArguments(HttpRequest originating, Authentication authentication);
+    protected abstract Map<String, Object> getArguments(HttpRequest<?> originating, Authentication authentication);
 
     /**
      * @param originating The originating request
      * @return The absolute redirect URI
      */
-    protected String getRedirectUri(HttpRequest originating) {
+    protected String getRedirectUri(HttpRequest<?> originating) {
         return endSessionCallbackUrlBuilder.build(originating).toString();
     }
 }

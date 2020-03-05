@@ -36,5 +36,5 @@ public interface EndSessionCallbackUrlBuilder {
      * @param originating The originating request
      * @return The URL
      */
-    URL build(HttpRequest originating);
+    URL build(HttpRequest<?> originating);
 }

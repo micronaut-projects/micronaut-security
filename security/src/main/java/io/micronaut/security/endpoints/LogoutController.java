@@ -18,10 +18,7 @@ package io.micronaut.security.endpoints;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MediaType;
+import io.micronaut.http.*;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -73,7 +70,7 @@ public class LogoutController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public HttpResponse index(HttpRequest<?> request, @Nullable Authentication authentication) {
+    public MutableHttpResponse<?> index(HttpRequest<?> request, @Nullable Authentication authentication) {
         return handleLogout(request, authentication);
     }
 
@@ -85,7 +82,7 @@ public class LogoutController {
      * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
      */
     @Get
-    public HttpResponse indexGet(HttpRequest<?> request, @Nullable Authentication authentication) {
+    public MutableHttpResponse<?> indexGet(HttpRequest<?> request, @Nullable Authentication authentication) {
         if (!getAllowed) {
            return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);
         }
@@ -99,7 +96,7 @@ public class LogoutController {
      * @param authentication {@link Authentication} instance for current user
      * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
      */
-    protected HttpResponse handleLogout(HttpRequest<?> request, @Nullable Authentication authentication) {
+    protected MutableHttpResponse<?> handleLogout(HttpRequest<?> request, @Nullable Authentication authentication) {
         if (authentication != null) {
             eventPublisher.publishEvent(new LogoutEvent(authentication));
         }

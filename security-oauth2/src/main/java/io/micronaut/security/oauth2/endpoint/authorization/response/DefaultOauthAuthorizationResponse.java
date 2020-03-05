@@ -69,7 +69,7 @@ public class DefaultOauthAuthorizationResponse extends AbstractAuthorizationResp
 
     @Nonnull
     @Override
-    public HttpRequest getCallbackRequest() {
+    public HttpRequest<?> getCallbackRequest() {
         return request;
     }
 }

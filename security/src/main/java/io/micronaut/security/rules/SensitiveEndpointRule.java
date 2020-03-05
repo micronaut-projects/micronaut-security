@@ -62,7 +62,7 @@ public class SensitiveEndpointRule implements SecurityRule {
     }
 
     @Override
-    public SecurityRuleResult check(HttpRequest request, @Nullable RouteMatch routeMatch, @Nullable Map<String, Object> claims) {
+    public SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             ExecutableMethod method = ((MethodBasedRouteMatch) routeMatch).getExecutableMethod();
 

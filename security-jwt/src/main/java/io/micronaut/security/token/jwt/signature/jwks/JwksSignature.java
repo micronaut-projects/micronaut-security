@@ -75,7 +75,6 @@ public class JwksSignature implements SignatureConfiguration {
      * @param keyType The JWK key type
      * @param jwkValidator JWK Validator to be used.
      */
-    @Inject
     public JwksSignature(String url,
                          @Nullable KeyType keyType,
                          JwkValidator jwkValidator) {

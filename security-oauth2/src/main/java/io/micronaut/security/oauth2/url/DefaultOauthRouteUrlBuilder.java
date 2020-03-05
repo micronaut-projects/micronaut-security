@@ -57,12 +57,12 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     }
 
     @Override
-    public URL buildLoginUrl(@Nullable HttpRequest originating, String providerName) {
+    public URL buildLoginUrl(@Nullable HttpRequest<?> originating, String providerName) {
         return build(originating, providerName, loginUriTemplate);
     }
 
     @Override
-    public URL buildCallbackUrl(@Nullable HttpRequest originating, String providerName) {
+    public URL buildCallbackUrl(@Nullable HttpRequest<?> originating, String providerName) {
         return build(originating, providerName, callbackUriTemplate);
     }
 
@@ -92,7 +92,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
      * @param uriTemplate The URI template
      * @return The URL
      */
-    protected URL build(@Nullable HttpRequest originating, String providerName, String uriTemplate) {
+    protected URL build(@Nullable HttpRequest<?> originating, String providerName, String uriTemplate) {
         return buildUrl(originating, getPath(uriTemplate, providerName));
     }
 
@@ -110,7 +110,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     }
 
     @Override
-    public URL buildUrl(@Nullable HttpRequest current, String path) {
+    public URL buildUrl(@Nullable HttpRequest<?> current, String path) {
         try {
             return UriBuilder.of(hostResolver.resolve(current))
                     .path(path)

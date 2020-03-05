@@ -36,5 +36,5 @@ public interface AbsoluteUrlBuilder {
      * @param path The path
      * @return The absolute URL
      */
-    URL buildUrl(@Nullable HttpRequest current, String path);
+    URL buildUrl(@Nullable HttpRequest<?> current, String path);
 }

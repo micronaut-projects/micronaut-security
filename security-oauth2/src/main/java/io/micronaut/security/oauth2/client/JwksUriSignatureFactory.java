@@ -46,7 +46,7 @@ public class JwksUriSignatureFactory {
      */
     @EachBean(DefaultOpenIdProviderMetadata.class)
     public JwksSignature createJwksUriSignature(@Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
-                                                   JwkValidator jwkValidator) {
+                                                JwkValidator jwkValidator) {
         return new JwksSignature(new JwksSignatureConfiguration() {
             @Nonnull
             @Override
