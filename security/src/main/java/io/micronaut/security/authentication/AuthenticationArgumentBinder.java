@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.bind.ArgumentBinder;
 import io.micronaut.core.convert.ArgumentConversionContext;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
