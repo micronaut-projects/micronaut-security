@@ -1,6 +1,7 @@
 rootProject.name = 'micronaut-security'
 
 include "security"
+include "security-annotations"
 include "security-jwt"
 include "security-session"
 include "security-ldap"

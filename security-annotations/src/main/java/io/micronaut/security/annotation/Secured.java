@@ -43,8 +43,7 @@ public @interface Secured {
      * the resource.
      *
      * The values can be a role (eg ROLE_ADMIN), or a token.
-     * @see io.micronaut.security.rules.SecurityRule#IS_AUTHENTICATED
-     * @see io.micronaut.security.rules.SecurityRule#IS_ANONYMOUS
+     * See io.micronaut.security.rules.SecurityRule for other supported values.
      *
      * @return The list of roles or tokens
      */

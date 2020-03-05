@@ -27,7 +27,6 @@ import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.Authenticator;
 import io.micronaut.security.authentication.UserDetails;
@@ -88,9 +87,8 @@ public class LoginController {
                 eventPublisher.publishEvent(new LoginSuccessfulEvent(userDetails));
                 return loginHandler.loginSuccess(userDetails, request);
             } else {
-                AuthenticationFailed authenticationFailed = (AuthenticationFailed) authenticationResponse;
-                eventPublisher.publishEvent(new LoginFailedEvent(authenticationFailed));
-                return loginHandler.loginFailed(authenticationFailed);
+                eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
+                return loginHandler.loginFailed(authenticationResponse);
             }
         }).first(HttpResponse.status(HttpStatus.UNAUTHORIZED));
     }
