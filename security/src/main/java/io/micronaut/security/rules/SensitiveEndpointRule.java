@@ -15,11 +15,9 @@
  */
 package io.micronaut.security.rules;
 
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
-import io.micronaut.management.endpoint.EndpointsFilter;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
 import org.slf4j.Logger;
