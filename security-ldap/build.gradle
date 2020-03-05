@@ -1,9 +1,9 @@
 group "io.micronaut.configuration"
 
 dependencies {
-    compile project(":security")
+    api project(":security")
 
-    testCompile "com.unboundid:unboundid-ldapsdk:4.0.14"
+    testImplementation "com.unboundid:unboundid-ldapsdk:4.0.14"
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
