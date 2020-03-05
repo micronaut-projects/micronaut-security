@@ -37,7 +37,6 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.0
  */
-@Replaces(EndpointsFilter.class)
 @Singleton
 public class SensitiveEndpointRule implements SecurityRule {
     /**
