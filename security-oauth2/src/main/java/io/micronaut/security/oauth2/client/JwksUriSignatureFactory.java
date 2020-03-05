@@ -19,6 +19,7 @@ import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
@@ -34,6 +35,7 @@ import javax.inject.Provider;
  * @since 1.3.0
  */
 @Factory
+@Internal
 public class JwksUriSignatureFactory {
 
     /**
