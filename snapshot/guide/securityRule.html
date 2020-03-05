@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>4 Security Rules 2.0.0.BUILD-SNAPSHOT</title>
+    <title>4 Security Rules 1.4.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -105,7 +105,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>4 Security Rules</h1>
 
-                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.4.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -162,6 +162,7 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
+    enabled: true
     ip-patterns:
       - 127.0.0.1
       - 192.168.1.*</code></pre>
@@ -282,6 +283,7 @@ public class ExampleController {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
+    enabled: true
     intercept-url-map:
       -
         pattern: /images/*
@@ -335,6 +337,7 @@ and an optional HTTP method.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
+    enabled: true
     intercept-url-map:
       - pattern: /v1/myResource/**
         httpMethod: GET <i class="conum" data-value="1"></i><b>(1)</b>

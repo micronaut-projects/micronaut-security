@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>6 Rejection Handling 2.0.0.BUILD-SNAPSHOT</title>
+    <title>6 Rejection Handling 1.4.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -105,7 +105,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>6 Rejection Handling</h1>
 
-                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.4.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -142,14 +142,15 @@ function addJsClass() {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
-@Replaces(DefaultAuthorizationExceptionHandler.class)
-public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
+@Replaces(HttpStatusCodeRejectionHandler.class)
+public class MyRejectionHandler extends HttpStatusCodeRejectionHandler {
 
     @Override
-    public MutableHttpResponse&lt;?&gt; handle(HttpRequest request, AuthorizationException exception) {
+    public Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; reject(HttpRequest&lt;?&gt; request, boolean forbidden) {
         //Let the HttpStatusCodeRejectionHandler create the initial request
         //then add a header
-        return super.handle(request, exception).header("X-Reason", "Example Header");
+        return Flowable.fromPublisher(super.reject(request, forbidden))
+                .map(response -&gt; response.header("X-Reason", "Example Header"));
     }
 }</code></pre>
 </div>
