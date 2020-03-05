@@ -15,19 +15,12 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import com.nimbusds.jwt.EncryptedJWT;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -65,6 +58,10 @@ public class JwtTokenValidator implements TokenValidator {
                 .build(), jwtAuthenticationFactory);
     }
 
+    /**
+     * @param validator Validates the JWT
+     * @param jwtAuthenticationFactory The authentication factory
+     */
     public JwtTokenValidator(JwtValidator validator,
                              JwtAuthenticationFactory jwtAuthenticationFactory) {
         this.validator = validator;
