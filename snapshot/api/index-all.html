@@ -234,7 +234,7 @@
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/authentication/AuthenticationProvider.html#authenticate-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.AuthenticationRequest-"><code>AuthenticationProvider.authenticate(HttpRequest, AuthenticationRequest)</code></a> instead.</span></div>
 </div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/AuthenticationProvider.html#authenticate-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.AuthenticationRequest-">authenticate(HttpRequest&lt;?&gt;, AuthenticationRequest)</a></span> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/AuthenticationProvider.html#authenticate-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.AuthenticationRequest-">authenticate(HttpRequest&lt;?&gt;, AuthenticationRequest&lt;?, ?&gt;)</a></span> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication">AuthenticationProvider</a></dt>
 <dd>
 <div class="block">Authenticates a user with the given request.</div>
 </dd>
@@ -247,6 +247,12 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/Authenticator.html#authenticate-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.AuthenticationRequest-">authenticate(HttpRequest&lt;?&gt;, AuthenticationRequest&lt;?, ?&gt;)</a></span> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a></dt>
 <dd>
 <div class="block">Authenticates the user with the provided credentials.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/HttpAuthenticationProvider.html#authenticate-io.micronaut.security.authentication.AuthenticationRequest-">authenticate(AuthenticationRequest)</a></span> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/HttpAuthenticationProvider.html" title="interface in io.micronaut.security.authentication">HttpAuthenticationProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/HttpAuthenticationProvider.html#authenticate-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.AuthenticationRequest-">authenticate(HttpRequest&lt;?&gt;, AuthenticationRequest&lt;?, ?&gt;)</a></span> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/HttpAuthenticationProvider.html" title="interface in io.micronaut.security.authentication">HttpAuthenticationProvider</a></dt>
+<dd>
+<div class="block">Authenticates a user with the given request.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/providers/DelegatingAuthenticationProvider.html#authenticate-io.micronaut.security.authentication.AuthenticationRequest-">authenticate(AuthenticationRequest)</a></span> - Method in class io.micronaut.security.authentication.providers.<a href="io/micronaut/security/authentication/providers/DelegatingAuthenticationProvider.html" title="class in io.micronaut.security.authentication.providers">DelegatingAuthenticationProvider</a></dt>
 <dd>
@@ -3031,6 +3037,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html#headerValue-java.lang.String-">headerValue(String)</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriter</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/authentication/HttpAuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><span class="typeNameLink">HttpAuthenticationProvider</span></a> - Interface in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
+<dd>
+<div class="block">Authenticates the authentication request within the context of
+ an http request.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html" title="class in io.micronaut.security.token.reader"><span class="typeNameLink">HttpHeaderTokenReader</span></a> - Class in <a href="io/micronaut/security/token/reader/package-summary.html">io.micronaut.security.token.reader</a></dt>
 <dd>
 <div class="block">Reads a token from an HTTP request and removes prefix from HTTP Header Value.</div>

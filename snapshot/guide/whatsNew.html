@@ -121,12 +121,57 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>Micronaut Security 1.4.0.BUILD-SNAPSHOT includes the following changes:</p>
+<p>Micronaut Security 1.4.0.BUILD-SNAPSHOT includes changes to make the transition to version 2.0 easier.</p>
 </div>
-<div class="sect2">
-<h3 id="_startup_time_improvements">Startup Time Improvements</h3>
-<div class="paragraph">
-<p>For users of the OAuth module, you should see an improvement in startup time because the loading of the provider metadata is now done lazily.</p>
+<div class="sect1">
+<h2 id="_deprecations">Deprecations</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Most of the methods in <a href="../api/io/micronaut/security/token/jwt/validator/JwtTokenValidator.html">JwtTokenValidator</a> and the <a href="../api/io/micronaut/security/token/jwt/validator/JwtTokenValidatorUtils.html">JwtTokenValidatorUtils</a> class has been deprecated in favor of a new builder style syntax. The new class is <a href="../api/io/micronaut/security/token/jwt/validator/JwtValidator.html">JwtValidator</a>. Replace any deprecated usage with the builder style validator.</p>
+</li>
+<li>
+<p>The entire <a href="../api/io/micronaut/security/handlers/RejectionHandler.html">RejectionHandler</a> API has been deprecated in favor of usage of the existing exception handler functionality in Micronaut. A new exception, <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a>, has been created and will be emitted from the security filter. To bridge that API with the current one, a <a href="../api/io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html">DefaultAuthorizationExceptionHandler</a> has been created that delegates to the current <a href="../api/io/micronaut/security/handler/RejectionHandler.html">RejectionHandler</a> API. If you have your own rejection handler, it is recommended to replace the default exception handler with your own implementation.</p>
+</li>
+<li>
+<p>The <a href="../api/io/micronaut/security/handlers/LoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationFailed-">LoginHandler#loginFailed</a> method has been deprecated. Override the new default method that takes an <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> instead.</p>
+</li>
+<li>
+<p>The <a href="../api/io/micronaut/security/authentication/providers/DelegatingAuthenticationProvider.html">DelegatingAuthenticationProvider</a> and its related APIs have been deprecated and will be removed in a future release without any replacement. If your application currently overrides these APIs, copy the code into your codebase.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annotation_processing">Annotation Processing</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation has been moved to a separate module in order to reduce the number of classes in the annotation processor scope. If you currently have <code>micronaut-security</code> in the classpath of your compiler, the entry can be changed to <code>micronaut-security-annotations</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_improvements">Improvements</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>It is now possible to gain access to the request in your <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.</p>
+</li>
+<li>
+<p>It is no longer assumed that a failed authentication response is an instance of <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>. That now allows for any subclass of <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> to be emitted in the case of an authentication failure.</p>
+</li>
+<li>
+<p>A new constructor for <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a> that takes a string message has been added to allow for custom error messages.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 
