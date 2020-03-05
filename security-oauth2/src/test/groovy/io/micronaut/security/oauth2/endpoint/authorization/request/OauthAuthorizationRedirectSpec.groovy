@@ -33,8 +33,8 @@ class OauthAuthorizationRedirectSpec extends Specification implements Configurat
         config.putAll(oauth2Config)
         config.put("spec.name", OauthAuthorizationRedirectSpec.simpleName)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
-        config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")
-        config.put("micronaut.security.oauth2.clients.twitter.token.url", "http://twitter.com/token")
+        config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "https://twitter.com/authorize")
+        config.put("micronaut.security.oauth2.clients.twitter.token.url", "https://twitter.com/token")
         config.put("micronaut.security.oauth2.clients.twitter.client-id", "myclient")
         config.put("micronaut.security.oauth2.clients.twitter.client-secret", "mysecret")
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, config)
@@ -55,7 +55,7 @@ class OauthAuthorizationRedirectSpec extends Specification implements Configurat
 
         then:
         response.status == HttpStatus.FOUND
-        location.startsWith("http://twitter.com/authorize")
+        location.startsWith("https://twitter.com/authorize")
         !location.contains("scope=")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")

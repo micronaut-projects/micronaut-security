@@ -37,8 +37,8 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
         config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)
-        config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")
-        config.put("micronaut.security.oauth2.clients.twitter.token.url", "http://twitter.com/token")
+        config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "https://twitter.com/authorize")
+        config.put("micronaut.security.oauth2.clients.twitter.token.url", "https://twitter.com/token")
         config.put("micronaut.security.oauth2.clients.twitter.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.twitter.client-secret", "mysecret")
         ApplicationContext context = startContext(config)
@@ -78,7 +78,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
 
         then:
         response.status == HttpStatus.FOUND
-        location.startsWith("http://twitter.com/authorize")
+        location.startsWith("https://twitter.com/authorize")
         !location.contains("scope=")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
@@ -98,8 +98,8 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
         config.put("micronaut.security.oauth2.clients.keycloak.openid.issuer", ISSUER)
         config.put("micronaut.security.oauth2.clients.keycloak.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.keycloak.client-secret", CLIENT_SECRET)
-        config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "http://twitter.com/authorize")
-        config.put("micronaut.security.oauth2.clients.twitter.token.url", "http://twitter.com/token")
+        config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "https://twitter.com/authorize")
+        config.put("micronaut.security.oauth2.clients.twitter.token.url", "https://twitter.com/token")
         config.put("micronaut.security.oauth2.clients.twitter.client-id", CLIENT_ID)
         config.put("micronaut.security.oauth2.clients.twitter.client-secret", "mysecret")
         config.put("micronaut.security.oauth2.clients.twitter.enabled", false)
