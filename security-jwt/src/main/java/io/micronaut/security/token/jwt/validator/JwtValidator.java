@@ -17,7 +17,6 @@ package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jwt.*;
-import io.micronaut.core.order.OrderUtil;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
