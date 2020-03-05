@@ -21,7 +21,7 @@ import spock.lang.Specification
 
 class BasicAuthTokenValidatorSpec extends Specification {
 
-    def "BasicAuthTokenValidator not loaded unless security is turn on"() {
+    def "BasicAuthTokenValidator is loaded because by default security is turn on"() {
         given:
         ApplicationContext applicationContext = ApplicationContext.run()
 

@@ -35,7 +35,7 @@ class LogoutControllerEnabledSpec extends Specification {
     ], Environment.TEST)
 
     @Unroll("if micronaut.security.enabled=true and micronaut.security.endpoints.logout.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    void "if micronaut.security.endpoints.logout.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
         embeddedServer.applicationContext.getBean(clazz)
 

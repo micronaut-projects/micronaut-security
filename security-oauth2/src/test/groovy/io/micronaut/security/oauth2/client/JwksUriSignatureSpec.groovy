@@ -61,17 +61,10 @@ class JwksUriSignatureSpec extends Specification {
     @Shared
     int authServerBPort = SocketUtils.findAvailableTcpPort()
 
-    Map<String, Object> getMinimumConfig() {
-        [
-                'micronaut.security.enabled'                         : true,
-                'micronaut.security.oauth2.enabled'                  : true,
-                'micronaut.security.token.jwt.enabled'               : true,
-        ] as Map<String, Object>
-    }
 
     @AutoCleanup
     @Shared
-    EmbeddedServer authServerA = ApplicationContext.run(EmbeddedServer,  minimumConfig + [
+    EmbeddedServer authServerA = ApplicationContext.run(EmbeddedServer, [
             'micronaut.server.port'                              : authServerAPort,
             'spec.name'                                          : 'AuthServerAJwksUriSignatureSpec',
             'micronaut.security.endpoints.login.enabled'         : true,
@@ -83,7 +76,7 @@ class JwksUriSignatureSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    EmbeddedServer authServerB = ApplicationContext.run(EmbeddedServer,  minimumConfig + [
+    EmbeddedServer authServerB = ApplicationContext.run(EmbeddedServer, [
             'micronaut.server.port'                              : authServerBPort,
             'spec.name'                                          : 'AuthServerBJwksUriSignatureSpec',
             'micronaut.security.endpoints.login.enabled'         : true,
@@ -95,7 +88,7 @@ class JwksUriSignatureSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, minimumConfig + [
+    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer,[
             'micronaut.security.token.jwt.bearer.enabled'          : true,
             'micronaut.security.token.jwt.cookie.enabled'          : true,
             'micronaut.security.oauth2.clients.a.openid.issuer' : "http://localhost:${authServerAPort}/oauth2/default",

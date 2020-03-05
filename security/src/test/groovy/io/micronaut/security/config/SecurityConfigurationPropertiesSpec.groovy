@@ -45,7 +45,6 @@ class SecurityConfigurationPropertiesSpec extends Specification {
     void "test configuring security with invalid method"() {
         given:
         def ctx = ApplicationContext.run([
-                "micronaut.security.enabled": true,
                 "micronaut.security.intercept-url-map": [
                         [httpMethod: 'FOO', pattern: '/health', access: ['isAnonymous()']]
                 ]], Environment.TEST)
@@ -64,7 +63,6 @@ class SecurityConfigurationPropertiesSpec extends Specification {
     void "test configuring security with missing pattern"() {
         given:
         def ctx = ApplicationContext.run([
-                "micronaut.security.enabled": true,
                 "micronaut.security.intercept-url-map": [
                         [httpMethod: 'POST', access: ['isAnonymous()']]
                 ]], Environment.TEST)
@@ -83,7 +81,6 @@ class SecurityConfigurationPropertiesSpec extends Specification {
     void "test configuring valid security"() {
         given:
         def ctx = ApplicationContext.run([
-                "micronaut.security.enabled": true,
                 "micronaut.security.intercept-url-map": [
                         [pattern: '/health', access: 'foo'],
                         [pattern: '/health', access: 'isAnonymous()'],

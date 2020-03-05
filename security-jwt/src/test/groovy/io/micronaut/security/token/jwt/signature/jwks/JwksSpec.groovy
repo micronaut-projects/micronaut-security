@@ -91,8 +91,6 @@ class JwksSpec extends Specification {
         given:
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY)                           : 'jwks.gateway',
-                'micronaut.security.enabled'                   : true,
-                'micronaut.security.token.jwt.enabled'         : true,
                 'micronaut.security.endpoints.login.enabled'   : true,
                 'micronaut.security.endpoints.keys.enabled'    : true,
         ]
@@ -127,8 +125,6 @@ class JwksSpec extends Specification {
         given:
         Map booksConfig = [
                 (SPEC_NAME_PROPERTY)                           : 'jwks.books',
-                'micronaut.security.enabled'                   : true,
-                'micronaut.security.token.jwt.enabled'         : true,
                 'micronaut.security.token.jwt.signatures.jwks.gateway.url' : "http://localhost:${gatewayPort}/keys",
         ]
 

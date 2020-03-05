@@ -2,7 +2,6 @@ package io.micronaut.security.oauth2.configuration
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import io.micronaut.context.exceptions.NoSuchBeanException
 import spock.lang.Specification
 
 class OauthConfigurationSpec extends Specification {

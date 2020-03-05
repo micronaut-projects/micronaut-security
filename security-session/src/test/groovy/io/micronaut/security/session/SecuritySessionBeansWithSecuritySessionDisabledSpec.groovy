@@ -39,7 +39,7 @@ class SecuritySessionBeansWithSecuritySessionDisabledSpec extends Specification 
     RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
 
     @Unroll("if micronaut.security.enabled=true and micronaut.security.session.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    void "if micronaut.security.session.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
         embeddedServer.applicationContext.getBean(clazz)
 

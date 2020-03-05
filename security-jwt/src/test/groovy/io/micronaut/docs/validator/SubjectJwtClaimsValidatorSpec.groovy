@@ -28,7 +28,6 @@ class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : SubjectNotNullJwtClaimsValidatorSpec.simpleName,
-                'micronaut.security.token.jwt.enabled': true
 
         ], Environment.TEST)
 

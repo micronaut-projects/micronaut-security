@@ -1,7 +1,6 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.security.oauth2.ConfigurationFixture
 import spock.lang.Specification
 
 class ClaimsValidationDisableSpec extends Specification {

@@ -47,8 +47,6 @@ class JwsSignatureSpec extends Specification implements JwtFixture {
     @Shared
     Map conf = [
             (SPEC_NAME_PROPERTY)                           : 'jwssignaturespec',
-            'micronaut.security.enabled'                   : true,
-            'micronaut.security.token.jwt.enabled'         : true,
             'micronaut.security.endpoints.keys.enabled'    : true,
     ]
 
