@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;

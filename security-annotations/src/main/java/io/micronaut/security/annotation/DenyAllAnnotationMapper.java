@@ -19,7 +19,6 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.annotation.TypedAnnotationMapper;
 import io.micronaut.inject.visitor.VisitorContext;
-import io.micronaut.security.rules.SecurityRule;
 
 import javax.annotation.security.DenyAll;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class DenyAllAnnotationMapper implements TypedAnnotationMapper<DenyAll> {
         List<AnnotationValue<?>> annotationValues = new ArrayList<>(1);
         annotationValues.add(
                 AnnotationValue.builder(Secured.class)
-                                .value(SecurityRule.DENY_ALL)
+                                .value("denyAll()")
                                 .build()
         );
         return annotationValues;

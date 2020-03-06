@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Classes related to OpenID end session endpoint requests and responses.
  *

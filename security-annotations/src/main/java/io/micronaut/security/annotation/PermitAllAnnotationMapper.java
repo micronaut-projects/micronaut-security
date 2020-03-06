@@ -19,7 +19,6 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.annotation.TypedAnnotationMapper;
 import io.micronaut.inject.visitor.VisitorContext;
-import io.micronaut.security.rules.SecurityRule;
 
 import javax.annotation.security.PermitAll;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class PermitAllAnnotationMapper implements TypedAnnotationMapper<PermitAl
         List<AnnotationValue<?>> annotationValues = new ArrayList<>(1);
         annotationValues.add(
                 AnnotationValue.builder(Secured.class) // <3>
-                                .value(SecurityRule.IS_ANONYMOUS) // <4>
+                                .value("isAnonymous()") // <4>
                                 .build()
         );
         return annotationValues;
