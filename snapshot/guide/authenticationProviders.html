@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>3 Authentication Providers 1.4.0.BUILD-SNAPSHOT</title>
+    <title>3 Authentication Providers 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -50,7 +50,7 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
@@ -105,7 +105,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>3 Authentication Providers</h1>
 
-                    <p><strong>Version:</strong> 1.4.0.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -128,46 +128,42 @@ function addJsClass() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Singleton
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.UserDetails;
+import io.reactivex.Maybe;
+import org.reactivestreams.Publisher;
+
+import javax.inject.Singleton;
+import java.util.ArrayList;
+@Singleton
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
-    public Publisher&lt;AuthenticationResponse&gt; authenticate(AuthenticationRequest authenticationRequest) {
-        if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
-            return Flowable.just(new UserDetails("user", new ArrayList&lt;&gt;()));
-        }
-        return Flowable.just(new AuthenticationFailed());
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
+        return Maybe.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
+            if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
+                emitter.onSuccess(new UserDetails("user", new ArrayList&lt;&gt;()));
+            } else {
+                emitter.onSuccess(new AuthenticationFailed());
+            }
+        }).toFlowable();
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The built-in <a href="#login">Login Controller</a> uses every available authentication provider. Authentication strategies, such as basic auth, where the credentials are present in the request use the available authentication providers too.</p>
+<p>The built-in <a href="#login">Login Controller</a> uses every available authentication provider. The first provider that returns a successful authentication response will have its value used as the basis for the JWT token or session state.</p>
 </div>
 <div class="paragraph">
-<p>Micronaut ships with <a href="../api/io/micronaut/security/authentication/providers/DelegatingAuthenticationProvider.html">DelegatingAuthenticationProvider</a> which can be typically used
-in environments such as the one described in the following diagram.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../img/delegating_authentication_provider.svg" alt="delegating authentication provider">
-</div>
+<p>Basic authentication which is implemented as an <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> will also trigger the available <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s.</p>
 </div>
 <div class="paragraph">
-<p><code>DelegatingAuthenticationProvider</code> is not enabled unless you provide implementations for <a href="../api/io/micronaut/security/authentication/providers/UserFetcher.html">UserFetcher</a>,
-<a href="../api/io/micronaut/security/authentication/providers/PasswordEncoder.html">PasswordEncoder</a> and  <a href="../api/io/micronaut/security/authentication/providers/AuthoritiesFetcher.html">AuthoritiesFetcher</a></p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Read the <a href="https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html">LDAP and Database authentication providers</a> to learn more.
-</td>
-</tr>
-</table>
+<p>Micronaut comes with authentication providers for LDAP and the OAuth 2.0 password grant authentication flow. For any custom authentication, an authentication provider must be created.</p>
 </div>
 
 

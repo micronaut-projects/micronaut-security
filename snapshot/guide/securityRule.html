@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>4 Security Rules 1.4.0.BUILD-SNAPSHOT</title>
+    <title>4 Security Rules 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -50,7 +50,7 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
@@ -98,14 +98,14 @@ function addJsClass() {
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span> >></a></div>
                 
 
 
                 <div class="project">
                     <h1>4 Security Rules</h1>
 
-                    <p><strong>Version:</strong> 1.4.0.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -142,6 +142,50 @@ function addJsClass() {
 Security Rules. Micronaut ships with several built-in security rules. If they don&#8217;t fulfil your needs,
 you can implement your own <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a>.</p>
 </div>
+<div class="paragraph">
+<p>Security rules implement the ordered interface and they are executed in order. All of the existing rules have a static variable <code>ORDER</code> that stores the order of that rule. You can use those variables to place your own rule before or after any of the existing rules.</p>
+</div>
+<div class="paragraph">
+<p>Security rules return a <a href="../api/io/micronaut/security/rules/SecurityRuleResult.html">SecurityRuleResult</a>. See the following table for a description of each result.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Result</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#ALLOWED">ALLOWED</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be granted and no further rules will be considered.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#REJECTED">REJECTED</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be rejected and no further rules will be considered.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#UNKNOWN">UNKNOWN</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The rule doesn&#8217;t apply to the request resource, or it cannot be determined either way. This result will cause other security rules to be considered.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If all security rules return <code>UNKNOWN</code>, the request will be rejected!
+</td>
+</tr>
+</table>
+</div>
 
 <h2 id="ipPattern"><a class="anchor" href="#ipPattern"></a>4.1 IP Pattern Rule</h2>
 
@@ -162,7 +206,6 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     ip-patterns:
       - 127.0.0.1
       - 192.168.1.*</code></pre>
@@ -171,6 +214,12 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <div class="paragraph">
 <p>In the previous code, the <a href="../api/io/micronaut/security/rules/IpPatternsRule.html">IpPatternsRule</a> rejects traffic not coming
 either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
+</div>
+<div class="paragraph">
+<p>The IP patterns rule never explicitly allows requests, it only rejects requests if the address does not match. There must be other security rules that determine whether a resource should be accessed.</p>
+</div>
+<div class="paragraph">
+<p>If the desired behavior is to allow access to all resources as long as the address matches, create a security rule that executes after this one that returns <code>ALLOWED</code>.</p>
 </div>
 
 <h2 id="secured"><a class="anchor" href="#secured"></a>4.2 Secured Annotation</h2>
@@ -183,8 +232,8 @@ either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
 
 
 <div class="paragraph">
-<p>As illustrated below, you can use <a href="../api/io/micronaut/security/annotation/Secured.html">Secured</a> annotation to configure
-access at <a href="../api/io/micronaut/http/annotation/Controller.html">Controller</a> or Controller&#8217;s Action level.</p>
+<p>As illustrated below, you can use the <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation to control
+access to controllers or controller methods.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -231,7 +280,7 @@ public class ExampleController {
 </table>
 </div>
 <div class="paragraph">
-<p>Alternatively, you could use <a href="https://jcp.org/en/jsr/detail?id=250">JSR_250</a> annotations (<code>javax.annotation.security.PermitAll</code>, <code>javax.annotation.security.RolesAllowed</code>, <code>javax.annotation.security.DenyAll</code>):</p>
+<p>Alternatively, you can use <a href="https://jcp.org/en/jsr/detail?id=250">JSR_250</a> annotations (<code>javax.annotation.security.PermitAll</code>, <code>javax.annotation.security.RolesAllowed</code>, <code>javax.annotation.security.DenyAll</code>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -266,6 +315,18 @@ public class ExampleController {
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The use of JSR 250 annotations requires <code>io.micronaut:micronaut-security-annotations</code> to be in the annotation processor classpath (<code>annotationProcessor</code>, <code>kapt</code>, <code>compileOnly</code>) respectively for Java, Kotlin, Groovy.
+</td>
+</tr>
+</table>
+</div>
 
 <h2 id="interceptUrlMap"><a class="anchor" href="#interceptUrlMap"></a>4.3 Intercept URL Map</h2>
 
@@ -283,7 +344,6 @@ public class ExampleController {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     intercept-url-map:
       -
         pattern: /images/*
@@ -337,7 +397,6 @@ and an optional HTTP method.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     intercept-url-map:
       - pattern: /v1/myResource/**
         httpMethod: GET <i class="conum" data-value="1"></i><b>(1)</b>
@@ -402,7 +461,7 @@ and an optional HTTP method.</p>
                 
                     <div class="toc-item prev-left"><a href="../guide/authenticationProviders.html">&lt;&lt; <strong>3</strong><span>Authentication Providers</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
