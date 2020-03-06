@@ -86,7 +86,7 @@ public class BasicAuthTokenValidator implements TokenValidator {
     public Publisher<Authentication> validateToken(String encodedToken) {
         Optional<UsernamePasswordCredentials> creds = credsFromEncodedToken(encodedToken);
         if (creds.isPresent()) {
-            HttpRequest<?> request = ServerRequestContext.currentRequest().get();
+            HttpRequest<?> request = ServerRequestContext.currentRequest().orElse(null);
             Flowable<AuthenticationResponse> authenticationResponse = Flowable.fromPublisher(authenticator.authenticate(request, creds.get()));
 
             return authenticationResponse.switchMap(response -> {
