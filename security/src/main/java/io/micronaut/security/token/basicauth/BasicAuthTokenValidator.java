@@ -17,6 +17,8 @@ package io.micronaut.security.token.basicauth;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
@@ -84,7 +86,8 @@ public class BasicAuthTokenValidator implements TokenValidator {
     public Publisher<Authentication> validateToken(String encodedToken) {
         Optional<UsernamePasswordCredentials> creds = credsFromEncodedToken(encodedToken);
         if (creds.isPresent()) {
-            Flowable<AuthenticationResponse> authenticationResponse = Flowable.fromPublisher(authenticator.authenticate(creds.get()));
+            HttpRequest<?> request = ServerRequestContext.currentRequest().get();
+            Flowable<AuthenticationResponse> authenticationResponse = Flowable.fromPublisher(authenticator.authenticate(request, creds.get()));
 
             return authenticationResponse.switchMap(response -> {
                 if (response.isAuthenticated()) {
