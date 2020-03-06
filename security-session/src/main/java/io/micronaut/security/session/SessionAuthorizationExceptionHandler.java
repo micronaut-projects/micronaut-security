@@ -35,16 +35,16 @@ import java.net.URISyntaxException;
  */
 @Singleton
 @Replaces(DefaultAuthorizationExceptionHandler.class)
-public class RedirectingAuthorizationExceptionHandler extends DefaultAuthorizationExceptionHandler {
+public class SessionAuthorizationExceptionHandler extends DefaultAuthorizationExceptionHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RedirectingAuthorizationExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SessionAuthorizationExceptionHandler.class);
 
     private final SecuritySessionConfiguration configuration;
 
     /**
      * @param configuration The session configuration
      */
-    public RedirectingAuthorizationExceptionHandler(SecuritySessionConfiguration configuration) {
+    public SessionAuthorizationExceptionHandler(SecuritySessionConfiguration configuration) {
         this.configuration = configuration;
     }
 

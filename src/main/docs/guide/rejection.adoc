@@ -1,21 +1,13 @@
 Micronaut allows the customization of the response that is sent when a request is not authorized to access a resource, or is not authenticated and the resource requires authentication.
 
-To control this response, it is necessary to register a api:io.micronaut.security.handlers.RejectionHandler[] and ensure your bean replaces the default implementation.
+When a request is rejected, the security filter emits an api:security.authentication.AuthorizationException[]. The default implementation (api:security.authentication.DefaultAuthorizationExceptionHandler[]) simply returns an empty response with either a 401 or 403 status code depending on whether the request was authenticated or not.
 
-If both beans (api:io.micronaut.security.handlers.UnauthorizedRejectionUriProvider[], api:io.micronaut.security.handlers.ForbiddenRejectionUriProvider[]) exists, then api:io.micronaut.security.handlers.RedirectRejectionHandler[],
-               a generic redirect handler, is registered as a `RejectionHandler`.
+For those using session based authorization, the default implementation is overridden by api:security.session.SessionAuthorizationExceptionHandler[]. The session exception handler redirects based on the session configuration.
 
-You can create your own `RejectionHandler`. You will need to replace the current `RejectionHandler`.
-
-For those using JWT based security, replace api:io.micronaut.security.handlers.HttpStatusCodeRejectionHandler[].
+To fully customize the behavior, replace the relevant bean with your own implementation.
 
 For example:
-
 [source,java]
 ----
 include::{testssecurityjwt}/rejection/MyRejectionHandler.java[tag=clazz,indent=0]
 ----
-
-For those using session based security, replace api:io.micronaut.security.session.SessionSecurityfilterRejectionHandler[].
-
-NOTE: If you are using session based security to use the `RedirectRejectionHandler` you will need to disable `SessionSecurityfilterRejectionHandler` with `micronaut.security.session.legacy-redirect-handler: false`.

@@ -9,9 +9,9 @@ securityRule:
   interceptUrlMap: Intercept URL Map
   builtInEndpointsAccess: Built-In Endpoints Security
 authenticationStrategies:
-  title: Authentication Strategies
-  basicAuth: Basic Auth
-  session: Session Authentication
+  title: Authorization Strategies
+  basicAuth: Basic Authentication
+  session: Session Authorization
   jwt:
     title: JSON Web Token
     reader:
@@ -32,6 +32,7 @@ authenticationStrategies:
     title: LDAP Authentication
     configuration: Configuration
     extending: Extending Default Behavior
+  custom: Custom Authorization Strategies
 rejection: Rejection Handling
 tokenPropagation: Token Propagation
 endpoints:

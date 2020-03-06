@@ -139,7 +139,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     }
 
     /**
-     * Sets the unauthorized target URL.
+     * Sets the unauthorized target URL. Default value ({@value #DEFAULT_UNAUTHORIZEDTARGETURL}).
      *
      * @param unauthorizedTargetUrl The URL
      */
@@ -150,7 +150,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     }
 
     /**
-     * Sets the forbidden target URL.
+     * Sets the forbidden target URL. Default value ({@value #DEFAULT_FORBIDDENTARGETURL}).
      *
       * @param forbiddenTargetUrl The URL
      */

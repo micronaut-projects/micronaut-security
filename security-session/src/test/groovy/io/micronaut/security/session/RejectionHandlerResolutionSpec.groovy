@@ -6,9 +6,7 @@ import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.http.server.exceptions.ExceptionHandler
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthorizationException
-import spock.lang.Shared
 import spock.lang.Specification
 
 class RejectionHandlerResolutionSpec extends Specification {
@@ -31,7 +29,7 @@ class RejectionHandlerResolutionSpec extends Specification {
 
         then:
         noExceptionThrown()
-        exceptionHandler instanceof RedirectingAuthorizationExceptionHandler
+        exceptionHandler instanceof SessionAuthorizationExceptionHandler
 
         cleanup:
         context.close()

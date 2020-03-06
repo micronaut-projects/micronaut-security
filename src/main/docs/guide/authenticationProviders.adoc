@@ -1,21 +1,14 @@
-To authenticate users you must provide implementations of link:{api}/io/micronaut/security/authentication/AuthenticationProvider.html[AuthenticationProvider].
+To authenticate users you must provide implementations of api:security.authentication.AuthenticationProvider[].
 
 The following code snippet illustrates a naive implementation:
 
-[source, groovy]
+[source, java]
 ----
-include::{testssecurity}/security/token/basicauth/AuthenticationProviderUserPassword.groovy[tag=clazz,indent=0]
+include::{testssecurity}/security/token/basicauth/AuthenticationProviderUserPassword.java[tag=clazz,indent=0]
 ----
 
-The built-in <<login, Login Controller>> uses every available authentication provider. Authentication strategies, such as basic auth, where the credentials are present in the request use the available authentication providers too.
+The built-in <<login, Login Controller>> uses every available authentication provider. The first provider that returns a successful authentication response will have its value used as the basis for the JWT token or session state.
 
+Basic authentication which is implemented as an api:security.filters.AuthenticationFetcher[] will also trigger the available api:security.authentication.AuthenticationProvider[]s.
 
-Micronaut ships with link:{api}/io/micronaut/security/authentication/providers/DelegatingAuthenticationProvider.html[DelegatingAuthenticationProvider] which can be typically used
-in environments such as the one described in the following diagram.
-
-image::delegating_authentication_provider.svg[]
-
-`DelegatingAuthenticationProvider` is not enabled unless you provide implementations for link:{api}/io/micronaut/security/authentication/providers/UserFetcher.html[UserFetcher],
-link:{api}/io/micronaut/security/authentication/providers/PasswordEncoder.html[PasswordEncoder] and  link:{api}/io/micronaut/security/authentication/providers/AuthoritiesFetcher.html[AuthoritiesFetcher]
-
-TIP: Read the https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html[LDAP and Database authentication providers] to learn more.
+Micronaut comes with authentication providers for LDAP and the OAuth 2.0 password grant authentication flow. For any custom authentication, an authentication provider must be created.
