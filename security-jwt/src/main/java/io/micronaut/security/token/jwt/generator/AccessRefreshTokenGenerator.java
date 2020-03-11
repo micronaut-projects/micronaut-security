@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.generator;
 
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.token.generator.RefreshTokenGenerator;
 import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.security.token.jwt.event.AccessTokenGeneratedEvent;
 import io.micronaut.security.token.jwt.event.RefreshTokenGeneratedEvent;
@@ -42,28 +43,36 @@ public class AccessRefreshTokenGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccessRefreshTokenGenerator.class);
 
+    private final RefreshTokenGenerator refreshTokenGenerator;
     protected final ClaimsGenerator claimsGenerator;
-    protected final JwtGeneratorConfiguration jwtGeneratorConfiguration;
+    protected final AccessTokenConfiguration accessTokenConfiguration;
+    protected final RefreshTokenConfiguration refreshTokenConfiguration;
     protected final TokenRenderer tokenRenderer;
     protected final TokenGenerator tokenGenerator;
     protected final ApplicationEventPublisher eventPublisher;
 
     /**
      *
-     * @param jwtGeneratorConfiguration Instance of {@link JwtGeneratorConfiguration}
-     * @param tokenRenderer Instance of {@link TokenRenderer}
-     * @param tokenGenerator Intance of {@link TokenGenerator}
+     * @param accessTokenConfiguration The access token generator config
+     * @param refreshTokenConfiguration The refresh token generator config
+     * @param tokenRenderer The token renderer
+     * @param tokenGenerator The token generator
+     * @param refreshTokenGenerator The refresh token generator
      * @param claimsGenerator Claims generator
      * @param eventPublisher The Application event publiser
      */
-    public AccessRefreshTokenGenerator(JwtGeneratorConfiguration jwtGeneratorConfiguration,
+    public AccessRefreshTokenGenerator(AccessTokenConfiguration accessTokenConfiguration,
+                                       RefreshTokenConfiguration refreshTokenConfiguration,
                                        TokenRenderer tokenRenderer,
                                        TokenGenerator tokenGenerator,
+                                       RefreshTokenGenerator refreshTokenGenerator,
                                        ClaimsGenerator claimsGenerator,
                                        ApplicationEventPublisher eventPublisher) {
-        this.jwtGeneratorConfiguration = jwtGeneratorConfiguration;
+        this.accessTokenConfiguration = accessTokenConfiguration;
+        this.refreshTokenConfiguration = refreshTokenConfiguration;
         this.tokenRenderer = tokenRenderer;
         this.tokenGenerator = tokenGenerator;
+        this.refreshTokenGenerator = refreshTokenGenerator;
         this.claimsGenerator = claimsGenerator;
         this.eventPublisher = eventPublisher;
     }
@@ -77,23 +86,30 @@ public class AccessRefreshTokenGenerator {
      */
     public Optional<AccessRefreshToken> generate(UserDetails userDetails) {
 
-        Optional<String> accessToken = tokenGenerator.generateToken(userDetails, jwtGeneratorConfiguration.getAccessTokenExpiration());
-        Optional<String> refreshToken = tokenGenerator.generateToken(userDetails, jwtGeneratorConfiguration.getRefreshTokenExpiration());
-        if (!accessToken.isPresent() || !refreshToken.isPresent()) {
+        Optional<String> accessToken = tokenGenerator.generateToken(userDetails, accessTokenConfiguration.getExpiration().orElse(null));
+        if (!accessToken.isPresent()) {
             if (LOG.isDebugEnabled()) {
-                if (!accessToken.isPresent()) {
-                    LOG.debug("tokenGenerator failed to generate access token for userDetails {}", userDetails.getUsername());
-                }
-                if (!refreshToken.isPresent()) {
-                    LOG.debug("tokenGenerator failed to generate refreshToken token for userDetails {}", userDetails.getUsername());
-                }
+                LOG.debug("Failed to generate access token for user {}", userDetails.getUsername());
             }
             return Optional.empty();
-
+        } else {
+            eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken.get()));
         }
-        AccessRefreshToken accessRefreshToken = tokenRenderer.render(userDetails, jwtGeneratorConfiguration.getAccessTokenExpiration(), accessToken.get(), refreshToken.get());
-        eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessRefreshToken.getAccessToken()));
-        eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(accessRefreshToken.getRefreshToken()));
+
+        Optional<String> refreshToken;
+        if (refreshTokenConfiguration.isEnabled()) {
+            String key = refreshTokenGenerator.createKey(userDetails);
+            refreshToken = refreshTokenGenerator.generate(userDetails, key);
+        } else {
+            refreshToken = Optional.empty();
+        }
+        refreshToken.ifPresent(s -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(s)));
+
+        AccessRefreshToken accessRefreshToken = tokenRenderer.render(userDetails,
+                accessTokenConfiguration.getExpiration().orElse(null),
+                accessToken.get(),
+                refreshToken.orElse(null));
+
         return Optional.of(accessRefreshToken);
     }
 
@@ -106,7 +122,7 @@ public class AccessRefreshTokenGenerator {
      * @return The http response
      */
     public Optional<AccessRefreshToken> generate(String refreshToken, Map<String, Object> oldClaims) {
-        Map<String, Object> claims = claimsGenerator.generateClaimsSet(oldClaims, jwtGeneratorConfiguration.getAccessTokenExpiration());
+        Map<String, Object> claims = claimsGenerator.generateClaimsSet(oldClaims, accessTokenConfiguration.getExpiration().orElse(null));
 
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
         if (!optionalAccessToken.isPresent()) {
@@ -120,7 +136,7 @@ public class AccessRefreshTokenGenerator {
         }
         String accessToken = optionalAccessToken.get();
         eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
-        return Optional.of(tokenRenderer.render(jwtGeneratorConfiguration.getAccessTokenExpiration(), accessToken, refreshToken));
+        return Optional.of(tokenRenderer.render(accessTokenConfiguration.getExpiration().orElse(null), accessToken, refreshToken));
 
     }
 }

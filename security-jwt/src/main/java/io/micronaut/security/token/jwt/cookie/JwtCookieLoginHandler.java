@@ -22,7 +22,7 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
-import io.micronaut.security.token.jwt.generator.JwtGeneratorConfiguration;
+import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 
@@ -44,18 +44,18 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
 
     protected final JwtCookieConfiguration jwtCookieConfiguration;
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
-    protected final JwtGeneratorConfiguration jwtGeneratorConfiguration;
+    protected final AccessTokenConfiguration accessTokenConfiguration;
 
     /**
      * @param jwtCookieConfiguration JWT Cookie Configuration
-     * @param jwtGeneratorConfiguration JWT Generator Configuration
+     * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
      */
     public JwtCookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
-                                 JwtGeneratorConfiguration jwtGeneratorConfiguration,
+                                 AccessTokenConfiguration accessTokenConfiguration,
                                  AccessRefreshTokenGenerator accessRefreshTokenGenerator) {
         this.jwtCookieConfiguration = jwtCookieConfiguration;
-        this.jwtGeneratorConfiguration = jwtGeneratorConfiguration;
+        this.accessTokenConfiguration = accessTokenConfiguration;
         this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
     }
 
@@ -95,7 +95,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
             if (cookieMaxAge.isPresent()) {
                 cookie.maxAge(cookieMaxAge.get());
             } else {
-                cookie.maxAge(jwtGeneratorConfiguration.getAccessTokenExpiration());
+                cookie.maxAge(accessTokenConfiguration.getExpiration());
             }
             return Optional.of(cookie);
         }
