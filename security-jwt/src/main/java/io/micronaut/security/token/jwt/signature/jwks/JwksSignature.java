@@ -25,6 +25,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
+import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
@@ -88,8 +90,15 @@ public class JwksSignature implements SignatureConfiguration {
     }
 
     private Optional<JWKSet> getJWKSet() {
+        JWKSet jwkSet = this.jwkSet;
         if (jwkSet == null) {
-            this.jwkSet = loadJwkSet(getUrl());
+            synchronized (this) { // double check
+                jwkSet = this.jwkSet;
+                if (jwkSet == null) {
+                    jwkSet = loadJwkSet(getUrl());
+                    this.jwkSet = jwkSet;
+                }
+            }
         }
         return Optional.ofNullable(jwkSet);
     }
@@ -193,6 +202,7 @@ public class JwksSignature implements SignatureConfiguration {
             matches = new JWKSelector(builder.build()).select(jwkSet);
         }
         if (refreshKeysAttempts > 0 && matches.isEmpty()) {
+            this.jwkSet = null;
             return matches(jwt, getJWKSet().orElse(null), refreshKeysAttempts - 1);
         }
         return matches;
