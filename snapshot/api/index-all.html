@@ -2171,8 +2171,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SecurityFilter.html#getOrder--">getOrder()</a></span> - Method in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SessionSecurityFilterOrderProvider.html#getOrder--">getOrder()</a></span> - Method in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SessionSecurityFilterOrderProvider.html" title="class in io.micronaut.security.filters">SessionSecurityFilterOrderProvider</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#getOrder--">getOrder()</a></span> - Method in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/rules/IpPatternsRule.html#getOrder--">getOrder()</a></span> - Method in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/IpPatternsRule.html" title="class in io.micronaut.security.rules">IpPatternsRule</a></dt>
@@ -4017,10 +4015,6 @@
 <div class="block">Responsible for converting an OpenID token response to
  a <a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><code>UserDetails</code></a> representing the authenticated user.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SecurityFilter.html#order">order</a></span> - Variable in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
-<dd>
-<div class="block">The order of the Security Filter.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#ORDER">ORDER</a></span> - Static variable in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></dt>
 <dd>
 <div class="block">The order of the rule.</div>
@@ -4575,12 +4569,8 @@
 <dd>
 <div class="block">Security Filter.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.filters.SecurityFilterOrderProvider-">SecurityFilter(Collection&lt;SecurityRule&gt;, Collection&lt;AuthenticationFetcher&gt;, SecurityFilterOrderProvider)</a></span> - Constructor for class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-">SecurityFilter(Collection&lt;SecurityRule&gt;, Collection&lt;AuthenticationFetcher&gt;)</a></span> - Constructor for class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/filters/SecurityFilterOrderProvider.html" title="interface in io.micronaut.security.filters"><span class="typeNameLink">SecurityFilterOrderProvider</span></a> - Interface in <a href="io/micronaut/security/filters/package-summary.html">io.micronaut.security.filters</a></dt>
-<dd>
-<div class="block">Provides an order for the <a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters"><code>SecurityFilter</code></a>.</div>
-</dd>
 <dt><a href="io/micronaut/security/authentication/jackson/SecurityJacksonModule.html" title="class in io.micronaut.security.authentication.jackson"><span class="typeNameLink">SecurityJacksonModule</span></a> - Class in <a href="io/micronaut/security/authentication/jackson/package-summary.html">io.micronaut.security.authentication.jackson</a></dt>
 <dd>
 <div class="block">A module to extend Jackson for security related classes.</div>
@@ -4667,18 +4657,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/session/SessionNoncePersistence.html#SessionNoncePersistence-io.micronaut.session.SessionStore-">SessionNoncePersistence(SessionStore&lt;Session&gt;)</a></span> - Constructor for class io.micronaut.security.oauth2.endpoint.nonce.persistence.session.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/session/SessionNoncePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.session">SessionNoncePersistence</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/filters/SessionSecurityFilterOrderProvider.html" title="class in io.micronaut.security.filters"><span class="typeNameLink">SessionSecurityFilterOrderProvider</span></a> - Class in <a href="io/micronaut/security/filters/package-summary.html">io.micronaut.security.filters</a></dt>
-<dd>
-<div class="block">Ensures the security filter runs after the session filter (if present) and the metrics filter (if present)</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SessionSecurityFilterOrderProvider.html#SessionSecurityFilterOrderProvider--">SessionSecurityFilterOrderProvider()</a></span> - Constructor for class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SessionSecurityFilterOrderProvider.html" title="class in io.micronaut.security.filters">SessionSecurityFilterOrderProvider</a></dt>
-<dd>
-<div class="block">Default constructor.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SessionSecurityFilterOrderProvider.html#SessionSecurityFilterOrderProvider-io.micronaut.context.BeanContext-">SessionSecurityFilterOrderProvider(BeanContext)</a></span> - Constructor for class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SessionSecurityFilterOrderProvider.html" title="class in io.micronaut.security.filters">SessionSecurityFilterOrderProvider</a></dt>
-<dd>
-<div class="block">Injected constructor.</div>
-</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/session/SessionStatePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.session"><span class="typeNameLink">SessionStatePersistence</span></a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/session/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.state.persistence.session</a></dt>
 <dd>
 <div class="block">Persists the state in the session.</div>
