@@ -16,11 +16,14 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.config.AuthenticationStrategy;
+import io.micronaut.security.config.SecurityConfiguration;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Iterator;
@@ -40,12 +43,25 @@ public class Authenticator {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
     protected final Collection<AuthenticationProvider> authenticationProviders;
+    private final SecurityConfiguration securityConfiguration;
 
     /**
      * @param authenticationProviders a List of available authentication providers
      */
+    @Deprecated
     public Authenticator(Collection<AuthenticationProvider> authenticationProviders) {
         this.authenticationProviders = authenticationProviders;
+        this.securityConfiguration = null;
+    }
+
+    /**
+     * @param authenticationProviders a List of available authentication providers
+     */
+    @Inject
+    public Authenticator(Collection<AuthenticationProvider> authenticationProviders,
+                         SecurityConfiguration securityConfiguration) {
+        this.authenticationProviders = authenticationProviders;
+        this.securityConfiguration = securityConfiguration;
     }
 
     /**
@@ -74,13 +90,33 @@ public class Authenticator {
         if (LOG.isDebugEnabled()) {
             LOG.debug(authenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
-        Iterator<AuthenticationProvider> providerIterator = authenticationProviders.iterator();
-        if (providerIterator.hasNext()) {
-            Flowable<AuthenticationProvider> providerFlowable = Flowable.just(providerIterator.next());
-            AtomicReference<AuthenticationResponse> lastFailure = new AtomicReference<>();
-            return attemptAuthenticationRequest(request, authenticationRequest, providerIterator, providerFlowable, lastFailure);
+        if (securityConfiguration != null && securityConfiguration.getAuthenticationStrategy() == AuthenticationStrategy.ALL) {
+            return Flowable.merge(
+                    authenticationProviders.stream()
+                            .map(provider -> {
+                                return Flowable.fromPublisher(provider.authenticate(request, authenticationRequest))
+                                        .switchMap(response -> {
+                                            if (response.isAuthenticated()) {
+                                                return Flowable.just(response);
+                                            } else {
+                                                return Flowable.error(() -> new AuthenticationException(response));
+                                            }
+                                        })
+                                        .switchIfEmpty(Flowable.error(() -> new AuthenticationException("Provider did not respond. Rejecting authentication")));
+                            })
+                            .collect(Collectors.toList()))
+                    .lastOrError()
+                    .onErrorReturn((t) -> new AuthenticationFailed(t.getMessage()))
+                    .toFlowable();
         } else {
-            return Flowable.empty();
+            Iterator<AuthenticationProvider> providerIterator = authenticationProviders.iterator();
+            if (providerIterator.hasNext()) {
+                Flowable<AuthenticationProvider> providerFlowable = Flowable.just(providerIterator.next());
+                AtomicReference<AuthenticationResponse> lastFailure = new AtomicReference<>();
+                return attemptAuthenticationRequest(request, authenticationRequest, providerIterator, providerFlowable, lastFailure);
+            } else {
+                return Flowable.empty();
+            }
         }
     }
 

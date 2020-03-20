@@ -28,14 +28,19 @@ import java.util.List;
 public interface SecurityConfiguration extends Toggleable {
 
     /**
-     * ipPatterns getter.
      * @return a list of IP Regex patterns. e.g. [192.168.1.*]
      */
     List<String> getIpPatterns();
 
     /**
-     * interceptUrlMap getter.
      * @return a list of {@link InterceptUrlMapPattern}
      */
     List<InterceptUrlMapPattern> getInterceptUrlMap();
+
+    /**
+     * @return The authentication strategy
+     */
+    default AuthenticationStrategy getAuthenticationStrategy() {
+        return AuthenticationStrategy.ANY;
+    }
 }

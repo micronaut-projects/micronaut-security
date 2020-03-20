@@ -202,6 +202,7 @@ public class JwksSignature implements SignatureConfiguration {
             matches = new JWKSelector(builder.build()).select(jwkSet);
         }
         if (refreshKeysAttempts > 0 && matches.isEmpty()) {
+            //Clear the cache in case the provider changed the key set
             this.jwkSet = null;
             return matches(jwt, getJWKSet().orElse(null), refreshKeysAttempts - 1);
         }
