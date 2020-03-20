@@ -48,7 +48,7 @@ public class Authenticator {
     private final SecurityConfiguration securityConfiguration;
 
     /**
-     * @param authenticationProviders a List of available authentication providers
+     * @param authenticationProviders A list of available authentication providers
      */
     @Deprecated
     public Authenticator(Collection<AuthenticationProvider> authenticationProviders) {
@@ -57,7 +57,8 @@ public class Authenticator {
     }
 
     /**
-     * @param authenticationProviders a List of available authentication providers
+     * @param authenticationProviders A list of available authentication providers
+     * @param securityConfiguration The security configuration
      */
     @Inject
     public Authenticator(Collection<AuthenticationProvider> authenticationProviders,

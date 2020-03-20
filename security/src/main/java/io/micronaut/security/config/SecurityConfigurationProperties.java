@@ -45,7 +45,6 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     private List<String> ipPatterns = Collections.singletonList(ANYWHERE);
     private AuthenticationStrategy authenticationStrategy = AuthenticationStrategy.ANY;
 
-
     @Override
     public boolean isEnabled() {
         return this.enabled;
