@@ -19,6 +19,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.reactivex.Flowable;
+import io.reactivex.exceptions.CompositeException;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -91,7 +93,7 @@ public class Authenticator {
             LOG.debug(authenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
         if (securityConfiguration != null && securityConfiguration.getAuthenticationStrategy() == AuthenticationStrategy.ALL) {
-            return Flowable.merge(
+            return Flowable.mergeDelayError(
                     authenticationProviders.stream()
                             .map(provider -> {
                                 return Flowable.fromPublisher(provider.authenticate(request, authenticationRequest))
@@ -102,11 +104,18 @@ public class Authenticator {
                                                 return Flowable.error(() -> new AuthenticationException(response));
                                             }
                                         })
-                                        .switchIfEmpty(Flowable.error(() -> new AuthenticationException("Provider did not respond. Rejecting authentication")));
+                                        .switchIfEmpty(Flowable.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected")));
                             })
                             .collect(Collectors.toList()))
                     .lastOrError()
-                    .onErrorReturn((t) -> new AuthenticationFailed(t.getMessage()))
+                    .onErrorReturn((t) -> {
+                        if (t instanceof CompositeException) {
+                            List<Throwable> exceptions = ((CompositeException) t).getExceptions();
+                            return new AuthenticationFailed(exceptions.get(exceptions.size() - 1).getMessage());
+                        } else {
+                            return new AuthenticationFailed(t.getMessage());
+                        }
+                    })
                     .toFlowable();
         } else {
             Iterator<AuthenticationProvider> providerIterator = authenticationProviders.iterator();

@@ -21,3 +21,5 @@ Micronaut Security {version} includes changes to make the transition to version 
 * It is no longer assumed that a failed authentication response is an instance of api:security.authentication.AuthenticationFailed[]. That now allows for any subclass of api:security.authentication.AuthenticationResponse[] to be emitted in the case of an authentication failure.
 
 * A new constructor for api:security.authentication.AuthenticationFailed[] that takes a string message has been added to allow for custom error messages.
+
+* It is now possible to require all api:security.authentication.AuthenticationProvider[]s to return a successful authentication response. Set `micronaut.security.authentication-strategy: ALL` to enable this functionality.

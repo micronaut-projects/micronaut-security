@@ -1,14 +1,35 @@
 
 package io.micronaut.security.authentication
 
+import io.micronaut.security.config.AuthenticationStrategy
+import io.micronaut.security.config.InterceptUrlMapPattern
+import io.micronaut.security.config.SecurityConfiguration
 import io.reactivex.Flowable
 import spock.lang.Specification
 
 class AuthenticatorSpec extends Specification {
 
-    def "if no authentication providers return empty optional"() {
+    SecurityConfiguration ALL = new SecurityConfiguration() {
+        @Override
+        List<String> getIpPatterns() {
+            return null
+        }
+
+        @Override
+        List<InterceptUrlMapPattern> getInterceptUrlMap() {
+            return null
+        }
+
+        @Override
+        AuthenticationStrategy getAuthenticationStrategy() {
+            return AuthenticationStrategy.ALL
+        }
+
+    }
+
+    void "if no authentication providers return empty optional"() {
         given:
-        Authenticator authenticator = new Authenticator()
+        Authenticator authenticator = new Authenticator([])
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
@@ -17,10 +38,9 @@ class AuthenticatorSpec extends Specification {
 
         then:
         thrown(NoSuchElementException)
-
     }
 
-    def "if any authentication provider throws exception, continue with authentication"() {
+    void "if any authentication provider throws exception, continue with authentication"() {
         given:
         def authProviderExceptionRaiser = Stub(AuthenticationProvider) {
             authenticate(_, _) >> { Flowable.error( new Exception('Authentication provider raised exception') ) }
@@ -38,7 +58,7 @@ class AuthenticatorSpec extends Specification {
         rsp.blockingFirst() instanceof UserDetails
     }
 
-    def "if no authentication provider can authentication, the last error is sent back"() {
+    void "if no authentication provider can authentication, the last error is sent back"() {
         given:
         def authProviderFailed = Stub(AuthenticationProvider) {
             authenticate(_, _) >> Flowable.just( new AuthenticationFailed() )
@@ -51,5 +71,92 @@ class AuthenticatorSpec extends Specification {
 
         then:
         rsp.blockingFirst() instanceof AuthenticationFailed
+    }
+
+    void "test authentication strategy all with error and empty"() {
+        given:
+        def providers = [
+                Stub(AuthenticationProvider) {
+                    authenticate(_, _) >> Flowable.just( new AuthenticationFailed("failed") )
+                },
+                Stub(AuthenticationProvider) {
+                    authenticate(_, _) >> Flowable.empty()
+                },
+                Stub(AuthenticationProvider) {
+                    authenticate(_, _) >> Flowable.just( new UserDetails("a", []) )
+                },
+        ]
+        Authenticator authenticator = new Authenticator(providers, ALL)
+
+        when:
+        def creds = new UsernamePasswordCredentials('admin', 'admin')
+        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(creds)).blockingFirst()
+
+        then: //The last error is returned
+        rsp instanceof AuthenticationFailed
+        rsp.message.get() == "Provider did not respond. Authentication rejected"
+    }
+
+    void "test authentication strategy all with error"() {
+        given:
+        def providers = [
+                Stub(AuthenticationProvider) {
+                    authenticate(_, _) >> Flowable.just( new AuthenticationFailed("failed") )
+                },
+                Stub(AuthenticationProvider) {
+                    authenticate(_, _) >> Flowable.just( new UserDetails("a", []) )
+                },
+        ]
+        Authenticator authenticator = new Authenticator(providers, ALL)
+
+        when:
+        def creds = new UsernamePasswordCredentials('admin', 'admin')
+        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(creds)).blockingFirst()
+
+        then: //The last error is returned
+        rsp instanceof AuthenticationFailed
+        rsp.message.get() == "failed"
+    }
+
+    void "test authentication strategy success first"() {
+        given:
+        def providers = [
+                Stub(AuthenticationProvider) {
+                    authenticate(_, _) >> Flowable.just( new UserDetails("a", []) )
+                },
+                Stub(AuthenticationProvider) {
+                    authenticate(_, _) >> Flowable.just( new AuthenticationFailed("failed") )
+                },
+        ]
+        Authenticator authenticator = new Authenticator(providers, ALL)
+
+        when:
+        def creds = new UsernamePasswordCredentials('admin', 'admin')
+        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(creds)).blockingFirst()
+
+        then: //The last error is returned
+        rsp instanceof AuthenticationFailed
+        rsp.message.get() == "failed"
+    }
+
+    void "test authentication strategy multiple successes"() {
+        given:
+        def providers = [
+                Stub(AuthenticationProvider) {
+                    authenticate(_, _) >> Flowable.just( new UserDetails("a", []) )
+                },
+                Stub(AuthenticationProvider) {
+                    authenticate(_, _) >> Flowable.just( new UserDetails("b", []) )
+                },
+        ]
+        Authenticator authenticator = new Authenticator(providers, ALL)
+
+        when:
+        def creds = new UsernamePasswordCredentials('admin', 'admin')
+        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(creds)).blockingFirst()
+
+        then: //The last error is returned
+        rsp instanceof UserDetails
+        ((UserDetails) rsp).username == "b"
     }
 }

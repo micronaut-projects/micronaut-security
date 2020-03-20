@@ -164,11 +164,11 @@ class JwksUriSignatureSpec extends Specification {
 
         and:
         authServerA.applicationContext.getBean(AuthServerAOpenIdConfigurationController).invocations == 1
-        authServerA.applicationContext.getBean(AuthServerAKeysController).invocations == 1
+        authServerA.applicationContext.getBean(AuthServerAKeysController).invocations >= 1
 
         and:
         authServerB.applicationContext.getBean(AuthServerBOpenIdConfigurationController).invocations == 1
-        authServerB.applicationContext.getBean(AuthServerBKeysController).invocations == 1
+        authServerB.applicationContext.getBean(AuthServerBKeysController).invocations >= 1
     }
 
     @Requires(property = 'spec.name', value = 'JwksUriSignatureSpec')
