@@ -1,0 +1,491 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script src="/cdn-cgi/apps/head/3cOPSgo5Omz84ycX7CvigfX4cpw.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-82213539-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-82213539-2');
+    </script>
+    <title>4 Security Rules 2.0.0.M1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <div class="navTitle">
+        
+        Micronaut Security
+    </div>
+    <div class="navLinks">
+        <ul>
+            <li>
+                <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                    <a href="../guide/index.html" class="button">Table of contents</a>
+
+                    <div id="nav-summary-childs" style="display:none;">
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="separator selected">
+                <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/authenticationProviders.html">&lt;&lt; <strong>3</strong><span>Authentication Providers</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>4 Security Rules</h1>
+
+                    <p><strong>Version:</strong> 2.0.0.M1</p>
+                </div>
+
+                
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#ipPattern"><strong>4.1</strong><span>IP Pattern Rule</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#secured"><strong>4.2</strong><span>Secured Annotation</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#interceptUrlMap"><strong>4.3</strong><span>Intercept URL Map</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#builtInEndpointsAccess"><strong>4.4</strong><span>Built-In Endpoints Security</span></a>
+                    </div>
+                    
+                </div>
+                
+
+                
+<h1 id="securityRule"><a class="anchor" href="#securityRule"></a>4 Security Rules</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The decision to allow access to a particular endpoint to anonymous or authenticated users is determined by a collection of
+Security Rules. Micronaut ships with several built-in security rules. If they don&#8217;t fulfil your needs,
+you can implement your own <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a>.</p>
+</div>
+<div class="paragraph">
+<p>Security rules implement the ordered interface and they are executed in order. All of the existing rules have a static variable <code>ORDER</code> that stores the order of that rule. You can use those variables to place your own rule before or after any of the existing rules.</p>
+</div>
+<div class="paragraph">
+<p>Security rules return a <a href="../api/io/micronaut/security/rules/SecurityRuleResult.html">SecurityRuleResult</a>. See the following table for a description of each result.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Result</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#ALLOWED">ALLOWED</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be granted and no further rules will be considered.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#REJECTED">REJECTED</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be rejected and no further rules will be considered.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#UNKNOWN">UNKNOWN</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The rule doesn&#8217;t apply to the request resource, or it cannot be determined either way. This result will cause other security rules to be considered.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If all security rules return <code>UNKNOWN</code>, the request will be rejected!
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="ipPattern"><a class="anchor" href="#ipPattern"></a>4.1 IP Pattern Rule</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/ipPattern.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>When you turn on security, traffic coming from any ip address is allowed by default.</p>
+</div>
+<div class="paragraph">
+<p>You can however reject traffic not coming from a white list of IP Patterns as illustrated below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    ip-patterns:
+      - 127.0.0.1
+      - 192.168.1.*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the previous code, the <a href="../api/io/micronaut/security/rules/IpPatternsRule.html">IpPatternsRule</a> rejects traffic not coming
+either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
+</div>
+<div class="paragraph">
+<p>The IP patterns rule never explicitly allows requests, it only rejects requests if the address does not match. There must be other security rules that determine whether a resource should be accessed.</p>
+</div>
+<div class="paragraph">
+<p>If the desired behavior is to allow access to all resources as long as the address matches, create a security rule that executes after this one that returns <code>ALLOWED</code>.</p>
+</div>
+
+<h2 id="secured"><a class="anchor" href="#secured"></a>4.2 Secured Annotation</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/secured.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>As illustrated below, you can use the <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation to control
+access to controllers or controller methods.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">@Controller("/example")
+@Secured(SecurityRule.IS_AUTHENTICATED) <i class="conum" data-value="1"></i><b>(1)</b>
+public class ExampleController {
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @Secured({"ROLE_ADMIN", "ROLE_X"}) <i class="conum" data-value="2"></i><b>(2)</b>
+    public String withroles() {
+        return "You have ROLE_ADMIN or ROLE_X roles";
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @Secured(SecurityRule.IS_ANONYMOUS)  <i class="conum" data-value="3"></i><b>(3)</b>
+    public String anonymous() {
+        return "You are anonymous";
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/authenticated") <i class="conum" data-value="1"></i><b>(1)</b>
+    public String authenticated(Authentication authentication) {
+        return authentication.getName() + " is authenticated";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Authenticated users are able to access <code>authenticated</code> Controller&#8217;s action.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Users granted role <code>ROLE_ADMIN</code> or <code>ROLE_X</code> roles can access <code>withroles</code> Controller&#8217;s action.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Anonymous users (authenticated and not authenticated users) can access <code>anonymous</code> Controller&#8217;s action.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can use <a href="https://jcp.org/en/jsr/detail?id=250">JSR_250</a> annotations (<code>javax.annotation.security.PermitAll</code>, <code>javax.annotation.security.RolesAllowed</code>, <code>javax.annotation.security.DenyAll</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Controller("/example")
+public class ExampleController {
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/admin")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_X"}) <i class="conum" data-value="1"></i><b>(1)</b>
+    public String withroles() {
+        return "You have ROLE_ADMIN or ROLE_X roles";
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Get("/anonymous")
+    @PermitAll  <i class="conum" data-value="2"></i><b>(2)</b>
+    public String anonymous() {
+        return "You are anonymous";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Users granted role <code>ROLE_ADMIN</code> or <code>ROLE_X</code> roles can access <code>withroles</code> Controller&#8217;s action.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Anonymous users (authenticated and not authenticated users) can access <code>anonymous</code> Controller&#8217;s action.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The use of JSR 250 annotations requires <code>io.micronaut:micronaut-security-annotations</code> to be in the annotation processor classpath (<code>annotationProcessor</code>, <code>kapt</code>, <code>compileOnly</code>) respectively for Java, Kotlin, Groovy.
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="interceptUrlMap"><a class="anchor" href="#interceptUrlMap"></a>4.3 Intercept URL Map</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/interceptUrlMap.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Moreover, you can configure endpoint authentication and authorization access with an Intercept URL Map:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    intercept-url-map:
+      -
+        pattern: /images/*
+        http-method: GET
+        access:
+          - isAnonymous() <i class="conum" data-value="1"></i><b>(1)</b>
+      -
+        pattern: /books
+        access:
+          - isAuthenticated() <i class="conum" data-value="2"></i><b>(2)</b>
+      -
+        pattern: /books/grails
+        http-method: POST
+        access:
+          - ROLE_GRAILS <i class="conum" data-value="3"></i><b>(3)</b>
+          - ROLE_GROOVY
+      -
+        pattern: /books/grails
+        http-method: PUT
+        access:
+          - ROLE_ADMIN</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Enable access to authenticated and not authenticated users</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Enable access for everyone authenticated</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Enable access for users who are granted any of the specified roles.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>As you see in the previous code listing, any endpoint is identified by a combination of pattern
+and an optional HTTP method.</p>
+</div>
+<div class="paragraph">
+<p>If a given request URI matches more than one intercept url map, the one that specifies an http method that matches the request method will be used. If there are multiple mappings that do not specify a method and match the request URI, then the first mapping will be used. For example:</p>
+</div>
+<div class="paragraph">
+<p>The example below defines that all HTTP requests to URIs matching the pattern <code>/v1/myResource/**</code> and using HTTP method <code>GET</code> will be accessible to everyone. Requests matching the same URI pattern but using a different HTTP method than <code>GET</code> require fully authenticated access.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    intercept-url-map:
+      - pattern: /v1/myResource/**
+        httpMethod: GET <i class="conum" data-value="1"></i><b>(1)</b>
+        access:
+          - isAnonymous()
+      - pattern: /v1/myResource/**
+        access:
+          - isAuthenticated() <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Accessing <code>/v1/myResource/**</code> with a GET request does not require authentication.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Accessing <code>/v1/myResource/**</code> with a request that isn&#8217;t GET requires authentication.</td>
+</tr>
+</table>
+</div>
+
+<h2 id="builtInEndpointsAccess"><a class="anchor" href="#builtInEndpointsAccess"></a>4.4 Built-In Endpoints Security</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/builtInEndpointsAccess.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>When you turn on security, <a href="https://docs.micronaut.io/latest/guide/index.html#providedEndpoints">Built-in endpoints</a> are secured depending on their sensitive value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">endpoints:
+  beans:
+    enabled: true
+    sensitive: true <i class="conum" data-value="1"></i><b>(1)</b>
+  info:
+    enabled: true
+    sensitive: false  <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>/beans</code> endpoint is secured</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>/info</code> endpoint is open for unauthenticated access.</td>
+</tr>
+</table>
+</div>
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/authenticationProviders.html">&lt;&lt; <strong>3</strong><span>Authentication Providers</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
