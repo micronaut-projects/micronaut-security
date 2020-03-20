@@ -7,6 +7,7 @@ import com.unboundid.ldif.LDIFReader
 import com.unboundid.util.ssl.SSLUtil
 import io.micronaut.configuration.security.ldap.LdapAuthenticationProvider
 import io.micronaut.core.io.ResourceResolver
+import io.micronaut.http.HttpVersion
 import io.micronaut.http.ssl.SslBuilder
 import io.micronaut.http.ssl.SslConfiguration
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -31,9 +32,13 @@ abstract class InMemoryLdapSpec extends Specification {
             sslConfiguration.setCiphers(["TLS_DH_anon_WITH_AES_128_CBC_SHA"] as String[])
 
             def builder = new SslBuilder<Object>(new ResourceResolver()) {
-
                 TrustManagerFactory getTrust() {
                     getTrustManagerFactory(sslConfiguration)
+                }
+
+                @Override
+                Optional<Object> build(SslConfiguration sslConfig, HttpVersion version) {
+                    return null
                 }
 
                 @Override

@@ -25,6 +25,7 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
+import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.management.endpoint.EndpointsFilter;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
@@ -73,7 +74,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     /**
      * The order of the Security Filter.
      */
-    protected final Integer order;
+    private static final Integer ORDER = ServerFilterPhase.SECURITY.order();
 
     protected final Collection<SecurityRule> securityRules;
     protected final Collection<AuthenticationFetcher> authenticationFetchers;
@@ -81,20 +82,17 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     /**
      * @param securityRules               The list of rules that will allow or reject the request
      * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
-     * @param securityFilterOrderProvider filter order provider
      */
     @Inject
     public SecurityFilter(Collection<SecurityRule> securityRules,
-                          Collection<AuthenticationFetcher> authenticationFetchers,
-                          @Nullable SecurityFilterOrderProvider securityFilterOrderProvider) {
+                          Collection<AuthenticationFetcher> authenticationFetchers) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
-        this.order = securityFilterOrderProvider != null ? securityFilterOrderProvider.getOrder() : 0;
     }
 
     @Override
     public int getOrder() {
-        return order;
+        return ORDER;
     }
 
     @Override
