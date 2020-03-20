@@ -157,7 +157,7 @@ class JwksUriSignatureSpec extends Specification {
 
         and:
         authServerA.applicationContext.getBean(AuthServerAOpenIdConfigurationController).invocations == 1
-        authServerA.applicationContext.getBean(AuthServerAKeysController).invocations == 1
+        authServerA.applicationContext.getBean(AuthServerAKeysController).invocations == 2
 
         and:
         authServerB.applicationContext.getBean(AuthServerBOpenIdConfigurationController).invocations == 1
