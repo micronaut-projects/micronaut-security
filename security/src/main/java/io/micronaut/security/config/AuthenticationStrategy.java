@@ -13,27 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.writer;
-
-import io.micronaut.core.util.Toggleable;
+package io.micronaut.security.config;
 
 /**
- *  HTTP Token Writer Configuration.
+ * Options for how to handle multiple authentication providers.
  *
- * @author Sergio del Amo
- * @since 1.0
+ * @author James Kleeh
+ * @since 1.4.0
  */
-interface HttpHeaderTokenWriterConfiguration extends Toggleable {
+public enum AuthenticationStrategy {
 
     /**
-     *
-     * @return a Prefix before the token in the header value. E.g. Bearer
+     * All authentication providers must return a successful response
+     * for authentication to succeed
      */
-    String getPrefix();
+    ALL,
 
     /**
-     *
-     * @return an HTTP Header name. e.g. Authorization
+     * At least one authentication provider must return a successful
+     * response for authentication to succeed
      */
-    String getHeaderName();
+    ANY
 }

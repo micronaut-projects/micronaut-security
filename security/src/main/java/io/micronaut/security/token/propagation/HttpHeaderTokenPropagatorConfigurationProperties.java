@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.writer;
+package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
@@ -23,15 +23,16 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 
 /**
- *  HTTP Token Writer Configuration Properties.
+ * Http header token propagation configuration
  *
- * @author Sergio del Amo
- * @since 1.0
+ * @author James Kleeh
+ * @since 1.4.0
  */
-@Requires(property = HttpHeaderTokenWriterConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
-@ConfigurationProperties(HttpHeaderTokenWriterConfigurationProperties.PREFIX)
-public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderTokenWriterConfiguration {
-    public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".writer.header";
+@Requires(property = HttpHeaderTokenPropagatorConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@ConfigurationProperties(HttpHeaderTokenPropagatorConfigurationProperties.PREFIX)
+public class HttpHeaderTokenPropagatorConfigurationProperties implements HttpHeaderTokenPropagatorConfiguration {
+
+    public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".propagation.header";
 
     /**
      * The default enable value.
@@ -51,7 +52,7 @@ public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderT
     }
 
     /**
-     * Enable {@link io.micronaut.security.token.writer.HttpHeaderTokenWriter}. Default value ({@value #DEFAULT_ENABLED}).
+     * Enable {@link io.micronaut.security.token.propagation.HttpHeaderTokenPropagator}. Default value ({@value #DEFAULT_ENABLED}).
      * @param enabled enabled flag
      */
     public void setEnabled(boolean enabled) {
@@ -91,4 +92,5 @@ public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderT
     public String getHeaderName() {
         return this.headerName;
     }
+
 }

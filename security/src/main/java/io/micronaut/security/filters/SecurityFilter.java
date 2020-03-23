@@ -29,6 +29,7 @@ import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.management.endpoint.EndpointsFilter;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
+import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
@@ -79,15 +80,19 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     protected final Collection<SecurityRule> securityRules;
     protected final Collection<AuthenticationFetcher> authenticationFetchers;
 
+    protected final SecurityConfiguration securityConfiguration;
+
     /**
      * @param securityRules               The list of rules that will allow or reject the request
      * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
      */
     @Inject
     public SecurityFilter(Collection<SecurityRule> securityRules,
-                          Collection<AuthenticationFetcher> authenticationFetchers) {
+                          Collection<AuthenticationFetcher> authenticationFetchers,
+                          SecurityConfiguration securityConfiguration) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
+        this.securityConfiguration = securityConfiguration;
     }
 
     @Override
@@ -164,8 +169,12 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Authorized request {} {}. No rule provider authorized or rejected the request.", method, path);
         }
-        //no rule found for the given request, reject
-        request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
-        return Publishers.just(new AuthorizationException(authentication));
+        //no rule found for the given request
+        if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
+            return chain.proceed(request);
+        } else {
+            request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
+            return Publishers.just(new AuthorizationException(authentication));
+        }
     }
 }

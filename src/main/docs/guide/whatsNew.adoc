@@ -1,1 +1,2 @@
 Micronaut Security {version} includes the following new features and improvements.
+

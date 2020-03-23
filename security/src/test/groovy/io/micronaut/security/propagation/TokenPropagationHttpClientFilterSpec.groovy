@@ -6,7 +6,10 @@ import io.micronaut.http.filter.ClientFilterChain
 import io.micronaut.http.util.OutgoingHttpRequestProcessor
 import io.micronaut.http.util.OutgoingHttpRequestProcessorImpl
 import io.micronaut.security.filters.SecurityFilter
+import io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
+import io.micronaut.security.token.propagation.TokenPropagator
+import io.micronaut.security.token.reader.TokenReader
 import io.micronaut.security.token.writer.TokenWriter
 import spock.lang.Shared
 import spock.lang.Specification
@@ -38,7 +41,10 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
     void "if current request attribute TOKEN does NOT contains a token, it is not written to target request, but request proceeds"() {
         given:
         TokenWriter tokenWriter = Mock(TokenWriter)
-        TokenPropagationHttpClientFilter clientFilter = new TokenPropagationHttpClientFilter(tokenWriter,null, requestProcessor)
+        TokenPropagator tokenPropagator = Stub(TokenPropagator) {
+            findToken(_) >> Optional.empty()
+        }
+        TokenPropagationHttpClientFilter clientFilter = new TokenPropagationHttpClientFilter(tokenWriter,null, requestProcessor, tokenPropagator)
         MutableHttpRequest<?> targetRequest = Stub(MutableHttpRequest)
         ClientFilterChain chain = Mock(ClientFilterChain)
         HttpRequest<Object> currentRequest =  Stub(MutableHttpRequest) {
@@ -49,6 +55,31 @@ class TokenPropagationHttpClientFilterSpec extends Specification {
         clientFilter.doFilter(targetRequest, chain, currentRequest)
 
         then:
+        0 * tokenWriter.writeToken(targetRequest, _)
+        1 * chain.proceed(targetRequest)
+    }
+
+    void "if target request contains a token, it does not overwrite it"() {
+        String sampleJwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        TokenWriter tokenWriter = Mock(TokenWriter)
+        TokenPropagator tokenPropagator = Stub(TokenPropagator) {
+            findToken(_) >> Optional.of(sampleJwt)
+        }
+        TokenPropagationConfigurationProperties config = new TokenPropagationConfigurationProperties()
+        TokenPropagationHttpClientFilter clientFilter = new TokenPropagationHttpClientFilter(null, config, requestProcessor, tokenPropagator)
+        MutableHttpRequest<?> targetRequest = Stub(MutableHttpRequest) {
+            getAttribute(SecurityFilter.TOKEN) >> Optional.of(sampleJwt)
+        }
+        ClientFilterChain chain = Mock(ClientFilterChain)
+        HttpRequest<Object> currentRequest =  Stub(MutableHttpRequest) {
+            getAttribute(SecurityFilter.TOKEN) >> Optional.of(sampleJwt)
+        }
+
+        when:
+        clientFilter.doFilter(targetRequest, chain, currentRequest)
+
+        then:
+        0 * tokenWriter.writeToken(targetRequest, sampleJwt)
         1 * chain.proceed(targetRequest)
     }
 }
