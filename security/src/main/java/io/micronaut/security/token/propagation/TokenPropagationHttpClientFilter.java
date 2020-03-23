@@ -54,7 +54,7 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
      * @param tokenWriter bean responsible of writing the token to the target request
      * @param tokenPropagationConfiguration JWT Propagation configuration
      * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
-     * @deprecated Use {@link #TokenPropagationHttpClientFilter(TokenWriter, TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)} instead
+     * @deprecated Use {@link #TokenPropagationHttpClientFilter(TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)} instead
      */
     @Deprecated
     public TokenPropagationHttpClientFilter(TokenWriter tokenWriter,
@@ -72,13 +72,30 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
      * @param tokenPropagationConfiguration JWT Propagation configuration
      * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
      * @param tokenPropagator The token propagator
+     * @deprecated Use {@link #TokenPropagationHttpClientFilter(TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)} instead
      */
+    @Deprecated
     @Inject
     public TokenPropagationHttpClientFilter(@Nullable TokenWriter tokenWriter,
                                             TokenPropagationConfiguration tokenPropagationConfiguration,
                                             OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
                                             TokenPropagator tokenPropagator) {
         this.tokenWriter = tokenWriter;
+        this.tokenPropagationConfiguration = tokenPropagationConfiguration;
+        this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
+        this.tokenPropagator = tokenPropagator;
+    }
+
+    /**
+     *
+     * @param tokenPropagationConfiguration JWT Propagation configuration
+     * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
+     * @param tokenPropagator The token propagator
+     */
+    public TokenPropagationHttpClientFilter(TokenPropagationConfiguration tokenPropagationConfiguration,
+                                            OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
+                                            TokenPropagator tokenPropagator) {
+        this.tokenWriter = null;
         this.tokenPropagationConfiguration = tokenPropagationConfiguration;
         this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
         this.tokenPropagator = tokenPropagator;
