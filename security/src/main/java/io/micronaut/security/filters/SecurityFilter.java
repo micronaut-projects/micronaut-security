@@ -83,8 +83,9 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     protected final SecurityConfiguration securityConfiguration;
 
     /**
-     * @param securityRules               The list of rules that will allow or reject the request
-     * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
+     * @param securityRules          The list of rules that will allow or reject the request
+     * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
+     * @param securityConfiguration  The security configuration
      */
     @Inject
     public SecurityFilter(Collection<SecurityRule> securityRules,

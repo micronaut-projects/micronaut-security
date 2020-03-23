@@ -27,7 +27,6 @@ import io.micronaut.http.filter.HttpClientFilter;
 import io.micronaut.http.util.OutgoingHttpRequestProcessor;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Inject;
 import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
