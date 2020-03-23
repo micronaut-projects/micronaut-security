@@ -29,6 +29,7 @@ import io.micronaut.security.token.reader.TokenReader;
 import io.micronaut.security.token.writer.TokenWriter;
 import org.reactivestreams.Publisher;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -41,18 +42,20 @@ import static io.micronaut.security.filters.SecurityFilter.TOKEN;
  * @since 1.0
  */
 @Filter("${" + TokenPropagationConfigurationProperties.PREFIX + ".path:/**}")
-@Requires(beans = {TokenWriter.class, TokenPropagationConfiguration.class})
+@Requires(beans = {TokenPropagator.class, TokenPropagationConfiguration.class})
 @Requires(property = TokenPropagationConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 public class TokenPropagationHttpClientFilter implements HttpClientFilter {
+
     protected final TokenPropagationConfiguration tokenPropagationConfiguration;
     protected final TokenWriter tokenWriter;
     protected final OutgoingHttpRequestProcessor outgoingHttpRequestProcessor;
-    private final TokenReader tokenReader;
+    protected final TokenPropagator tokenPropagator;
 
     /**
      * @param tokenWriter bean responsible of writing the token to the target request
      * @param tokenPropagationConfiguration JWT Propagation configuration
      * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
+     * @deprecated Use {@link #TokenPropagationHttpClientFilter(TokenWriter, TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)} instead
      */
     @Deprecated
     public TokenPropagationHttpClientFilter(TokenWriter tokenWriter,
@@ -61,7 +64,7 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
         this.tokenWriter = tokenWriter;
         this.tokenPropagationConfiguration = tokenPropagationConfiguration;
         this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
-        this.tokenReader = null;
+        this.tokenPropagator = null;
     }
 
     /**
@@ -69,17 +72,17 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
      * @param tokenWriter bean responsible of writing the token to the target request
      * @param tokenPropagationConfiguration JWT Propagation configuration
      * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
-     * @param tokenReader The token reader
+     * @param tokenPropagator The token propagator
      */
     @Inject
-    public TokenPropagationHttpClientFilter(TokenWriter tokenWriter,
+    public TokenPropagationHttpClientFilter(@Nullable TokenWriter tokenWriter,
                                             TokenPropagationConfiguration tokenPropagationConfiguration,
                                             OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
-                                            TokenReader tokenReader) {
+                                            TokenPropagator tokenPropagator) {
         this.tokenWriter = tokenWriter;
         this.tokenPropagationConfiguration = tokenPropagationConfiguration;
         this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
-        this.tokenReader = tokenReader;
+        this.tokenPropagator = tokenPropagator;
     }
 
     /**
@@ -118,7 +121,11 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
             if (obj instanceof String) {
                 String tokenValue = (String) obj;
                 if (!hasExistingToken(targetRequest)) {
-                    tokenWriter.writeToken(targetRequest, tokenValue);
+                    if (tokenWriter != null) {
+                        tokenWriter.writeToken(targetRequest, tokenValue);
+                    } else if (tokenPropagator != null) {
+                        tokenPropagator.writeToken(targetRequest, tokenValue);
+                    }
                 }
                 return chain.proceed(targetRequest);
             }
@@ -127,6 +134,6 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
     }
 
     private boolean hasExistingToken(MutableHttpRequest<?> targetRequest) {
-        return tokenReader != null && tokenReader.findToken(targetRequest).isPresent();
+        return tokenPropagator != null && tokenPropagator.findToken(targetRequest).isPresent();
     }
 }

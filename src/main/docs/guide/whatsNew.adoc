@@ -10,6 +10,8 @@ Micronaut Security {version} includes changes to make the transition to version 
 
 * The api:security.authentication.providers.DelegatingAuthenticationProvider[] and its related APIs have been deprecated and will be removed in a future release without any replacement. If your application currently overrides these APIs, copy the code into your codebase.
 
+* The api:security.token.writer.TokenWriter[] api has been deprecated in favor of api:security.token.propagation.TokenPropagator[].
+
 == Annotation Processing
 
 * The ann:security.annotation.Secured[] annotation has been moved to a separate module in order to reduce the number of classes in the annotation processor scope. If you currently have `micronaut-security` in the classpath of your compiler, the entry can be changed to `micronaut-security-annotations`.

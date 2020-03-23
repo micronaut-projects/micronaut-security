@@ -43,4 +43,15 @@ public interface SecurityConfiguration extends Toggleable {
     default AuthenticationStrategy getAuthenticationStrategy() {
         return AuthenticationStrategy.ANY;
     }
+
+    /**
+     * For cases where no security rule handles a request and it is determined
+     * that the request does not match any routes on the server, whether the response
+     * should be to reject the request or allow the not found response to be returned.
+     *
+     * @return True if the response should be rejected.
+     */
+    default boolean isRejectNotFound() {
+        return true;
+    }
 }

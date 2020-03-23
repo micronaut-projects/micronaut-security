@@ -17,19 +17,25 @@ package io.micronaut.security.token.writer;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.security.token.propagation.TokenPropagator;
 
 import javax.inject.Singleton;
+import java.util.Optional;
 
 /**
  *  Write the token in an HTTP header.
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated Use {@link io.micronaut.security.token.propagation.HttpHeaderTokenPropagator} instead
  */
 @Singleton
 @Requires(property = HttpHeaderTokenWriterConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Requires(beans = {HttpHeaderTokenWriterConfiguration.class})
+@Deprecated
 public class HttpHeaderTokenWriter implements TokenWriter {
     protected final HttpHeaderTokenWriterConfiguration httpHeaderTokenWriterConfiguration;
 
@@ -59,6 +65,7 @@ public class HttpHeaderTokenWriter implements TokenWriter {
         request.header(getHeaderName(), headerValue(token));
     }
 
+
     /**
      * @param token the token being written
      * @return the value which will be written to an HTTP Header
@@ -74,4 +81,5 @@ public class HttpHeaderTokenWriter implements TokenWriter {
         sb.append(token);
         return sb.toString();
     }
+
 }

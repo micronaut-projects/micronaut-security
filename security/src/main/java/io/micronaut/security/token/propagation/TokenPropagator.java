@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.writer;
+package io.micronaut.security.token.propagation;
 
+import io.micronaut.core.order.Ordered;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 
-/**
- *  Responsible for writing the token in the request.
- *
- * @author Sergio del Amo
- * @since 1.0
- * @deprecated Implement {@link io.micronaut.security.token.propagation.TokenPropagator} instead
- */
-@Deprecated
-public interface TokenWriter {
+import java.util.Optional;
+
+public interface TokenPropagator extends Ordered {
 
     /**
      * Writes the token to the request.
@@ -34,4 +30,11 @@ public interface TokenWriter {
      */
     void writeToken(MutableHttpRequest<?> request, String token);
 
+    /**
+     * Attempts to retrieve a token in a request.
+     *
+     * @param request The request to look for the token in
+     * @return An optional token string
+     */
+    Optional<String> findToken(HttpRequest<?> request);
 }

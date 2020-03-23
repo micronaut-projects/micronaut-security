@@ -26,6 +26,7 @@ import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
+import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.handlers.RejectionHandler;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
@@ -69,6 +70,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(SecurityFilter.class);
 
+    private final SecurityConfiguration securityConfiguration;
     /**
      * The order of the Security Filter.
      */
@@ -82,7 +84,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
      * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
      * @param rejectionHandler            Bean which handles routes which need to be rejected
      * @param securityFilterOrderProvider filter order provider
-     * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityFilterOrderProvider)} instead
+     * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterOrderProvider)} instead
      */
     @Deprecated
     public SecurityFilter(Collection<SecurityRule> securityRules,
@@ -92,19 +94,23 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
         this.order = securityFilterOrderProvider != null ? securityFilterOrderProvider.getOrder() : 0;
+        this.securityConfiguration = null;
     }
 
     /**
      * @param securityRules               The list of rules that will allow or reject the request
      * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
+     * @param securityConfiguration       The security configuration
      * @param securityFilterOrderProvider filter order provider
      */
     @Inject
     public SecurityFilter(Collection<SecurityRule> securityRules,
                           Collection<AuthenticationFetcher> authenticationFetchers,
+                          SecurityConfiguration securityConfiguration,
                           @Nullable SecurityFilterOrderProvider securityFilterOrderProvider) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
+        this.securityConfiguration = securityConfiguration;
         this.order = securityFilterOrderProvider != null ? securityFilterOrderProvider.getOrder() : 0;
     }
 
@@ -182,9 +188,13 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Authorized request {} {}. No rule provider authorized or rejected the request.", method, path);
         }
-        //no rule found for the given request, reject
-        request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
-        return Publishers.just(new AuthorizationException(authentication));
+        //no rule found for the given request
+        if (routeMatch == null && securityConfiguration != null && !securityConfiguration.isRejectNotFound()) {
+            return chain.proceed(request);
+        } else {
+            request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
+            return Publishers.just(new AuthorizationException(authentication));
+        }
     }
 
     /**

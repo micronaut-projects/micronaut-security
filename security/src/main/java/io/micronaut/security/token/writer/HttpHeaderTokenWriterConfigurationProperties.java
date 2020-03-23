@@ -21,17 +21,24 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
+import io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *  HTTP Token Writer Configuration Properties.
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated Use {@link io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties} instead
  */
 @Requires(property = HttpHeaderTokenWriterConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @ConfigurationProperties(HttpHeaderTokenWriterConfigurationProperties.PREFIX)
+@Deprecated
 public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderTokenWriterConfiguration {
     public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".writer.header";
+    private static final Logger LOG = LoggerFactory.getLogger(HttpHeaderTokenWriterConfigurationProperties.class);
+
 
     /**
      * The default enable value.
@@ -56,6 +63,9 @@ public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderT
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        if (LOG.isWarnEnabled()) {
+            LOG.warn(HttpHeaderTokenWriterConfigurationProperties.PREFIX + " configuration is deprecated. Use " + HttpHeaderTokenPropagatorConfigurationProperties.PREFIX + " instead");
+        }
     }
 
     /**
@@ -64,6 +74,9 @@ public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderT
      */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+        if (LOG.isWarnEnabled()) {
+            LOG.warn(HttpHeaderTokenWriterConfigurationProperties.PREFIX + " configuration is deprecated. Use " + HttpHeaderTokenPropagatorConfigurationProperties.PREFIX + " instead");
+        }
     }
 
     /**
@@ -81,6 +94,9 @@ public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderT
      */
     public void setHeaderName(String headerName) {
         this.headerName = headerName;
+        if (LOG.isWarnEnabled()) {
+            LOG.warn(HttpHeaderTokenWriterConfigurationProperties.PREFIX + " configuration is deprecated. Use " + HttpHeaderTokenPropagatorConfigurationProperties.PREFIX + " instead");
+        }
     }
 
     /**

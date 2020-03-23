@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.writer;
+package io.micronaut.security.token.propagation;
 
 import io.micronaut.core.util.Toggleable;
 
 /**
- *  HTTP Token Writer Configuration.
+ * HTTP header token propagation configuration
  *
- * @author Sergio del Amo
- * @since 1.0
- * @deprecated Use {@link io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfiguration} instead
+ * @author James Kleeh
+ * @since 1.4.0
  */
-@Deprecated
-interface HttpHeaderTokenWriterConfiguration extends Toggleable {
+public interface HttpHeaderTokenPropagatorConfiguration  extends Toggleable {
 
     /**
-     *
      * @return a Prefix before the token in the header value. E.g. Bearer
      */
     String getPrefix();
 
     /**
-     *
      * @return an HTTP Header name. e.g. Authorization
      */
     String getHeaderName();
+
 }
