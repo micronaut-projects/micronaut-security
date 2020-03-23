@@ -108,11 +108,16 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer">io.micronaut.security.token.writer.TokenWriter</a>
+<div class="block"><span class="deprecationComment">Implement <a href="io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation"><code>TokenPropagator</code></a> instead</span></div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/authentication/providers/UserFetcher.html" title="interface in io.micronaut.security.authentication.providers">io.micronaut.security.authentication.providers.UserFetcher</a>
 <div class="block"><span class="deprecationComment">This class will be removed in a future version</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/authentication/providers/UserState.html" title="interface in io.micronaut.security.authentication.providers">io.micronaut.security.authentication.providers.UserState</a>
 <div class="block"><span class="deprecationComment">This class will be removed in a future version</span></div>
 </td>
@@ -144,6 +149,16 @@
 <td class="colOne"><a href="io/micronaut/security/authentication/providers/DelegatingAuthenticationProvider.html" title="class in io.micronaut.security.authentication.providers">io.micronaut.security.authentication.providers.DelegatingAuthenticationProvider</a>
 <div class="block"><span class="deprecationComment">This class will be removed in a future version. Copy the logic into your own class
  to maintain the same behavior.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer">io.micronaut.security.token.writer.HttpHeaderTokenWriter</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation"><code>HttpHeaderTokenPropagator</code></a> instead</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">io.micronaut.security.token.writer.HttpHeaderTokenWriterConfigurationProperties</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation"><code>HttpHeaderTokenPropagatorConfigurationProperties</code></a> instead</span></div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -375,7 +390,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.handlers.RejectionHandler-io.micronaut.security.filters.SecurityFilterOrderProvider-">io.micronaut.security.filters.SecurityFilter(Collection&lt;SecurityRule&gt;, Collection&lt;AuthenticationFetcher&gt;, RejectionHandler, SecurityFilterOrderProvider)</a>
-<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.filters.SecurityFilterOrderProvider-"><code>SecurityFilter.SecurityFilter(Collection, Collection, SecurityFilterOrderProvider)</code></a> instead</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.config.SecurityConfiguration-io.micronaut.security.filters.SecurityFilterOrderProvider-"><code>SecurityFilter.SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterOrderProvider)</code></a> instead</span></div>
 </td>
 </tr>
 <tr class="altColor">
@@ -387,6 +402,11 @@
 <td class="colOne"><a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#TokenAuthenticationFetcher-java.util.Collection-java.util.Collection-io.micronaut.context.event.ApplicationEventPublisher-">io.micronaut.security.token.TokenAuthenticationFetcher(Collection&lt;TokenValidator&gt;, Collection&lt;TokenReader&gt;, ApplicationEventPublisher)</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#TokenAuthenticationFetcher-java.util.Collection-io.micronaut.security.token.reader.TokenResolver-io.micronaut.context.event.ApplicationEventPublisher-"><code>TokenAuthenticationFetcher.TokenAuthenticationFetcher(Collection, TokenResolver, ApplicationEventPublisher)</code></a> instead.
  A <a href="io/micronaut/security/token/reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader"><code>TokenResolver</code></a> can be created using <a href="io/micronaut/security/token/reader/DefaultTokenResolver.html#DefaultTokenResolver-java.util.Collection-"><code>DefaultTokenResolver.DefaultTokenResolver(Collection)</code></a>.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-">io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter(TokenWriter, TokenPropagationConfiguration, OutgoingHttpRequestProcessor)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-io.micronaut.security.token.propagation.TokenPropagator-"><code>TokenPropagationHttpClientFilter.TokenPropagationHttpClientFilter(TokenWriter, TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)</code></a> instead</span></div>
 </td>
 </tr>
 </tbody>

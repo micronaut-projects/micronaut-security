@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html" title="class in io.micronaut.security.token.propagation"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li>Next&nbsp;Class</li>
+<li><a href="../../../../../io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html" target="_top">Frames</a></li>
@@ -112,7 +112,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>@Filter(value="${micronaut.security.token.propagation.path:/**}")
- @Requires(beans={<a href="../../../../../io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer">TokenWriter.class</a>,<a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration.class</a>}) @Requires(property="micronaut.security.token.propagation.enabled",value="true")
+ @Requires(beans={<a href="../../../../../io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation">TokenPropagator.class</a>,<a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration.class</a>}) @Requires(property="micronaut.security.token.propagation.enabled",value="true")
 public class <span class="typeNameLabel">TokenPropagationHttpClientFilter</span>
 extends java.lang.Object
 implements io.micronaut.http.filter.HttpClientFilter</pre>
@@ -150,6 +150,10 @@ implements io.micronaut.http.filter.HttpClientFilter</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#tokenPropagationConfiguration">tokenPropagationConfiguration</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation">TokenPropagator</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#tokenPropagator">tokenPropagator</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected <a href="../../../../../io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer">TokenWriter</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#tokenWriter">tokenWriter</a></span></code>&nbsp;</td>
 </tr>
@@ -177,7 +181,17 @@ implements io.micronaut.http.filter.HttpClientFilter</pre>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-">TokenPropagationHttpClientFilter</a></span>(<a href="../../../../../io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer">TokenWriter</a>&nbsp;tokenWriter,
                                 <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration</a>&nbsp;tokenPropagationConfiguration,
-                                io.micronaut.http.util.OutgoingHttpRequestProcessor&nbsp;outgoingHttpRequestProcessor)</code>&nbsp;</td>
+                                io.micronaut.http.util.OutgoingHttpRequestProcessor&nbsp;outgoingHttpRequestProcessor)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-io.micronaut.security.token.propagation.TokenPropagator-"><code>TokenPropagationHttpClientFilter(TokenWriter, TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)</code></a> instead</span></div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-io.micronaut.security.token.propagation.TokenPropagator-">TokenPropagationHttpClientFilter</a></span>(<a href="../../../../../io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer">TokenWriter</a>&nbsp;tokenWriter,
+                                <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration</a>&nbsp;tokenPropagationConfiguration,
+                                io.micronaut.http.util.OutgoingHttpRequestProcessor&nbsp;outgoingHttpRequestProcessor,
+                                <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation">TokenPropagator</a>&nbsp;tokenPropagator)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -262,10 +276,19 @@ implements io.micronaut.http.filter.HttpClientFilter</pre>
 <a name="outgoingHttpRequestProcessor">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>outgoingHttpRequestProcessor</h4>
 <pre>protected final&nbsp;io.micronaut.http.util.OutgoingHttpRequestProcessor outgoingHttpRequestProcessor</pre>
+</li>
+</ul>
+<a name="tokenPropagator">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>tokenPropagator</h4>
+<pre>protected final&nbsp;<a href="../../../../../io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation">TokenPropagator</a> tokenPropagator</pre>
 </li>
 </ul>
 </li>
@@ -279,17 +302,40 @@ implements io.micronaut.http.filter.HttpClientFilter</pre>
 <a name="TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>TokenPropagationHttpClientFilter</h4>
-<pre>public&nbsp;TokenPropagationHttpClientFilter(<a href="../../../../../io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer">TokenWriter</a>&nbsp;tokenWriter,
-                                        <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration</a>&nbsp;tokenPropagationConfiguration,
-                                        io.micronaut.http.util.OutgoingHttpRequestProcessor&nbsp;outgoingHttpRequestProcessor)</pre>
+<pre>@Deprecated
+public&nbsp;TokenPropagationHttpClientFilter(<a href="../../../../../io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer">TokenWriter</a>&nbsp;tokenWriter,
+                                                    <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration</a>&nbsp;tokenPropagationConfiguration,
+                                                    io.micronaut.http.util.OutgoingHttpRequestProcessor&nbsp;outgoingHttpRequestProcessor)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-io.micronaut.security.token.propagation.TokenPropagator-"><code>TokenPropagationHttpClientFilter(TokenWriter, TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)</code></a> instead</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tokenWriter</code> - bean responsible of writing the token to the target request</dd>
 <dd><code>tokenPropagationConfiguration</code> - JWT Propagation configuration</dd>
 <dd><code>outgoingHttpRequestProcessor</code> - Utility to decide whether to process the request</dd>
+</dl>
+</li>
+</ul>
+<a name="TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-io.micronaut.security.token.propagation.TokenPropagator-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>TokenPropagationHttpClientFilter</h4>
+<pre>@Inject
+public&nbsp;TokenPropagationHttpClientFilter(@Nullable
+                                                <a href="../../../../../io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer">TokenWriter</a>&nbsp;tokenWriter,
+                                                <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation">TokenPropagationConfiguration</a>&nbsp;tokenPropagationConfiguration,
+                                                io.micronaut.http.util.OutgoingHttpRequestProcessor&nbsp;outgoingHttpRequestProcessor,
+                                                <a href="../../../../../io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation">TokenPropagator</a>&nbsp;tokenPropagator)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>tokenWriter</code> - bean responsible of writing the token to the target request</dd>
+<dd><code>tokenPropagationConfiguration</code> - JWT Propagation configuration</dd>
+<dd><code>outgoingHttpRequestProcessor</code> - Utility to decide whether to process the request</dd>
+<dd><code>tokenPropagator</code> - The token propagator</dd>
 </dl>
 </li>
 </ul>
@@ -367,7 +413,7 @@ implements io.micronaut.http.filter.HttpClientFilter</pre>
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html" title="class in io.micronaut.security.token.propagation"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li>Next&nbsp;Class</li>
+<li><a href="../../../../../io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html" target="_top">Frames</a></li>

@@ -167,10 +167,14 @@ extends io.micronaut.http.filter.OncePerRequestHttpServerFilter</pre>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/filters/SecurityFilter.html#securityConfiguration">securityConfiguration</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected java.util.Collection&lt;<a href="../../../../io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/filters/SecurityFilter.html#securityRules">securityRules</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static java.lang.CharSequence</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/filters/SecurityFilter.html#TOKEN">TOKEN</a></span></code>
 <div class="block">The attribute used to store a valid token in the request.</div>
@@ -203,13 +207,14 @@ extends io.micronaut.http.filter.OncePerRequestHttpServerFilter</pre>
               <a href="../../../../io/micronaut/security/handlers/RejectionHandler.html" title="interface in io.micronaut.security.handlers">RejectionHandler</a>&nbsp;rejectionHandler,
               <a href="../../../../io/micronaut/security/filters/SecurityFilterOrderProvider.html" title="interface in io.micronaut.security.filters">SecurityFilterOrderProvider</a>&nbsp;securityFilterOrderProvider)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
-<div class="block"><span class="deprecationComment">Use <a href="../../../../io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.filters.SecurityFilterOrderProvider-"><code>SecurityFilter(Collection, Collection, SecurityFilterOrderProvider)</code></a> instead</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="../../../../io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.config.SecurityConfiguration-io.micronaut.security.filters.SecurityFilterOrderProvider-"><code>SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterOrderProvider)</code></a> instead</span></div>
 </div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.filters.SecurityFilterOrderProvider-">SecurityFilter</a></span>(java.util.Collection&lt;<a href="../../../../io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&gt;&nbsp;securityRules,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.config.SecurityConfiguration-io.micronaut.security.filters.SecurityFilterOrderProvider-">SecurityFilter</a></span>(java.util.Collection&lt;<a href="../../../../io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&gt;&nbsp;securityRules,
               java.util.Collection&lt;<a href="../../../../io/micronaut/security/filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&gt;&nbsp;authenticationFetchers,
+              <a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration,
               <a href="../../../../io/micronaut/security/filters/SecurityFilterOrderProvider.html" title="interface in io.micronaut.security.filters">SecurityFilterOrderProvider</a>&nbsp;securityFilterOrderProvider)</code>&nbsp;</td>
 </tr>
 </table>
@@ -345,10 +350,19 @@ extends io.micronaut.http.filter.OncePerRequestHttpServerFilter</pre>
 <a name="authenticationFetchers">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>authenticationFetchers</h4>
 <pre>protected final&nbsp;java.util.Collection&lt;<a href="../../../../io/micronaut/security/filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&gt; authenticationFetchers</pre>
+</li>
+</ul>
+<a name="securityConfiguration">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>securityConfiguration</h4>
+<pre>protected final&nbsp;<a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a> securityConfiguration</pre>
 </li>
 </ul>
 </li>
@@ -371,7 +385,7 @@ public&nbsp;SecurityFilter(java.util.Collection&lt;<a href="../../../../io/micro
                                   <a href="../../../../io/micronaut/security/handlers/RejectionHandler.html" title="interface in io.micronaut.security.handlers">RejectionHandler</a>&nbsp;rejectionHandler,
                                   @Nullable
                                   <a href="../../../../io/micronaut/security/filters/SecurityFilterOrderProvider.html" title="interface in io.micronaut.security.filters">SecurityFilterOrderProvider</a>&nbsp;securityFilterOrderProvider)</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.filters.SecurityFilterOrderProvider-"><code>SecurityFilter(Collection, Collection, SecurityFilterOrderProvider)</code></a> instead</span></div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.config.SecurityConfiguration-io.micronaut.security.filters.SecurityFilterOrderProvider-"><code>SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterOrderProvider)</code></a> instead</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>securityRules</code> - The list of rules that will allow or reject the request</dd>
@@ -381,7 +395,7 @@ public&nbsp;SecurityFilter(java.util.Collection&lt;<a href="../../../../io/micro
 </dl>
 </li>
 </ul>
-<a name="SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.filters.SecurityFilterOrderProvider-">
+<a name="SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.config.SecurityConfiguration-io.micronaut.security.filters.SecurityFilterOrderProvider-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -390,12 +404,14 @@ public&nbsp;SecurityFilter(java.util.Collection&lt;<a href="../../../../io/micro
 <pre>@Inject
 public&nbsp;SecurityFilter(java.util.Collection&lt;<a href="../../../../io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>&gt;&nbsp;securityRules,
                               java.util.Collection&lt;<a href="../../../../io/micronaut/security/filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>&gt;&nbsp;authenticationFetchers,
+                              <a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration,
                               @Nullable
                               <a href="../../../../io/micronaut/security/filters/SecurityFilterOrderProvider.html" title="interface in io.micronaut.security.filters">SecurityFilterOrderProvider</a>&nbsp;securityFilterOrderProvider)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>securityRules</code> - The list of rules that will allow or reject the request</dd>
 <dd><code>authenticationFetchers</code> - List of <a href="../../../../io/micronaut/security/filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters"><code>AuthenticationFetcher</code></a> beans in the context.</dd>
+<dd><code>securityConfiguration</code> - The security configuration</dd>
 <dd><code>securityFilterOrderProvider</code> - filter order provider</dd>
 </dl>
 </li>

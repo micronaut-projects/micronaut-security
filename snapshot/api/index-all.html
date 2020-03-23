@@ -768,6 +768,8 @@
 <div class="block">Compares the given roles to determine if the request is allowed by
  comparing if any of the granted roles is in the required roles list.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#configuration">configuration</a></span> - Variable in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules"><span class="typeNameLink">ConfigurationInterceptUrlMapRule</span></a> - Class in <a href="io/micronaut/security/rules/package-summary.html">io.micronaut.security.rules</a></dt>
 <dd>
 <div class="block">A security rule implementation backed by the <a href="io/micronaut/security/config/SecurityConfiguration.html#getInterceptUrlMap--"><code>SecurityConfiguration.getInterceptUrlMap()</code></a>.</div>
@@ -950,12 +952,17 @@
 <dd>
 <div class="block">The default enable value.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default enable value.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">TokenPropagationConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default enable value.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriterConfigurationProperties</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">The default enable value.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#DEFAULT_EXPIRATION">DEFAULT_EXPIRATION</a></span> - Static variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">JwtGeneratorConfigurationProperties</a></dt>
@@ -1027,6 +1034,8 @@
 <div class="block">The default http status used for redirection.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#DEFAULT_REFRESH_JWKS_ATTEMPTS">DEFAULT_REFRESH_JWKS_ATTEMPTS</a></span> - Static variable in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#DEFAULT_REJECT_NOT_FOUND">DEFAULT_REJECT_NOT_FOUND</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_ROLES_NAME">DEFAULT_ROLES_NAME</a></span> - Static variable in interface io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -1474,6 +1483,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html#ExpirationJwtClaimsValidator--">ExpirationJwtClaimsValidator()</a></span> - Constructor for class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">ExpirationJwtClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#extractTokenFromAuthorization-java.lang.String-">extractTokenFromAuthorization(String)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html#extractTokenFromAuthorization-java.lang.String-">extractTokenFromAuthorization(String)</a></span> - Method in class io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html" title="class in io.micronaut.security.token.reader">HttpHeaderTokenReader</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -1512,6 +1523,14 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html#findToken-io.micronaut.http.HttpRequest-">findToken(HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieTokenReader</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#findToken-io.micronaut.http.HttpRequest-">findToken(HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagator</a></dt>
+<dd>
+<div class="block">Search for a JWT token in a HTTP request.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagator.html#findToken-io.micronaut.http.HttpRequest-">findToken(HttpRequest&lt;?&gt;)</a></span> - Method in interface io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation">TokenPropagator</a></dt>
+<dd>
+<div class="block">Attempts to retrieve a token in a request.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html#findToken-io.micronaut.http.HttpRequest-">findToken(HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html" title="class in io.micronaut.security.token.reader">HttpHeaderTokenReader</a></dt>
 <dd>
 <div class="block">Search for a JWT token in a HTTP request.</div>
@@ -2108,12 +2127,20 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/bearer/BearerTokenReader.html#getHeaderName--">getHeaderName()</a></span> - Method in class io.micronaut.security.token.jwt.bearer.<a href="io/micronaut/security/token/jwt/bearer/BearerTokenReader.html" title="class in io.micronaut.security.token.jwt.bearer">BearerTokenReader</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html#getHeaderName--">getHeaderName()</a></span> - Method in interface io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html" title="interface in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#getHeaderName--">getHeaderName()</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html#getHeaderName--">getHeaderName()</a></span> - Method in class io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html" title="class in io.micronaut.security.token.reader">HttpHeaderTokenReader</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html#getHeaderName--">getHeaderName()</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriter</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html#getHeaderName--">getHeaderName()</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriterConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/InterceptUrlMapPattern.html#getHttpMethod--">getHttpMethod()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/InterceptUrlMapPattern.html" title="class in io.micronaut.security.config">InterceptUrlMapPattern</a></dt>
 <dd>
 <div class="block">httpMethod getter.</div>
@@ -2495,10 +2522,16 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/bearer/BearerTokenReader.html#getPrefix--">getPrefix()</a></span> - Method in class io.micronaut.security.token.jwt.bearer.<a href="io/micronaut/security/token/jwt/bearer/BearerTokenReader.html" title="class in io.micronaut.security.token.jwt.bearer">BearerTokenReader</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html#getPrefix--">getPrefix()</a></span> - Method in interface io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html" title="interface in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#getPrefix--">getPrefix()</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html#getPrefix--">getPrefix()</a></span> - Method in class io.micronaut.security.token.reader.<a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html" title="class in io.micronaut.security.token.reader">HttpHeaderTokenReader</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html#getPrefix--">getPrefix()</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriterConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/encryption/ec/ECEncryptionConfiguration.html#getPrivateKey--">getPrivateKey()</a></span> - Method in interface io.micronaut.security.token.jwt.encryption.ec.<a href="io/micronaut/security/token/jwt/encryption/ec/ECEncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption.ec">ECEncryptionConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/encryption/rsa/RSAEncryptionConfiguration.html#getPrivateKey--">getPrivateKey()</a></span> - Method in interface io.micronaut.security.token.jwt.encryption.rsa.<a href="io/micronaut/security/token/jwt/encryption/rsa/RSAEncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption.rsa">RSAEncryptionConfiguration</a></dt>
@@ -3039,13 +3072,33 @@
 <dd>
 <div class="block">If the current user has a specific role.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html#headerValue-java.lang.String-">headerValue(String)</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriter</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#headerValue-java.lang.String-">headerValue(String)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html#headerValue-java.lang.String-">headerValue(String)</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriter</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/HttpAuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><span class="typeNameLink">HttpAuthenticationProvider</span></a> - Interface in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>
 <div class="block">Authenticates the authentication request within the context of
  an http request.</div>
 </dd>
+<dt><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation"><span class="typeNameLink">HttpHeaderTokenPropagator</span></a> - Class in <a href="io/micronaut/security/token/propagation/package-summary.html">io.micronaut.security.token.propagation</a></dt>
+<dd>
+<div class="block">Propagates a token based off of a header</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#HttpHeaderTokenPropagator-io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfiguration-">HttpHeaderTokenPropagator(HttpHeaderTokenPropagatorConfiguration)</a></span> - Constructor for class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html" title="interface in io.micronaut.security.token.propagation"><span class="typeNameLink">HttpHeaderTokenPropagatorConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/propagation/package-summary.html">io.micronaut.security.token.propagation</a></dt>
+<dd>
+<div class="block">HTTP header token propagation configuration</div>
+</dd>
+<dt><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation"><span class="typeNameLink">HttpHeaderTokenPropagatorConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/token/propagation/package-summary.html">io.micronaut.security.token.propagation</a></dt>
+<dd>
+<div class="block">Http header token propagation configuration</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#HttpHeaderTokenPropagatorConfigurationProperties--">HttpHeaderTokenPropagatorConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/reader/HttpHeaderTokenReader.html" title="class in io.micronaut.security.token.reader"><span class="typeNameLink">HttpHeaderTokenReader</span></a> - Class in <a href="io/micronaut/security/token/reader/package-summary.html">io.micronaut.security.token.reader</a></dt>
 <dd>
 <div class="block">Reads a token from an HTTP request and removes prefix from HTTP Header Value.</div>
@@ -3054,18 +3107,28 @@
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer"><span class="typeNameLink">HttpHeaderTokenWriter</span></a> - Class in <a href="io/micronaut/security/token/writer/package-summary.html">io.micronaut.security.token.writer</a></dt>
 <dd>
-<div class="block">Write the token in an HTTP header.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation"><code>HttpHeaderTokenPropagator</code></a> instead</span></div>
+</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html#HttpHeaderTokenWriter-io.micronaut.security.token.writer.HttpHeaderTokenWriterConfiguration-">HttpHeaderTokenWriter(HttpHeaderTokenWriterConfiguration)</a></span> - Constructor for class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriter</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html#httpHeaderTokenWriterConfiguration">httpHeaderTokenWriterConfiguration</a></span> - Variable in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriter</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer"><span class="typeNameLink">HttpHeaderTokenWriterConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/token/writer/package-summary.html">io.micronaut.security.token.writer</a></dt>
 <dd>
-<div class="block">HTTP Token Writer Configuration Properties.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation"><code>HttpHeaderTokenPropagatorConfigurationProperties</code></a> instead</span></div>
+</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html#HttpHeaderTokenWriterConfigurationProperties--">HttpHeaderTokenWriterConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriterConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/RedirectRejectionHandler.html#httpResponseWithUri-java.lang.String-">httpResponseWithUri(String)</a></span> - Method in class io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/RedirectRejectionHandler.html" title="class in io.micronaut.security.handlers">RedirectRejectionHandler</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -3511,10 +3574,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.endpoints">OauthControllerConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">TokenPropagationConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriterConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html#isErrorCallback-io.micronaut.core.convert.value.ConvertibleMultiValues-">isErrorCallback(ConvertibleMultiValues&lt;String&gt;)</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOauthClient</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html#isErrorCallback-io.micronaut.core.convert.value.ConvertibleMultiValues-">isErrorCallback(ConvertibleMultiValues&lt;String&gt;)</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdClient</a></dt>
@@ -3548,6 +3615,14 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html#isRefreshToken--">isRefreshToken()</a></span> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html#isRefreshToken--">isRefreshToken()</a></span> - Method in interface io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdAdditionalClaimsConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfiguration.html#isRejectNotFound--">isRejectNotFound()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></dt>
+<dd>
+<div class="block">For cases where no security rule handles a request and it is determined
+ that the request does not match any routes on the server, whether the response
+ should be to reject the request or allow the not found response to be returned.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#isRejectNotFound--">isRejectNotFound()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/configuration/GroupPropertiesSearchSettings.html#isSubtree--">isSubtree()</a></span> - Method in class io.micronaut.configuration.security.ldap.configuration.<a href="io/micronaut/configuration/security/ldap/configuration/GroupPropertiesSearchSettings.html" title="class in io.micronaut.configuration.security.ldap.configuration">GroupPropertiesSearchSettings</a></dt>
 <dd>&nbsp;</dd>
@@ -4584,10 +4659,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#PREFIX">PREFIX</a></span> - Static variable in interface io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">TokenPropagationConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriterConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/PrincipalArgumentBinder.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">PrincipalArgumentBinder</span></a> - Class in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>
 <div class="block">Responsible for binding a <code>Principal</code> to a route argument.</div>
@@ -4971,6 +5050,8 @@
 <dd>
 <div class="block">Defines security configuration properties.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SecurityFilter.html#securityConfiguration">securityConfiguration</a></span> - Variable in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config"><span class="typeNameLink">SecurityConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/config/package-summary.html">io.micronaut.security.config</a></dt>
 <dd>
 <div class="block">Stores configuration for JWT.</div>
@@ -4984,10 +5065,10 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.handlers.RejectionHandler-io.micronaut.security.filters.SecurityFilterOrderProvider-">SecurityFilter(Collection&lt;SecurityRule&gt;, Collection&lt;AuthenticationFetcher&gt;, RejectionHandler, SecurityFilterOrderProvider)</a></span> - Constructor for class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.filters.SecurityFilterOrderProvider-"><code>SecurityFilter.SecurityFilter(Collection, Collection, SecurityFilterOrderProvider)</code></a> instead</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.config.SecurityConfiguration-io.micronaut.security.filters.SecurityFilterOrderProvider-"><code>SecurityFilter.SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterOrderProvider)</code></a> instead</span></div>
 </div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.filters.SecurityFilterOrderProvider-">SecurityFilter(Collection&lt;SecurityRule&gt;, Collection&lt;AuthenticationFetcher&gt;, SecurityFilterOrderProvider)</a></span> - Constructor for class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/filters/SecurityFilter.html#SecurityFilter-java.util.Collection-java.util.Collection-io.micronaut.security.config.SecurityConfiguration-io.micronaut.security.filters.SecurityFilterOrderProvider-">SecurityFilter(Collection&lt;SecurityRule&gt;, Collection&lt;AuthenticationFetcher&gt;, SecurityConfiguration, SecurityFilterOrderProvider)</a></span> - Constructor for class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilterOrderProvider.html" title="interface in io.micronaut.security.filters"><span class="typeNameLink">SecurityFilterOrderProvider</span></a> - Interface in <a href="io/micronaut/security/filters/package-summary.html">io.micronaut.security.filters</a></dt>
 <dd>
@@ -5423,12 +5504,17 @@
 <dd>
 <div class="block">Sets whether the <a href="io/micronaut/security/token/jwt/endpoints/OauthController.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>OauthController</code></a> is enabled.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
+<dd>
+<div class="block">Enable <a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation"><code>HttpHeaderTokenPropagator</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">TokenPropagationConfigurationProperties</a></dt>
 <dd>
 <div class="block">Enables <a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html" title="class in io.micronaut.security.token.propagation"><code>TokenPropagationHttpClientFilter</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriterConfigurationProperties</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Enable <a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer"><code>HttpHeaderTokenWriter</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html#setEncryptionMethod-com.nimbusds.jose.EncryptionMethod-">setEncryptionMethod(EncryptionMethod)</a></span> - Method in class io.micronaut.security.token.jwt.encryption.secret.<a href="io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption.secret">SecretEncryptionConfiguration</a></dt>
@@ -5498,8 +5584,13 @@
 <dd>
 <div class="block">Sets the header name to use.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#setHeaderName-java.lang.String-">setHeaderName(String)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
+<dd>
+<div class="block">Http Header to be used to propagate the token.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html#setHeaderName-java.lang.String-">setHeaderName(String)</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriterConfigurationProperties</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Http Header to be used to propagate the token.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/RedirectRejectionHandlerConfigurationProperties.html#setHttpStatus-io.micronaut.http.HttpStatus-">setHttpStatus(HttpStatus)</a></span> - Method in class io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/RedirectRejectionHandlerConfigurationProperties.html" title="class in io.micronaut.security.handlers">RedirectRejectionHandlerConfigurationProperties</a></dt>
@@ -5683,8 +5774,13 @@
 <dd>
 <div class="block">Sets the prefix to use for the auth token.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#setPrefix-java.lang.String-">setPrefix(String)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
+<dd>
+<div class="block">Value prefix for Http Header.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html#setPrefix-java.lang.String-">setPrefix(String)</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriterConfigurationProperties.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriterConfigurationProperties</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Value prefix for Http Header.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html#setPrompt-io.micronaut.security.oauth2.endpoint.authorization.request.Prompt-">setPrompt(Prompt)</a></span> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></dt>
@@ -5726,6 +5822,8 @@
 <div class="block">Sets the registration endpoint configuration.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#setRegistrationEndpoint-java.lang.String-">setRegistrationEndpoint(String)</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#setRejectNotFound-boolean-">setRejectNotFound(boolean)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#setRequestObjectEncryptionAlgValuesSupported-java.util.List-">setRequestObjectEncryptionAlgValuesSupported(List&lt;String&gt;)</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a></dt>
 <dd>&nbsp;</dd>
@@ -6110,7 +6208,20 @@
 <div class="block"><code>HttpClientFilter</code> to enable Token propagation.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-">TokenPropagationHttpClientFilter(TokenWriter, TokenPropagationConfiguration, OutgoingHttpRequestProcessor)</a></span> - Constructor for class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html" title="class in io.micronaut.security.token.propagation">TokenPropagationHttpClientFilter</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-io.micronaut.security.token.propagation.TokenPropagator-"><code>TokenPropagationHttpClientFilter.TokenPropagationHttpClientFilter(TokenWriter, TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)</code></a> instead</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#TokenPropagationHttpClientFilter-io.micronaut.security.token.writer.TokenWriter-io.micronaut.security.token.propagation.TokenPropagationConfiguration-io.micronaut.http.util.OutgoingHttpRequestProcessor-io.micronaut.security.token.propagation.TokenPropagator-">TokenPropagationHttpClientFilter(TokenWriter, TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)</a></span> - Constructor for class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html" title="class in io.micronaut.security.token.propagation">TokenPropagationHttpClientFilter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html#tokenPropagator">tokenPropagator</a></span> - Variable in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html" title="class in io.micronaut.security.token.propagation">TokenPropagationHttpClientFilter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation"><span class="typeNameLink">TokenPropagator</span></a> - Interface in <a href="io/micronaut/security/token/propagation/package-summary.html">io.micronaut.security.token.propagation</a></dt>
+<dd>
+<div class="block">Responsible for retrieving and writing tokens for the purpose
+ of propagation between services.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/reader/TokenReader.html" title="interface in io.micronaut.security.token.reader"><span class="typeNameLink">TokenReader</span></a> - Interface in <a href="io/micronaut/security/token/reader/package-summary.html">io.micronaut.security.token.reader</a></dt>
 <dd>
 <div class="block">Responsible for reading the token data from a request.</div>
@@ -6167,7 +6278,9 @@
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer"><span class="typeNameLink">TokenWriter</span></a> - Interface in <a href="io/micronaut/security/token/writer/package-summary.html">io.micronaut.security.token.writer</a></dt>
 <dd>
-<div class="block">Responsible for writing the token in the request.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Implement <a href="io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation"><code>TokenPropagator</code></a> instead</span></div>
+</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/grants/AsMap.html#toMap--">toMap()</a></span> - Method in interface io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/AsMap.html" title="interface in io.micronaut.security.oauth2.grants">AsMap</a></dt>
 <dd>&nbsp;</dd>
@@ -6527,12 +6640,22 @@ the order they are declared.</div>
 <dd>
 <div class="block">Replaces any existing configurations with the ones supplied</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#writeToken-io.micronaut.http.MutableHttpRequest-java.lang.String-">writeToken(MutableHttpRequest&lt;?&gt;, String)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagator</a></dt>
+<dd>
+<div class="block">Writes the token to the request.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagator.html#writeToken-io.micronaut.http.MutableHttpRequest-java.lang.String-">writeToken(MutableHttpRequest&lt;?&gt;, String)</a></span> - Method in interface io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagator.html" title="interface in io.micronaut.security.token.propagation">TokenPropagator</a></dt>
+<dd>
+<div class="block">Writes the token to the request.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html#writeToken-io.micronaut.http.MutableHttpRequest-java.lang.String-">writeToken(MutableHttpRequest&lt;?&gt;, String)</a></span> - Method in class io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/HttpHeaderTokenWriter.html" title="class in io.micronaut.security.token.writer">HttpHeaderTokenWriter</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Writes the token to the request.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/writer/TokenWriter.html#writeToken-io.micronaut.http.MutableHttpRequest-java.lang.String-">writeToken(MutableHttpRequest&lt;?&gt;, String)</a></span> - Method in interface io.micronaut.security.token.writer.<a href="io/micronaut/security/token/writer/TokenWriter.html" title="interface in io.micronaut.security.token.writer">TokenWriter</a></dt>
 <dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Writes the token to the request.</div>
 </dd>
 </dl>

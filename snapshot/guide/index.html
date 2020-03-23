@@ -323,6 +323,11 @@ compile "io.micronaut:micronaut-security"</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/config/AuthenticationStrategy.html">AuthenticationStrategy</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Determines how authentication providers should be processed.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.reject-not-found</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the server should respond with 404 for requests that do not</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -365,6 +370,9 @@ compile "io.micronaut:micronaut-security"</code></pre>
 <li>
 <p>The <a href="../api/io/micronaut/security/authentication/providers/DelegatingAuthenticationProvider.html">DelegatingAuthenticationProvider</a> and its related APIs have been deprecated and will be removed in a future release without any replacement. If your application currently overrides these APIs, copy the code into your codebase.</p>
 </li>
+<li>
+<p>The <a href="../api/io/micronaut/security/token/writer/TokenWriter.html">TokenWriter</a> api has been deprecated in favor of <a href="../api/io/micronaut/security/token/propagation/TokenPropagator.html">TokenPropagator</a>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -397,6 +405,9 @@ compile "io.micronaut:micronaut-security"</code></pre>
 </li>
 <li>
 <p>It is now possible to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response. Set <code>micronaut.security.authentication-strategy: ALL</code> to enable this functionality.</p>
+</li>
+<li>
+<p>The token propagation implementation will now no longer override an existing token.</p>
 </li>
 </ul>
 </div>
