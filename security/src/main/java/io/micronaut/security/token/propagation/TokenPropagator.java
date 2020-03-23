@@ -21,10 +21,18 @@ import io.micronaut.http.MutableHttpRequest;
 
 import java.util.Optional;
 
+/**
+ * Responsible for retrieving and writing tokens for the purpose
+ * of propagation between services.
+ *
+ * @author James Kleeh
+ * @since 1.4.0
+ */
 public interface TokenPropagator extends Ordered {
 
     /**
      * Writes the token to the request.
+     *
      * @param request The {@link MutableHttpRequest} instance
      * @param token A token ( e.g. JWT token, basic auth token...)
      */

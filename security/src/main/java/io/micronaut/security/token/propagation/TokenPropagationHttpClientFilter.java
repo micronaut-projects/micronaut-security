@@ -25,7 +25,6 @@ import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import io.micronaut.http.util.OutgoingHttpRequestProcessor;
-import io.micronaut.security.token.reader.TokenReader;
 import io.micronaut.security.token.writer.TokenWriter;
 import org.reactivestreams.Publisher;
 

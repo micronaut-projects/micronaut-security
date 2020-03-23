@@ -37,14 +37,13 @@ import org.slf4j.LoggerFactory;
 @Deprecated
 public class HttpHeaderTokenWriterConfigurationProperties implements HttpHeaderTokenWriterConfiguration {
     public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".writer.header";
-    private static final Logger LOG = LoggerFactory.getLogger(HttpHeaderTokenWriterConfigurationProperties.class);
-
-
     /**
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+
+    private static final Logger LOG = LoggerFactory.getLogger(HttpHeaderTokenWriterConfigurationProperties.class);
     private static final String DEFAULT_PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
     private static final String DEFAULT_HEADER_NAME = HttpHeaders.AUTHORIZATION;
 

@@ -70,7 +70,6 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(SecurityFilter.class);
 
-    private final SecurityConfiguration securityConfiguration;
     /**
      * The order of the Security Filter.
      */
@@ -78,6 +77,8 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
 
     protected final Collection<SecurityRule> securityRules;
     protected final Collection<AuthenticationFetcher> authenticationFetchers;
+
+    protected final SecurityConfiguration securityConfiguration;
 
     /**
      * @param securityRules               The list of rules that will allow or reject the request

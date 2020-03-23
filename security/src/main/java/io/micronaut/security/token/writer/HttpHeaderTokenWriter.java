@@ -17,13 +17,9 @@ package io.micronaut.security.token.writer;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpHeaders;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
-import io.micronaut.security.token.propagation.TokenPropagator;
 
 import javax.inject.Singleton;
-import java.util.Optional;
 
 /**
  *  Write the token in an HTTP header.

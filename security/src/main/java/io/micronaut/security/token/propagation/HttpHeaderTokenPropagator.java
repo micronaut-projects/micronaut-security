@@ -24,6 +24,12 @@ import io.micronaut.http.MutableHttpRequest;
 import javax.inject.Singleton;
 import java.util.Optional;
 
+/**
+ * Propagates a token based off of a header
+ *
+ * @author James Kleeh
+ * @since 1.4.0
+ */
 @Requires(property = HttpHeaderTokenPropagatorConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Singleton
 public class HttpHeaderTokenPropagator implements TokenPropagator {
