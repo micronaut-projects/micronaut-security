@@ -53,7 +53,6 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
      * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
      * @param tokenPropagator The token propagator
      */
-    @Inject
     public TokenPropagationHttpClientFilter(TokenPropagationConfiguration tokenPropagationConfiguration,
                                             OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
                                             TokenPropagator tokenPropagator) {
