@@ -22,7 +22,7 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation 'com.sun.activation:javax.activation:1.2.0' // Java 11
-    testImplementation "org.testcontainers:testcontainers:1.12.5"
+    testImplementation "org.testcontainers:testcontainers:1.13.0"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.61"
     testImplementation project(":security-jwt")
 }
