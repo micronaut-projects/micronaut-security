@@ -2,17 +2,17 @@ plugins {
     id "com.github.erdi.webdriver-binaries" version "2.2"
 }
 dependencies {
-    compile "io.micronaut:micronaut-runtime"
-    compile "io.micronaut:micronaut-management"
-    compile "io.micronaut:micronaut-http"
-    compile "io.micronaut:micronaut-session"
-    compile project(":security")
+    api "io.micronaut:micronaut-runtime"
+    api "io.micronaut:micronaut-management"
+    api "io.micronaut:micronaut-http"
+    api "io.micronaut:micronaut-session"
+    api project(":security")
 
-    compile "io.micronaut:micronaut-http-server"
-    testCompile "io.micronaut:micronaut-http-client"
+    api "io.micronaut:micronaut-http-server"
+    testImplementation "io.micronaut:micronaut-http-client"
 
-    testCompile "io.micronaut:micronaut-inject-groovy"
-    testCompile "io.micronaut:micronaut-http-server-netty"
+    testImplementation "io.micronaut:micronaut-inject-groovy"
+    testImplementation "io.micronaut:micronaut-http-server-netty"
 
 }
 

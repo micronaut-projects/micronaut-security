@@ -8,23 +8,23 @@ ext {
 }
 
 dependencies {
-    compile "io.micronaut:micronaut-runtime"
-    compile "io.micronaut:micronaut-management"
-    compile "io.micronaut:micronaut-http"
-    compile "io.micronaut:micronaut-http-server"
-    compile project(":security")
+    api "io.micronaut:micronaut-runtime"
+    api "io.micronaut:micronaut-management"
+    api "io.micronaut:micronaut-http"
+    api "io.micronaut:micronaut-http-server"
+    api project(":security")
     compileOnly "com.oracle.substratevm:svm"
-    compile "com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"
+    api "com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"
 
-    testCompile "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
-    testCompile "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
+    testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
+    testImplementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
 
-    testCompile "io.micronaut:micronaut-http-client"
+    testImplementation "io.micronaut:micronaut-http-client"
     testCompileOnly "io.micronaut:micronaut-inject-groovy"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testCompile "io.micronaut:micronaut-http-server-netty"
-    testCompile "io.micronaut:micronaut-multitenancy"
-    testCompile "io.micronaut:micronaut-views"
+    testImplementation "io.micronaut:micronaut-http-server-netty"
+    testImplementation "io.micronaut:micronaut-multitenancy"
+    testImplementation "io.micronaut:micronaut-views"
     testRuntime "org.apache.velocity:velocity-engine-core:2.2"
 }
 

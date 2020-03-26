@@ -59,14 +59,7 @@ subprojects { Project subproject ->
     }
     
     apply plugin: "groovy"
-    apply plugin: "java"
-    apply plugin: "io.spring.dependency-management"
-
-    dependencyManagement {
-        imports {
-            mavenBom "io.micronaut:micronaut-bom:$micronautVersion"
-        }
-    }
+    apply plugin: "java-library"
     
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
@@ -113,22 +106,27 @@ subprojects { Project subproject ->
     }
     
     dependencies {
+        annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+        testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+        implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+        api platform("io.micronaut:micronaut-bom:$micronautVersion")
+
         documentation "org.codehaus.groovy:groovy-templates:$groovyVersion"
         documentation "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
 
         annotationProcessor "io.micronaut:micronaut-inject-java"
         annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
         annotationProcessor "io.micronaut:micronaut-graal"
-        compile "io.micronaut:micronaut-inject"
-        
-        testCompile("org.spockframework:spock-core:${spockVersion}") {
+        api "io.micronaut:micronaut-inject"
+
+        testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module:'groovy-all'
         }
-        testCompile "cglib:cglib-nodep:3.3.0"
-        testCompile "org.objenesis:objenesis:3.1"
+        testImplementation "cglib:cglib-nodep:3.3.0"
+        testImplementation "org.objenesis:objenesis:3.1"
 
         testRuntime "ch.qos.logback:logback-classic:1.2.3"
-        testCompile "org.codehaus.groovy:groovy-test:$groovyVersion"
+        testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
     }
 
     groovydoc {
