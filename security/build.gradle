@@ -10,7 +10,7 @@ dependencies {
     testCompileOnly "io.micronaut:micronaut-inject-groovy"
     testImplementation "io.micronaut:micronaut-http-server-netty"
 
-    testImplementation "io.projectreactor:reactor-core:3.3.3.RELEASE"
+    testImplementation "io.projectreactor:reactor-core:3.3.4.RELEASE"
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
