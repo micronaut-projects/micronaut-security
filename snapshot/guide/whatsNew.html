@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>2 What's New 1.4.0.BUILD-SNAPSHOT</title>
+    <title>2 What's New 1.4.1.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -105,7 +105,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>2 What's New</h1>
 
-                    <p><strong>Version:</strong> 1.4.0.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.4.1.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -121,7 +121,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>Micronaut Security 1.4.0.BUILD-SNAPSHOT includes changes to make the transition to version 2.0 easier.</p>
+<p>Micronaut Security 1.4.1.BUILD-SNAPSHOT includes changes to make the transition to version 2.0 easier.</p>
 </div>
 <div class="sect1">
 <h2 id="_deprecations">Deprecations</h2>
@@ -178,6 +178,9 @@ function addJsClass() {
 </li>
 <li>
 <p>The token propagation implementation will now no longer override an existing token.</p>
+</li>
+<li>
+<p>It is now possible to allow for requests that would normally result in a 404 to return with 404 instead of almost always returning a 401 or 403. The current behavior is still the default because it prevents attackers from discovering what endpoints are available in your application. To enable the alternative behavior, set <code>micronaut.security.reject-not-found: false</code> in your configuration.</p>
 </li>
 </ul>
 </div>
