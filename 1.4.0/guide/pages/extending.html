@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script src="/cdn-cgi/apps/head/3cOPSgo5Omz84ycX7CvigfX4cpw.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-82213539-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-82213539-2');
+    </script>
+    <title>5.4.2 Extending Default Behavior 1.4.0</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <div class="navTitle">
+        
+        Micronaut Security
+    </div>
+    <div class="navLinks">
+        <ul>
+            <li>
+                <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                    <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                    <div id="nav-summary-childs" style="display:none;">
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="separator selected">
+                <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityRule.html">&lt;&lt; <strong>4</strong><span>Security Rules</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>5.4.2 Extending Default Behavior</h1>
+
+                    <p><strong>Version:</strong> 1.4.0</p>
+                </div>
+
+                
+
+                
+<h2 id="extending"><a class="anchor" href="#extending"></a>5.4.2 Extending Default Behavior</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/extending.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>This section will outline some common requirements that will require custom code to implement and describe what to do in those cases.</p>
+</div>
+<div class="sect1">
+<h2 id="_authentication_data">Authentication Data</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The authentication object returned from a successful authentication request is by default an instance of UserDetails, which only contains the username and any roles associated with the user. To store additional data in the authentication, extend <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> with your own implementation that has fields for the additional data you wish to store.</p>
+</div>
+<div class="paragraph">
+<p>To use this new implementation, you must override the <a href="../api/io/micronaut/security/ldap/DefaultContextAuthenticationMapper.html">DefaultContextAuthenticationMapper</a> and provide your own implementation.</p>
+</div>
+<div class="listingblock">
+<div class="title">MyContextAuthenticationMapper.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+@Replaces(DefaultContextAuthenticationMapper.class) <i class="conum" data-value="1"></i><b>(1)</b>
+public class MyContextAuthenticationMapper implements ContextAuthenticationMapper {
+
+    @Override
+    public AuthenticationResponse map(ConvertibleValues&lt;Object&gt; attributes, String username, Set&lt;String&gt; groups) {
+        // return an extended UserDetails or an AuthenticationFailed object
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The usage of @Replaces will allow your bean to replace the default implementation in the context</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groups">Groups</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default the groups found in LDAP, if enabled, will be returned as is without any processing. No additional groups from any other sources will be added to the list. It is a common requirement to retrieve additional groups from other sources, or to normalize the names of the groups in a specific format.</p>
+</div>
+<div class="paragraph">
+<p>To extend this behavior, it is necessary to create your own implementation of <a href="../api/io/micronaut/security/ldap/group/LdapGroupProcessor.html">LdapGroupProcessor</a>. Likely it will be desired to extend the default implementation because it has the logic for querying the groups from LDAP and executes the other methods to process the groups and query for additional groups.</p>
+</div>
+<div class="listingblock">
+<div class="title">MyLdapGroupProcessor.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+@Replaces(DefaultLdapGroupProcessor.class) <i class="conum" data-value="1"></i><b>(1)</b>
+public class MyLdapGroupProcessor extends DefaultLdapGroupProcessor {
+
+    Set&lt;String&gt; getAdditionalGroups(LdapSearchResult result) { <i class="conum" data-value="2"></i><b>(2)</b>
+        //Use the result to query another source for additional groups (database, etc)
+    }
+
+    Optional&lt;String&gt; processGroup(String group) { <i class="conum" data-value="3"></i><b>(3)</b>
+        //convert "Admin" to "ROLE_ADMIN" for example
+        //return an empty optional to exclude the group
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The usage of @Replaces will allow your bean to replace the default implementation in the context</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <a href="../api/io/micronaut/security/ldap/group/LdapGroupProcessor.html#getAdditionalGroups-io.micronaut.security.ldap.context.LdapSearchResult-">getAdditionalGroups</a> method allows you to add groups from other sources</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The <a href="../api/io/micronaut/security/ldap/group/LdapGroupProcessor.html#processGroup-java.lang.String-">processGroup</a> method allows you to transform the name of the group, or exclude it</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_search_logic">Search Logic</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To customize how LDAP searches are done, replace the default implementation with your own. See <a href="../api/io/micronaut/security/ldap/context/LdapSearchService.html">LdapSearchService</a>.</p>
+</div>
+<div class="listingblock">
+<div class="title">MyLdapSearchService.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+@Replaces(DefaultLdapSearchService.class)
+public class MyLdapSearchService implements LdapSearchService {
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_context_building">Context Building</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To customize how the LDAP context is built, replace the default implementation with your own. See <a href="../api/io/micronaut/security/ldap/context/ContextBuilder.html">ContextBuilder</a>.</p>
+</div>
+<div class="listingblock">
+<div class="title">MyContextBuilder.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+@Replaces(DefaultContextBuilder.class)
+public class MyContextBuilder implements ContextBuilder {
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/securityRule.html">&lt;&lt; <strong>4</strong><span>Security Rules</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
