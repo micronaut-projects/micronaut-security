@@ -409,6 +409,9 @@ compile "io.micronaut:micronaut-security"</code></pre>
 <li>
 <p>The token propagation implementation will now no longer override an existing token.</p>
 </li>
+<li>
+<p>It is now possible to allow for requests that would normally result in a 404 to return with 404 instead of almost always returning a 401 or 403. The current behavior is still the default because it prevents attackers from discovering what endpoints are available in your application. To enable the alternative behavior, set <code>micronaut.security.reject-not-found: false</code> in your configuration.</p>
+</li>
 </ul>
 </div>
 </div>

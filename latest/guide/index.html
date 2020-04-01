@@ -65,6 +65,8 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#oauth"><strong>11</strong><span>OAuth 2.0</span></a></div>
                                 
+                                <div class="toc-item" style="margin-left:0"><a href="#breaks"><strong>12</strong><span>Breaking Changes</span></a></div>
+                                
                             </div>
                         </div>
                     </li>
@@ -212,6 +214,8 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-custom-client"><a href="#custom-client"><strong>11.5</strong><span>Custom Clients</span></a></div>
         
+        <div class="toc-item" style="margin-left:0px" id="toc-item-breaks"><a href="#breaks"><strong>12</strong><span>Breaking Changes</span></a></div>
+        
         </div>
     </div>
     
@@ -220,7 +224,7 @@
         <h1>Micronaut Security</h1>
         <p></p>
         <p>Official Security Solution for Micronaut</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-security/snapshot/guide/index.html'>1.3.2</option><option value='https://micronaut-projects.github.io/micronaut-security/2.0.0.M1/guide/index.html'>2.0.0.M1</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-security/1.3.2/guide/index.html'>1.3.2</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.1/guide/index.html'>1.3.1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.0/guide/index.html'>1.3.0</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.0.RC1/guide/index.html'>1.3.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.3/guide/index.html'>1.2.3</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.2/guide/index.html'>1.2.2</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.0.RC1/guide/index.html'>1.2.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.1.1/guide/index.html'>1.1.1</option></select></p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-security/snapshot/guide/index.html'>1.4.0</option><option value='https://micronaut-projects.github.io/micronaut-security/2.0.0.M1/guide/index.html'>2.0.0.M1</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-security/1.4.0/guide/index.html'>1.4.0</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.2/guide/index.html'>1.3.2</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.1/guide/index.html'>1.3.1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.0/guide/index.html'>1.3.0</option><option value='https://micronaut-projects.github.io/micronaut-security/1.3.0.RC1/guide/index.html'>1.3.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.3/guide/index.html'>1.2.3</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.2/guide/index.html'>1.2.2</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-security/1.2.0.RC1/guide/index.html'>1.2.0.RC1</option><option value='https://micronaut-projects.github.io/micronaut-security/1.1.1/guide/index.html'>1.1.1</option></select></p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -314,6 +318,16 @@ compile "io.micronaut:micronaut-security"</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Allowed IP patterns. Default value (["0.0.0.0"])</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication-strategy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/config/AuthenticationStrategy.html">AuthenticationStrategy</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Determines how authentication providers should be processed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.reject-not-found</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the server should respond with 404 for requests that do not</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -337,12 +351,69 @@ compile "io.micronaut:micronaut-security"</code></pre>
 
 
 <div class="paragraph">
-<p>Micronaut Security 1.3.2 includes the following changes:</p>
+<p>Micronaut Security 1.4.0 includes changes to make the transition to version 2.0 easier.</p>
 </div>
-<div class="sect2">
-<h3 id="_startup_time_improvements">Startup Time Improvements</h3>
-<div class="paragraph">
-<p>For users of the OAuth module, you should see an improvement in startup time because the loading of the provider metadata is now done lazily.</p>
+<div class="sect1">
+<h2 id="_deprecations">Deprecations</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Most of the methods in <a href="../api/io/micronaut/security/token/jwt/validator/JwtTokenValidator.html">JwtTokenValidator</a> and the <a href="../api/io/micronaut/security/token/jwt/validator/JwtTokenValidatorUtils.html">JwtTokenValidatorUtils</a> class has been deprecated in favor of a new builder style syntax. The new class is <a href="../api/io/micronaut/security/token/jwt/validator/JwtValidator.html">JwtValidator</a>. Replace any deprecated usage with the builder style validator.</p>
+</li>
+<li>
+<p>The entire <a href="../api/io/micronaut/security/handlers/RejectionHandler.html">RejectionHandler</a> API has been deprecated in favor of usage of the existing exception handler functionality in Micronaut. A new exception, <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a>, has been created and will be emitted from the security filter. To bridge that API with the current one, a <a href="../api/io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html">DefaultAuthorizationExceptionHandler</a> has been created that delegates to the current <a href="../api/io/micronaut/security/handler/RejectionHandler.html">RejectionHandler</a> API. If you have your own rejection handler, it is recommended to replace the default exception handler with your own implementation.</p>
+</li>
+<li>
+<p>The <a href="../api/io/micronaut/security/handlers/LoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationFailed-">LoginHandler#loginFailed</a> method has been deprecated. Override the new default method that takes an <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> instead.</p>
+</li>
+<li>
+<p>The <a href="../api/io/micronaut/security/authentication/providers/DelegatingAuthenticationProvider.html">DelegatingAuthenticationProvider</a> and its related APIs have been deprecated and will be removed in a future release without any replacement. If your application currently overrides these APIs, copy the code into your codebase.</p>
+</li>
+<li>
+<p>The <a href="../api/io/micronaut/security/token/writer/TokenWriter.html">TokenWriter</a> api has been deprecated in favor of <a href="../api/io/micronaut/security/token/propagation/TokenPropagator.html">TokenPropagator</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annotation_processing">Annotation Processing</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation has been moved to a separate module in order to reduce the number of classes in the annotation processor scope. If you currently have <code>micronaut-security</code> in the classpath of your compiler, the entry can be changed to <code>micronaut-security-annotations</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_improvements">Improvements</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>It is now possible to gain access to the request in your <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.</p>
+</li>
+<li>
+<p>It is no longer assumed that a failed authentication response is an instance of <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>. That now allows for any subclass of <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> to be emitted in the case of an authentication failure.</p>
+</li>
+<li>
+<p>A new constructor for <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a> that takes a string message has been added to allow for custom error messages.</p>
+</li>
+<li>
+<p>It is now possible to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response. Set <code>micronaut.security.authentication-strategy: ALL</code> to enable this functionality.</p>
+</li>
+<li>
+<p>The token propagation implementation will now no longer override an existing token.</p>
+</li>
+<li>
+<p>It is now possible to allow for requests that would normally result in a 404 to return with 404 instead of almost always returning a 401 or 403. The current behavior is still the default because it prevents attackers from discovering what endpoints are available in your application. To enable the alternative behavior, set <code>micronaut.security.reject-not-found: false</code> in your configuration.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -399,7 +470,7 @@ in environments such as the one described in the following diagram.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html">LDAP and Database authentication providers</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html">LDAP and Database authentication providers</a> to learn more.
 </td>
 </tr>
 </table>
@@ -1806,7 +1877,7 @@ Pragma: no-cache
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html#securityLdap">LDAP and Database authentication providers</a> to see an example.
+Read the <a href="https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html#securityLdap">LDAP and Database authentication providers</a> to see an example.
 </td>
 </tr>
 </table>
@@ -2250,7 +2321,7 @@ will propagate the security token seamlessly.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-token-propagation/guide/index.html">Token Propagation tutorial</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-token-propagation/guide/index.html">Token Propagation tutorial</a> to learn more.
 </td>
 </tr>
 </table>
@@ -2769,7 +2840,7 @@ public class UserController {
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.configuration:micronaut-security-oauth2:1.3.2")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.configuration:micronaut-security-oauth2:1.4.0")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2777,7 +2848,7 @@ public class UserController {
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.configuration&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-oauth2&lt;/artifactId&gt;
-    &lt;version&gt;1.3.2&lt;/version&gt;
+    &lt;version&gt;1.4.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -4625,6 +4696,31 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </div>
 <div class="paragraph">
 <p>Because of how generic this interface is, it is possible to implement authentication for any provider that follows the redirect / redirect back pattern. For example one could implement support for OAuth 1.0a providers (looking at you, twitter).</p>
+</div>
+
+<h1 id="breaks"><a class="anchor" href="#breaks"></a>12 Breaking Changes</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/breaks.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x → 2.x.x).</p>
+</div>
+<div class="sect1">
+<h2 id="_1_4_0">1.4.0</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The collections returned by <a href="../api/io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#getSignatureConfigurations--">JwtTokenValidator#getSignatureConfigurations</a>, <a href="../api/io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#getEncryptionConfigurations--">JwtTokenValidator#getEncryptionConfigurations</a>, and <a href="../api/io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#getGenericJwtClaimsValidators--">JwtTokenValidator#getGenericJwtClaimsValidators</a> are now immutable.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 
     </div>
