@@ -22,6 +22,7 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
         if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
             return Flowable.just(new UserDetails('user', ['ROLE_USER']))
         }
+
         return Flowable.just(new AuthenticationFailed())
     }
 }
