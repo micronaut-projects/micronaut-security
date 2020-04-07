@@ -17,7 +17,7 @@ package io.micronaut.security.utils;
 
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.config.TokenConfigurationProperties;
+import io.micronaut.security.token.config.TokenConfiguration;
 
 import javax.inject.Singleton;
 import java.security.Principal;
@@ -33,10 +33,15 @@ import java.util.Collection;
 @Singleton
 public class DefaultSecurityService implements SecurityService {
 
-    private final TokenConfigurationProperties tokenConfigurationProperties;
+    public static final String ROLES = "roles";
+    private final TokenConfiguration tokenConfiguration;
 
-    public DefaultSecurityService(TokenConfigurationProperties tokenConfigurationProperties) {
-        this.tokenConfigurationProperties = tokenConfigurationProperties;
+    /**
+     *
+     * @param tokenConfiguration Token Configuration
+     */
+    public DefaultSecurityService(TokenConfiguration tokenConfiguration) {
+        this.tokenConfiguration = tokenConfiguration;
     }
 
     /**
@@ -78,11 +83,7 @@ public class DefaultSecurityService implements SecurityService {
      */
     @Override
     public boolean hasRole(String role) {
-        if (tokenConfigurationProperties.isEnabled()) {
-            return hasRole(role, tokenConfigurationProperties.getRolesName());
-        } else {
-            return hasRole(role, "roles");
-        }
+        return hasRole(role, tokenConfiguration.isEnabled() ? tokenConfiguration.getRolesName() : ROLES);
     }
 
     /**
