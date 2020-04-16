@@ -5,7 +5,6 @@ io.micronaut.configuration.security.ldap.group
 io.micronaut.security.annotation
 io.micronaut.security.authentication
 io.micronaut.security.authentication.jackson
-io.micronaut.security.authentication.providers
 io.micronaut.security.config
 io.micronaut.security.endpoints
 io.micronaut.security.event
@@ -41,7 +40,6 @@ io.micronaut.security.oauth2.url
 io.micronaut.security.rules
 io.micronaut.security.session
 io.micronaut.security.token
-io.micronaut.security.token.basicauth
 io.micronaut.security.token.config
 io.micronaut.security.token.generator
 io.micronaut.security.token.jwt.bearer
@@ -66,5 +64,4 @@ io.micronaut.security.token.jwt.validator
 io.micronaut.security.token.propagation
 io.micronaut.security.token.reader
 io.micronaut.security.token.validator
-io.micronaut.security.token.writer
 io.micronaut.security.utils
