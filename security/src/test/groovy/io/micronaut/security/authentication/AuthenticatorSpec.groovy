@@ -3,6 +3,7 @@ package io.micronaut.security.authentication
 import io.micronaut.security.config.AuthenticationStrategy
 import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.config.SecurityConfiguration
+import io.micronaut.security.config.SecurityConfigurationProperties
 import io.reactivex.Flowable
 import spock.lang.Specification
 
@@ -28,7 +29,7 @@ class AuthenticatorSpec extends Specification {
 
     void "if no authentication providers return empty optional"() {
         given:
-        Authenticator authenticator = new Authenticator([])
+        Authenticator authenticator = new Authenticator([], new SecurityConfigurationProperties())
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
@@ -47,7 +48,7 @@ class AuthenticatorSpec extends Specification {
         def authProviderOK = Stub(AuthenticationProvider) {
             authenticate(_, _) >> Flowable.just(new UserDetails('admin', []))
         }
-        Authenticator authenticator = new Authenticator([authProviderExceptionRaiser, authProviderOK])
+        Authenticator authenticator = new Authenticator([authProviderExceptionRaiser, authProviderOK], new SecurityConfigurationProperties())
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
@@ -62,7 +63,7 @@ class AuthenticatorSpec extends Specification {
         def authProviderFailed = Stub(AuthenticationProvider) {
             authenticate(_, _) >> Flowable.just( new AuthenticationFailed() )
         }
-        Authenticator authenticator = new Authenticator([authProviderFailed])
+        Authenticator authenticator = new Authenticator([authProviderFailed], new SecurityConfigurationProperties())
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
@@ -89,7 +90,7 @@ class AuthenticatorSpec extends Specification {
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(creds)).blockingFirst()
+        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds)).blockingFirst()
 
         then: //The last error is returned
         rsp instanceof AuthenticationFailed
@@ -110,7 +111,7 @@ class AuthenticatorSpec extends Specification {
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(creds)).blockingFirst()
+        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds)).blockingFirst()
 
         then: //The last error is returned
         rsp instanceof AuthenticationFailed
@@ -131,7 +132,7 @@ class AuthenticatorSpec extends Specification {
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(creds)).blockingFirst()
+        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds)).blockingFirst()
 
         then: //The last error is returned
         rsp instanceof AuthenticationFailed
@@ -152,7 +153,7 @@ class AuthenticatorSpec extends Specification {
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(creds)).blockingFirst()
+        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds)).blockingFirst()
 
         then: //The last error is returned
         rsp instanceof UserDetails
