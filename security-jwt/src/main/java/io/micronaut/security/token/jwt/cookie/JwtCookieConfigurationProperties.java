@@ -225,13 +225,10 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
         return Optional.ofNullable(cookieMaxAge);
     }
 
-
     @Override
-    public Optional<SameSite> getCookieSameSite()
-    {
+    public Optional<SameSite> getCookieSameSite() {
         return Optional.ofNullable(cookieSameSite);
     }
-
 
     /**
      * Sets the domain name of this Cookie.

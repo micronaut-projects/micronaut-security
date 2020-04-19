@@ -186,7 +186,7 @@ public class JwksSignature implements SignatureConfiguration {
                 builder = builder.keyType(keyType);
             }
             String keyId = jwt.getHeader().getKeyID();
-            if (keyId !=null) {
+            if (keyId != null) {
                 builder = builder.keyID(keyId);
             }
 
