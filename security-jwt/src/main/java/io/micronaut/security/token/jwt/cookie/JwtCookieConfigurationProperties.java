@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 import javax.annotation.Nonnull;
@@ -82,11 +83,18 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_LOGINFAILURETARGETURL = "/";
 
+    /**
+     * The default same-site setting for the JWT cookie.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final SameSite DEFAULT_COOKIESAMESITE = null;
+
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     private Boolean cookieSecure = DEFAULT_SECURE;
     private Duration cookieMaxAge;
+    private SameSite cookieSameSite = DEFAULT_COOKIESAMESITE;
     private boolean enabled = DEFAULT_ENABLED;
     private String logoutTargetUrl = DEFAULT_LOGOUTTARGETURL;
     private String cookieName = DEFAULT_COOKIENAME;
@@ -217,6 +225,14 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
         return Optional.ofNullable(cookieMaxAge);
     }
 
+
+    @Override
+    public Optional<SameSite> getCookieSameSite()
+    {
+        return Optional.ofNullable(cookieSameSite);
+    }
+
+
     /**
      * Sets the domain name of this Cookie.
      * @param cookieDomain the domain name of this Cookie
@@ -255,5 +271,13 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      */
     public void setCookieMaxAge(Duration cookieMaxAge) {
         this.cookieMaxAge = cookieMaxAge;
+    }
+
+    /**
+     * Sets the same-site setting of the cookie. Default value ({@value #DEFAULT_COOKIESAMESITE}.
+     * @param cookieSameSite The same-site setting of the cookie.
+     */
+    public void setCookieSameSite(@Nullable SameSite cookieSameSite) {
+        this.cookieSameSite = cookieSameSite;
     }
 }
