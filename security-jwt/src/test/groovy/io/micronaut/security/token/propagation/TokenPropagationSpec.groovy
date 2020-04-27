@@ -21,6 +21,7 @@ import spock.lang.Stepwise
 
 import java.time.Duration
 
+@Ignore
 class TokenPropagationSpec extends Specification {
 
     static final SPEC_NAME_PROPERTY = 'spec.name'

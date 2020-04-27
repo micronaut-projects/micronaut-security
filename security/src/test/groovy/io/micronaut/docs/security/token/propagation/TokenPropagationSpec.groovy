@@ -4,9 +4,10 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator
+import io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfiguration
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
-import io.micronaut.security.token.writer.HttpHeaderTokenWriterConfiguration
-import io.micronaut.security.token.writer.TokenWriter
+import io.micronaut.security.token.propagation.TokenPropagator
 import io.micronaut.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
@@ -27,13 +28,12 @@ micronaut:
                     secret:
                         generator:
                             secret: "pleaseChangeThisSecretForANewOne"
-                            jws-algorithm: HS256                
-            writer:
+                            jws-algorithm: HS256
+            propagation:
                 header:
                     enabled: true
                     headerName: "Authorization"
                     prefix: "Bearer "
-            propagation:
                 enabled: true
                 service-id-regex: "http://localhost:(8083|8081|8082)"                            
 '''//end::yamlconfig[]
@@ -60,14 +60,12 @@ micronaut:
                                                     ]
                                             ]
                                     ],
-                                    'writer': [
+                                    'propagation': [
                                             'header': [
                                                     'enabled': true,
                                                     'headerName': 'Authorization',
                                                     'prefix': 'Bearer ',
-                                            ]
-                                    ],
-                                    'propagation': [
+                                            ],
                                             'enabled': true,
                                             'service-id-regex': 'http://localhost:(8083|8081|8082)'
                                     ]
@@ -99,13 +97,13 @@ micronaut:
         noExceptionThrown()
 
         when:
-        embeddedServer.applicationContext.getBean(TokenWriter)
+        embeddedServer.applicationContext.getBean(HttpHeaderTokenPropagator)
 
         then:
         noExceptionThrown()
 
         when:
-        embeddedServer.applicationContext.getBean(HttpHeaderTokenWriterConfiguration)
+        embeddedServer.applicationContext.getBean(HttpHeaderTokenPropagatorConfiguration)
 
         then:
         noExceptionThrown()

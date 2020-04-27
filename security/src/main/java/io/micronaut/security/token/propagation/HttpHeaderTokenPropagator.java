@@ -13,35 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.reader;
+package io.micronaut.security.token.propagation;
 
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.micronaut.http.MutableHttpRequest;
+
+import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Reads a token from an HTTP request and removes prefix from HTTP Header Value.
+ * Propagates a token based off of a header
  *
- * @author Sergio del Amo
- * @since 1.0
+ * @author James Kleeh
+ * @since 1.4.0
  */
-public abstract class HttpHeaderTokenReader implements TokenReader {
+@Requires(property = HttpHeaderTokenPropagatorConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@Singleton
+public class HttpHeaderTokenPropagator implements TokenPropagator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HttpHeaderTokenReader.class);
-
-    /**
-     *
-     * @return a Prefix before the token in the header value. E.g. Basic
-     */
-    protected abstract String getPrefix();
+    protected final HttpHeaderTokenPropagatorConfiguration configuration;
 
     /**
-     *
-     * @return an HTTP Header name. e.g. Authorization
+     * @param configuration The token propagator configuration
      */
-    protected abstract String getHeaderName();
+    public HttpHeaderTokenPropagator(HttpHeaderTokenPropagatorConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    /**
+     * Writes the token to the request.
+     * @param request The {@link MutableHttpRequest} instance
+     * @param token A token ( e.g. JWT token, basic auth token...)
+     */
+    @Override
+    public void writeToken(MutableHttpRequest<?> request, String token) {
+        request.header(configuration.getHeaderName(), headerValue(token));
+    }
 
     /**
      * Search for a JWT token in a HTTP request.
@@ -50,22 +60,36 @@ public abstract class HttpHeaderTokenReader implements TokenReader {
      */
     @Override
     public Optional<String> findToken(HttpRequest<?> request) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Looking for bearer token in Authorization header");
-        }
         HttpHeaders headers = request.getHeaders();
-        Optional<String> authorizationHeader = headers.findFirst(getHeaderName());
+        Optional<String> authorizationHeader = headers.findFirst(configuration.getHeaderName());
         return authorizationHeader.flatMap(this::extractTokenFromAuthorization);
     }
 
+
     /**
-     *
+     * @param token the token being written
+     * @return the value which will be written to an HTTP Header
+     */
+    protected String headerValue(String token) {
+        StringBuilder sb = new StringBuilder();
+        String prefix = configuration.getPrefix();
+        if (prefix != null) {
+            sb.append(prefix);
+            if (!prefix.endsWith(" ")) {
+                sb.append(" ");
+            }
+        }
+        sb.append(token);
+        return sb.toString();
+    }
+
+    /**
      * @param authorization Authorization header value
      * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
         StringBuilder sb = new StringBuilder();
-        final String prefix = getPrefix();
+        final String prefix = configuration.getPrefix();
         if (prefix != null && !prefix.isEmpty()) {
             sb.append(prefix);
             sb.append(" ");
@@ -74,7 +98,6 @@ public abstract class HttpHeaderTokenReader implements TokenReader {
         if (authorization.startsWith(str)) {
             return Optional.of(authorization.substring(str.length()));
         } else {
-            LOG.debug("{} does not start with {}", authorization, str);
             return Optional.empty();
         }
     }

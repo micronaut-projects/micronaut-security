@@ -1,1 +1,19 @@
 Micronaut Security {version} includes the following new features and improvements.
+
+== Annotation Processing
+
+* The ann:security.annotation.Secured[] annotation has been moved to a separate module in order to reduce the number of classes in the annotation processor scope. If you currently have `micronaut-security` in the classpath of your compiler, the entry can be changed to `micronaut-security-annotations`.
+
+== Improvements
+
+* It is now possible to gain access to the request in your api:security.authentication.AuthenticationProvider[]. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.
+
+* It is no longer assumed that a failed authentication response is an instance of api:security.authentication.AuthenticationFailed[]. That now allows for any subclass of api:security.authentication.AuthenticationResponse[] to be emitted in the case of an authentication failure.
+
+* A new constructor for api:security.authentication.AuthenticationFailed[] that takes a string message has been added to allow for custom error messages.
+
+* It is now possible to require all api:security.authentication.AuthenticationProvider[]s to return a successful authentication response. Set `micronaut.security.authentication-strategy: ALL` to enable this functionality.
+
+* The token propagation implementation will now no longer override an existing token.
+
+* It is now possible to allow for requests that would normally result in a 404 to return with 404 instead of almost always returning a 401 or 403. The current behavior is still the default because it prevents attackers from discovering what endpoints are available in your application. To enable the alternative behavior, set `micronaut.security.reject-not-found: false` in your configuration.

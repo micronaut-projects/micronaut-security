@@ -39,32 +39,25 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+    public static final boolean DEFAULT_REJECT_NOT_FOUND = true;
 
     private boolean enabled = DEFAULT_ENABLED;
     private List<InterceptUrlMapPattern> interceptUrlMap = new ArrayList<>();
     private List<String> ipPatterns = Collections.singletonList(ANYWHERE);
+    private AuthenticationStrategy authenticationStrategy = AuthenticationStrategy.ANY;
+    private boolean rejectNotFound = DEFAULT_REJECT_NOT_FOUND;
 
-    /**
-     * enabled getter.
-     * @return boolean flag indicating whether the security features are enabled.
-     */
     @Override
     public boolean isEnabled() {
         return this.enabled;
     }
 
-    /**
-     * interceptUrlMap getter.
-     * @return a list of {@link InterceptUrlMapPattern}
-     */
+    @Override
     public List<InterceptUrlMapPattern> getInterceptUrlMap() {
         return interceptUrlMap;
     }
 
-    /**
-     * ipPatterns getter.
-     * @return a list of IP Regex patterns. e.g. [192.168.1.*]
-     */
+    @Override
     public List<String> getIpPatterns() {
         return ipPatterns;
     }
@@ -96,5 +89,31 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      */
     public void setIpPatterns(List<String> ipPatterns) {
         this.ipPatterns = ipPatterns;
+    }
+
+    @Override
+    public AuthenticationStrategy getAuthenticationStrategy() {
+        return authenticationStrategy;
+    }
+
+    /**
+     * @param authenticationStrategy Determines how authentication providers should be processed.
+     *                               Default value ({@link AuthenticationStrategy#ANY}).
+     */
+    public void setAuthenticationStrategy(AuthenticationStrategy authenticationStrategy) {
+        this.authenticationStrategy = authenticationStrategy;
+    }
+
+    @Override
+    public boolean isRejectNotFound() {
+        return rejectNotFound;
+    }
+
+    /**
+     * @param rejectNotFound Set to true if the server should respond with 404 for requests that do not
+     *      * match any routes on the server. Default value ({#DEFAULT_REJECT_NOT_FOUND}).
+     */
+    public void setRejectNotFound(boolean rejectNotFound) {
+        this.rejectNotFound = rejectNotFound;
     }
 }

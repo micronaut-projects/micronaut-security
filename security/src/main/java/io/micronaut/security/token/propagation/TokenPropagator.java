@@ -13,23 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.writer;
+package io.micronaut.security.token.propagation;
 
+import io.micronaut.core.order.Ordered;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 
+import java.util.Optional;
+
 /**
- *  Responsible for writing the token in the request.
+ * Responsible for retrieving and writing tokens for the purpose
+ * of propagation between services.
  *
- * @author Sergio del Amo
- * @since 1.0
+ * @author James Kleeh
+ * @since 1.4.0
  */
-public interface TokenWriter {
+public interface TokenPropagator extends Ordered {
 
     /**
      * Writes the token to the request.
+     *
      * @param request The {@link MutableHttpRequest} instance
      * @param token A token ( e.g. JWT token, basic auth token...)
      */
     void writeToken(MutableHttpRequest<?> request, String token);
 
+    /**
+     * Attempts to retrieve a token in a request.
+     *
+     * @param request The request to look for the token in
+     * @return An optional token string
+     */
+    Optional<String> findToken(HttpRequest<?> request);
 }

@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.filters;
-
-import io.micronaut.http.filter.FilterOrderProvider;
+package io.micronaut.security.config;
 
 /**
- * Provides an order for the {@link SecurityFilter}.
+ * Options for how to handle multiple authentication providers.
  *
- * @author Sergio del Amo
- * @since 1.0
+ * @author James Kleeh
+ * @since 1.4.0
  */
-public interface SecurityFilterOrderProvider extends FilterOrderProvider {
+public enum AuthenticationStrategy {
 
+    /**
+     * All authentication providers must return a successful response
+     * for authentication to succeed
+     */
+    ALL,
+
+    /**
+     * At least one authentication provider must return a successful
+     * response for authentication to succeed
+     */
+    ANY
 }

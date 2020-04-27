@@ -2,14 +2,13 @@ package io.micronaut.security.token.writer
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
-import io.micronaut.security.token.writer.HttpHeaderTokenWriter
+import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
-class HttpHeaderTokenWriterDisabledSpec extends Specification {
+class HttpHeaderTokenPropagatorDisabledSpec extends Specification {
+
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
     @Shared
@@ -17,9 +16,9 @@ class HttpHeaderTokenWriterDisabledSpec extends Specification {
             (SPEC_NAME_PROPERTY):getClass().simpleName
     ], Environment.TEST)
 
-    void "HttpHeaderTokenWriter is enabled by default"() {
+    void "HttpHeaderTokenPropagator is enabled by default"() {
         when:
-        context.getBean(HttpHeaderTokenWriter)
+        context.getBean(HttpHeaderTokenPropagator)
 
         then:
         noExceptionThrown()

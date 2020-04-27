@@ -81,19 +81,27 @@ public class IpPatternsRule extends AbstractSecurityRule {
             InetSocketAddress socketAddress = request.getRemoteAddress();
             //noinspection ConstantConditions https://github.com/micronaut-projects/micronaut-security/issues/186
             if (socketAddress != null) {
-                String hostAddress = socketAddress.getAddress().getHostAddress();
-                if (patternList.stream().anyMatch(pattern ->
-                        pattern.pattern().equals(SecurityConfigurationProperties.ANYWHERE) ||
-                                pattern.matcher(hostAddress).matches())) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("One or more of the IP patterns matched the host address [{}]. Continuing request processing.", hostAddress);
+                if (socketAddress.getAddress() != null) {
+                    String hostAddress = socketAddress.getAddress().getHostAddress();
+
+                    if (patternList.stream().anyMatch(pattern ->
+                            pattern.pattern().equals(SecurityConfigurationProperties.ANYWHERE) ||
+                                    pattern.matcher(hostAddress).matches())) {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("One or more of the IP patterns matched the host address [{}]. Continuing request processing.", hostAddress);
+                        }
+                        return SecurityRuleResult.UNKNOWN;
+                    } else {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("None of the IP patterns [{}] matched the host address [{}]. Rejecting the request.", patternList.stream().map(Pattern::pattern).collect(Collectors.toList()), hostAddress);
+                        }
+                        return SecurityRuleResult.REJECTED;
                     }
-                    return SecurityRuleResult.UNKNOWN;
                 } else {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("None of the IP patterns [{}] matched the host address [{}]. Rejecting the request.", patternList.stream().map(Pattern::pattern).collect(Collectors.toList()), hostAddress);
+                        LOG.debug("Could not resolve the InetAddress. Continuing request processing.");
                     }
-                    return SecurityRuleResult.REJECTED;
+                    return SecurityRuleResult.UNKNOWN;
                 }
             } else {
                 if (LOG.isDebugEnabled()) {

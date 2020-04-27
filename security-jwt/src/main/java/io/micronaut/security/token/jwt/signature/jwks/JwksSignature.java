@@ -87,8 +87,15 @@ public class JwksSignature implements SignatureConfiguration {
     }
 
     private Optional<JWKSet> getJWKSet() {
+        JWKSet jwkSet = this.jwkSet;
         if (jwkSet == null) {
-            this.jwkSet = loadJwkSet(getUrl());
+            synchronized (this) { // double check
+                jwkSet = this.jwkSet;
+                if (jwkSet == null) {
+                    jwkSet = loadJwkSet(getUrl());
+                    this.jwkSet = jwkSet;
+                }
+            }
         }
         return Optional.ofNullable(jwkSet);
     }
@@ -192,6 +199,8 @@ public class JwksSignature implements SignatureConfiguration {
             matches = new JWKSelector(builder.build()).select(jwkSet);
         }
         if (refreshKeysAttempts > 0 && matches.isEmpty()) {
+            //Clear the cache in case the provider changed the key set
+            this.jwkSet = null;
             return matches(jwt, getJWKSet().orElse(null), refreshKeysAttempts - 1);
         }
         return matches;

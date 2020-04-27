@@ -169,7 +169,8 @@ micronaut:
         cookie.endsWith('; HTTPOnly')
 
         when:
-        String sessionId = cookie.replaceAll('SESSION=', '').replaceAll('; HTTPOnly', '')
+
+        String sessionId = cookie.split(";")[0].split("=")[1]
         request = HttpRequest.GET('/').cookie(Cookie.of('SESSION', sessionId))
         rsp = client.toBlocking().exchange(request, String)
 
