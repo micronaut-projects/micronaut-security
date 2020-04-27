@@ -28,6 +28,7 @@ import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 
 import java.util.Base64;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -45,9 +46,8 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
      * @param config {@link SecretSignatureConfiguration} configuration
      */
     public SecretSignature(SecretSignatureConfiguration config) {
-        if (config.getSecret() != null) {
-            this.secret = config.isBase64() ? Base64.getDecoder().decode(config.getSecret()) : config.getSecret().getBytes(UTF_8);
-        }
+        Objects.requireNonNull(config.getSecret(), "The secret for the secret signature cannot be null");
+        this.secret = config.isBase64() ? Base64.getDecoder().decode(config.getSecret()) : config.getSecret().getBytes(UTF_8);
         this.algorithm = config.getJwsAlgorithm();
     }
 

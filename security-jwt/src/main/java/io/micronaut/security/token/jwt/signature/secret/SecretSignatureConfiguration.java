@@ -20,6 +20,8 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Create a {@link io.micronaut.context.annotation.ConfigurationProperties} bean for each sub-property of micronaut.security.token.jwt.signatures.secret.*.
  * @author Sergio del Amo
