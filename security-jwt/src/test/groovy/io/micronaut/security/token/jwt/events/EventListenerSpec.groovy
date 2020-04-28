@@ -40,10 +40,6 @@ class EventListenerSpec extends Specification {
         client.toBlocking().exchange(request)
 
         then:
-        embeddedServer.applicationContext.getBean(RefreshTokenGeneratedEventListener).events.size() ==
-                old(embeddedServer.applicationContext.getBean(RefreshTokenGeneratedEventListener).events.size()) + 1
-
-        and:
         embeddedServer.applicationContext.getBean(AccessTokenGeneratedEventListener).events.size() ==
                 old(embeddedServer.applicationContext.getBean(AccessTokenGeneratedEventListener).events.size()) + 1
     }

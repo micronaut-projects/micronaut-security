@@ -43,7 +43,7 @@ class JwtClaimsOverrideSpec extends Specification {
         rsp.status.code == 200
         rsp.body.isPresent()
         rsp.body.get().accessToken
-        rsp.body.get().refreshToken
+        !rsp.body.get().refreshToken
 
         when:
         String accessToken = rsp.body.get().accessToken

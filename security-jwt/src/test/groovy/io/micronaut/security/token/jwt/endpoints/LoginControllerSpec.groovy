@@ -57,7 +57,7 @@ class LoginControllerSpec extends Specification {
         rsp.status() == HttpStatus.OK
         rsp.body().accessToken
         !rsp.body().refreshToken
-        rsp.body().username == null
+        rsp.body().username
         rsp.body().roles == null
         rsp.body().expiresIn
         rsp.body().tokenType

@@ -139,7 +139,7 @@ public class AccessRefreshTokenGenerator {
 
         String accessToken = optionalAccessToken.get();
         eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
-        return Optional.of(tokenRenderer.render(accessTokenConfiguration.getExpiration().orElse(null), accessToken, refreshToken));
+        return Optional.of(tokenRenderer.render(userDetails, accessTokenConfiguration.getExpiration().orElse(null), accessToken, refreshToken));
     }
 
 
