@@ -40,6 +40,14 @@ import java.util.function.Supplier;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * The default implementation of {@link RefreshTokenGenerator} and {@link RefreshTokenValidator}
+ * that encrypts the token with a secret key and validates a token can be decrypted with
+ * the same secret key.
+ *
+ * @author James Kleeh
+ * @since 2.0.0
+ */
 @Singleton
 @Requires(beans = RefreshTokenPersistence.class)
 public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, RefreshTokenValidator {
@@ -49,6 +57,9 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
     private final Supplier<Cipher> encryptingCipher;
     private final Supplier<Cipher> decryptingCipher;
 
+    /**
+     * @param configuration The refresh token configuration
+     */
     public SignedRefreshTokenGenerator(RefreshTokenConfiguration configuration) {
         String secret = configuration.getSecret().orElse(null);
         Supplier<byte[]> secretKey;

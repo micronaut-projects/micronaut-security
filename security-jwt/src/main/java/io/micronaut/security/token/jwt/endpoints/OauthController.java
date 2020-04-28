@@ -63,9 +63,10 @@ public class OauthController {
     private final RefreshTokenValidator refreshTokenValidator;
 
     /**
-     *
-     * @param tokenValidator An instance of {@link TokenValidator}
-     * @param accessRefreshTokenGenerator An instance of {@link AccessRefreshTokenGenerator}
+     * @param tokenValidator The token validator
+     * @param accessRefreshTokenGenerator The access refresh token generator
+     * @param refreshTokenPersistence The persistence mechanism for the refresh token
+     * @param refreshTokenValidator The refresh token validator
      */
     public OauthController(JwtTokenValidator tokenValidator,
                            AccessRefreshTokenGenerator accessRefreshTokenGenerator,

@@ -42,5 +42,4 @@ public interface RefreshTokenGenerator {
      */
     Optional<String> generate(UserDetails userDetails, String token);
 
-
 }

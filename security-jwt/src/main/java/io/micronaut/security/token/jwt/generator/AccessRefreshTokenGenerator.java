@@ -111,7 +111,7 @@ public class AccessRefreshTokenGenerator {
      * @return The http response
      */
     public Optional<AccessRefreshToken> generate(String refreshToken, Map<String, Object> oldClaims) {
-        Map<String, Object> claims = claimsGenerator.generateClaimsSet(oldClaims, accessTokenConfiguration.getExpiration().orElse(null));
+        Map<String, Object> claims = claimsGenerator.generateClaimsSet(oldClaims, accessTokenConfiguration.getExpiration());
 
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
         if (!optionalAccessToken.isPresent()) {
@@ -125,11 +125,18 @@ public class AccessRefreshTokenGenerator {
         }
         String accessToken = optionalAccessToken.get();
         eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
-        return Optional.of(tokenRenderer.render(accessTokenConfiguration.getExpiration().orElse(null), accessToken, refreshToken));
+        return Optional.of(tokenRenderer.render(accessTokenConfiguration.getExpiration(), accessToken, refreshToken));
     }
 
+    /**
+     * Generate a new access refresh token.
+     *
+     * @param refreshToken The refresh token
+     * @param userDetails The user details to create a new access token
+     * @return The optional access refresh token
+     */
     public Optional<AccessRefreshToken> generate(String refreshToken, UserDetails userDetails) {
-        Optional<String> optionalAccessToken = tokenGenerator.generateToken(userDetails, accessTokenConfiguration.getExpiration().orElse(null));
+        Optional<String> optionalAccessToken = tokenGenerator.generateToken(userDetails, accessTokenConfiguration.getExpiration());
         if (!optionalAccessToken.isPresent()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Failed to generate access token for user {}", userDetails.getUsername());
@@ -139,8 +146,7 @@ public class AccessRefreshTokenGenerator {
 
         String accessToken = optionalAccessToken.get();
         eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
-        return Optional.of(tokenRenderer.render(userDetails, accessTokenConfiguration.getExpiration().orElse(null), accessToken, refreshToken));
+        return Optional.of(tokenRenderer.render(userDetails, accessTokenConfiguration.getExpiration(), accessToken, refreshToken));
     }
-
 
 }
