@@ -2,4 +2,6 @@ Micronaut relies on https://connect2id.com/products/nimbus-jose-jwt[Nimbus JOSE 
 
 The following configuration options are available:
 
-include::{includedir}configurationProperties/io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties.adoc[]
+
+include::{includedir}configurationProperties/io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties.adoc[]

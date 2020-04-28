@@ -15,12 +15,13 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.token.generator.RefreshTokenGenerator;
 import io.micronaut.security.token.generator.TokenGenerator;
-import io.micronaut.security.token.jwt.event.AccessTokenGeneratedEvent;
-import io.micronaut.security.token.jwt.event.RefreshTokenGeneratedEvent;
+import io.micronaut.security.token.event.AccessTokenGeneratedEvent;
+import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
 import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import io.micronaut.security.token.jwt.render.TokenRenderer;
@@ -43,7 +44,7 @@ public class AccessRefreshTokenGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccessRefreshTokenGenerator.class);
 
-    private final RefreshTokenGenerator refreshTokenGenerator;
+    protected final RefreshTokenGenerator refreshTokenGenerator;
     protected final ClaimsGenerator claimsGenerator;
     protected final AccessTokenConfiguration accessTokenConfiguration;
     protected final RefreshTokenConfiguration refreshTokenConfiguration;
@@ -65,7 +66,7 @@ public class AccessRefreshTokenGenerator {
                                        RefreshTokenConfiguration refreshTokenConfiguration,
                                        TokenRenderer tokenRenderer,
                                        TokenGenerator tokenGenerator,
-                                       RefreshTokenGenerator refreshTokenGenerator,
+                                       @Nullable RefreshTokenGenerator refreshTokenGenerator,
                                        ClaimsGenerator claimsGenerator,
                                        ApplicationEventPublisher eventPublisher) {
         this.accessTokenConfiguration = accessTokenConfiguration;
@@ -85,32 +86,20 @@ public class AccessRefreshTokenGenerator {
      * @return The http response
      */
     public Optional<AccessRefreshToken> generate(UserDetails userDetails) {
-
-        Optional<String> accessToken = tokenGenerator.generateToken(userDetails, accessTokenConfiguration.getExpiration().orElse(null));
-        if (!accessToken.isPresent()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Failed to generate access token for user {}", userDetails.getUsername());
-            }
-            return Optional.empty();
-        } else {
-            eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken.get()));
-        }
-
-        Optional<String> refreshToken;
+        Optional<String> refreshToken = Optional.empty();
         if (refreshTokenConfiguration.isEnabled()) {
-            String key = refreshTokenGenerator.createKey(userDetails);
-            refreshToken = refreshTokenGenerator.generate(userDetails, key);
-        } else {
-            refreshToken = Optional.empty();
+            if (refreshTokenGenerator == null) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Failed to add a refresh token to the response. There is no refresh token generator.");
+                }
+            } else {
+                String key = refreshTokenGenerator.createKey(userDetails);
+                refreshToken = refreshTokenGenerator.generate(userDetails, key);
+                refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(userDetails, key)));
+            }
         }
-        refreshToken.ifPresent(s -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(s)));
 
-        AccessRefreshToken accessRefreshToken = tokenRenderer.render(userDetails,
-                accessTokenConfiguration.getExpiration().orElse(null),
-                accessToken.get(),
-                refreshToken.orElse(null));
-
-        return Optional.of(accessRefreshToken);
+        return generate(refreshToken.orElse(null), userDetails);
     }
 
     /**
@@ -137,6 +126,21 @@ public class AccessRefreshTokenGenerator {
         String accessToken = optionalAccessToken.get();
         eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
         return Optional.of(tokenRenderer.render(accessTokenConfiguration.getExpiration().orElse(null), accessToken, refreshToken));
-
     }
+
+    public Optional<AccessRefreshToken> generate(String refreshToken, UserDetails userDetails) {
+        Optional<String> optionalAccessToken = tokenGenerator.generateToken(userDetails, accessTokenConfiguration.getExpiration().orElse(null));
+        if (!optionalAccessToken.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Failed to generate access token for user {}", userDetails.getUsername());
+            }
+            return Optional.empty();
+        }
+
+        String accessToken = optionalAccessToken.get();
+        eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
+        return Optional.of(tokenRenderer.render(accessTokenConfiguration.getExpiration().orElse(null), accessToken, refreshToken));
+    }
+
+
 }

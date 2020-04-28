@@ -95,7 +95,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
             if (cookieMaxAge.isPresent()) {
                 cookie.maxAge(cookieMaxAge.get());
             } else {
-                cookie.maxAge(accessTokenConfiguration.getExpiration());
+                cookie.maxAge(Duration.ofSeconds(accessTokenConfiguration.getExpiration().get()));
             }
             return Optional.of(cookie);
         }

@@ -13,25 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.event;
-
-import io.micronaut.context.event.ApplicationEvent;
 
 /**
- * Triggered when a JWT access token is generated.
+ * Token generated events.
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-public class AccessTokenGeneratedEvent extends ApplicationEvent {
+package io.micronaut.security.token.event;
 
-    /**
-     * Triggered when a JWT access token is generated.
-     *
-     * @param source A String with the JWT access token generated.
-     * @throws IllegalArgumentException if source is null.
-     */
-    public AccessTokenGeneratedEvent(Object source) {
-        super(source);
-    }
-}

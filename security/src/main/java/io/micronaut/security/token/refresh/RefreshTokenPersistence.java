@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.generator;
+package io.micronaut.security.token.refresh;
 
+import io.micronaut.runtime.event.annotation.EventListener;
 import io.micronaut.security.authentication.UserDetails;
-
-import java.util.Optional;
+import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
+import org.reactivestreams.Publisher;
 
 /**
- * Responsible for generating refresh tokens. This class assumes the internal
- * value of the token will be transformed in some way before being sent to
- * the client.
+ * Responsible for persisting refresh tokens and retrieving
+ * user details by a refresh token.
  *
  * @author James Kleeh
  * @since 2.0.0
  */
-public interface RefreshTokenGenerator {
+public interface RefreshTokenPersistence {
 
     /**
-     * @param userDetails The user details
-     * @return The internal value that will persisted.
+     * Persist the refresh token.
+     *
+     * @param event The refresh token generated event
      */
-    String createKey(UserDetails userDetails);
+    @EventListener
+    void persistToken(RefreshTokenGeneratedEvent event);
 
     /**
-     * @param userDetails The user details
-     * @param token The internal value
-     * @return The refresh token
+     * @param refreshToken The refresh token
+     * @return The user details associated with the refresh token
      */
-    Optional<String> generate(UserDetails userDetails, String token);
-
+    Publisher<UserDetails> getUserDetails(String refreshToken);
 
 }

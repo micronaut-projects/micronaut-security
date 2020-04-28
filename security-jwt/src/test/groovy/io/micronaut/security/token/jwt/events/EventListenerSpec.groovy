@@ -13,8 +13,8 @@ import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
-import io.micronaut.security.token.jwt.event.AccessTokenGeneratedEvent
-import io.micronaut.security.token.jwt.event.RefreshTokenGeneratedEvent
+import io.micronaut.security.token.event.AccessTokenGeneratedEvent
+import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.AutoCleanup

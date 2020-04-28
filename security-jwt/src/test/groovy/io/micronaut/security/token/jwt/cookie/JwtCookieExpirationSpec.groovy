@@ -53,7 +53,7 @@ class JwtCookieExpirationSpec extends Specification {
                         'micronaut.security.token.jwt.bearer.enabled': false,
                         'micronaut.security.token.jwt.cookie.enabled': true,
                         'micronaut.security.token.jwt.cookie.login-failure-target-url': '/login/authFailed',
-                        'micronaut.security.token.jwt.generator.access-token-expiration': '500',
+                        'micronaut.security.token.jwt.generator.access-token.expiration': '500',
                         'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
                 ], Environment.TEST)
         EmbeddedServer embeddedServer = context.getBean(EmbeddedServer).start()

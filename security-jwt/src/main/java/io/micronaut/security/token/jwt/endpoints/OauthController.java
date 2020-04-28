@@ -16,29 +16,29 @@
 package io.micronaut.security.token.jwt.endpoints;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
+import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.TokenValidator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import io.micronaut.validation.Validated;
-import io.reactivex.Flowable;
 import io.reactivex.Single;
-import io.reactivex.functions.Function;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -50,6 +50,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(beans = RefreshTokenPersistence.class)
 @Controller("${" + OauthControllerConfigurationProperties.PREFIX + ".path:/oauth/access_token}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Validated
@@ -58,6 +59,8 @@ public class OauthController {
     private static final Logger LOG = LoggerFactory.getLogger(OauthController.class);
     protected final TokenValidator tokenValidator;
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
+    private final RefreshTokenPersistence refreshTokenPersistence;
+    private final RefreshTokenValidator refreshTokenValidator;
 
     /**
      *
@@ -65,9 +68,13 @@ public class OauthController {
      * @param accessRefreshTokenGenerator An instance of {@link AccessRefreshTokenGenerator}
      */
     public OauthController(JwtTokenValidator tokenValidator,
-                           AccessRefreshTokenGenerator accessRefreshTokenGenerator) {
+                           AccessRefreshTokenGenerator accessRefreshTokenGenerator,
+                           RefreshTokenPersistence refreshTokenPersistence,
+                           RefreshTokenValidator refreshTokenValidator) {
         this.tokenValidator = tokenValidator;
         this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+        this.refreshTokenPersistence = refreshTokenPersistence;
+        this.refreshTokenValidator = refreshTokenValidator;
     }
 
     /**
@@ -82,14 +89,17 @@ public class OauthController {
             LOG.debug("grantType: {} refreshToken: {}", tokenRefreshRequest.getGrantType(), tokenRefreshRequest.getRefreshToken());
         }
 
-        Flowable<Authentication> authenticationFlowable = Flowable.fromPublisher(tokenValidator.validateToken(tokenRefreshRequest.getRefreshToken()));
-        return authenticationFlowable.map((Function<Authentication, HttpResponse<AccessRefreshToken>>) authentication -> {
-            Map<String, Object> claims = authentication.getAttributes();
-            Optional<AccessRefreshToken> accessRefreshToken = accessRefreshTokenGenerator.generate(tokenRefreshRequest.getRefreshToken(), claims);
+        Publisher<UserDetails> userDetailsPublisher = refreshTokenValidator.validate(tokenRefreshRequest.getRefreshToken())
+                .map(refreshTokenPersistence::getUserDetails)
+                .orElseGet(Publishers::empty);
+
+        return Single.fromPublisher(userDetailsPublisher)
+            .map(userDetails -> {
+            Optional<AccessRefreshToken> accessRefreshToken = accessRefreshTokenGenerator.generate(tokenRefreshRequest.getRefreshToken(), userDetails);
             if (accessRefreshToken.isPresent()) {
                 return HttpResponse.ok(accessRefreshToken.get());
             }
             return HttpResponse.serverError();
-        }).first(HttpResponse.status(HttpStatus.FORBIDDEN));
+        });
     }
 }

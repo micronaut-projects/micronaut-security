@@ -11,17 +11,8 @@ public class RefreshTokenConfigurationProperties implements RefreshTokenConfigur
 
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".generator.refresh-token";
 
-    private Integer expiration;
     private boolean enabled = false;
     private String secret;
-
-    public Optional<Integer> getExpiration() {
-        return Optional.ofNullable(expiration);
-    }
-
-    public void setExpiration(Integer expiration) {
-        this.expiration = expiration;
-    }
 
     @Override
     public boolean isEnabled() {

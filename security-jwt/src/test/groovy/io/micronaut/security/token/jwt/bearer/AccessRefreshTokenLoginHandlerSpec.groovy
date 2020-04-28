@@ -69,7 +69,7 @@ class AccessRefreshTokenLoginHandlerSpec extends Specification {
         then:
         resp.status == HttpStatus.OK
         resp.body().accessToken
-        resp.body().refreshToken
+        !resp.body().refreshToken
         resp.body().username == "valid"
         resp.body().roles == ["foo", "bar"]
         resp.body().expiresIn
@@ -79,6 +79,6 @@ class AccessRefreshTokenLoginHandlerSpec extends Specification {
 
         then:
         json.contains('access_token')
-        json.contains('refresh_token')
+        !json.contains('refresh_token')
     }
 }

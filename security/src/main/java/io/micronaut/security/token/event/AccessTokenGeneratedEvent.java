@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.event;
+package io.micronaut.security.token.event;
 
 import io.micronaut.context.event.ApplicationEvent;
 
 /**
- * Triggered when a JWT refresh token is generated.
+ * Triggered when a JWT access token is generated.
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-public class RefreshTokenGeneratedEvent extends ApplicationEvent {
+public class AccessTokenGeneratedEvent extends ApplicationEvent {
 
     /**
-     * Triggered when a JWT refresh token is generated.
+     * Triggered when a JWT access token is generated.
      *
-     * @param source A String with the JWT refresh token generated.
+     * @param source A String with the JWT access token generated.
      * @throws IllegalArgumentException if source is null.
      */
-    public RefreshTokenGeneratedEvent(Object source) {
+    public AccessTokenGeneratedEvent(Object source) {
         super(source);
     }
 }

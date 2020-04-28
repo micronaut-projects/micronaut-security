@@ -149,7 +149,7 @@ class JwksSpec extends Specification {
         then:
         rsp.status() == HttpStatus.OK
         rsp.body().accessToken
-        rsp.body().refreshToken
+        !rsp.body().refreshToken
 
         when:
         String username = booksClient.toBlocking().retrieve(HttpRequest.GET('/').bearerAuth(rsp.body().accessToken), String)

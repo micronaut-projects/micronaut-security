@@ -1,16 +1,19 @@
 package io.micronaut.security.token.jwt.refreshtokenexpiration
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.authentication.UsernamePasswordCredentials
-import io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest
-import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -26,8 +29,7 @@ class AccessTokenExpirationSpec extends Specification {
                     'endpoints.beans.enabled': true,
                     'endpoints.beans.sensitive': true,
                     'micronaut.security.endpoints.login.enabled': true,
-                    'micronaut.security.endpoints.oauth.enabled': true,
-                    'micronaut.security.token.jwt.generator.refresh-token-expiration': 5,
+                    'micronaut.security.token.jwt.generator.access-token.expiration': 5,
                     'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne'
             ], Environment.TEST)
 
@@ -46,25 +48,27 @@ class AccessTokenExpirationSpec extends Specification {
 
         then:
         rsp.status() == HttpStatus.OK
-        rsp.body().refreshToken
-        rsp.body().refreshToken
-
-        when:
-        final String refreshToken =  rsp.body().refreshToken
-        def tokenRefreshReq = new TokenRefreshRequest("refresh_token", refreshToken)
-        HttpRequest request = HttpRequest.POST('/oauth/access_token', tokenRefreshReq)
-        HttpResponse refreshRsp = client.toBlocking().exchange(request, AccessRefreshToken)
-
-        then:
-        refreshRsp.status() == HttpStatus.OK
-        refreshRsp.body().accessToken
+        rsp.body().accessToken
+        !rsp.body().refreshToken
 
         when: 'sleep six seconds to leave time to the refresh token to expire'
         sleep(6_000)
-        client.toBlocking().exchange(request, AccessRefreshToken)
+        client.toBlocking().exchange(HttpRequest.GET("/secured")
+                .bearerAuth(rsp.body().accessToken), String)
 
         then:
         HttpClientResponseException e = thrown(HttpClientResponseException)
-        e.status == HttpStatus.FORBIDDEN
+        e.status == HttpStatus.UNAUTHORIZED
+    }
+
+    @Requires(property = "spec.name", value = "refreshtokenexpiration")
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Controller("/secured")
+    static class SecuredController {
+
+        @Get("/")
+        String test() {
+            "test"
+        }
     }
 }
