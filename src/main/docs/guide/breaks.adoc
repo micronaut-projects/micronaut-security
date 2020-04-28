@@ -4,11 +4,19 @@ This section will document breaking changes that may happen during milestone or 
 
 * All deprecations present in 1.3.x have been removed.
 
+* The story around refresh tokens has been changed. There were a couple of core issues with the old implementation that needed resolved.
++
+** The refresh tokens were JWT tokens which also allowed them to be used to access resources.
+** Because they never expire (by default), it requires a list of invalid tokens to be maintained in perpetuity if the ability to revoke tokens is a requirement.
+** The refresh mechanism simply copied the claims from the refresh token JWT back into a new access token. This made any changes to the state of the user (new roles, etc) not be applied at the time of refresh.
++
+The functionality has now been changed to generate a token that is not a JWT, but is instead a signed token of a unique key. The default implementation signs a UUID with a secret provided via configuration. After the token is generated, it is up to each application to provide an implementation of api:security.token.refresh.RefreshTokenPersistence[] to store the token and link it to the user it was created for. That is essential to generate new claims information in new access tokens created by the refresh endpoint. See the <<refresh, refresh section>> for more information.
+
 * The legacy rejection handler in the session module, which was enabled by default, has been removed. The setting `micronaut.security.session.legacy-rejection-handler` no longer has any effect and is equivalent to the behavior of `false` in previous versions.
 
 * The entire `RejectionHandler` API and its dependents have been removed in favor of using the built in exception handling API in Micronaut. An api:security.authentication.AuthorizationException[] will now be emitted when access to a resource has been rejected. Default exception handlers have been created to mimic the previous behavior. If you haven't overridden any of this API or manipulated it through settings there should be no change in behavior.
 
-* The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]
+* The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications.
 
 * Modules are now enabled by default. The configuration keys `micronaut.security.enabled`, `micronaut.security.token.jwt.enabled`, `micronaut.security.oauth2.enabled`, and `micronaut.security.session.enabled` are now all `true` by default.
 
