@@ -5,35 +5,22 @@ import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.runtime.server.EmbeddedServer
 import mock.OpenIdConfigurationController
 import spock.lang.AutoCleanup
+import spock.lang.Retry
 import spock.lang.Shared
 import spock.lang.Specification
 
+@Retry(mode = Retry.Mode.SETUP_FEATURE_CLEANUP)
 abstract class ApplicationContextSpecification extends Specification {
-    @Shared
-    int mockOpenIdHttpServerPort = SocketUtils.findAvailableTcpPort()
 
-    @Shared
-    String mockOpenIdHttpServerUrl = "http://localhost:${mockOpenIdHttpServerPort}"
-
-    @Shared
-    Map<String, Object> openIdMockServerConf = [
-            "spec.name": "mockopenidprovider",
-            'micronaut.server.port': mockOpenIdHttpServerPort,
-            'mockserver.url': mockOpenIdHttpServerUrl,
-            'mockserver.path': mockServerPath,
-            ] as Map<String, Object>
+    int mockOpenIdHttpServerPort
+    String mockOpenIdHttpServerUrl
+    Map<String, Object> openIdMockServerConf
+    EmbeddedServer openIdMockEmbeddedServer
+    ApplicationContext applicationContext
 
     String getMockServerPath() {
         ''
     }
-
-    @AutoCleanup
-    @Shared
-    EmbeddedServer openIdMockEmbeddedServer = ApplicationContext.run(EmbeddedServer, openIdMockServerConf)
-
-    @AutoCleanup
-    @Shared
-    ApplicationContext applicationContext = ApplicationContext.run(configuration)
 
     String getIssuer() {
         assert openIdMockEmbeddedServer.applicationContext.containsBean(OpenIdConfigurationController)
@@ -49,5 +36,24 @@ abstract class ApplicationContextSpecification extends Specification {
                 'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
                 'micronaut.security.oauth2.clients.foo.openid.issuer': getIssuer(),
         ]
+    }
+
+    void setup() {
+        mockOpenIdHttpServerPort = SocketUtils.findAvailableTcpPort()
+        mockOpenIdHttpServerUrl = "http://localhost:${mockOpenIdHttpServerPort}"
+        openIdMockServerConf = [
+                "spec.name": "mockopenidprovider",
+                'micronaut.server.port': mockOpenIdHttpServerPort,
+                'mockserver.url': mockOpenIdHttpServerUrl,
+                'mockserver.path': mockServerPath,
+        ] as Map<String, Object>
+
+        openIdMockEmbeddedServer = ApplicationContext.run(EmbeddedServer, openIdMockServerConf)
+        applicationContext = ApplicationContext.run(configuration)
+    }
+
+    void cleanup() {
+        applicationContext.close()
+        openIdMockEmbeddedServer.close()
     }
 }

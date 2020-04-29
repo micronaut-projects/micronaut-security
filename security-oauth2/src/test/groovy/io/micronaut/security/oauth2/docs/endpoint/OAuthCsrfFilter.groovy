@@ -13,7 +13,7 @@ import io.micronaut.http.filter.ServerFilterChain
 import org.reactivestreams.Publisher
 
 //end::class[]
-@Requires(property = "spec.name", value = "OauthAuthorizationRedirectSpec")
+@Requires(property = "oauth.csrf")
 //tag::class[]
 @Filter(value = ["/oauth/login", "/oauth/login/*"])
 class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {

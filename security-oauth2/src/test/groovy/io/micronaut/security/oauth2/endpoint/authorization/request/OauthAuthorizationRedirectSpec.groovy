@@ -31,7 +31,7 @@ class OauthAuthorizationRedirectSpec extends Specification {
 
     void "test authorization redirect with just oauth"() {
         given:
-        Map config = new HashMap<>()
+        Map config = [:]
         config.put("spec.name", OauthAuthorizationRedirectSpec.simpleName)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
         config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "https://twitter.com/authorize")
@@ -42,6 +42,7 @@ class OauthAuthorizationRedirectSpec extends Specification {
         ApplicationContext context = embeddedServer.getApplicationContext()
         RxHttpClient client = context.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
         PollingConditions conditions = new PollingConditions(timeout: 10)
+
         conditions.eventually {
             assert embeddedServer.isRunning()
         }
@@ -77,6 +78,7 @@ class OauthAuthorizationRedirectSpec extends Specification {
         given:
         Map config = new HashMap<>()
         config.put("spec.name", "OauthAuthorizationRedirectSpec")
+        config.put("oauth.csrf", true)
         config.put("micronaut.security.token.jwt.cookie.enabled", true)
         config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "https://twitter.com/authorize")
         config.put("micronaut.security.oauth2.clients.twitter.token.url", "https://twitter.com/token")
