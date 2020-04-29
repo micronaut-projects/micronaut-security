@@ -1,6 +1,7 @@
 package io.micronaut.security.oauth2.docs.openid
 
 //tag::clazz[]
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
@@ -24,7 +25,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
                                               tokenResponse: OpenIdTokenResponse, // <3>
                                               openIdClaims: OpenIdClaims, // <4>
                                               state: State?) // <5>
-            : UserDetails {
+            : AuthenticationResponse {
         return UserDetails("name", emptyList()) // <6>
     }
 }

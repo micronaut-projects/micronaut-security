@@ -1,7 +1,8 @@
 package io.micronaut.security.oauth2.docs.openid
 
 import edu.umd.cs.findbugs.annotations.Nullable
-import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.Requires
+import io.micronaut.security.authentication.AuthenticationResponse;
 
 //tag::clazz[]
 import io.micronaut.security.authentication.UserDetails
@@ -31,10 +32,10 @@ class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
 
     @Override
     @NonNull
-    UserDetails createAuthenticationResponse(String providerName, // <2>
-                                             OpenIdTokenResponse tokenResponse, // <3>
-                                             OpenIdClaims openIdClaims, // <4>
-                                             @Nullable State state) { // <5>
+    AuthenticationResponse createAuthenticationResponse(String providerName, // <2>
+                                                        OpenIdTokenResponse tokenResponse, // <3>
+                                                        OpenIdClaims openIdClaims, // <4>
+                                                        @Nullable State state) { // <5>
         new UserDetails("name", []) // <6>
     }
 }

@@ -2,6 +2,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -13,6 +14,7 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.OpenIDIntegrationSpec
 import io.micronaut.security.oauth2.client.OauthClient
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
@@ -100,8 +102,14 @@ class OauthAuthorizationRedirectSpec extends Specification {
     @Named("twitter")
     @Requires(property = "spec.name", value = "OauthAuthorizationRedirectSpec")
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
+
         @Override
-        Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse) {
+        Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
+            return Publishers.just(new UnsupportedOperationException())
+        }
+
+        @Override
+        Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
             return Flowable.just(new UserDetails("twitterUser", Collections.emptyList()))
         }
     }
