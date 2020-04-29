@@ -7,6 +7,7 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.UserDetails
@@ -68,6 +69,31 @@ class OauthAuthorizationRedirectSpec extends Specification {
 
         cleanup:
         context.close()
+    }
+
+    void "test csrf filter"() {
+        given:
+        Map config = new HashMap<>()
+        config.put("spec.name", "OauthAuthorizationRedirectSpec")
+        config.put("micronaut.security.token.jwt.cookie.enabled", true)
+        config.put("micronaut.security.oauth2.clients.twitter.authorization.url", "https://twitter.com/authorize")
+        config.put("micronaut.security.oauth2.clients.twitter.token.url", "https://twitter.com/token")
+        config.put("micronaut.security.oauth2.clients.twitter.client-id", "myclient")
+        config.put("micronaut.security.oauth2.clients.twitter.client-secret", "mysecret")
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, config)
+        ApplicationContext context = embeddedServer.getApplicationContext()
+        RxHttpClient client = context.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
+        PollingConditions conditions = new PollingConditions(timeout: 10)
+        conditions.eventually {
+            assert embeddedServer.isRunning()
+        }
+
+        when:
+        client.toBlocking().exchange("/oauth/login/twitter")
+
+        then:
+        def ex = thrown(HttpClientResponseException)
+        ex.status == HttpStatus.FORBIDDEN
     }
 
     @Singleton

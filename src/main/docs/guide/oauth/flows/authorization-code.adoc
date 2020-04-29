@@ -9,3 +9,18 @@ The URI templates for login and callback have a template variable in them `{prov
 For example `/oauth/login{?provider}` is not a valid configuration because Micronaut does not consider the query segment of a URL when routing requests. The provider variable must be part of the *path*.
 
 TIP: It is possible to designate a default provider. The value of the configuration must match one of the client names. The default provider will have the same uri template, but with `null` passed as the provider parameter. By default that will result in `/oauth/login` being redirected to the default provider authentication page.
+
+#### OAuth Login and CSRF
+
+In order to prevent forced login attacks, you must implement CSRF protection on the oauth login endpoints. Because this library is not in control of the forms where login may originate from, we cannot ensure that CSRF is applied. In addition, there is no sensible defaults with regards to how the token is stored or how it should be retrieved. Implementing CSRF is relatively simple.
+
+1. When rendering the login form where users can choose to login via OAuth, the server should store a value either in state on the server specific to that user (session), or state on the client (http-only cookies, etc), or some other mechanism.
+2. That value gets sent with the response and subsequently included in the request to login with OAuth. The value could be sent as a query parameter, or sent as a cookie, etc.
+3. A server filter is written to compare the value in the user specific state and the value sent in the request. If they do not match, the request is rejected.
+
+Here is an example:
+
+snippet::io.micronaut.security.oauth2.docs.endpoint.OAuthCsrfFilter[tags="class", project="security-oauth2"]
+
+
+
