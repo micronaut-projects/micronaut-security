@@ -27,6 +27,9 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State;
  */
 public interface StateAwareAuthenticationResponse extends AuthenticationResponse {
 
+    /**
+     * @return The OAuth state
+     */
     @Nullable
     State getState();
 }

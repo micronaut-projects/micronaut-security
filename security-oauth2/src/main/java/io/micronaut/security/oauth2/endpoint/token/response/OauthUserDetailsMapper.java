@@ -22,8 +22,6 @@ import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import org.reactivestreams.Publisher;
 
-import java.util.Optional;
-
 /**
  * A contract for mapping an OAuth 2.0 token endpoint
  * response to a {@link UserDetails} object.
@@ -66,7 +64,8 @@ public interface OauthUserDetailsMapper {
      * Convert the token response and state into an authentication response.
      *
      * @param tokenResponse The token response
-     * @return The user details
+     * @param state The OAuth state
+     * @return The authentication response
      */
     default Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) {
         return Publishers.map(createUserDetails(tokenResponse), AuthenticationResponse.class::cast);

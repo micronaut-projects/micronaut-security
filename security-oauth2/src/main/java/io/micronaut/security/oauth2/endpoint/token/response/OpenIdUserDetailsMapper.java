@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
@@ -55,7 +54,7 @@ public interface OpenIdUserDetailsMapper {
      * @param tokenResponse The token response
      * @param openIdClaims The OpenID claims
      * @param state        The state of the response
-     * @return A user details object
+     * @return An authentication response
      */
     @NonNull
     default AuthenticationResponse createAuthenticationResponse(String providerName,
