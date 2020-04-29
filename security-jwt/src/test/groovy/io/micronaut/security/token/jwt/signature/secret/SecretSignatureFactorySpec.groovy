@@ -1,6 +1,7 @@
 package io.micronaut.security.token.jwt.signature.secret
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.exceptions.BeanInstantiationException
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
 import spock.lang.Specification
@@ -32,6 +33,24 @@ class SecretSignatureFactorySpec extends Specification {
         expect:
         !applicationContext.containsBean(SignatureGeneratorConfiguration)
         !applicationContext.containsBean(SignatureConfiguration)
+
+        cleanup:
+        applicationContext.close()
+    }
+
+    void "test failing to provide a secret"() {
+        given:
+        ApplicationContext applicationContext = ApplicationContext.run([
+                'micronaut.security.enabled': true,
+                'micronaut.security.token.jwt.enabled': true,
+                'micronaut.security.token.jwt.signatures.secret.generator.jwsAlgorithm': 'HS256'
+        ])
+
+        when:
+        applicationContext.getBeansOfType(SecretSignature)
+
+        then:
+        thrown(BeanInstantiationException)
 
         cleanup:
         applicationContext.close()

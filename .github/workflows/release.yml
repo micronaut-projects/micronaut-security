@@ -26,7 +26,7 @@ jobs:
       env:
         BETA: true
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        BASE_BRANCH: master 
+        BASE_BRANCH: 1.3.x
         BRANCH: gh-pages 
         FOLDER: build/docs
         VERSION: ${{ steps.release_version.outputs.release_version }}
