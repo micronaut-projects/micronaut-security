@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>11.3.1.1 OAuth 2.0 1.4.1.BUILD-SNAPSHOT</title>
+    <title>11.3.1.1 OAuth 2.0 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -50,7 +50,7 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
@@ -105,7 +105,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>11.3.1.1 OAuth 2.0</h1>
 
-                    <p><strong>Version:</strong> 1.4.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -178,9 +178,7 @@ function addJsClass() {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     oauth2:
-      enabled: true
       clients:
         github: <i class="conum" data-value="1"></i><b>(1)</b>
           client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
@@ -373,7 +371,11 @@ interface GithubApiClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.security.authentication.UserDetails;
+<pre class="highlight"><code class="language-java" data-lang="java">import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
@@ -394,7 +396,12 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     } <b class="conum">(2)</b>
 
     @Override
-    public Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) { <b class="conum">(3)</b>
+    public Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) {
+        return Publishers.just(new UnsupportedOperationException());
+    }
+
+    @Override
+    public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
         return apiClient.getUser("token " + tokenResponse.getAccessToken())
                 .map(user -&gt; {
                     List&lt;String&gt; roles = Collections.singletonList("ROLE_GITHUB");
@@ -407,6 +414,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
@@ -425,7 +433,12 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     }
 
     @Override
-    Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) { <b class="conum">(3)</b>
+    Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) {
+        Publishers.just(new UnsupportedOperationException())
+    }
+
+    @Override
+    Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
         apiClient.getUser("token ${tokenResponse.accessToken}")
             .map({ user -&gt;
                 new UserDetails(user.login, ["ROLE_GITHUB"]) <b class="conum">(4)</b>
@@ -436,10 +449,14 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.UserDetails
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.core.async.publisher.Publishers
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
+import java.lang.UnsupportedOperationException
 
 import javax.inject.Named
 import javax.inject.Singleton
@@ -449,7 +466,11 @@ import javax.inject.Singleton
 internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <b class="conum">(2)</b>
     : OauthUserDetailsMapper {
 
-    override fun createUserDetails(tokenResponse: TokenResponse): Publisher&lt;UserDetails&gt; { <b class="conum">(3)</b>
+    override fun createUserDetails(tokenResponse: TokenResponse?): Publisher&lt;UserDetails&gt; {
+        return Publishers.just(UnsupportedOperationException())
+    }
+
+    override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher&lt;AuthenticationResponse&gt; { <b class="conum">(3)</b>
         return apiClient.getUser("token " + tokenResponse.accessToken)
                 .map { user -&gt;
                     UserDetails(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>

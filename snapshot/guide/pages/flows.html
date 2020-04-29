@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>11.3 Flows 1.4.1.BUILD-SNAPSHOT</title>
+    <title>11.3 Flows 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -50,7 +50,7 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
@@ -105,7 +105,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>11.3 Flows</h1>
 
-                    <p><strong>Version:</strong> 1.4.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -203,7 +203,7 @@ function addJsClass() {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the OAuth 2.0 support is enabled. Default value (false).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the OAuth 2.0 support is enabled. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.callback-uri</code></p></td>
@@ -241,6 +241,119 @@ It is possible to designate a default provider. The value of the configuration m
 </td>
 </tr>
 </table>
+</div>
+<div class="sect3">
+<h4 id="_oauth_login_and_csrf">OAuth Login and CSRF</h4>
+<div class="paragraph">
+<p>In order to prevent forced login attacks, you must implement CSRF protection on the oauth login endpoints. Because this library is not in control of the forms where login may originate from, we cannot ensure that CSRF is applied. In addition, there is no sensible defaults with regards to how the token is stored or how it should be retrieved. Implementing CSRF is relatively simple.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When rendering the login form where users can choose to login via OAuth, the server should store a value either in state on the server specific to that user (session), or state on the client (http-only cookies, etc), or some other mechanism.</p>
+</li>
+<li>
+<p>That value gets sent with the response and subsequently included in the request to login with OAuth. The value could be sent as a query parameter, or sent as a cookie, etc.</p>
+</li>
+<li>
+<p>A server filter is written to compare the value in the user specific state and the value sent in the request. If they do not match, the request is rejected.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Here is an example:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.annotation.Filter;
+import io.micronaut.http.cookie.Cookie;
+import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
+import io.micronaut.http.filter.ServerFilterChain;
+import org.reactivestreams.Publisher;
+
+@Filter(value = {"/oauth/login", "/oauth/login/*"})
+public class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
+
+    @Override
+    protected Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilterOnce(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
+        String requestParameter = request.getParameters().get("_csrf");
+        String cookieValue = request.getCookies().findCookie("_csrf").map(Cookie::getValue).orElse(null);
+
+        if (cookieValue == null || !cookieValue.equals(requestParameter)) {
+            return Publishers.just(HttpResponse.status(HttpStatus.FORBIDDEN));
+        }
+
+        return chain.proceed(request);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Requires
+import io.micronaut.core.async.publisher.Publishers
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
+import io.micronaut.http.MutableHttpResponse
+import io.micronaut.http.annotation.Filter
+import io.micronaut.http.filter.OncePerRequestHttpServerFilter
+import io.micronaut.http.filter.ServerFilterChain
+import org.reactivestreams.Publisher
+
+@Filter(value = ["/oauth/login", "/oauth/login/*"])
+class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
+
+    @Override
+    protected Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilterOnce(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
+        String requestParameter = request.parameters.get("_csrf")
+        String cookieValue = request.cookies.findCookie("_csrf").map({c -&gt; c.getValue()}).orElse(null)
+
+        if (cookieValue == null || cookieValue != requestParameter) {
+            return Publishers.just(HttpResponse.status(HttpStatus.FORBIDDEN))
+        }
+
+        return chain.proceed(request)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.core.async.publisher.Publishers
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
+import io.micronaut.http.MutableHttpResponse
+import io.micronaut.http.annotation.Filter
+import io.micronaut.http.cookie.Cookie
+import io.micronaut.http.filter.OncePerRequestHttpServerFilter
+import io.micronaut.http.filter.ServerFilterChain
+import org.reactivestreams.Publisher
+
+@Filter(value = ["/oauth/login", "/oauth/login/*"])
+class OAuthCsrfFilter : OncePerRequestHttpServerFilter() {
+
+    override fun doFilterOnce(request: HttpRequest&lt;*&gt;, chain: ServerFilterChain): Publisher&lt;MutableHttpResponse&lt;*&gt;&gt; {
+        val requestParameter = request.parameters["_csrf"]
+        val cookieValue = request.cookies.findCookie("_csrf").map { obj: Cookie -&gt; obj.value }.orElse(null)
+
+        return if (cookieValue == null || cookieValue != requestParameter) {
+            Publishers.just(HttpResponse.status&lt;Any&gt;(HttpStatus.FORBIDDEN))
+        } else {
+            chain.proceed(request)
+        }
+    }
+}</code></pre>
+</div>
+</div>
 </div>
 
 <h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>11.3.1.1 OAuth 2.0</h2>
@@ -299,9 +412,7 @@ It is possible to designate a default provider. The value of the configuration m
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     oauth2:
-      enabled: true
       clients:
         github: <i class="conum" data-value="1"></i><b>(1)</b>
           client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
@@ -494,7 +605,11 @@ interface GithubApiClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.security.authentication.UserDetails;
+<pre class="highlight"><code class="language-java" data-lang="java">import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
@@ -515,7 +630,12 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     } <b class="conum">(2)</b>
 
     @Override
-    public Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) { <b class="conum">(3)</b>
+    public Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) {
+        return Publishers.just(new UnsupportedOperationException());
+    }
+
+    @Override
+    public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
         return apiClient.getUser("token " + tokenResponse.getAccessToken())
                 .map(user -&gt; {
                     List&lt;String&gt; roles = Collections.singletonList("ROLE_GITHUB");
@@ -528,6 +648,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
@@ -546,7 +667,12 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     }
 
     @Override
-    Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) { <b class="conum">(3)</b>
+    Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) {
+        Publishers.just(new UnsupportedOperationException())
+    }
+
+    @Override
+    Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
         apiClient.getUser("token ${tokenResponse.accessToken}")
             .map({ user -&gt;
                 new UserDetails(user.login, ["ROLE_GITHUB"]) <b class="conum">(4)</b>
@@ -557,10 +683,14 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.UserDetails
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.core.async.publisher.Publishers
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
+import java.lang.UnsupportedOperationException
 
 import javax.inject.Named
 import javax.inject.Singleton
@@ -570,7 +700,11 @@ import javax.inject.Singleton
 internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <b class="conum">(2)</b>
     : OauthUserDetailsMapper {
 
-    override fun createUserDetails(tokenResponse: TokenResponse): Publisher&lt;UserDetails&gt; { <b class="conum">(3)</b>
+    override fun createUserDetails(tokenResponse: TokenResponse?): Publisher&lt;UserDetails&gt; {
+        return Publishers.just(UnsupportedOperationException())
+    }
+
+    override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher&lt;AuthenticationResponse&gt; { <b class="conum">(3)</b>
         return apiClient.getUser("token " + tokenResponse.accessToken)
                 .map { user -&gt;
                     UserDetails(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
@@ -648,9 +782,7 @@ internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     security:
-        enabled: true
         oauth2:
-            enabled: true
             clients:
                 okta: <i class="conum" data-value="1"></i><b>(1)</b>
                     client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
@@ -969,14 +1101,18 @@ Enabling all of the above with cookie JWT storage has been known to cause issues
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Replaces;
+<pre class="highlight"><code class="language-java" data-lang="java">import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.context.annotation.Replaces;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Singleton;
 import java.util.Collections;
 
@@ -984,9 +1120,16 @@ import java.util.Collections;
 @Replaces(DefaultOpenIdUserDetailsMapper.class)
 public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    @NonNull
     @Override
-    @Nonnull
     public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    @NonNull
+    public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
         return new UserDetails("name", Collections.emptyList());
     }
 }</code></pre>
@@ -996,35 +1139,48 @@ public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
-import javax.annotation.Nonnull
+import edu.umd.cs.findbugs.annotations.NonNull
 import javax.inject.Singleton
 
 @Singleton
 @Replaces(DefaultOpenIdUserDetailsMapper.class)
 class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
     @Override
-    @Nonnull
     UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        throw new UnsupportedOperationException()
+    }
+
+    @Override
+    @NonNull
+    AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
         new UserDetails("name", [])
     }
+
+
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+import java.lang.UnsupportedOperationException
 
 import javax.inject.Singleton
 
@@ -1032,7 +1188,12 @@ import javax.inject.Singleton
 @Replaces(DefaultOpenIdUserDetailsMapper::class)
 class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    override fun createUserDetails(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims): UserDetails {
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
+        throw UnsupportedOperationException()
+    }
+
+    override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): AuthenticationResponse {
         return UserDetails("name", emptyList())
     }
 }</code></pre>
@@ -1043,12 +1204,15 @@ class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.security.authentication.UserDetails;
+<pre class="highlight"><code class="language-java" data-lang="java">import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Collections;
@@ -1057,24 +1221,35 @@ import java.util.Collections;
 @Named("okta") <b class="conum">(1)</b>
 public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
 
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    @NonNull
     @Override
-    @Nonnull
-    public UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
-                                         OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
-                                         OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
-        return new UserDetails("name", Collections.emptyList()); <b class="conum">(5)</b>
+    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        throw new UnsupportedOperationException();
     }
+
+    @Override
+    @NonNull
+    public AuthenticationResponse createAuthenticationResponse(String providerName, <b class="conum">(2)</b>
+                                                               OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                                               OpenIdClaims openIdClaims, <b class="conum">(4)</b>
+                                                               @Nullable State state) { <b class="conum">(5)</b>
+        return new UserDetails("name", Collections.emptyList()); <b class="conum">(6)</b>
+    }
+
+
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
-import javax.annotation.Nonnull
+import edu.umd.cs.findbugs.annotations.NonNull
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -1082,22 +1257,34 @@ import javax.inject.Singleton
 @Named("okta") <b class="conum">(1)</b>
 class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
 
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    @NonNull
+    UserDetails createUserDetails(String providerName,
+                                  OpenIdTokenResponse tokenResponse,
+                                  OpenIdClaims openIdClaims) {
+        throw new UnsupportedOperationException()
+    }
+
     @Override
-    @Nonnull
-    UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
-                                  OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
-                                  OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
-        new UserDetails("name", []) <b class="conum">(5)</b>
+    @NonNull
+    AuthenticationResponse createAuthenticationResponse(String providerName, <b class="conum">(2)</b>
+                                                        OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                                        OpenIdClaims openIdClaims, <b class="conum">(4)</b>
+                                                        @Nullable State state) { <b class="conum">(5)</b>
+        new UserDetails("name", []) <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.UserDetails
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+import java.lang.UnsupportedOperationException
 
 import javax.inject.Named
 import javax.inject.Singleton
@@ -1106,11 +1293,17 @@ import javax.inject.Singleton
 @Named("okta") <b class="conum">(1)</b>
 class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    override fun createUserDetails(providerName: String, <b class="conum">(2)</b>
-                                   tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
-                                   openIdClaims: OpenIdClaims) <b class="conum">(4)</b>
-            : UserDetails {
-        return UserDetails("name", emptyList()) <b class="conum">(5)</b>
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
+        throw UnsupportedOperationException()
+    }
+
+    override fun createAuthenticationResponse(providerName: String, <b class="conum">(2)</b>
+                                              tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
+                                              openIdClaims: OpenIdClaims, <b class="conum">(4)</b>
+                                              state: State?) <b class="conum">(5)</b>
+            : AuthenticationResponse {
+        return UserDetails("name", emptyList()) <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
@@ -1135,7 +1328,11 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>An instance of <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> is returned</td>
+<td>The state object used during OAuth authentication</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>An instance of <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> is returned</td>
 </tr>
 </table>
 </div>
