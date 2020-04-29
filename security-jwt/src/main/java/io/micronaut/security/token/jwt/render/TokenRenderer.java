@@ -17,7 +17,7 @@ package io.micronaut.security.token.jwt.render;
 
 import io.micronaut.security.authentication.UserDetails;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Responsible for converting token information to an {@link AccessRefreshToken}.

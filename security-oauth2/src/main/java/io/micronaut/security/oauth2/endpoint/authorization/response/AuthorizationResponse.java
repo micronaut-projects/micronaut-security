@@ -19,8 +19,8 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * OAuth 2.0 Authentication Response.
@@ -44,13 +44,13 @@ public interface AuthorizationResponse {
     /**
      * @return An authorization code which the client will later exchange for an access token.
      */
-    @Nonnull
+    @NonNull
     String getCode();
 
 
     /**
      * @return The authorization callback request
      */
-    @Nonnull
+    @NonNull
     HttpRequest<?> getCallbackRequest();
 }

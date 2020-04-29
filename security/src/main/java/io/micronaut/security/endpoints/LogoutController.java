@@ -29,7 +29,7 @@ import io.micronaut.security.event.LogoutEvent;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.rules.SecurityRule;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Inject;
 
 /**

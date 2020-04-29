@@ -15,8 +15,14 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import org.reactivestreams.Publisher;
+
+import java.util.Optional;
 
 /**
  * A contract for mapping an OAuth 2.0 token endpoint
@@ -50,6 +56,19 @@ public interface OauthUserDetailsMapper {
      *
      * @param tokenResponse The token response
      * @return The user details
+     * @deprecated Use {@link #createAuthenticationResponse(TokenResponse, State) instead}. This
+     * method will only be called if the new method is not overridden.
      */
+    @Deprecated
     Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse);
+
+    /**
+     * Convert the token response and state into an authentication response.
+     *
+     * @param tokenResponse The token response
+     * @return The user details
+     */
+    default Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) {
+        return Publishers.map(createUserDetails(tokenResponse), AuthenticationResponse.class::cast);
+    }
 }

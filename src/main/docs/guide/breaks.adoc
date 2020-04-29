@@ -36,4 +36,4 @@ The functionality has now been changed to generate a token that is not a JWT, bu
 
 * The SecurityFilterOrderProvider API has been deleted in favor of the standard ServerFilterPhase class. The security filter will now run on the order defined by the SECURITY phase.
 
-* The classes in `io.micronaut.security.token.jwt.event` have been moved to `io.micronaut.security.token.event`.
+* The io.micronaut.security.token.jwt.signature.secret.SecretSignatureFactory was deleted because the beans can be created directly from the SecretSignature class.

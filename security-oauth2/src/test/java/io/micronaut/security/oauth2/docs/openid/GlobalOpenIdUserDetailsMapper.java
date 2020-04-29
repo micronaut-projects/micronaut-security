@@ -8,7 +8,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Singleton;
 import java.util.Collections;
 
@@ -17,8 +17,8 @@ import java.util.Collections;
 public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
     @Override
-    @Nonnull
-    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+    @NonNull
+    public UserDetails createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         return new UserDetails("name", Collections.emptyList());
     }
 }

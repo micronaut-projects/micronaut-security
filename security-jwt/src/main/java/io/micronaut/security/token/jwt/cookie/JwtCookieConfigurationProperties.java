@@ -20,9 +20,10 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Duration;
+import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 /**
@@ -174,7 +175,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      *
      * @return a name for the cookie
      */
-    @Nonnull
+    @NonNull
     @Override
     public String getCookieName() {
         return this.cookieName;
@@ -220,7 +221,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      * @return The max age to use for the cookie
      */
     @Override
-    public Optional<Duration> getCookieMaxAge() {
+    public Optional<TemporalAmount> getCookieMaxAge() {
         return Optional.ofNullable(cookieMaxAge);
     }
 

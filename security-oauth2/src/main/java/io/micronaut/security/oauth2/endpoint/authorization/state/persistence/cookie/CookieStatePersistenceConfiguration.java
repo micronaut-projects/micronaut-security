@@ -19,9 +19,10 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Duration;
+import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 /**
@@ -46,7 +47,7 @@ public class CookieStatePersistenceConfiguration implements CookieConfiguration 
     private Duration cookieMaxAge = DEFAULT_MAX_AGE;
     private String cookieName = DEFAULT_COOKIENAME;
 
-    @Nonnull
+    @NonNull
     @Override
     public String getCookieName() {
         return this.cookieName;
@@ -57,7 +58,7 @@ public class CookieStatePersistenceConfiguration implements CookieConfiguration 
      *
      * @param cookieName Cookie name
      */
-    public void setCookieName(@Nonnull String cookieName) {
+    public void setCookieName(@NonNull String cookieName) {
         this.cookieName = cookieName;
     }
 
@@ -118,7 +119,7 @@ public class CookieStatePersistenceConfiguration implements CookieConfiguration 
     }
 
     @Override
-    public Optional<Duration> getCookieMaxAge() {
+    public Optional<TemporalAmount> getCookieMaxAge() {
         return Optional.ofNullable(cookieMaxAge);
     }
 

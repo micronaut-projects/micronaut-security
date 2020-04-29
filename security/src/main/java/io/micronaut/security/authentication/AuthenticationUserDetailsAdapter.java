@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Map;
 
 /**
@@ -40,7 +40,7 @@ public class AuthenticationUserDetailsAdapter implements Authentication {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Map<String, Object> getAttributes() {
         return userDetails.getAttributes(rolesKey, "username");
     }

@@ -11,7 +11,7 @@ import spock.lang.Issue
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javax.annotation.Nonnull
+import edu.umd.cs.findbugs.annotations.NonNull
 
 class InterceptUrlMapRuleSpec extends Specification {
 
@@ -20,7 +20,7 @@ class InterceptUrlMapRuleSpec extends Specification {
         given:
         SecurityRule rule = new InterceptUrlMapRule(new RolesFinder() {
             @Override
-            List<String> findInClaims(@Nonnull Claims claims) {
+            List<String> findInClaims(@NonNull Claims claims) {
                 claims.get("roles")
             }
         }) {

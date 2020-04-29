@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.configuration;
 import io.micronaut.core.naming.Named;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.net.URL;
 import java.util.Optional;
 
@@ -82,6 +82,6 @@ public interface OpenIdClientConfiguration extends Named {
      *
      * @return The end session configuration
      */
-    @Nonnull
+    @NonNull
     EndSessionEndpointConfiguration getEndSession();
 }

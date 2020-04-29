@@ -22,8 +22,8 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -74,7 +74,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @return OAuth 2.0 Grant Type.
      */
-    @Nonnull
+    @NonNull
     public String getGrantType() {
         return grantType;
     }
@@ -83,7 +83,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @param grantType OAuth 2.0 Grant Type.
      */
-    public void setGrantType(@Nonnull String grantType) {
+    public void setGrantType(@NonNull String grantType) {
         this.grantType = grantType;
     }
 
@@ -91,7 +91,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @return The application's Client identifier.
      */
-    @Nonnull
+    @NonNull
     public String getClientId() {
         return clientId;
     }
@@ -100,7 +100,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @param clientId Application's Client identifier.
      */
-    public void setClientId(@Nonnull String clientId) {
+    public void setClientId(@NonNull String clientId) {
         this.clientId = clientId;
     }
 
@@ -124,7 +124,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @return An username
      */
-    @Nonnull
+    @NonNull
     public String getUsername() {
         return username;
     }
@@ -133,7 +133,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @param username An username
      */
-    public void setUsername(@Nonnull String username) {
+    public void setUsername(@NonNull String username) {
         this.username = username;
     }
 
@@ -141,7 +141,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @return An password
      */
-    @Nonnull
+    @NonNull
     public String getPassword() {
         return password;
     }
@@ -150,7 +150,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @param password An password
      */
-    public void setPassword(@Nonnull String password) {
+    public void setPassword(@NonNull String password) {
         this.password = password;
     }
 
@@ -167,7 +167,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @param scope Requested scopes separed by spaces
      */
-    public void setScope(@Nonnull String scope) {
+    public void setScope(@NonNull String scope) {
         this.scope = scope;
     }
 

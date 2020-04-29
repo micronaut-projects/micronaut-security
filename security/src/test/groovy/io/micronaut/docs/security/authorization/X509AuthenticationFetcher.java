@@ -8,7 +8,7 @@ import io.micronaut.security.filters.AuthenticationFetcher;
 import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Singleton;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -35,7 +35,7 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
                             return x509Certificate.getIssuerX500Principal().getName();
                         }
 
-                        @Nonnull
+                        @NonNull
                         @Override
                         public Map<String, Object> getAttributes() {
                             return Collections.emptyMap();

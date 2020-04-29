@@ -18,7 +18,7 @@ package io.micronaut.security.authentication;
 import io.micronaut.http.HttpRequest;
 import org.reactivestreams.Publisher;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Defines an authentication provider.

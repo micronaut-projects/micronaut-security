@@ -187,7 +187,7 @@ class OpenIdAuthorizationRedirectSpec extends Specification implements OpenIDInt
     @Requires(property = "micronaut.security.oauth2.clients.twitter")
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
         @Override
-        Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
+        Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse) {
             return Flowable.just(new UserDetails("twitterUser", Collections.emptyList()))
         }
     }

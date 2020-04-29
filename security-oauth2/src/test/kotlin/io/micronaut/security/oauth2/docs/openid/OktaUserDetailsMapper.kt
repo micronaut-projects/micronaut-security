@@ -13,9 +13,9 @@ import javax.inject.Singleton
 @Named("okta") // <1>
 class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    override fun createUserDetails(providerName: String, // <2>
-                                   tokenResponse: OpenIdTokenResponse, // <3>
-                                   openIdClaims: OpenIdClaims) // <4>
+    override fun createAuthenticationResponse(providerName: String, // <2>
+                                              tokenResponse: OpenIdTokenResponse, // <3>
+                                              openIdClaims: OpenIdClaims) // <4>
             : UserDetails {
         return UserDetails("name", emptyList()) // <5>
     }

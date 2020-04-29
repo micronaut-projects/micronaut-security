@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Map;
@@ -38,6 +38,6 @@ public interface Authentication extends Principal, Serializable {
      *
      * @return Any additional attributes in the authentication
      */
-    @Nonnull
+    @NonNull
     Map<String, Object> getAttributes();
 }

@@ -31,7 +31,7 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Factory creating {@link AuthenticationProvider} beans that delegate

@@ -7,7 +7,7 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.security.annotation.Secured
-import javax.annotation.Nullable
+import edu.umd.cs.findbugs.annotations.Nullable
 
 @Requires(env = Environment.TEST)
 @Requires(property = SecurityServiceSpec.SPEC_NAME_PROPERTY, value = 'SecurityServiceSpec')

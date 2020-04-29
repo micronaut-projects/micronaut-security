@@ -8,7 +8,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
-import javax.annotation.Nonnull
+import edu.umd.cs.findbugs.annotations.NonNull
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -20,10 +20,10 @@ import javax.inject.Singleton
 class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
 
     @Override
-    @Nonnull
-    UserDetails createUserDetails(String providerName, // <2>
-                                  OpenIdTokenResponse tokenResponse, // <3>
-                                  OpenIdClaims openIdClaims) { // <4>
+    @NonNull
+    UserDetails createAuthenticationResponse(String providerName, // <2>
+                                             OpenIdTokenResponse tokenResponse, // <3>
+                                             OpenIdClaims openIdClaims) { // <4>
         new UserDetails("name", []) // <5>
     }
 }

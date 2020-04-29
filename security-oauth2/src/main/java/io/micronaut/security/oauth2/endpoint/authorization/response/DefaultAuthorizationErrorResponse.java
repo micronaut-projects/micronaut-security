@@ -23,8 +23,8 @@ import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Locale;
 import java.util.Map;
 
@@ -54,7 +54,7 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
                 }).orElseGet(request::getParameters);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public AuthorizationError getError() {
         String name = responseData.get(JSON_KEY_ERROR).toUpperCase(Locale.ENGLISH);

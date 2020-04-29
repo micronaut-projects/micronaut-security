@@ -31,7 +31,6 @@ import io.micronaut.security.token.jwt.signature.ec.ECSignatureFactory
 import io.micronaut.security.token.jwt.signature.ec.ECSignatureGeneratorFactory
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureFactory
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorFactory
-import io.micronaut.security.token.jwt.signature.secret.SecretSignatureFactory
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -85,7 +84,6 @@ class SecurityJwtBeansWithSecurityJwtDisabledSpec extends Specification {
                 ECSignatureGeneratorFactory,
                 RSASignatureFactory,
                 RSASignatureGeneratorFactory,
-                SecretSignatureFactory,
                 JwtTokenValidator,
         ]
 

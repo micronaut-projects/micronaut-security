@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

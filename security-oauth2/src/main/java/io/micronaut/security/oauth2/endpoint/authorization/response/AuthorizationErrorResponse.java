@@ -18,8 +18,8 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * OAuth 2.0 Error Response.
@@ -40,7 +40,7 @@ public interface AuthorizationErrorResponse {
      *
      * @return The error code
      */
-    @Nonnull
+    @NonNull
     AuthorizationError getError();
 
     /**

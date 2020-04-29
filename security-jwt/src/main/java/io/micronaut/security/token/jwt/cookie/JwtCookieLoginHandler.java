@@ -30,6 +30,7 @@ import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
+import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 import java.util.List;
 import java.util.Arrays;
@@ -91,7 +92,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
 
             Cookie cookie = Cookie.of(jwtCookieConfiguration.getCookieName(), accessRefreshTokenOptional.get().getAccessToken());
             cookie.configure(jwtCookieConfiguration, request.isSecure());
-            Optional<Duration> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
+            Optional<TemporalAmount> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
             if (cookieMaxAge.isPresent()) {
                 cookie.maxAge(cookieMaxAge.get());
             } else {

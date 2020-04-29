@@ -19,8 +19,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Represent the response of an authorization server to an invalid access token request.
@@ -47,7 +47,7 @@ public class TokenErrorResponse {
     /**
      * @return The error code
      */
-    @Nonnull
+    @NonNull
     public TokenError getError() {
         return error;
     }

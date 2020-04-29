@@ -73,7 +73,7 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
         return Flowable.fromPublisher(
                 tokenEndpointClient.sendRequest(context))
                 .switchMap(response -> {
-                    return Flowable.fromPublisher(userDetailsMapper.createUserDetails(response))
+                    return Flowable.fromPublisher(userDetailsMapper.createAuthenticationResponse(response))
                             .map(AuthenticationResponse.class::cast);
                 });
     }

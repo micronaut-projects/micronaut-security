@@ -37,7 +37,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 import java.text.ParseException;
 import java.util.Optional;
@@ -87,11 +87,12 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             @Nullable OpenIdUserDetailsMapper userDetailsMapper,
             SecureEndpoint tokenEndpoint) {
 
+        State state;
         if (stateValidator != null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Validating state found in the authorization response from provider [{}]", clientConfiguration.getName());
             }
-            State state = authorizationResponse.getState();
+            state = authorizationResponse.getState();
             try {
                 stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
             } catch (InvalidStateException e) {
@@ -99,6 +100,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             }
 
         } else {
+            state = null;
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Skipping state validation, no state validator found");
             }
@@ -123,7 +125,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                                 }
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
                                 OpenIdUserDetailsMapper openIdUserDetailsMapper = userDetailsMapper != null ? userDetailsMapper : defaultUserDetailsMapper;
-                                emitter.onNext(openIdUserDetailsMapper.createUserDetails(clientConfiguration.getName(), response, claims));
+                                emitter.onNext(openIdUserDetailsMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, state));
                                 emitter.onComplete();
                             } catch (ParseException e) {
                                 //Should never happen as validation succeeded

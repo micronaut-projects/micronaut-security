@@ -19,8 +19,8 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Optional;
 
 /**
@@ -64,7 +64,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getLoginUri() {
         return loginUri;
     }
@@ -75,12 +75,12 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      *
      * @param loginUri The Login uri
      */
-    public void setLoginUri(@Nonnull String loginUri) {
+    public void setLoginUri(@NonNull String loginUri) {
         this.loginUri = loginUri;
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getCallbackUri() {
         return callbackUri;
     }
@@ -106,12 +106,12 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      *
      * @param callbackUri The callback Uri
      */
-    public void setCallbackUri(@Nonnull String callbackUri) {
+    public void setCallbackUri(@NonNull String callbackUri) {
         this.callbackUri = callbackUri;
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public OpenIdConfiguration getOpenid() {
         return openid;
     }
@@ -121,7 +121,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      *
      * @param openid The OpenID configuration
      */
-    public void setOpenid(@Nonnull OpenIdConfigurationProperties openid) {
+    public void setOpenid(@NonNull OpenIdConfigurationProperties openid) {
         this.openid = openid;
     }
 
@@ -205,7 +205,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             private String redirectUri = DEFAULT_REDIRECT_URI;
 
             @Override
-            @Nonnull
+            @NonNull
             public String getRedirectUri() {
                 return redirectUri;
             }

@@ -38,7 +38,7 @@ import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.annotation.Nullable
+import edu.umd.cs.findbugs.annotations.Nullable
 import javax.inject.Singleton
 
 class SecurityServiceCustomRolesKeySpec extends Specification {

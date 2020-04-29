@@ -24,8 +24,8 @@ import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Provider;
 
 /**
@@ -48,7 +48,7 @@ public class JwksUriSignatureFactory {
     public JwksSignature createJwksUriSignature(@Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
                                                 JwkValidator jwkValidator) {
         return new JwksSignature(new JwksSignatureConfiguration() {
-            @Nonnull
+            @NonNull
             @Override
             public String getUrl() {
                 return openIdProviderMetadata.get().getJwksUri();

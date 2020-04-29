@@ -21,7 +21,7 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestC
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Responsible for sending requests to a token endpoint.
@@ -38,6 +38,6 @@ public interface TokenEndpointClient {
      * @param <R> The token response type
      * @return a HTTP Request to the Token Endpoint with Authorization Code Grant payload.
      */
-    @Nonnull
+    @NonNull
     <G, R extends TokenResponse> Publisher<R> sendRequest(TokenRequestContext<G, R> requestContext);
 }

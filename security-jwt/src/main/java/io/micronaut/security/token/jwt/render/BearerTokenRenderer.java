@@ -18,7 +18,7 @@ package io.micronaut.security.token.jwt.render;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.security.authentication.UserDetails;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 
 /**

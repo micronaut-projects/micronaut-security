@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 
 import com.nimbusds.jwt.JWT;

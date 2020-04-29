@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -108,7 +108,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         this.requireRequestUriRegistration = requireRequestUriRegistration;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getAuthorizationEndpoint() {
         return authorizationEndpoint;
@@ -118,7 +118,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
      *
      * @param authorizationEndpoint URL of the Open ID Provider's OAuth 2.0 Authorization Endpoint.
      */
-    public void setAuthorizationEndpoint(@Nonnull String authorizationEndpoint) {
+    public void setAuthorizationEndpoint(@NonNull String authorizationEndpoint) {
         this.authorizationEndpoint = authorizationEndpoint;
     }
 
@@ -130,7 +130,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         this.userinfoEncryptionEncValuesSupported = userinfoEncryptionEncValuesSupported;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public List<String> getIdTokenSigningAlgValuesSupported() {
         return idTokenSigningAlgValuesSupported;
@@ -174,11 +174,11 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
      *
      * @param idTokenSigningAlgValuesSupported List of the JWE encryption algorithms (enc values) supported by the OP for the ID Token to encode the Claims in a JWT.
      */
-    public void setIdTokenSigningAlgValuesSupported(@Nonnull List<String> idTokenSigningAlgValuesSupported) {
+    public void setIdTokenSigningAlgValuesSupported(@NonNull List<String> idTokenSigningAlgValuesSupported) {
         this.idTokenSigningAlgValuesSupported = idTokenSigningAlgValuesSupported;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getIssuer() {
         return issuer;
@@ -188,11 +188,11 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
      *
      * @param issuer URL using the https scheme with no query or fragment component that the Open ID Provider asserts as its Issuer Identifier.
      */
-    public void setIssuer(@Nonnull String issuer) {
+    public void setIssuer(@NonNull String issuer) {
         this.issuer = issuer;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getJwksUri() {
         return jwksUri;
@@ -202,7 +202,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
      *
      * @param jwksUri URL of the Open ID Provider's JSON Web Key Set.
      */
-    public void setJwksUri(@Nonnull String jwksUri) {
+    public void setJwksUri(@NonNull String jwksUri) {
         this.jwksUri = jwksUri;
     }
 
@@ -221,7 +221,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
      *
      * @return if Response Types Supported is ommited, default for Dynamic OpenID Providers is ["query", "fragment"].
      */
-    @Nonnull
+    @NonNull
     public List<String> getDefaultResponseTypesSupported() {
         return Arrays.asList("query", "fragment");
     }
@@ -248,7 +248,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         this.scopesSupported = scopesSupported;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public List<String> getSubjectTypesSupported() {
         return subjectTypesSupported;
@@ -258,11 +258,11 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
      *
      * @param subjectTypesSupported List of the Subject Identifier types that this OP supports.
      */
-    public void setSubjectTypesSupported(@Nonnull List<String> subjectTypesSupported) {
+    public void setSubjectTypesSupported(@NonNull List<String> subjectTypesSupported) {
         this.subjectTypesSupported = subjectTypesSupported;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getTokenEndpoint() {
         return tokenEndpoint;
@@ -371,7 +371,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
      * the default value is ["authorization_code", "implicit"].
      * @return Default Grant Types if grantTypesSupported is ommited.
      */
-    @Nonnull
+    @NonNull
     public List<String> getDefaultGrantTypesSupported() {
         return Arrays.asList("authorization_code", "implicit");
     }
@@ -589,7 +589,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     /**
      * @return As per spec, If requestParameterSupported omitted, the default value is false.
      */
-    @Nonnull
+    @NonNull
     public Boolean getDefaultRequestParameterSupported() {
         return Boolean.FALSE;
     }
@@ -603,7 +603,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     /**
      * @return As per spec, If requestUriParameterSupported omitted, the default value is false.
      */
-    @Nonnull
+    @NonNull
     public Boolean getDefaultRequestUriParameterSupported() {
         return Boolean.TRUE;
     }

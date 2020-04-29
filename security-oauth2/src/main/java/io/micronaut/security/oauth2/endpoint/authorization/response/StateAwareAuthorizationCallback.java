@@ -20,7 +20,7 @@ import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**

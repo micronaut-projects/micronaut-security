@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.configuration.endpoints;
 
 import io.micronaut.http.MediaType;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * TokenEndpoint Configuration.
@@ -32,6 +32,6 @@ public interface TokenEndpointConfiguration extends SecureEndpointConfiguration 
     /**
      * @return The content type
      */
-    @Nonnull
+    @NonNull
     MediaType getContentType();
 }

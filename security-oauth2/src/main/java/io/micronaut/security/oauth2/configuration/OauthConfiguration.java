@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.core.util.Toggleable;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Optional;
 
 /**
@@ -32,13 +32,13 @@ public interface OauthConfiguration extends Toggleable {
      *
      * @return the login Uri
      */
-    @Nonnull
+    @NonNull
     String getLoginUri();
 
     /**
      * @return the Callback Uri
      */
-    @Nonnull
+    @NonNull
     String getCallbackUri();
 
     /**
@@ -50,6 +50,6 @@ public interface OauthConfiguration extends Toggleable {
      *
      * @return OpenID Connect Configuration
      */
-    @Nonnull
+    @NonNull
     OpenIdConfiguration getOpenid();
 }

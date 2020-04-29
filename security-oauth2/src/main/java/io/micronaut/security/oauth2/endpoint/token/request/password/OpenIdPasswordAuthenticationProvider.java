@@ -101,7 +101,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
                         if (jwt.isPresent()) {
                             try {
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                                emitter.onNext(openIdUserDetailsMapper.createUserDetails(clientConfiguration.getName(), response, claims));
+                                emitter.onNext(openIdUserDetailsMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims));
                                 emitter.onComplete();
                             } catch (ParseException e) {
                                 //Should never happen as validation succeeded

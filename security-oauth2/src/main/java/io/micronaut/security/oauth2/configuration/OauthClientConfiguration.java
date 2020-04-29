@@ -20,8 +20,8 @@ import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguratio
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.grants.GrantType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,13 +36,13 @@ public interface OauthClientConfiguration extends Toggleable {
     /**
      * @return The provider name
      */
-    @Nonnull
+    @NonNull
     String getName();
 
     /**
      * @return The client id
      */
-    @Nonnull
+    @NonNull
     String getClientId();
 
     /**
@@ -54,13 +54,13 @@ public interface OauthClientConfiguration extends Toggleable {
     /**
      * @return The scopes requested
      */
-    @Nonnull
+    @NonNull
     List<String> getScopes();
 
     /**
      * @return The grant type
      */
-    @Nonnull
+    @NonNull
     GrantType getGrantType();
 
     /**

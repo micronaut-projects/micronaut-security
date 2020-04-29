@@ -19,7 +19,7 @@ package io.micronaut.security.oauth2.url;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.net.URI;
 import java.net.URL;
 

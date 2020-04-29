@@ -20,7 +20,7 @@ import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Generates a nonce. A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.
@@ -38,6 +38,6 @@ public interface NonceFactory {
      * @param response The authorization redirect response
      * @return A nonce. A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.
      */
-    @Nonnull
+    @NonNull
     String buildNonce(HttpRequest<?> request, MutableHttpResponse response);
 }

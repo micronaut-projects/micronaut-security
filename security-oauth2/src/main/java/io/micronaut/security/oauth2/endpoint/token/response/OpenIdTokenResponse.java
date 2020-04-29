@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Id Token Access Token Response.
@@ -47,7 +47,7 @@ public class OpenIdTokenResponse extends TokenResponse {
      *
      * @return ID Token value associated with the authenticated session.
      */
-    @Nonnull
+    @NonNull
     public String getIdToken() {
         return idToken;
     }
@@ -56,7 +56,7 @@ public class OpenIdTokenResponse extends TokenResponse {
      *
      * @param idToken ID Token value associated with the authenticated session.
      */
-    public void setIdToken(@Nonnull String idToken) {
+    public void setIdToken(@NonNull String idToken) {
         this.idToken = idToken;
     }
 }

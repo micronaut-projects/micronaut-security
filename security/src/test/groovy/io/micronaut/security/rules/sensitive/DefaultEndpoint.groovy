@@ -4,7 +4,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.management.endpoint.annotation.Endpoint
 import io.micronaut.management.endpoint.annotation.Read
 
-import javax.annotation.Nullable
+import edu.umd.cs.findbugs.annotations.Nullable
 import java.security.Principal
 
 @Requires(property = 'spec.name', value = 'sensitive')

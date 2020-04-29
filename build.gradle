@@ -105,9 +105,9 @@ subprojects { Project subproject ->
         }
     }
     dependencies {
-        annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
-        testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
-        implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+        annotationProcessor enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion")
+        testAnnotationProcessor enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion")
+        implementation enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion")
         api platform("io.micronaut:micronaut-bom:$micronautVersion")
 
         documentation "org.codehaus.groovy:groovy-templates:$groovyVersion"

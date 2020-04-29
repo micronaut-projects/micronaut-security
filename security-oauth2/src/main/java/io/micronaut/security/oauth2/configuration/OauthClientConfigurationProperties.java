@@ -27,8 +27,8 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +67,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         this.name = name;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getClientId() {
         return clientId;
@@ -78,7 +78,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      *
      * @param clientId The client id
      */
-    public void setClientId(@Nonnull String clientId) {
+    public void setClientId(@NonNull String clientId) {
         this.clientId = clientId;
     }
 
@@ -111,7 +111,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         this.enabled = enabled;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public List<String> getScopes() {
         return scopes == null ? DEFAULT_SCOPES : scopes;
@@ -126,13 +126,13 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         this.scopes = scopes;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getName() {
         return name;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public GrantType getGrantType() {
         return grantType;
@@ -143,7 +143,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      *
      * @param grantType The grant type
      */
-    public void setGrantType(@Nonnull GrantType grantType) {
+    public void setGrantType(@NonNull GrantType grantType) {
         this.grantType = grantType;
     }
 
@@ -275,7 +275,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             this.name = name;
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public String getName() {
             return name;
@@ -297,7 +297,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public String getConfigurationPath() {
             return configurationPath;
         }
@@ -307,7 +307,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          *
          * @param configurationPath The configuration path
          */
-        public void setConfigurationPath(@Nonnull String configurationPath) {
+        public void setConfigurationPath(@NonNull String configurationPath) {
             this.configurationPath = configurationPath;
         }
 
@@ -382,7 +382,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public EndSessionEndpointConfiguration getEndSession() {
             return endSession;
         }
@@ -392,7 +392,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          *
          * @param endSession End session endpoint configuration
          */
-        public void setEndSession(@Nonnull EndSessionConfigurationProperties endSession) {
+        public void setEndSession(@NonNull EndSessionConfigurationProperties endSession) {
             this.endSession = endSession;
         }
 
@@ -422,7 +422,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             private List<String> uiLocales;
             private List<String>  acrValues;
 
-            @Nonnull
+            @NonNull
             @Override
             public ResponseType getResponseType() {
                 return responseType;
@@ -433,7 +433,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              *
              * @param responseType The response type
              */
-            public void setResponseType(@Nonnull ResponseType responseType) {
+            public void setResponseType(@NonNull ResponseType responseType) {
                 this.responseType = responseType;
             }
 
@@ -531,7 +531,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_FORM_URLENCODED_TYPE;
             private MediaType contentType = DEFAULT_CONTENT_TYPE;
 
-            @Nonnull
+            @NonNull
             @Override
             public MediaType getContentType() {
                 return this.contentType;
@@ -542,7 +542,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
              *
              * @param contentType The content type
              */
-            public void setContentType(@Nonnull MediaType contentType) {
+            public void setContentType(@NonNull MediaType contentType) {
                 this.contentType = contentType;
             }
         }

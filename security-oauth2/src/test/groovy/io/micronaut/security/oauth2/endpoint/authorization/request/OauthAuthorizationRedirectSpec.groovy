@@ -101,7 +101,7 @@ class OauthAuthorizationRedirectSpec extends Specification {
     @Requires(property = "spec.name", value = "OauthAuthorizationRedirectSpec")
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
         @Override
-        Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
+        Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse) {
             return Flowable.just(new UserDetails("twitterUser", Collections.emptyList()))
         }
     }

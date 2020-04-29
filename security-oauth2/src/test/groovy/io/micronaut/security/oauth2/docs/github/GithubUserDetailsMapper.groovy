@@ -25,7 +25,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     }
 
     @Override
-    Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) { // <3>
+    Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse) { // <3>
         apiClient.getUser("token ${tokenResponse.accessToken}")
             .map({ user ->
                 new UserDetails(user.login, ["ROLE_GITHUB"]) // <4>

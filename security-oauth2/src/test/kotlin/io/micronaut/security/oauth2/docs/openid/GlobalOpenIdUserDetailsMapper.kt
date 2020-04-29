@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Replaces(DefaultOpenIdUserDetailsMapper::class)
 class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    override fun createUserDetails(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims): UserDetails {
+    override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims): UserDetails {
         return UserDetails("name", emptyList())
     }
 }

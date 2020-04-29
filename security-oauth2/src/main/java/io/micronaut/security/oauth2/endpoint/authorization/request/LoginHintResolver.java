@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.http.HttpRequest;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Resolves a LoginHint. Hint to the Authorization Server about the login identifier the End-User might use to log in.
@@ -35,6 +35,6 @@ public interface LoginHintResolver {
      * @param request The originating request
      * @return The login hint
      */
-    @Nonnull
+    @NonNull
     String resolve(HttpRequest<?> request);
 }

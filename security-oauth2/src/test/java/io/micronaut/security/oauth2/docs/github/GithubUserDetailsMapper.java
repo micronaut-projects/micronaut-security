@@ -22,7 +22,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     } // <2>
 
     @Override
-    public Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) { // <3>
+    public Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse) { // <3>
         return apiClient.getUser("token " + tokenResponse.getAccessToken())
                 .map(user -> {
                     List<String> roles = Collections.singletonList("ROLE_GITHUB");

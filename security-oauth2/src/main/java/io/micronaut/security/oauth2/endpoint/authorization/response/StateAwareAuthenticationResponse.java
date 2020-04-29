@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.security.oauth2.endpoint.authorization.response;
 
-package io.micronaut.security.oauth2.endpoint;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
 /**
- * An OAuth 2.0 provider endpoint.
+ * An authentication response that contains the OAuth state.
  *
- * @author Sergio del Amo
- * @since 1.2.0
+ * @author James Kleeh
+ * @since 2.0.0
  */
-public interface Endpoint {
+public interface StateAwareAuthenticationResponse extends AuthenticationResponse {
 
-    /**
-     * @return The endpoint URL
-     */
-    @NonNull
-    String getUrl();
+    @Nullable
+    State getState();
 }

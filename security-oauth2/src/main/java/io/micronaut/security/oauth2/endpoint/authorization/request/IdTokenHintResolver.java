@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.http.HttpRequest;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Resolves a Id Token Hint. A Token previously issued by the Authorization Server being passed as a hint about the End-User's current or past authenticated session with the Client.
@@ -33,6 +33,6 @@ public interface IdTokenHintResolver {
      * @param request The originating request
      * @return A IdTokenHint.
      */
-    @Nonnull
+    @NonNull
     String resolve(HttpRequest<?> request);
 }
