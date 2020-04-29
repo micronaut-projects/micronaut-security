@@ -20,4 +20,5 @@ snippet::io.micronaut.security.oauth2.docs.openid.OktaUserDetailsMapper[tags="cl
 <2> The provider name is passed to the method. Only useful for the global version
 <3> The full token response is available
 <4> The JWT claims are available
-<5> An instance of api:security.authentication.UserDetails[] is returned
+<5> The state object used during OAuth authentication
+<6> An instance of api:security.authentication.Authentication[] is returned
