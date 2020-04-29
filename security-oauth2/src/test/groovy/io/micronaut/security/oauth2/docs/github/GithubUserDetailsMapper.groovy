@@ -1,9 +1,13 @@
 package io.micronaut.security.oauth2.docs.github
 
-import io.micronaut.context.annotation.Requires;
+import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.context.annotation.Requires
+import io.micronaut.core.async.publisher.Publishers
+import io.micronaut.security.authentication.AuthenticationResponse;
 
 //tag::clazz[]
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
@@ -25,7 +29,12 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     }
 
     @Override
-    Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse) { // <3>
+    Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
+        Publishers.just(new UnsupportedOperationException())
+    }
+
+    @Override
+    Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { // <3>
         apiClient.getUser("token ${tokenResponse.accessToken}")
             .map({ user ->
                 new UserDetails(user.login, ["ROLE_GITHUB"]) // <4>
