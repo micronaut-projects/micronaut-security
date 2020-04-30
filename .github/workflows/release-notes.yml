@@ -1,5 +1,4 @@
 name: Release Notes
-
 on:
   pull_request:
     types: [closed]
@@ -7,7 +6,11 @@ on:
       - master
   issues:
     types: [closed,reopened]
-
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/release-notes.yml"    
 jobs:
   release_notes:
     runs-on: ubuntu-latest
