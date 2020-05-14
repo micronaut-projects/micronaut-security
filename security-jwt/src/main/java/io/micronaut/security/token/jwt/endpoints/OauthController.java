@@ -25,13 +25,11 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.token.validator.RefreshTokenValidator;
-import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
-import io.micronaut.security.token.refresh.RefreshTokenPersistence;
-import io.micronaut.security.token.validator.TokenValidator;
+import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
+import io.micronaut.security.token.refresh.RefreshTokenPersistence;
+import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.validation.Validated;
 import io.reactivex.Single;
 import org.reactivestreams.Publisher;
@@ -57,22 +55,18 @@ import java.util.Optional;
 public class OauthController {
 
     private static final Logger LOG = LoggerFactory.getLogger(OauthController.class);
-    protected final TokenValidator tokenValidator;
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
     private final RefreshTokenPersistence refreshTokenPersistence;
     private final RefreshTokenValidator refreshTokenValidator;
 
     /**
-     * @param tokenValidator The token validator
      * @param accessRefreshTokenGenerator The access refresh token generator
      * @param refreshTokenPersistence The persistence mechanism for the refresh token
      * @param refreshTokenValidator The refresh token validator
      */
-    public OauthController(JwtTokenValidator tokenValidator,
-                           AccessRefreshTokenGenerator accessRefreshTokenGenerator,
+    public OauthController(AccessRefreshTokenGenerator accessRefreshTokenGenerator,
                            RefreshTokenPersistence refreshTokenPersistence,
                            RefreshTokenValidator refreshTokenValidator) {
-        this.tokenValidator = tokenValidator;
         this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
         this.refreshTokenPersistence = refreshTokenPersistence;
         this.refreshTokenValidator = refreshTokenValidator;
