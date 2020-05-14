@@ -79,7 +79,7 @@ class OauthControllerSpec extends Specification {
         sleep(1_000) // Sleep for one second to give time for Claims issue date to be different
         final String originalAccessToken = rsp.body().accessToken
         String refreshToken = rsp.body().refreshToken
-        def tokenRefreshReq = new TokenRefreshRequest("refresh_token", refreshToken)
+        def tokenRefreshReq = new TokenRefreshRequest(refreshToken)
         HttpResponse refreshRsp = client.toBlocking().exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), AccessRefreshToken)
 
         then:
