@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.security.authentication.UserDetails;
@@ -29,6 +30,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Singleton;
+import javax.validation.constraints.NotBlank;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -139,7 +141,7 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
      * @return The decrypted token wrapped in an Optional or {@literal Optional#empty()} if the supplied token is invalid.
      */
     @Override
-    public Optional<String> validate(String refreshToken) {
+    public Optional<String> validate(@NonNull @NotBlank String refreshToken) {
         Cipher cipher = decryptingCipher.get();
         if (cipher != null) {
             byte[] token = Base64.getDecoder().decode(refreshToken);

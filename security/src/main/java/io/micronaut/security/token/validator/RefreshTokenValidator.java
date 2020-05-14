@@ -15,6 +15,9 @@
  */
 package io.micronaut.security.token.validator;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
 /**
@@ -32,5 +35,6 @@ public interface RefreshTokenValidator {
      * @param refreshToken The refresh token
      * @return The validated token wrapped in an Optional or {@literal Optional#empty()} if the supplied token is invalid.
      */
-    Optional<String> validate(String refreshToken);
+    @NonNull
+    Optional<String> validate(@NonNull @NotBlank String refreshToken);
 }
