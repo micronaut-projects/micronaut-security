@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.endpoints;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -25,7 +24,6 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode;
 import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.rules.SecurityRule;
@@ -35,7 +33,6 @@ import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.validation.Validated;
 import io.reactivex.Single;
-import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,13 +84,12 @@ public class OauthController {
         if (LOG.isDebugEnabled()) {
             LOG.debug("grantType: {} refreshToken: {}", tokenRefreshRequest.getGrantType(), tokenRefreshRequest.getRefreshToken());
         }
-
-        Publisher<UserDetails> userDetailsPublisher = refreshTokenValidator.validate(tokenRefreshRequest.getRefreshToken())
-                .map(refreshTokenPersistence::getUserDetails)
-                .orElseGet(Publishers::empty);
-
-        return Single.fromPublisher(userDetailsPublisher)
-            .map(userDetails -> {
+        Optional<String> validRefreshToken = refreshTokenValidator.validate(tokenRefreshRequest.getRefreshToken());
+        if (!validRefreshToken.isPresent()) {
+            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT, "Refresh token is invalid", null);
+        }
+        return Single.fromPublisher(refreshTokenPersistence.getUserDetails(validRefreshToken.get()))
+                .map(userDetails -> {
             Optional<AccessRefreshToken> accessRefreshToken = accessRefreshTokenGenerator.generate(tokenRefreshRequest.getRefreshToken(), userDetails);
             if (accessRefreshToken.isPresent()) {
                 return HttpResponse.ok(accessRefreshToken.get());

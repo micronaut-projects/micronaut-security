@@ -107,6 +107,38 @@ class OauthControllerSpec extends Specification {
         originalAccessTokenClaims.get(JwtClaims.ISSUED_AT) != newAccessTokenClaims.get(JwtClaims.ISSUED_AT)
         originalAccessTokenClaims.get(JwtClaims.EXPIRATION_TIME) != newAccessTokenClaims.get(JwtClaims.EXPIRATION_TIME)
         originalAccessTokenClaims.get(JwtClaims.NOT_BEFORE) != newAccessTokenClaims.get(JwtClaims.NOT_BEFORE)
+
+        cleanup:
+        context.getBean(InMemoryRefreshTokenPersistence).tokens.clear()
+    }
+
+    void "trying to get a new access token with an unsigned refresh token throws exception"() {
+        given:
+        String refreshToken = 'XXX'
+
+        when:
+        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(refreshToken)
+        Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
+        Argument<CustomErrorResponse> errorType = Argument.of(CustomErrorResponse)
+        client.toBlocking().exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), bodyType, errorType)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.response.status() == HttpStatus.BAD_REQUEST
+
+        when:
+        Optional<CustomErrorResponse> errorResponseOptional = e.response.getBody(CustomErrorResponse)
+
+        then:
+        errorResponseOptional.isPresent()
+
+        when:
+        CustomErrorResponse errorResponse = errorResponseOptional.get()
+
+        then:
+        errorResponse.error
+        errorResponse.error == 'invalid_grant'
+        errorResponse.errorDescription == 'Refresh token is invalid'
     }
 
     void "grant_type other than refresh_token returns 400 with {\"error\": \"unsupported_grant_type\"...}"() {
