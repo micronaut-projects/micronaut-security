@@ -31,8 +31,13 @@ import java.util.Optional;
 public class RefreshTokenConfigurationProperties implements RefreshTokenConfiguration {
 
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".generator.refresh-token";
+    /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ENABLED = false;
 
-    private boolean enabled = false;
+    private boolean enabled = DEFAULT_ENABLED;
     private String secret;
 
     @Override
@@ -41,7 +46,7 @@ public class RefreshTokenConfigurationProperties implements RefreshTokenConfigur
     }
 
     /**
-     * @param enabled True if refresh tokens should be included in authentication responses
+     * @param enabled Whether refresh tokens should be included in authentication responses. Default value {@value #DEFAULT_ENABLED}.
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
