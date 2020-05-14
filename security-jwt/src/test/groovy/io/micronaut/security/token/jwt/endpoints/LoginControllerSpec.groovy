@@ -38,7 +38,6 @@ class LoginControllerSpec extends Specification {
 
     def "if valid credentials authenticate"() {
         expect:
-        context.getBean(AuthenticationProviderThrowingException.class)
         context.getBean(AuthenticationProviderUserPassword.class)
         context.getBean(SignatureConfiguration.class)
         context.getBean(SignatureConfiguration.class, Qualifiers.byName("generator"))
@@ -65,7 +64,6 @@ class LoginControllerSpec extends Specification {
 
     def "invoking login with GET, returns unauthorized"() {
         expect:
-        context.getBean(AuthenticationProviderThrowingException.class)
         context.getBean(AuthenticationProviderUserPassword.class)
 
         when:
@@ -79,7 +77,6 @@ class LoginControllerSpec extends Specification {
 
     def "if invalid credentials unauthorized"() {
         expect:
-        context.getBean(AuthenticationProviderThrowingException.class)
         context.getBean(AuthenticationProviderUserPassword.class)
 
         when:
