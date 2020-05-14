@@ -133,6 +133,11 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
         return Optional.empty();
     }
 
+    /**
+     *
+     * @param refreshToken The refresh token
+     * @return The decrypted token wrapped in an Optional or {@literal Optional#empty()} if the supplied token is invalid.
+     */
     @Override
     public Optional<String> validate(String refreshToken) {
         Cipher cipher = decryptingCipher.get();

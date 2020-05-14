@@ -30,7 +30,7 @@ public interface RefreshTokenValidator {
 
     /**
      * @param refreshToken The refresh token
-     * @return True if the refresh token is valid
+     * @return The validated token wrapped in an Optional or {@literal Optional#empty()} if the supplied token is invalid.
      */
     Optional<String> validate(String refreshToken);
 }
