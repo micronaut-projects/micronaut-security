@@ -18,37 +18,18 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.security.errors.ErrorResponse;
 
 /**
- * OAuth 2.0 Error Response.
+ * Open ID Connect Authentication Error Response.
  *
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthError">Authentication Error Response</a>
  *
  * @author Sergio del Amo
  * @since 1.2.0
  */
-public interface AuthorizationErrorResponse {
-
-    String JSON_KEY_ERROR = "error";
-    String JSON_KEY_STATE = "state";
-    String JSON_KEY_ERROR_DESCRIPTION = "error_description";
-    String JSON_KEY_ERROR_URI = "error_uri";
-
-    /**
-     *
-     * @return The error code
-     */
-    @NonNull
-    AuthorizationError getError();
-
-    /**
-     *
-     * @return Human-readable ASCII [USASCII] text providing additional information, used to assist the client developer in understanding the errorCode that occurred.
-     */
-    @Nullable
-    String getErrorDescription();
+public interface AuthorizationErrorResponse extends ErrorResponse {
 
     /**
      * Although the state is required if the Authorization Request included the state parameter. it is set to nullable because it is possible to send authorization requests without including a state.
@@ -57,10 +38,4 @@ public interface AuthorizationErrorResponse {
     @Nullable
     State getState();
 
-    /**
-     *
-     * @return URI identifying a human-readable web page with information about the errorCode
-     */
-    @Nullable
-    String getErrorUri();
 }

@@ -25,6 +25,8 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.security.errors.ErrorCode;
+
 import java.util.Locale;
 import java.util.Map;
 
@@ -56,9 +58,9 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
 
     @NonNull
     @Override
-    public AuthorizationError getError() {
+    public ErrorCode getError() {
         String name = responseData.get(JSON_KEY_ERROR).toUpperCase(Locale.ENGLISH);
-        return AuthorizationError.valueOf(name);
+        return AuthorizationErrorCode.valueOf(name);
     }
 
     @Nullable

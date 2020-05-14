@@ -22,9 +22,12 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode;
+import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
@@ -36,6 +39,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -96,5 +100,22 @@ public class OauthController {
             }
             return HttpResponse.serverError();
         });
+    }
+
+    /**
+     *
+     * @param ex Exception raised when {@link TokenRefreshRequest} validation fails
+     * @return 400
+     * @throws OauthErrorResponseException thrown with invalid_request on unsupported_grant_type error codes
+     */
+    @Error(exception = ConstraintViolationException.class)
+    public HttpResponse onConstraintViolationException(ConstraintViolationException ex) throws OauthErrorResponseException {
+        if (ex.getConstraintViolations().stream().anyMatch(constraintViolation -> constraintViolation.getMessageTemplate().equals("{javax.validation.constraints.NotBlank.message}"))) {
+            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token and grant_type are required", null);
+        }
+        if (ex.getConstraintViolations().stream().anyMatch(constraintViolation -> constraintViolation.getMessageTemplate().equals("{javax.validation.constraints.Pattern.message}"))) {
+            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.UNSUPPORTED_GRANT_TYPE, "grant_type must be refresh_token", null);
+        }
+        return HttpResponse.badRequest();
     }
 }

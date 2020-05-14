@@ -1,9 +1,12 @@
 package io.micronaut.security.token.jwt.endpoints
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.async.publisher.Publishers
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -106,21 +109,68 @@ class OauthControllerSpec extends Specification {
         originalAccessTokenClaims.get(JwtClaims.NOT_BEFORE) != newAccessTokenClaims.get(JwtClaims.NOT_BEFORE)
     }
 
-    @Unroll
-    def "grantType: #grantType refreshToken: #refreshToken is invalid"(String grantType, String refreshToken) {
+    void "grant_type other than refresh_token returns 400 with {\"error\": \"unsupported_grant_type\"...}"() {
+        given:
+        HttpRequest request = HttpRequest.POST('/oauth/access_token', new TokenRefreshRequest("foo", "XXX"))
+
         when:
-        client.toBlocking().exchange(HttpRequest.POST('/oauth/access_token',
-                new TokenRefreshRequest(grantType, refreshToken)))
+        Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
+        Argument<CustomErrorResponse> errorType = Argument.of(CustomErrorResponse)
+        client.toBlocking().exchange(request, bodyType, errorType)
 
         then:
-        def e = thrown(HttpClientResponseException)
+        HttpClientResponseException e = thrown()
         e.response.status() == HttpStatus.BAD_REQUEST
 
+        when:
+        Optional<CustomErrorResponse> errorResponseOptional = e.response.getBody(CustomErrorResponse)
+
+        then:
+        errorResponseOptional.isPresent()
+
+        when:
+        CustomErrorResponse errorResponse = errorResponseOptional.get()
+
+        then:
+        errorResponse.error
+        errorResponse.error == 'unsupported_grant_type'
+        errorResponse.errorDescription == 'grant_type must be refresh_token'
+    }
+
+    @Unroll
+    void "missing #paramName returns 400 with {\"error\": \"invalid_request\"...}"(String grantType, String refreshToken, String paramName) {
+        given:
+        HttpRequest request = HttpRequest.POST('/oauth/access_token', new TokenRefreshRequest(grantType, refreshToken))
+
+        when:
+        Argument<AccessRefreshToken> bodyType =  Argument.of(AccessRefreshToken)
+        Argument<CustomErrorResponse> errorType =  Argument.of(CustomErrorResponse)
+        client.toBlocking().exchange(request, bodyType, errorType)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.response.status() == HttpStatus.BAD_REQUEST
+
+        when:
+        Optional<CustomErrorResponse> errorResponseOptional = e.response.getBody(CustomErrorResponse)
+
+        then:
+        errorResponseOptional.isPresent()
+
+        when:
+        CustomErrorResponse errorResponse = errorResponseOptional.get()
+
+        then:
+        errorResponse.error
+        errorResponse.error == 'invalid_request'
+        errorResponse.errorDescription == 'refresh_token and grant_type are required'
+
         where:
-        grantType        | refreshToken
-        null             | "XXXX"
-        'foo'            | "XXXX"
-        'refresh_token'  | null
+        grantType       | refreshToken
+        'refresh_token' | null
+        null            | 'XXXX'
+
+        paramName = grantType == null ? 'grant_type' : (refreshToken == null ? 'refresh_token': '')
     }
 
     @Singleton
@@ -137,5 +187,16 @@ class OauthControllerSpec extends Specification {
         Publisher<UserDetails> getUserDetails(String refreshToken) {
             Publishers.just(tokens.get(refreshToken))
         }
+    }
+
+    @Introspected
+    static class CustomErrorResponse {
+        String error
+
+        @JsonProperty("error_description")
+        String errorDescription
+
+        @JsonProperty("error_uri")
+        String errorUri
     }
 }
