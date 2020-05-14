@@ -31,6 +31,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -115,12 +116,14 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
     }
 
     @Override
-    public String createKey(UserDetails userDetails) {
+    @NonNull
+    public String createKey(@NonNull @NotNull UserDetails userDetails) {
         return UUID.randomUUID().toString();
     }
 
     @Override
-    public Optional<String> generate(UserDetails userDetails, String token) {
+    @NonNull
+    public Optional<String> generate(@NonNull @NotNull UserDetails userDetails, @NonNull @NotBlank String token) {
         Cipher cipher = encryptingCipher.get();
         if (cipher != null) {
             try {
@@ -141,6 +144,7 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
      * @return The decrypted token wrapped in an Optional or {@literal Optional#empty()} if the supplied token is invalid.
      */
     @Override
+    @NonNull
     public Optional<String> validate(@NonNull @NotBlank String refreshToken) {
         Cipher cipher = decryptingCipher.get();
         if (cipher != null) {

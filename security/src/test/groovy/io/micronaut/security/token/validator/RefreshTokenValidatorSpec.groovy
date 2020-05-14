@@ -40,6 +40,7 @@ class RefreshTokenValidatorSpec extends Specification {
     static class CustomRefreshTokenValidator implements RefreshTokenValidator {
 
         @Override
+        @NonNull
         Optional<String> validate(@NonNull @NotBlank String refreshToken) {
             return Optional.ofNullable(refreshToken)
         }
