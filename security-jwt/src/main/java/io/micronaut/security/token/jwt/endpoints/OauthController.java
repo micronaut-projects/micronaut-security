@@ -43,6 +43,7 @@ import java.util.Optional;
 /**
  *
  * A controller that handles token refresh.
+ * @see <a href="https://tools.ietf.org/html/rfc6749#section-6">Refreshing an Access token</a>
  *
  * @author Sergio del Amo
  * @author Graeme Rocher
