@@ -30,8 +30,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Singleton;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -117,13 +115,13 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
 
     @Override
     @NonNull
-    public String createKey(@NonNull @NotNull UserDetails userDetails) {
+    public String createKey(@NonNull UserDetails userDetails) {
         return UUID.randomUUID().toString();
     }
 
     @Override
     @NonNull
-    public Optional<String> generate(@NonNull @NotNull UserDetails userDetails, @NonNull @NotBlank String token) {
+    public Optional<String> generate(@NonNull UserDetails userDetails, @NonNull String token) {
         Cipher cipher = encryptingCipher.get();
         if (cipher != null) {
             try {
@@ -145,7 +143,7 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
      */
     @Override
     @NonNull
-    public Optional<String> validate(@NonNull @NotBlank String refreshToken) {
+    public Optional<String> validate(@NonNull String refreshToken) {
         Cipher cipher = decryptingCipher.get();
         if (cipher != null) {
             byte[] token = Base64.getDecoder().decode(refreshToken);

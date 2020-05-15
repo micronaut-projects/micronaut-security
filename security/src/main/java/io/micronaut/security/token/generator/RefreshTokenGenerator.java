@@ -18,8 +18,6 @@ package io.micronaut.security.token.generator;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.security.authentication.UserDetails;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 /**
@@ -37,7 +35,7 @@ public interface RefreshTokenGenerator {
      * @return The internal value that will persisted.
      */
     @NonNull
-    String createKey(@NonNull @NotNull UserDetails userDetails);
+    String createKey(@NonNull UserDetails userDetails);
 
     /**
      * @param userDetails The user details
@@ -45,6 +43,6 @@ public interface RefreshTokenGenerator {
      * @return The refresh token
      */
     @NonNull
-    Optional<String> generate(@NonNull @NotNull UserDetails userDetails, @NonNull @NotBlank String token);
+    Optional<String> generate(@NonNull UserDetails userDetails, @NonNull String token);
 
 }

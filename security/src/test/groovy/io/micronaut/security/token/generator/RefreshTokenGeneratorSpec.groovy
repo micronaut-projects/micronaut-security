@@ -9,9 +9,6 @@ import spock.lang.Subject
 import spock.lang.Unroll
 
 import javax.inject.Singleton
-import javax.validation.ConstraintViolationException
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
 
 class RefreshTokenGeneratorSpec extends ApplicationContextSpecification {
 
@@ -24,41 +21,41 @@ class RefreshTokenGeneratorSpec extends ApplicationContextSpecification {
     @Shared
     RefreshTokenGenerator refreshTokenGenerator = applicationContext.getBean(RefreshTokenGenerator)
 
-    void "for RefreshTokenGenerator::createKey user details cannot be null"() {
+    void "for RefreshTokenGenerator::createKey user details can be null"() {
         when:
         refreshTokenGenerator.createKey(null)
 
         then:
-        thrown(ConstraintViolationException)
+        noExceptionThrown()
     }
 
     @Unroll("For RefreshTokenGenerator::generate #description")
-    void "RefreshTokenGenerator::generate constraints"(UserDetails userDetails, String token, String description) {
+    void "RefreshTokenGenerator::generate does not validate parameters"(UserDetails userDetails, String token, String description) {
         when:
         refreshTokenGenerator.generate(userDetails, token)
 
         then:
-        thrown(ConstraintViolationException)
+        noExceptionThrown()
 
         where:
         userDetails                 | token
         null                        | 'xxx'
         new UserDetails("user", []) | null
         new UserDetails("user", []) | ''
-        description = userDetails == null ? 'userDetails cannot be null' : (token == null ? 'token cannot be null' : (token == '' ? 'token cannot be blank': ''))
+        description = userDetails == null ? 'userDetails can be null' : (token == null ? 'token can be null' : (token == '' ? 'token can be blank': ''))
     }
 
     @Requires(property = 'spec.name', value = 'RefreshTokenGeneratorSpec')
     @Singleton
     static class CustomRefreshTokenGenerator implements RefreshTokenGenerator {
         @Override
-        String createKey(@NonNull @NotNull UserDetails userDetails) {
+        String createKey(@NonNull UserDetails userDetails) {
             return 'foo'
         }
 
         @Override
-        Optional<String> generate(@NonNull @NotNull UserDetails userDetails, @NonNull @NotBlank String token) {
-            return 'faa'
+        Optional<String> generate(@NonNull UserDetails userDetails, @NonNull String token) {
+            return Optional.of('faa')
         }
     }
 }

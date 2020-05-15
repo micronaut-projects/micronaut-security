@@ -8,8 +8,6 @@ import spock.lang.Subject
 import spock.lang.Unroll
 
 import javax.inject.Singleton
-import javax.validation.ConstraintViolationException
-import javax.validation.constraints.NotBlank
 
 class RefreshTokenValidatorSpec extends ApplicationContextSpecification {
 
@@ -22,13 +20,13 @@ class RefreshTokenValidatorSpec extends ApplicationContextSpecification {
     @Shared
     RefreshTokenValidator refreshTokenValidator = applicationContext.getBean(RefreshTokenValidator)
 
-    @Unroll("For RefreshTokenValidator::validate #token throws ConstraintViolationException")
-    void "RefreshTokenValidator::validate constraints"(String token) {
+    @Unroll("For RefreshTokenValidator::validate #token does not throw ConstraintViolationException")
+    void "RefreshTokenValidator::validate does not validate parameter"(String token) {
         when:
         refreshTokenValidator.validate(token)
 
         then:
-        thrown(ConstraintViolationException)
+        noExceptionThrown()
 
         where:
         token << [null, '']
@@ -40,7 +38,7 @@ class RefreshTokenValidatorSpec extends ApplicationContextSpecification {
 
         @Override
         @NonNull
-        Optional<String> validate(@NonNull @NotBlank String refreshToken) {
+        Optional<String> validate(@NonNull String refreshToken) {
             return Optional.ofNullable(refreshToken)
         }
     }
