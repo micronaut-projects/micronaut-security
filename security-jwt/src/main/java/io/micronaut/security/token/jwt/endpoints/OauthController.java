@@ -21,7 +21,6 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode;
@@ -36,8 +35,6 @@ import io.reactivex.Single;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import java.util.Optional;
 
 /**
@@ -82,7 +79,14 @@ public class OauthController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public Single<HttpResponse<AccessRefreshToken>> index(@Valid TokenRefreshRequest tokenRefreshRequest) {
+    public Single<HttpResponse<AccessRefreshToken>> index(TokenRefreshRequest tokenRefreshRequest) {
+        if (StringUtils.isEmpty(tokenRefreshRequest.getGrantType()) || StringUtils.isEmpty(tokenRefreshRequest.getRefreshToken())) {
+            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token and grant_type are required", null);
+        }
+        if (!tokenRefreshRequest.getGrantType().equals(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN)) {
+            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.UNSUPPORTED_GRANT_TYPE, "grant_type must be refresh_token", null);
+        }
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("grantType: {} refreshToken: {}", tokenRefreshRequest.getGrantType(), tokenRefreshRequest.getRefreshToken());
         }
@@ -98,22 +102,5 @@ public class OauthController {
             }
             return HttpResponse.serverError();
         });
-    }
-
-    /**
-     *
-     * @param ex Exception raised when {@link TokenRefreshRequest} validation fails
-     * @return 400
-     * @throws OauthErrorResponseException thrown with invalid_request on unsupported_grant_type error codes
-     */
-    @Error(exception = ConstraintViolationException.class)
-    public HttpResponse onConstraintViolationException(ConstraintViolationException ex) throws OauthErrorResponseException {
-        if (ex.getConstraintViolations().stream().anyMatch(constraintViolation -> constraintViolation.getMessageTemplate().equals("{javax.validation.constraints.NotBlank.message}"))) {
-            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token and grant_type are required", null);
-        }
-        if (ex.getConstraintViolations().stream().anyMatch(constraintViolation -> constraintViolation.getMessageTemplate().equals("{javax.validation.constraints.Pattern.message}"))) {
-            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.UNSUPPORTED_GRANT_TYPE, "grant_type must be refresh_token", null);
-        }
-        return HttpResponse.badRequest();
     }
 }
