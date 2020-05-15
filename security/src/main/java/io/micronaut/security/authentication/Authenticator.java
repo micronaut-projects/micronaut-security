@@ -24,8 +24,6 @@ import io.reactivex.exceptions.CompositeException;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.List;
@@ -52,7 +50,6 @@ public class Authenticator {
      * @param authenticationProviders A list of available authentication providers
      * @param securityConfiguration The security configuration
      */
-    @Inject
     public Authenticator(Collection<AuthenticationProvider> authenticationProviders,
                          SecurityConfiguration securityConfiguration) {
         this.authenticationProviders = authenticationProviders;
