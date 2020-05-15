@@ -1,11 +1,9 @@
 package io.micronaut.security.token.validator
 
 import edu.umd.cs.findbugs.annotations.NonNull
-import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import spock.lang.AutoCleanup
+import io.micronaut.security.ApplicationContextSpecification
 import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Unroll
 
@@ -13,11 +11,12 @@ import javax.inject.Singleton
 import javax.validation.ConstraintViolationException
 import javax.validation.constraints.NotBlank
 
-class RefreshTokenValidatorSpec extends Specification {
+class RefreshTokenValidatorSpec extends ApplicationContextSpecification {
 
-    @AutoCleanup
-    @Shared
-    ApplicationContext applicationContext = ApplicationContext.run(['spec.name': 'RefreshTokenValidatorSpec'])
+    @Override
+    String getSpecName() {
+        'RefreshTokenValidatorSpec'
+    }
 
     @Subject
     @Shared

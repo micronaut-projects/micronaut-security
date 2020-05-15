@@ -36,8 +36,6 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
         noExceptionThrown()
 
         when:
-
-
         String[] patterns
         Optional<AnnotationValue<Filter>> filterOpt = annotationMetadataResolver.resolveMetadata(filter).findAnnotation(Filter.class)
         if (filterOpt.isPresent()) {
@@ -81,8 +79,6 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
         noExceptionThrown()
 
         when:
-
-
         String[] patterns
         Optional<AnnotationValue<Filter>> filterOpt = annotationMetadataResolver.resolveMetadata(filter).findAnnotation(Filter.class)
         if (filterOpt.isPresent()) {

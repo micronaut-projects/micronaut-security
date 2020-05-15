@@ -1,16 +1,14 @@
 package io.micronaut.security.events
 
-import io.micronaut.context.ApplicationContext
+
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
-import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
@@ -25,29 +23,32 @@ import io.micronaut.security.event.TokenValidatedEvent
 import io.micronaut.security.handlers.LoginHandler
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
 import javax.inject.Singleton
 
-class EventListenerSpec extends Specification {
+class EventListenerSpec extends EmbeddedServerSpecification {
 
-    @Shared @AutoCleanup EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': "io.micronaut.security.events.EventListenerSpec",
+    @Override
+    String getSpecName() {
+        'EventListenerSpec'
+    }
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
             'endpoints.beans.enabled': true,
             'endpoints.beans.sensitive': true,
             'micronaut.security.endpoints.login.enabled': true,
             'micronaut.security.endpoints.logout.enabled': true,
-    ], Environment.TEST)
-    @Shared @AutoCleanup RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+        ]
+    }
 
     def "failed login publishes LoginFailedEvent"() {
         when:
         println "sending request to login with bogus/password"
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("bogus", "password"))
-        client.toBlocking().exchange(request)
+        client.exchange(request)
 
         then:
         def e = thrown(HttpClientResponseException)
@@ -60,7 +61,7 @@ class EventListenerSpec extends Specification {
     def "successful login publishes LoginSuccessfulEvent"() {
         when:
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("user", "password"))
-        client.toBlocking().exchange(request)
+        client.exchange(request)
 
         then:
         new PollingConditions().eventually {
@@ -71,7 +72,7 @@ class EventListenerSpec extends Specification {
     def "invoking logout triggers LogoutEvent"() {
         when:
         HttpRequest request = HttpRequest.POST("/logout", "").basicAuth("user", "password")
-        client.toBlocking().exchange(request)
+        client.exchange(request)
 
         then:
         thrown(HttpClientResponseException)
@@ -81,7 +82,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class LoginSuccessfulEventListener implements ApplicationEventListener<LoginSuccessfulEvent> {
         List<LoginSuccessfulEvent> events = []
@@ -91,7 +92,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class LogoutEventListener implements ApplicationEventListener<LogoutEvent> {
         List<LogoutEvent> events = []
@@ -102,7 +103,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class LoginFailedEventListener implements ApplicationEventListener<LoginFailedEvent> {
         volatile List<LoginFailedEvent> events = []
@@ -113,7 +114,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class TokenValidatedEventListener implements ApplicationEventListener<TokenValidatedEvent> {
         List<TokenValidatedEvent> events = []
@@ -124,7 +125,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class LogoutFailedEventListener implements ApplicationEventListener<LogoutEvent> {
         List<LogoutEvent> events = []
@@ -135,7 +136,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class CustomAuthenticationProvider implements AuthenticationProvider {
 
@@ -152,7 +153,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class CustomLoginHandler implements LoginHandler {
 

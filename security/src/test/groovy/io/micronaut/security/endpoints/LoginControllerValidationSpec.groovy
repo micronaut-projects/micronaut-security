@@ -1,30 +1,33 @@
 package io.micronaut.security.endpoints
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.security.handlers.LoginHandler
 import spock.lang.Unroll
 
-class LoginControllerValidationSpec extends Specification {
+import javax.inject.Singleton
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'loginpathconfigurable',
+class LoginControllerValidationSpec extends EmbeddedServerSpecification {
+
+    @Override
+    String getSpecName() {
+        'LoginControllerValidationSpec'
+    }
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
             'micronaut.security.endpoints.login.enabled': true,
-    ], Environment.TEST)
-
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+        ]
+    }
 
     @Unroll("{\"username\": \"#username\", \"password\": \"#password\"} is invalid payload")
     void "LoginController responds BAD_REQUEST if POJO sent to /login is invalid"(String username, String password) {
@@ -32,7 +35,7 @@ class LoginControllerValidationSpec extends Specification {
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials(username, password)
 
         when:
-        client.toBlocking().exchange(HttpRequest.POST('/login', creds))
+        client.exchange(HttpRequest.POST('/login', creds))
 
         then:
         HttpClientResponseException e = thrown(HttpClientResponseException)
@@ -44,5 +47,20 @@ class LoginControllerValidationSpec extends Specification {
         ''       | 'aabbc12345678'
         'johnny' | null
         'johnny' | ''
+    }
+
+    @Requires(property = 'spec.name', value = 'LoginControllerValidationSpec')
+    @Singleton
+    static class CustomLoginHandler implements LoginHandler {
+
+        @Override
+        MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+            HttpResponse.ok()
+        }
+
+        @Override
+        MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
+            HttpResponse.unauthorized()
+        }
     }
 }

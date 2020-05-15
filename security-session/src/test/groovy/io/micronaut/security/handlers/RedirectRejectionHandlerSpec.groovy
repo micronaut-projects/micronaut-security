@@ -1,37 +1,45 @@
 package io.micronaut.security.handlers
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
+import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.rules.SecurityRule
+import io.reactivex.Flowable
+import org.reactivestreams.Publisher
 import spock.lang.Shared
-import spock.lang.Specification
 
-class RedirectRejectionHandlerSpec extends Specification {
+import javax.inject.Singleton
+
+class RedirectRejectionHandlerSpec extends EmbeddedServerSpecification {
+
+    @Override
+    String getSpecName() {
+        "RedirectRejectionHandlerSpec"
+    }
 
     @Shared
     String accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': RedirectRejectionHandlerSpec.simpleName,
-            'micronaut.security.session.unauthorized-target-url': '/login',
-            'micronaut.security.session.forbidden-target-url': '/forbidden'
-    ], Environment.TEST)
+    Map<String, Object> getConfiguration() {
+        super.configuration + ['micronaut.security.session.unauthorized-target-url': '/login',
+                               'micronaut.security.session.forbidden-target-url': '/forbidden']
+    }
 
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
-
-    def "UnauthorizedRejectionUriProvider is used for 401"() {
+    void "UnauthorizedRejectionUriProvider is used for 401"() {
         when: 'accessing a secured page without authenticating'
         HttpRequest request = HttpRequest.GET("/secured").header("Accept", accept)
-        HttpResponse<String> rsp = client.toBlocking().exchange(request, String)
+        HttpResponse<String> rsp = client.exchange(request, String)
 
         then: 'user is redirected to the url provided by CustomUnauthorizedRejectionUriProvider'
         rsp.status() == HttpStatus.OK
@@ -43,7 +51,7 @@ class RedirectRejectionHandlerSpec extends Specification {
         HttpRequest request = HttpRequest.GET("/secured")
                 .header("Accept", accept)
                 .basicAuth("sherlock", "elementary")
-        HttpResponse<String> rsp = client.toBlocking().exchange(request, String)
+        HttpResponse<String> rsp = client.exchange(request, String)
 
         then: 'no redirection takes place'
         rsp.status() == HttpStatus.OK
@@ -53,10 +61,61 @@ class RedirectRejectionHandlerSpec extends Specification {
         request = HttpRequest.GET("/admin")
                 .header("Accept", accept)
                 .basicAuth("sherlock", "elementary")
-        rsp = client.toBlocking().exchange(request, String)
+        rsp = client.exchange(request, String)
 
         then: 'user is redirected to the url provided by ForbiddenRejectionUriProvider'
         rsp.status() == HttpStatus.OK
         rsp.body() == 'forbidden'
     }
+
+    @Requires(property = "spec.name", value = "RedirectRejectionHandlerSpec")
+    @Controller("/")
+    static class HomeController {
+
+        @Secured(SecurityRule.IS_ANONYMOUS)
+        @Produces(MediaType.TEXT_PLAIN)
+        @Get
+        String index() {
+            'open'
+        }
+
+        @Secured(SecurityRule.IS_ANONYMOUS)
+        @Produces(MediaType.TEXT_PLAIN)
+        @Get("/login")
+        String login() {
+            'login'
+        }
+
+        @Secured(SecurityRule.IS_ANONYMOUS)
+        @Produces(MediaType.TEXT_PLAIN)
+        @Get("/forbidden")
+        String forbidden() {
+            'forbidden'
+        }
+
+        @Secured(SecurityRule.IS_AUTHENTICATED)
+        @Produces(MediaType.TEXT_PLAIN)
+        @Get("/secured")
+        String secured() {
+            'secured'
+        }
+
+        @Secured("ROLE_ADMIN")
+        @Produces(MediaType.TEXT_PLAIN)
+        @Get("/admin")
+        String admin() {
+            'admin'
+        }
+    }
+
+    @Requires(property = "spec.name", value = "RedirectRejectionHandlerSpec")
+    @Singleton
+    static class CustomAuthenticationProvider implements AuthenticationProvider {
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            return Flowable.just(new UserDetails("sherlock", Collections.emptyList()))
+        }
+    }
+
 }

@@ -1,32 +1,24 @@
 package io.micronaut.security.permitalloverridesrolesallowed
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.client.RxHttpClient
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.security.EmbeddedServerSpecification
 
-class PermitAllOverridesRolesAllowedSpec extends Specification {
-    static final String SPEC_NAME_PROPERTY = 'spec.name'
+import javax.annotation.security.PermitAll
+import javax.annotation.security.RolesAllowed
 
-    public static final String controllerPath = '/permitalloverridesrolesallowed'
+class PermitAllOverridesRolesAllowedSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            (SPEC_NAME_PROPERTY): PermitAllOverridesRolesAllowedSpec.class.simpleName,
-            ], Environment.TEST)
-
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    String getSpecName() {
+        'PermitAllOverridesRolesAllowedSpec'
+    }
 
     void "PermitAllOverridesRolesAllowedSpec collaborators are loaded"() {
         when:
-        embeddedServer.applicationContext.getBean(BookController)
+        applicationContext.getBean(BookController)
 
         then:
         noExceptionThrown()
@@ -34,9 +26,20 @@ class PermitAllOverridesRolesAllowedSpec extends Specification {
 
     def " If the RolesAllowed is specified at the class level and PermitAll annotation is applied at the method level, the PermitAll annotation overrides the RolesAllowed for the specified method."() {
         when:
-        client.toBlocking().exchange(HttpRequest.GET("${controllerPath}/books"))
+        client.exchange(HttpRequest.GET("/permitalloverridesrolesallowed/books"))
 
         then:
         noExceptionThrown()
+    }
+
+    @Requires(property = 'spec.name', value = 'PermitAllOverridesRolesAllowedSpec')
+    @Controller('/permitalloverridesrolesallowed')
+    @RolesAllowed(['ROLE_ADMIN'])
+    static class BookController {
+        @PermitAll
+        @Get("/books")
+        Map<String, Object> list() {
+            [books: ['Building Microservice', 'Release it']]
+        }
     }
 }

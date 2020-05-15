@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.utils
 
-import io.micronaut.context.ApplicationContext
+import edu.umd.cs.findbugs.annotations.Nullable
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
@@ -24,7 +24,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
@@ -34,25 +34,23 @@ import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 
-import edu.umd.cs.findbugs.annotations.Nullable
 import javax.inject.Singleton
 
-class SecurityServiceCustomRolesKeySpec extends Specification {
+class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name' : 'SecurityServiceCustomRolesKeySpec',
+    @Override
+    String getSpecName() {
+        'SecurityServiceCustomRolesKeySpec'
+    }
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
             'micronaut.security.enabled': true,
             'micronaut.security.token.roles-name' : 'customRoles',
-    ])
-
-    @Shared
-    BlockingHttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL()).toBlocking()
+        ]
+    }
 
     void "verify SecurityService.isCurrentUserInRole() with custom roleKey"() {
         when:

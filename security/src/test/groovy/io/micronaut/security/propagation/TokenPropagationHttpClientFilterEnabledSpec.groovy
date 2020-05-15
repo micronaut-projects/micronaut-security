@@ -1,25 +1,21 @@
 package io.micronaut.security.propagation
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.security.ApplicationContextSpecification
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 
-class TokenPropagationHttpClientFilterEnabledSpec extends Specification {
-    static final SPEC_NAME_PROPERTY = 'spec.name'
+class TokenPropagationHttpClientFilterEnabledSpec extends ApplicationContextSpecification {
 
-    @Shared
-    @AutoCleanup ApplicationContext context = ApplicationContext.run([
-            'micronaut.security.token.writer.header.enabled': true,
-            'micronaut.security.token.propagation.enabled': true,
-            (SPEC_NAME_PROPERTY):getClass().simpleName
-    ], Environment.TEST)
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.token.writer.header.enabled': true,
+                'micronaut.security.token.propagation.enabled': true,
+                ]
 
+    }
     void "TokenPropagationHttpClientFilter is enabled if you set micronaut.security.token.jwt.propagation.enabled"() {
         when:
-        context.getBean(TokenPropagationHttpClientFilter)
+        applicationContext.getBean(TokenPropagationHttpClientFilter)
 
         then:
         noExceptionThrown()

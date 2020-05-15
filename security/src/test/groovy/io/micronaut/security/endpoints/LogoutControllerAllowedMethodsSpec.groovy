@@ -3,8 +3,6 @@ package io.micronaut.security.endpoints
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
-import io.micronaut.context.exceptions.BeanInstantiationException
-import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -12,6 +10,7 @@ import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
@@ -19,22 +18,27 @@ import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.handlers.LogoutHandler
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import spock.lang.Shared
+import org.spockframework.compiler.model.Spec
 import spock.lang.Specification
 
 import javax.inject.Singleton
 
 class LogoutControllerAllowedMethodsSpec extends Specification {
 
-    @Shared
-    Map<String, Object> config = [
-            'spec.name': 'logoutcontrollerallowedmethodsspec',
-            'micronaut.security.endpoints.logout.enabled': true,
-    ]
+    String getSpecName() {
+        'LogoutControllerAllowedMethodsSpec'
+    }
+
+    Map<String, Object> getConfiguration() {
+        [
+                'spec.name': specName,
+                'micronaut.security.endpoints.logout.enabled': true,
+        ] as Map<String, Object>
+    }
 
     void "LogoutController does not accept GET requests by default"() {
         given:
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, config, Environment.TEST)
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration, Environment.TEST)
         RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
 
         when:
@@ -52,7 +56,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
     void "LogoutController can accept GET requests if micronaut.security.endpoints.logout.get-allowed=true"() {
         given:
         Map<String, Object> m = new HashMap<>()
-        m.putAll(config)
+        m.putAll(configuration)
         m.put('micronaut.security.endpoints.logout.get-allowed', true)
 
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m, Environment.TEST)
@@ -72,7 +76,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
     void "test logging out without credentials"() {
         given:
         Map<String, Object> m = new HashMap<>()
-        m.putAll(config)
+        m.putAll(configuration)
         m.put('micronaut.security.endpoints.logout.get-allowed', true)
 
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m, Environment.TEST)
@@ -95,7 +99,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
         embeddedServer.close()
     }
 
-    @Requires(property = 'spec.name', value = 'logoutcontrollerallowedmethodsspec')
+    @Requires(property = 'spec.name', value = 'LogoutControllerAllowedMethodsSpec')
     @Singleton
     static class CustomLogoutHandler implements LogoutHandler {
         @Override
@@ -104,7 +108,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
         }
     }
 
-    @Requires(property = 'spec.name', value = 'logoutcontrollerallowedmethodsspec')
+    @Requires(property = 'spec.name', value = 'LogoutControllerAllowedMethodsSpec')
     @Singleton
     static class CustomAuthenticationProvider implements AuthenticationProvider {
 

@@ -1,38 +1,47 @@
 package io.micronaut.security.rules.sensitive
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.client.RxHttpClient
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.management.endpoint.annotation.Endpoint
+import io.micronaut.management.endpoint.annotation.Read
+import io.micronaut.security.EmbeddedServerSpecification
 
-class EndpointWithPrincipalAndSensitivityOverrideSpec extends Specification {
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'sensitive',
-            'endpoints.defaultendpoint.sensitive': false,
+import java.security.Principal
 
-    ], Environment.TEST)
+class EndpointWithPrincipalAndSensitivityOverrideSpec extends EmbeddedServerSpecification {
+    @Override
+    String getSpecName() {
+        'EndpointWithPrincipalAndSensitivityOverrideSpec'
+    }
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'endpoints.defaultendpoint.sensitive': false,
 
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
-
-    private HttpResponse get(String path) {
-        HttpRequest req = HttpRequest.GET(path)
-        client.toBlocking().exchange(req, String)
+        ]
     }
 
     void "if endpoint sensitive is set to false via configuration property, it overrides default sensitive true"() {
         when:
-        HttpResponse<String> response = get("/defaultendpoint")
+        HttpResponse<String> response = client.exchange(HttpRequest.GET("/defaultendpoint"), String)
 
         then:
         response.body() == "Not logged in"
+    }
+
+    @Requires(property = 'spec.name', value = 'EndpointWithPrincipalAndSensitivityOverrideSpec')
+    @Endpoint("defaultendpoint")
+    static class DefaultEndpoint {
+
+        @Read
+        String hello(@Nullable Principal principal) {
+            if (principal == null) {
+                "Not logged in"
+            } else {
+                "Logged in as ${principal.name}"
+            }
+        }
     }
 }

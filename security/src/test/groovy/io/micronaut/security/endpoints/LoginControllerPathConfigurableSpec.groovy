@@ -25,6 +25,7 @@ import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -36,44 +37,43 @@ import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.AutoCleanup
 import spock.lang.Shared
-import spock.lang.Specification
 
 import javax.inject.Singleton
 
-class LoginControllerPathConfigurableSpec extends Specification {
+class LoginControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'loginpathconfigurable',
+    @Override
+    String getSpecName() {
+        'LoginControllerPathConfigurableSpec'
+    }
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
             'micronaut.security.endpoints.login.enabled': true,
             'micronaut.security.endpoints.login.path': '/auth',
-    ], Environment.TEST)
-
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
-
+        ]
+    }
 
     void "LoginController is not accessible at /login but at /auth"() {
         given:
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')
 
         when:
-        client.toBlocking().exchange(HttpRequest.POST('/login', creds))
+        client.exchange(HttpRequest.POST('/login', creds))
 
         then:
         HttpClientResponseException e = thrown(HttpClientResponseException)
         e.status == HttpStatus.UNAUTHORIZED
 
         when:
-        client.toBlocking().exchange(HttpRequest.POST('/auth', creds))
+        client.exchange(HttpRequest.POST('/auth', creds))
 
         then:
         noExceptionThrown()
     }
 
-    @Requires(property = 'spec.name', value = 'loginpathconfigurable')
+    @Requires(property = 'spec.name', value = 'LoginControllerPathConfigurableSpec')
     @Singleton
     static class CustomLoginHandler implements LoginHandler {
 
@@ -88,7 +88,7 @@ class LoginControllerPathConfigurableSpec extends Specification {
         }
     }
 
-    @Requires(property = 'spec.name', value = 'loginpathconfigurable')
+    @Requires(property = 'spec.name', value = 'LoginControllerPathConfigurableSpec')
     @Singleton
     static class CustomAuthenticationProvider implements AuthenticationProvider {
 

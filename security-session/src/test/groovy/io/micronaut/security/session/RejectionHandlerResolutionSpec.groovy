@@ -1,68 +1,70 @@
 package io.micronaut.security.session
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.server.exceptions.ExceptionHandler
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.ApplicationContextSpecification
 import io.micronaut.security.authentication.AuthorizationException
-import spock.lang.Specification
 
-class RejectionHandlerResolutionSpec extends Specification {
+import javax.inject.Singleton
 
-    static final SPEC_NAME_PROPERTY = 'spec.name'
+class RejectionHandlerResolutionSpec extends ApplicationContextSpecification {
 
+    @Override
+    String getSpecName() {
+        'RejectionHandlerResolutionSpec'
+    }
 
     void "RedirectRejectionHandler is the default rejection handler resolved"() {
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [:], Environment.TEST)
-        ApplicationContext context = embeddedServer.applicationContext
+        given:
+        ApplicationContext ctx = ApplicationContext.run([:])
 
         when:
-        context.getBean(ExtendedSessionSecurityfilterRejectionHandler)
+        ctx.getBean(ExtendedSessionSecurityfilterRejectionHandler)
 
         then:
         thrown(NoSuchBeanException)
 
         when:
-        ExceptionHandler exceptionHandler = context.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthorizationException, Object))
+        ExceptionHandler exceptionHandler = ctx.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthorizationException, Object))
 
         then:
         noExceptionThrown()
         exceptionHandler instanceof SessionAuthorizationExceptionHandler
 
         cleanup:
-        context.close()
-
-        and:
-        embeddedServer.close()
+        ctx.close()
     }
 
     void "If a bean extended SessionSecurityfilterRejectionHandler that is used as Rejection Handler"() {
-        given:
-        Map<String, Object> conf = [
-                (SPEC_NAME_PROPERTY): getClass().simpleName,
-        ]
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, conf, Environment.TEST)
-        ApplicationContext context = embeddedServer.applicationContext
-
         when:
-        context.getBean(ExtendedSessionSecurityfilterRejectionHandler)
+        applicationContext.getBean(ExtendedSessionSecurityfilterRejectionHandler)
 
         then:
         noExceptionThrown()
 
         when:
-        ExceptionHandler exceptionHandler = context.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthorizationException, Object))
+        ExceptionHandler exceptionHandler = applicationContext.getBean(ExceptionHandler, Qualifiers.byTypeArgumentsClosest(AuthorizationException, Object))
 
         then:
         noExceptionThrown()
         exceptionHandler instanceof ExtendedSessionSecurityfilterRejectionHandler
-
-        cleanup:
-        context.close()
-
-        and:
-        embeddedServer.close()
     }
+
+    @Requires(property = 'spec.name', value = "RejectionHandlerResolutionSpec")
+    @Singleton
+    @Replaces(SessionAuthorizationExceptionHandler)
+    static class ExtendedSessionSecurityfilterRejectionHandler implements ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> {
+
+        @Override
+        MutableHttpResponse<?> handle(HttpRequest request, AuthorizationException exception) {
+            return null
+        }
+    }
+
 }

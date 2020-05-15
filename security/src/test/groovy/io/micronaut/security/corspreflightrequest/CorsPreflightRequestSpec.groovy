@@ -1,31 +1,24 @@
 package io.micronaut.security.corspreflightrequest
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
-import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.security.EmbeddedServerSpecification
 
-class CorsPreflightRequestSpec extends Specification {
+class CorsPreflightRequestSpec extends EmbeddedServerSpecification {
 
-    @AutoCleanup
-    @Shared
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'corspreflightrequest',
-            'micronaut.server.cors.enabled': true,
-            ], Environment.TEST)
+    @Override
+    String getSpecName() {
+        'CorsPreflightRequestSpec'
+    }
 
-    @AutoCleanup
-    @Shared
-    RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + ['micronaut.server.cors.enabled': true]
+    }
 
-    def "preflight requests are authorized"() {
+    void "preflight requests are authorized"() {
         given:
         HttpRequest request = HttpRequest.OPTIONS("/register")
                 .header("Access-Control-Request-Method", "DELETE")
@@ -33,7 +26,7 @@ class CorsPreflightRequestSpec extends Specification {
                 .header("Origin", "https://foo.bar.org")
 
         when:
-        HttpResponse rsp = rxClient.toBlocking().exchange(request)
+        HttpResponse rsp = client.exchange(request)
 
         then:
         noExceptionThrown()

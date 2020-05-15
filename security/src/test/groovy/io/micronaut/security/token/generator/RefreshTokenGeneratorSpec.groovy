@@ -1,13 +1,10 @@
 package io.micronaut.security.token.generator
 
 import edu.umd.cs.findbugs.annotations.NonNull
-import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
+import io.micronaut.security.ApplicationContextSpecification
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.token.validator.RefreshTokenValidator
-import spock.lang.AutoCleanup
 import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Unroll
 
@@ -16,11 +13,12 @@ import javax.validation.ConstraintViolationException
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-class RefreshTokenGeneratorSpec extends Specification {
+class RefreshTokenGeneratorSpec extends ApplicationContextSpecification {
 
-    @AutoCleanup
-    @Shared
-    ApplicationContext applicationContext = ApplicationContext.run(['spec.name': 'RefreshTokenGeneratorSpec'])
+    @Override
+    String getSpecName() {
+        'RefreshTokenGeneratorSpec'
+    }
 
     @Subject
     @Shared

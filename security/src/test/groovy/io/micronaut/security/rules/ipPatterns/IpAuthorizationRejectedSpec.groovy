@@ -1,35 +1,65 @@
 package io.micronaut.security.rules.ipPatterns
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.client.RxHttpClient
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.rules.SecurityRule
+import io.reactivex.Flowable
+import org.reactivestreams.Publisher
 
-class IpAuthorizationRejectedSpec extends Specification {
+import javax.inject.Singleton
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'ipPatterns',
-            'micronaut.security.ip-patterns': ['10.10.0.48', '127.0.0.*']
+class IpAuthorizationRejectedSpec extends EmbeddedServerSpecification {
+    @Override
+    String getSpecName() {
+        'IpAuthorizationRejectedSpec'
+    }
 
-    ], Environment.TEST)
-
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.ip-patterns': ['10.10.0.48', '127.0.0.*']
+        ]
+    }
 
     void "if you are in the correct ip range, accessing the secured controller with authentication should be successful"() {
         when:
         HttpRequest req = HttpRequest.GET("/secured/authenticated")
                 .basicAuth("user", "password")
-        client.toBlocking().exchange(req, String)
+        client.exchange(req, String)
 
         then:
         noExceptionThrown()
     }
+
+    @Requires(property = 'spec.name', value = 'IpAuthorizationRejectedSpec')
+    @Controller("/secured")
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    static class SecuredController {
+
+        @Get("/authenticated")
+        String authenticated(Authentication authentication) {
+            "${authentication.getName()} is authenticated"
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'IpAuthorizationRejectedSpec')
+    @Singleton
+    static class CustomAuthenticationProvider implements AuthenticationProvider {
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            return Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
+        }
+    }
+
 }

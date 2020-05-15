@@ -1,8 +1,7 @@
 package io.micronaut.security.token.jwt.endpoints
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.async.publisher.Publishers
@@ -10,10 +9,12 @@ import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.authentication.AuthenticationFailed
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
@@ -25,71 +26,77 @@ import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.TokenValidator
+import io.micronaut.testutils.EmbeddedServerSpecification
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Unroll
 
 import javax.inject.Singleton
 
-class OauthControllerSpec extends Specification {
+class OauthControllerSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    ApplicationContext context = ApplicationContext.run(
-            [
-                    'spec.name': 'endpoints',
-                    'micronaut.security.endpoints.login.enabled': true,
-                    'micronaut.security.endpoints.oauth.enabled': true,
-                    'micronaut.security.token.jwt.generator.refresh-token.enabled': true,
-                    'micronaut.security.token.jwt.generator.refresh-token.secret': 'abc',
-                    'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa'
-            ], Environment.TEST)
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.endpoints.login.enabled': true,
+                'micronaut.security.endpoints.oauth.enabled': true,
+                'micronaut.security.token.jwt.generator.refresh-token.enabled': true,
+                'micronaut.security.token.jwt.generator.refresh-token.secret': 'abc',
+                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa'
+         ] as Map<String, Object>
+    }
 
-    @Shared
-    EmbeddedServer embeddedServer = context.getBean(EmbeddedServer).start()
-
-    @Shared
-    @AutoCleanup
-    HttpClient client = context.createBean(HttpClient, embeddedServer.getURL())
+    @Override
+    String getSpecName() {
+        'OauthControllerSpec'
+    }
 
     def "can obtain a new access token using the refresh token"() {
         expect:
-        context.getBean(SignatureConfiguration.class)
-        context.getBean(SignatureConfiguration.class, Qualifiers.byName("generator"))
+        applicationContext.getBean(SignatureConfiguration.class)
+        applicationContext.getBean(SignatureConfiguration.class, Qualifiers.byName("generator"))
 
         when:
-        context.getBean(EncryptionConfiguration.class)
+        applicationContext.getBean(EncryptionConfiguration.class)
 
         then:
         thrown(NoSuchBeanException)
 
         when:
-        def creds = new UsernamePasswordCredentials('user', 'password')
-        HttpResponse rsp = client.toBlocking().exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')
+        HttpResponse<BearerAccessRefreshToken> rsp = client.exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
 
         then:
+        noExceptionThrown()
         rsp.status() == HttpStatus.OK
-        rsp.body().accessToken
-        rsp.body().refreshToken
+
+        when:
+        BearerAccessRefreshToken accessRefreshToken = rsp.body()
+
+        then:
+        accessRefreshToken.accessToken
+        accessRefreshToken.refreshToken
 
         when:
         sleep(1_000) // Sleep for one second to give time for Claims issue date to be different
-        final String originalAccessToken = rsp.body().accessToken
-        String refreshToken = rsp.body().refreshToken
-        def tokenRefreshReq = new TokenRefreshRequest(refreshToken)
-        HttpResponse refreshRsp = client.toBlocking().exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), AccessRefreshToken)
+        String originalAccessToken = accessRefreshToken.accessToken
+        String refreshToken = accessRefreshToken.refreshToken
+        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(refreshToken)
+        HttpResponse<BearerAccessRefreshToken> refreshRsp = client.exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), BearerAccessRefreshToken)
 
         then:
+        noExceptionThrown()
         refreshRsp.status() == HttpStatus.OK
-        refreshRsp.body().accessToken
-        and:
-        refreshRsp.body().accessToken != originalAccessToken
 
         when:
-        TokenValidator tokenValidator = context.getBean(JwtTokenValidator.class)
+        accessRefreshToken = refreshRsp.body()
+
+        then:
+        accessRefreshToken.accessToken
+        accessRefreshToken.accessToken != originalAccessToken
+
+        when:
+        TokenValidator tokenValidator = applicationContext.getBean(JwtTokenValidator.class)
         Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(refreshRsp.body().accessToken)).blockingFirst().getAttributes()
         Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(originalAccessToken)).blockingFirst().getAttributes()
         List<String> expectedClaims = [JwtClaims.SUBJECT,
@@ -109,7 +116,7 @@ class OauthControllerSpec extends Specification {
         originalAccessTokenClaims.get(JwtClaims.NOT_BEFORE) != newAccessTokenClaims.get(JwtClaims.NOT_BEFORE)
 
         cleanup:
-        context.getBean(InMemoryRefreshTokenPersistence).tokens.clear()
+        applicationContext.getBean(InMemoryRefreshTokenPersistence).tokens.clear()
     }
 
     void "trying to get a new access token with an unsigned refresh token throws exception"() {
@@ -120,7 +127,7 @@ class OauthControllerSpec extends Specification {
         TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(refreshToken)
         Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
         Argument<CustomErrorResponse> errorType = Argument.of(CustomErrorResponse)
-        client.toBlocking().exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), bodyType, errorType)
+        client.exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), bodyType, errorType)
 
         then:
         HttpClientResponseException e = thrown()
@@ -148,7 +155,7 @@ class OauthControllerSpec extends Specification {
         when:
         Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
         Argument<CustomErrorResponse> errorType = Argument.of(CustomErrorResponse)
-        client.toBlocking().exchange(request, bodyType, errorType)
+        client.exchange(request, bodyType, errorType)
 
         then:
         HttpClientResponseException e = thrown()
@@ -177,7 +184,7 @@ class OauthControllerSpec extends Specification {
         when:
         Argument<AccessRefreshToken> bodyType =  Argument.of(AccessRefreshToken)
         Argument<CustomErrorResponse> errorType =  Argument.of(CustomErrorResponse)
-        client.toBlocking().exchange(request, bodyType, errorType)
+        client.exchange(request, bodyType, errorType)
 
         then:
         HttpClientResponseException e = thrown()
@@ -205,6 +212,7 @@ class OauthControllerSpec extends Specification {
         paramName = grantType == null ? 'grant_type' : (refreshToken == null ? 'refresh_token': '')
     }
 
+    @Requires(property = 'spec.name', value = 'OauthControllerSpec')
     @Singleton
     static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
 
@@ -218,6 +226,19 @@ class OauthControllerSpec extends Specification {
         @Override
         Publisher<UserDetails> getUserDetails(String refreshToken) {
             Publishers.just(tokens.get(refreshToken))
+        }
+    }
+
+    @Singleton
+    @Requires(property = 'spec.name', value = 'OauthControllerSpec')
+    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                return Flowable.just(new UserDetails('user', []))
+            }
+            return Flowable.just(new AuthenticationFailed())
         }
     }
 

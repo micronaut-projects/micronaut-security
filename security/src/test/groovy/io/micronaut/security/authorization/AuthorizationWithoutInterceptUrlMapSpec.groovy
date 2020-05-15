@@ -1,30 +1,27 @@
 package io.micronaut.security.authorization
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.management.endpoint.annotation.Endpoint
+import io.micronaut.management.endpoint.annotation.Read
+import io.micronaut.security.EmbeddedServerSpecification
 
-class AuthorizationWithoutInterceptUrlMapSpec extends Specification  {
+import java.security.Principal
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'authorization',
-            ], Environment.TEST)
+class AuthorizationWithoutInterceptUrlMapSpec extends EmbeddedServerSpecification {
 
-    @Shared @AutoCleanup RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    String getSpecName() {
+        'AuthorizationWithoutInterceptUrlMapSpec'
+    }
 
     void "test accessing a non sensitive endpoint without authentication"() {
         when:
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.GET("/non-sensitive"), String)
+        HttpResponse<String> response = client.exchange(HttpRequest.GET("/non-sensitive"), String)
 
         then:
         response.body() == "Not logged in"
@@ -32,10 +29,34 @@ class AuthorizationWithoutInterceptUrlMapSpec extends Specification  {
 
     void "test accessing a sensitive endpoint without authentication"() {
         when:
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.GET("/sensitive"), String)
+        client.exchange(HttpRequest.GET("/sensitive"), String)
 
         then:
         HttpClientResponseException e = thrown(HttpClientResponseException)
         e.status == HttpStatus.UNAUTHORIZED
+    }
+
+    @Requires(property = 'spec.name', value = 'AuthorizationWithoutInterceptUrlMapSpec')
+    @Endpoint(id = "nonSensitive", defaultSensitive = false)
+    static class NonSensitiveEndpoint {
+
+        @Read
+        String hello(@Nullable Principal principal) {
+            if (principal == null) {
+                "Not logged in"
+            } else {
+                "Logged in as ${principal.name}"
+            }
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'AuthorizationWithoutInterceptUrlMapSpec')
+    @Endpoint(id = "sensitive", defaultSensitive = true)
+    static class SensitiveEndpoint {
+
+        @Read
+        String hello(Principal principal) {
+            "Hello ${principal.name}"
+        }
     }
 }

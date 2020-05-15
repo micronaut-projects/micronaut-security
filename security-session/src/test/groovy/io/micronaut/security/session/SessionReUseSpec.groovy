@@ -3,7 +3,6 @@ package io.micronaut.security.session
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
-import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -13,6 +12,7 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.LoadBalancer
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -23,23 +23,30 @@ import io.micronaut.session.Session
 import io.micronaut.session.SessionStore
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import spock.lang.Specification
 
 import javax.inject.Singleton
 
-class SessionReUseSpec extends Specification {
+class SessionReUseSpec extends EmbeddedServerSpecification {
 
-    void "test the same session is reused through login/logout/login"() {
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-                'spec.name'                 : SessionReUseSpec.simpleName,
+    @Override
+    String getSpecName() {
+        'SessionReUseSpec'
+    }
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
                 'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.security.endpoints.logout.enabled': true,
-        ], Environment.TEST)
-        ApplicationContext context = embeddedServer.applicationContext
+        ]
+    }
+
+    void "test the same session is reused through login/logout/login"() {
+        given:
         def config = new DefaultHttpClientConfiguration(followRedirects: false)
-        BlockingHttpClient client = context.createBean(HttpClient,
+        BlockingHttpClient client = applicationContext.createBean(HttpClient,
                 LoadBalancer.fixed(embeddedServer.getURL()), config, null).toBlocking()
-        SessionStore<Session> sessionStore = context.getBean(SessionStore)
+        SessionStore<Session> sessionStore = applicationContext.getBean(SessionStore)
 
         when:
         HttpResponse response = client.exchange(HttpRequest.POST("/login", "username=sherlock&password=password")
@@ -77,9 +84,6 @@ class SessionReUseSpec extends Specification {
         afterLoginSessionId == sessionId
         afterLoginSession.is(session)
         afterLoginSession.get(SecurityFilter.AUTHENTICATION).isPresent()
-
-        cleanup:
-        context.close()
     }
 
     private String getSessionId(String cookieId) {
@@ -98,7 +102,6 @@ class SessionReUseSpec extends Specification {
                     }
                 }.get("SESSION")
     }
-
 
     @Singleton
     @Requires(property = "spec.name", value = "SessionReUseSpec")

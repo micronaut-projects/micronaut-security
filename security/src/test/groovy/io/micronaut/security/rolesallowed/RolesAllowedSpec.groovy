@@ -1,40 +1,43 @@
 package io.micronaut.security.rolesallowed
 
-import io.micronaut.context.ApplicationContext
+
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.authentication.AuthenticationFailed
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
+import io.reactivex.Flowable
+import org.reactivestreams.Publisher
 
-class RolesAllowedSpec extends Specification {
-    static final String SPEC_NAME_PROPERTY = 'spec.name'
+import javax.annotation.security.RolesAllowed
+import javax.inject.Singleton
+
+class RolesAllowedSpec extends EmbeddedServerSpecification {
+
+    @Override
+    String getSpecName() {
+        'RolesAllowedSpec'
+    }
 
     public static final String controllerPath = '/rolesallowed'
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            (SPEC_NAME_PROPERTY): RolesAllowedSpec.class.simpleName,
-            ], Environment.TEST)
-
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
-
     void "PermitAllSpec collaborators are loaded"() {
         when:
-        embeddedServer.applicationContext.getBean(BookController)
+        applicationContext.getBean(BookController)
 
         then:
         noExceptionThrown()
 
         when:
-        embeddedServer.applicationContext.getBean(AuthenticationProviderUserPassword)
+        applicationContext.getBean(AuthenticationProviderUserPassword)
 
         then:
         noExceptionThrown()
@@ -42,7 +45,7 @@ class RolesAllowedSpec extends Specification {
 
     def "@RolesAllowed(['ROLE_ADMIN', 'ROLE_USER']) annotation is equivalent to @Secured(['ROLE_ADMIN', 'ROLE_USER'])"() {
         when:
-        client.toBlocking().exchange(HttpRequest.GET("${controllerPath}/books").basicAuth("user", "password"))
+        client.exchange(HttpRequest.GET("${controllerPath}/books").basicAuth("user", "password"))
 
         then:
         noExceptionThrown()
@@ -50,7 +53,7 @@ class RolesAllowedSpec extends Specification {
 
     def "methods in a controller inherit @RolesAllowed at class level"() {
         when:
-        client.toBlocking().exchange(HttpRequest.GET("${controllerPath}/classlevel").basicAuth("user", "password"))
+        client.exchange(HttpRequest.GET("${controllerPath}/classlevel").basicAuth("user", "password"))
 
         then:
         noExceptionThrown()
@@ -58,12 +61,51 @@ class RolesAllowedSpec extends Specification {
 
     def "@RolesAllowed(['ROLE_ADMIN', 'ROLE_MANAGER']) annotation is equivalent to @Secured(['ROLE_ADMIN', 'ROLE_MANAGER']), if user has only ROLE_USER access is forbidden "() {
         when:
-        client.toBlocking().exchange(HttpRequest.GET("${controllerPath}/forbidenbooks").basicAuth("user", "password"))
+        client.exchange(HttpRequest.GET("${controllerPath}/forbidenbooks").basicAuth("user", "password"))
 
         then:
         def e = thrown(HttpClientResponseException)
 
         e.response.status() == HttpStatus.FORBIDDEN
     }
+
+    @Singleton
+    @Requires(env = Environment.TEST)
+    @Requires(property = 'spec.name', value = 'RolesAllowedSpec')
+    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                return Flowable.just(new UserDetails('user', ['ROLE_USER']))
+            }
+            return Flowable.just(new AuthenticationFailed())
+        }
+    }
+
+    @Requires(env = Environment.TEST)
+    @Requires(property = 'spec.name', value = 'RolesAllowedSpec')
+    @RolesAllowed(['ROLE_USER'])
+    @Controller(RolesAllowedSpec.controllerPath)
+    static class BookController {
+
+        @RolesAllowed(['ROLE_USER', 'ROLE_ADMIN'])
+        @Get("/books")
+        Map<String, Object> list() {
+            [books: ['Building Microservice', 'Release it']]
+        }
+
+        @Get("/classlevel")
+        Map<String, Object> classlevel() {
+            [books: ['Building Microservice', 'Release it']]
+        }
+
+        @RolesAllowed(['ROLE_ADMIN', 'ROLE_MANAGER'])
+        @Get("/forbidenbooks")
+        Map<String, Object> forbiddenList() {
+            [books: ['Building Microservice', 'Release it']]
+        }
+    }
+
 
 }

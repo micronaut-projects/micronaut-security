@@ -4,7 +4,6 @@ import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.config.SecurityConfigurationProperties
-import io.micronaut.security.token.config.TokenConfiguration
 import spock.lang.Specification
 import spock.lang.Unroll
 
