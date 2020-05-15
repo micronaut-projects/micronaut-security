@@ -15,53 +15,115 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.core.util.ArgumentUtils;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
-import java.util.Optional;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
- * Refresh token configuration.
+ * {@link ConfigurationProperties} implementation of {@link RefreshTokenConfiguration} to configure {@link SignedRefreshTokenGenerator}.
  *
  * @author James Kleeh
+ * @author Sergio del Amo
  * @since 2.0.0
  */
+@Introspected
+@Requires(property = RefreshTokenConfigurationProperties.PREFIX + ".secret")
+@Requires(property = RefreshTokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(RefreshTokenConfigurationProperties.PREFIX)
 public class RefreshTokenConfigurationProperties implements RefreshTokenConfiguration {
 
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".generator.refresh-token";
+
+    /**
+     * The default secure value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final JWSAlgorithm DEFAULT_JWS_ALGORITHM = JWSAlgorithm.HS256;
+
+    /**
+     * The default base64 value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_BASE64 = false;
+
     /**
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
 
     private boolean enabled = DEFAULT_ENABLED;
+
+    @NonNull
+    @NotNull
+    private JWSAlgorithm jwsAlgorithm = DEFAULT_JWS_ALGORITHM;
+
+    @NonNull
+    @NotBlank
     private String secret;
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+    private boolean base64 = DEFAULT_BASE64;
 
     /**
-     * @param enabled Whether refresh tokens should be included in authentication responses. Default value {@value #DEFAULT_ENABLED}.
+     * Sets whether {@link SignedRefreshTokenGenerator} is enabled. Default value ({@value #DEFAULT_ENABLED}).
+     *
+     * @param enabled True if it is enabled
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    @Override
-    public Optional<String> getSecret() {
-        return Optional.ofNullable(secret);
+    /**
+     * {@link com.nimbusds.jose.JWSAlgorithm}. Defaults to HS256
+     *
+     * @param jwsAlgorithm JWS Algorithm
+     */
+    public void setJwsAlgorithm(@NonNull JWSAlgorithm jwsAlgorithm) {
+        this.jwsAlgorithm = jwsAlgorithm;
     }
 
     /**
-     * @param secret The secret used to sign refresh token values
+     * @param secret shared secret. For HS256 must be at least 256 bits.
      */
-    public void setSecret(String secret) {
-        ArgumentUtils.requireNonNull("secret", secret);
+    public void setSecret(@NonNull String secret) {
         this.secret = secret;
+    }
+
+    /**
+     * Indicates whether the supplied secret is base64 encoded. Default value {@value #DEFAULT_BASE64}.
+     *
+     * @param base64 boolean flag indicating whether the supplied secret is base64 encoded
+     */
+    public void setBase64(boolean base64) {
+        this.base64 = base64;
+    }
+
+    @NonNull
+    @Override
+    public JWSAlgorithm getJwsAlgorithm() {
+        return jwsAlgorithm;
+    }
+
+    @NonNull
+    @Override
+    public String getSecret() {
+        return secret;
+    }
+
+    @Override
+    public boolean isBase64() {
+        return base64;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

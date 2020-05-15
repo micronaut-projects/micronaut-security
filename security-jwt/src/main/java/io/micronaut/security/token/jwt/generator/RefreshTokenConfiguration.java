@@ -15,20 +15,33 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
 
-import java.util.Optional;
-
 /**
- * Refresh token configuration
+ * Configuration for the {@link SignedRefreshTokenGenerator}.
  *
  * @author James Kleeh
+ * @author Sergio del Amo
  * @since 2.0.0
  */
 public interface RefreshTokenConfiguration extends Toggleable {
+    /**
+     *
+     * @return JWS Algorithm
+     */
+    @NonNull
+    JWSAlgorithm getJwsAlgorithm();
 
     /**
-     * @return The optional secret.
+     * @return Secret used to sign the refresh token.
      */
-    Optional<String> getSecret();
+    @NonNull
+    String getSecret();
+
+    /**
+     * @return true if the secret is Base64 encoded
+     */
+    boolean isBase64();
 }

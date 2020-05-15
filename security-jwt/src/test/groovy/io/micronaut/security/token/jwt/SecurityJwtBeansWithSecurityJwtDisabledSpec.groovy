@@ -24,7 +24,6 @@ import io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationPro
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator
 import io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator
 import io.micronaut.security.token.jwt.render.BearerTokenRenderer
 import io.micronaut.security.token.jwt.signature.ec.ECSignatureFactory
@@ -77,7 +76,6 @@ class SecurityJwtBeansWithSecurityJwtDisabledSpec extends Specification {
                 JWTClaimsSetGenerator,
                 AccessRefreshTokenGenerator,
                 AccessTokenConfigurationProperties,
-                RefreshTokenConfigurationProperties,
                 JwtTokenGenerator,
                 BearerTokenRenderer,
                 ECSignatureFactory,

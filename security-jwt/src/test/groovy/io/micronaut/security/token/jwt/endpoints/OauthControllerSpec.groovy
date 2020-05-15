@@ -1,6 +1,7 @@
 package io.micronaut.security.token.jwt.endpoints
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.nimbusds.jose.JWSObject
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.annotation.Introspected
@@ -36,7 +37,6 @@ import io.micronaut.testutils.EmbeddedServerSpecification
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
-
 import javax.inject.Singleton
 import java.security.Principal
 
@@ -47,9 +47,8 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         super.configuration + [
                 'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.security.endpoints.oauth.enabled': true,
-                'micronaut.security.token.jwt.generator.refresh-token.enabled': true,
-                'micronaut.security.token.jwt.generator.refresh-token.secret': 'abc',
-                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa'
+                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
+                'micronaut.security.token.jwt.generator.refresh-token.secret': 'pleaseChangeThisSecretForANewOne',
          ] as Map<String, Object>
     }
 
@@ -83,6 +82,12 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         then:
         accessRefreshToken.accessToken
         accessRefreshToken.refreshToken
+
+        when: 'refresh token is a JWS'
+        JWSObject.parse(accessRefreshToken.refreshToken)
+
+        then:
+        noExceptionThrown()
 
         when: 'it is possible to access a secured endpoint with an access token'
         String name = client.retrieve(HttpRequest.GET('/echoname').accept(MediaType.TEXT_PLAIN).bearerAuth(accessRefreshToken.accessToken), String)
