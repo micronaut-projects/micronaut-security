@@ -9,14 +9,20 @@ import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims
@@ -32,6 +38,7 @@ import org.reactivestreams.Publisher
 import spock.lang.Unroll
 
 import javax.inject.Singleton
+import java.security.Principal
 
 class OauthControllerSpec extends EmbeddedServerSpecification {
 
@@ -76,6 +83,20 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         then:
         accessRefreshToken.accessToken
         accessRefreshToken.refreshToken
+
+        when: 'it is possible to access a secured endpoint with an access token'
+        String name = client.retrieve(HttpRequest.GET('/echoname').accept(MediaType.TEXT_PLAIN).bearerAuth(accessRefreshToken.accessToken), String)
+
+        then:
+        noExceptionThrown()
+        name == 'user'
+
+        when: 'it is not possible to access a secured endpoint with a refresh token'
+        client.retrieve(HttpRequest.GET('/echoname').accept(MediaType.TEXT_PLAIN).bearerAuth(accessRefreshToken.refreshToken))
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.status == HttpStatus.UNAUTHORIZED
 
         when:
         sleep(1_000) // Sleep for one second to give time for Claims issue date to be different
@@ -210,6 +231,17 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         null            | 'XXXX'
 
         paramName = grantType == null ? 'grant_type' : (refreshToken == null ? 'refresh_token': '')
+    }
+
+    @Requires(property = 'spec.name', value = 'OauthControllerSpec')
+    @Controller("/echoname")
+    static class EchoNameController {
+        @Produces(MediaType.TEXT_PLAIN)
+        @Secured(SecurityRule.IS_AUTHENTICATED)
+        @Get
+        String index(Principal principal) {
+            principal.name
+        }
     }
 
     @Requires(property = 'spec.name', value = 'OauthControllerSpec')
