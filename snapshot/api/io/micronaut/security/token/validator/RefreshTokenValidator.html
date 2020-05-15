@@ -134,7 +134,7 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html#validate-java.lang.String-">validate</a></span>(java.lang.String&nbsp;refreshToken)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html#validate-java.lang.String-">validate</a></span>(@NotBlank java.lang.String&nbsp;refreshToken)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -157,12 +157,14 @@ var activeTableTab = "activeTableTab";
 <ul class="blockListLast">
 <li class="blockList">
 <h4>validate</h4>
-<pre>java.util.Optional&lt;java.lang.String&gt;&nbsp;validate(java.lang.String&nbsp;refreshToken)</pre>
+<pre>@NonNull
+java.util.Optional&lt;java.lang.String&gt;&nbsp;validate(@NonNull @NotBlank
+                                                       @NotBlank java.lang.String&nbsp;refreshToken)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>refreshToken</code> - The refresh token</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>True if the refresh token is valid</dd>
+<dd>The validated token wrapped in an Optional or Optional#empty() if the supplied token is invalid.</dd>
 </dl>
 </li>
 </ul>

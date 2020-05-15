@@ -133,12 +133,12 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html#createKey-io.micronaut.security.authentication.UserDetails-">createKey</a></span>(<a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html#createKey-io.micronaut.security.authentication.UserDetails-">createKey</a></span>(@NotNull <a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html#generate-io.micronaut.security.authentication.UserDetails-java.lang.String-">generate</a></span>(<a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
-        java.lang.String&nbsp;token)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html#generate-io.micronaut.security.authentication.UserDetails-java.lang.String-">generate</a></span>(@NotNull <a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+        @NotBlank java.lang.String&nbsp;token)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -161,7 +161,9 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>createKey</h4>
-<pre>java.lang.String&nbsp;createKey(<a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</pre>
+<pre>@NonNull
+java.lang.String&nbsp;createKey(@NonNull @NotNull
+                                    @NotNull <a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>userDetails</code> - The user details</dd>
@@ -176,8 +178,11 @@ var activeTableTab = "activeTableTab";
 <ul class="blockListLast">
 <li class="blockList">
 <h4>generate</h4>
-<pre>java.util.Optional&lt;java.lang.String&gt;&nbsp;generate(<a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
-                                              java.lang.String&nbsp;token)</pre>
+<pre>@NonNull
+java.util.Optional&lt;java.lang.String&gt;&nbsp;generate(@NonNull @NotNull
+                                                       @NotNull <a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+                                                       @NonNull @NotBlank
+                                                       @NotBlank java.lang.String&nbsp;token)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>userDetails</code> - The user details</dd>
