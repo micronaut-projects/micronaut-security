@@ -21,7 +21,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
 /**
- * Configures the provided OAuth controller.
+ * Configures the provided {@link OauthController}.
  *
  * @author Sergio del Amo
  * @since 1.0
