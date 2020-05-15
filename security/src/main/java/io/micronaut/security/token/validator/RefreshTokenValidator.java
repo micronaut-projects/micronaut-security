@@ -29,6 +29,7 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 2.0.0
  */
+@FunctionalInterface
 public interface RefreshTokenValidator {
 
     /**
