@@ -15,7 +15,9 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.token.generator.RefreshTokenGenerator;
@@ -25,6 +27,8 @@ import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
 import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import io.micronaut.security.token.jwt.render.TokenRenderer;
+import io.micronaut.security.token.refresh.RefreshTokenPersistence;
+import io.micronaut.security.token.validator.RefreshTokenValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,10 +48,10 @@ public class AccessRefreshTokenGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccessRefreshTokenGenerator.class);
 
+    protected final BeanContext beanContext;
     protected final RefreshTokenGenerator refreshTokenGenerator;
     protected final ClaimsGenerator claimsGenerator;
     protected final AccessTokenConfiguration accessTokenConfiguration;
-    protected final RefreshTokenConfiguration refreshTokenConfiguration;
     protected final TokenRenderer tokenRenderer;
     protected final TokenGenerator tokenGenerator;
     protected final ApplicationEventPublisher eventPublisher;
@@ -55,24 +59,24 @@ public class AccessRefreshTokenGenerator {
     /**
      *
      * @param accessTokenConfiguration The access token generator config
-     * @param refreshTokenConfiguration The refresh token generator config
      * @param tokenRenderer The token renderer
      * @param tokenGenerator The token generator
+     * @param beanContext Bean Context
      * @param refreshTokenGenerator The refresh token generator
      * @param claimsGenerator Claims generator
      * @param eventPublisher The Application event publiser
      */
     public AccessRefreshTokenGenerator(AccessTokenConfiguration accessTokenConfiguration,
-                                       RefreshTokenConfiguration refreshTokenConfiguration,
                                        TokenRenderer tokenRenderer,
                                        TokenGenerator tokenGenerator,
+                                       BeanContext beanContext,
                                        @Nullable RefreshTokenGenerator refreshTokenGenerator,
                                        ClaimsGenerator claimsGenerator,
                                        ApplicationEventPublisher eventPublisher) {
         this.accessTokenConfiguration = accessTokenConfiguration;
-        this.refreshTokenConfiguration = refreshTokenConfiguration;
         this.tokenRenderer = tokenRenderer;
         this.tokenGenerator = tokenGenerator;
+        this.beanContext = beanContext;
         this.refreshTokenGenerator = refreshTokenGenerator;
         this.claimsGenerator = claimsGenerator;
         this.eventPublisher = eventPublisher;
@@ -86,20 +90,31 @@ public class AccessRefreshTokenGenerator {
      * @return The http response
      */
     public Optional<AccessRefreshToken> generate(UserDetails userDetails) {
+        return generate(generateRefreshToken(userDetails).orElse(null), userDetails);
+    }
+
+    /**
+     * Generates a refresh token and emits a {@link RefreshTokenGeneratedEvent}.
+     * @param userDetails Authenticated user's representation.
+     * @return {@literal Optional#empty()} if refresh token was not generated or the refresh token wrapped in an Optional.
+     */
+    public Optional<String> generateRefreshToken(@NonNull UserDetails userDetails) {
         Optional<String> refreshToken = Optional.empty();
-        if (refreshTokenConfiguration.isEnabled()) {
-            if (refreshTokenGenerator == null) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Failed to add a refresh token to the response. There is no refresh token generator.");
-                }
-            } else {
-                String key = refreshTokenGenerator.createKey(userDetails);
-                refreshToken = refreshTokenGenerator.generate(userDetails, key);
-                refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(userDetails, key)));
+        if (beanContext.containsBean(RefreshTokenValidator.class) &&
+            beanContext.containsBean(RefreshTokenPersistence.class) &&
+                refreshTokenGenerator != null) {
+            String key = refreshTokenGenerator.createKey(userDetails);
+            refreshToken = refreshTokenGenerator.generate(userDetails, key);
+            refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(userDetails, key)));
+        } else {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("refresh token not generated. To generate a refresh token, provide beans of type {}, {} and {}",
+                        RefreshTokenValidator.class.getSimpleName(),
+                        RefreshTokenPersistence.class.getSimpleName(),
+                        RefreshTokenGenerator.class);
             }
         }
-
-        return generate(refreshToken.orElse(null), userDetails);
+        return refreshToken;
     }
 
     /**

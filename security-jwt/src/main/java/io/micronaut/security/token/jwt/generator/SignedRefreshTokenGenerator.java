@@ -15,161 +15,109 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.async.SupplierUtil;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.token.generator.RefreshTokenGenerator;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
-import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.crypto.*;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Singleton;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import java.text.ParseException;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * The default implementation of {@link RefreshTokenGenerator} and {@link RefreshTokenValidator}
- * that encrypts the token with a secret key and validates a token can be decrypted with
- * the same secret key.
+ * The default implementation of {@link RefreshTokenGenerator} and {@link RefreshTokenValidator}.
+ * Create and verify a JWS encoded object whose payload is a UUID with a hash-based message authentication code (HMAC).
+ * @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/jws-with-hmac">JSON Web Signature (JWS) with HMAC protection</a>
  *
- * @author James Kleeh
+ * @author Sergio del Amo
  * @since 2.0.0
  */
 @Singleton
-@Requires(beans = RefreshTokenPersistence.class)
+@Requires(beans = RefreshTokenConfiguration.class)
 public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, RefreshTokenValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SignedRefreshTokenGenerator.class);
-
-    private final Supplier<Cipher> encryptingCipher;
-    private final Supplier<Cipher> decryptingCipher;
+    private final JWSAlgorithm algorithm;
+    private final JWSVerifier verifier;
+    private final JWSSigner signer;
 
     /**
-     * @param configuration The refresh token configuration
+     *
+     * @param config Signed Refresh Token generator
      */
-    public SignedRefreshTokenGenerator(RefreshTokenConfiguration configuration) {
-        String secret = configuration.getSecret().orElse(null);
-        Supplier<byte[]> secretKey;
-        if (secret != null) {
-            secretKey = SupplierUtil.memoized(() -> this.generateSecretKey(secret.toCharArray()));
-        } else {
-            secretKey = () -> {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Cannot generate a refresh token without a secret. Configure micronaut.security.token.jwt.generator.refresh-token.secret");
-                }
-                return null;
-            };
+    public SignedRefreshTokenGenerator(RefreshTokenConfiguration config) {
+        byte[] secret = config.isBase64() ? Base64.getDecoder().decode(config.getSecret()) : config.getSecret().getBytes(UTF_8);
+        this.algorithm = config.getJwsAlgorithm();
+        try {
+            this.signer = new MACSigner(secret);
+        } catch (JOSEException e) {
+            throw new ConfigurationException("unable to create a signer", e);
         }
-        // Your vector must be 8 bytes long
-        IvParameterSpec iv = new IvParameterSpec(new byte[8]);
-
-        encryptingCipher = SupplierUtil.memoized(() -> {
-            byte[] key = secretKey.get();
-            if (key != null) {
-                try {
-                    SecretKey secretKeySpec = new SecretKeySpec(key, "DESede");
-                    Cipher encrypt = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-                    encrypt.init(Cipher.ENCRYPT_MODE, secretKeySpec, iv);
-                    return encrypt;
-                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e) {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("Failed to initialize the secret key to sign refresh tokens", e);
-                    }
-                }
-            }
-            return null;
-        });
-
-        decryptingCipher = SupplierUtil.memoized(() -> {
-            byte[] key = secretKey.get();
-            if (key != null) {
-                try {
-                    SecretKey secretKeySpec = new SecretKeySpec(key, "DESede");
-                    Cipher encrypt = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-                    encrypt.init(Cipher.DECRYPT_MODE, secretKeySpec, iv);
-                    return encrypt;
-                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e) {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("Failed to initialize the secret key to sign refresh tokens", e);
-                    }
-                }
-            }
-            return null;
-        });
-
+        try {
+            this.verifier = new MACVerifier(secret);
+        } catch (JOSEException e) {
+            throw new ConfigurationException("unable to create a verifier", e);
+        }
     }
 
-    @Override
     @NonNull
+    @Override
     public String createKey(@NonNull UserDetails userDetails) {
         return UUID.randomUUID().toString();
     }
 
-    @Override
     @NonNull
+    @Override
     public Optional<String> generate(@NonNull UserDetails userDetails, @NonNull String token) {
-        Cipher cipher = encryptingCipher.get();
-        if (cipher != null) {
-            try {
-                byte[] encryptedToken = cipher.doFinal(token.getBytes(UTF_8));
-                return Optional.of(new String(Base64.getEncoder().encode(encryptedToken), UTF_8));
-            } catch (IllegalBlockSizeException | BadPaddingException e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Failed to sign the refresh token", e);
-                }
-            }
-        }
-        return Optional.empty();
-    }
-
-    /**
-     *
-     * @param refreshToken The refresh token
-     * @return The decrypted token wrapped in an Optional or {@literal Optional#empty()} if the supplied token is invalid.
-     */
-    @Override
-    @NonNull
-    public Optional<String> validate(@NonNull String refreshToken) {
-        Cipher cipher = decryptingCipher.get();
-        if (cipher != null) {
-            byte[] token = Base64.getDecoder().decode(refreshToken);
-            try {
-                byte[] decrypted = cipher.doFinal(token);
-                return Optional.of(new String(decrypted, UTF_8));
-            } catch (IllegalBlockSizeException | BadPaddingException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Failed to decrypt a refresh token", e);
-                }
-            }
-        }
-        return Optional.empty();
-    }
-
-    private byte[] generateSecretKey(char[] secret) {
         try {
-            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-            PBEKeySpec spec = new PBEKeySpec(secret, "micronaut".getBytes(), 1000, 192);
-            SecretKey tempKey = skf.generateSecret(spec);
-            return tempKey.getEncoded();
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            JWSObject jwsObject = new JWSObject(new JWSHeader(algorithm), new Payload(token));
+            jwsObject.sign(signer);
+            return Optional.of(jwsObject.serialize());
+        } catch (JOSEException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Failed to initialize the secret key to sign refresh tokens", e);
+                LOG.warn("JOSEException signing a JWS Object");
             }
-            return null;
         }
+        return Optional.empty();
+
+    }
+
+    @NonNull
+    @Override
+    public Optional<String> validate(@NonNull String refreshToken) {
+        JWSObject jwsObject = null;
+        try {
+            jwsObject = JWSObject.parse(refreshToken);
+            if (jwsObject.verify(verifier)) {
+                return Optional.of(jwsObject.getPayload().toString());
+            }
+        } catch (ParseException e) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Parse exception parsing refresh token {} into JWS Object", refreshToken);
+            }
+            return Optional.empty();
+        } catch (JOSEException e) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("JOSEException parsing refresh token {} into JWS Object", refreshToken);
+            }
+        }
+        return Optional.empty();
     }
 }
