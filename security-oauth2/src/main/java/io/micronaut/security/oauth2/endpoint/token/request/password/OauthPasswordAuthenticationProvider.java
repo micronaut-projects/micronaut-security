@@ -29,8 +29,6 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPassword
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,8 +41,6 @@ import java.util.List;
  * @since 1.2.0
  */
 public class OauthPasswordAuthenticationProvider implements AuthenticationProvider {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OauthPasswordAuthenticationProvider.class);
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;

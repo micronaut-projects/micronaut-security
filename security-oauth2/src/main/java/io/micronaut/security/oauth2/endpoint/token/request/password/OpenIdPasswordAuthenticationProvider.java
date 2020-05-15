@@ -37,8 +37,6 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.List;
@@ -53,8 +51,6 @@ import java.util.stream.Collectors;
  * @since 1.2.0
  */
 public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvider {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OauthPasswordAuthenticationProvider.class);
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
