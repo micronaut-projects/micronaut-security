@@ -101,9 +101,14 @@ var activeTableTab = "activeTableTab";
 <dt>All Known Implementing Classes:</dt>
 <dd><a href="../../../../../io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">SignedRefreshTokenGenerator</a></dd>
 </dl>
+<dl>
+<dt>Functional Interface:</dt>
+<dd>This is a functional interface and can therefore be used as the assignment target for a lambda expression or method reference.</dd>
+</dl>
 <hr>
 <br>
-<pre>public interface <span class="typeNameLabel">RefreshTokenValidator</span></pre>
+<pre>@FunctionalInterface
+public interface <span class="typeNameLabel">RefreshTokenValidator</span></pre>
 <div class="block">Responsible for validating a refresh token
  is in a valid format. This logic is separate from determining
  if the refresh token has been revoked or otherwise not
