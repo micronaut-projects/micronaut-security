@@ -79,7 +79,7 @@ public class LoginController {
         Flowable<AuthenticationResponse> authenticationResponseFlowable = Flowable.fromPublisher(authenticator.authenticate(request, usernamePasswordCredentials));
 
         return authenticationResponseFlowable.map(authenticationResponse -> {
-            if (authenticationResponse.isAuthenticated()) {
+            if (authenticationResponse.isAuthenticated() && authenticationResponse.getUserDetails().isPresent()) {
                 UserDetails userDetails = authenticationResponse.getUserDetails().get();
                 eventPublisher.publishEvent(new LoginSuccessfulEvent(userDetails));
                 return loginHandler.loginSuccess(userDetails, request);
