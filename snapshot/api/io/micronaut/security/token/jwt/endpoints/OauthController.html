@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -180,11 +180,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>io.reactivex.Single&lt;io.micronaut.http.HttpResponse&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html#index-io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest-">index</a></span>(@Valid <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest)</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>io.micronaut.http.HttpResponse</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html#onConstraintViolationException-javax.validation.ConstraintViolationException-">onConstraintViolationException</a></span>(javax.validation.ConstraintViolationException&nbsp;ex)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html#index-io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest-">index</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -253,37 +249,17 @@ extends java.lang.Object</pre>
 <a name="index-io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>index</h4>
 <pre>@Consumes(value={"application/x-www-form-urlencoded","application/json"})
  @Post
-public&nbsp;io.reactivex.Single&lt;io.micronaut.http.HttpResponse&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;&gt;&nbsp;index(@Valid
-                                                                                                                                                                      @Valid <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest)</pre>
+public&nbsp;io.reactivex.Single&lt;io.micronaut.http.HttpResponse&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;&gt;&nbsp;index(<a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tokenRefreshRequest</code> - An instance of <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>TokenRefreshRequest</code></a> present in the request</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status</dd>
-</dl>
-</li>
-</ul>
-<a name="onConstraintViolationException-javax.validation.ConstraintViolationException-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>onConstraintViolationException</h4>
-<pre>@Error(exception=javax.validation.ConstraintViolationException.class)
-public&nbsp;io.micronaut.http.HttpResponse&nbsp;onConstraintViolationException(javax.validation.ConstraintViolationException&nbsp;ex)
-                                                                                                                                    throws <a href="../../../../../../io/micronaut/security/errors/OauthErrorResponseException.html" title="class in io.micronaut.security.errors">OauthErrorResponseException</a></pre>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>ex</code> - Exception raised when <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>TokenRefreshRequest</code></a> validation fails</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>400</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../../io/micronaut/security/errors/OauthErrorResponseException.html" title="class in io.micronaut.security.errors">OauthErrorResponseException</a></code> - thrown with invalid_request on unsupported_grant_type error codes</dd>
 </dl>
 </li>
 </ul>
