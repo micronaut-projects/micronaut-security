@@ -51,6 +51,7 @@ import java.util.Optional;
  */
 @Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 @Requires(beans = RefreshTokenPersistence.class)
+@Requires(beans = RefreshTokenValidator.class)
 @Controller("${" + OauthControllerConfigurationProperties.PREFIX + ".path:/oauth/access_token}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Validated
