@@ -21,6 +21,7 @@ package io.micronaut.security.token.jwt.generator;
  * @author James Kleeh
  * @since 2.0.0
  */
+@FunctionalInterface
 public interface AccessTokenConfiguration {
 
     /**
