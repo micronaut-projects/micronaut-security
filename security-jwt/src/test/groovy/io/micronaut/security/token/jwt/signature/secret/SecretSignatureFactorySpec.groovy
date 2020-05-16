@@ -41,7 +41,6 @@ class SecretSignatureFactorySpec extends Specification {
     void "test failing to provide a secret"() {
         when:
         ApplicationContext.run([
-                'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.signatures.secret.generator.jwsAlgorithm': 'HS256'
         ])
 
