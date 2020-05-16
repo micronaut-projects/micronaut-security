@@ -14,7 +14,7 @@ class LoginControllerEnabledSpec extends ApplicationContextSpecification {
         ]
     }
 
-    @Unroll("if micronaut.security.enabled=true and micronaut.security.endpoints.login.enabled=false bean [#description] is not loaded")
+    @Unroll("if micronaut.security.endpoints.login.enabled=false bean [#description] is not loaded")
     void "if micronaut.security.endpoints.login.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
         applicationContext.getBean(clazz)

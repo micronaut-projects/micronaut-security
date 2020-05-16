@@ -13,7 +13,7 @@ class BearerEnabledSpec extends EmbeddedServerSpecification {
         ]
     }
 
-    @Unroll("if micronaut.security.enabled=true and m.s.token.jwt.enabled=true and m.s.token.jwt.bearer.enabled=false bean [#description] is not loaded")
+    @Unroll("if micronaut.security.token.jwt.bearer.enabled=false bean [#description] is not loaded")
     void "if micronaut.security.token.jwt.bearer.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
         embeddedServer.applicationContext.getBean(clazz)
