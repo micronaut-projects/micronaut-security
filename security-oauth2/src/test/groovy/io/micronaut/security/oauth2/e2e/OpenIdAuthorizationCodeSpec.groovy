@@ -1,18 +1,23 @@
 package io.micronaut.security.oauth2.e2e
 
-import geb.spock.GebSpec
-import io.micronaut.context.ApplicationContext
-import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.oauth2.OpenIDIntegrationSpec
+import io.micronaut.security.oauth2.GebEmbeddedServerSpecification
+import io.micronaut.security.oauth2.Keycloak
 
-class OpenIdAuthorizationCodeSpec extends GebSpec implements OpenIDIntegrationSpec {
+class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                "micronaut.security.token.jwt.cookie.enabled" : true,
+                "micronaut.security.oauth2.clients.keycloak.openid.issuer" : Keycloak.issuer,
+                "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
+                "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret,
+                "micronaut.security.token.jwt.signatures.secret.generator.secret" : 'pleaseChangeThisSecretForANewOne',
+        ] as Map<String, Object>
+    }
 
     void "test a full login"() {
         given:
-        ApplicationContext context = startContext()
-        EmbeddedServer embeddedServer = context.getBean(EmbeddedServer)
-        embeddedServer.start()
-
         browser.baseUrl = "http://localhost:${embeddedServer.port}"
 
         when:
@@ -34,16 +39,4 @@ class OpenIdAuthorizationCodeSpec extends GebSpec implements OpenIDIntegrationSp
         then:
         homePage.message.matches("Hello .*")
     }
-
-    @Override
-    Map<String, Object> getConfiguration() {
-        OpenIDIntegrationSpec.super.getConfiguration() + [
-                        "micronaut.security.token.jwt.cookie.enabled" : true,
-                        "micronaut.security.oauth2.clients.keycloak.openid.issuer" : ISSUER,
-                        "micronaut.security.oauth2.clients.keycloak.client-id" : CLIENT_ID,
-                        "micronaut.security.oauth2.clients.keycloak.client-secret" : CLIENT_SECRET,
-                        "micronaut.security.token.jwt.signatures.secret.generator.secret" : 'pleaseChangeThisSecretForANewOne',
-        ] as Map<String, Object>
-    }
-
 }
