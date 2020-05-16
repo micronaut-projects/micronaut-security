@@ -21,41 +21,55 @@ import io.micronaut.core.util.Toggleable;
  * Defines Session-based Authentication configuration properties.
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration} instead.
  */
+@Deprecated
 public interface SecuritySessionConfiguration extends Toggleable {
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after a successful login.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getLoginSuccess()} instead.
      */
+    @Deprecated
     String getLoginSuccessTargetUrl();
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after logout.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getLogout()} instead.
      */
+    @Deprecated
     String getLogoutTargetUrl();
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after a failed login.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getLoginFailure()} instead.
      */
+    @Deprecated
     String getLoginFailureTargetUrl();
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after trying to access a secured route.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getUnauthorized()} instead.
      */
+    @Deprecated
     String getUnauthorizedTargetUrl();
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getForbidden()} instead.
      */
+    @Deprecated
     String getForbiddenTargetUrl();
 
     /**
      * @return True if a redirect should occur when a request is rejected
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#isOnRejection()} instead.
      */
+    @Deprecated
     boolean isRedirectOnRejection();
 }

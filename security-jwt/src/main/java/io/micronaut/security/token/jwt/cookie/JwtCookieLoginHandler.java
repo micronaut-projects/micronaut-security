@@ -21,11 +21,13 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -46,15 +48,39 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
     protected final JwtCookieConfiguration jwtCookieConfiguration;
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
     protected final AccessTokenConfiguration accessTokenConfiguration;
+    protected final String loginFailure;
+    protected final String loginSuccess;
 
     /**
      * @param jwtCookieConfiguration JWT Cookie Configuration
      * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
+     * @deprecated Use {@link JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator)} instead.
      */
+    @Deprecated
     public JwtCookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
                                  AccessTokenConfiguration accessTokenConfiguration,
                                  AccessRefreshTokenGenerator accessRefreshTokenGenerator) {
+        this.jwtCookieConfiguration = jwtCookieConfiguration;
+        this.accessTokenConfiguration = accessTokenConfiguration;
+        this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+        this.loginFailure = jwtCookieConfiguration.getLoginFailureTargetUrl();
+        this.loginSuccess = jwtCookieConfiguration.getLoginSuccessTargetUrl();
+    }
+
+    /**
+     * @param redirectConfiguration Redirect configuration
+     * @param jwtCookieConfiguration JWT Cookie Configuration
+     * @param accessTokenConfiguration JWT Generator Configuration
+     * @param accessRefreshTokenGenerator Access Refresh Token Generator
+     */
+    @Inject
+    public JwtCookieLoginHandler(RedirectConfiguration redirectConfiguration,
+            JwtCookieConfiguration jwtCookieConfiguration,
+            AccessTokenConfiguration accessTokenConfiguration,
+            AccessRefreshTokenGenerator accessRefreshTokenGenerator) {
+        this.loginFailure = redirectConfiguration.getLoginFailure();
+        this.loginSuccess = redirectConfiguration.getLoginSuccess();
         this.jwtCookieConfiguration = jwtCookieConfiguration;
         this.accessTokenConfiguration = accessTokenConfiguration;
         this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
@@ -73,7 +99,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
     @Override
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
         try {
-            URI location = new URI(jwtCookieConfiguration.getLoginFailureTargetUrl());
+            URI location = new URI(loginFailure);
             return HttpResponse.seeOther(location);
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();
@@ -110,7 +136,7 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
      */
     protected MutableHttpResponse<?> loginSuccessWithCookies(List<Cookie> cookies) {
         try {
-            URI location = new URI(jwtCookieConfiguration.getLoginSuccessTargetUrl());
+            URI location = new URI(loginSuccess);
             MutableHttpResponse<?> mutableHttpResponse = HttpResponse.seeOther(location);
             for (Cookie cookie : cookies) {
                 mutableHttpResponse = mutableHttpResponse.cookie(cookie);

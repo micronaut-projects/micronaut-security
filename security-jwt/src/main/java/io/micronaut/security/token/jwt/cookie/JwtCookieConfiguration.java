@@ -28,18 +28,25 @@ public interface JwtCookieConfiguration extends CookieConfiguration, Toggleable 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after a successful login.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getLoginSuccess()} instead.
      */
+    @Deprecated
     String getLoginSuccessTargetUrl();
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after logout.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getLogout()} instead.
      */
+    @Deprecated
     String getLogoutTargetUrl();
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after a failed login.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getLoginFailure()} instead.
      */
+    @Deprecated
     String getLoginFailureTargetUrl();
+
 }

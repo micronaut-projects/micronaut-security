@@ -10,6 +10,7 @@ class SecuritySessionConfigurationSpec extends ApplicationContextSpecification {
     @Shared
     SecuritySessionConfiguration sessionConfiguration = applicationContext.getBean(SecuritySessionConfiguration)
 
+    @Deprecated
     void "it is possible to override success and failure urls via configuration"() {
         expect:
         sessionConfiguration.loginSuccessTargetUrl == '/'

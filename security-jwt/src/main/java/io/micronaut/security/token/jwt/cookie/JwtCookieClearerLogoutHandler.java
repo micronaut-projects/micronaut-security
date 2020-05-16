@@ -19,8 +19,10 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
+import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.handlers.LogoutHandler;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,19 +37,34 @@ import java.util.Optional;
 public class JwtCookieClearerLogoutHandler implements LogoutHandler {
 
     protected final JwtCookieConfiguration jwtCookieConfiguration;
+    protected final String logout;
 
     /**
      * @param jwtCookieConfiguration JWT Cookie Configuration
+     * @deprecated Use {@link JwtCookieClearerLogoutHandler(JwtCookieConfiguration, RedirectConfiguration)} instead.
      */
+    @Deprecated
     public JwtCookieClearerLogoutHandler(JwtCookieConfiguration jwtCookieConfiguration) {
+            this.jwtCookieConfiguration = jwtCookieConfiguration;
+            this.logout = jwtCookieConfiguration.getLogoutTargetUrl();
+    }
+
+    /**
+     * @param jwtCookieConfiguration JWT Cookie Configuration
+     * @param redirectConfiguration Redirect configuration
+     */
+    @Inject
+    public JwtCookieClearerLogoutHandler(JwtCookieConfiguration jwtCookieConfiguration,
+                                         RedirectConfiguration redirectConfiguration) {
         this.jwtCookieConfiguration = jwtCookieConfiguration;
+        this.logout = redirectConfiguration.getLogout();
     }
 
     @Override
     public MutableHttpResponse<?> logout(HttpRequest<?> request) {
         Optional<Cookie> maybeCookie = request.getCookies().findCookie(jwtCookieConfiguration.getCookieName());
         try {
-            URI location = new URI(jwtCookieConfiguration.getLogoutTargetUrl());
+            URI location = new URI(logout);
             if (maybeCookie.isPresent()) {
                 Cookie requestCookie = maybeCookie.get();
                 String domain = jwtCookieConfiguration.getCookieDomain().orElse(null);
