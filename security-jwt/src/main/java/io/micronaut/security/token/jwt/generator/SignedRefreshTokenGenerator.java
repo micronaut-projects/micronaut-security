@@ -57,6 +57,7 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
     private final JWSAlgorithm algorithm;
     private final JWSVerifier verifier;
     private final JWSSigner signer;
+    private final boolean enabled;
 
     /**
      *
@@ -75,6 +76,7 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
         } catch (JOSEException e) {
             throw new ConfigurationException("unable to create a verifier", e);
         }
+        this.enabled = config.isEnabled();
     }
 
     @NonNull
@@ -86,13 +88,19 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
     @NonNull
     @Override
     public Optional<String> generate(@NonNull UserDetails userDetails, @NonNull String token) {
-        try {
-            JWSObject jwsObject = new JWSObject(new JWSHeader(algorithm), new Payload(token));
-            jwsObject.sign(signer);
-            return Optional.of(jwsObject.serialize());
-        } catch (JOSEException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("JOSEException signing a JWS Object");
+        if (enabled) {
+            try {
+                JWSObject jwsObject = new JWSObject(new JWSHeader(algorithm), new Payload(token));
+                jwsObject.sign(signer);
+                return Optional.of(jwsObject.serialize());
+            } catch (JOSEException e) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("JOSEException signing a JWS Object");
+                }
+            }
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped refresh token generation because the configuration is disabled");
             }
         }
         return Optional.empty();

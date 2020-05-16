@@ -100,20 +100,28 @@ public class AccessRefreshTokenGenerator {
      */
     public Optional<String> generateRefreshToken(@NonNull UserDetails userDetails) {
         Optional<String> refreshToken = Optional.empty();
-        if (beanContext.containsBean(RefreshTokenValidator.class) &&
-            beanContext.containsBean(RefreshTokenPersistence.class) &&
-                refreshTokenGenerator != null) {
-            String key = refreshTokenGenerator.createKey(userDetails);
-            refreshToken = refreshTokenGenerator.generate(userDetails, key);
-            refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(userDetails, key)));
+        if (beanContext.containsBean(RefreshTokenValidator.class)) {
+            if (beanContext.containsBean(RefreshTokenPersistence.class)) {
+                if (refreshTokenGenerator != null) {
+                    String key = refreshTokenGenerator.createKey(userDetails);
+                    refreshToken = refreshTokenGenerator.generate(userDetails, key);
+                    refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(userDetails, key)));
+                } else {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenGenerator.class.getName());
+                    }
+                }
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenPersistence.class.getName());
+                }
+            }
         } else {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("refresh token not generated. To generate a refresh token, provide beans of type {}, {} and {}",
-                        RefreshTokenValidator.class.getSimpleName(),
-                        RefreshTokenPersistence.class.getSimpleName(),
-                        RefreshTokenGenerator.class);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenValidator.class.getName());
             }
         }
+
         return refreshToken;
     }
 

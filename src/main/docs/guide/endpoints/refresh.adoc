@@ -2,16 +2,13 @@ IMPORTANT: The refresh token functionality has changed dramatically starting in 
 
 Refresh tokens can be used to obtain a new access token. By default, refresh tokens are not generated.
 
-To enable refresh token generation, you have to provide beans of type api:security.token.generator.RefreshTokenGenerator[],
-api:security.token.validator.RefreshTokenValidator[] and api:security.token.refresh.RefreshTokenPersistence[].
+The api:security.token.generator.RefreshTokenGenerator[] API is responsible for generating the token that gets included in the response. The api:security.token.generator.RefreshTokenValidator[] is responsible for validating the refresh token. Note that this validation step is not related to the persistence of the token, but instead is intended to verify the token is not a random/guessed value.
 
-The api:security.token.generator.RefreshTokenGenerator[] API is responsible for generating the token that gets included in the response.
-
-api:io.micronaut.security.token.jwt.generator.SignedRefreshTokenGenerator[] an implementation of both api:security.token.generator.RefreshTokenGenerator[] and  api:security.token.validator.RefreshTokenValidator[] has been provided. It creates and verifies a JWS (JSON web signature) encoded object whose payload is a UUID with a hash-based message authentication code (HMAC). You can configure it:
+An implementation of both api:security.token.generator.RefreshTokenGenerator[] and  api:security.token.validator.RefreshTokenValidator[] has been provided by default. The api:io.micronaut.security.token.jwt.generator.SignedRefreshTokenGenerator[] creates and verifies a JWS (JSON web signature) encoded object whose payload is a UUID with a hash-based message authentication code (HMAC). See the following configuration options:
 
 include::{includedir}configurationProperties/io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties.adoc[]
 
-To enable it you will need to provide a secret:
+To enable it, you must provide a secret:
 
 ```yaml
 micronaut:
@@ -25,7 +22,9 @@ micronaut:
 
 After a token is generated, this library has no knowledge of it. The value is not cached or stored anywhere. It is up to each application to decide how to store the token, support revocation, and retrieve user details when given a token.
 
-The api:security.token.refresh.RefreshTokenPersistence[] implementation will receive an event when refresh tokens is generated and then must persist the token along with a link to the user that it was generated for. The user information and the token are both available in the api:security.token.event.RefreshTokenGeneratedEvent[].
+In addition to the above requirements, each application must provide an implementation of api:security.token.refresh.RefreshTokenPersistence[].
+
+The api:security.token.refresh.RefreshTokenPersistence[] implementation will receive an event when a refresh token is generated and then is responsible for persisting the token along with a link to the user that it was generated for. The user information and the token are both available in the api:security.token.event.RefreshTokenGeneratedEvent[].
 
 ### Refreshing the Token
 
