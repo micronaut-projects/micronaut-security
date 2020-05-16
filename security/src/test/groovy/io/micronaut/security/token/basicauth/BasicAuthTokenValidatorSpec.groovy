@@ -28,9 +28,9 @@ class BasicAuthTokenValidatorSpec extends Specification {
         applicationContext.close()
     }
 
-    def "BasicAuthTokenValidator is loaded if micronaut.security.enabled=true"() {
+    def "BasicAuthTokenValidator is loaded by default"() {
         given:
-        ApplicationContext applicationContext = ApplicationContext.run(['micronaut.security.enabled': true])
+        ApplicationContext applicationContext = ApplicationContext.run([:])
 
         expect:
         applicationContext.containsBean(BasicAuthAuthenticationFetcher)
