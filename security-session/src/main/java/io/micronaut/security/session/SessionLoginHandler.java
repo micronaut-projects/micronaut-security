@@ -28,7 +28,6 @@ import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -52,7 +51,6 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
      * @param sessionStore The session store
      * @param tokenConfiguration Token Configuration
      */
-    @Inject
     public SessionLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,
                                SessionStore<Session> sessionStore,
                                TokenConfiguration tokenConfiguration) {
