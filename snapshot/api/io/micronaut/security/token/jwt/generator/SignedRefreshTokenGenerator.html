@@ -112,18 +112,19 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>@Singleton
- @Requires(beans=<a href="../../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence.class</a>)
+ @Requires(beans=<a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration.class</a>)
 public class <span class="typeNameLabel">SignedRefreshTokenGenerator</span>
 extends java.lang.Object
 implements <a href="../../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a>, <a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a></pre>
-<div class="block">The default implementation of <a href="../../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator"><code>RefreshTokenGenerator</code></a> and <a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator"><code>RefreshTokenValidator</code></a>
- that encrypts the token with a secret key and validates a token can be decrypted with
- the same secret key.</div>
+<div class="block">The default implementation of <a href="../../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator"><code>RefreshTokenGenerator</code></a> and <a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator"><code>RefreshTokenValidator</code></a>.
+ Create and verify a JWS encoded object whose payload is a UUID with a hash-based message authentication code (HMAC).</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0.0</dd>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>James Kleeh</dd>
+<dd>Sergio del Amo</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="https://connect2id.com/products/nimbus-jose-jwt/examples/jws-with-hmac">JSON Web Signature (JWS) with HMAC protection</a></dd>
 </dl>
 </li>
 </ul>
@@ -143,7 +144,7 @@ implements <a href="../../../../../../io/micronaut/security/token/generator/Refr
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html#SignedRefreshTokenGenerator-io.micronaut.security.token.jwt.generator.RefreshTokenConfiguration-">SignedRefreshTokenGenerator</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a>&nbsp;configuration)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html#SignedRefreshTokenGenerator-io.micronaut.security.token.jwt.generator.RefreshTokenConfiguration-">SignedRefreshTokenGenerator</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a>&nbsp;config)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -201,10 +202,10 @@ implements <a href="../../../../../../io/micronaut/security/token/generator/Refr
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SignedRefreshTokenGenerator</h4>
-<pre>public&nbsp;SignedRefreshTokenGenerator(<a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a>&nbsp;configuration)</pre>
+<pre>public&nbsp;SignedRefreshTokenGenerator(<a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a>&nbsp;config)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>configuration</code> - The refresh token configuration</dd>
+<dd><code>config</code> - Signed Refresh Token generator</dd>
 </dl>
 </li>
 </ul>
@@ -272,7 +273,7 @@ public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;validate(@NonNull
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>refreshToken</code> - The refresh token</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>The decrypted token wrapped in an Optional or Optional#empty() if the supplied token is invalid.</dd>
+<dd>The validated token wrapped in an Optional or Optional#empty() if the supplied token is invalid.</dd>
 </dl>
 </li>
 </ul>

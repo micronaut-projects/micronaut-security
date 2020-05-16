@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -140,16 +140,16 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#accessTokenConfiguration">accessTokenConfiguration</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected io.micronaut.context.BeanContext</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#beanContext">beanContext</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#claimsGenerator">claimsGenerator</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected io.micronaut.context.event.ApplicationEventPublisher</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#eventPublisher">eventPublisher</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected <a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#refreshTokenConfiguration">refreshTokenConfiguration</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a></code></td>
@@ -178,10 +178,10 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#AccessRefreshTokenGenerator-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.RefreshTokenConfiguration-io.micronaut.security.token.jwt.render.TokenRenderer-io.micronaut.security.token.generator.TokenGenerator-io.micronaut.security.token.generator.RefreshTokenGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator-io.micronaut.context.event.ApplicationEventPublisher-">AccessRefreshTokenGenerator</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
-                           <a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a>&nbsp;refreshTokenConfiguration,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#AccessRefreshTokenGenerator-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.render.TokenRenderer-io.micronaut.security.token.generator.TokenGenerator-io.micronaut.context.BeanContext-io.micronaut.security.token.generator.RefreshTokenGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator-io.micronaut.context.event.ApplicationEventPublisher-">AccessRefreshTokenGenerator</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
                            <a href="../../../../../../io/micronaut/security/token/jwt/render/TokenRenderer.html" title="interface in io.micronaut.security.token.jwt.render">TokenRenderer</a>&nbsp;tokenRenderer,
                            <a href="../../../../../../io/micronaut/security/token/generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a>&nbsp;tokenGenerator,
+                           io.micronaut.context.BeanContext&nbsp;beanContext,
                            <a href="../../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a>&nbsp;refreshTokenGenerator,
                            <a href="../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a>&nbsp;claimsGenerator,
                            io.micronaut.context.event.ApplicationEventPublisher&nbsp;eventPublisher)</code>&nbsp;</td>
@@ -223,6 +223,12 @@ extends java.lang.Object</pre>
  user details.</div>
 </td>
 </tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#generateRefreshToken-io.micronaut.security.authentication.UserDetails-">generateRefreshToken</a></span>(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</code>
+<div class="block">Generates a refresh token and emits a <a href="../../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><code>RefreshTokenGeneratedEvent</code></a>.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -245,6 +251,15 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Field Detail</h3>
+<a name="beanContext">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>beanContext</h4>
+<pre>protected final&nbsp;io.micronaut.context.BeanContext beanContext</pre>
+</li>
+</ul>
 <a name="refreshTokenGenerator">
 <!--   -->
 </a>
@@ -270,15 +285,6 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>accessTokenConfiguration</h4>
 <pre>protected final&nbsp;<a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a> accessTokenConfiguration</pre>
-</li>
-</ul>
-<a name="refreshTokenConfiguration">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>refreshTokenConfiguration</h4>
-<pre>protected final&nbsp;<a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a> refreshTokenConfiguration</pre>
 </li>
 </ul>
 <a name="tokenRenderer">
@@ -316,16 +322,16 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="AccessRefreshTokenGenerator-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.RefreshTokenConfiguration-io.micronaut.security.token.jwt.render.TokenRenderer-io.micronaut.security.token.generator.TokenGenerator-io.micronaut.security.token.generator.RefreshTokenGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator-io.micronaut.context.event.ApplicationEventPublisher-">
+<a name="AccessRefreshTokenGenerator-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.render.TokenRenderer-io.micronaut.security.token.generator.TokenGenerator-io.micronaut.context.BeanContext-io.micronaut.security.token.generator.RefreshTokenGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator-io.micronaut.context.event.ApplicationEventPublisher-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>AccessRefreshTokenGenerator</h4>
 <pre>public&nbsp;AccessRefreshTokenGenerator(<a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
-                                   <a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a>&nbsp;refreshTokenConfiguration,
                                    <a href="../../../../../../io/micronaut/security/token/jwt/render/TokenRenderer.html" title="interface in io.micronaut.security.token.jwt.render">TokenRenderer</a>&nbsp;tokenRenderer,
                                    <a href="../../../../../../io/micronaut/security/token/generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a>&nbsp;tokenGenerator,
+                                   io.micronaut.context.BeanContext&nbsp;beanContext,
                                    @Nullable
                                    <a href="../../../../../../io/micronaut/security/token/generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a>&nbsp;refreshTokenGenerator,
                                    <a href="../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a>&nbsp;claimsGenerator,
@@ -333,9 +339,9 @@ extends java.lang.Object</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>accessTokenConfiguration</code> - The access token generator config</dd>
-<dd><code>refreshTokenConfiguration</code> - The refresh token generator config</dd>
 <dd><code>tokenRenderer</code> - The token renderer</dd>
 <dd><code>tokenGenerator</code> - The token generator</dd>
+<dd><code>beanContext</code> - Bean Context</dd>
 <dd><code>refreshTokenGenerator</code> - The refresh token generator</dd>
 <dd><code>claimsGenerator</code> - Claims generator</dd>
 <dd><code>eventPublisher</code> - The Application event publiser</dd>
@@ -364,6 +370,23 @@ extends java.lang.Object</pre>
 <dd><code>userDetails</code> - Authenticated user's representation.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The http response</dd>
+</dl>
+</li>
+</ul>
+<a name="generateRefreshToken-io.micronaut.security.authentication.UserDetails-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>generateRefreshToken</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;generateRefreshToken(@NonNull
+                                                                 <a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</pre>
+<div class="block">Generates a refresh token and emits a <a href="../../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><code>RefreshTokenGeneratedEvent</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>userDetails</code> - Authenticated user's representation.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Optional#empty() if refresh token was not generated or the refresh token wrapped in an Optional.</dd>
 </dl>
 </li>
 </ul>

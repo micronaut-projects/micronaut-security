@@ -293,7 +293,17 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 </table>
 </div>
 <div class="paragraph">
-<p>Refresh tokens are non JWT tokens that can be used to obtain a new access token. By default, refresh tokens are disabled. To enable refresh tokens, the enabled flag in the table below must be set to true. In addition, applications must provide an implementation of <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a>.</p>
+<p>Refresh tokens can be used to obtain a new access token. By default, refresh tokens are not generated.</p>
+</div>
+<div class="paragraph">
+<p>To enable refresh token generation, you have to provide beans of type <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a>,
+<a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> and <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> API is responsible for generating the token that gets included in the response.</p>
+</div>
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> an implementation of both <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> and  <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> has been provided. It creates and verifies a JWS (JSON web signature) encoded object whose payload is a UUID with a hash-based message authentication code (HMAC). You can configure it:</p>
 </div>
 <a id="io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
@@ -314,23 +324,44 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether refresh tokens should be included in authentication responses. Default value false.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether {@link SignedRefreshTokenGenerator} is enabled. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.jws-algorithm</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">com.nimbusds.jose.JWSAlgorithm</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{@link com.nimbusds.jose.JWSAlgorithm}. Defaults to HS256</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.secret</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The secret used to sign refresh token values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shared secret. For HS256 must be at least 256 bits.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.base64</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether the supplied secret is base64 encoded. Default value false.</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> API is responsible for generating the token that gets included in the response. A <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">default implementation</a> has been provided that signs a UUID with the configured secret (see the table above).</p>
+<p>To enable it you will need to provide a secret:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    security:
+        token:
+            jwt:
+                generator:
+                    refresh-token:
+                        secret: 'pleaseChangeThisSecretForANewOne'</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>After a token is generated, this library has no knowledge of it. The value is not cached or stored anywhere. It is up to each application to decide how to store the token, support revocation, and retrieve user details when given a token.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation will receive an event when refresh tokens are generated and then must persist the token along with a link to the user that it was generated for. The user information and the token are both available in the <a href="../api/io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a>.</p>
+<p>The <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation will receive an event when refresh tokens is generated and then must persist the token along with a link to the user that it was generated for. The user information and the token are both available in the <a href="../api/io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="_refreshing_the_token">Refreshing the Token</h3>
@@ -369,10 +400,10 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <p>The controller exposes an endpoint as defined by <a href="https://tools.ietf.org/html/rfc6749#section-6">section 6 of the OAuth 2.0 spec</a> - Refreshing an Access Token.</p>
 </div>
 <div class="paragraph">
-<p>The refresh token endpoint uses the <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> API to verify the token matches the format that is expected. The <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">default implementation</a> attempts to decrypt the token with the provided secret. Any validator implementations should not be concerned with revocation status, existence, or any other persistence related validation.</p>
+<p>The refresh token endpoint uses the <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> API to verify the token matches the format that is expected. <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> attempts to verify the signature and returns the payload. Any validator implementations should not be concerned with revocation status, existence, or any other persistence related validation.</p>
 </div>
 <div class="paragraph">
-<p>If the validator successfully validates the token, it is then passed to a <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation, which each application must provide. A new access token is then created from the user details returned and then sent in the response.</p>
+<p>If the validator successfully validates the token, it is then passed to a <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation, which each application must provide. A new access token is then created from the user details returned by <code>RefreshTokenPersistence::getUserDetails</code> and then sent in the response.</p>
 </div>
 <div class="paragraph">
 <p>Here is an example of a refresh token request. Send a POST request to the <code>/oauth/access_token</code> endpoint:</p>

@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -111,16 +111,18 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>@ConfigurationProperties(value="micronaut.security.token.jwt.generator.refresh-token")
+<pre>@Introspected
+ @Requires(property="micronaut.security.token.jwt.generator.refresh-token.secret") @Requires(property="micronaut.security.token.jwt.generator.refresh-token.enabled",notEquals="false",defaultValue="true")
+ @ConfigurationProperties(value="micronaut.security.token.jwt.generator.refresh-token")
 public class <span class="typeNameLabel">RefreshTokenConfigurationProperties</span>
 extends java.lang.Object
 implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a></pre>
-<div class="block">Refresh token configuration.</div>
+<div class="block"><code>ConfigurationProperties</code> implementation of <a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><code>RefreshTokenConfiguration</code></a> to configure <a href="../../../../../../io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>SignedRefreshTokenGenerator</code></a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0.0</dd>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>James Kleeh</dd>
+<dd>James Kleeh, Sergio del Amo</dd>
 </dl>
 </li>
 </ul>
@@ -142,8 +144,20 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#DEFAULT_BASE64">DEFAULT_BASE64</a></span></code>
+<div class="block">The default base64 value.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span></code>
 <div class="block">The default enable value.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static com.nimbusds.jose.JWSAlgorithm</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#DEFAULT_JWS_ALGORITHM">DEFAULT_JWS_ALGORITHM</a></span></code>
+<div class="block">The default secure value.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -183,18 +197,40 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#getSecret--">getSecret</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>com.nimbusds.jose.JWSAlgorithm</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#getJwsAlgorithm--">getJwsAlgorithm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#getSecret--">getSecret</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#isBase64--">isBase64</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#isEnabled--">isEnabled</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#setEnabled-boolean-">setEnabled</a></span>(boolean&nbsp;enabled)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#setBase64-boolean-">setBase64</a></span>(boolean&nbsp;base64)</code>
+<div class="block">Indicates whether the supplied secret is base64 encoded.</div>
+</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#setEnabled-boolean-">setEnabled</a></span>(boolean&nbsp;enabled)</code>
+<div class="block">Sets whether <a href="../../../../../../io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>SignedRefreshTokenGenerator</code></a> is enabled.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#setJwsAlgorithm-com.nimbusds.jose.JWSAlgorithm-">setJwsAlgorithm</a></span>(com.nimbusds.jose.JWSAlgorithm&nbsp;jwsAlgorithm)</code>
+<div class="block"><code>JWSAlgorithm</code>.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#setSecret-java.lang.String-">setSecret</a></span>(java.lang.String&nbsp;secret)</code>&nbsp;</td>
 </tr>
@@ -230,6 +266,30 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../../constant-values.html#io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties.PREFIX">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="DEFAULT_JWS_ALGORITHM">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_JWS_ALGORITHM</h4>
+<pre>public static final&nbsp;com.nimbusds.jose.JWSAlgorithm DEFAULT_JWS_ALGORITHM</pre>
+<div class="block">The default secure value.</div>
+</li>
+</ul>
+<a name="DEFAULT_BASE64">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_BASE64</h4>
+<pre>public static final&nbsp;boolean DEFAULT_BASE64</pre>
+<div class="block">The default base64 value.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../constant-values.html#io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties.DEFAULT_BASE64">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
@@ -272,19 +332,6 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="isEnabled--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isEnabled</h4>
-<pre>public&nbsp;boolean&nbsp;isEnabled()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>isEnabled</code>&nbsp;in interface&nbsp;<code>io.micronaut.core.util.Toggleable</code></dd>
-</dl>
-</li>
-</ul>
 <a name="setEnabled-boolean-">
 <!--   -->
 </a>
@@ -292,9 +339,69 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
 <li class="blockList">
 <h4>setEnabled</h4>
 <pre>public&nbsp;void&nbsp;setEnabled(boolean&nbsp;enabled)</pre>
+<div class="block">Sets whether <a href="../../../../../../io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>SignedRefreshTokenGenerator</code></a> is enabled. Default value (<a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#DEFAULT_ENABLED">true</a>).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>enabled</code> - Whether refresh tokens should be included in authentication responses. Default value <a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#DEFAULT_ENABLED">false</a>.</dd>
+<dd><code>enabled</code> - True if it is enabled</dd>
+</dl>
+</li>
+</ul>
+<a name="setJwsAlgorithm-com.nimbusds.jose.JWSAlgorithm-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setJwsAlgorithm</h4>
+<pre>public&nbsp;void&nbsp;setJwsAlgorithm(@NonNull
+                            com.nimbusds.jose.JWSAlgorithm&nbsp;jwsAlgorithm)</pre>
+<div class="block"><code>JWSAlgorithm</code>. Defaults to HS256</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>jwsAlgorithm</code> - JWS Algorithm</dd>
+</dl>
+</li>
+</ul>
+<a name="setSecret-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setSecret</h4>
+<pre>public&nbsp;void&nbsp;setSecret(@NonNull
+                      java.lang.String&nbsp;secret)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>secret</code> - shared secret. For HS256 must be at least 256 bits.</dd>
+</dl>
+</li>
+</ul>
+<a name="setBase64-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setBase64</h4>
+<pre>public&nbsp;void&nbsp;setBase64(boolean&nbsp;base64)</pre>
+<div class="block">Indicates whether the supplied secret is base64 encoded. Default value <a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#DEFAULT_BASE64">false</a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>base64</code> - boolean flag indicating whether the supplied secret is base64 encoded</dd>
+</dl>
+</li>
+</ul>
+<a name="getJwsAlgorithm--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getJwsAlgorithm</h4>
+<pre>@NonNull
+public&nbsp;com.nimbusds.jose.JWSAlgorithm&nbsp;getJwsAlgorithm()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html#getJwsAlgorithm--">getJwsAlgorithm</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a></code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>JWS Algorithm</dd>
 </dl>
 </li>
 </ul>
@@ -304,25 +411,41 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
 <ul class="blockList">
 <li class="blockList">
 <h4>getSecret</h4>
-<pre>public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getSecret()</pre>
+<pre>@NonNull
+public&nbsp;java.lang.String&nbsp;getSecret()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html#getSecret--">getSecret</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>The optional secret.</dd>
+<dd>Secret used to sign the refresh token.</dd>
 </dl>
 </li>
 </ul>
-<a name="setSecret-java.lang.String-">
+<a name="isBase64--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isBase64</h4>
+<pre>public&nbsp;boolean&nbsp;isBase64()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html#isBase64--">isBase64</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a></code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the secret is Base64 encoded</dd>
+</dl>
+</li>
+</ul>
+<a name="isEnabled--">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>setSecret</h4>
-<pre>public&nbsp;void&nbsp;setSecret(java.lang.String&nbsp;secret)</pre>
+<h4>isEnabled</h4>
+<pre>public&nbsp;boolean&nbsp;isEnabled()</pre>
 <dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>secret</code> - The secret used to sign refresh token values</dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>isEnabled</code>&nbsp;in interface&nbsp;<code>io.micronaut.core.util.Toggleable</code></dd>
 </dl>
 </li>
 </ul>

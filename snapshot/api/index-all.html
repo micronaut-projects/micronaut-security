@@ -139,7 +139,7 @@
 <dd>
 <div class="block">Generates http responses with access and refresh token.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#AccessRefreshTokenGenerator-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.RefreshTokenConfiguration-io.micronaut.security.token.jwt.render.TokenRenderer-io.micronaut.security.token.generator.TokenGenerator-io.micronaut.security.token.generator.RefreshTokenGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator-io.micronaut.context.event.ApplicationEventPublisher-">AccessRefreshTokenGenerator(AccessTokenConfiguration, RefreshTokenConfiguration, TokenRenderer, TokenGenerator, RefreshTokenGenerator, ClaimsGenerator, ApplicationEventPublisher)</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#AccessRefreshTokenGenerator-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.render.TokenRenderer-io.micronaut.security.token.generator.TokenGenerator-io.micronaut.context.BeanContext-io.micronaut.security.token.generator.RefreshTokenGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator-io.micronaut.context.event.ApplicationEventPublisher-">AccessRefreshTokenGenerator(AccessTokenConfiguration, TokenRenderer, TokenGenerator, BeanContext, RefreshTokenGenerator, ClaimsGenerator, ApplicationEventPublisher)</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html" title="class in io.micronaut.security.token.jwt.bearer"><span class="typeNameLink">AccessRefreshTokenLoginHandler</span></a> - Class in <a href="io/micronaut/security/token/jwt/bearer/package-summary.html">io.micronaut.security.token.jwt.bearer</a></dt>
 <dd>
@@ -437,6 +437,8 @@
  against any <a href="io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationProvider</code></a>s available.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html#BasicAuthAuthenticationFetcher-io.micronaut.security.authentication.Authenticator-io.micronaut.security.authentication.BasicAuthAuthenticationConfiguration-">BasicAuthAuthenticationFetcher(Authenticator, BasicAuthAuthenticationConfiguration)</a></span> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationFetcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#beanContext">beanContext</a></span> - Variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/render/BearerAccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render"><span class="typeNameLink">BearerAccessRefreshToken</span></a> - Class in <a href="io/micronaut/security/token/jwt/render/package-summary.html">io.micronaut.security.token.jwt.render</a></dt>
 <dd>
@@ -810,6 +812,10 @@
 <dd>
 <div class="block">Decrypt an encrypted JWT.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#DEFAULT_BASE64">DEFAULT_BASE64</a></span> - Static variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default base64 value.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_COOKIENAME">DEFAULT_COOKIENAME</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default cookie name.</div>
@@ -891,6 +897,10 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_HTTPONLY">DEFAULT_HTTPONLY</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default http only value.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#DEFAULT_JWS_ALGORITHM">DEFAULT_JWS_ALGORITHM</a></span> - Static variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default secure value.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#DEFAULT_KEYTYPE">DEFAULT_KEYTYPE</a></span> - Static variable in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfigurationProperties</a></dt>
 <dd>
@@ -1459,6 +1469,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/claims/JwtIdGenerator.html#generateJtiClaim--">generateJtiClaim()</a></span> - Method in interface io.micronaut.security.token.jwt.generator.claims.<a href="io/micronaut/security/token/jwt/generator/claims/JwtIdGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtIdGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#generateRefreshToken-io.micronaut.security.authentication.UserDetails-">generateRefreshToken(UserDetails)</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></dt>
+<dd>
+<div class="block">Generates a refresh token and emits a <a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><code>RefreshTokenGeneratedEvent</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/generator/TokenGenerator.html#generateToken-io.micronaut.security.authentication.UserDetails-java.lang.Integer-">generateToken(UserDetails, Integer)</a></span> - Method in interface io.micronaut.security.token.generator.<a href="io/micronaut/security/token/generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/generator/TokenGenerator.html#generateToken-java.util.Map-">generateToken(Map&lt;String, Object&gt;)</a></span> - Method in interface io.micronaut.security.token.generator.<a href="io/micronaut/security/token/generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a></dt>
@@ -2093,6 +2107,10 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OpenIdClientConfiguration.html#getJwksUri--">getJwksUri()</a></span> - Method in interface io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getJwkValidator--">getJwkValidator()</a></span> - Method in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html#getJwsAlgorithm--">getJwsAlgorithm()</a></span> - Method in interface io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#getJwsAlgorithm--">getJwsAlgorithm()</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html#getJwsAlgorithm--">getJwsAlgorithm()</a></span> - Method in interface io.micronaut.security.token.jwt.signature.ec.<a href="io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html" title="interface in io.micronaut.security.token.jwt.signature.ec">ECSignatureConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -3277,6 +3295,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OpenIdClaimsValidationConfiguration.html#isAuthorizedParty--">isAuthorizedParty()</a></span> - Method in interface io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OpenIdClaimsValidationConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClaimsValidationConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html#isBase64--">isBase64()</a></span> - Method in interface io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">RefreshTokenConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#isBase64--">isBase64()</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html#isBase64--">isBase64()</a></span> - Method in class io.micronaut.security.token.jwt.signature.secret.<a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html" title="class in io.micronaut.security.token.jwt.signature.secret">SecretSignatureConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#isCookieHttpOnly--">isCookieHttpOnly()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
@@ -4418,15 +4440,13 @@
 <div class="block">A key to be stored in the user details to store the
  refresh token returned by the provider.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#refreshTokenConfiguration">refreshTokenConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><span class="typeNameLink">RefreshTokenConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/jwt/generator/package-summary.html">io.micronaut.security.token.jwt.generator</a></dt>
 <dd>
-<div class="block">Refresh token configuration</div>
+<div class="block">Configuration for the <a href="io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>SignedRefreshTokenGenerator</code></a>.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator"><span class="typeNameLink">RefreshTokenConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/token/jwt/generator/package-summary.html">io.micronaut.security.token.jwt.generator</a></dt>
 <dd>
-<div class="block">Refresh token configuration.</div>
+<div class="block"><code>ConfigurationProperties</code> implementation of <a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><code>RefreshTokenConfiguration</code></a> to configure <a href="io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>SignedRefreshTokenGenerator</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#RefreshTokenConfigurationProperties--">RefreshTokenConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -4897,6 +4917,10 @@
 <dd>
 <div class="block">Sets the base DN to search.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#setBase64-boolean-">setBase64(boolean)</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
+<dd>
+<div class="block">Indicates whether the supplied secret is base64 encoded.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html#setBase64-boolean-">setBase64(boolean)</a></span> - Method in class io.micronaut.security.token.jwt.signature.secret.<a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html" title="class in io.micronaut.security.token.jwt.signature.secret">SecretSignatureConfiguration</a></dt>
 <dd>
 <div class="block">Indicates whether the supplied secret is base64 encoded.</div>
@@ -5127,7 +5151,9 @@
 <div class="block">Sets whether the <a href="io/micronaut/security/token/jwt/endpoints/OauthController.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>OauthController</code></a> is enabled.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Sets whether <a href="io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>SignedRefreshTokenGenerator</code></a> is enabled.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfigurationProperties</a></dt>
 <dd>
 <div class="block">Enable <a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation"><code>HttpHeaderTokenPropagator</code></a>.</div>
@@ -5246,6 +5272,10 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html#setJwksUri-java.lang.String-">setJwksUri(String)</a></span> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties</a></dt>
 <dd>
 <div class="block">The JWKS signature URI.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#setJwsAlgorithm-com.nimbusds.jose.JWSAlgorithm-">setJwsAlgorithm(JWSAlgorithm)</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
+<dd>
+<div class="block"><code>JWSAlgorithm</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html#setJwsAlgorithm-com.nimbusds.jose.JWSAlgorithm-">setJwsAlgorithm(JWSAlgorithm)</a></span> - Method in class io.micronaut.security.token.jwt.signature.secret.<a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html" title="class in io.micronaut.security.token.jwt.signature.secret">SecretSignatureConfiguration</a></dt>
 <dd>
@@ -5629,9 +5659,7 @@
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><span class="typeNameLink">SignedRefreshTokenGenerator</span></a> - Class in <a href="io/micronaut/security/token/jwt/generator/package-summary.html">io.micronaut.security.token.jwt.generator</a></dt>
 <dd>
-<div class="block">The default implementation of <a href="io/micronaut/security/token/generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator"><code>RefreshTokenGenerator</code></a> and <a href="io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator"><code>RefreshTokenValidator</code></a>
- that encrypts the token with a secret key and validates a token can be decrypted with
- the same secret key.</div>
+<div class="block">The default implementation of <a href="io/micronaut/security/token/generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator"><code>RefreshTokenGenerator</code></a> and <a href="io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator"><code>RefreshTokenValidator</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html#SignedRefreshTokenGenerator-io.micronaut.security.token.jwt.generator.RefreshTokenConfiguration-">SignedRefreshTokenGenerator(RefreshTokenConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">SignedRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>

@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6};
+var methods = {"i0":6,"i1":6,"i2":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -109,12 +109,12 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public interface <span class="typeNameLabel">RefreshTokenConfiguration</span>
 extends io.micronaut.core.util.Toggleable</pre>
-<div class="block">Refresh token configuration</div>
+<div class="block">Configuration for the <a href="../../../../../../io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>SignedRefreshTokenGenerator</code></a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0.0</dd>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>James Kleeh</dd>
+<dd>James Kleeh, Sergio del Amo</dd>
 </dl>
 </li>
 </ul>
@@ -135,8 +135,16 @@ extends io.micronaut.core.util.Toggleable</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
+<td class="colFirst"><code>com.nimbusds.jose.JWSAlgorithm</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html#getJwsAlgorithm--">getJwsAlgorithm</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html#getSecret--">getSecret</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html#isBase64--">isBase64</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -160,16 +168,44 @@ extends io.micronaut.core.util.Toggleable</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="getJwsAlgorithm--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getJwsAlgorithm</h4>
+<pre>@NonNull
+com.nimbusds.jose.JWSAlgorithm&nbsp;getJwsAlgorithm()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>JWS Algorithm</dd>
+</dl>
+</li>
+</ul>
 <a name="getSecret--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSecret</h4>
+<pre>@NonNull
+java.lang.String&nbsp;getSecret()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Secret used to sign the refresh token.</dd>
+</dl>
+</li>
+</ul>
+<a name="isBase64--">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getSecret</h4>
-<pre>java.util.Optional&lt;java.lang.String&gt;&nbsp;getSecret()</pre>
+<h4>isBase64</h4>
+<pre>boolean&nbsp;isBase64()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>The optional secret.</dd>
+<dd>true if the secret is Base64 encoded</dd>
 </dl>
 </li>
 </ul>
