@@ -47,7 +47,6 @@ class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-            'micronaut.security.enabled': true,
             'micronaut.security.token.roles-name' : 'customRoles',
         ]
     }

@@ -26,7 +26,6 @@ class JwtCookieSameSiteSpec extends EmbeddedServerSpecification {
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 'micronaut.http.client.followRedirects': false,
-                'micronaut.security.enabled': true,
                 'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.security.endpoints.logout.enabled': true,
                 'micronaut.security.token.jwt.enabled': true,
