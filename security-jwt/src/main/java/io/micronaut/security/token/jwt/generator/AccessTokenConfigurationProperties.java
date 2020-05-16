@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
@@ -36,9 +37,11 @@ public class AccessTokenConfigurationProperties implements AccessTokenConfigurat
     @SuppressWarnings("WeakerAccess")
     public static final Integer DEFAULT_EXPIRATION = 3600;
 
+    @NonNull
     private Integer expiration = DEFAULT_EXPIRATION;
 
     @Override
+    @NonNull
     public Integer getExpiration() {
         return expiration;
     }

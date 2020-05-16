@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * Configuration for access tokens
  *
@@ -27,5 +29,6 @@ public interface AccessTokenConfiguration {
     /**
      * @return The number of seconds until the access token expires
      */
+    @NonNull
     Integer getExpiration();
 }
