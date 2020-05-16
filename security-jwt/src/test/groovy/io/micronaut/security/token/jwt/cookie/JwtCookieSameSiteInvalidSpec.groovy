@@ -15,41 +15,47 @@ import org.reactivestreams.Publisher
 
 import javax.inject.Singleton
 
-class JwtCookieExpirationSpec extends EmbeddedServerSpecification {
+class JwtCookieSameSiteInvalidSpec extends EmbeddedServerSpecification {
 
     @Override
     String getSpecName() {
-        'JwtCookieExpirationSpec'
+        'JwtCookieSameSiteInvalidSpec'
     }
 
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 'micronaut.http.client.followRedirects': false,
+                'micronaut.security.enabled': true,
                 'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.security.endpoints.logout.enabled': true,
+                'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.bearer.enabled': false,
                 'micronaut.security.token.jwt.cookie.enabled': true,
+                'micronaut.security.token.jwt.cookie.cookie-max-age': '5m',
+                'micronaut.security.token.jwt.cookie.cookie-same-site': 'nonesense',
                 'micronaut.security.token.jwt.cookie.login-failure-target-url': '/login/authFailed',
-                'micronaut.security.token.jwt.generator.access-token.expiration': '500',
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
         ]
     }
 
-    void "test max-age is set from jwt generator settings"() {
+    void "test same-site cookie setting cannot have invalid value"() {
+        when:
         HttpRequest loginRequest = HttpRequest.POST('/login', new LoginForm(username: 'sherlock', password: 'password'))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-
         HttpResponse loginRsp = client.exchange(loginRequest, String)
+
+        then:
+        noExceptionThrown()
 
         when:
         String cookie = loginRsp.getHeaders().get('Set-Cookie')
 
         then:
-        cookie.contains('Max-Age=500')
+        cookie.contains('SameSite') == false
     }
 
-    @Requires(property = "spec.name", value = "JwtCookieExpirationSpec")
+    @Requires(property = "spec.name", value = "JwtCookieSameSiteInvalidSpec")
     @Singleton
     static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
 

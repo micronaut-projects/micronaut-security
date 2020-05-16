@@ -15,11 +15,11 @@ import org.reactivestreams.Publisher
 
 import javax.inject.Singleton
 
-class JwtCookieExpirationSpec extends EmbeddedServerSpecification {
+class JwtCookieMaxAgeSpec extends EmbeddedServerSpecification {
 
     @Override
     String getSpecName() {
-        'JwtCookieExpirationSpec'
+        'JwtCookieMaxAgeSpec'
     }
 
     @Override
@@ -30,13 +30,13 @@ class JwtCookieExpirationSpec extends EmbeddedServerSpecification {
                 'micronaut.security.endpoints.logout.enabled': true,
                 'micronaut.security.token.jwt.bearer.enabled': false,
                 'micronaut.security.token.jwt.cookie.enabled': true,
+                'micronaut.security.token.jwt.cookie.cookie-max-age': '5m',
                 'micronaut.security.token.jwt.cookie.login-failure-target-url': '/login/authFailed',
-                'micronaut.security.token.jwt.generator.access-token.expiration': '500',
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
         ]
     }
 
-    void "test max-age is set from jwt generator settings"() {
+    void "test max-age is set from jwt cookie settings"() {
         HttpRequest loginRequest = HttpRequest.POST('/login', new LoginForm(username: 'sherlock', password: 'password'))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 
@@ -46,10 +46,10 @@ class JwtCookieExpirationSpec extends EmbeddedServerSpecification {
         String cookie = loginRsp.getHeaders().get('Set-Cookie')
 
         then:
-        cookie.contains('Max-Age=500')
+        cookie.contains('Max-Age=300')
     }
 
-    @Requires(property = "spec.name", value = "JwtCookieExpirationSpec")
+    @Requires(property = "spec.name", value = "JwtCookieMaxAgeSpec")
     @Singleton
     static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
 
