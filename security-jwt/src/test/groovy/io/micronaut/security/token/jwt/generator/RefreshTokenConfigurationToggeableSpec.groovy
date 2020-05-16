@@ -14,5 +14,6 @@ class RefreshTokenConfigurationToggeableSpec extends ApplicationContextSpecifica
     void "by default no bean of type RefreshTokenConfiguration exists"() {
         expect:
         !applicationContext.containsBean(RefreshTokenConfiguration)
+        !applicationContext.containsBean(SignedRefreshTokenGenerator)
     }
 }
