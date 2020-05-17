@@ -7,12 +7,12 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.oauth2.EmbeddedServerSpecification
 import io.micronaut.security.rules.SecurityRule
 import spock.lang.AutoCleanup
 import spock.lang.Shared
-import spock.lang.Specification
 
-class OpenIdClientFactorySpec extends Specification {
+class OpenIdClientFactorySpec extends EmbeddedServerSpecification {
 
     @Shared
     int authServerPort = SocketUtils.findAvailableTcpPort()
@@ -24,8 +24,9 @@ class OpenIdClientFactorySpec extends Specification {
         ] as Map<String, Object>
     }
 
+    @Override
     Map<String, Object> getConfiguration() {
-        [
+        super.configuration + [
                 'micronaut.security.token.jwt.bearer.enabled': true,
                 'micronaut.security.token.jwt.cookie.enabled': true,
                 'micronaut.security.oauth2.clients.okta.openid.issuer': "http://localhost:${authServerPort}/oauth2/default",
@@ -35,10 +36,6 @@ class OpenIdClientFactorySpec extends Specification {
     @AutoCleanup
     @Shared
     EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, authServerConfiguration)
-
-    @AutoCleanup
-    @Shared
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
     void "starting an app does not call eagerly .well-known/openid-configuration"() {
         when:
