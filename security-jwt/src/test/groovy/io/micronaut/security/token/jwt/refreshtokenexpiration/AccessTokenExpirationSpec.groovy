@@ -1,50 +1,40 @@
 package io.micronaut.security.token.jwt.refreshtokenexpiration
 
-import io.micronaut.context.ApplicationContext
+
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.testutils.EmbeddedServerSpecification
 
-class AccessTokenExpirationSpec extends Specification {
+class AccessTokenExpirationSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    ApplicationContext context = ApplicationContext.run(
-            [
-                    'spec.name': 'refreshtokenexpiration',
-                    'endpoints.beans.enabled': true,
-                    'endpoints.beans.sensitive': true,
-                    'micronaut.security.endpoints.login.enabled': true,
-                    'micronaut.security.token.jwt.generator.access-token.expiration': 5,
-                    'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne'
-            ], Environment.TEST)
+    @Override
+    String getSpecName() {
+        'refreshtokenexpiration'
+    }
 
-    @Shared
-    EmbeddedServer embeddedServer = context.getBean(EmbeddedServer).start()
-
-    @Shared
-    @AutoCleanup
-    HttpClient client = context.createBean(HttpClient, embeddedServer.getURL())
-
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'endpoints.beans.enabled': true,
+                'endpoints.beans.sensitive': true,
+                'micronaut.security.token.jwt.generator.access-token.expiration': 5,
+                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
+                'micronaut.security.endpoints.login.enabled': true,
+        ]
+    }
 
     def "expired access tokens failed validation"() {
         when:
         def creds = new UsernamePasswordCredentials('user', 'password')
-        HttpResponse rsp = client.toBlocking().exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
+        HttpResponse rsp = client.exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
 
         then:
         rsp.status() == HttpStatus.OK
@@ -53,7 +43,7 @@ class AccessTokenExpirationSpec extends Specification {
 
         when: 'sleep six seconds to leave time to the refresh token to expire'
         sleep(6_000)
-        client.toBlocking().exchange(HttpRequest.GET("/secured")
+        client.exchange(HttpRequest.GET("/secured")
                 .bearerAuth(rsp.body().accessToken), String)
 
         then:

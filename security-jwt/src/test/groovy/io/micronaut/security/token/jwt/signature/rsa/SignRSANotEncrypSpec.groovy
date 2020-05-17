@@ -3,43 +3,36 @@ package io.micronaut.security.token.jwt.signature.rsa
 import com.nimbusds.jwt.EncryptedJWT
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.AuthorizationUtils
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.testutils.EmbeddedServerSpecification
 
-class SignRSANotEncrypSpec extends Specification implements AuthorizationUtils {
+class SignRSANotEncrypSpec extends EmbeddedServerSpecification implements AuthorizationUtils {
 
-    @Shared
-    File pemFile = new File('src/test/resources/rsa-2048bit-key-pair.pem')
+    @Override
+    String getSpecName() {
+        'signaturersa'
+    }
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'signaturersa',
-            'endpoints.beans.enabled': true,
-            'endpoints.beans.sensitive': true,
-            'micronaut.security.endpoints.login.enabled': true,
-            'micronaut.security.token.enabled': true,
-            'pem.path': pemFile.absolutePath,
-    ], Environment.TEST)
+    private static final File pemFile = new File('src/test/resources/rsa-2048bit-key-pair.pem')
 
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'endpoints.beans.enabled': true,
+                'endpoints.beans.sensitive': true,
+                'pem.path': pemFile.absolutePath,
+                'micronaut.security.endpoints.login.enabled': true,
+        ]
+    }
 
     void "test /beans is secured"() {
         when:

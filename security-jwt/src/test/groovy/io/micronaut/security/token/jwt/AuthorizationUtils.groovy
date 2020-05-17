@@ -3,27 +3,27 @@ package io.micronaut.security.token.jwt
 import groovy.transform.CompileStatic
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 
 @CompileStatic
 trait AuthorizationUtils {
 
-    abstract RxHttpClient getClient()
+    abstract BlockingHttpClient getClient()
 
-    String loginWith(RxHttpClient client, String username = "valid", String password = "valid") {
+    String loginWith(BlockingHttpClient client, String username = "valid", String password = "valid") {
         def creds = new UsernamePasswordCredentials(username, password)
-        def resp = client.toBlocking().exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
+        def resp = client.exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
         resp.body().accessToken
     }
 
-    HttpResponse get(RxHttpClient client, String path, String token = null, String prefix = 'Bearer') {
+    HttpResponse get(BlockingHttpClient client, String path, String token = null, String prefix = 'Bearer') {
         HttpRequest req = HttpRequest.GET(path)
         if (token != null) {
             req = req.header("Authorization", "${prefix} ${token}".toString())
         }
-        client.toBlocking().exchange(req, String)
+        client.exchange(req, String)
     }
 
     String loginWith(String username = "valid") {

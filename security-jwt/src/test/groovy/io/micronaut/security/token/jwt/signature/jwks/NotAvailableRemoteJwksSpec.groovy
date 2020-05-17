@@ -49,13 +49,10 @@ import spock.util.concurrent.PollingConditions
 import javax.inject.Named
 import javax.inject.Singleton
 import java.security.Principal
-import java.security.PublicKey
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
 class NotAvailableRemoteJwksSpec extends Specification {
-
-    private static final Logger LOG = LoggerFactory.getLogger(NotAvailableRemoteJwksSpec.class)
 
     @Retry
     void "start an app, validation fails if remote jwks down. If the jwks endpoint goes live validation works"() {

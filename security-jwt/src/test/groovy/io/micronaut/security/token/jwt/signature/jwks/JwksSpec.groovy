@@ -69,9 +69,6 @@ class JwksSpec extends Specification {
     @Shared
     RxHttpClient gatewayClient
 
-    def setupSpec() {
-    }
-
     def "setup gateway server"() {
         given:
         Map gatewayConfig = [

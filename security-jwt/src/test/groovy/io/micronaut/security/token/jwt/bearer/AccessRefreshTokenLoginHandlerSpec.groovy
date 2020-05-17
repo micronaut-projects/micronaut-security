@@ -67,27 +67,6 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
         "accountLocked"   | "valid"   | "Account Locked"
     }
 
-    void "test valid authentication"() {
-        when:
-        def creds = new UsernamePasswordCredentials("valid", "valid")
-        def resp = client.exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
-
-        then:
-        resp.status == HttpStatus.OK
-        resp.body().accessToken
-        !resp.body().refreshToken
-        resp.body().username == "valid"
-        resp.body().roles == ["foo", "bar"]
-        resp.body().expiresIn
-
-        when: 'validate json response contains access_token and refresh_token keys as described in RFC6759'
-        String json = client.retrieve(HttpRequest.POST('/login', creds), String)
-
-        then:
-        json.contains('access_token')
-        !json.contains('refresh_token')
-    }
-
     @Singleton
     @Requires(property = 'spec.name', value = 'AccessRefreshTokenLoginHandlerSpec')
     static class TestingAuthenticationProvider implements AuthenticationProvider {

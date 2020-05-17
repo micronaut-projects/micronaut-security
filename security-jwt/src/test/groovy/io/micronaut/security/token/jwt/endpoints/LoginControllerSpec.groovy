@@ -1,6 +1,5 @@
 package io.micronaut.security.token.jwt.endpoints
 
-
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.http.HttpRequest
