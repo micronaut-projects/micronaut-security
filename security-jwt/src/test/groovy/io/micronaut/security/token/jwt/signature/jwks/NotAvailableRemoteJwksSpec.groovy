@@ -25,6 +25,7 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
@@ -37,6 +38,7 @@ import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import io.micronaut.security.token.views.UserDetailsEmail
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
@@ -201,7 +203,10 @@ class NotAvailableRemoteJwksSpec extends Specification {
     static class MockAuthenticationProvider implements AuthenticationProvider {
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
+            Flowable.create({emitter ->
+                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.onComplete()
+            }, BackpressureStrategy.ERROR)
         }
     }
 

@@ -37,6 +37,7 @@ import io.micronaut.security.token.jwt.endpoints.KeysController
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.reactivestreams.Publisher
@@ -316,7 +317,10 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerAAuthenticationProvider implements AuthenticationProvider {
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
+            Flowable.create({ emitter ->
+                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.onComplete()
+            }, BackpressureStrategy.ERROR)
         }
     }
     @Requires(property = 'spec.name', value = 'AuthServerBJwksUriSignatureSpec')
@@ -324,7 +328,10 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerBAuthenticationProvider implements AuthenticationProvider {
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
+            Flowable.create( {emitter ->
+                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.onComplete()
+            }, BackpressureStrategy.ERROR)
         }
     }
 

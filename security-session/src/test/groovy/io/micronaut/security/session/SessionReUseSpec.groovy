@@ -21,6 +21,7 @@ import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.filters.SecurityFilter
 import io.micronaut.session.Session
 import io.micronaut.session.SessionStore
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
@@ -108,12 +109,17 @@ class SessionReUseSpec extends EmbeddedServerSpecification {
     static class AuthenticationProviderUserPassword implements AuthenticationProvider  { // <2>
         @Override
         public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            if ( authenticationRequest.getIdentity().equals("sherlock") &&
-                    authenticationRequest.getSecret().equals("password") ) {
-                UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>());
-                return Flowable.just(userDetails);
-            }
-            return Flowable.just(new AuthenticationFailed());
+            return Flowable.create({ emitter ->
+                if ( authenticationRequest.getIdentity().equals("sherlock") &&
+                        authenticationRequest.getSecret().equals("password") ) {
+                    UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>());
+                    emitter.onNext(userDetails);
+                    emitter.onComplete();
+                } else {
+                    emitter.onNext(new AuthenticationFailed());
+                    emitter.onComplete();
+                }
+            }, BackpressureStrategy.ERROR);
         }
     }
 }

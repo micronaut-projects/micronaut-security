@@ -34,6 +34,7 @@ import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.testutils.EmbeddedServerSpecification
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
@@ -272,10 +273,15 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                return Flowable.just(new UserDetails('user', []))
-            }
-            return Flowable.just(new AuthenticationFailed())
+            Flowable.create({emitter ->
+                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onComplete()
+                } else {
+                    emitter.onNext(new AuthenticationFailed())
+                    emitter.onComplete()
+                }
+            }, BackpressureStrategy.ERROR)
         }
     }
 

@@ -7,6 +7,7 @@ import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
@@ -20,16 +21,23 @@ public class SampleAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        if (authenticationRequest.getIdentity() == null) {
-            return Flowable.just(new AuthenticationFailed());
-        }
-        if (authenticationRequest.getSecret() == null) {
-            return Flowable.just(new AuthenticationFailed());
-        }
-        if (Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString()) &&
-                authenticationRequest.getSecret().equals("elementary")) {
-            return Flowable.just(new UserDetails(authenticationRequest.getIdentity().toString(), new ArrayList<>()));
-        }
-        return Flowable.just(new AuthenticationFailed());
+        return Flowable.create(emitter -> {
+            if (authenticationRequest.getIdentity() == null) {
+                emitter.onNext(new AuthenticationFailed());
+                emitter.onComplete();
+            } else if (authenticationRequest.getSecret() == null) {
+                emitter.onNext(new AuthenticationFailed());
+                emitter.onComplete();
+            } else if (Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString()) &&
+                    authenticationRequest.getSecret().equals("elementary")) {
+                emitter.onNext(new UserDetails(authenticationRequest.getIdentity().toString(), new ArrayList<>()));
+                emitter.onComplete();
+            } else {
+                emitter.onNext(new AuthenticationFailed());
+                emitter.onComplete();
+            }
+        },BackpressureStrategy.ERROR);
+
+
     }
 }

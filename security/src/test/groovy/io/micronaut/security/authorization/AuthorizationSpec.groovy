@@ -21,6 +21,7 @@ import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.PrincipalArgumentBinder
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.reactivestreams.Publisher
@@ -339,28 +340,30 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            String username = authenticationRequest.getIdentity().toString()
-            switch (username) {
-                case "disabled":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED))
-                    break
-                case "accountExpired":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED))
-                    break
-                case "passwordExpired":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED))
-                    break
-                case "accountLocked":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED))
-                    break
-                case "invalidPassword":
-                    Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
-                    break
-                case "notFound":
-                    return Flowable.empty()
-                    break
-            }
-            return Flowable.just(new UserDetails(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"]));
+            Flowable.create({ emitter ->
+                String username = authenticationRequest.getIdentity().toString()
+                if (username == "disabled") {
+                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED))
+                    emitter.onComplete()
+                } else if (username == "accountExpired") {
+                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED))
+                    emitter.onComplete()
+                } else if (username == "passwordExpired") {
+                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED))
+                    emitter.onComplete()
+                } else if (username == "accountLocked") {
+                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED))
+                    emitter.onComplete()
+                } else if (username == "invalidPassword") {
+                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
+                    emitter.onComplete()
+                } else if (username == "notFound") {
+                    emitter.onComplete()
+                } else {
+                    emitter.onNext(new UserDetails(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"]));
+                    emitter.onComplete()
+                }
+            }, BackpressureStrategy.ERROR)
         }
     }
 

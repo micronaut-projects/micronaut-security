@@ -30,6 +30,7 @@ import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
@@ -174,10 +175,15 @@ class JwksSpec extends Specification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                return Flowable.just(new UserDetails('user', []))
-            }
-            return Flowable.just(new AuthenticationFailed())
+            Flowable.create({emitter ->
+                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onComplete()
+                } else {
+                    emitter.onNext(new AuthenticationFailed())
+                    emitter.onComplete()
+                }
+            }, BackpressureStrategy.ERROR)
         }
     }
 

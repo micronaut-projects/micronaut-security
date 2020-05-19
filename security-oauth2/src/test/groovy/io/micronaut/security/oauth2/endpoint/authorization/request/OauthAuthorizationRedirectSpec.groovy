@@ -17,6 +17,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
@@ -82,7 +83,10 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
-            Flowable.just(new UserDetails("twitterUser", Collections.emptyList()))
+            Flowable.create({ emitter ->
+                emitter.onNext(new UserDetails("twitterUser", Collections.emptyList()))
+                emitter.onComplete()
+            }, BackpressureStrategy.ERROR)
         }
     }
 }

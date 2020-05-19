@@ -23,6 +23,7 @@ import io.micronaut.security.token.jwt.bearer.BearerTokenReader
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.testutils.GebEmbeddedServerSpecification
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
@@ -185,11 +186,16 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            if ( authenticationRequest.getIdentity().equals("sherlock") &&
-                    authenticationRequest.getSecret().equals("password") ) {
-                return Flowable.just(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
-            }
-            return Flowable.just(new AuthenticationFailed())
+            Flowable.create({emitter ->
+                if ( authenticationRequest.getIdentity().equals("sherlock") &&
+                        authenticationRequest.getSecret().equals("password") ) {
+                    emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
+                    emitter.onComplete()
+                } else {
+                    emitter.onNext(new AuthenticationFailed())
+                    emitter.onComplete()
+                }
+            }, BackpressureStrategy.ERROR)
         }
     }
 

@@ -21,6 +21,7 @@ import io.micronaut.security.event.LoginSuccessfulEvent
 import io.micronaut.security.event.LogoutEvent
 import io.micronaut.security.event.TokenValidatedEvent
 import io.micronaut.security.handlers.LoginHandler
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.util.concurrent.PollingConditions
@@ -142,14 +143,15 @@ class EventListenerSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            System.out.println(authenticationRequest.identity)
-            System.out.println(authenticationRequest.secret)
-            if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                System.out.println("returning a new user details")
-                return Flowable.just(new UserDetails('user', []))
-            }
-            System.out.println("returning authentication failed")
-            return Flowable.just(new AuthenticationFailed())
+            Flowable.create({emitter ->
+                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onComplete()
+                } else {
+                    emitter.onNext(new AuthenticationFailed())
+                    emitter.onComplete()
+                }
+            }, BackpressureStrategy.ERROR)
         }
     }
 

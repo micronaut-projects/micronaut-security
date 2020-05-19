@@ -13,9 +13,9 @@ import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.testutils.EmbeddedServerSpecification
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
@@ -73,31 +73,43 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            String username = authenticationRequest.getIdentity().toString()
-            switch (username) {
-                case "disabled":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED))
-                    break
-                case "accountExpired":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED))
-                    break
-                case "passwordExpired":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED))
-                    break
-                case "accountLocked":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED))
-                    break
-                case "invalidPassword":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
-                    break
-                case "notFound":
-                    return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND))
-                    break
-            }
-            if (authenticationRequest.getSecret().toString() == "invalid") {
-                return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
-            }
-            return Flowable.just(new UserDetails(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"]));
+
+            return Flowable.create({ emitter ->
+                String username = authenticationRequest.getIdentity().toString()
+                switch (username) {
+                    case "disabled":
+                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED))
+                        emitter.onComplete()
+                        break
+                    case "accountExpired":
+                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED))
+                        emitter.onComplete()
+                        break
+                    case "passwordExpired":
+                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED))
+                        emitter.onComplete()
+                        break
+                    case "accountLocked":
+                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED))
+                        emitter.onComplete()
+                        break
+                    case "invalidPassword":
+                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
+                        emitter.onComplete()
+                        break
+                    case "notFound":
+                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND))
+                        emitter.onComplete()
+                        break
+                }
+                if (authenticationRequest.getSecret().toString() == "invalid") {
+                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
+                    emitter.onComplete()
+                } else {
+                    emitter.onNext(new UserDetails(username, (username == "admin") ? ["ROLE_ADMIN"] : ["foo", "bar"]))
+                    emitter.onComplete()
+                }
+            }, BackpressureStrategy.ERROR)
         }
     }
 }
