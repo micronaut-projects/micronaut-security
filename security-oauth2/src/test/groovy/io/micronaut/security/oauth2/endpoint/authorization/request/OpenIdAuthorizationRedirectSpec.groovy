@@ -21,11 +21,13 @@ import io.micronaut.security.oauth2.routes.OauthController
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
+import spock.lang.IgnoreIf
 
 import javax.inject.Named
 import javax.inject.Singleton
 import java.nio.charset.StandardCharsets
 
+@IgnoreIf({ sys['testcontainers'] == false })
 class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
     @Override

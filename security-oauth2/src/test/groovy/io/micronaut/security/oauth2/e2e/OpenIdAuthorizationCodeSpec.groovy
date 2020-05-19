@@ -2,7 +2,9 @@ package io.micronaut.security.oauth2.e2e
 
 import io.micronaut.security.oauth2.GebEmbeddedServerSpecification
 import io.micronaut.security.oauth2.Keycloak
+import spock.lang.IgnoreIf
 
+@IgnoreIf({ sys['testcontainers'] == false })
 class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
 
     @Override

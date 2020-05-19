@@ -13,9 +13,11 @@ import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.routes.OauthController
+import spock.lang.IgnoreIf
 
 import java.nio.charset.StandardCharsets
 
+@IgnoreIf({ sys['testcontainers'] == false })
 class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecification {
 
     @Override
