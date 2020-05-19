@@ -1,30 +1,23 @@
 package io.micronaut.security.token.jwt.endpoints
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.testutils.ApplicationContextSpecification
 import spock.lang.Unroll
 
-class OauthControllerEnabledSpec extends Specification {
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name'                 : OauthControllerEnabledSpec.simpleName,
-            'micronaut.security.endpoints.oauth.enabled': false,
-
-    ], Environment.TEST)
+class OauthControllerEnabledSpec extends ApplicationContextSpecification {
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + ['micronaut.security.endpoints.oauth.enabled': false,]
+    }
 
     @Unroll("if micronaut.security.endpoints.oauth.enabled=false bean [#description] is not loaded")
     void "if micronaut.security.endpoints.oauth.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
-        embeddedServer.applicationContext.getBean(clazz)
+        applicationContext.getBean(clazz)
 
         then:
-        def e = thrown(NoSuchBeanException)
+        NoSuchBeanException e = thrown()
         e.message.contains('No bean of type ['+clazz.name+'] exists.')
 
         where:
