@@ -26,7 +26,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(OauthControllerConfigurationProperties.PREFIX)
 public class OauthControllerConfigurationProperties implements OauthControllerConfiguration {
 
@@ -36,7 +36,7 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
 
     /**
      * The default path.

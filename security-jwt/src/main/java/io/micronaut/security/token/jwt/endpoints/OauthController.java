@@ -46,7 +46,8 @@ import java.util.Optional;
  * @author Graeme Rocher
  * @since 1.0
  */
-@Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(beans = AccessRefreshTokenGenerator.class)
 @Requires(beans = RefreshTokenPersistence.class)
 @Requires(beans = RefreshTokenValidator.class)
 @Controller("${" + OauthControllerConfigurationProperties.PREFIX + ".path:/oauth/access_token}")

@@ -28,7 +28,9 @@ The api:security.token.refresh.RefreshTokenPersistence[] implementation will rec
 
 ### Refreshing the Token
 
-Micronaut security comes with a controller to allow for the refresh of access tokens. The api:security.token.jwt.endpoints.OauthController[controller] can be enabled with a configuration property.
+Micronaut security comes with a controller to allow for the refresh of access tokens. The context loads the api:security.token.jwt.endpoints.OauthController[OauthController] if your context contains beans of type: api:io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator[], api:security.token.refresh.RefreshTokenPersistence[], api:security.token.validator.RefreshTokenValidator[]
+
+Moreover, the controller can be configured with:
 
 include::{includedir}configurationProperties/io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties.adoc[]
 
