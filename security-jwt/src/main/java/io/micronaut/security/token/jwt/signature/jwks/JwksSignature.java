@@ -225,7 +225,6 @@ public class JwksSignature implements SignatureConfiguration {
         return DEFAULT_REFRESH_JWKS_ATTEMPTS;
     }
     
-    
     /**
      *
      * @return A JSON Web Key Validator.

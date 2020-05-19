@@ -54,8 +54,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
     public String getHeaderName() {
         return headerName;
     }
-
-
+    
     /**
      * Set whether to enable bearer token authentication. Default value {@value #DEFAULT_ENABLED}.
      *

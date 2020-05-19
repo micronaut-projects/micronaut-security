@@ -106,7 +106,6 @@ public class LdapConfiguration implements Toggleable {
         this.search = searchConfiguration;
     }
 
-
     /**
      * @return The group configuration
      */

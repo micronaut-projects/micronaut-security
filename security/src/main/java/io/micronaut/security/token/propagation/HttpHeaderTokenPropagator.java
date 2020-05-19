@@ -65,7 +65,6 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
         return authorizationHeader.flatMap(this::extractTokenFromAuthorization);
     }
 
-
     /**
      * @param token the token being written
      * @return the value which will be written to an HTTP Header

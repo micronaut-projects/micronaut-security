@@ -36,7 +36,6 @@ public class OauthErrorResponseException extends RuntimeException implements Err
     @Nullable
     private String errorUri;
 
-
     /**
      *
      * @param errorCode the error code
