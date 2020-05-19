@@ -37,9 +37,12 @@ class WebSocketsHomePage extends Page {
 
     List<String> filterMessagesByType(String type) {
         messagesList.findAll {
-            it.text().contains(type)
+            it.text().contains(type) || it.text().contains(type.toUpperCase())  || it.text().contains(type.toLowerCase())
         }.collect {
-            it.text().replaceAll(type, '')
+            String text = it.text().replaceAll(type, '')
+            text = text.replaceAll(type.toUpperCase(), '')
+            text = text.replaceAll(type.toLowerCase(), '')
+            text
         }
     }
 
