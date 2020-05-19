@@ -1,28 +1,13 @@
 package io.micronaut.security.token.jwt.endpoints
 
-import io.micronaut.context.ApplicationContext
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.client.BlockingHttpClient
-import io.micronaut.http.client.RxHttpClient
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.testutils.EmbeddedServerSpecification
 
-class KeysControllersWithNoJWKSpec extends Specification {
+class KeysControllersWithNoJWKSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'micronaut.security.endpoints.keys.enabled': true
-    ])
-
-    @Shared
-    @AutoCleanup
-    RxHttpClient httpClient = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
-
-    BlockingHttpClient getClient() {
-        httpClient.toBlocking()
+    @Override
+    Map<String, Object> getConfiguration() {
+        ['micronaut.security.endpoints.keys.enabled': true]
     }
 
     void "keys JSON Object MUST have a keys member"() {
