@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>7 Token Propagation 2.0.0.BUILD-SNAPSHOT</title>
+    <title>7 Token Propagation 1.3.3.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -50,7 +50,7 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
@@ -69,9 +69,6 @@ function addJsClass() {
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
-                        </div>
-                        
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
                         </div>
                         
                     </div>
@@ -105,7 +102,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>7 Token Propagation</h1>
 
-                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.3.3.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -141,18 +138,21 @@ that token to other requests in your network.</p>
     application:
         name: gateway
     security:
+        enabled: true
         token:
             jwt:
+                enabled: true
                 signatures:
                     secret:
                         generator:
                             secret: "pleaseChangeThisSecretForANewOne"
                             jws-algorithm: HS256
-            propagation:
+            writer:
                 header:
                     enabled: true
                     headerName: "Authorization"
                     prefix: "Bearer "
+            propagation:
                 enabled: true
                 service-id-regex: "http://localhost:(8083|8081|8082)"</code></pre>
 </div>
@@ -177,7 +177,7 @@ will propagate the security token seamlessly.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="https://guides.micronaut.io/micronaut-token-propagation/guide/index.html">Token Propagation tutorial</a> to learn more.
+Read the <a href="http://guides.micronaut.io/micronaut-token-propagation/guide/index.html">Token Propagation tutorial</a> to learn more.
 </td>
 </tr>
 </table>
