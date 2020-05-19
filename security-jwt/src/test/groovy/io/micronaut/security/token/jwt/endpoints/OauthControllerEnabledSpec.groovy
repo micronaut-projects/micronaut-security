@@ -11,7 +11,7 @@ class OauthControllerEnabledSpec extends ApplicationContextSpecification {
         super.configuration + ['micronaut.security.endpoints.oauth.enabled': false,]
     }
 
-    @Unroll("if micronaut.security.endpoints.oauth.enabled=false bean [#description] is not loaded")
+    @Unroll("bean #description is not loaded if micronaut.security.endpoints.oauth.enabled=false")
     void "if micronaut.security.endpoints.oauth.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
         applicationContext.getBean(clazz)
@@ -23,10 +23,11 @@ class OauthControllerEnabledSpec extends ApplicationContextSpecification {
         where:
         clazz << [
                 OauthController,
+                OauthControllerConfiguration,
                 OauthControllerConfigurationProperties,
         ]
 
-        description = clazz.name
+        description = clazz.simpleName
     }
 
 }
