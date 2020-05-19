@@ -7,7 +7,7 @@ This section will document breaking changes that may happen during milestone or 
 * The story around refresh tokens has been changed. There were a couple of core issues with the old implementation that needed resolved.
 +
 ** The refresh tokens were JWT tokens which also allowed them to be used to access resources.
-** Because they never expire (by default), it requires a list of invalid tokens to be maintained in perpetuity if the ability to revoke tokens is a requirement.
+** Because they never expire (by default), it requires a list of invalid tokens to be maintained in perpetuity if the ability to revoke tokens is a requirement. `JwtGeneratorConfiguration#getRefreshTokenExpiration` is deprecated and it is no longer used.
 ** The refresh mechanism simply copied the claims from the refresh token JWT back into a new access token. This made any changes to the state of the user (new roles, etc) not be applied at the time of refresh.
 +
 The functionality has now been changed to generate a token that is not a JWT, but is instead a signed token of a unique key. The default implementation signs a UUID with a secret provided via configuration. After the token is generated, it is up to each application to provide an implementation of api:security.token.refresh.RefreshTokenPersistence[] to store the token and link it to the user it was created for. That is essential to generate new claims information in new access tokens created by the refresh endpoint. See the <<refresh, refresh section>> for more information.
@@ -19,6 +19,7 @@ The functionality has now been changed to generate a token that is not a JWT, bu
 * The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications.
 
 * Modules are now enabled by default. The configuration keys `micronaut.security.enabled`, `micronaut.security.token.jwt.enabled`, `micronaut.security.oauth2.enabled`, and `micronaut.security.session.enabled` are now all `true` by default.
+
 === Endpoints enabled by default
 
 * You don't need to enable Endpoints. The configuration keys `micronaut.security.endpoints.keys.enabled` are now all `true` by default. However, You will need to provide the required beans for each endpoint.
@@ -36,8 +37,10 @@ The functionality has now been changed to generate a token that is not a JWT, bu
 
 * Basic authentication configuration has moved from `micronaut.security.token.basic-auth` to `micronaut.security.basic-auth`. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a `TokenValidatedEvent` was triggered as a result of basic authentication, however that is no longer the case.
 
-* `JwtGeneratorConfiguration` has been replaced with api:security.token.jwt.generator.AccessTokenConfiguration[] and api:security.token.jwt.generator.RefreshTokenConfiguration[]. The configuration has been changed from `micronaut.security.token.jwt.generator.access-token-expiration` to `micronaut.security.token.jwt.generator.access-token.expiration`. The same applies to `refresh-token-expiration`.
-
 * The SecurityFilterOrderProvider API has been deleted in favor of the standard ServerFilterPhase class. The security filter will now run on the order defined by the SECURITY phase.
 
 * The io.micronaut.security.token.jwt.signature.secret.SecretSignatureFactory was deleted because the beans can be created directly from the SecretSignature class.
+
+=== Deprecated
+
+* `JwtGeneratorConfiguration` has been deprecated in favor of api:security.token.jwt.generator.AccessTokenConfiguration[]. The configuration has been changed from `micronaut.security.token.jwt.generator.access-token-expiration` to `micronaut.security.token.jwt.generator.access-token.expiration`.
