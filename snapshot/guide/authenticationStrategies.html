@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>5 Authentication Strategies 1.3.3.BUILD-SNAPSHOT</title>
+    <title>5 Authorization Strategies 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -50,7 +50,7 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
@@ -69,6 +69,9 @@ function addJsClass() {
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
                         </div>
                         
                     </div>
@@ -100,19 +103,19 @@ function addJsClass() {
 
 
                 <div class="project">
-                    <h1>5 Authentication Strategies</h1>
+                    <h1>5 Authorization Strategies</h1>
 
-                    <p><strong>Version:</strong> 1.3.3.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
                 <div id="table-of-content">
                     <h2>Table of Contents</h2>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#basicAuth"><strong>5.1</strong><span>Basic Auth</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#basicAuth"><strong>5.1</strong><span>Basic Authentication</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#session"><strong>5.2</strong><span>Session Authentication</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#session"><strong>5.2</strong><span>Session Authorization</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0px"><a href="#jwt"><strong>5.3</strong><span>JSON Web Token</span></a>
@@ -157,11 +160,14 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:10px"><a href="#extending"><strong>5.4.2</strong><span>Extending Default Behavior</span></a>
                     </div>
                     
+                    <div class="toc-item" style="margin-left:0px"><a href="#custom"><strong>5.5</strong><span>Custom Authorization Strategies</span></a>
+                    </div>
+                    
                 </div>
                 
 
                 
-<h1 id="authenticationStrategies"><a class="anchor" href="#authenticationStrategies"></a>5 Authentication Strategies</h1>
+<h1 id="authenticationStrategies"><a class="anchor" href="#authenticationStrategies"></a>5 Authorization Strategies</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies.adoc"'>
@@ -172,7 +178,7 @@ function addJsClass() {
 
 
 
-<h2 id="basicAuth"><a class="anchor" href="#basicAuth"></a>5.1 Basic Auth</h2>
+<h2 id="basicAuth"><a class="anchor" href="#basicAuth"></a>5.1 Basic Authentication</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/basicAuth.adoc"'>
@@ -182,17 +188,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64.</p>
-</div>
-<div class="paragraph">
-<p>Once you enable Micronaut security, Basic Auth is enabled by default.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-  security:
-    enabled: true</code></pre>
-</div>
+<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default.</p>
 </div>
 <div class="paragraph">
 <p>The following sequence illustrates the authentication flow:</p>
@@ -225,42 +221,6 @@ which attempts to validate them.</p>
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">HttpRequest request = HttpRequest.GET("/home").basicAuth('sherlock', 'password')</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The following configuration properties are available to customize basic authentication behaviour:</p>
-</div>
-<a id="io.micronaut.security.token.basicauth.BasicAuthTokenReaderConfigurationProperties" href="#io.micronaut.security.token.basicauth.BasicAuthTokenReaderConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/basicauth/BasicAuthTokenReaderConfigurationProperties.html">BasicAuthTokenReaderConfigurationProperties</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.basic-auth.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/token/basicauth/BasicAuthTokenReader.html">BasicAuthTokenReader</a>. Default value true.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.basic-auth.header-name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Http Header name. Default value {@value io.micronaut.http.HttpHeaders#AUTHORIZATION}.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.basic-auth.prefix</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Http Header value prefix. Default value {@value io.micronaut.http.HttpHeaderValues#AUTHORIZATION_PREFIX_BASIC}.</p></td>
-</tr>
-</tbody>
-</table>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -268,13 +228,13 @@ which attempts to validate them.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-security-basicauth/guide/index.html">Basic Authentication Micronaut Guide</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-security-basicauth/guide/index.html">Basic Authentication Micronaut Guide</a> to learn more.
 </td>
 </tr>
 </table>
 </div>
 
-<h2 id="session"><a class="anchor" href="#session"></a>5.2 Session Authentication</h2>
+<h2 id="session"><a class="anchor" href="#session"></a>5.2 Session Authorization</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/session.adoc"'>
@@ -312,7 +272,9 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-basicauth/guide/
 <div class="listingblock">
 <div class="title">build.gradle</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">annotationProcessor "io.micronaut:micronaut-security"
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">//Only required to use JSR 250 annotations
+annotationProcessor "io.micronaut:micronaut-security-annotations"
+
 compile "io.micronaut:micronaut-security-session"</code></pre>
 </div>
 </div>
@@ -361,22 +323,23 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.unauthorized-target-url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the unauthorized target URL.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the unauthorized target URL. Default value ("/").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.forbidden-target-url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the forbidden target URL.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the forbidden target URL. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.redirect-on-rejection</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether a redirect should occur on an authorization failure.
+ Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the session config is enabled. Default value (false).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.legacy-rejection-handler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Decides whether the deprecated {@link SessionSecurityFilterOrderProvider} is loaded, instead of the new <a href="../api/io/micronaut/security/handlers/RedirectRejectionHandler.html">RedirectRejectionHandler</a>. Defaults to (true).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the session config is enabled. Default value (true).</p></td>
 </tr>
 </tbody>
 </table>
@@ -387,14 +350,12 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     endpoints:
       login:
         enabled: true
       logout:
         enabled: true
     session:
-      enabled: true
       login-failure-target-url: /login/authFailed</code></pre>
 </div>
 </div>
@@ -405,7 +366,7 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-security-session/guide/index.html">Session-Based Authentication Micronaut Guide</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-security-session/guide/index.html">Session-Based Authentication Micronaut Guide</a> to learn more.
 </td>
 </tr>
 </table>
@@ -483,7 +444,9 @@ JWT is an <a href="https://tools.ietf.org/html/rfc7519">IETF standard</a> which 
 <div class="listingblock">
 <div class="title">build.gradle</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">annotationProcessor "io.micronaut:micronaut-security"
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">//Only required to use JSR 250 annotations
+annotationProcessor "io.micronaut:micronaut-security-annotations"
+
 compile "io.micronaut:micronaut-security-jwt"</code></pre>
 </div>
 </div>
@@ -509,7 +472,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value (false).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value (true).</p></td>
 </tr>
 </tbody>
 </table>
@@ -658,7 +621,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0MjI5OTU5MjIsInN1YiI6Imppb
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Check out the <a href="http://guides.micronaut.io/micronaut-security-jwt/guide/index.html">Micronaut JWT Authentication guide</a> for a tutorial on Micronaut&#8217;s JWT support.
+Check out the <a href="https://guides.micronaut.io/micronaut-security-jwt/guide/index.html">Micronaut JWT Authentication guide</a> for a tutorial on Micronaut&#8217;s JWT support.
 </td>
 </tr>
 </table>
@@ -769,7 +732,7 @@ Check out the <a href="http://guides.micronaut.io/micronaut-security-jwt/guide/i
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide/index.html">Micronaut JWT Authentication with Cookies</a> to learn more.
+Read the <a href="https://guides.micronaut.io/micronaut-security-jwt-cookie/guide/index.html">Micronaut JWT Authentication with Cookies</a> to learn more.
 </td>
 </tr>
 </table>
@@ -790,9 +753,9 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 <div class="paragraph">
 <p>The following configuration options are available:</p>
 </div>
-<a id="io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html">JwtGeneratorConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html">AccessTokenConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -807,12 +770,7 @@ Read the <a href="http://guides.micronaut.io/micronaut-security-jwt-cookie/guide
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token-expiration</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Refresh token expiration. By default refresh tokens, do not expire.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token.expiration</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value (3600).</p></td>
 </tr>
@@ -850,10 +808,8 @@ qualified with name <code>generator</code>.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           secret:
             generator:
@@ -880,10 +836,8 @@ qualified with name <code>generator</code>.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           secret:
             generator:
@@ -962,10 +916,8 @@ class MySignatureGeneratorConfigurationFactory {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           secret:
             generator:
@@ -1133,10 +1085,8 @@ participate as signature configurations in the JWT validation.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           jwks:
             awscognito:
@@ -1202,7 +1152,7 @@ fulfil your needs you can provide your own <a href="#replaces">replacement</a> o
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
-    public Publisher&lt;AuthenticationResponse&gt; authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
         return Flowable.just(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
     }
 }</code></pre>
@@ -1298,7 +1248,7 @@ Pragma: no-cache
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="http://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html#securityLdap">LDAP and Database authentication providers</a> to see an example.
+Read the <a href="https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html#securityLdap">LDAP and Database authentication providers</a> to see an example.
 </td>
 </tr>
 </table>
@@ -1610,6 +1560,71 @@ public class MyContextBuilder implements ContextBuilder {
 }</code></pre>
 </div>
 </div>
+</div>
+</div>
+
+<h2 id="custom"><a class="anchor" href="#custom"></a>5.5 Custom Authorization Strategies</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/custom.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>All authorization strategies implement the <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> interface. The contract is designed to return an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> object from the request. To implement custom logic to retrieve the currently logged in user, simply create a bean that implements the contract and it will be picked up automatically.</p>
+</div>
+<div class="paragraph">
+<p>For example to retrieve information from an X509 certificate:</p>
+</div>
+<div class="listingblock">
+<div class="title">X509 Authentication Fetcher</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.filters.AuthenticationFetcher;
+import io.reactivex.Maybe;
+import org.reactivestreams.Publisher;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.inject.Singleton;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+@Singleton
+public class X509AuthenticationFetcher implements AuthenticationFetcher {
+
+    @Override
+    public Publisher&lt;Authentication&gt; fetchAuthentication(HttpRequest&lt;?&gt; request) {
+        return Maybe.&lt;Authentication&gt;create(emitter -&gt; {
+            Optional&lt;Certificate&gt; optionalCertificate = request.getCertificate();
+            if (optionalCertificate.isPresent()) {
+                Certificate certificate = optionalCertificate.get();
+                if (certificate instanceof X509Certificate) {
+                    emitter.onSuccess(new Authentication() {
+                        X509Certificate x509Certificate = ((X509Certificate) certificate);
+                        @Override
+                        public String getName() {
+                            return x509Certificate.getIssuerX500Principal().getName();
+                        }
+
+                        @NonNull
+                        @Override
+                        public Map&lt;String, Object&gt; getAttributes() {
+                            return Collections.emptyMap();
+                        }
+                    });
+                    return;
+                }
+            }
+            emitter.onComplete();
+        }).toFlowable();
+    }
+}</code></pre>
 </div>
 </div>
 

@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>8 Built-In Security Controllers 1.3.3.BUILD-SNAPSHOT</title>
+    <title>8 Built-In Security Controllers 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -50,7 +50,7 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
@@ -69,6 +69,9 @@ function addJsClass() {
                         </div>
                         
                         <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
                         </div>
                         
                     </div>
@@ -102,7 +105,7 @@ function addJsClass() {
                 <div class="project">
                     <h1>8 Built-In Security Controllers</h1>
 
-                    <p><strong>Version:</strong> 1.3.3.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -277,25 +280,96 @@ If you are using JWT authentication not stored in a cookie, you may not need to 
 </div>
 
 
-<div class="admonitionblock note">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-This controller can only be enabled if you are using JWT authentication.
+The refresh token functionality has changed dramatically starting in Micronaut Security 2.0. Please read this section if you are upgrading as it now behaves differently.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>By default, issued access tokens expire after a period of time, and they are paired with refresh tokens. To
-ease the refresh, you can enable <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthController.html">OauthController</a>, with configuration property:</p>
+<p>Refresh tokens can be used to obtain a new access token. By default, refresh tokens are not generated.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> API is responsible for generating the token that gets included in the response. The <a href="../api/io/micronaut/security/token/generator/RefreshTokenValidator.html">RefreshTokenValidator</a> is responsible for validating the refresh token. Note that this validation step is not related to the persistence of the token, but instead is intended to verify the token is not a random/guessed value.</p>
+</div>
+<div class="paragraph">
+<p>An implementation of both <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> and  <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> has been provided by default. The <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> creates and verifies a JWS (JSON web signature) encoded object whose payload is a UUID with a hash-based message authentication code (HMAC). See the following configuration options:</p>
+</div>
+<a id="io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html">RefreshTokenConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether {@link SignedRefreshTokenGenerator} is enabled. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.jws-algorithm</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">com.nimbusds.jose.JWSAlgorithm</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{@link com.nimbusds.jose.JWSAlgorithm}. Defaults to HS256</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.secret</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shared secret. For HS256 must be at least 256 bits.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.base64</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether the supplied secret is base64 encoded. Default value false.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>To enable it, you must provide a secret:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    security:
+        token:
+            jwt:
+                generator:
+                    refresh-token:
+                        secret: 'pleaseChangeThisSecretForANewOne'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After a token is generated, this library has no knowledge of it. The value is not cached or stored anywhere. It is up to each application to decide how to store the token, support revocation, and retrieve user details when given a token.</p>
+</div>
+<div class="paragraph">
+<p>In addition to the above requirements, each application must provide an implementation of <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation will receive an event when a refresh token is generated and then is responsible for persisting the token along with a link to the user that it was generated for. The user information and the token are both available in the <a href="../api/io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_refreshing_the_token">Refreshing the Token</h3>
+<div class="paragraph">
+<p>Micronaut security comes with a controller to allow for the refresh of access tokens. The <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthController.html">controller</a> can be enabled with a configuration property.</p>
 </div>
 <a id="io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties" href="#io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html">OauthControllerConfigurationProperties</a></caption>
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html">OauthControllerConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -325,7 +399,13 @@ ease the refresh, you can enable <a href="../api/io/micronaut/security/token/jwt
 <p>The controller exposes an endpoint as defined by <a href="https://tools.ietf.org/html/rfc6749#section-6">section 6 of the OAuth 2.0 spec</a> - Refreshing an Access Token.</p>
 </div>
 <div class="paragraph">
-<p>By default, issued Refresh tokens never expire, and can be used to obtain a new access token by sending a POST request to the <code>/oauth/access_token</code> endpoint:</p>
+<p>The refresh token endpoint uses the <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> API to verify the token matches the format that is expected. <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> attempts to verify the signature and returns the payload. Any validator implementations should not be concerned with revocation status, existence, or any other persistence related validation.</p>
+</div>
+<div class="paragraph">
+<p>If the validator successfully validates the token, it is then passed to a <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation, which each application must provide. A new access token is then created from the user details returned by <code>RefreshTokenPersistence::getUserDetails</code> and then sent in the response.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example of a refresh token request. Send a POST request to the <code>/oauth/access_token</code> endpoint:</p>
 </div>
 <div class="listingblock">
 <div class="title">Sample HTTP request to obtain an access token</div>
@@ -353,11 +433,12 @@ grant_type=refresh_token&amp;refresh_token=eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyN
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-By default refresh tokens never expire, they must be securely stored in your client application.
+Refresh tokens must be securely stored in your client application.
 See <a href="https://tools.ietf.org/html/rfc6749#section-10.4">section 10.4 of the OAuth 2.0 spec</a> for more information.
 </td>
 </tr>
 </table>
+</div>
 </div>
 
 <h2 id="keys"><a class="anchor" href="#keys"></a>8.4 Keys Controller</h2>
