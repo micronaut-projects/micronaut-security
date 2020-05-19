@@ -14,12 +14,12 @@ class OauthControllerEnabledSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : OauthControllerEnabledSpec.simpleName,
-            'micronaut.security.token.jwt.endpoints.oauth.enabled': false,
+            'micronaut.security.endpoints.oauth.enabled': false,
 
     ], Environment.TEST)
 
-    @Unroll("if micronaut.security.token.jwt.endpoints.oauth.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.token.jwt.endpoints.oauth.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    @Unroll("if micronaut.security.endpoints.oauth.enabled=false bean [#description] is not loaded")
+    void "if micronaut.security.endpoints.oauth.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
         embeddedServer.applicationContext.getBean(clazz)
 
