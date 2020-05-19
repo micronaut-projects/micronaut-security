@@ -98,13 +98,17 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e);
             }
-            return Flowable.just(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN));
+            return Flowable.create(emitter -> {
+                emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN));
+                emitter.onComplete();
+            }, BackpressureStrategy.ERROR);
         }
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Attempting to authenticate with user [{}]", username);
         }
 
+        return Flowable.create(emitter -> {
         AuthenticationResponse response = new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND);
 
         try {
@@ -172,7 +176,10 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
         } finally {
             contextBuilder.close(managerContext);
         }
-        return Flowable.just(response);
+
+            emitter.onNext(response);
+            emitter.onComplete();
+        }, BackpressureStrategy.ERROR);
     }
 
     @Override
