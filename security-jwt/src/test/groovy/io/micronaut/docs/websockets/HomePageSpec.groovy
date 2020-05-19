@@ -4,7 +4,6 @@ import geb.Browser
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.testutils.GebEmbeddedServerSpecification
-import spock.lang.IgnoreIf
 import spock.util.concurrent.PollingConditions
 
 import java.time.LocalDateTime
