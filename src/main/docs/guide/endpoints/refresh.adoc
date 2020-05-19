@@ -45,7 +45,7 @@ Here is an example of a refresh token request. Send a POST request to the `/oaut
 [source,bash]
 .Sample HTTP request to obtain an access token
 ----
-POST /myApp/oauth/access_token HTTP/1.1
+POST /oauth/access_token HTTP/1.1
 Host: micronaut.example
 Content-Type: application/x-www-form-urlencoded
 
