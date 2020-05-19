@@ -1,9 +1,7 @@
 package io.micronaut.security.token.jwt.endpoints
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -12,21 +10,19 @@ class KeysControllerEnabledSpec extends Specification {
     @Unroll("if micronaut.security.endpoints.keys.enabled=false bean [#description] is not loaded")
     void "if micronaut.security.endpoints.keys.enabled=false security related beans are not loaded"(Class clazz, String description) {
         given:
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-                'spec.name'                                          : KeysControllerEnabledSpec.simpleName,
+        ApplicationContext applicationContext = ApplicationContext.run([
                 'micronaut.security.endpoints.keys.enabled': false,
-
-        ], Environment.TEST)
+        ])
 
         when:
-        embeddedServer.applicationContext.getBean(clazz)
+        applicationContext.getBean(clazz)
 
         then:
-        def e = thrown(NoSuchBeanException)
+        NoSuchBeanException e = thrown()
         e.message.contains('No bean of type [' + clazz.name + '] exists.')
 
         cleanup:
-        embeddedServer.close()
+        applicationContext.close()
 
         where:
         clazz << [
@@ -41,20 +37,15 @@ class KeysControllerEnabledSpec extends Specification {
     @Unroll
     void "#description loads if micronaut.security.endpoints.keys.enabled=true"(Class clazz, String description) {
         given:
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-                'spec.name'                 : KeysControllerEnabledSpec.simpleName,
-                'micronaut.security.endpoints.keys.enabled': true,
+        ApplicationContext applicationContext = ApplicationContext.run([
+                'micronaut.security.endpoints.keys.enabled': true]
+        )
 
-        ], Environment.TEST)
-
-        when:
-        embeddedServer.applicationContext.getBean(clazz)
-
-        then:
-        noExceptionThrown()
+        expect:
+        applicationContext.containsBean(clazz)
 
         cleanup:
-        embeddedServer.close()
+        applicationContext.close()
 
         where:
         clazz << [KeysController, KeysControllerConfiguration, KeysControllerConfigurationProperties]
