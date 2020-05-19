@@ -1,6 +1,5 @@
 package io.micronaut.security.token.jwt.refreshtokenexpiration
 
-
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
