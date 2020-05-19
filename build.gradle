@@ -79,8 +79,10 @@ subprojects { Project subproject ->
     dependencyUpdates {
         rejectVersionIf { mod ->
             mod.candidate.version ==~ /.+(-|\.?)(b|M|RC)\d.*/ ||
-                    ["alpha", "beta", "milestone"].any { mod.candidate.version.toLowerCase(Locale.ENGLISH).contains(it) } ||
-                    mod.candidate.group == 'io.micronaut' // managed by the micronaut version
+                    ["alpha", "beta", "milestone"].any {
+                        mod.candidate.version.toLowerCase(Locale.ENGLISH).contains(it) } ||
+                    mod.candidate.group == 'io.micronaut' || // managed by the micronaut version
+                    mod.candidate.module.contains('htmlunit')
         }
         outputFormatter = { result ->
             if (!result.outdated.dependencies.isEmpty()) {
