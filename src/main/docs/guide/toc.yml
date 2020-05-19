@@ -1,6 +1,7 @@
 introduction:
   title: Introduction
 whatsNew: What's New
+breaks: Breaking Changes
 authenticationProviders: Authentication Providers
 securityRule:
   title: Security Rules
@@ -78,5 +79,4 @@ oauth:
     revocation: Revocation
     user-info: OpenID User Info
   custom-client: Custom Clients
-breaks: Breaking Changes
 repository: Repository
