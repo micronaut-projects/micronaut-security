@@ -79,3 +79,4 @@ oauth:
     user-info: OpenID User Info
   custom-client: Custom Clients
 breaks: Breaking Changes
+repository: Repository
