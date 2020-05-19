@@ -1,3 +1,8 @@
+configurations.all {
+    resolutionStrategy {
+        force "io.projectreactor:reactor-core:3.3.5.RELEASE"
+    }
+}
 dependencies {
     api "io.micronaut:micronaut-management"
     api "io.micronaut:micronaut-http"
@@ -9,7 +14,7 @@ dependencies {
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-http-server-netty"
 
-    testImplementation "io.projectreactor:reactor-core:3.3.3.RELEASE"
+    testImplementation "io.projectreactor:reactor-core"
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
