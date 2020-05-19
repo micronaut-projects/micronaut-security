@@ -4,19 +4,17 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
 class KeysControllerEnabledSpec extends Specification {
 
-    @Unroll("if m.s.enabled=true and m.s.token.jwt.enabled=true and m.s.token.jwt.endpoints.oauth.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.token.jwt.endpoints.keys.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    @Unroll("if micronaut.security.endpoints.keys.enabled=false bean [#description] is not loaded")
+    void "if micronaut.security.endpoints.keys.enabled=false security related beans are not loaded"(Class clazz, String description) {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                                          : KeysControllerEnabledSpec.simpleName,
-                'micronaut.security.token.jwt.endpoints.keys.enabled': false,
+                'micronaut.security.endpoints.keys.enabled': false,
 
         ], Environment.TEST)
 
