@@ -1,9 +1,12 @@
 package io.micronaut.security.token.jwt.endpoints
 
+import com.nimbusds.jose.jwk.JWK
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
 import spock.lang.Specification
 import spock.lang.Unroll
+import javax.inject.Singleton
 
 class KeysControllerEnabledSpec extends Specification {
 
@@ -30,16 +33,13 @@ class KeysControllerEnabledSpec extends Specification {
                 KeysControllerConfiguration,
                 KeysControllerConfigurationProperties,
         ]
-
         description = clazz.name
     }
 
     @Unroll
-    void "#description loads if micronaut.security.endpoints.keys.enabled=true"(Class clazz, String description) {
+    void "#description is loaded by default"(Class clazz, String description) {
         given:
-        ApplicationContext applicationContext = ApplicationContext.run([
-                'micronaut.security.endpoints.keys.enabled': true]
-        )
+        ApplicationContext applicationContext = ApplicationContext.run(["spec.name": 'KeysControllerEnabledSpec'])
 
         expect:
         applicationContext.containsBean(clazz)
@@ -50,5 +50,15 @@ class KeysControllerEnabledSpec extends Specification {
         where:
         clazz << [KeysController, KeysControllerConfiguration, KeysControllerConfigurationProperties]
         description = clazz.name
+    }
+
+    @Requires(property = "spec.name", value = 'KeysControllerEnabledSpec')
+    @Singleton
+    static class CustomJwkProvider implements JwkProvider {
+
+        @Override
+        List<JWK> retrieveJsonWebKeys() {
+            []
+        }
     }
 }

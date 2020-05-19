@@ -59,8 +59,7 @@ class JwksUriSignatureSpec extends Specification {
         given:
         int authServerAPort = SocketUtils.findAvailableTcpPort()
         int authServerBPort = SocketUtils.findAvailableTcpPort()
-        Map<String, Object> endpointsConfiguration = ['micronaut.security.endpoints.login.enabled': true,
-                                                      'micronaut.security.endpoints.keys.enabled': true]
+        Map<String, Object> endpointsConfiguration = ['micronaut.security.endpoints.login.enabled': true]
 
         when:
         Map<String, Object> authServerAConfig = endpointsConfiguration + [

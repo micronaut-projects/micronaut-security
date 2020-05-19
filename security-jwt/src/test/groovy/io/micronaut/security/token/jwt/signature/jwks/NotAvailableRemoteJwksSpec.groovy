@@ -74,7 +74,6 @@ class NotAvailableRemoteJwksSpec extends Specification {
                     'micronaut.server.port': authServerPort,
                     'spec.name': 'AuthServerNotAvailableRemoteJwksSpec',
                     'micronaut.security.endpoints.login.enabled': true,
-                    'micronaut.security.endpoints.keys.enabled': true,
             ]
 
 

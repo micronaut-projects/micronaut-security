@@ -19,6 +19,10 @@ The functionality has now been changed to generate a token that is not a JWT, bu
 * The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications.
 
 * Modules are now enabled by default. The configuration keys `micronaut.security.enabled`, `micronaut.security.token.jwt.enabled`, `micronaut.security.oauth2.enabled`, and `micronaut.security.session.enabled` are now all `true` by default.
+=== Endpoints enabled by default
+
+* You don't need to enable Endpoints. The configuration keys `micronaut.security.endpoints.keys.enabled` are now all `true` by default. However, You will need to provide the required beans for each endpoint.
+
 
 * The api:security.handlers.LoginHandler[] API has changed to accept an api:security.authentication.AuthenticationResponse[] object instead of an api:security.authentication.AuthenticationFailed[].
 

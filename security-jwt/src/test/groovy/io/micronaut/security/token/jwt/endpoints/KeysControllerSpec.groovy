@@ -26,7 +26,6 @@ class KeysControllerSpec extends Specification {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : 'keyscontrollerspec',
-                'micronaut.security.endpoints.keys.enabled': true,
                 'micronaut.security.endpoints.keys.path': path,
 
         ], Environment.TEST)
