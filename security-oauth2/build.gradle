@@ -17,7 +17,7 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation 'com.sun.activation:javax.activation:1.2.0' // Java 11
-    testImplementation "org.testcontainers:testcontainers:1.12.5"
+    testImplementation "org.testcontainers:testcontainers:1.14.2"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72"
     testImplementation project(":security-jwt")
 }
