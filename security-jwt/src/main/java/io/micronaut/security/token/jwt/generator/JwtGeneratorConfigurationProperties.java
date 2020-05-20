@@ -13,29 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.token.jwt.generator;
 
-import javax.inject.Singleton;
+import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 /**
  * {@link JwtGeneratorConfiguration} implementation.
  *
+ * @deprecated Use {@link AccessTokenConfigurationProperties} instead.
  * @author Sergio del Amo
  * @since 1.0
- * @deprecated Use {@link AccessTokenConfigurationProperties} instead.
  */
 @Deprecated
-@Singleton
+@ConfigurationProperties(JwtGeneratorConfigurationProperties.PREFIX)
 public class JwtGeneratorConfigurationProperties implements JwtGeneratorConfiguration {
 
-    private final AccessTokenConfiguration accessTokenConfiguration;
+    public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".generator";
 
+    private final AccessTokenConfigurationProperties accessTokenConfiguration;
+    
     /**
      *
-     * @param accessTokenConfiguration Access TokenConfiguration
+     * @param accessTokenConfiguration Access Token configuration
      */
-    public JwtGeneratorConfigurationProperties(AccessTokenConfiguration accessTokenConfiguration) {
+    public JwtGeneratorConfigurationProperties(AccessTokenConfigurationProperties accessTokenConfiguration) {
         this.accessTokenConfiguration = accessTokenConfiguration;
     }
 
@@ -45,12 +47,21 @@ public class JwtGeneratorConfigurationProperties implements JwtGeneratorConfigur
         return null;
     }
 
-    /**
-     * @deprecated Use {@link AccessTokenConfiguration#getExpiration()}) instead.
-     */
-    @Override
     @Deprecated
+    @Override
     public Integer getAccessTokenExpiration() {
-        return accessTokenConfiguration.getExpiration();
+        return this.accessTokenConfiguration.getExpiration();
+    }
+
+    /**
+     * deprecated Use micronaut.security.token.jwt.generator.access-token.expiration instead.
+     * @param accessTokenExpiration The expiration
+     */
+    @Deprecated
+    public void setAccessTokenExpiration(Integer accessTokenExpiration) {
+        if (accessTokenConfiguration != null &&
+                accessTokenConfiguration.getExpiration().equals(AccessTokenConfigurationProperties.DEFAULT_EXPIRATION)) {
+            this.accessTokenConfiguration.setExpiration(accessTokenExpiration);
+        }
     }
 }
