@@ -6,7 +6,7 @@ plugins {
 group "io.micronaut.configuration"
 
 dependencies {
-    annotationProcessor project(":security")
+    annotationProcessor project(":security-annotations")
 
     compileOnly "io.micronaut:micronaut-inject-java"
     compileOnly project(":security-jwt")
