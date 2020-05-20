@@ -29,7 +29,6 @@ class LogoutControllerPathConfigurableSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-            'micronaut.security.endpoints.logout.enabled': true,
             'micronaut.security.endpoints.logout.path': '/salir',
         ]
     }

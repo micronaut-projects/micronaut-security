@@ -38,7 +38,6 @@ class SessionReUseSpec extends EmbeddedServerSpecification {
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 'micronaut.security.endpoints.login.enabled': true,
-                'micronaut.security.endpoints.logout.enabled': true,
         ]
     }
 

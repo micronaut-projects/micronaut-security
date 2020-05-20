@@ -19,22 +19,22 @@ import io.micronaut.security.handlers.LogoutHandler
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import org.spockframework.compiler.model.Spec
 import spock.lang.Specification
 
 import javax.inject.Singleton
 
 class LogoutControllerAllowedMethodsSpec extends Specification {
 
-    String getSpecName() {
-        'LogoutControllerAllowedMethodsSpec'
+    Map<String, Object> getConfiguration() {
+        Map<String, Object> m = [:]
+        if (specName) {
+            m['spec.name'] = specName
+        }
+        m
     }
 
-    Map<String, Object> getConfiguration() {
-        [
-                'spec.name': specName,
-                'micronaut.security.endpoints.logout.enabled': true,
-        ] as Map<String, Object>
+    String getSpecName() {
+        'LogoutControllerAllowedMethodsSpec'
     }
 
     void "LogoutController does not accept GET requests by default"() {

@@ -21,6 +21,7 @@ import io.micronaut.security.event.LoginSuccessfulEvent
 import io.micronaut.security.event.LogoutEvent
 import io.micronaut.security.event.TokenValidatedEvent
 import io.micronaut.security.handlers.LoginHandler
+import io.micronaut.security.handlers.LogoutHandler
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
@@ -41,7 +42,6 @@ class EventListenerSpec extends EmbeddedServerSpecification {
             'endpoints.beans.enabled': true,
             'endpoints.beans.sensitive': true,
             'micronaut.security.endpoints.login.enabled': true,
-            'micronaut.security.endpoints.logout.enabled': true,
         ]
     }
 
@@ -76,7 +76,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         client.exchange(request)
 
         then:
-        thrown(HttpClientResponseException)
+        noExceptionThrown()
         new PollingConditions().eventually {
             embeddedServer.applicationContext.getBean(LogoutEventListener).events.size() == 1
             (embeddedServer.applicationContext.getBean(LogoutEventListener).events*.getSource() as List<Authentication>).any { it.name == 'user'}
@@ -134,6 +134,16 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         void onApplicationEvent(LogoutEvent event) {
             println "received logout event"
             events.add(event)
+        }
+    }
+
+    @Requires(property = "spec.name", value = "EventListenerSpec")
+    @Singleton
+    static class CustomLogoutHandler implements LogoutHandler {
+
+        @Override
+        MutableHttpResponse<?> logout(HttpRequest<?> request) {
+            HttpResponse.ok()
         }
     }
 

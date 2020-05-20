@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.endpoints;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.util.StringUtils;
@@ -33,7 +34,6 @@ import io.micronaut.security.event.LogoutEvent;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.rules.SecurityRule;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Inject;
 
 /**
@@ -41,7 +41,8 @@ import javax.inject.Inject;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Requires(property = LogoutControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = LogoutControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(beans = LogoutHandler.class)
 @Controller("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LogoutController {
@@ -57,7 +58,7 @@ public class LogoutController {
      * @param logoutControllerConfiguration Configuration for the Logout controller
      */
     @Inject
-    public LogoutController(@Nullable LogoutHandler logoutHandler,
+    public LogoutController(LogoutHandler logoutHandler,
                             ApplicationEventPublisher eventPublisher,
                             LogoutControllerConfiguration logoutControllerConfiguration) {
         this.logoutHandler = logoutHandler;
@@ -104,9 +105,6 @@ public class LogoutController {
         if (authentication != null) {
             eventPublisher.publishEvent(new LogoutEvent(authentication));
         }
-        if (logoutHandler != null) {
-            return logoutHandler.logout(request);
-        }
-        return HttpResponse.notFound();
+        return logoutHandler.logout(request);
     }
 }

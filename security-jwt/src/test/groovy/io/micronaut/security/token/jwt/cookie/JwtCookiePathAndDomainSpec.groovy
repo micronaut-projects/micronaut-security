@@ -34,7 +34,6 @@ class JwtCookiePathAndDomainSpec extends EmbeddedServerSpecification {
         super.configuration + [
                     'micronaut.http.client.followRedirects': false,
                     'micronaut.security.endpoints.login.enabled': true,
-                    'micronaut.security.endpoints.logout.enabled': true,
                     'micronaut.security.token.jwt.bearer.enabled': false,
                     'micronaut.security.token.jwt.cookie.enabled': true,
                     'micronaut.security.token.jwt.cookie.cookie-path': "/path",
