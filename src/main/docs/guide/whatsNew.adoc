@@ -6,10 +6,6 @@ Micronaut Security {version} includes the following new features and improvement
 
 == Improvements
 
-* It is now possible to gain access to the request in your api:security.authentication.AuthenticationProvider[]. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.
-
-* It is no longer assumed that a failed authentication response is an instance of api:security.authentication.AuthenticationFailed[]. That now allows for any subclass of api:security.authentication.AuthenticationResponse[] to be emitted in the case of an authentication failure.
-
 * A new constructor for api:security.authentication.AuthenticationFailed[] that takes a string message has been added to allow for custom error messages.
 
 * It is now possible to require all api:security.authentication.AuthenticationProvider[]s to return a successful authentication response. Set `micronaut.security.authentication-strategy: ALL` to enable this functionality.

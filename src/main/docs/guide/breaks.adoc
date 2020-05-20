@@ -2,7 +2,31 @@ This section will document breaking changes that may happen during milestone or 
 
 == 2.0.0
 
-* All deprecations present in 1.3.x have been removed.
+=== Modules Enabled by default
+
+* Modules are now enabled by default. The configuration keys `micronaut.security.enabled`, `micronaut.security.token.jwt.enabled`, `micronaut.security.oauth2.enabled`, and `micronaut.security.session.enabled` are now all `true` by default.
+
+=== Endpoints enabled by default
+
+* You don't need to enable Endpoints. The configuration keys `micronaut.security.endpoints.keys.enabled`, `micronaut.security.endpoints.login.enabled`, `micronaut.security.endpoints.logout.enabled`, `micronaut.security.endpoints.oauth.enabled` are now all `true` by default. However, You will need to provide the required beans for each endpoint.
+
+=== Authentication Provider
+
+* The api:security.authentication.AuthenticationProvider[] API has changed to include the HTTP request as a parameter. Thus, it is now possible to gain access to the request in your api:security.authentication.AuthenticationProvider[]. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.
+
+* It is no longer assumed that a failed authentication response is an instance of api:security.authentication.AuthenticationFailed[]. That now allows for any subclass of api:security.authentication.AuthenticationResponse[] to be emitted in the case of an authentication failure.
+
+* Previously api:security.authentication.AuthenticationProvider[]s were allowed to return hot observables, meaning the logic to authenticate the user could be done upon execution of the method. Allowing for that behavior caused the logic to execute the authenticators to be difficult to maintain. Now providers must return cold observables. The `authenticate` method will be executed for every authentication provider for every authentication request. If you were previously doing the authentication work then using something like `Flowable.just`, you must use something like `Flowable.create` to create a cold observable.
+
+=== Delegating Authentication Provider
+
+* The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications.
+
+=== LoginHandler
+
+* The api:security.handlers.LoginHandler[] API has changed to accept an api:security.authentication.AuthenticationResponse[] object instead of an api:security.authentication.AuthenticationFailed[].
+
+=== Refresh Token
 
 * The story around refresh tokens has been changed. There were a couple of core issues with the old implementation that needed resolved.
 +
@@ -12,35 +36,28 @@ This section will document breaking changes that may happen during milestone or 
 +
 The functionality has now been changed to generate a token that is not a JWT, but is instead a signed token of a unique key. The default implementation signs a UUID with a secret provided via configuration. After the token is generated, it is up to each application to provide an implementation of api:security.token.refresh.RefreshTokenPersistence[] to store the token and link it to the user it was created for. That is essential to generate new claims information in new access tokens created by the refresh endpoint. See the <<refresh, refresh section>> for more information.
 
+=== Rejection Handler
+
 * The legacy rejection handler in the session module, which was enabled by default, has been removed. The setting `micronaut.security.session.legacy-rejection-handler` no longer has any effect and is equivalent to the behavior of `false` in previous versions.
 
 * The entire `RejectionHandler` API and its dependents have been removed in favor of using the built in exception handling API in Micronaut. An api:security.authentication.AuthorizationException[] will now be emitted when access to a resource has been rejected. Default exception handlers have been created to mimic the previous behavior. If you haven't overridden any of this API or manipulated it through settings there should be no change in behavior.
 
-* The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications.
+=== Basic Auth
 
-* Modules are now enabled by default. The configuration keys `micronaut.security.enabled`, `micronaut.security.token.jwt.enabled`, `micronaut.security.oauth2.enabled`, and `micronaut.security.session.enabled` are now all `true` by default.
+* Basic authentication configuration has moved from `micronaut.security.token.basic-auth` to `micronaut.security.basic-auth`. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a `TokenValidatedEvent` was triggered as a result of basic authentication, however that is no longer the case.
 
-=== Endpoints enabled by default
-
-* You don't need to enable Endpoints. The configuration keys `micronaut.security.endpoints.keys.enabled` are now all `true` by default. However, You will need to provide the required beans for each endpoint.
-
-
-* The api:security.handlers.LoginHandler[] API has changed to accept an api:security.authentication.AuthenticationResponse[] object instead of an api:security.authentication.AuthenticationFailed[].
-
-* The api:security.authentication.AuthenticationProvider[] API has changed to include the HTTP request as a parameter.
+=== Misc
 
 * Several APIs that lacked generics have been changed to add them. For example `HttpRequest` -> `HttpRequest<?>`.
 
 * Several APIs have been changed to return api:http.MutableHttpResponse[] instead of api:http.HttpResponse[].
-
-* Previously api:security.authentication.AuthenticationProvider[]s were allowed to return hot observables, meaning the logic to authenticate the user could be done upon execution of the method. Allowing for that behavior caused the logic to execute the authenticators to be difficult to maintain. Now providers must return cold observables. The `authenticate` method will be executed for every authentication provider for every authentication request. If you were previously doing the authentication work then using something like `Flowable.just`, you must use something like `Flowable.create` to create a cold observable.
-
-* Basic authentication configuration has moved from `micronaut.security.token.basic-auth` to `micronaut.security.basic-auth`. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a `TokenValidatedEvent` was triggered as a result of basic authentication, however that is no longer the case.
 
 * The SecurityFilterOrderProvider API has been deleted in favor of the standard ServerFilterPhase class. The security filter will now run on the order defined by the SECURITY phase.
 
 * The io.micronaut.security.token.jwt.signature.secret.SecretSignatureFactory was deleted because the beans can be created directly from the SecretSignature class.
 
 === Deprecated
+
+* All deprecations present in 1.3.x have been removed.
 
 * `JwtGeneratorConfiguration` has been deprecated in favor of api:security.token.jwt.generator.AccessTokenConfiguration[]. The configuration has been changed from `micronaut.security.token.jwt.generator.access-token-expiration` to `micronaut.security.token.jwt.generator.access-token.expiration`.
