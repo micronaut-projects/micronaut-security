@@ -20,7 +20,7 @@ In order to prevent forced login attacks, you must implement CSRF protection on 
 
 Here is an example:
 
-snippet::io.micronaut.security.oauth2.docs.endpoint.OAuthCsrfFilter[tags="class", project="security-oauth2"]
+snippet::io.micronaut.security.oauth2.docs.endpoint.OAuthCsrfFilter[tags="imports,class"]
 
 
 

@@ -10,11 +10,11 @@ If the default implementation is not sufficient, it is possible to override the 
 
 To override the global default mapper, register a bean that replaces api:security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper[].
 
-snippet::io.micronaut.security.oauth2.docs.openid.GlobalOpenIdUserDetailsMapper[tags="clazz", project="security-oauth2"]
+snippet::io.micronaut.security.oauth2.docs.openid.GlobalOpenIdUserDetailsMapper[tags="clazz"]
 
 To override the user detail mapping behavior for a specific provider, register a bean with a named qualifier with a value equal to the name specified in the client configuration.
 
-snippet::io.micronaut.security.oauth2.docs.openid.OktaUserDetailsMapper[tags="clazz", project="security-oauth2"]
+snippet::io.micronaut.security.oauth2.docs.openid.OktaUserDetailsMapper[tags="clazz"]
 
 <1> The named qualifier is added that matches the name in configuration
 <2> The provider name is passed to the method. Only useful for the global version

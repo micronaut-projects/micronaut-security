@@ -1,5 +1,4 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.3.72"
     id "com.github.erdi.webdriver-binaries" version "2.2"
 }
 
@@ -18,17 +17,9 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation 'com.sun.activation:javax.activation:1.2.0' // Java 11
     testImplementation "org.testcontainers:testcontainers:1.14.2"
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72"
     testImplementation project(":security-jwt")
 }
 
 apply from: "${rootProject.projectDir}/gradle/geb.gradle"
 apply from: "${rootProject.projectDir}/gradle/webdriverbinaries.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
-
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = '1.8'
-        javaParameters = true
-    }
-}

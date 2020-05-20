@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.docs.endpoint;
 
-//tag::class[]
+//tag::imports[]
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.http.HttpRequest;
@@ -13,7 +13,7 @@ import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import org.reactivestreams.Publisher;
 
-//end::class[]
+//end::imports[]
 @Requires(property = "oauth.csrf")
 //tag::class[]
 @Filter(value = {"/oauth/login", "/oauth/login/*"})

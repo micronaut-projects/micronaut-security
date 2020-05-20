@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.docs.endpoint
 
-//tag::class[]
+//tag::imports[]
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpRequest
@@ -8,26 +8,26 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Filter
+import io.micronaut.http.cookie.Cookie
 import io.micronaut.http.filter.OncePerRequestHttpServerFilter
 import io.micronaut.http.filter.ServerFilterChain
 import org.reactivestreams.Publisher
 
-//end::class[]
+//end::imports[]
 @Requires(property = "oauth.csrf")
 //tag::class[]
 @Filter(value = ["/oauth/login", "/oauth/login/*"])
-class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
+class OAuthCsrfFilter : OncePerRequestHttpServerFilter() {
 
-    @Override
-    protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
-        String requestParameter = request.parameters.get("_csrf")
-        String cookieValue = request.cookies.findCookie("_csrf").map({c -> c.getValue()}).orElse(null)
+    override fun doFilterOnce(request: HttpRequest<*>, chain: ServerFilterChain): Publisher<MutableHttpResponse<*>> {
+        val requestParameter = request.parameters["_csrf"]
+        val cookieValue = request.cookies.findCookie("_csrf").map { obj: Cookie -> obj.value }.orElse(null)
 
-        if (cookieValue == null || cookieValue != requestParameter) {
-            return Publishers.just(HttpResponse.status(HttpStatus.FORBIDDEN))
+        return if (cookieValue == null || cookieValue != requestParameter) {
+            Publishers.just(HttpResponse.status<Any>(HttpStatus.FORBIDDEN))
+        } else {
+            chain.proceed(request)
         }
-
-        return chain.proceed(request)
     }
 }
 //end::class[]

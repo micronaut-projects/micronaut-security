@@ -1,4 +1,5 @@
-package io.micronaut.security.oauth2.endpoint.authorization.request
+package io.microanut.security.oauth2.docs.endpoint
+
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
@@ -7,7 +8,6 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.EmbeddedServerSpecification
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
@@ -17,6 +17,7 @@ import org.reactivestreams.Publisher
 
 import javax.inject.Named
 import javax.inject.Singleton
+import io.microanut.security.oauth2.docs.EmbeddedServerSpecification
 
 class CsrfFilterSpec extends EmbeddedServerSpecification {
 
