@@ -17,7 +17,7 @@ import org.reactivestreams.Publisher
 
 import javax.inject.Named
 import javax.inject.Singleton
-import io.microanut.security.oauth2.docs.EmbeddedServerSpecification
+import io.micronaut.security.oauth2.docs.EmbeddedServerSpecification
 
 class CsrfFilterSpec extends EmbeddedServerSpecification {
 

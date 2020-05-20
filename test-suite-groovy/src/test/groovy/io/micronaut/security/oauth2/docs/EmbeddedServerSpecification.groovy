@@ -1,4 +1,4 @@
-package io.microanut.security.oauth2.docs
+package io.micronaut.security.oauth2.docs
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.http.client.BlockingHttpClient
