@@ -127,12 +127,12 @@ subprojects { Project subproject ->
         forkEvery = 100
 
         retry {
-            maxRetries = 3
+            maxRetries = System.getProperty("retry.max") !=null ? (System.getProperty("retry.max") as Integer) : (System.getenv("GITHUB_ACTIONS") ? 3 : 0)
             maxFailures = 20
             failOnPassedAfterRetry = false
        }
     }
-
+    
     configurations {
         documentation
         all {
