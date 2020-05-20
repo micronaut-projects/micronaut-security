@@ -25,6 +25,7 @@ import io.micronaut.http.MutableHttpResponse;
  * @author Sergio del Amo
  * @since 1.0.0
  */
+@FunctionalInterface
 public interface LogoutHandler {
 
     /**
