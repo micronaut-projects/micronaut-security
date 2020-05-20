@@ -21,6 +21,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 
 /**
+ * Defines how to respond to a successful or failed login attempt.
  * @author Sergio del Amo
  * @since 1.0
  */
