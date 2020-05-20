@@ -107,8 +107,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <hr>
 <br>
-<pre>@Requires(property="micronaut.security.endpoints.login.enabled",
-          value="true")
+<pre>@Requires(property="micronaut.security.endpoints.login.enabled",notEquals="false",defaultValue="true") @Requires(beans=<a href="../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler.class</a>) @Requires(beans=<a href="../../../../io/micronaut/security/authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator.class</a>)
  @Controller(value="${micronaut.security.endpoints.login.path:/login}")
  <a href="../../../../io/micronaut/security/annotation/Secured.html" title="annotation in io.micronaut.security.annotation">@Secured</a>(<a href="../../../../io/micronaut/security/annotation/Secured.html#value--">value</a>="isAnonymous()")
  @Validated
