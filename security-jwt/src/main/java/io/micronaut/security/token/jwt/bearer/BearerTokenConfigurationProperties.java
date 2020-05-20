@@ -74,7 +74,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
     }
 
     /**
-     * Sets the prefix to use for the auth token. Default value {@value io.micronaut.http.HttpHeaderValues#AUTHORIZATION_PREFIX_BEARER}.
+     * Sets the prefix to use for the auth token. Default value Bearer.
      * @param prefix The prefix to use
      */
     public void setPrefix(String prefix) {
