@@ -65,7 +65,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
     }
 
     /**
-     * Sets the header name to use. Default value {@value io.micronaut.http.HttpHeaders#AUTHORIZATION}.
+     * Sets the header name to use. Default value Authorization.
      *
      * @param headerName The header name to use
      */
