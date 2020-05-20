@@ -212,7 +212,13 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>You can enable the logout endpoint with configuration:</p>
+<p>To enable the logout controller you need a bean of type <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a>. The behaviour of the controller is delegated to it.</p>
+</div>
+<div class="paragraph">
+<p>There are default implementations provided for JWT Cookie (<a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a>) and Session based authentication storage (<a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a>).</p>
+</div>
+<div class="paragraph">
+<p>You can configure the logout endpoint with:</p>
 </div>
 <a id="io.micronaut.security.endpoints.LogoutControllerConfigurationProperties" href="#io.micronaut.security.endpoints.LogoutControllerConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
@@ -233,7 +239,7 @@ function addJsClass() {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/endpoints/LogoutController.html">LogoutController</a>. Default value false.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/endpoints/LogoutController.html">LogoutController</a>. Default value true.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.path</code></p></td>
@@ -247,9 +253,6 @@ function addJsClass() {
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>The behavior of the controller is delegated to a <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> implementation. There are default implementations provided for JWT Cookie and Session based authentication storage.</p>
-</div>
 <div class="admonitionblock tip">
 <table>
 <tr>

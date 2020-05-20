@@ -107,8 +107,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <hr>
 <br>
-<pre>@Requires(property="micronaut.security.endpoints.logout.enabled",
-          value="true")
+<pre>@Requires(property="micronaut.security.endpoints.logout.enabled",notEquals="false",defaultValue="true") @Requires(beans=<a href="../../../../io/micronaut/security/handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler.class</a>)
  @Controller(value="${micronaut.security.endpoints.logout.path:/logout}")
  <a href="../../../../io/micronaut/security/annotation/Secured.html" title="annotation in io.micronaut.security.annotation">@Secured</a>(<a href="../../../../io/micronaut/security/annotation/Secured.html#value--">value</a>="isAnonymous()")
 public class <span class="typeNameLabel">LogoutController</span>
@@ -204,8 +203,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>LogoutController</h4>
 <pre>@Inject
-public&nbsp;LogoutController(@Nullable
-                                <a href="../../../../io/micronaut/security/handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a>&nbsp;logoutHandler,
+public&nbsp;LogoutController(<a href="../../../../io/micronaut/security/handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a>&nbsp;logoutHandler,
                                 io.micronaut.context.event.ApplicationEventPublisher&nbsp;eventPublisher,
                                 <a href="../../../../io/micronaut/security/endpoints/LogoutControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">LogoutControllerConfiguration</a>&nbsp;logoutControllerConfiguration)</pre>
 <dl>
