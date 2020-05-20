@@ -107,7 +107,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <hr>
 <br>
-<pre>@Requires(property="micronaut.security.endpoints.oauth.enabled",value="true") @Requires(beans=<a href="../../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence.class</a>) @Requires(beans=<a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator.class</a>)
+<pre>@Requires(property="micronaut.security.endpoints.oauth.enabled",notEquals="false",defaultValue="true") @Requires(beans=<a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator.class</a>) @Requires(beans=<a href="../../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence.class</a>) @Requires(beans=<a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator.class</a>)
  @Controller(value="${micronaut.security.endpoints.oauth.path:/oauth/access_token}")
  <a href="../../../../../../io/micronaut/security/annotation/Secured.html" title="annotation in io.micronaut.security.annotation">@Secured</a>(<a href="../../../../../../io/micronaut/security/annotation/Secured.html#value--">value</a>="isAnonymous()")
  @Validated

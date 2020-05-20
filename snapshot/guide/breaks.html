@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>12 Breaking Changes 2.0.0.BUILD-SNAPSHOT</title>
+    <title>3 Breaking Changes 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -44,34 +44,37 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>3</strong><span>Breaking Changes</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>4</strong><span>Authentication Providers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>5</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>6</strong><span>Authorization Strategies</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>7</strong><span>Rejection Handling</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>8</strong><span>Token Propagation</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>9</strong><span>Built-In Security Controllers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>10</strong><span>Retrieve the authenticated user</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>11</strong><span>Security Events</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>12</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/repository.html"><strong>13</strong><span>Repository</span></a>
                         </div>
                         
                     </div>
@@ -92,16 +95,18 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../guide/oauth.html">&lt;&lt; <strong>11</strong><span>OAuth 2.0</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/whatsNew.html">&lt;&lt; <strong>2</strong><span>What's New</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
+                    <div class="toc-item next-right"><a href="../guide/authenticationProviders.html"><strong>4</strong><span>Authentication Providers</span> >></a></div>
+                
 
 
                 <div class="project">
-                    <h1>12 Breaking Changes</h1>
+                    <h1>3 Breaking Changes</h1>
 
                     <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
@@ -109,7 +114,7 @@ function addJsClass() {
                 
 
                 
-<h1 id="breaks"><a class="anchor" href="#breaks"></a>12 Breaking Changes</h1>
+<h1 id="breaks"><a class="anchor" href="#breaks"></a>3 Breaking Changes</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/breaks.adoc"'>
@@ -137,7 +142,7 @@ function addJsClass() {
 <p>The refresh tokens were JWT tokens which also allowed them to be used to access resources.</p>
 </li>
 <li>
-<p>Because they never expire (by default), it requires a list of invalid tokens to be maintained in perpetuity if the ability to revoke tokens is a requirement.</p>
+<p>Because they never expire (by default), it requires a list of invalid tokens to be maintained in perpetuity if the ability to revoke tokens is a requirement. <code>JwtGeneratorConfiguration#getRefreshTokenExpiration</code> is deprecated and it is no longer used.</p>
 </li>
 <li>
 <p>The refresh mechanism simply copied the claims from the refresh token JWT back into a new access token. This made any changes to the state of the user (new roles, etc) not be applied at the time of refresh.</p>
@@ -160,6 +165,15 @@ function addJsClass() {
 <li>
 <p>Modules are now enabled by default. The configuration keys <code>micronaut.security.enabled</code>, <code>micronaut.security.token.jwt.enabled</code>, <code>micronaut.security.oauth2.enabled</code>, and <code>micronaut.security.session.enabled</code> are now all <code>true</code> by default.</p>
 </li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_endpoints_enabled_by_default">Endpoints enabled by default</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>You don&#8217;t need to enable Endpoints. The configuration keys <code>micronaut.security.endpoints.keys.enabled</code> are now all <code>true</code> by default. However, You will need to provide the required beans for each endpoint.</p>
+</li>
 <li>
 <p>The <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> API has changed to accept an <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> object instead of an <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>.</p>
 </li>
@@ -179,9 +193,6 @@ function addJsClass() {
 <p>Basic authentication configuration has moved from <code>micronaut.security.token.basic-auth</code> to <code>micronaut.security.basic-auth</code>. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a <code>TokenValidatedEvent</code> was triggered as a result of basic authentication, however that is no longer the case.</p>
 </li>
 <li>
-<p><code>JwtGeneratorConfiguration</code> has been replaced with <a href="../api/io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html">AccessTokenConfiguration</a> and <a href="../api/io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html">RefreshTokenConfiguration</a>. The configuration has been changed from <code>micronaut.security.token.jwt.generator.access-token-expiration</code> to <code>micronaut.security.token.jwt.generator.access-token.expiration</code>. The same applies to <code>refresh-token-expiration</code>.</p>
-</li>
-<li>
 <p>The SecurityFilterOrderProvider API has been deleted in favor of the standard ServerFilterPhase class. The security filter will now run on the order defined by the SECURITY phase.</p>
 </li>
 <li>
@@ -190,12 +201,25 @@ function addJsClass() {
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_deprecated">Deprecated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JwtGeneratorConfiguration</code> has been deprecated in favor of <a href="../api/io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html">AccessTokenConfiguration</a>. The configuration has been changed from <code>micronaut.security.token.jwt.generator.access-token-expiration</code> to <code>micronaut.security.token.jwt.generator.access-token.expiration</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../guide/oauth.html">&lt;&lt; <strong>11</strong><span>OAuth 2.0</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/whatsNew.html">&lt;&lt; <strong>2</strong><span>What's New</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/authenticationProviders.html"><strong>4</strong><span>Authentication Providers</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>

@@ -107,8 +107,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <hr>
 <br>
-<pre>@Requires(property="micronaut.security.endpoints.keys.enabled",
-          value="true")
+<pre>@Requires(property="micronaut.security.endpoints.keys.enabled",notEquals="false",defaultValue="true") @Requires(beans=<a href="../../../../../../io/micronaut/security/token/jwt/endpoints/JwkProvider.html" title="interface in io.micronaut.security.token.jwt.endpoints">JwkProvider.class</a>)
  @Controller(value="${micronaut.security.endpoints.keys.path:/keys}")
  <a href="../../../../../../io/micronaut/security/annotation/Secured.html" title="annotation in io.micronaut.security.annotation">@Secured</a>(<a href="../../../../../../io/micronaut/security/annotation/Secured.html#value--">value</a>="isAnonymous()")
 public class <span class="typeNameLabel">KeysController</span>

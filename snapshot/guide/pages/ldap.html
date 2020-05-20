@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>5.4 LDAP Authentication 2.0.0.BUILD-SNAPSHOT</title>
+    <title>6.4 LDAP Authentication 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -44,34 +44,37 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/breaks.html"><strong>3</strong><span>Breaking Changes</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>4</strong><span>Authentication Providers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>5</strong><span>Authorization Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>5</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>6</strong><span>Authorization Strategies</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>7</strong><span>Rejection Handling</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/tokenPropagation.html"><strong>8</strong><span>Token Propagation</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/endpoints.html"><strong>9</strong><span>Built-In Security Controllers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/retrievingAuthenticatedUser.html"><strong>10</strong><span>Retrieve the authenticated user</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>11</strong><span>Security Events</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>12</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/repository.html"><strong>13</strong><span>Repository</span></a>
                         </div>
                         
                     </div>
@@ -92,18 +95,18 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../../guide/securityRule.html">&lt;&lt; <strong>4</strong><span>Security Rules</span></a></div>
+                    <div class="toc-item prev-left"><a href="../../guide/securityRule.html">&lt;&lt; <strong>5</strong><span>Security Rules</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../../guide/rejection.html"><strong>7</strong><span>Rejection Handling</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>5.4 LDAP Authentication</h1>
+                    <h1>6.4 LDAP Authentication</h1>
 
                     <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
@@ -112,17 +115,17 @@ function addJsClass() {
                 <div id="table-of-content">
                     <h2>Table of Contents</h2>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#configuration"><strong>5.1</strong><span>Configuration</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#configuration"><strong>6.1</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#extending"><strong>5.2</strong><span>Extending Default Behavior</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#extending"><strong>6.2</strong><span>Extending Default Behavior</span></a>
                     </div>
                     
                 </div>
                 
 
                 
-<h2 id="ldap"><a class="anchor" href="#ldap"></a>5.4 LDAP Authentication</h2>
+<h2 id="ldap"><a class="anchor" href="#ldap"></a>6.4 LDAP Authentication</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/ldap.adoc"'>
@@ -157,7 +160,7 @@ Read the <a href="https://guides.micronaut.io/micronaut-database-authentication-
 basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </div>
 
-<h2 id="configuration"><a class="anchor" href="#configuration"></a>5.4.1 Configuration</h2>
+<h2 id="configuration"><a class="anchor" href="#configuration"></a>6.4.1 Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/configuration.adoc"'>
@@ -335,7 +338,7 @@ To connect to an LDAP server with SSL, set the standard Java system properties t
 </div>
 </div>
 
-<h2 id="extending"><a class="anchor" href="#extending"></a>5.4.2 Extending Default Behavior</h2>
+<h2 id="extending"><a class="anchor" href="#extending"></a>6.4.2 Extending Default Behavior</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/extending.adoc"'>
@@ -465,9 +468,9 @@ public class MyContextBuilder implements ContextBuilder {
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../../guide/securityRule.html">&lt;&lt; <strong>4</strong><span>Security Rules</span></a></div>
+                    <div class="toc-item prev-left"><a href="../../guide/securityRule.html">&lt;&lt; <strong>5</strong><span>Security Rules</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../../guide/rejection.html"><strong>7</strong><span>Rejection Handling</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
