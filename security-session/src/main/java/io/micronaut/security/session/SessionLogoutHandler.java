@@ -20,13 +20,12 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.config.RedirectConfiguration;
-import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.filters.SecurityFilter;
+import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -36,7 +35,6 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Singleton
 public class SessionLogoutHandler implements LogoutHandler {
 
     protected final String logout;

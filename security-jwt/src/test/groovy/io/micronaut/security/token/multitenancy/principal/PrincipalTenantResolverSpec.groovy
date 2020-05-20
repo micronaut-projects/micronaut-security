@@ -87,6 +87,7 @@ class PrincipalTenantResolverSpec extends Specification {
         given:
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY): 'multitenancy.principal.gateway',
+                'micronaut.security.login-handler': 'bearer',
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
                 'micronaut.http.services.books.url': "http://localhost:${gormPort}",
                 'micronaut.security.token.writer.header.enabled': true,

@@ -120,6 +120,7 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY)                        : 'rsajwtgateway',
                 'micronaut.http.services.books.url'         : "http://localhost:${booksPort}",
+                'micronaut.security.login-handler'   : 'bearer',
         ]
 
         gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig, Environment.TEST)

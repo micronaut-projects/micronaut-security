@@ -48,6 +48,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         super.configuration + [
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
                 'micronaut.security.token.jwt.generator.refresh-token.secret': 'pleaseChangeThisSecretForANewOne',
+                'micronaut.security.login-handler': 'bearer',
          ] as Map<String, Object>
     }
 

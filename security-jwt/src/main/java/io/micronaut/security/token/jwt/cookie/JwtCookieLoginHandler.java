@@ -22,28 +22,25 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
-import io.micronaut.security.handlers.RedirectingLoginHandler;
-import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
+import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
+import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
-import java.util.Optional;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-@Singleton
-public class JwtCookieLoginHandler implements RedirectingLoginHandler {
+public class JwtCookieLoginHandler implements LoginHandler {
 
     protected final JwtCookieConfiguration jwtCookieConfiguration;
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
@@ -74,7 +71,6 @@ public class JwtCookieLoginHandler implements RedirectingLoginHandler {
      * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
      */
-    @Inject
     public JwtCookieLoginHandler(RedirectConfiguration redirectConfiguration,
             JwtCookieConfiguration jwtCookieConfiguration,
             AccessTokenConfiguration accessTokenConfiguration,

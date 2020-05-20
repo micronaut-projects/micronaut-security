@@ -6,6 +6,8 @@ securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
   authenticationStrategy: Authentication Strategy
+  loginHandler: Login Handler
+  logoutHandler: Logout Handler
 authenticationProviders: Authentication Providers
 securityRule:
   title: Security Rules

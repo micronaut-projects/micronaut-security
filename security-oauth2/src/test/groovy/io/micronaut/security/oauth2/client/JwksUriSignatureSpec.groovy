@@ -63,6 +63,7 @@ class JwksUriSignatureSpec extends Specification {
         when:
         Map<String, Object> authServerAConfig = [
                 'micronaut.server.port': authServerAPort,
+                'micronaut.security.login-handler': 'bearer',
                 'spec.name': 'AuthServerAJwksUriSignatureSpec']
         EmbeddedServer authServerA = ApplicationContext.run(EmbeddedServer, authServerAConfig)
 
@@ -74,6 +75,7 @@ class JwksUriSignatureSpec extends Specification {
         when:
         Map<String, Object> authServerBConfig = [
                 'micronaut.server.port': authServerBPort,
+                'micronaut.security.login-handler': 'bearer',
                 'spec.name': 'AuthServerBJwksUriSignatureSpec']
         EmbeddedServer authServerB = ApplicationContext.run(EmbeddedServer, authServerBConfig)
 
@@ -84,8 +86,7 @@ class JwksUriSignatureSpec extends Specification {
 
         when:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer,[
-                'micronaut.security.token.jwt.bearer.enabled'          : true,
-                'micronaut.security.token.jwt.cookie.enabled'          : true,
+                'micronaut.security.login-handler': 'cookie',
                 'micronaut.security.oauth2.clients.a.openid.issuer' : "http://localhost:${authServerAPort}/oauth2/default",
                 'micronaut.security.oauth2.clients.b.openid.issuer' : "http://localhost:${authServerBPort}/oauth2/default",
                 'spec.name'                                            : 'JwksUriSignatureSpec',

@@ -1,6 +1,5 @@
 package io.micronaut.security.token.jwt.events
 
-
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.http.HttpRequest
@@ -31,6 +30,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         super.configuration + [
                 'endpoints.beans.enabled': true,
                 'endpoints.beans.sensitive': true,
+                'micronaut.security.login-handler': 'bearer',
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
         ]
     }

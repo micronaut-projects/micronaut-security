@@ -1,4 +1,4 @@
-To enable the `LoginController` you need to have a bean of type api:security.handlers.LoginHandler[] which handles the response of the Login Endpoint.
+To enable the `LoginController` you need to have a bean of type api:security.handlers.LoginHandler[]. A custom implementation can, of course, be provided. However, several <<loginHandler, Login Handlers>> implementations are available out of the box.
 
 You can configure the `LoginController` with:
 

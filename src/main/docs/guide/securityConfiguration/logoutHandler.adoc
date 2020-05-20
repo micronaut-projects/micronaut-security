@@ -1,0 +1,20 @@
+The api:security.handlers.LogoutHandler[] API defines how to respond to a logout attempt. For example, with the <<logout, Logout Controller>>.
+
+You can provide your own implementation of api:security.handlers.LogoutHandler[]. However, Micronaut security modules ship with several implementations which you can enable by setting the configuration:
+
+|===
+| Type | Configuration Key | Configuration Value | Module | Bean
+
+| JWT Cookie
+| `micronaut.security.logout-handler`
+| `cookie`
+| `micronaut-jwt`
+| api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[]
+
+| Session Storage
+| `micronaut.security.logout-handler`
+| `session`
+| `micronaut-session`
+| api:security.session.SessionLogoutHandler[]
+
+|===

@@ -33,6 +33,7 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
+                'micronaut.security.login-handler'   : 'bearer',
         ]
     }
 

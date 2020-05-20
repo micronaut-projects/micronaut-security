@@ -1,8 +1,6 @@
 package io.micronaut.security.session
 
-import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -11,7 +9,6 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.LoadBalancer
 import io.micronaut.http.cookie.Cookie
-import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
@@ -28,6 +25,14 @@ import org.reactivestreams.Publisher
 import javax.inject.Singleton
 
 class SessionReUseSpec extends EmbeddedServerSpecification {
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.login-handler': 'session',
+                'micronaut.security.logout-handler': 'session',
+        ]
+    }
 
     @Override
     String getSpecName() {

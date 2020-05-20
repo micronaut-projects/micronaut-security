@@ -74,6 +74,7 @@ class JwksSpec extends Specification {
         given:
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY)                           : 'jwks.gateway',
+                'micronaut.security.login-handler': 'bearer',
         ]
 
         gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig, Environment.TEST)

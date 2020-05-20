@@ -15,8 +15,11 @@
  */
 package io.micronaut.security.config;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.security.handlers.LoginHandlerMode;
+import io.micronaut.security.handlers.LogoutHandlerMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +54,40 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     private List<String> ipPatterns = Collections.singletonList(ANYWHERE);
     private AuthenticationStrategy authenticationStrategy = DEFAULT_AUTHENTICATION_STRATEGY;
     private boolean rejectNotFound = DEFAULT_REJECT_NOT_FOUND;
+
+    @Nullable
+    private LoginHandlerMode loginHandler = null;
+
+    @Nullable
+    private LogoutHandlerMode logoutHandler = null;
+
+    @Override
+    @Nullable
+    public LogoutHandlerMode getLogoutHandler() {
+        return this.logoutHandler;
+    }
+
+    /**
+     * Defines which Logout Handler to setup. Defaults to null. Possible values session, cookie
+     * @param logoutHandler Logout Handler LogoutHandler
+     */
+    public void setLogoutHandler(@Nullable LogoutHandlerMode logoutHandler) {
+        this.logoutHandler = logoutHandler;
+    }
+
+    @Override
+    @Nullable
+    public LoginHandlerMode getLoginHandler() {
+        return loginHandler;
+    }
+
+    /**
+     * Defines which Login Handler to setup. Defaults to null. Possible values bearer, session, cookie
+     * @param loginHandler Login Handler Mode
+     */
+    public void setLoginHandler(@Nullable LoginHandlerMode loginHandler) {
+        this.loginHandler = loginHandler;
+    }
 
     @Override
     public boolean isEnabled() {

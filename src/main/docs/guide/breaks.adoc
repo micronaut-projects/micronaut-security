@@ -26,6 +26,42 @@ This section will document breaking changes that may happen during milestone or 
 
 * The api:security.handlers.LoginHandler[] API has changed to accept an api:security.authentication.AuthenticationResponse[] object instead of an api:security.authentication.AuthenticationFailed[].
 
+* `RedirectingLoginHandler` has been removed.
+
+* Previously, `AccessRefreshTokenLoginHandler` was enabled by default. Currently, no `LoginHandler` is enabled by default. If you wish to use any of the built-in `LoginHandler`s, you have to set the configuration:
+
+** `micronaut.security.login-handler: bearer` to enable api:security.token.jwt.bearer.AccessRefreshTokenLoginHandler[]
+** `micronaut.security.login-handler: cookie` to enable api:security.token.jwt.cookie.JwtCookieLoginHandler[]
+** `micronaut.security.login-handler: session` to enable api:security.session.SessionLoginHandler[]
+
+Previous configuration such as:
+
+```yaml
+micronaut:
+    security:
+        token:
+            jwt:
+                bearer:
+                     enabled: false
+                cookie:
+                     enabled: false
+```
+
+It is currently configured as:
+
+```yaml
+micronaut:
+    security:
+        login-handler: cookie
+```
+
+=== LogoutHandler
+
+* To use any of the built-in api:security.handlers.LogoutHandler[] you have to set the configuration:
+
+** `micronaut.security.logout-handler: cookie` to enable api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[]
+** `micronaut.security.logout-handler: session` to enable api:security.session.SessionLogoutHandler[]
+
 === Refresh Token
 
 * The story around refresh tokens has been changed. There were a couple of core issues with the old implementation that needed resolved.

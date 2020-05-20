@@ -1,6 +1,7 @@
 package io.micronaut.security.endpoints
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -28,11 +29,26 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials(username, password)
 
         when:
-        client.exchange(HttpRequest.POST('/login', creds))
+        Argument<String> okArg = Argument.of(String)
+        Argument<String> errorArgument = Argument.of(String)
+
+        client.exchange(HttpRequest.POST('/login', creds), okArg, errorArgument)
 
         then:
         HttpClientResponseException e = thrown(HttpClientResponseException)
         e.status == HttpStatus.BAD_REQUEST
+
+        when:
+        Optional<String> errorOptional = e.response.getBody(String)
+
+        then:
+        errorOptional.isPresent()
+
+        when:
+        String jsonError = errorOptional.get()
+
+        then:
+        jsonError.contains('must not be blank') || jsonError.contains('must not be null')
 
         where:
         username | password

@@ -27,7 +27,6 @@ import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
-import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -57,7 +56,7 @@ public class DefaultOauthController implements OauthController {
      * @param eventPublisher The event publisher
      */
     DefaultOauthController(@Parameter OauthClient oauthClient,
-                           RedirectingLoginHandler loginHandler,
+                           LoginHandler loginHandler,
                            ApplicationEventPublisher eventPublisher) {
         this.oauthClient = oauthClient;
         this.loginHandler = loginHandler;

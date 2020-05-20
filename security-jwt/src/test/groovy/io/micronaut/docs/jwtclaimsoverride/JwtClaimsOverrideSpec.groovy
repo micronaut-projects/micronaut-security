@@ -28,6 +28,7 @@ class JwtClaimsOverrideSpec extends EmbeddedServerSpecification {
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
+                'micronaut.security.login-handler': 'bearer',
         ]
     }
 

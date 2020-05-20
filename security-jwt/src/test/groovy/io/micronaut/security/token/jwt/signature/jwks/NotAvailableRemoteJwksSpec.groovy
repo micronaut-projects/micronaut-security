@@ -1,6 +1,6 @@
 package io.micronaut.security.token.jwt.signature.jwks
 
-import com.nimbusds.jose.JOSEException
+
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
@@ -10,7 +10,6 @@ import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
@@ -25,7 +24,6 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
@@ -35,16 +33,11 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import io.micronaut.security.token.views.UserDetailsEmail
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import spock.lang.Retry
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
@@ -73,6 +66,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
             [
                     'micronaut.server.port': authServerPort,
                     'spec.name': 'AuthServerNotAvailableRemoteJwksSpec',
+                    'micronaut.security.login-handler': 'bearer',
             ]
 
 

@@ -9,7 +9,6 @@ class JwtCookieConfigurationOverrideSpec extends ApplicationContextSpecification
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.token.jwt.cookie.enabled': true,
                 'micronaut.security.token.jwt.cookie.logout-target-url': '/logout',
                 'micronaut.security.token.jwt.cookie.login-success-target-url': '/welcome',
                 'micronaut.security.token.jwt.cookie.login-failure-target-url': '/login',

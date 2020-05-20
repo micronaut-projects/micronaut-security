@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.handlers;
 
 /**
- * A marker contract to indicate the login handler
- * returns redirecting responses.
- *
- * @author James Kleeh
- * @since 1.2.0
+ * Different logout modes shipped with Micronaut Security.
+ * @author Sergio del Amo
+ * @since 2.0.0
  */
-public interface RedirectingLoginHandler extends LoginHandler {
+public enum LogoutHandlerMode {
+    COOKIE,
+    SESSION;
+
+    @Override
+    public String toString() {
+        return this.name().toLowerCase();
+    }
 }

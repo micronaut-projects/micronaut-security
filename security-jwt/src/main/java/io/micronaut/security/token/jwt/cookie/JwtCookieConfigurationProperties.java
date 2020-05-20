@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.config.RedirectConfigurationProperties;
@@ -32,6 +33,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(property = JwtCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(JwtCookieConfigurationProperties.PREFIX)
 public class JwtCookieConfigurationProperties implements JwtCookieConfiguration {
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".cookie";
@@ -40,7 +42,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
 
     /**
      * The default secure value.

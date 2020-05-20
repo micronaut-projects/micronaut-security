@@ -1,6 +1,5 @@
 To enable the logout controller you need a bean of type api:security.handlers.LogoutHandler[]. The behaviour of the controller is delegated to it.
-
-There are default implementations provided for JWT Cookie (api:io.micronaut.security.token.jwt.cookie.JwtCookieClearerLogoutHandler[]) and Session based authentication storage (api:io.micronaut.security.session.SessionLogoutHandler[]).
+A custom implementation can, of course, be provided. However, several <<logoutHandler, Logout Handler>>s implementations are available out of the box.
 
 You can configure the logout endpoint with:
 

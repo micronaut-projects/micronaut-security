@@ -15,7 +15,6 @@ import io.micronaut.security.token.jwt.signature.secret.SecretSignature
 import io.micronaut.testutils.EmbeddedServerSpecification
 import io.micronaut.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
-import spock.lang.Shared
 
 class SignSecretEncryptRSASpec extends EmbeddedServerSpecification implements AuthorizationUtils, YamlAsciidocTagCleaner {
 
@@ -65,6 +64,7 @@ micronaut:
                 'endpoints.beans.enabled': true,
                 'endpoints.beans.sensitive': true,
                 'pem.path': pemFile.absolutePath,
+                'micronaut.security.login-handler': 'bearer',
         ] << flatten(configMap)
     }
 

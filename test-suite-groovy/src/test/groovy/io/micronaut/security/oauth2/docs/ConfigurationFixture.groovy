@@ -1,4 +1,4 @@
-package io.microanut.security.oauth2.docs
+package io.micronaut.security.oauth2.docs
 
 trait ConfigurationFixture {
     Map<String, Object> getConfiguration() {
@@ -6,8 +6,7 @@ trait ConfigurationFixture {
         if (specName) {
             m['spec.name'] = specName
         }
-        m += disableBearerConfiguration
-        m += enableCookieConfiguration
+        m += loginHandlerCookieConfiguration
         m += oauth2ClientConfiguration
         m
     }
@@ -24,12 +23,8 @@ trait ConfigurationFixture {
         null
     }
 
-    Map<String, Object> getDisableBearerConfiguration() {
-        ['micronaut.security.token.jwt.bearer.enabled': false]
-    }
-
-    Map<String, Object> getEnableCookieConfiguration() {
-        ['micronaut.security.token.jwt.cookie.enabled': true] as Map<String, Object>
+    Map<String, Object> getLoginHandlerCookieConfiguration() {
+        ['micronaut.security.login-handler': 'cookie'] as Map<String, Object>
     }
 
     Map<String, Object> getOauth2ClientConfiguration() {

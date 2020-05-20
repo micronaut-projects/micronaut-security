@@ -6,13 +6,6 @@ import spock.lang.Subject
 
 class JwtCookieConfigurationSpec extends ApplicationContextSpecification {
 
-    @Override
-    Map<String, Object> getConfiguration() {
-        super.configuration + [
-                'micronaut.security.token.jwt.cookie.enabled': true,
-        ]
-    }
-
     @Subject
     @Shared
     JwtCookieConfiguration jwtCookieConfiguration = applicationContext.getBean(JwtCookieConfiguration)
