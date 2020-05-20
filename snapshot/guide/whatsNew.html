@@ -144,12 +144,6 @@ function addJsClass() {
 <div class="ulist">
 <ul>
 <li>
-<p>It is now possible to gain access to the request in your <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.</p>
-</li>
-<li>
-<p>It is no longer assumed that a failed authentication response is an instance of <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>. That now allows for any subclass of <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> to be emitted in the case of an authentication failure.</p>
-</li>
-<li>
 <p>A new constructor for <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a> that takes a string message has been added to allow for custom error messages.</p>
 </li>
 <li>
