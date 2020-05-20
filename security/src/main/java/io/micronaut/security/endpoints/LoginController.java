@@ -49,7 +49,9 @@ import javax.validation.Valid;
  * @author Graeme Rocher
  * @since 1.0
  */
-@Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(beans = LoginHandler.class)
+@Requires(beans = Authenticator.class)
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Validated

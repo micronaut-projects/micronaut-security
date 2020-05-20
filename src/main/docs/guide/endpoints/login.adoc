@@ -1,4 +1,7 @@
 You can enable `LoginController` with configuration property:
+To enable the `LoginController` you need to have a bean of type `LoginHandler``
+
+You can configure the `LoginController` with api:security.handlers.LoginHandler[].
 
 include::{includedir}configurationProperties/io.micronaut.security.endpoints.LoginControllerConfigurationProperties.adoc[]
 
