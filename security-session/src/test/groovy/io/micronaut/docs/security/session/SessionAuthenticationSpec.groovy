@@ -20,13 +20,13 @@ class SessionAuthenticationSpec extends GebSpec implements YamlAsciidocTagCleane
 //tag::yamlconfig[]
 micronaut:
   security:
+    redirect:
+      login-failure: /login/authFailed
     endpoints:
       login:
         enabled: true
       logout:
-        enabled: true
-    session:
-      login-failure-target-url: /login/authFailed
+        enabled: true 
 '''//end::yamlconfig[]
 
     @Shared
@@ -40,8 +40,8 @@ micronaut:
                                     'enabled': true,
                             ],
                     ],
-                    'session': [
-                            'login-failure-target-url': '/login/authFailed',
+                    'redirect': [
+                            'login-failure': '/login/authFailed',
                     ]
             ]
         ]

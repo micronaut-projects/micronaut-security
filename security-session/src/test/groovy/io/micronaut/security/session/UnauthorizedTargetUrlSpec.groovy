@@ -17,14 +17,14 @@ class UnauthorizedTargetUrlSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.session.unauthorized-target-url': '/login/auth',
+                'micronaut.security.redirect.unauthorized': '/login/auth',
                 'micronaut.security.intercept-url-map': [
                         [pattern: '/login/auth', httpMethod: 'GET', access: ['isAnonymous()']]
                 ]
         ]
     }
 
-    void "access a secured controller without authentication redirects to micronaut.security.session.unauthorized-target-url"() {
+    void "access a secured controller without authentication redirects to micronaut.security.redirect.unauthorized"() {
         when:
         HttpRequest request = HttpRequest.GET("/foo/bar")
                 .header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')

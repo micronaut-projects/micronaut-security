@@ -21,6 +21,7 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.token.config.TokenConfiguration;
@@ -28,6 +29,7 @@ import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,8 +43,9 @@ import java.net.URISyntaxException;
 @Singleton
 public class SessionLoginHandler implements RedirectingLoginHandler {
 
+    protected final String loginSuccess;
+    protected final String loginFailure;
     protected final SessionStore<Session> sessionStore;
-    protected final SecuritySessionConfiguration securitySessionConfiguration;
     private final String rolesKeyName;
 
     /**
@@ -50,11 +53,30 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
      * @param securitySessionConfiguration Security Session Configuration
      * @param sessionStore The session store
      * @param tokenConfiguration Token Configuration
+     * @deprecated Use {@link SessionLoginHandler(RedirectConfiguration, SessionStore, TokenConfiguration)} instead.
      */
+    @Deprecated
     public SessionLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,
                                SessionStore<Session> sessionStore,
                                TokenConfiguration tokenConfiguration) {
-        this.securitySessionConfiguration = securitySessionConfiguration;
+        this.loginFailure = securitySessionConfiguration.getLoginFailureTargetUrl();
+        this.loginSuccess = securitySessionConfiguration.getLoginSuccessTargetUrl();
+        this.sessionStore = sessionStore;
+        this.rolesKeyName = tokenConfiguration.getRolesName();
+    }
+
+    /**
+     * Constructor.
+     * @param redirectConfiguration Redirect configuration
+     * @param sessionStore The session store
+     * @param tokenConfiguration Token Configuration
+     */
+    @Inject
+    public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
+                               SessionStore<Session> sessionStore,
+                               TokenConfiguration tokenConfiguration) {
+        this.loginFailure = redirectConfiguration.getLoginFailure();
+        this.loginSuccess = redirectConfiguration.getLoginSuccess();
         this.sessionStore = sessionStore;
         this.rolesKeyName = tokenConfiguration.getRolesName();
     }
@@ -64,7 +86,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
         session.put(SecurityFilter.AUTHENTICATION, new AuthenticationUserDetailsAdapter(userDetails, rolesKeyName));
         try {
-            URI location = new URI(securitySessionConfiguration.getLoginSuccessTargetUrl());
+            URI location = new URI(loginSuccess);
             return HttpResponse.seeOther(location);
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();
@@ -74,7 +96,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     @Override
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
         try {
-            URI location = new URI(securitySessionConfiguration.getLoginFailureTargetUrl());
+            URI location = new URI(loginFailure);
             return HttpResponse.seeOther(location);
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();

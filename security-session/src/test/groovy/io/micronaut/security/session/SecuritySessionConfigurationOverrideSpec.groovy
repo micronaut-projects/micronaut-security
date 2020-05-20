@@ -9,7 +9,6 @@ class SecuritySessionConfigurationOverrideSpec extends ApplicationContextSpecifi
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security..jwt.cookie.logout-target-url': '/logout',
                 'micronaut.security.session.login-success-target-url': '/welcome',
                 'micronaut.security.session.login-failure-target-url': '/login',
                 'micronaut.security.session.logout-target-url': '/logout',
@@ -23,6 +22,7 @@ class SecuritySessionConfigurationOverrideSpec extends ApplicationContextSpecifi
     @Shared
     SecuritySessionConfiguration sessionConfiguration = applicationContext.getBean(SecuritySessionConfiguration)
 
+    @Deprecated
     void "it is possible to override success and failure urls via configuration"() {
         expect:
         sessionConfiguration.loginSuccessTargetUrl == '/welcome'

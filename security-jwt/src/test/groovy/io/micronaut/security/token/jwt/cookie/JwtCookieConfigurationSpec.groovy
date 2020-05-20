@@ -17,6 +17,7 @@ class JwtCookieConfigurationSpec extends ApplicationContextSpecification {
     @Shared
     JwtCookieConfiguration jwtCookieConfiguration = applicationContext.getBean(JwtCookieConfiguration)
 
+    @Deprecated
     void "it is possible to override success and failure urls via configuration"() {
         expect:
         jwtCookieConfiguration.logoutTargetUrl == '/'

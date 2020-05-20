@@ -31,7 +31,7 @@ class JwtCookieSameSiteInvalidSpec extends EmbeddedServerSpecification {
                 'micronaut.security.token.jwt.cookie.enabled': true,
                 'micronaut.security.token.jwt.cookie.cookie-max-age': '5m',
                 'micronaut.security.token.jwt.cookie.cookie-same-site': 'nonesense',
-                'micronaut.security.token.jwt.cookie.login-failure-target-url': '/login/authFailed',
+                'micronaut.security.redirect.login-failure': '/login/authFailed',
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
         ]
     }

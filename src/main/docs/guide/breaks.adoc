@@ -61,3 +61,26 @@ The functionality has now been changed to generate a token that is not a JWT, bu
 * All deprecations present in 1.3.x have been removed.
 
 * `JwtGeneratorConfiguration` has been deprecated in favor of api:security.token.jwt.generator.AccessTokenConfiguration[]. The configuration has been changed from `micronaut.security.token.jwt.generator.access-token-expiration` to `micronaut.security.token.jwt.generator.access-token.expiration`.
+
+==== Redirection
+
+* Redirection configuration have been simplified. The following properties are deprecated:
+
+** `micronaut.security.session.login-success-target-url`
+** `micronaut.security.session.login-failure-target-url`
+** `micronaut.security.session.logout-target-url`
+** `micronaut.security.session.unauthorized-target-url`
+** `micronaut.security.session.forbidden-target-url`
+** `micronaut.security.session.redirect-on-rejection`
+** `micronaut.security.token.jwt.cookie.logout-target-url`
+** `micronaut.security.token.jwt.cookie.login-success-target-url`
+** `micronaut.security.token.jwt.cookie.login-failure-target-url`
+
+You should use instead:
+
+** `micronaut.security.redirect.login-success`
+** `micronaut.security.redirect.login-failure`
+** `micronaut.security.redirect.logout`
+** `micronaut.security.redirect.unauthorized`
+** `micronaut.security.redirect.forbidden`
+** `micronaut.security.redirect.on-rejection`

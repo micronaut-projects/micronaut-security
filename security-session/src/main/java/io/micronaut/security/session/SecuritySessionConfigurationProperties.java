@@ -17,13 +17,16 @@ package io.micronaut.security.session;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
 /**
  * Implementation of {@link SecuritySessionConfiguration}. Session-based Authentication configuration properties.
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated Use {@link RedirectConfigurationProperties} instead.
  */
+@Deprecated
 @ConfigurationProperties(SecuritySessionConfigurationProperties.PREFIX)
 public class SecuritySessionConfigurationProperties implements SecuritySessionConfiguration {
 
@@ -35,128 +38,110 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
-    /**
-     * The default login success target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_LOGINSUCCESSTARGETURL = "/";
+    private final RedirectConfigurationProperties redirectConfigurationProperties;
 
-    /**
-     * The default login failure target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_LOGINFAILURETARGETURL = "/";
-
-    /**
-     * The default login target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_LOGOUTTARGETURL = "/";
-
-    /**
-     * The default unauthorized rejection target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_UNAUTHORIZEDTARGETURL = "/";
-
-    /**
-     * The default forbidden rejection target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_FORBIDDENTARGETURL = "/";
-
-    private static final Boolean DEFAULT_REDIRECT_ON_REJECTION = true;
-
-    private String loginSuccessTargetUrl = DEFAULT_LOGINSUCCESSTARGETURL;
-    private String loginFailureTargetUrl = DEFAULT_LOGINFAILURETARGETURL;
-    private String logoutTargetUrl = DEFAULT_LOGOUTTARGETURL;
-    private String unauthorizedTargetUrl = DEFAULT_UNAUTHORIZEDTARGETURL;
-    private String forbiddenTargetUrl = DEFAULT_FORBIDDENTARGETURL;
-    private boolean redirectOnRejection = DEFAULT_REDIRECT_ON_REJECTION;
     private boolean enabled = DEFAULT_ENABLED;
-    
+
+    /**
+     *
+     * @param redirectConfigurationProperties Redirect configuration
+     */
+    public SecuritySessionConfigurationProperties(RedirectConfigurationProperties redirectConfigurationProperties) {
+        this.redirectConfigurationProperties = redirectConfigurationProperties;
+    }
+
     @Override
     public boolean isEnabled() {
         return enabled;
     }
 
     @Override
+    @Deprecated
     public String getLoginSuccessTargetUrl() {
-        return this.loginSuccessTargetUrl;
+        return this.redirectConfigurationProperties.getLoginSuccess();
     }
 
     @Override
+    @Deprecated
     public String getLogoutTargetUrl() {
-        return this.logoutTargetUrl;
+        return this.redirectConfigurationProperties.getLogout();
     }
 
     @Override
+    @Deprecated
     public String getLoginFailureTargetUrl() {
-        return this.loginFailureTargetUrl;
+        return this.redirectConfigurationProperties.getLoginFailure();
     }
 
     @Override
+    @Deprecated
     public String getUnauthorizedTargetUrl()  {
-        return unauthorizedTargetUrl;
+        return this.redirectConfigurationProperties.getUnauthorized();
     }
 
     @Override
+    @Deprecated
     public String getForbiddenTargetUrl()  {
-        return forbiddenTargetUrl;
+        return this.redirectConfigurationProperties.getForbidden();
     }
 
     /**
-     * Sets the login success target URL. Default value ({@value #DEFAULT_LOGINSUCCESSTARGETURL}).
+     * deprecated use micronaut.security.redirect.login-success.
      *
      * @param loginSuccessTargetUrl The URL
      */
+    @Deprecated
     public void setLoginSuccessTargetUrl(String loginSuccessTargetUrl) {
         if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
-            this.loginSuccessTargetUrl = loginSuccessTargetUrl;
+            this.redirectConfigurationProperties.setLoginSuccess(loginSuccessTargetUrl);
         }
     }
 
     /**
-     * Sets the login failure target URL. Default value ({@value #DEFAULT_LOGINFAILURETARGETURL}).
+     * deprecated use micronaut.security.redirect.login-success.
      *
      * @param loginFailureTargetUrl The URL
      */
+    @Deprecated
     public void setLoginFailureTargetUrl(String loginFailureTargetUrl) {
         if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
-            this.loginFailureTargetUrl = loginFailureTargetUrl;
+            this.redirectConfigurationProperties.setLoginFailure(loginFailureTargetUrl);
         }
     }
 
     /**
-     * Sets the logout target URL. Default value ({@value #DEFAULT_LOGOUTTARGETURL}).
+     * deprecated use micronaut.security.redirect.logout
      *
      * @param logoutTargetUrl The URL
      */
+    @Deprecated
     public void setLogoutTargetUrl(String logoutTargetUrl) {
         if (StringUtils.isNotEmpty(logoutTargetUrl)) {
-            this.logoutTargetUrl = logoutTargetUrl;
+            this.redirectConfigurationProperties.setLogout(logoutTargetUrl);
         }
     }
 
     /**
-     * Sets the unauthorized target URL. Default value ({@value #DEFAULT_UNAUTHORIZEDTARGETURL}).
+     * deprecated use micronaut.security.redirect.unauthorized
      *
      * @param unauthorizedTargetUrl The URL
      */
+    @Deprecated
     public void setUnauthorizedTargetUrl(String unauthorizedTargetUrl) {
         if (StringUtils.isNotEmpty(unauthorizedTargetUrl)) {
-            this.unauthorizedTargetUrl = unauthorizedTargetUrl;
+            this.redirectConfigurationProperties.setUnauthorized(unauthorizedTargetUrl);
         }
     }
 
     /**
-     * Sets the forbidden target URL. Default value ({@value #DEFAULT_FORBIDDENTARGETURL}).
+     * deprecated use micronaut.security.redirect.forbidden
      *
-      * @param forbiddenTargetUrl The URL
+     * @param forbiddenTargetUrl The URL
      */
+    @Deprecated
     public void setForbiddenTargetUrl(String forbiddenTargetUrl) {
         if (StringUtils.isNotEmpty(forbiddenTargetUrl)) {
-            this.forbiddenTargetUrl = forbiddenTargetUrl;
+            this.redirectConfigurationProperties.setForbidden(forbiddenTargetUrl);
         }
     }
 
@@ -170,17 +155,18 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     }
 
     @Override
+    @Deprecated
     public boolean isRedirectOnRejection() {
-        return redirectOnRejection;
+        return this.redirectConfigurationProperties.isOnRejection();
     }
 
     /**
-     * Sets whether a redirect should occur on an authorization failure.
-     * Default value ({@value #DEFAULT_REDIRECT_ON_REJECTION}).
+     *  deprecated. use micronaut.security.redirect.on-rejection instead.
      *
      * @param redirectOnRejection True if a redirect should occur
      */
+    @Deprecated
     public void setRedirectOnRejection(boolean redirectOnRejection) {
-        this.redirectOnRejection = redirectOnRejection;
+        this.redirectConfigurationProperties.setOnRejection(redirectOnRejection);
     }
 }
