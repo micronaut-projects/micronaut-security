@@ -143,6 +143,10 @@ implements <a href="../../../../../../io/micronaut/security/handlers/LogoutHandl
 <td class="colFirst"><code>protected <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#jwtCookieConfiguration">jwtCookieConfiguration</a></span></code>&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#logout">logout</a></span></code>&nbsp;</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -158,7 +162,15 @@ implements <a href="../../../../../../io/micronaut/security/handlers/LogoutHandl
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-">JwtCookieClearerLogoutHandler</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-">JwtCookieClearerLogoutHandler</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-"><code>JwtCookieClearerLogoutHandler(JwtCookieConfiguration, RedirectConfiguration)</code></a> instead.</span></div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-">JwtCookieClearerLogoutHandler</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
+                             <a href="../../../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -204,10 +216,19 @@ implements <a href="../../../../../../io/micronaut/security/handlers/LogoutHandl
 <a name="jwtCookieConfiguration">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>jwtCookieConfiguration</h4>
 <pre>protected final&nbsp;<a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a> jwtCookieConfiguration</pre>
+</li>
+</ul>
+<a name="logout">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>logout</h4>
+<pre>protected final&nbsp;java.lang.String logout</pre>
 </li>
 </ul>
 </li>
@@ -221,13 +242,31 @@ implements <a href="../../../../../../io/micronaut/security/handlers/LogoutHandl
 <a name="JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>JwtCookieClearerLogoutHandler</h4>
-<pre>public&nbsp;JwtCookieClearerLogoutHandler(<a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration)</pre>
+<pre>@Deprecated
+public&nbsp;JwtCookieClearerLogoutHandler(<a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-"><code>JwtCookieClearerLogoutHandler(JwtCookieConfiguration, RedirectConfiguration)</code></a> instead.</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>jwtCookieConfiguration</code> - JWT Cookie Configuration</dd>
+</dl>
+</li>
+</ul>
+<a name="JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>JwtCookieClearerLogoutHandler</h4>
+<pre>@Inject
+public&nbsp;JwtCookieClearerLogoutHandler(<a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
+                                             <a href="../../../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>jwtCookieConfiguration</code> - JWT Cookie Configuration</dd>
+<dd><code>redirectConfiguration</code> - Redirect configuration</dd>
 </dl>
 </li>
 </ul>

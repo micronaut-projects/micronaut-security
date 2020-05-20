@@ -141,8 +141,8 @@ implements <a href="../../../../io/micronaut/security/handlers/LogoutHandler.htm
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLogoutHandler.html#securitySessionConfiguration">securitySessionConfiguration</a></span></code>&nbsp;</td>
+<td class="colFirst"><code>protected java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLogoutHandler.html#logout">logout</a></span></code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -159,8 +159,15 @@ implements <a href="../../../../io/micronaut/security/handlers/LogoutHandler.htm
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLogoutHandler.html#SessionLogoutHandler-io.micronaut.security.session.SecuritySessionConfiguration-">SessionLogoutHandler</a></span>(<a href="../../../../io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a>&nbsp;securitySessionConfiguration)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLogoutHandler.html#SessionLogoutHandler-io.micronaut.security.config.RedirectConfiguration-">SessionLogoutHandler</a></span>(<a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration)</code>
 <div class="block">Constructor.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLogoutHandler.html#SessionLogoutHandler-io.micronaut.security.session.SecuritySessionConfiguration-">SessionLogoutHandler</a></span>(<a href="../../../../io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a>&nbsp;securitySessionConfiguration)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../io/micronaut/security/session/SessionLogoutHandler.html#SessionLogoutHandler-io.micronaut.security.config.RedirectConfiguration-"><code>SessionLogoutHandler(RedirectConfiguration)</code></a> instead.</span></div>
+</div>
 </td>
 </tr>
 </table>
@@ -204,13 +211,13 @@ implements <a href="../../../../io/micronaut/security/handlers/LogoutHandler.htm
 <!--   -->
 </a>
 <h3>Field Detail</h3>
-<a name="securitySessionConfiguration">
+<a name="logout">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>securitySessionConfiguration</h4>
-<pre>protected final&nbsp;<a href="../../../../io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a> securitySessionConfiguration</pre>
+<h4>logout</h4>
+<pre>protected final&nbsp;java.lang.String logout</pre>
 </li>
 </ul>
 </li>
@@ -224,14 +231,31 @@ implements <a href="../../../../io/micronaut/security/handlers/LogoutHandler.htm
 <a name="SessionLogoutHandler-io.micronaut.security.session.SecuritySessionConfiguration-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>SessionLogoutHandler</h4>
-<pre>public&nbsp;SessionLogoutHandler(<a href="../../../../io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a>&nbsp;securitySessionConfiguration)</pre>
+<pre>@Deprecated
+public&nbsp;SessionLogoutHandler(<a href="../../../../io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a>&nbsp;securitySessionConfiguration)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../io/micronaut/security/session/SessionLogoutHandler.html#SessionLogoutHandler-io.micronaut.security.config.RedirectConfiguration-"><code>SessionLogoutHandler(RedirectConfiguration)</code></a> instead.</span></div>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>securitySessionConfiguration</code> - Security Session Configuration session store</dd>
+</dl>
+</li>
+</ul>
+<a name="SessionLogoutHandler-io.micronaut.security.config.RedirectConfiguration-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>SessionLogoutHandler</h4>
+<pre>@Inject
+public&nbsp;SessionLogoutHandler(<a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration)</pre>
+<div class="block">Constructor.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>redirectConfiguration</code> - Redirect Configuration</dd>
 </dl>
 </li>
 </ul>
