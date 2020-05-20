@@ -22,13 +22,6 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
         'LoginControllerValidationSpec'
     }
 
-    @Override
-    Map<String, Object> getConfiguration() {
-        super.configuration + [
-            'micronaut.security.endpoints.login.enabled': true,
-        ]
-    }
-
     @Unroll("{\"username\": \"#username\", \"password\": \"#password\"} is invalid payload")
     void "LoginController responds BAD_REQUEST if POJO sent to /login is invalid"(String username, String password) {
         given:

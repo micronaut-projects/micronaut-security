@@ -1,11 +1,8 @@
-You can enable `LoginController` with configuration property:
-To enable the `LoginController` you need to have a bean of type `LoginHandler``
+To enable the `LoginController` you need to have a bean of type api:security.handlers.LoginHandler[] which handles the response of the Login Endpoint.
 
-You can configure the `LoginController` with api:security.handlers.LoginHandler[].
+You can configure the `LoginController` with:
 
 include::{includedir}configurationProperties/io.micronaut.security.endpoints.LoginControllerConfigurationProperties.adoc[]
-
-The response of the Login Endpoint is handled by a bean instance of link:{api}/io/micronaut/security/handlers/LoginHandler.html[LoginHandler].
 
 == Login Endpoint invocation example
 

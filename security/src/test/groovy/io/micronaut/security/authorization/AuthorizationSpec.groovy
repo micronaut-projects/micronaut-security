@@ -36,7 +36,6 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
         super.configuration + [
                 'endpoints.beans.enabled': true,
                 'endpoints.beans.sensitive': true,
-                'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.security.intercept-url-map': [
                         [pattern: '/urlMap/admin', access: ['ROLE_ADMIN', 'ROLE_X']],
                         [pattern: '/urlMap/**',    access: 'isAuthenticated()'],

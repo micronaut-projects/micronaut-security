@@ -29,7 +29,6 @@ class EventListenerSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.endpoints.login.enabled': true,
                 'endpoints.beans.enabled': true,
                 'endpoints.beans.sensitive': true,
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',

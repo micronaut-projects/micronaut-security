@@ -62,7 +62,6 @@ micronaut:
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.endpoints.login.enabled': true,
                 'endpoints.beans.enabled': true,
                 'endpoints.beans.sensitive': true,
                 'pem.path': pemFile.absolutePath,

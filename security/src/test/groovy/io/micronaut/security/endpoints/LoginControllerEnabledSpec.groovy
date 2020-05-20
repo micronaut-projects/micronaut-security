@@ -26,6 +26,7 @@ class LoginControllerEnabledSpec extends ApplicationContextSpecification {
         where:
         clazz << [
                 LoginController,
+                LoginControllerConfiguration,
                 LoginControllerConfigurationProperties,
         ]
 

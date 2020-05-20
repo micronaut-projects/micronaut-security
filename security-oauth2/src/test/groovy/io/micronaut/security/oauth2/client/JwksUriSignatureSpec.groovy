@@ -59,10 +59,9 @@ class JwksUriSignatureSpec extends Specification {
         given:
         int authServerAPort = SocketUtils.findAvailableTcpPort()
         int authServerBPort = SocketUtils.findAvailableTcpPort()
-        Map<String, Object> endpointsConfiguration = ['micronaut.security.endpoints.login.enabled': true]
 
         when:
-        Map<String, Object> authServerAConfig = endpointsConfiguration + [
+        Map<String, Object> authServerAConfig = [
                 'micronaut.server.port': authServerAPort,
                 'spec.name': 'AuthServerAJwksUriSignatureSpec']
         EmbeddedServer authServerA = ApplicationContext.run(EmbeddedServer, authServerAConfig)
@@ -73,7 +72,7 @@ class JwksUriSignatureSpec extends Specification {
         }
 
         when:
-        Map<String, Object> authServerBConfig = endpointsConfiguration + [
+        Map<String, Object> authServerBConfig = [
                 'micronaut.server.port': authServerBPort,
                 'spec.name': 'AuthServerBJwksUriSignatureSpec']
         EmbeddedServer authServerB = ApplicationContext.run(EmbeddedServer, authServerBConfig)

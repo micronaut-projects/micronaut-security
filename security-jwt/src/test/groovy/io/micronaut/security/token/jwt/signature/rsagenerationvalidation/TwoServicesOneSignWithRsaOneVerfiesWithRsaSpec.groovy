@@ -119,7 +119,6 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         given:
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY)                        : 'rsajwtgateway',
-                'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.http.services.books.url'         : "http://localhost:${booksPort}",
         ]
 

@@ -26,7 +26,6 @@ class AccessTokenExpirationSpec extends EmbeddedServerSpecification {
                 'endpoints.beans.sensitive': true,
                 'micronaut.security.token.jwt.generator.access-token.expiration': 5,
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
-                'micronaut.security.endpoints.login.enabled': true,
         ]
     }
 

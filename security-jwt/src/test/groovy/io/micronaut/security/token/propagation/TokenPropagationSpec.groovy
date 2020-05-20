@@ -49,7 +49,6 @@ class TokenPropagationSpec extends Specification {
                 'micronaut.application.name': 'gateway',
                 'micronaut.http.services.books.url': "${booksEmbeddedServer.getURL().toString()}",
                 'micronaut.http.services.inventory.url': "${inventoryEmbeddedServer.getURL().toString()}",
-                'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.security.token.propagation.enabled': true,
                 'micronaut.security.token.propagation.service-id-regex': 'books|inventory',
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',

@@ -41,7 +41,6 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         super.configuration + [
             'endpoints.beans.enabled': true,
             'endpoints.beans.sensitive': true,
-            'micronaut.security.endpoints.login.enabled': true,
         ]
     }
 

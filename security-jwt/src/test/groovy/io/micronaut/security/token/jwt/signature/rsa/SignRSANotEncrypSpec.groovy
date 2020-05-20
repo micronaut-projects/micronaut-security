@@ -30,7 +30,6 @@ class SignRSANotEncrypSpec extends EmbeddedServerSpecification implements Author
                 'endpoints.beans.enabled': true,
                 'endpoints.beans.sensitive': true,
                 'pem.path': pemFile.absolutePath,
-                'micronaut.security.endpoints.login.enabled': true,
         ]
     }
 

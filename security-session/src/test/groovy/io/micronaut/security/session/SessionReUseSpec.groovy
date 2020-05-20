@@ -34,13 +34,6 @@ class SessionReUseSpec extends EmbeddedServerSpecification {
         'SessionReUseSpec'
     }
 
-    @Override
-    Map<String, Object> getConfiguration() {
-        super.configuration + [
-                'micronaut.security.endpoints.login.enabled': true,
-        ]
-    }
-
     void "test the same session is reused through login/logout/login"() {
         given:
         def config = new DefaultHttpClientConfiguration(followRedirects: false)
