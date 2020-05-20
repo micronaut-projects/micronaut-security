@@ -2,6 +2,10 @@ introduction:
   title: Introduction
 whatsNew: What's New
 breaks: Breaking Changes
+securityConfiguration:
+  title: Security Configuration
+  rejectNotFound: Reject Not Found Routes
+  authenticationStrategy: Authentication Strategy
 authenticationProviders: Authentication Providers
 securityRule:
   title: Security Rules

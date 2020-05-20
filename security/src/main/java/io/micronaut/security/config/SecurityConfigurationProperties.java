@@ -39,12 +39,17 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+    /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final AuthenticationStrategy DEFAULT_AUTHENTICATION_STRATEGY = AuthenticationStrategy.ANY;
     public static final boolean DEFAULT_REJECT_NOT_FOUND = true;
 
     private boolean enabled = DEFAULT_ENABLED;
     private List<InterceptUrlMapPattern> interceptUrlMap = new ArrayList<>();
     private List<String> ipPatterns = Collections.singletonList(ANYWHERE);
-    private AuthenticationStrategy authenticationStrategy = AuthenticationStrategy.ANY;
+    private AuthenticationStrategy authenticationStrategy = DEFAULT_AUTHENTICATION_STRATEGY;
     private boolean rejectNotFound = DEFAULT_REJECT_NOT_FOUND;
 
     @Override
@@ -97,8 +102,8 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     /**
-     * @param authenticationStrategy Determines how authentication providers should be processed.
-     *                               Default value ({@link AuthenticationStrategy#ANY}).
+     * Determines how authentication providers should be processed. Default value ANY. Possible values: ANY or ALL.
+     * @param authenticationStrategy authentication strategy.
      */
     public void setAuthenticationStrategy(AuthenticationStrategy authenticationStrategy) {
         this.authenticationStrategy = authenticationStrategy;
