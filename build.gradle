@@ -17,6 +17,7 @@ buildscript {
             exclude module:'shadow'
             exclude module:'plugin-shadow'
         }
+        classpath "org.gradle:test-retry-gradle-plugin:1.1.5"
     }
 }
 
@@ -54,7 +55,8 @@ subprojects { Project subproject ->
     apply plugin:"java-library"
     apply plugin: 'idea'
     apply plugin: 'checkstyle'
-    apply plugin: "com.github.ben-manes.versions"
+    apply plugin: "com.github.ben-manes.versions"    
+    apply plugin: "org.gradle.test-retry"
 
     apply from: rootProject.file('gradle/license.gradle')
 
@@ -123,6 +125,12 @@ subprojects { Project subproject ->
 
         maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
         forkEvery = 100
+
+        retry {
+            maxRetries = 3
+            maxFailures = 20
+            failOnPassedAfterRetry = false
+       }
     }
 
     configurations {
