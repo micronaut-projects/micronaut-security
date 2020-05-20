@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>12 OAuth 2.0 2.0.0.BUILD-SNAPSHOT</title>
+    <title>11 OAuth 2.0 1.3.3.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -44,37 +44,31 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>3</strong><span>Breaking Changes</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>4</strong><span>Authentication Providers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>5</strong><span>Security Rules</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>6</strong><span>Authorization Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>7</strong><span>Rejection Handling</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>8</strong><span>Token Propagation</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>9</strong><span>Built-In Security Controllers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>10</strong><span>Retrieve the authenticated user</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>11</strong><span>Security Events</span></a>
-                        </div>
-                        
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>12</strong><span>OAuth 2.0</span></a>
-                        </div>
-                        
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/repository.html"><strong>13</strong><span>Repository</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
                         </div>
                         
                     </div>
@@ -95,100 +89,98 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../guide/securityEvents.html">&lt;&lt; <strong>11</strong><span>Security Events</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/securityEvents.html">&lt;&lt; <strong>10</strong><span>Security Events</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/repository.html"><strong>13</strong><span>Repository</span> >></a></div>
-                
 
 
                 <div class="project">
-                    <h1>12 OAuth 2.0</h1>
+                    <h1>11 OAuth 2.0</h1>
 
-                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.3.3.BUILD-SNAPSHOT</p>
                 </div>
 
                 
                 <div id="table-of-content">
                     <h2>Table of Contents</h2>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#installation"><strong>12.1</strong><span>Installation</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#installation"><strong>11.1</strong><span>Installation</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#openid"><strong>12.2</strong><span>OpenID Connect</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#openid"><strong>11.2</strong><span>OpenID Connect</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#flows"><strong>12.3</strong><span>Flows</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#flows"><strong>11.3</strong><span>Flows</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#authorization-code"><strong>12.3.1</strong><span>Authorization Code</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#authorization-code"><strong>11.3.1</strong><span>Authorization Code</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:20px"><a href="#oauth2-authorization-code"><strong>12.3.1.1</strong><span>OAuth 2.0</span></a>
+                    <div class="toc-item" style="margin-left:20px"><a href="#oauth2-authorization-code"><strong>11.3.1.1</strong><span>OAuth 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:30px"><a href="#oauth2-configuration"><strong>12.3.1.1.1</strong><span>Configuration</span></a>
+                    <div class="toc-item" style="margin-left:30px"><a href="#oauth2-configuration"><strong>11.3.1.1.1</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:30px"><a href="#oauth2-user-details"><strong>12.3.1.1.2</strong><span>User Details Mapper</span></a>
+                    <div class="toc-item" style="margin-left:30px"><a href="#oauth2-user-details"><strong>11.3.1.1.2</strong><span>User Details Mapper</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:20px"><a href="#openid-authorization-code"><strong>12.3.1.2</strong><span>OpenID Connect</span></a>
+                    <div class="toc-item" style="margin-left:20px"><a href="#openid-authorization-code"><strong>11.3.1.2</strong><span>OpenID Connect</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:30px"><a href="#openid-configuration"><strong>12.3.1.2.1</strong><span>Configuration</span></a>
+                    <div class="toc-item" style="margin-left:30px"><a href="#openid-configuration"><strong>11.3.1.2.1</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:30px"><a href="#openid-user-details"><strong>12.3.1.2.2</strong><span>User Details Mapper</span></a>
+                    <div class="toc-item" style="margin-left:30px"><a href="#openid-user-details"><strong>11.3.1.2.2</strong><span>User Details Mapper</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:30px"><a href="#openid-auth-parameters"><strong>12.3.1.2.3</strong><span>Parameters</span></a>
+                    <div class="toc-item" style="margin-left:30px"><a href="#openid-auth-parameters"><strong>11.3.1.2.3</strong><span>Parameters</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:40px"><a href="#nonce"><strong>12.3.1.2.3.1</strong><span>Nonce</span></a>
+                    <div class="toc-item" style="margin-left:40px"><a href="#nonce"><strong>11.3.1.2.3.1</strong><span>Nonce</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:40px"><a href="#login-hint"><strong>12.3.1.2.3.2</strong><span>Login Hint</span></a>
+                    <div class="toc-item" style="margin-left:40px"><a href="#login-hint"><strong>11.3.1.2.3.2</strong><span>Login Hint</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:40px"><a href="#id-token-hint"><strong>12.3.1.2.3.3</strong><span>ID Token Hint</span></a>
+                    <div class="toc-item" style="margin-left:40px"><a href="#id-token-hint"><strong>11.3.1.2.3.3</strong><span>ID Token Hint</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:30px"><a href="#token-validation"><strong>12.3.1.2.4</strong><span>Token Validation</span></a>
+                    <div class="toc-item" style="margin-left:30px"><a href="#token-validation"><strong>11.3.1.2.4</strong><span>Token Validation</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:20px"><a href="#state"><strong>12.3.1.3</strong><span>State Parameter</span></a>
+                    <div class="toc-item" style="margin-left:20px"><a href="#state"><strong>11.3.1.3</strong><span>State Parameter</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#password"><strong>12.3.2</strong><span>Password</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#password"><strong>11.3.2</strong><span>Password</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#oauth-endpoints"><strong>12.4</strong><span>Endpoints</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#oauth-endpoints"><strong>11.4</strong><span>Endpoints</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#endsession"><strong>12.4.1</strong><span>OpenID End Session</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#endsession"><strong>11.4.1</strong><span>OpenID End Session</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#introspection"><strong>12.4.2</strong><span>Introspection</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#introspection"><strong>11.4.2</strong><span>Introspection</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#revocation"><strong>12.4.3</strong><span>Revocation</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#revocation"><strong>11.4.3</strong><span>Revocation</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:10px"><a href="#user-info"><strong>12.4.4</strong><span>OpenID User Info</span></a>
+                    <div class="toc-item" style="margin-left:10px"><a href="#user-info"><strong>11.4.4</strong><span>OpenID User Info</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#custom-client"><strong>12.5</strong><span>Custom Clients</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#custom-client"><strong>11.5</strong><span>Custom Clients</span></a>
                     </div>
                     
                 </div>
                 
 
                 
-<h1 id="oauth"><a class="anchor" href="#oauth"></a>12 OAuth 2.0</h1>
+<h1 id="oauth"><a class="anchor" href="#oauth"></a>11 OAuth 2.0</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth.adoc"'>
@@ -213,7 +205,9 @@ function addJsClass() {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
+    enabled: true
     oauth2:
+      enabled: true
       clients:
         google:
           client-secret: &lt;&lt;your client secret&gt;&gt;
@@ -247,13 +241,13 @@ function addJsClass() {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Session Storage</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.enabled: true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-session</code></p></td>
 </tr>
 </tbody>
 </table>
 
-<h2 id="installation"><a class="anchor" href="#installation"></a>12.1 Installation</h2>
+<h2 id="installation"><a class="anchor" href="#installation"></a>11.1 Installation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/installation.adoc"'>
@@ -266,7 +260,7 @@ function addJsClass() {
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.configuration:micronaut-security-oauth2:2.0.0.BUILD-SNAPSHOT")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.configuration:micronaut-security-oauth2:1.3.3.BUILD-SNAPSHOT")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -274,7 +268,7 @@ function addJsClass() {
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
     &lt;groupId&gt;io.micronaut.configuration&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-oauth2&lt;/artifactId&gt;
-    &lt;version&gt;2.0.0.BUILD-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;1.3.3.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -287,7 +281,7 @@ function addJsClass() {
 <p>Code can be found at the <a href="https://github.com/micronaut-projects/micronaut-security/tree/master/security-oauth2">micronaut-security</a> repository.</p>
 </div>
 
-<h2 id="openid"><a class="anchor" href="#openid"></a>12.2 OpenID Connect</h2>
+<h2 id="openid"><a class="anchor" href="#openid"></a>11.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/openid.adoc"'>
@@ -348,7 +342,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 </table>
 </div>
 
-<h2 id="flows"><a class="anchor" href="#flows"></a>12.3 Flows</h2>
+<h2 id="flows"><a class="anchor" href="#flows"></a>11.3 Flows</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows.adoc"'>
@@ -359,7 +353,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 
 
 
-<h2 id="authorization-code"><a class="anchor" href="#authorization-code"></a>12.3.1 Authorization Code</h2>
+<h2 id="authorization-code"><a class="anchor" href="#authorization-code"></a>11.3.1 Authorization Code</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code.adoc"'>
@@ -393,7 +387,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the OAuth 2.0 support is enabled. Default value (true).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the OAuth 2.0 support is enabled. Default value (false).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.callback-uri</code></p></td>
@@ -432,124 +426,8 @@ It is possible to designate a default provider. The value of the configuration m
 </tr>
 </table>
 </div>
-<div class="sect3">
-<h4 id="_oauth_login_and_csrf">OAuth Login and CSRF</h4>
-<div class="paragraph">
-<p>In order to prevent forced login attacks, you must implement CSRF protection on the oauth login endpoints. Because this library is not in control of the forms where login may originate from, we cannot ensure that CSRF is applied. In addition, there is no sensible defaults with regards to how the token is stored or how it should be retrieved. Implementing CSRF is relatively simple.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>When rendering the login form where users can choose to login via OAuth, the server should store a value either in state on the server specific to that user (session), or state on the client (http-only cookies, etc), or some other mechanism.</p>
-</li>
-<li>
-<p>That value gets sent with the response and subsequently included in the request to login with OAuth. The value could be sent as a query parameter, or sent as a cookie, etc.</p>
-</li>
-<li>
-<p>A server filter is written to compare the value in the user specific state and the value sent in the request. If they do not match, the request is rejected.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Here is an example:</p>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.async.publisher.Publishers;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.http.annotation.Filter;
-import io.micronaut.http.cookie.Cookie;
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
-import io.micronaut.http.filter.ServerFilterChain;
-import org.reactivestreams.Publisher;
 
-
-@Filter(value = {"/oauth/login", "/oauth/login/*"})
-public class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
-
-    @Override
-    protected Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilterOnce(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
-        String requestParameter = request.getParameters().get("_csrf");
-        String cookieValue = request.getCookies().findCookie("_csrf").map(Cookie::getValue).orElse(null);
-
-        if (cookieValue == null || !cookieValue.equals(requestParameter)) {
-            return Publishers.just(HttpResponse.status(HttpStatus.FORBIDDEN));
-        }
-
-        return chain.proceed(request);
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Requires
-import io.micronaut.core.async.publisher.Publishers
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
-import io.micronaut.http.MutableHttpResponse
-import io.micronaut.http.annotation.Filter
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter
-import io.micronaut.http.filter.ServerFilterChain
-import org.reactivestreams.Publisher
-
-
-@Filter(value = ["/oauth/login", "/oauth/login/*"])
-class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
-
-    @Override
-    protected Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilterOnce(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
-        String requestParameter = request.parameters.get("_csrf")
-        String cookieValue = request.cookies.findCookie("_csrf").map({c -&gt; c.getValue()}).orElse(null)
-
-        if (cookieValue == null || cookieValue != requestParameter) {
-            return Publishers.just(HttpResponse.status(HttpStatus.FORBIDDEN))
-        }
-
-        return chain.proceed(request)
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Requires
-import io.micronaut.core.async.publisher.Publishers
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
-import io.micronaut.http.MutableHttpResponse
-import io.micronaut.http.annotation.Filter
-import io.micronaut.http.cookie.Cookie
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter
-import io.micronaut.http.filter.ServerFilterChain
-import org.reactivestreams.Publisher
-
-
-@Filter(value = ["/oauth/login", "/oauth/login/*"])
-class OAuthCsrfFilter : OncePerRequestHttpServerFilter() {
-
-    override fun doFilterOnce(request: HttpRequest&lt;*&gt;, chain: ServerFilterChain): Publisher&lt;MutableHttpResponse&lt;*&gt;&gt; {
-        val requestParameter = request.parameters["_csrf"]
-        val cookieValue = request.cookies.findCookie("_csrf").map { obj: Cookie -&gt; obj.value }.orElse(null)
-
-        return if (cookieValue == null || cookieValue != requestParameter) {
-            Publishers.just(HttpResponse.status&lt;Any&gt;(HttpStatus.FORBIDDEN))
-        } else {
-            chain.proceed(request)
-        }
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-
-<h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>12.3.1.1 OAuth 2.0</h2>
+<h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>11.3.1.1 OAuth 2.0</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code.adoc"'>
@@ -570,7 +448,7 @@ class OAuthCsrfFilter : OncePerRequestHttpServerFilter() {
 </div>
 </div>
 
-<h2 id="oauth2-configuration"><a class="anchor" href="#oauth2-configuration"></a>12.3.1.1.1 Configuration</h2>
+<h2 id="oauth2-configuration"><a class="anchor" href="#oauth2-configuration"></a>11.3.1.1.1 Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
@@ -605,7 +483,9 @@ class OAuthCsrfFilter : OncePerRequestHttpServerFilter() {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
+    enabled: true
     oauth2:
+      enabled: true
       clients:
         github: <i class="conum" data-value="1"></i><b>(1)</b>
           client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
@@ -668,7 +548,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </table>
 </div>
 
-<h2 id="oauth2-user-details"><a class="anchor" href="#oauth2-user-details"></a>12.3.1.1.2 User Details Mapper</h2>
+<h2 id="oauth2-user-details"><a class="anchor" href="#oauth2-user-details"></a>11.3.1.1.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
@@ -798,11 +678,7 @@ interface GithubApiClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.core.async.publisher.Publishers;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
@@ -823,12 +699,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     } <b class="conum">(2)</b>
 
     @Override
-    public Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) {
-        return Publishers.just(new UnsupportedOperationException());
-    }
-
-    @Override
-    public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
+    public Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) { <b class="conum">(3)</b>
         return apiClient.getUser("token " + tokenResponse.getAccessToken())
                 .map(user -&gt; {
                     List&lt;String&gt; roles = Collections.singletonList("ROLE_GITHUB");
@@ -841,7 +712,6 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
@@ -860,12 +730,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     }
 
     @Override
-    Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) {
-        Publishers.just(new UnsupportedOperationException())
-    }
-
-    @Override
-    Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
+    Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) { <b class="conum">(3)</b>
         apiClient.getUser("token ${tokenResponse.accessToken}")
             .map({ user -&gt;
                 new UserDetails(user.login, ["ROLE_GITHUB"]) <b class="conum">(4)</b>
@@ -876,14 +741,10 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.core.async.publisher.Publishers
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
-import java.lang.UnsupportedOperationException
 
 import javax.inject.Named
 import javax.inject.Singleton
@@ -893,11 +754,7 @@ import javax.inject.Singleton
 internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <b class="conum">(2)</b>
     : OauthUserDetailsMapper {
 
-    override fun createUserDetails(tokenResponse: TokenResponse?): Publisher&lt;UserDetails&gt; {
-        return Publishers.just(UnsupportedOperationException())
-    }
-
-    override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher&lt;AuthenticationResponse&gt; { <b class="conum">(3)</b>
+    override fun createUserDetails(tokenResponse: TokenResponse): Publisher&lt;UserDetails&gt; { <b class="conum">(3)</b>
         return apiClient.getUser("token " + tokenResponse.accessToken)
                 .map { user -&gt;
                     UserDetails(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
@@ -927,7 +784,7 @@ internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <
 </table>
 </div>
 
-<h2 id="openid-authorization-code"><a class="anchor" href="#openid-authorization-code"></a>12.3.1.2 OpenID Connect</h2>
+<h2 id="openid-authorization-code"><a class="anchor" href="#openid-authorization-code"></a>11.3.1.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
@@ -948,7 +805,7 @@ internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <
 </div>
 </div>
 
-<h2 id="openid-configuration"><a class="anchor" href="#openid-configuration"></a>12.3.1.2.1 Configuration</h2>
+<h2 id="openid-configuration"><a class="anchor" href="#openid-configuration"></a>11.3.1.2.1 Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
@@ -975,7 +832,9 @@ internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     security:
+        enabled: true
         oauth2:
+            enabled: true
             clients:
                 okta: <i class="conum" data-value="1"></i><b>(1)</b>
                     client-id: &lt;&lt;my client id&gt;&gt; <i class="conum" data-value="2"></i><b>(2)</b>
@@ -1223,7 +1082,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tbody>
 </table>
 
-<h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>12.3.1.2.2 User Details Mapper</h2>
+<h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>11.3.1.2.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
@@ -1294,18 +1153,14 @@ Enabling all of the above with cookie JWT storage has been known to cause issues
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.context.annotation.Replaces;
-import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.authentication.AuthenticationResponse;
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Replaces;
 import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.Collections;
 
@@ -1313,16 +1168,9 @@ import java.util.Collections;
 @Replaces(DefaultOpenIdUserDetailsMapper.class)
 public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @NonNull
     @Override
+    @Nonnull
     public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @NonNull
-    public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
         return new UserDetails("name", Collections.emptyList());
     }
 }</code></pre>
@@ -1332,48 +1180,35 @@ public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
-import edu.umd.cs.findbugs.annotations.NonNull
+import javax.annotation.Nonnull
 import javax.inject.Singleton
 
 @Singleton
 @Replaces(DefaultOpenIdUserDetailsMapper.class)
 class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
     @Override
+    @Nonnull
     UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException()
-    }
-
-    @Override
-    @NonNull
-    AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
         new UserDetails("name", [])
     }
-
-
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
-import java.lang.UnsupportedOperationException
 
 import javax.inject.Singleton
 
@@ -1381,12 +1216,7 @@ import javax.inject.Singleton
 @Replaces(DefaultOpenIdUserDetailsMapper::class)
 class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
-        throw UnsupportedOperationException()
-    }
-
-    override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): AuthenticationResponse {
+    override fun createUserDetails(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims): UserDetails {
         return UserDetails("name", emptyList())
     }
 }</code></pre>
@@ -1397,15 +1227,12 @@ class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Collections;
@@ -1414,35 +1241,24 @@ import java.util.Collections;
 @Named("okta") <b class="conum">(1)</b>
 public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @NonNull
     @Override
-    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException();
+    @Nonnull
+    public UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
+                                         OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                         OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
+        return new UserDetails("name", Collections.emptyList()); <b class="conum">(5)</b>
     }
-
-    @Override
-    @NonNull
-    public AuthenticationResponse createAuthenticationResponse(String providerName, <b class="conum">(2)</b>
-                                                               OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
-                                                               OpenIdClaims openIdClaims, <b class="conum">(4)</b>
-                                                               @Nullable State state) { <b class="conum">(5)</b>
-        return new UserDetails("name", Collections.emptyList()); <b class="conum">(6)</b>
-    }
-
-
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
-import edu.umd.cs.findbugs.annotations.NonNull
+import javax.annotation.Nonnull
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -1450,34 +1266,22 @@ import javax.inject.Singleton
 @Named("okta") <b class="conum">(1)</b>
 class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @NonNull
-    UserDetails createUserDetails(String providerName,
-                                  OpenIdTokenResponse tokenResponse,
-                                  OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException()
-    }
-
     @Override
-    @NonNull
-    AuthenticationResponse createAuthenticationResponse(String providerName, <b class="conum">(2)</b>
-                                                        OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
-                                                        OpenIdClaims openIdClaims, <b class="conum">(4)</b>
-                                                        @Nullable State state) { <b class="conum">(5)</b>
-        new UserDetails("name", []) <b class="conum">(6)</b>
+    @Nonnull
+    UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
+                                  OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                  OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
+        new UserDetails("name", []) <b class="conum">(5)</b>
     }
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
-import java.lang.UnsupportedOperationException
 
 import javax.inject.Named
 import javax.inject.Singleton
@@ -1486,17 +1290,11 @@ import javax.inject.Singleton
 @Named("okta") <b class="conum">(1)</b>
 class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
-        throw UnsupportedOperationException()
-    }
-
-    override fun createAuthenticationResponse(providerName: String, <b class="conum">(2)</b>
-                                              tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
-                                              openIdClaims: OpenIdClaims, <b class="conum">(4)</b>
-                                              state: State?) <b class="conum">(5)</b>
-            : AuthenticationResponse {
-        return UserDetails("name", emptyList()) <b class="conum">(6)</b>
+    override fun createUserDetails(providerName: String, <b class="conum">(2)</b>
+                                   tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
+                                   openIdClaims: OpenIdClaims) <b class="conum">(4)</b>
+            : UserDetails {
+        return UserDetails("name", emptyList()) <b class="conum">(5)</b>
     }
 }</code></pre>
 </div>
@@ -1521,16 +1319,12 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>The state object used during OAuth authentication</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>An instance of <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> is returned</td>
+<td>An instance of <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> is returned</td>
 </tr>
 </table>
 </div>
 
-<h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>12.3.1.2.3 Parameters</h2>
+<h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>11.3.1.2.3 Parameters</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
@@ -1605,7 +1399,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 </tbody>
 </table>
 
-<h2 id="nonce"><a class="anchor" href="#nonce"></a>12.3.1.2.3.1 Nonce</h2>
+<h2 id="nonce"><a class="anchor" href="#nonce"></a>11.3.1.2.3.1 Nonce</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
@@ -1749,7 +1543,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 </div>
 </div>
 
-<h2 id="login-hint"><a class="anchor" href="#login-hint"></a>12.3.1.2.3.2 Login Hint</h2>
+<h2 id="login-hint"><a class="anchor" href="#login-hint"></a>11.3.1.2.3.2 Login Hint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
@@ -1762,7 +1556,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 <p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">login hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/LoginHintResolver.html">LoginHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
 </div>
 
-<h2 id="id-token-hint"><a class="anchor" href="#id-token-hint"></a>12.3.1.2.3.3 ID Token Hint</h2>
+<h2 id="id-token-hint"><a class="anchor" href="#id-token-hint"></a>11.3.1.2.3.3 ID Token Hint</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
@@ -1775,7 +1569,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 <p>This library does not include an <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token hint</a> by default with authorization requests. A <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/request/IdTokenHintResolver.html">IdTokenHintResolver</a> bean can be registered that will be called when the authorization request is being built.</p>
 </div>
 
-<h2 id="token-validation"><a class="anchor" href="#token-validation"></a>12.3.1.2.4 Token Validation</h2>
+<h2 id="token-validation"><a class="anchor" href="#token-validation"></a>11.3.1.2.4 Token Validation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
@@ -1794,7 +1588,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 <p>To allow for additional or custom  validations, register an <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdClaimsValidator.html">OpenIdClaimsValidator</a> bean.</p>
 </div>
 
-<h2 id="state"><a class="anchor" href="#state"></a>12.3.1.3 State Parameter</h2>
+<h2 id="state"><a class="anchor" href="#state"></a>11.3.1.3 State Parameter</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
@@ -1943,7 +1737,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 </div>
 </div>
 
-<h2 id="password"><a class="anchor" href="#password"></a>12.3.2 Password</h2>
+<h2 id="password"><a class="anchor" href="#password"></a>11.3.2 Password</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/password.adoc"'>
@@ -2003,7 +1797,7 @@ This example above is not intended to be a complete configuration reference
 <p>When a client is configured for the password grant type, the authorization code endpoints will not be available and instead an <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a> will be created that will participate in the <a href="#login">normal login flow</a>.</p>
 </div>
 
-<h2 id="oauth-endpoints"><a class="anchor" href="#oauth-endpoints"></a>12.4 Endpoints</h2>
+<h2 id="oauth-endpoints"><a class="anchor" href="#oauth-endpoints"></a>11.4 Endpoints</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints.adoc"'>
@@ -2014,7 +1808,7 @@ This example above is not intended to be a complete configuration reference
 
 
 
-<h2 id="endsession"><a class="anchor" href="#endsession"></a>12.4.1 OpenID End Session</h2>
+<h2 id="endsession"><a class="anchor" href="#endsession"></a>11.4.1 OpenID End Session</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
@@ -2136,7 +1930,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="introspection"><a class="anchor" href="#introspection"></a>12.4.2 Introspection</h2>
+<h2 id="introspection"><a class="anchor" href="#introspection"></a>11.4.2 Introspection</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/introspection.adoc"'>
@@ -2180,7 +1974,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="revocation"><a class="anchor" href="#revocation"></a>12.4.3 Revocation</h2>
+<h2 id="revocation"><a class="anchor" href="#revocation"></a>11.4.3 Revocation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/revocation.adoc"'>
@@ -2224,7 +2018,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="user-info"><a class="anchor" href="#user-info"></a>12.4.4 OpenID User Info</h2>
+<h2 id="user-info"><a class="anchor" href="#user-info"></a>11.4.4 OpenID User Info</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
@@ -2263,7 +2057,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tbody>
 </table>
 
-<h2 id="custom-client"><a class="anchor" href="#custom-client"></a>12.5 Custom Clients</h2>
+<h2 id="custom-client"><a class="anchor" href="#custom-client"></a>11.5 Custom Clients</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/custom-client.adoc"'>
@@ -2293,7 +2087,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
      * @param originating The originating request
      * @return A response publisher
      */
-    Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; authorizationRedirect(HttpRequest&lt;?&gt; originating);
+    Publisher&lt;HttpResponse&gt; authorizationRedirect(HttpRequest originating);
 
     /**
      * Responsible for receiving the authorization callback request and returning
@@ -2327,9 +2121,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../guide/securityEvents.html">&lt;&lt; <strong>11</strong><span>Security Events</span></a></div>
-                
-                    <div class="toc-item next-right"><a href="../guide/repository.html"><strong>13</strong><span>Repository</span> >></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/securityEvents.html">&lt;&lt; <strong>10</strong><span>Security Events</span></a></div>
                 
                 <div style="clear:both"></div>
             </div>

@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>12.3.1.2.2 User Details Mapper 2.0.0.BUILD-SNAPSHOT</title>
+    <title>11.3.1.2.2 User Details Mapper 1.3.3.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -44,37 +44,31 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/breaks.html"><strong>3</strong><span>Breaking Changes</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>4</strong><span>Authentication Providers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityRule.html"><strong>5</strong><span>Security Rules</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationStrategies.html"><strong>6</strong><span>Authorization Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/rejection.html"><strong>7</strong><span>Rejection Handling</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/tokenPropagation.html"><strong>8</strong><span>Token Propagation</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/endpoints.html"><strong>9</strong><span>Built-In Security Controllers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/retrievingAuthenticatedUser.html"><strong>10</strong><span>Retrieve the authenticated user</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/securityEvents.html"><strong>11</strong><span>Security Events</span></a>
-                        </div>
-                        
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>12</strong><span>OAuth 2.0</span></a>
-                        </div>
-                        
-                        <div class="toc-item" style="margin-left:0"><a href="../../guide/repository.html"><strong>13</strong><span>Repository</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
                         </div>
                         
                     </div>
@@ -95,26 +89,24 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>11</strong><span>Security Events</span></a></div>
+                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>10</strong><span>Security Events</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../../guide/repository.html"><strong>13</strong><span>Repository</span> >></a></div>
-                
 
 
                 <div class="project">
-                    <h1>12.3.1.2.2 User Details Mapper</h1>
+                    <h1>11.3.1.2.2 User Details Mapper</h1>
 
-                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.3.3.BUILD-SNAPSHOT</p>
                 </div>
 
                 
 
                 
-<h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>12.3.1.2.2 User Details Mapper</h2>
+<h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>11.3.1.2.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
@@ -185,18 +177,14 @@ Enabling all of the above with cookie JWT storage has been known to cause issues
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.context.annotation.Replaces;
-import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.authentication.AuthenticationResponse;
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Replaces;
 import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.Collections;
 
@@ -204,16 +192,9 @@ import java.util.Collections;
 @Replaces(DefaultOpenIdUserDetailsMapper.class)
 public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @NonNull
     @Override
+    @Nonnull
     public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @NonNull
-    public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
         return new UserDetails("name", Collections.emptyList());
     }
 }</code></pre>
@@ -223,48 +204,35 @@ public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
-import edu.umd.cs.findbugs.annotations.NonNull
+import javax.annotation.Nonnull
 import javax.inject.Singleton
 
 @Singleton
 @Replaces(DefaultOpenIdUserDetailsMapper.class)
 class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
     @Override
+    @Nonnull
     UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException()
-    }
-
-    @Override
-    @NonNull
-    AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
         new UserDetails("name", [])
     }
-
-
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
-import java.lang.UnsupportedOperationException
 
 import javax.inject.Singleton
 
@@ -272,12 +240,7 @@ import javax.inject.Singleton
 @Replaces(DefaultOpenIdUserDetailsMapper::class)
 class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
-        throw UnsupportedOperationException()
-    }
-
-    override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): AuthenticationResponse {
+    override fun createUserDetails(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims): UserDetails {
         return UserDetails("name", emptyList())
     }
 }</code></pre>
@@ -288,15 +251,12 @@ class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Collections;
@@ -305,35 +265,24 @@ import java.util.Collections;
 @Named("okta") <b class="conum">(1)</b>
 public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @NonNull
     @Override
-    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException();
+    @Nonnull
+    public UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
+                                         OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                         OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
+        return new UserDetails("name", Collections.emptyList()); <b class="conum">(5)</b>
     }
-
-    @Override
-    @NonNull
-    public AuthenticationResponse createAuthenticationResponse(String providerName, <b class="conum">(2)</b>
-                                                               OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
-                                                               OpenIdClaims openIdClaims, <b class="conum">(4)</b>
-                                                               @Nullable State state) { <b class="conum">(5)</b>
-        return new UserDetails("name", Collections.emptyList()); <b class="conum">(6)</b>
-    }
-
-
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
-import edu.umd.cs.findbugs.annotations.NonNull
+import javax.annotation.Nonnull
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -341,34 +290,22 @@ import javax.inject.Singleton
 @Named("okta") <b class="conum">(1)</b>
 class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @NonNull
-    UserDetails createUserDetails(String providerName,
-                                  OpenIdTokenResponse tokenResponse,
-                                  OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException()
-    }
-
     @Override
-    @NonNull
-    AuthenticationResponse createAuthenticationResponse(String providerName, <b class="conum">(2)</b>
-                                                        OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
-                                                        OpenIdClaims openIdClaims, <b class="conum">(4)</b>
-                                                        @Nullable State state) { <b class="conum">(5)</b>
-        new UserDetails("name", []) <b class="conum">(6)</b>
+    @Nonnull
+    UserDetails createUserDetails(String providerName, <b class="conum">(2)</b>
+                                  OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
+                                  OpenIdClaims openIdClaims) { <b class="conum">(4)</b>
+        new UserDetails("name", []) <b class="conum">(5)</b>
     }
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
-import java.lang.UnsupportedOperationException
 
 import javax.inject.Named
 import javax.inject.Singleton
@@ -377,17 +314,11 @@ import javax.inject.Singleton
 @Named("okta") <b class="conum">(1)</b>
 class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
-        throw UnsupportedOperationException()
-    }
-
-    override fun createAuthenticationResponse(providerName: String, <b class="conum">(2)</b>
-                                              tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
-                                              openIdClaims: OpenIdClaims, <b class="conum">(4)</b>
-                                              state: State?) <b class="conum">(5)</b>
-            : AuthenticationResponse {
-        return UserDetails("name", emptyList()) <b class="conum">(6)</b>
+    override fun createUserDetails(providerName: String, <b class="conum">(2)</b>
+                                   tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
+                                   openIdClaims: OpenIdClaims) <b class="conum">(4)</b>
+            : UserDetails {
+        return UserDetails("name", emptyList()) <b class="conum">(5)</b>
     }
 }</code></pre>
 </div>
@@ -412,11 +343,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>The state object used during OAuth authentication</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>An instance of <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> is returned</td>
+<td>An instance of <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> is returned</td>
 </tr>
 </table>
 </div>
@@ -424,9 +351,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>11</strong><span>Security Events</span></a></div>
-                
-                    <div class="toc-item next-right"><a href="../../guide/repository.html"><strong>13</strong><span>Repository</span> >></a></div>
+                    <div class="toc-item prev-left"><a href="../../guide/securityEvents.html">&lt;&lt; <strong>10</strong><span>Security Events</span></a></div>
                 
                 <div style="clear:both"></div>
             </div>
