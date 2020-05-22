@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li>Next&nbsp;Class</li>
+<li><a href="../../../../io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?io/micronaut/security/config/SecurityConfigurationProperties.html" target="_top">Frames</a></li>
@@ -197,30 +197,26 @@ implements <a href="../../../../io/micronaut/security/config/SecurityConfigurati
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#getAuthenticationStrategy--">getAuthenticationStrategy</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code><a href="../../../../io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#getAuthentication--">getAuthentication</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#getAuthenticationProviderStrategy--">getAuthenticationProviderStrategy</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.List&lt;<a href="../../../../io/micronaut/security/config/InterceptUrlMapPattern.html" title="class in io.micronaut.security.config">InterceptUrlMapPattern</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#getInterceptUrlMap--">getInterceptUrlMap</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#getIpPatterns--">getIpPatterns</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../../../../io/micronaut/security/handlers/LoginHandlerMode.html" title="enum in io.micronaut.security.handlers">LoginHandlerMode</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#getLoginHandler--">getLoginHandler</a></span>()</code>&nbsp;</td>
-</tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../../io/micronaut/security/handlers/LogoutHandlerMode.html" title="enum in io.micronaut.security.handlers">LogoutHandlerMode</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#getLogoutHandler--">getLogoutHandler</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i5" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#isEnabled--">isEnabled</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#isRejectNotFound--">isRejectNotFound</a></span>()</code>
 <div class="block">For cases where no security rule handles a request and it is determined
@@ -228,9 +224,15 @@ implements <a href="../../../../io/micronaut/security/config/SecurityConfigurati
  should be to reject the request or allow the not found response to be returned.</div>
 </td>
 </tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#setAuthentication-io.micronaut.security.handlers.AuthenticationMode-">setAuthentication</a></span>(<a href="../../../../io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a>&nbsp;authentication)</code>
+<div class="block">Defines which authentication to use.</div>
+</td>
+</tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#setAuthenticationStrategy-io.micronaut.security.config.AuthenticationStrategy-">setAuthenticationStrategy</a></span>(<a href="../../../../io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a>&nbsp;authenticationStrategy)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#setAuthenticationProviderStrategy-io.micronaut.security.config.AuthenticationStrategy-">setAuthenticationProviderStrategy</a></span>(<a href="../../../../io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a>&nbsp;authenticationProviderStrategy)</code>
 <div class="block">Determines how authentication providers should be processed.</div>
 </td>
 </tr>
@@ -253,18 +255,6 @@ implements <a href="../../../../io/micronaut/security/config/SecurityConfigurati
 </td>
 </tr>
 <tr id="i11" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#setLoginHandler-io.micronaut.security.handlers.LoginHandlerMode-">setLoginHandler</a></span>(<a href="../../../../io/micronaut/security/handlers/LoginHandlerMode.html" title="enum in io.micronaut.security.handlers">LoginHandlerMode</a>&nbsp;loginHandler)</code>
-<div class="block">Defines which Login Handler to setup.</div>
-</td>
-</tr>
-<tr id="i12" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#setLogoutHandler-io.micronaut.security.handlers.LogoutHandlerMode-">setLogoutHandler</a></span>(<a href="../../../../io/micronaut/security/handlers/LogoutHandlerMode.html" title="enum in io.micronaut.security.handlers">LogoutHandlerMode</a>&nbsp;logoutHandler)</code>
-<div class="block">Defines which Logout Handler to setup.</div>
-</td>
-</tr>
-<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfigurationProperties.html#setRejectNotFound-boolean-">setRejectNotFound</a></span>(boolean&nbsp;rejectNotFound)</code>&nbsp;</td>
 </tr>
@@ -378,65 +368,34 @@ implements <a href="../../../../io/micronaut/security/config/SecurityConfigurati
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getLogoutHandler--">
+<a name="getAuthentication--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getLogoutHandler</h4>
+<h4>getAuthentication</h4>
 <pre>@Nullable
-public&nbsp;<a href="../../../../io/micronaut/security/handlers/LogoutHandlerMode.html" title="enum in io.micronaut.security.handlers">LogoutHandlerMode</a>&nbsp;getLogoutHandler()</pre>
+public&nbsp;<a href="../../../../io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a>&nbsp;getAuthentication()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#getLogoutHandler--">getLogoutHandler</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>Logout Handler to use.</dd>
-</dl>
-</li>
-</ul>
-<a name="setLogoutHandler-io.micronaut.security.handlers.LogoutHandlerMode-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setLogoutHandler</h4>
-<pre>public&nbsp;void&nbsp;setLogoutHandler(@Nullable
-                             <a href="../../../../io/micronaut/security/handlers/LogoutHandlerMode.html" title="enum in io.micronaut.security.handlers">LogoutHandlerMode</a>&nbsp;logoutHandler)</pre>
-<div class="block">Defines which Logout Handler to setup. Defaults to null. Possible values session, cookie</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>logoutHandler</code> - Logout Handler LogoutHandler</dd>
-</dl>
-</li>
-</ul>
-<a name="getLoginHandler--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getLoginHandler</h4>
-<pre>@Nullable
-public&nbsp;<a href="../../../../io/micronaut/security/handlers/LoginHandlerMode.html" title="enum in io.micronaut.security.handlers">LoginHandlerMode</a>&nbsp;getLoginHandler()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#getLoginHandler--">getLoginHandler</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></code></dd>
+<dd><code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#getAuthentication--">getAuthentication</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Login Handler to use.</dd>
 </dl>
 </li>
 </ul>
-<a name="setLoginHandler-io.micronaut.security.handlers.LoginHandlerMode-">
+<a name="setAuthentication-io.micronaut.security.handlers.AuthenticationMode-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setLoginHandler</h4>
-<pre>public&nbsp;void&nbsp;setLoginHandler(@Nullable
-                            <a href="../../../../io/micronaut/security/handlers/LoginHandlerMode.html" title="enum in io.micronaut.security.handlers">LoginHandlerMode</a>&nbsp;loginHandler)</pre>
-<div class="block">Defines which Login Handler to setup. Defaults to null. Possible values bearer, session, cookie</div>
+<h4>setAuthentication</h4>
+<pre>public&nbsp;void&nbsp;setAuthentication(@Nullable
+                              <a href="../../../../io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a>&nbsp;authentication)</pre>
+<div class="block">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>loginHandler</code> - Login Handler Mode</dd>
+<dd><code>authentication</code> - Login Handler Mode</dd>
 </dl>
 </li>
 </ul>
@@ -525,32 +484,32 @@ public&nbsp;<a href="../../../../io/micronaut/security/handlers/LoginHandlerMode
 </dl>
 </li>
 </ul>
-<a name="getAuthenticationStrategy--">
+<a name="getAuthenticationProviderStrategy--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getAuthenticationStrategy</h4>
-<pre>public&nbsp;<a href="../../../../io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a>&nbsp;getAuthenticationStrategy()</pre>
+<h4>getAuthenticationProviderStrategy</h4>
+<pre>public&nbsp;<a href="../../../../io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a>&nbsp;getAuthenticationProviderStrategy()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#getAuthenticationStrategy--">getAuthenticationStrategy</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></code></dd>
+<dd><code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#getAuthenticationProviderStrategy--">getAuthenticationProviderStrategy</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The authentication strategy</dd>
 </dl>
 </li>
 </ul>
-<a name="setAuthenticationStrategy-io.micronaut.security.config.AuthenticationStrategy-">
+<a name="setAuthenticationProviderStrategy-io.micronaut.security.config.AuthenticationStrategy-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setAuthenticationStrategy</h4>
-<pre>public&nbsp;void&nbsp;setAuthenticationStrategy(<a href="../../../../io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a>&nbsp;authenticationStrategy)</pre>
+<h4>setAuthenticationProviderStrategy</h4>
+<pre>public&nbsp;void&nbsp;setAuthenticationProviderStrategy(<a href="../../../../io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a>&nbsp;authenticationProviderStrategy)</pre>
 <div class="block">Determines how authentication providers should be processed. Default value ANY. Possible values: ANY or ALL.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>authenticationStrategy</code> - authentication strategy.</dd>
+<dd><code>authenticationProviderStrategy</code> - authentication strategy.</dd>
 </dl>
 </li>
 </ul>
@@ -615,7 +574,7 @@ public&nbsp;<a href="../../../../io/micronaut/security/handlers/LoginHandlerMode
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li>Next&nbsp;Class</li>
+<li><a href="../../../../io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?io/micronaut/security/config/SecurityConfigurationProperties.html" target="_top">Frames</a></li>

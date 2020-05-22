@@ -111,7 +111,10 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>public class <span class="typeNameLabel">AccessRefreshTokenLoginHandler</span>
+<pre>@Requires(property="micronaut.security.authentication",
+          value="bearer")
+ @Singleton
+public class <span class="typeNameLabel">AccessRefreshTokenLoginHandler</span>
 extends java.lang.Object
 implements <a href="../../../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></pre>
 <div class="block">Implementation of <a href="../../../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers"><code>LoginHandler</code></a> for Token Based Authentication.</div>

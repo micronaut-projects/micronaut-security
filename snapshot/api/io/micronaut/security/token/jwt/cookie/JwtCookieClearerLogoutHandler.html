@@ -111,7 +111,10 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>public class <span class="typeNameLabel">JwtCookieClearerLogoutHandler</span>
+<pre>@Requires(property="micronaut.security.authentication",
+          value="cookie")
+ @Singleton
+public class <span class="typeNameLabel">JwtCookieClearerLogoutHandler</span>
 extends java.lang.Object
 implements <a href="../../../../../../io/micronaut/security/handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a></pre>
 <dl>

@@ -186,20 +186,17 @@ function addJsClass() {
 <p>The <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> API has changed to accept an <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> object instead of an <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>.</p>
 </li>
 <li>
-<p><code>RedirectingLoginHandler</code> has been removed.</p>
-</li>
-<li>
 <p>Previously, <code>AccessRefreshTokenLoginHandler</code> was enabled by default. Currently, no <code>LoginHandler</code> is enabled by default. If you wish to use any of the built-in `LoginHandler`s, you have to set the configuration:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>micronaut.security.login-handler: bearer</code> to enable <a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a></p>
+<p><code>micronaut.security.authentication: bearer</code> to enable <a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a></p>
 </li>
 <li>
-<p><code>micronaut.security.login-handler: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html">JwtCookieLoginHandler</a></p>
+<p><code>micronaut.security.authentication: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html">JwtCookieLoginHandler</a></p>
 </li>
 <li>
-<p><code>micronaut.security.login-handler: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a></p>
+<p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a></p>
 </li>
 </ul>
 </div>
@@ -207,7 +204,17 @@ function addJsClass() {
 </ul>
 </div>
 <div class="paragraph">
-<p>Previous configuration such as:</p>
+<p>If you were using the default bearer authentication, you should set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    security:
+        authentication: bearer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a previous configuration such as:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -218,17 +225,17 @@ function addJsClass() {
                 bearer:
                      enabled: false
                 cookie:
-                     enabled: false</code></pre>
+                     enabled: true</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>It is currently configured as:</p>
+<p>use instead:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     security:
-        login-handler: cookie</code></pre>
+        authentication: cookie</code></pre>
 </div>
 </div>
 </div>
@@ -241,10 +248,10 @@ function addJsClass() {
 <div class="ulist">
 <ul>
 <li>
-<p><code>micronaut.security.logout-handler: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p>
+<p><code>micronaut.security.authentication: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p>
 </li>
 <li>
-<p><code>micronaut.security.logout-handler: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a></p>
+<p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a></p>
 </li>
 </ul>
 </div>
@@ -387,13 +394,16 @@ function addJsClass() {
 <p><code>micronaut.security.redirect.logout</code></p>
 </li>
 <li>
-<p><code>micronaut.security.redirect.unauthorized</code></p>
+<p><code>micronaut.security.redirect.unauthorized.url</code></p>
 </li>
 <li>
-<p><code>micronaut.security.redirect.forbidden</code></p>
+<p><code>micronaut.security.redirect.unauthorized.enabled</code></p>
 </li>
 <li>
-<p><code>micronaut.security.redirect.on-rejection</code></p>
+<p><code>micronaut.security.redirect.forbidden.url</code></p>
+</li>
+<li>
+<p><code>micronaut.security.redirect.forbidden.enabled</code></p>
 </li>
 </ul>
 </div>

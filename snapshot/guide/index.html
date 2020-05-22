@@ -348,7 +348,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <p>A new constructor for <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a> that takes a string message has been added to allow for custom error messages.</p>
 </li>
 <li>
-<p>It is now possible to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response. Set <code>micronaut.security.authentication-strategy: ALL</code> to enable this functionality.</p>
+<p>It is now possible to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response. Set <code>micronaut.security.authentication-provider-strategy: ALL</code> to enable this functionality.</p>
 </li>
 <li>
 <p>The token propagation implementation will now no longer override an existing token.</p>
@@ -430,20 +430,17 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <p>The <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> API has changed to accept an <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> object instead of an <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>.</p>
 </li>
 <li>
-<p><code>RedirectingLoginHandler</code> has been removed.</p>
-</li>
-<li>
 <p>Previously, <code>AccessRefreshTokenLoginHandler</code> was enabled by default. Currently, no <code>LoginHandler</code> is enabled by default. If you wish to use any of the built-in `LoginHandler`s, you have to set the configuration:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>micronaut.security.login-handler: bearer</code> to enable <a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a></p>
+<p><code>micronaut.security.authentication: bearer</code> to enable <a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a></p>
 </li>
 <li>
-<p><code>micronaut.security.login-handler: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html">JwtCookieLoginHandler</a></p>
+<p><code>micronaut.security.authentication: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html">JwtCookieLoginHandler</a></p>
 </li>
 <li>
-<p><code>micronaut.security.login-handler: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a></p>
+<p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a></p>
 </li>
 </ul>
 </div>
@@ -451,7 +448,17 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>Previous configuration such as:</p>
+<p>If you were using the default bearer authentication, you should set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    security:
+        authentication: bearer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a previous configuration such as:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -462,17 +469,17 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
                 bearer:
                      enabled: false
                 cookie:
-                     enabled: false</code></pre>
+                     enabled: true</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>It is currently configured as:</p>
+<p>use instead:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
     security:
-        login-handler: cookie</code></pre>
+        authentication: cookie</code></pre>
 </div>
 </div>
 </div>
@@ -485,10 +492,10 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><code>micronaut.security.logout-handler: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p>
+<p><code>micronaut.security.authentication: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p>
 </li>
 <li>
-<p><code>micronaut.security.logout-handler: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a></p>
+<p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a></p>
 </li>
 </ul>
 </div>
@@ -631,13 +638,16 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <p><code>micronaut.security.redirect.logout</code></p>
 </li>
 <li>
-<p><code>micronaut.security.redirect.unauthorized</code></p>
+<p><code>micronaut.security.redirect.unauthorized.url</code></p>
 </li>
 <li>
-<p><code>micronaut.security.redirect.forbidden</code></p>
+<p><code>micronaut.security.redirect.unauthorized.enabled</code></p>
 </li>
 <li>
-<p><code>micronaut.security.redirect.on-rejection</code></p>
+<p><code>micronaut.security.redirect.forbidden.url</code></p>
+</li>
+<li>
+<p><code>micronaut.security.redirect.forbidden.enabled</code></p>
 </li>
 </ul>
 </div>
@@ -690,7 +700,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Allowed IP patterns. Default value (["0.0.0.0"])</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication-strategy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication-provider-strategy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/config/AuthenticationStrategy.html">AuthenticationStrategy</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Determines how authentication providers should be processed. Default value ANY. Possible values: ANY or ALL.</p></td>
 </tr>
@@ -700,14 +710,9 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the server should respond with 404 for requests that do not</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.login-handler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/handlers/LoginHandlerMode.html">LoginHandlerMode</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which Login Handler to setup. Defaults to null. Possible values bearer, session, cookie</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.logout-handler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/handlers/LogoutHandlerMode.html">LogoutHandlerMode</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which Logout Handler to setup. Defaults to null. Possible values session, cookie</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/handlers/AuthenticationMode.html">AuthenticationMode</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie</p></td>
 </tr>
 </tbody>
 </table>
@@ -735,7 +740,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 
 
 <div class="paragraph">
-<p>By default, Micronaut requires just one <a href="#authenticationProviders">Authentication Provider</a> to return a successful authentication response. You can set <code>micronaut.security.authentication-strategy: ALL</code> to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response.</p>
+<p>By default, Micronaut requires just one <a href="#authenticationProviders">Authentication Provider</a> to return a successful authentication response. You can set <code>micronaut.security.authentication-provider-strategy: ALL</code> to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response.</p>
 </div>
 
 <h2 id="loginHandler"><a class="anchor" href="#loginHandler"></a>4.3 Login Handler</h2>
@@ -773,21 +778,21 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT Cookie</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.login-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-jwt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html">JwtCookieLoginHandler</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Session Storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.login-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>session</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-session</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT Bearer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.login-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>bearer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-jwt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a></p></td>
@@ -830,14 +835,14 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT Cookie</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.logout-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-jwt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Session Storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.logout-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>session</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-session</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a></p></td>
@@ -1367,22 +1372,6 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after trying to access a secured route. Default value ("/").</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.forbidden</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.. Default value ("/").</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.on-rejection</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether a redirect should occur on an authorization failure.
- Default value (true).</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a successful login. Default value ("/").</p></td>
@@ -1406,8 +1395,7 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    login-handler: session
-    logout-handler: session
+    authentication: session
     redirect:
       login-failure: /login/authFailed</code></pre>
 </div>

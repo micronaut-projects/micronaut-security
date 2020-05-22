@@ -38,6 +38,7 @@
 <li><a href="io/micronaut/security/filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters"><span class="interfaceName">AuthenticationFetcher</span></a></li>
 <li><a href="io/micronaut/security/token/jwt/validator/AuthenticationJWTClaimsSetAdapter.html" title="class in io.micronaut.security.token.jwt.validator">AuthenticationJWTClaimsSetAdapter</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html" title="enum in io.micronaut.security.oauth2.endpoint">AuthenticationMethod</a></li>
+<li><a href="io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a></li>
 <li><a href="io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><span class="interfaceName">AuthenticationProvider</span></a></li>
 <li><a href="io/micronaut/security/authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication"><span class="interfaceName">AuthenticationRequest</span></a></li>
 <li><a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><span class="interfaceName">AuthenticationResponse</span></a></li>
@@ -137,6 +138,7 @@
 <li><a href="io/micronaut/security/errors/ErrorCode.html" title="interface in io.micronaut.security.errors"><span class="interfaceName">ErrorCode</span></a></li>
 <li><a href="io/micronaut/security/errors/ErrorResponse.html" title="interface in io.micronaut.security.errors"><span class="interfaceName">ErrorResponse</span></a></li>
 <li><a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">ExpirationJwtClaimsValidator</a></li>
+<li><a href="io/micronaut/security/config/ForbiddenRedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="interfaceName">ForbiddenRedirectConfiguration</span></a></li>
 <li><a href="io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator"><span class="interfaceName">GenericJwtClaimsValidator</span></a></li>
 <li><a href="io/micronaut/security/oauth2/grants/GrantType.html" title="enum in io.micronaut.security.oauth2.grants">GrantType</a></li>
 <li><a href="io/micronaut/configuration/security/ldap/configuration/GroupPropertiesSearchSettings.html" title="class in io.micronaut.configuration.security.ldap.configuration">GroupPropertiesSearchSettings</a></li>
@@ -201,13 +203,6 @@
 <li><a href="io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html" title="class in io.micronaut.security.endpoints">LoginControllerConfigurationProperties</a></li>
 <li><a href="io/micronaut/security/event/LoginFailedEvent.html" title="class in io.micronaut.security.event">LoginFailedEvent</a></li>
 <li><a href="io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers"><span class="interfaceName">LoginHandler</span></a></li>
-<li><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearer.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryBearer</a></li>
-<li><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearerCondition.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryBearerCondition</a></li>
-<li><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookie</a></li>
-<li><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookieCondition.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookieCondition</a></li>
-<li><a href="io/micronaut/security/session/LoginHandlerFactorySession.html" title="class in io.micronaut.security.session">LoginHandlerFactorySession</a></li>
-<li><a href="io/micronaut/security/session/LoginHandlerFactorySessionCondition.html" title="class in io.micronaut.security.session">LoginHandlerFactorySessionCondition</a></li>
-<li><a href="io/micronaut/security/handlers/LoginHandlerMode.html" title="enum in io.micronaut.security.handlers">LoginHandlerMode</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/request/LoginHintResolver.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request"><span class="interfaceName">LoginHintResolver</span></a></li>
 <li><a href="io/micronaut/security/event/LoginSuccessfulEvent.html" title="class in io.micronaut.security.event">LoginSuccessfulEvent</a></li>
 <li><a href="io/micronaut/security/endpoints/LogoutController.html" title="class in io.micronaut.security.endpoints">LogoutController</a></li>
@@ -215,11 +210,6 @@
 <li><a href="io/micronaut/security/endpoints/LogoutControllerConfigurationProperties.html" title="class in io.micronaut.security.endpoints">LogoutControllerConfigurationProperties</a></li>
 <li><a href="io/micronaut/security/event/LogoutEvent.html" title="class in io.micronaut.security.event">LogoutEvent</a></li>
 <li><a href="io/micronaut/security/handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers"><span class="interfaceName">LogoutHandler</span></a></li>
-<li><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LogoutHandlerFactoryCookie</a></li>
-<li><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookieCondition.html" title="class in io.micronaut.security.token.jwt.config">LogoutHandlerFactoryCookieCondition</a></li>
-<li><a href="io/micronaut/security/session/LogoutHandlerFactorySession.html" title="class in io.micronaut.security.session">LogoutHandlerFactorySession</a></li>
-<li><a href="io/micronaut/security/session/LogoutHandlerFactorySessionCondition.html" title="class in io.micronaut.security.session">LogoutHandlerFactorySessionCondition</a></li>
-<li><a href="io/micronaut/security/handlers/LogoutHandlerMode.html" title="enum in io.micronaut.security.handlers">LogoutHandlerMode</a></li>
 <li><a href="io/micronaut/security/token/MapClaims.html" title="class in io.micronaut.security.token">MapClaims</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state"><span class="interfaceName">MutableState</span></a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">NonceClaimValidator</a></li>
@@ -288,6 +278,9 @@
 <li><a href="io/micronaut/security/oauth2/ProviderResolver.html" title="interface in io.micronaut.security.oauth2"><span class="interfaceName">ProviderResolver</span></a></li>
 <li><a href="io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="interfaceName">RedirectConfiguration</span></a></li>
 <li><a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></li>
+<li><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a></li>
+<li><a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a></li>
+<li><a href="io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers"><span class="interfaceName">RedirectingLoginHandler</span></a></li>
 <li><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><span class="interfaceName">RefreshTokenConfiguration</span></a></li>
 <li><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></li>
 <li><a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a></li>
@@ -372,6 +365,7 @@
 <li><a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a></li>
 <li><a href="io/micronaut/security/event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a></li>
 <li><a href="io/micronaut/security/token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator"><span class="interfaceName">TokenValidator</span></a></li>
+<li><a href="io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="interfaceName">UnauthorizedRedirectConfiguration</span></a></li>
 <li><a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a></li>
 <li><a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a></li>
 </ul>

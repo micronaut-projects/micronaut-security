@@ -178,7 +178,7 @@ function addJsClass() {
 <td class="tableblock halign-left valign-top"><p class="tableblock">Allowed IP patterns. Default value (["0.0.0.0"])</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication-strategy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication-provider-strategy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/config/AuthenticationStrategy.html">AuthenticationStrategy</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Determines how authentication providers should be processed. Default value ANY. Possible values: ANY or ALL.</p></td>
 </tr>
@@ -188,14 +188,9 @@ function addJsClass() {
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set to true if the server should respond with 404 for requests that do not</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.login-handler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/handlers/LoginHandlerMode.html">LoginHandlerMode</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which Login Handler to setup. Defaults to null. Possible values bearer, session, cookie</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.logout-handler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/handlers/LogoutHandlerMode.html">LogoutHandlerMode</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which Logout Handler to setup. Defaults to null. Possible values session, cookie</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/handlers/AuthenticationMode.html">AuthenticationMode</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie</p></td>
 </tr>
 </tbody>
 </table>
@@ -223,7 +218,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>By default, Micronaut requires just one <a href="#authenticationProviders">Authentication Provider</a> to return a successful authentication response. You can set <code>micronaut.security.authentication-strategy: ALL</code> to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response.</p>
+<p>By default, Micronaut requires just one <a href="#authenticationProviders">Authentication Provider</a> to return a successful authentication response. You can set <code>micronaut.security.authentication-provider-strategy: ALL</code> to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response.</p>
 </div>
 
 <h2 id="loginHandler"><a class="anchor" href="#loginHandler"></a>4.3 Login Handler</h2>
@@ -261,21 +256,21 @@ function addJsClass() {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT Cookie</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.login-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-jwt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html">JwtCookieLoginHandler</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Session Storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.login-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>session</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-session</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT Bearer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.login-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>bearer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-jwt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a></p></td>
@@ -318,14 +313,14 @@ function addJsClass() {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT Cookie</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.logout-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-jwt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Session Storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.logout-handler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>session</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut-session</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a></p></td>

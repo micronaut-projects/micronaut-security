@@ -131,10 +131,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html#accessRefreshTokenGenerator">accessRefreshTokenGenerator</a></span> - Variable in class io.micronaut.security.token.jwt.bearer.<a href="io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html" title="class in io.micronaut.security.token.jwt.bearer">AccessRefreshTokenLoginHandler</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearer.html#accessRefreshTokenGenerator">accessRefreshTokenGenerator</a></span> - Variable in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearer.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryBearer</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html#accessRefreshTokenGenerator">accessRefreshTokenGenerator</a></span> - Variable in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookie</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#accessRefreshTokenGenerator">accessRefreshTokenGenerator</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/endpoints/OauthController.html#accessRefreshTokenGenerator">accessRefreshTokenGenerator</a></span> - Variable in class io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/OauthController.html" title="class in io.micronaut.security.token.jwt.endpoints">OauthController</a></dt>
@@ -150,8 +146,6 @@
 <div class="block">Implementation of <a href="io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers"><code>LoginHandler</code></a> for Token Based Authentication.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html#AccessRefreshTokenLoginHandler-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-">AccessRefreshTokenLoginHandler(AccessRefreshTokenGenerator)</a></span> - Constructor for class io.micronaut.security.token.jwt.bearer.<a href="io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html" title="class in io.micronaut.security.token.jwt.bearer">AccessRefreshTokenLoginHandler</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html#accessTokenConfiguration">accessTokenConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookie</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#accessTokenConfiguration">accessTokenConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
 <dd>&nbsp;</dd>
@@ -313,6 +307,10 @@
 <dt><a href="io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html" title="enum in io.micronaut.security.oauth2.endpoint"><span class="typeNameLink">AuthenticationMethod</span></a> - Enum in <a href="io/micronaut/security/oauth2/endpoint/package-summary.html">io.micronaut.security.oauth2.endpoint</a></dt>
 <dd>
 <div class="block">Client Authentication methods that are used by Clients to authenticate to the Authorization Server when using the Token Endpoint.</div>
+</dd>
+<dt><a href="io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers"><span class="typeNameLink">AuthenticationMode</span></a> - Enum in <a href="io/micronaut/security/handlers/package-summary.html">io.micronaut.security.handlers</a></dt>
+<dd>
+<div class="block">Different authentication strategies shipped with Micronaut Security.</div>
 </dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><span class="typeNameLink">AuthenticationProvider</span></a> - Interface in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>
@@ -782,16 +780,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html#createKey-io.micronaut.security.authentication.UserDetails-">createKey(UserDetails)</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">SignedRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LoginHandlerFactorySession.html#createLoginHandler--">createLoginHandler()</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/LoginHandlerFactorySession.html" title="class in io.micronaut.security.session">LoginHandlerFactorySession</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearer.html#createLoginHandler--">createLoginHandler()</a></span> - Method in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearer.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryBearer</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html#createLoginHandler--">createLoginHandler()</a></span> - Method in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookie</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LogoutHandlerFactorySession.html#createLogoutHandler--">createLogoutHandler()</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/LogoutHandlerFactorySession.html" title="class in io.micronaut.security.session">LogoutHandlerFactorySession</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html#createLogoutHandler--">createLogoutHandler()</a></span> - Method in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LogoutHandlerFactoryCookie</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/AuthenticationFailed.html#createMessage-io.micronaut.security.authentication.AuthenticationFailureReason-">createMessage(AuthenticationFailureReason)</a></span> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a></dt>
 <dd>
 <div class="block">Generates a Title Case string for give authentication Failure.</div>
@@ -847,6 +835,14 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_COOKIESAMESITE">DEFAULT_COOKIESAMESITE</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default same-site setting for the JWT cookie.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default enabled value for forbidden.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default enabled value for unauthorized.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>
@@ -907,7 +903,7 @@
 <dd>
 <div class="block">The default expiration.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default forbidden rejection target URL.</div>
 </dd>
@@ -969,7 +965,7 @@
 <dd>
 <div class="block">The default secure value.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#DEFAULT_UNAUTHORIZED">DEFAULT_UNAUTHORIZED</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html#DEFAULT_UNAUTHORIZED">DEFAULT_UNAUTHORIZED</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default unauthorized rejection target URL.</div>
 </dd>
@@ -1438,6 +1434,12 @@
 <dd>
 <div class="block">Attempts to retrieve a token in a request.</div>
 </dd>
+<dt><a href="io/micronaut/security/config/ForbiddenRedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="typeNameLink">ForbiddenRedirectConfiguration</span></a> - Interface in <a href="io/micronaut/security/config/package-summary.html">io.micronaut.security.config</a></dt>
+<dd>
+<div class="block">Configuration about where to redirect if forbidden.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html#ForbiddenRedirectConfigurationProperties--">ForbiddenRedirectConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:G">
 <!--   -->
@@ -1616,6 +1618,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/AuthorizationException.html#getAuthentication--">getAuthentication()</a></span> - Method in exception io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthorizationException.html" title="class in io.micronaut.security.authentication">AuthorizationException</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfiguration.html#getAuthentication--">getAuthentication()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#getAuthentication--">getAuthentication()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/utils/DefaultSecurityService.html#getAuthentication--">getAuthentication()</a></span> - Method in class io.micronaut.security.utils.<a href="io/micronaut/security/utils/DefaultSecurityService.html" title="class in io.micronaut.security.utils">DefaultSecurityService</a></dt>
 <dd>
 <div class="block">Retrieves <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> if authenticated.</div>
@@ -1632,9 +1638,9 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#getAuthenticationMethodReferences--">getAuthenticationMethodReferences()</a></span> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfiguration.html#getAuthenticationStrategy--">getAuthenticationStrategy()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfiguration.html#getAuthenticationProviderStrategy--">getAuthenticationProviderStrategy()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#getAuthenticationStrategy--">getAuthenticationStrategy()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#getAuthenticationProviderStrategy--">getAuthenticationProviderStrategy()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html#getAuthenticationTime--">getAuthenticationTime()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">JWTOpenIdClaims</a></dt>
 <dd>&nbsp;</dd>
@@ -2185,10 +2191,6 @@
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfiguration.html#getLoginHandler--">getLoginHandler()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#getLoginHandler--">getLoginHandler()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html#getLoginHint--">getLoginHint()</a></span> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdAuthorizationRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfiguration.html#getLoginSuccess--">getLoginSuccess()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a></dt>
@@ -2222,10 +2224,6 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfiguration.html#getLogout--">getLogout()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#getLogout--">getLogout()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfiguration.html#getLogoutHandler--">getLogoutHandler()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#getLogoutHandler--">getLogoutHandler()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SecuritySessionConfiguration.html#getLogoutTargetUrl--">getLogoutTargetUrl()</a></span> - Method in interface io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a></dt>
 <dd>
@@ -2872,6 +2870,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/context/ContextSettings.html#getUrl--">getUrl()</a></span> - Method in interface io.micronaut.configuration.security.ldap.context.<a href="io/micronaut/configuration/security/ldap/context/ContextSettings.html" title="interface in io.micronaut.configuration.security.ldap.context">ContextSettings</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/ForbiddenRedirectConfiguration.html#getUrl--">getUrl()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/ForbiddenRedirectConfiguration.html" title="interface in io.micronaut.security.config">ForbiddenRedirectConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html#getUrl--">getUrl()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html#getUrl--">getUrl()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/UnauthorizedRedirectConfiguration.html#getUrl--">getUrl()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config">UnauthorizedRedirectConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/endpoints/DefaultEndpointConfiguration.html#getUrl--">getUrl()</a></span> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/DefaultEndpointConfiguration.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">DefaultEndpointConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/endpoints/EndpointConfiguration.html#getUrl--">getUrl()</a></span> - Method in interface io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/EndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">EndpointConfiguration</a></dt>
@@ -3428,6 +3434,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html" title="class in io.micronaut.security.endpoints">LoginControllerConfigurationProperties</a></dt>
@@ -3488,10 +3498,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html#isJwt--">isJwt()</a></span> - Method in interface io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdAdditionalClaimsConfiguration</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfiguration.html#isOnRejection--">isOnRejection()</a></span> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#isOnRejection--">isOnRejection()</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html#isPhoneNumberVerified--">isPhoneNumberVerified()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">JWTOpenIdClaims</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#isPhoneNumberVerified--">isPhoneNumberVerified()</a></span> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></dt>
@@ -3499,7 +3505,7 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SecuritySessionConfiguration.html#isRedirectOnRejection--">isRedirectOnRejection()</a></span> - Method in interface io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfiguration.html#isOnRejection--"><code>RedirectConfiguration.isOnRejection()</code></a> instead.</span></div>
+<div class="block"><span class="deprecationComment">Use <code>io.micronaut.security.config.RedirectConfiguration#isOnRejection()</code> instead.</span></div>
 </div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#isRedirectOnRejection--">isRedirectOnRejection()</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></dt>
@@ -3670,10 +3676,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-">JwtCookieClearerLogoutHandler(JwtCookieConfiguration, RedirectConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html#jwtCookieConfiguration">jwtCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookie</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html#jwtCookieConfiguration">jwtCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LogoutHandlerFactoryCookie</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#jwtCookieConfiguration">jwtCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie"><span class="typeNameLink">JwtCookieConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
@@ -3684,7 +3686,7 @@
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie"><span class="typeNameLink">JwtCookieConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#JwtCookieConfigurationProperties-io.micronaut.security.config.RedirectConfigurationProperties-">JwtCookieConfigurationProperties(RedirectConfigurationProperties)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#JwtCookieConfigurationProperties-io.micronaut.security.config.RedirectConfigurationProperties-io.micronaut.core.value.PropertyResolver-">JwtCookieConfigurationProperties(RedirectConfigurationProperties, PropertyResolver)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie"><span class="typeNameLink">JwtCookieLoginHandler</span></a> - Class in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
 <dd>&nbsp;</dd>
@@ -3705,7 +3707,7 @@
 <dt><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><span class="typeNameLink">JwtGeneratorConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/jwt/generator/package-summary.html">io.micronaut.security.token.jwt.generator</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use {@link AccessTokenConfiguration) instead.</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><code>AccessTokenConfiguration</code></a>) instead.</span></div>
 </div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator"><span class="typeNameLink">JwtGeneratorConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/token/jwt/generator/package-summary.html">io.micronaut.security.token.jwt.generator</a></dt>
@@ -3714,7 +3716,7 @@
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator"><code>AccessTokenConfigurationProperties</code></a> instead.</span></div>
 </div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#JwtGeneratorConfigurationProperties-io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties-">JwtGeneratorConfigurationProperties(AccessTokenConfigurationProperties)</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">JwtGeneratorConfigurationProperties</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#JwtGeneratorConfigurationProperties-io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties-io.micronaut.core.value.PropertyResolver-">JwtGeneratorConfigurationProperties(AccessTokenConfigurationProperties, PropertyResolver)</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">JwtGeneratorConfigurationProperties</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
@@ -3897,42 +3899,6 @@
 <dd>
 <div class="block">Defines how to respond to a successful or failed login attempt.</div>
 </dd>
-<dt><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearer.html" title="class in io.micronaut.security.token.jwt.config"><span class="typeNameLink">LoginHandlerFactoryBearer</span></a> - Class in <a href="io/micronaut/security/token/jwt/config/package-summary.html">io.micronaut.security.token.jwt.config</a></dt>
-<dd>
-<div class="block">Instantiates a <code>Singleton</code> of <a href="io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html" title="class in io.micronaut.security.token.jwt.bearer"><code>AccessRefreshTokenLoginHandler</code></a> if there is a bean of type <a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>AccessRefreshTokenGenerator</code></a> and the condition <a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearerCondition.html" title="class in io.micronaut.security.token.jwt.config"><code>LoginHandlerFactoryBearerCondition</code></a> is fulfilled.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearer.html#LoginHandlerFactoryBearer-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-">LoginHandlerFactoryBearer(AccessRefreshTokenGenerator)</a></span> - Constructor for class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearer.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryBearer</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearerCondition.html" title="class in io.micronaut.security.token.jwt.config"><span class="typeNameLink">LoginHandlerFactoryBearerCondition</span></a> - Class in <a href="io/micronaut/security/token/jwt/config/package-summary.html">io.micronaut.security.token.jwt.config</a></dt>
-<dd>
-<div class="block">Evaluates to true if a bean of type <a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config"><code>SecurityConfiguration</code></a> is set and <a href="io/micronaut/security/config/SecurityConfiguration.html#getLoginHandler--"><code>SecurityConfiguration.getLoginHandler()</code></a> equals bearer.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearerCondition.html#LoginHandlerFactoryBearerCondition--">LoginHandlerFactoryBearerCondition()</a></span> - Constructor for class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearerCondition.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryBearerCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config"><span class="typeNameLink">LoginHandlerFactoryCookie</span></a> - Class in <a href="io/micronaut/security/token/jwt/config/package-summary.html">io.micronaut.security.token.jwt.config</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html#LoginHandlerFactoryCookie-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-">LoginHandlerFactoryCookie(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator)</a></span> - Constructor for class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookie</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookieCondition.html" title="class in io.micronaut.security.token.jwt.config"><span class="typeNameLink">LoginHandlerFactoryCookieCondition</span></a> - Class in <a href="io/micronaut/security/token/jwt/config/package-summary.html">io.micronaut.security.token.jwt.config</a></dt>
-<dd>
-<div class="block">Evaluates to true if a bean of type <a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config"><code>SecurityConfiguration</code></a> is set and <a href="io/micronaut/security/config/SecurityConfiguration.html#getLoginHandler--"><code>SecurityConfiguration.getLoginHandler()</code></a> equals cookie.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookieCondition.html#LoginHandlerFactoryCookieCondition--">LoginHandlerFactoryCookieCondition()</a></span> - Constructor for class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookieCondition.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookieCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/session/LoginHandlerFactorySession.html" title="class in io.micronaut.security.session"><span class="typeNameLink">LoginHandlerFactorySession</span></a> - Class in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LoginHandlerFactorySession.html#LoginHandlerFactorySession-io.micronaut.security.config.RedirectConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-">LoginHandlerFactorySession(RedirectConfiguration, SessionStore&lt;Session&gt;, TokenConfiguration)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/LoginHandlerFactorySession.html" title="class in io.micronaut.security.session">LoginHandlerFactorySession</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/session/LoginHandlerFactorySessionCondition.html" title="class in io.micronaut.security.session"><span class="typeNameLink">LoginHandlerFactorySessionCondition</span></a> - Class in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
-<dd>
-<div class="block">Evaluates to true if a bean of type <a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config"><code>SecurityConfiguration</code></a> is set and <a href="io/micronaut/security/config/SecurityConfiguration.html#getLoginHandler--"><code>SecurityConfiguration.getLoginHandler()</code></a> equals session.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LoginHandlerFactorySessionCondition.html#LoginHandlerFactorySessionCondition--">LoginHandlerFactorySessionCondition()</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/LoginHandlerFactorySessionCondition.html" title="class in io.micronaut.security.session">LoginHandlerFactorySessionCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/handlers/LoginHandlerMode.html" title="enum in io.micronaut.security.handlers"><span class="typeNameLink">LoginHandlerMode</span></a> - Enum in <a href="io/micronaut/security/handlers/package-summary.html">io.micronaut.security.handlers</a></dt>
-<dd>
-<div class="block">Different login modes shipped with Micronaut Security.</div>
-</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/LoginHintResolver.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request"><span class="typeNameLink">LoginHintResolver</span></a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/request/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.request</a></dt>
 <dd>
 <div class="block">Resolves a LoginHint.</div>
@@ -3996,30 +3962,6 @@
 <div class="block">Responsible for logging the user out and returning
  an appropriate response.</div>
 </dd>
-<dt><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config"><span class="typeNameLink">LogoutHandlerFactoryCookie</span></a> - Class in <a href="io/micronaut/security/token/jwt/config/package-summary.html">io.micronaut.security.token.jwt.config</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html#LogoutHandlerFactoryCookie-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-">LogoutHandlerFactoryCookie(RedirectConfiguration, JwtCookieConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LogoutHandlerFactoryCookie</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookieCondition.html" title="class in io.micronaut.security.token.jwt.config"><span class="typeNameLink">LogoutHandlerFactoryCookieCondition</span></a> - Class in <a href="io/micronaut/security/token/jwt/config/package-summary.html">io.micronaut.security.token.jwt.config</a></dt>
-<dd>
-<div class="block">Evaluates to true if a bean of type <a href="io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config"><code>SecurityConfiguration</code></a> is set and <a href="io/micronaut/security/config/SecurityConfiguration.html#getLogoutHandler--"><code>SecurityConfiguration.getLogoutHandler()</code></a> ()} equals cookie.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookieCondition.html#LogoutHandlerFactoryCookieCondition--">LogoutHandlerFactoryCookieCondition()</a></span> - Constructor for class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookieCondition.html" title="class in io.micronaut.security.token.jwt.config">LogoutHandlerFactoryCookieCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/session/LogoutHandlerFactorySession.html" title="class in io.micronaut.security.session"><span class="typeNameLink">LogoutHandlerFactorySession</span></a> - Class in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LogoutHandlerFactorySession.html#LogoutHandlerFactorySession-io.micronaut.security.config.RedirectConfiguration-">LogoutHandlerFactorySession(RedirectConfiguration)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/LogoutHandlerFactorySession.html" title="class in io.micronaut.security.session">LogoutHandlerFactorySession</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/session/LogoutHandlerFactorySessionCondition.html" title="class in io.micronaut.security.session"><span class="typeNameLink">LogoutHandlerFactorySessionCondition</span></a> - Class in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
-<dd>
-<div class="block">Evaluates to true if a bean of type <code>SecurityConfiguration</code> is set and <a href="io/micronaut/security/config/SecurityConfiguration.html#getLogoutHandler--"><code>SecurityConfiguration.getLogoutHandler()</code></a> equals session.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LogoutHandlerFactorySessionCondition.html#LogoutHandlerFactorySessionCondition--">LogoutHandlerFactorySessionCondition()</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/LogoutHandlerFactorySessionCondition.html" title="class in io.micronaut.security.session">LogoutHandlerFactorySessionCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/handlers/LogoutHandlerMode.html" title="enum in io.micronaut.security.handlers"><span class="typeNameLink">LogoutHandlerMode</span></a> - Enum in <a href="io/micronaut/security/handlers/package-summary.html">io.micronaut.security.handlers</a></dt>
-<dd>
-<div class="block">Different logout modes shipped with Micronaut Security.</div>
-</dd>
 </dl>
 <a name="I:M">
 <!--   -->
@@ -4047,16 +3989,6 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/condition/OauthClientCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.oauth2.client.condition.<a href="io/micronaut/security/oauth2/client/condition/OauthClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OauthClientCondition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/condition/OpenIdClientCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.oauth2.client.condition.<a href="io/micronaut/security/oauth2/client/condition/OpenIdClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OpenIdClientCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LoginHandlerFactorySessionCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/LoginHandlerFactorySessionCondition.html" title="class in io.micronaut.security.session">LoginHandlerFactorySessionCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LogoutHandlerFactorySessionCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/LogoutHandlerFactorySessionCondition.html" title="class in io.micronaut.security.session">LogoutHandlerFactorySessionCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearerCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryBearerCondition.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryBearerCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookieCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookieCondition.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookieCondition</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookieCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookieCondition.html" title="class in io.micronaut.security.token.jwt.config">LogoutHandlerFactoryCookieCondition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#matches-com.nimbusds.jwt.SignedJWT-com.nimbusds.jose.jwk.JWKSet-int-">matches(SignedJWT, JWKSet, int)</a></span> - Method in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></dt>
 <dd>
@@ -4673,20 +4605,25 @@
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="typeNameLink">RedirectConfiguration</span></a> - Interface in <a href="io/micronaut/security/config/package-summary.html">io.micronaut.security.config</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LoginHandlerFactorySession.html#redirectConfiguration">redirectConfiguration</a></span> - Variable in class io.micronaut.security.session.<a href="io/micronaut/security/session/LoginHandlerFactorySession.html" title="class in io.micronaut.security.session">LoginHandlerFactorySession</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LogoutHandlerFactorySession.html#redirectConfiguration">redirectConfiguration</a></span> - Variable in class io.micronaut.security.session.<a href="io/micronaut/security/session/LogoutHandlerFactorySession.html" title="class in io.micronaut.security.session">LogoutHandlerFactorySession</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html#redirectConfiguration">redirectConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LoginHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LoginHandlerFactoryCookie</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html#redirectConfiguration">redirectConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/LogoutHandlerFactoryCookie.html" title="class in io.micronaut.security.token.jwt.config">LogoutHandlerFactoryCookie</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config"><span class="typeNameLink">RedirectConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/config/package-summary.html">io.micronaut.security.config</a></dt>
 <dd>
 <div class="block"><code>ConfigurationProperties</code> implementation of <a href="io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config"><code>RedirectConfiguration</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#RedirectConfigurationProperties--">RedirectConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config"><span class="typeNameLink">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/config/package-summary.html">io.micronaut.security.config</a></dt>
+<dd>
+<div class="block">Forbidden redirect configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config"><span class="typeNameLink">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/config/package-summary.html">io.micronaut.security.config</a></dt>
+<dd>
+<div class="block">Unauthorized redirect configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers"><span class="typeNameLink">RedirectingLoginHandler</span></a> - Interface in <a href="io/micronaut/security/handlers/package-summary.html">io.micronaut.security.handlers</a></dt>
+<dd>
+<div class="block">A marker contract to indicate the login handler
+ returns redirecting responses.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#REFRESH_TOKEN_KEY">REFRESH_TOKEN_KEY</a></span> - Static variable in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthUserDetailsMapper</a></dt>
 <dd>
 <div class="block">A key to be stored in the user details to store the
@@ -5043,7 +4980,7 @@
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config"><code>RedirectConfigurationProperties</code></a> instead.</span></div>
 </div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#SecuritySessionConfigurationProperties-io.micronaut.security.config.RedirectConfigurationProperties-">SecuritySessionConfigurationProperties(RedirectConfigurationProperties)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#SecuritySessionConfigurationProperties-io.micronaut.core.value.PropertyResolver-io.micronaut.security.config.RedirectConfigurationProperties-">SecuritySessionConfigurationProperties(PropertyResolver, RedirectConfigurationProperties)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
@@ -5073,11 +5010,11 @@
 <div class="block">An <code>ExceptionHandler</code> for <a href="io/micronaut/security/authentication/AuthorizationException.html" title="class in io.micronaut.security.authentication"><code>AuthorizationException</code></a> that
  redirects to a configured URI.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionAuthorizationExceptionHandler.html#SessionAuthorizationExceptionHandler-io.micronaut.security.session.SecuritySessionConfiguration-">SessionAuthorizationExceptionHandler(SecuritySessionConfiguration)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionAuthorizationExceptionHandler.html" title="class in io.micronaut.security.session">SessionAuthorizationExceptionHandler</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionAuthorizationExceptionHandler.html#SessionAuthorizationExceptionHandler-io.micronaut.security.config.RedirectConfiguration-">SessionAuthorizationExceptionHandler(RedirectConfiguration)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionAuthorizationExceptionHandler.html" title="class in io.micronaut.security.session">SessionAuthorizationExceptionHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session"><span class="typeNameLink">SessionLoginHandler</span></a> - Class in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
 <dd>
-<div class="block">A <a href="io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers"><code>LoginHandler</code></a> implementation for session based authentication.</div>
+<div class="block">A <a href="io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers"><code>RedirectingLoginHandler</code></a> implementation for session based authentication.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionLoginHandler.html#SessionLoginHandler-io.micronaut.security.session.SecuritySessionConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-">SessionLoginHandler(SecuritySessionConfiguration, SessionStore&lt;Session&gt;, TokenConfiguration)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
 <dd>
@@ -5114,8 +5051,6 @@
 <div class="block">Persists the state in the session.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/session/SessionStatePersistence.html#SessionStatePersistence-io.micronaut.session.SessionStore-">SessionStatePersistence(SessionStore&lt;Session&gt;)</a></span> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.session.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/session/SessionStatePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.session">SessionStatePersistence</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LoginHandlerFactorySession.html#sessionStore">sessionStore</a></span> - Variable in class io.micronaut.security.session.<a href="io/micronaut/security/session/LoginHandlerFactorySession.html" title="class in io.micronaut.security.session">LoginHandlerFactorySession</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionLoginHandler.html#sessionStore">sessionStore</a></span> - Variable in class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
 <dd>&nbsp;</dd>
@@ -5165,7 +5100,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.html#setAudience-boolean-">setAudience(boolean)</a></span> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties.ClaimsValidationConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#setAuthenticationStrategy-io.micronaut.security.config.AuthenticationStrategy-">setAuthenticationStrategy(AuthenticationStrategy)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#setAuthentication-io.micronaut.security.handlers.AuthenticationMode-">setAuthentication(AuthenticationMode)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
+<dd>
+<div class="block">Defines which authentication to use.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#setAuthenticationProviderStrategy-io.micronaut.security.config.AuthenticationStrategy-">setAuthenticationProviderStrategy(AuthenticationStrategy)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>
 <div class="block">Determines how authentication providers should be processed.</div>
 </dd>
@@ -5364,6 +5303,14 @@
 <dd>
 <div class="block">Enables the <a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html" title="class in io.micronaut.security.authentication"><code>BasicAuthAuthenticationFetcher</code></a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a></dt>
+<dd>
+<div class="block">Whether it should redirect on forbidden rejections.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a></dt>
+<dd>
+<div class="block">Whether it should redirect on unauthorized rejections.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>
 <div class="block">If Security is enabled.</div>
@@ -5399,7 +5346,6 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">Sets whether the session config is enabled.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfigurationProperties.html" title="class in io.micronaut.security.token.config">TokenConfigurationProperties</a></dt>
 <dd>
@@ -5475,9 +5421,9 @@
 <dd>
 <div class="block">Sets the search filter.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#setForbidden-java.lang.String-">setForbidden(String)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#setForbidden-io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties-">setForbidden(RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
 <dd>
-<div class="block">Where the user is redirected to after trying to access a secured route for which the does not have sufficient roles..</div>
+<div class="block">Sets the forbidden redirect configuration.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#setForbiddenTargetUrl-java.lang.String-">setForbiddenTargetUrl(String)</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></dt>
 <dd>
@@ -5584,10 +5530,6 @@
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#setLoginHandler-io.micronaut.security.handlers.LoginHandlerMode-">setLoginHandler(LoginHandlerMode)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
-<dd>
-<div class="block">Defines which Login Handler to setup.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#setLoginSuccess-java.lang.String-">setLoginSuccess(String)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
 <dd>
 <div class="block">Where the user is redirected to after a successful login.</div>
@@ -5608,10 +5550,6 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#setLogout-java.lang.String-">setLogout(String)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
 <dd>
 <div class="block">URL where the user is redirected after logout.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#setLogoutHandler-io.micronaut.security.handlers.LogoutHandlerMode-">setLogoutHandler(LogoutHandlerMode)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
-<dd>
-<div class="block">Defines which Logout Handler to setup.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#setLogoutTargetUrl-java.lang.String-">setLogoutTargetUrl(String)</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></dt>
 <dd>
@@ -5645,10 +5583,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html#setNonce-java.lang.String-">setNonce(String)</a></span> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">MutableState</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#setOnRejection-boolean-">setOnRejection(boolean)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
-<dd>
-<div class="block">Sets whether a redirect should occur on an authorization failure.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.html#setOpenid-io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties-">setOpenid(OauthClientConfigurationProperties.OpenIdClientConfigurationProperties)</a></span> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties</a></dt>
 <dd>
 <div class="block">The open id configuration.</div>
@@ -5884,9 +5818,9 @@
 <dd>
 <div class="block">Preferred locales for authentication.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#setUnauthorized-java.lang.String-">setUnauthorized(String)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#setUnauthorized-io.micronaut.security.config.RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties-">setUnauthorized(RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
 <dd>
-<div class="block">Where the user is redirected to after trying to access a secured route.</div>
+<div class="block">Sets the unauthorized redirect configuration.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#setUnauthorizedTargetUrl-java.lang.String-">setUnauthorizedTargetUrl(String)</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></dt>
 <dd>
@@ -5897,6 +5831,14 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html#setUriRegex-java.lang.String-">setUriRegex(String)</a></span> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html" title="class in io.micronaut.security.token.propagation">TokenPropagationConfigurationProperties</a></dt>
 <dd>
 <div class="block">a regular expression to match the uri.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html#setUrl-java.lang.String-">setUrl(String)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a></dt>
+<dd>
+<div class="block">Where the user is redirected to after trying to access a secured route which he is forbidden to access.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html#setUrl-java.lang.String-">setUrl(String)</a></span> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a></dt>
+<dd>
+<div class="block">Where the user is redirected to after trying to access a secured route.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/endpoints/DefaultEndpointConfiguration.html#setUrl-java.lang.String-">setUrl(String)</a></span> - Method in class io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/DefaultEndpointConfiguration.html" title="class in io.micronaut.security.oauth2.configuration.endpoints">DefaultEndpointConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -5928,7 +5870,7 @@
 <dd>
 <div class="block">username setter.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionAuthorizationExceptionHandler.html#shouldHandleRequest-io.micronaut.http.HttpRequest-">shouldHandleRequest(HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionAuthorizationExceptionHandler.html" title="class in io.micronaut.security.session">SessionAuthorizationExceptionHandler</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionAuthorizationExceptionHandler.html#shouldHandleRequest-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.AuthorizationException-">shouldHandleRequest(HttpRequest&lt;?&gt;, AuthorizationException)</a></span> - Method in class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionAuthorizationExceptionHandler.html" title="class in io.micronaut.security.session">SessionAuthorizationExceptionHandler</a></dt>
 <dd>
 <div class="block">Decides whether the request should be handled with a redirect.</div>
 </dd>
@@ -6084,8 +6026,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#TokenAuthenticationFetcher-java.util.Collection-io.micronaut.security.token.reader.TokenResolver-io.micronaut.context.event.ApplicationEventPublisher-">TokenAuthenticationFetcher(Collection&lt;TokenValidator&gt;, TokenResolver, ApplicationEventPublisher)</a></span> - Constructor for class io.micronaut.security.token.<a href="io/micronaut/security/token/TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/session/LoginHandlerFactorySession.html#tokenConfiguration">tokenConfiguration</a></span> - Variable in class io.micronaut.security.session.<a href="io/micronaut/security/session/LoginHandlerFactorySession.html" title="class in io.micronaut.security.session">LoginHandlerFactorySession</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config"><span class="typeNameLink">TokenConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/config/package-summary.html">io.micronaut.security.token.config</a></dt>
 <dd>
 <div class="block">Defines Security Token Configuration.</div>
@@ -6219,9 +6159,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html#toString--">toString()</a></span> - Method in enum io.micronaut.security.errors.<a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html" title="enum in io.micronaut.security.errors">ObtainingAuthorizationErrorCode</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/LoginHandlerMode.html#toString--">toString()</a></span> - Method in enum io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/LoginHandlerMode.html" title="enum in io.micronaut.security.handlers">LoginHandlerMode</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/LogoutHandlerMode.html#toString--">toString()</a></span> - Method in enum io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/LogoutHandlerMode.html" title="enum in io.micronaut.security.handlers">LogoutHandlerMode</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/AuthenticationMode.html#toString--">toString()</a></span> - Method in enum io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html#toString--">toString()</a></span> - Method in enum io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html" title="enum in io.micronaut.security.oauth2.endpoint">AuthenticationMethod</a></dt>
 <dd>&nbsp;</dd>
@@ -6247,6 +6185,12 @@
 </a>
 <h2 class="title">U</h2>
 <dl>
+<dt><a href="io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="typeNameLink">UnauthorizedRedirectConfiguration</span></a> - Interface in <a href="io/micronaut/security/config/package-summary.html">io.micronaut.security.config</a></dt>
+<dd>
+<div class="block">Configuration about where to redirect if unauthorized.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html#UnauthorizedRedirectConfigurationProperties--">UnauthorizedRedirectConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">UserDetails</span></a> - Class in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>
 <div class="block">Authenticated user's representation.</div>
@@ -6347,11 +6291,7 @@
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/LoginHandlerMode.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/LoginHandlerMode.html" title="enum in io.micronaut.security.handlers">LoginHandlerMode</a></dt>
-<dd>
-<div class="block">Returns the enum constant of this type with the specified name.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/LogoutHandlerMode.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/LogoutHandlerMode.html" title="enum in io.micronaut.security.handlers">LogoutHandlerMode</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/AuthenticationMode.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
@@ -6413,12 +6353,7 @@ the order they are declared.</div>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/LoginHandlerMode.html#values--">values()</a></span> - Static method in enum io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/LoginHandlerMode.html" title="enum in io.micronaut.security.handlers">LoginHandlerMode</a></dt>
-<dd>
-<div class="block">Returns an array containing the constants of this enum type, in
-the order they are declared.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/LogoutHandlerMode.html#values--">values()</a></span> - Static method in enum io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/LogoutHandlerMode.html" title="enum in io.micronaut.security.handlers">LogoutHandlerMode</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/handlers/AuthenticationMode.html#values--">values()</a></span> - Static method in enum io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>

@@ -107,14 +107,17 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></dd>
+<dd><a href="../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>, <a href="../../../../io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a></dd>
 </dl>
 <hr>
 <br>
-<pre>public class <span class="typeNameLabel">SessionLoginHandler</span>
+<pre>@Requires(property="micronaut.security.authentication",
+          value="session")
+ @Singleton
+public class <span class="typeNameLabel">SessionLoginHandler</span>
 extends java.lang.Object
-implements <a href="../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></pre>
-<div class="block">A <a href="../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers"><code>LoginHandler</code></a> implementation for session based authentication.</div>
+implements <a href="../../../../io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a></pre>
+<div class="block">A <a href="../../../../io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers"><code>RedirectingLoginHandler</code></a> implementation for session based authentication.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
@@ -288,9 +291,10 @@ public&nbsp;SessionLoginHandler(<a href="../../../../io/micronaut/security/sessi
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SessionLoginHandler</h4>
-<pre>public&nbsp;SessionLoginHandler(<a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
-                           io.micronaut.session.SessionStore&lt;io.micronaut.session.Session&gt;&nbsp;sessionStore,
-                           <a href="../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration)</pre>
+<pre>@Inject
+public&nbsp;SessionLoginHandler(<a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
+                                   io.micronaut.session.SessionStore&lt;io.micronaut.session.Session&gt;&nbsp;sessionStore,
+                                   <a href="../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration)</pre>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

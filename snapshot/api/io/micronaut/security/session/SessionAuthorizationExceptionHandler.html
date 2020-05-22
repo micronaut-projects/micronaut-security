@@ -146,7 +146,7 @@ extends <a href="../../../../io/micronaut/security/authentication/DefaultAuthori
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionAuthorizationExceptionHandler.html#SessionAuthorizationExceptionHandler-io.micronaut.security.session.SecuritySessionConfiguration-">SessionAuthorizationExceptionHandler</a></span>(<a href="../../../../io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a>&nbsp;configuration)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionAuthorizationExceptionHandler.html#SessionAuthorizationExceptionHandler-io.micronaut.security.config.RedirectConfiguration-">SessionAuthorizationExceptionHandler</a></span>(<a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -181,7 +181,8 @@ extends <a href="../../../../io/micronaut/security/authentication/DefaultAuthori
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionAuthorizationExceptionHandler.html#shouldHandleRequest-io.micronaut.http.HttpRequest-">shouldHandleRequest</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionAuthorizationExceptionHandler.html#shouldHandleRequest-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.AuthorizationException-">shouldHandleRequest</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                   <a href="../../../../io/micronaut/security/authentication/AuthorizationException.html" title="class in io.micronaut.security.authentication">AuthorizationException</a>&nbsp;exception)</code>
 <div class="block">Decides whether the request should be handled with a redirect.</div>
 </td>
 </tr>
@@ -207,16 +208,16 @@ extends <a href="../../../../io/micronaut/security/authentication/DefaultAuthori
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SessionAuthorizationExceptionHandler-io.micronaut.security.session.SecuritySessionConfiguration-">
+<a name="SessionAuthorizationExceptionHandler-io.micronaut.security.config.RedirectConfiguration-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SessionAuthorizationExceptionHandler</h4>
-<pre>public&nbsp;SessionAuthorizationExceptionHandler(<a href="../../../../io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">SecuritySessionConfiguration</a>&nbsp;configuration)</pre>
+<pre>public&nbsp;SessionAuthorizationExceptionHandler(<a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>configuration</code> - The session configuration</dd>
+<dd><code>redirectConfiguration</code> - Redirect configuration</dd>
 </dl>
 </li>
 </ul>
@@ -244,17 +245,19 @@ extends <a href="../../../../io/micronaut/security/authentication/DefaultAuthori
 </dl>
 </li>
 </ul>
-<a name="shouldHandleRequest-io.micronaut.http.HttpRequest-">
+<a name="shouldHandleRequest-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.AuthorizationException-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>shouldHandleRequest</h4>
-<pre>protected&nbsp;boolean&nbsp;shouldHandleRequest(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
+<pre>protected&nbsp;boolean&nbsp;shouldHandleRequest(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                      <a href="../../../../io/micronaut/security/authentication/AuthorizationException.html" title="class in io.micronaut.security.authentication">AuthorizationException</a>&nbsp;exception)</pre>
 <div class="block">Decides whether the request should be handled with a redirect.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>request</code> - The HTTP Request</dd>
+<dd><code>exception</code> - The authorization exception</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the request accepts text/html</dd>
 </dl>

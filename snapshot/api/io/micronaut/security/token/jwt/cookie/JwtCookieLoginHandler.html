@@ -107,13 +107,16 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></dd>
+<dd><a href="../../../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>, <a href="../../../../../../io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a></dd>
 </dl>
 <hr>
 <br>
-<pre>public class <span class="typeNameLabel">JwtCookieLoginHandler</span>
+<pre>@Requires(property="micronaut.security.authentication",
+          value="cookie")
+ @Singleton
+public class <span class="typeNameLabel">JwtCookieLoginHandler</span>
 extends java.lang.Object
-implements <a href="../../../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></pre>
+implements <a href="../../../../../../io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
@@ -320,10 +323,11 @@ public&nbsp;JwtCookieLoginHandler(<a href="../../../../../../io/micronaut/securi
 <ul class="blockListLast">
 <li class="blockList">
 <h4>JwtCookieLoginHandler</h4>
-<pre>public&nbsp;JwtCookieLoginHandler(<a href="../../../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
-                             <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
-                             <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
-                             <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator)</pre>
+<pre>@Inject
+public&nbsp;JwtCookieLoginHandler(<a href="../../../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
+                                     <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
+                                     <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
+                                     <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>redirectConfiguration</code> - Redirect configuration</dd>

@@ -189,22 +189,6 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after trying to access a secured route. Default value ("/").</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.forbidden</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.. Default value ("/").</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.on-rejection</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether a redirect should occur on an authorization failure.
- Default value (true).</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a successful login. Default value ("/").</p></td>
@@ -228,8 +212,7 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    login-handler: session
-    logout-handler: session
+    authentication: session
     redirect:
       login-failure: /login/authFailed</code></pre>
 </div>

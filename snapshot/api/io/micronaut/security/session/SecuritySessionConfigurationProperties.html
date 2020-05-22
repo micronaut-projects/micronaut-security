@@ -172,7 +172,8 @@ implements <a href="../../../../io/micronaut/security/session/SecuritySessionCon
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SecuritySessionConfigurationProperties.html#SecuritySessionConfigurationProperties-io.micronaut.security.config.RedirectConfigurationProperties-">SecuritySessionConfigurationProperties</a></span>(<a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a>&nbsp;redirectConfigurationProperties)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SecuritySessionConfigurationProperties.html#SecuritySessionConfigurationProperties-io.micronaut.core.value.PropertyResolver-io.micronaut.security.config.RedirectConfigurationProperties-">SecuritySessionConfigurationProperties</a></span>(io.micronaut.core.value.PropertyResolver&nbsp;propertyResolver,
+                                      <a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a>&nbsp;redirectConfigurationProperties)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 &nbsp;</td>
 </tr>
@@ -237,7 +238,6 @@ implements <a href="../../../../io/micronaut/security/session/SecuritySessionCon
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SecuritySessionConfigurationProperties.html#setEnabled-boolean-">setEnabled</a></span>(boolean&nbsp;enabled)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
-<div class="block">Sets whether the session config is enabled.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -335,16 +335,18 @@ implements <a href="../../../../io/micronaut/security/session/SecuritySessionCon
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SecuritySessionConfigurationProperties-io.micronaut.security.config.RedirectConfigurationProperties-">
+<a name="SecuritySessionConfigurationProperties-io.micronaut.core.value.PropertyResolver-io.micronaut.security.config.RedirectConfigurationProperties-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SecuritySessionConfigurationProperties</h4>
-<pre>public&nbsp;SecuritySessionConfigurationProperties(<a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a>&nbsp;redirectConfigurationProperties)</pre>
+<pre>public&nbsp;SecuritySessionConfigurationProperties(io.micronaut.core.value.PropertyResolver&nbsp;propertyResolver,
+                                              <a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a>&nbsp;redirectConfigurationProperties)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>propertyResolver</code> - Property resolvers</dd>
 <dd><code>redirectConfigurationProperties</code> - Redirect configuration</dd>
 </dl>
 </li>
@@ -542,7 +544,8 @@ public&nbsp;void&nbsp;setForbiddenTargetUrl(java.lang.String&nbsp;forbiddenTarge
 <ul class="blockList">
 <li class="blockList">
 <h4>setEnabled</h4>
-<pre>public&nbsp;void&nbsp;setEnabled(boolean&nbsp;enabled)</pre>
+<pre>@Deprecated
+public&nbsp;void&nbsp;setEnabled(boolean&nbsp;enabled)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Sets whether the session config is enabled. Default value (<a href="../../../../io/micronaut/security/session/SecuritySessionConfigurationProperties.html#DEFAULT_ENABLED">true</a>).</div>
 <dl>
