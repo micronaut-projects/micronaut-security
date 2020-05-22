@@ -25,7 +25,7 @@ import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.filters.SecurityFilter;
-import io.micronaut.security.handlers.LoginHandler;
+import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
@@ -37,14 +37,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * A {@link LoginHandler} implementation for session based authentication.
+ * A {@link RedirectingLoginHandler} implementation for session based authentication.
  *
  * @author Sergio del Amo
  * @since 1.0
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "session")
 @Singleton
-public class SessionLoginHandler implements LoginHandler {
+public class SessionLoginHandler implements RedirectingLoginHandler {
 
     protected final String loginSuccess;
     protected final String loginFailure;

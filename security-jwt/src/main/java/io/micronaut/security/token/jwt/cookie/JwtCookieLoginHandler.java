@@ -24,7 +24,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import io.micronaut.security.handlers.LoginHandler;
+import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
@@ -46,7 +46,7 @@ import java.util.Optional;
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "cookie")
 @Singleton
-public class JwtCookieLoginHandler implements LoginHandler {
+public class JwtCookieLoginHandler implements RedirectingLoginHandler {
 
     protected final JwtCookieConfiguration jwtCookieConfiguration;
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
