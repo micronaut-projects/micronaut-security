@@ -27,7 +27,7 @@ class JwtCookieSameSiteInvalidSpec extends EmbeddedServerSpecification {
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 'micronaut.http.client.followRedirects': false,
-                'micronaut.security.login-handler': 'cookie',
+                'micronaut.security.authentication': 'cookie',
                 'micronaut.security.token.jwt.cookie.cookie-max-age': '5m',
                 'micronaut.security.token.jwt.cookie.cookie-same-site': 'nonesense',
                 'micronaut.security.redirect.login-failure': '/login/authFailed',

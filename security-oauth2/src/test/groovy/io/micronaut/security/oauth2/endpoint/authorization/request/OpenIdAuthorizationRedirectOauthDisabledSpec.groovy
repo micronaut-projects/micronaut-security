@@ -41,7 +41,7 @@ class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecifi
     Map<String, Object> getConfiguration() {
         Keycloak.init()
         super.configuration + [
-                'micronaut.security.login-handler': 'cookie',
+                'micronaut.security.authentication': 'cookie',
                 "micronaut.security.oauth2.clients.keycloak.openid.issuer": Keycloak.issuer,
                 "micronaut.security.oauth2.clients.keycloak.client-id": Keycloak.CLIENT_ID,
                 "micronaut.security.oauth2.clients.keycloak.client-secret": Keycloak.clientSecret,

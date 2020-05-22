@@ -6,13 +6,13 @@ You can provide your own implementation of api:security.handlers.LogoutHandler[]
 | Type | Configuration Key | Configuration Value | Module | Bean
 
 | JWT Cookie
-| `micronaut.security.logout-handler`
+| `micronaut.security.authentication`
 | `cookie`
 | `micronaut-jwt`
 | api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[]
 
 | Session Storage
-| `micronaut.security.logout-handler`
+| `micronaut.security.authentication`
 | `session`
 | `micronaut-session`
 | api:security.session.SessionLogoutHandler[]

@@ -15,14 +15,26 @@
  */
 package io.micronaut.security.handlers;
 
+import io.micronaut.core.annotation.Internal;
+
 /**
- * Different logout modes shipped with Micronaut Security.
+ * Different authentication strategies shipped with Micronaut Security.
+ *
+ * Depending on the authentication used different {@link LoginHandler} and {@link LogoutHandler} are enabled.
  * @author Sergio del Amo
  * @since 2.0.0
  */
-public enum LogoutHandlerMode {
+@Internal
+public enum AuthenticationMode {
+    BEARER,
     COOKIE,
     SESSION;
+
+    /**
+     * Constructor.
+     */
+    AuthenticationMode() {
+    }
 
     @Override
     public String toString() {

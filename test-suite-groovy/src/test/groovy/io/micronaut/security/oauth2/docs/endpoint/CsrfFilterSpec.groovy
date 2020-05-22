@@ -30,7 +30,7 @@ class CsrfFilterSpec extends EmbeddedServerSpecification {
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 "oauth.csrf": true,
-                'micronaut.security.login-handler': 'cookie',
+                'micronaut.security.authentication': 'cookie',
                 "micronaut.security.oauth2.clients.twitter.authorization.url": "https://twitter.com/authorize",
                 "micronaut.security.oauth2.clients.twitter.token.url": "https://twitter.com/token",
                 "micronaut.security.oauth2.clients.twitter.client-id": "myclient",

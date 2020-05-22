@@ -66,7 +66,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
             [
                     'micronaut.server.port': authServerPort,
                     'spec.name': 'AuthServerNotAvailableRemoteJwksSpec',
-                    'micronaut.security.login-handler': 'bearer',
+                    'micronaut.security.authentication': 'bearer',
             ]
 
 

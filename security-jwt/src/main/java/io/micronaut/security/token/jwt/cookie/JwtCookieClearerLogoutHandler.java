@@ -15,14 +15,17 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.handlers.LogoutHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -32,6 +35,8 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "cookie")
+@Singleton
 public class JwtCookieClearerLogoutHandler implements LogoutHandler {
 
     protected final JwtCookieConfiguration jwtCookieConfiguration;

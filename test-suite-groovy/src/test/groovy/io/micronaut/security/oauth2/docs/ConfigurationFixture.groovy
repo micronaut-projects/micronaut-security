@@ -24,7 +24,7 @@ trait ConfigurationFixture {
     }
 
     Map<String, Object> getLoginHandlerCookieConfiguration() {
-        ['micronaut.security.login-handler': 'cookie'] as Map<String, Object>
+        ['micronaut.security.authentication': 'cookie'] as Map<String, Object>
     }
 
     Map<String, Object> getOauth2ClientConfiguration() {

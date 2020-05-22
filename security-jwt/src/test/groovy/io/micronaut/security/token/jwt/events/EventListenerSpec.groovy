@@ -30,7 +30,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         super.configuration + [
                 'endpoints.beans.enabled': true,
                 'endpoints.beans.sensitive': true,
-                'micronaut.security.login-handler': 'bearer',
+                'micronaut.security.authentication': 'bearer',
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
         ]
     }

@@ -4,8 +4,7 @@ import io.micronaut.security.config.AuthenticationStrategy
 import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.config.SecurityConfiguration
 import io.micronaut.security.config.SecurityConfigurationProperties
-import io.micronaut.security.handlers.LoginHandlerMode
-import io.micronaut.security.handlers.LogoutHandlerMode
+import io.micronaut.security.handlers.AuthenticationMode
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import spock.lang.Specification
@@ -29,12 +28,7 @@ class AuthenticatorSpec extends Specification {
         }
 
         @Override
-        LoginHandlerMode getLoginHandler() {
-            return null
-        }
-
-        @Override
-        LogoutHandlerMode getLogoutHandler() {
+        AuthenticationMode getAuthentication() {
             return null
         }
     }

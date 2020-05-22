@@ -17,8 +17,7 @@ package io.micronaut.security.config;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.core.util.Toggleable;
-import io.micronaut.security.handlers.LoginHandlerMode;
-import io.micronaut.security.handlers.LogoutHandlerMode;
+import io.micronaut.security.handlers.AuthenticationMode;
 
 import java.util.List;
 
@@ -63,13 +62,5 @@ public interface SecurityConfiguration extends Toggleable {
      * @return Login Handler to use.
      */
     @Nullable
-    LoginHandlerMode getLoginHandler();
-
-
-    /**
-     *
-     * @return Logout Handler to use.
-     */
-    @Nullable
-    LogoutHandlerMode getLogoutHandler();
+    AuthenticationMode getAuthentication();
 }

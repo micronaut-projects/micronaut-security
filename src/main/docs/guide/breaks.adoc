@@ -30,11 +30,19 @@ This section will document breaking changes that may happen during milestone or 
 
 * Previously, `AccessRefreshTokenLoginHandler` was enabled by default. Currently, no `LoginHandler` is enabled by default. If you wish to use any of the built-in `LoginHandler`s, you have to set the configuration:
 
-** `micronaut.security.login-handler: bearer` to enable api:security.token.jwt.bearer.AccessRefreshTokenLoginHandler[]
-** `micronaut.security.login-handler: cookie` to enable api:security.token.jwt.cookie.JwtCookieLoginHandler[]
-** `micronaut.security.login-handler: session` to enable api:security.session.SessionLoginHandler[]
+** `micronaut.security.authentication: bearer` to enable api:security.token.jwt.bearer.AccessRefreshTokenLoginHandler[]
+** `micronaut.security.authentication: cookie` to enable api:security.token.jwt.cookie.JwtCookieLoginHandler[]
+** `micronaut.security.authentication: session` to enable api:security.session.SessionLoginHandler[]
 
-Previous configuration such as:
+If you were using the default bearer authentication, you should set:
+
+```yaml
+micronaut:
+    security:
+        authentication: bearer
+```
+
+For a previous configuration such as:
 
 ```yaml
 micronaut:
@@ -47,20 +55,20 @@ micronaut:
                      enabled: true
 ```
 
-It is currently configured as:
+use instead:
 
 ```yaml
 micronaut:
     security:
-        login-handler: cookie
+        authentication: cookie
 ```
 
 === LogoutHandler
 
 * To use any of the built-in api:security.handlers.LogoutHandler[] you have to set the configuration:
 
-** `micronaut.security.logout-handler: cookie` to enable api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[]
-** `micronaut.security.logout-handler: session` to enable api:security.session.SessionLogoutHandler[]
+** `micronaut.security.authentication: cookie` to enable api:security.token.jwt.cookie.JwtCookieClearerLogoutHandler[]
+** `micronaut.security.authentication: session` to enable api:security.session.SessionLogoutHandler[]
 
 === Refresh Token
 

@@ -6,19 +6,19 @@ You can provide your own implementation of api:security.handlers.LoginHandler[].
 | Type | Configuration Key | Configuration Value | Module | Bean
 
 | JWT Cookie
-| `micronaut.security.login-handler`
+| `micronaut.security.authentication`
 | `cookie`
 | `micronaut-jwt`
 | api:security.token.jwt.cookie.JwtCookieLoginHandler[]
 
 | Session Storage
-| `micronaut.security.login-handler`
+| `micronaut.security.authentication`
 | `session`
 | `micronaut-session`
 | api:security.session.SessionLoginHandler[]
 
 | JWT Bearer
-| `micronaut.security.login-handler`
+| `micronaut.security.authentication`
 | `bearer`
 | `micronaut-jwt`
 | api:security.token.jwt.bearer.AccessRefreshTokenLoginHandler[]

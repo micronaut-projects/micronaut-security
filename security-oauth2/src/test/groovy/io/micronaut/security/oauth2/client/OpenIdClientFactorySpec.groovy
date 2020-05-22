@@ -27,7 +27,7 @@ class OpenIdClientFactorySpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.login-handler': 'cookie',
+                'micronaut.security.authentication': 'cookie',
                 'micronaut.security.oauth2.clients.okta.openid.issuer': "http://localhost:${authServerPort}/oauth2/default",
         ] as Map<String, Object>
     }

@@ -29,8 +29,7 @@ class SessionReUseSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.login-handler': 'session',
-                'micronaut.security.logout-handler': 'session',
+                'micronaut.security.authentication': 'session',
         ]
     }
 
