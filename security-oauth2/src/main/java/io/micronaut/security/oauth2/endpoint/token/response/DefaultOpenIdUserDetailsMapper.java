@@ -26,7 +26,11 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * The default implementation of {@link OpenIdUserDetailsMapper} that uses
