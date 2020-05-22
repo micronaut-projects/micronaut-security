@@ -44,7 +44,7 @@ micronaut:
                 bearer:
                      enabled: false
                 cookie:
-                     enabled: false
+                     enabled: true
 ```
 
 It is currently configured as:
