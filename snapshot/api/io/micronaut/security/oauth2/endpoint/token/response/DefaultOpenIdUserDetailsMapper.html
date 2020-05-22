@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/Address.html" title="class in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../index.html?io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html" target="_top">Frames</a></li>
@@ -161,6 +161,14 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/t
 </tr>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#DefaultOpenIdUserDetailsMapper-io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration-">DefaultOpenIdUserDetailsMapper</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdAdditionalClaimsConfiguration</a>&nbsp;openIdAdditionalClaimsConfiguration)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#DefaultOpenIdUserDetailsMapper-io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration-io.micronaut.security.config.AuthenticationModeConfiguration-"><code>DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration, AuthenticationModeConfiguration)</code></a> instead.</span></div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#DefaultOpenIdUserDetailsMapper-io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration-io.micronaut.security.config.AuthenticationModeConfiguration-">DefaultOpenIdUserDetailsMapper</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdAdditionalClaimsConfiguration</a>&nbsp;openIdAdditionalClaimsConfiguration,
+                              <a href="../../../../../../../io/micronaut/security/config/AuthenticationModeConfiguration.html" title="interface in io.micronaut.security.config">AuthenticationModeConfiguration</a>&nbsp;authenticationModeConfiguration)</code>
 <div class="block">Default constructor.</div>
 </td>
 </tr>
@@ -232,14 +240,32 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/t
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
+<a name="DefaultOpenIdUserDetailsMapper-io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration-io.micronaut.security.config.AuthenticationModeConfiguration-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DefaultOpenIdUserDetailsMapper</h4>
+<pre>@Inject
+public&nbsp;DefaultOpenIdUserDetailsMapper(<a href="../../../../../../../io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdAdditionalClaimsConfiguration</a>&nbsp;openIdAdditionalClaimsConfiguration,
+                                              <a href="../../../../../../../io/micronaut/security/config/AuthenticationModeConfiguration.html" title="interface in io.micronaut.security.config">AuthenticationModeConfiguration</a>&nbsp;authenticationModeConfiguration)</pre>
+<div class="block">Default constructor.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>openIdAdditionalClaimsConfiguration</code> - The additional claims configuration</dd>
+<dd><code>authenticationModeConfiguration</code> - Authentication Mode Configuration</dd>
+</dl>
+</li>
+</ul>
 <a name="DefaultOpenIdUserDetailsMapper-io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DefaultOpenIdUserDetailsMapper</h4>
-<pre>public&nbsp;DefaultOpenIdUserDetailsMapper(<a href="../../../../../../../io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdAdditionalClaimsConfiguration</a>&nbsp;openIdAdditionalClaimsConfiguration)</pre>
-<div class="block">Default constructor.</div>
+<pre>@Deprecated
+public&nbsp;DefaultOpenIdUserDetailsMapper(<a href="../../../../../../../io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdAdditionalClaimsConfiguration</a>&nbsp;openIdAdditionalClaimsConfiguration)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#DefaultOpenIdUserDetailsMapper-io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration-io.micronaut.security.config.AuthenticationModeConfiguration-"><code>DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration, AuthenticationModeConfiguration)</code></a> instead.</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>openIdAdditionalClaimsConfiguration</code> - The additional claims configuration</dd>
@@ -386,7 +412,7 @@ public&nbsp;<a href="../../../../../../../io/micronaut/security/authentication/A
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/Address.html" title="class in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../index.html?io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html" target="_top">Frames</a></li>

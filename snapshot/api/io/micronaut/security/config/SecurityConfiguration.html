@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":18,"i2":6,"i3":6,"i4":18};
+var methods = {"i0":18,"i1":6,"i2":6,"i3":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Superinterfaces:</dt>
-<dd>io.micronaut.core.util.Toggleable</dd>
+<dd><a href="../../../../io/micronaut/security/config/AuthenticationModeConfiguration.html" title="interface in io.micronaut.security.config">AuthenticationModeConfiguration</a>, io.micronaut.core.util.Toggleable</dd>
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
@@ -108,7 +108,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">SecurityConfiguration</span>
-extends io.micronaut.core.util.Toggleable</pre>
+extends io.micronaut.core.util.Toggleable, <a href="../../../../io/micronaut/security/config/AuthenticationModeConfiguration.html" title="interface in io.micronaut.security.config">AuthenticationModeConfiguration</a></pre>
 <div class="block">Defines security configuration properties.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -135,22 +135,18 @@ extends io.micronaut.core.util.Toggleable</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#getAuthentication--">getAuthentication</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code>default <a href="../../../../io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#getAuthenticationProviderStrategy--">getAuthenticationProviderStrategy</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.List&lt;<a href="../../../../io/micronaut/security/config/InterceptUrlMapPattern.html" title="class in io.micronaut.security.config">InterceptUrlMapPattern</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#getInterceptUrlMap--">getInterceptUrlMap</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#getIpPatterns--">getIpPatterns</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>default boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/SecurityConfiguration.html#isRejectNotFound--">isRejectNotFound</a></span>()</code>
 <div class="block">For cases where no security rule handles a request and it is determined
@@ -165,6 +161,13 @@ extends io.micronaut.core.util.Toggleable</pre>
 </a>
 <h3>Methods inherited from interface&nbsp;io.micronaut.core.util.Toggleable</h3>
 <code>isEnabled</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.io.micronaut.security.config.AuthenticationModeConfiguration">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;io.micronaut.security.config.<a href="../../../../io/micronaut/security/config/AuthenticationModeConfiguration.html" title="interface in io.micronaut.security.config">AuthenticationModeConfiguration</a></h3>
+<code><a href="../../../../io/micronaut/security/config/AuthenticationModeConfiguration.html#getAuthentication--">getAuthentication</a></code></li>
 </ul>
 </li>
 </ul>
@@ -222,7 +225,7 @@ extends io.micronaut.core.util.Toggleable</pre>
 <a name="isRejectNotFound--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>isRejectNotFound</h4>
 <pre>default&nbsp;boolean&nbsp;isRejectNotFound()</pre>
@@ -232,20 +235,6 @@ extends io.micronaut.core.util.Toggleable</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>True if the response should be rejected.</dd>
-</dl>
-</li>
-</ul>
-<a name="getAuthentication--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getAuthentication</h4>
-<pre>@Nullable
-<a href="../../../../io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a>&nbsp;getAuthentication()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>Login Handler to use.</dd>
 </dl>
 </li>
 </ul>
