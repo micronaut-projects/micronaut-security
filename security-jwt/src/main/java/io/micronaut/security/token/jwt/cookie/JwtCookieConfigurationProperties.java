@@ -18,6 +18,7 @@ package io.micronaut.security.token.jwt.cookie;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
@@ -75,6 +76,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     public static final SameSite DEFAULT_COOKIESAMESITE = null;
 
     private final RedirectConfigurationProperties redirectConfiguration;
+    private final PropertyResolver propertyResolver;
 
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
@@ -88,9 +90,12 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     /**
      *
      * @param redirectConfiguration Redirect Configuration
+     * @param propertyResolver Property Resolver
      */
-    public JwtCookieConfigurationProperties(RedirectConfigurationProperties redirectConfiguration) {
+    public JwtCookieConfigurationProperties(RedirectConfigurationProperties redirectConfiguration,
+                                            PropertyResolver propertyResolver) {
         this.redirectConfiguration = redirectConfiguration;
+        this.propertyResolver = propertyResolver;
     }
 
     /**
@@ -126,8 +131,10 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      */
     @Deprecated
     public void setLogoutTargetUrl(String logoutTargetUrl) {
-        if (StringUtils.isNotEmpty(logoutTargetUrl)) {
-            redirectConfiguration.setLogout(logoutTargetUrl);
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".logout")) {
+            if (StringUtils.isNotEmpty(logoutTargetUrl)) {
+                redirectConfiguration.setLogout(logoutTargetUrl);
+            }
         }
     }
 
@@ -137,8 +144,10 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      */
     @Deprecated
     public void setLoginSuccessTargetUrl(String loginSuccessTargetUrl) {
-        if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
-            redirectConfiguration.setLoginSuccess(loginSuccessTargetUrl);
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-success")) {
+            if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
+                redirectConfiguration.setLoginSuccess(loginSuccessTargetUrl);
+            }
         }
     }
 
@@ -148,8 +157,10 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      */
     @Deprecated
     public void setLoginFailureTargetUrl(String loginFailureTargetUrl) {
-        if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
-            redirectConfiguration.setLoginFailure(loginFailureTargetUrl);
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-failure")) {
+            if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
+                redirectConfiguration.setLoginFailure(loginFailureTargetUrl);
+            }
         }
     }
 
