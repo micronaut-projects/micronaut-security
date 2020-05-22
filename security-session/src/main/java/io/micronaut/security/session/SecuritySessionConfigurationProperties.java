@@ -76,13 +76,13 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     @Override
     @Deprecated
     public String getUnauthorizedTargetUrl()  {
-        return this.redirectConfigurationProperties.getUnauthorized();
+        return this.redirectConfigurationProperties.getUnauthorized().getUrl();
     }
 
     @Override
     @Deprecated
     public String getForbiddenTargetUrl()  {
-        return this.redirectConfigurationProperties.getForbidden();
+        return this.redirectConfigurationProperties.getForbidden().getUrl();
     }
 
     /**
@@ -129,7 +129,9 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     @Deprecated
     public void setUnauthorizedTargetUrl(String unauthorizedTargetUrl) {
         if (StringUtils.isNotEmpty(unauthorizedTargetUrl)) {
-            this.redirectConfigurationProperties.setUnauthorized(unauthorizedTargetUrl);
+            if (this.redirectConfigurationProperties.getUnauthorized() instanceof RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) {
+                ((RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) this.redirectConfigurationProperties.getUnauthorized()).setUrl(unauthorizedTargetUrl);
+            }
         }
     }
 
@@ -141,7 +143,9 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     @Deprecated
     public void setForbiddenTargetUrl(String forbiddenTargetUrl) {
         if (StringUtils.isNotEmpty(forbiddenTargetUrl)) {
-            this.redirectConfigurationProperties.setForbidden(forbiddenTargetUrl);
+            if (this.redirectConfigurationProperties.getForbidden() instanceof RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) {
+                ((RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) this.redirectConfigurationProperties.getForbidden()).setUrl(forbiddenTargetUrl);
+            }
         }
     }
 
@@ -157,7 +161,8 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     @Override
     @Deprecated
     public boolean isRedirectOnRejection() {
-        return this.redirectConfigurationProperties.isOnRejection();
+        return this.redirectConfigurationProperties.getUnauthorized().isEnabled() &&
+                this.redirectConfigurationProperties.getForbidden().isEnabled();
     }
 
     /**
@@ -167,6 +172,11 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
      */
     @Deprecated
     public void setRedirectOnRejection(boolean redirectOnRejection) {
-        this.redirectConfigurationProperties.setOnRejection(redirectOnRejection);
+        if (this.redirectConfigurationProperties.getUnauthorized() instanceof RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) {
+                ((RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) this.redirectConfigurationProperties.getUnauthorized()).setEnabled(redirectOnRejection);
+        }
+        if (this.redirectConfigurationProperties.getForbidden() instanceof RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) {
+            ((RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) this.redirectConfigurationProperties.getForbidden()).setEnabled(redirectOnRejection);
+        }
     }
 }

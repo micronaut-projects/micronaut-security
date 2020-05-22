@@ -50,34 +50,6 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_LOGIN_FAILURE = "/";
 
-    /**
-     * The default unauthorized rejection target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_UNAUTHORIZED = "/";
-
-    /**
-     * The default forbidden rejection target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_FORBIDDEN = "/";
-
-    /**
-     * The default forbidden redirect on rejection.
-     */
-    @SuppressWarnings("WeakerAccess")
-    private static final Boolean DEFAULT_ON_REJECTION = true;
-
-    @NonNull
-    @NotBlank
-    private String unauthorized = DEFAULT_UNAUTHORIZED;
-
-    @NonNull
-    @NotBlank
-    private String forbidden = DEFAULT_FORBIDDEN;
-
-    private boolean onRejection = DEFAULT_ON_REJECTION;
-
     @NonNull
     @NotBlank
     private String loginSuccess = DEFAULT_LOGIN_SUCCESS;
@@ -90,54 +62,9 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     @NotBlank
     private String logout = DEFAULT_LOGOUT_URL;
 
-    @Override
-    @NonNull
-    public String getUnauthorized()  {
-        return unauthorized;
-    }
+    private UnauthorizedRedirectConfigurationProperties unauthorized = new UnauthorizedRedirectConfigurationProperties();
 
-    @Override
-    @NonNull
-    public String getForbidden()  {
-        return forbidden;
-    }
-
-    /**
-     * Where the user is redirected to after trying to access a secured route. Default value ({@value #DEFAULT_UNAUTHORIZED}).
-     *
-     * @param unauthorized The URL
-     */
-    public void setUnauthorized(@NonNull String unauthorized) {
-        if (StringUtils.isNotEmpty(unauthorized)) {
-            this.unauthorized = unauthorized;
-        }
-    }
-
-    /**
-     * Where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.. Default value ({@value #DEFAULT_FORBIDDEN}).
-     *
-     * @param forbidden The URL
-     */
-    public void setForbidden(@NonNull String forbidden) {
-        if (StringUtils.isNotEmpty(forbidden)) {
-            this.forbidden = forbidden;
-        }
-    }
-
-    @Override
-    public boolean isOnRejection() {
-        return onRejection;
-    }
-
-    /**
-     * Sets whether a redirect should occur on an authorization failure.
-     * Default value ({@value #DEFAULT_ON_REJECTION}).
-     *
-     * @param onRejection True if a redirect should occur
-     */
-    public void setOnRejection(boolean onRejection) {
-        this.onRejection = onRejection;
-    }
+    private ForbiddenRedirectConfigurationProperties forbidden = new ForbiddenRedirectConfigurationProperties();
 
     @NonNull
     @Override
@@ -175,6 +102,36 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
         return this.logout;
     }
 
+    @NonNull
+    @Override
+    public UnauthorizedRedirectConfiguration getUnauthorized() {
+        return unauthorized;
+    }
+
+    /**
+     * Sets the unauthorized redirect configuration.
+     *
+     * @param unauthorized unauthorized redirect configuration.
+     */
+    public void setUnauthorized(UnauthorizedRedirectConfigurationProperties unauthorized) {
+        this.unauthorized = unauthorized;
+    }
+
+    /**
+     * Sets the forbidden redirect configuration.
+     *
+     * @param forbidden forbidden redirect configuration.
+     */
+    public void setForbidden(ForbiddenRedirectConfigurationProperties forbidden) {
+        this.forbidden = forbidden;
+    }
+
+    @NonNull
+    @Override
+    public ForbiddenRedirectConfiguration getForbidden() {
+        return forbidden;
+    }
+
     /**
      * URL where the user is redirected after logout. Default value ({@value #DEFAULT_LOGOUT_URL}).
      * @param logout The URL
@@ -182,6 +139,117 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     public void setLogout(@NonNull String logout) {
         if (StringUtils.isNotEmpty(logout)) {
             this.logout = logout;
+        }
+    }
+
+    /**
+     * Unauthorized redirect configuration.
+     */
+    @ConfigurationProperties("unauthorized")
+    public static class UnauthorizedRedirectConfigurationProperties implements UnauthorizedRedirectConfiguration {
+
+        /**
+         * The default enabled value for unauthorized.
+         */
+        @SuppressWarnings("WeakerAccess")
+        public static final Boolean DEFAULT_ENABLED = true;
+
+        /**
+         * The default unauthorized rejection target URL.
+         */
+        @SuppressWarnings("WeakerAccess")
+        public static final String DEFAULT_UNAUTHORIZED = "/";
+
+        private boolean enabled = DEFAULT_ENABLED;
+
+        @NonNull
+        @NotBlank
+        private String url = DEFAULT_UNAUTHORIZED;
+
+        @Override
+        @NonNull
+        public String getUrl()  {
+            return url;
+        }
+
+        /**
+         * Where the user is redirected to after trying to access a secured route. Default value ({@value #DEFAULT_UNAUTHORIZED}).
+         *
+         * @param url The URL
+         */
+        public void setUrl(@NonNull String url) {
+            if (StringUtils.isNotEmpty(url)) {
+                this.url = url;
+            }
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        /**
+         * Whether it should redirect on unauthorized rejections. Default value ({@value #DEFAULT_ENABLED}).
+         *
+         * @param enabled The enabled flag
+         */
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
+    /**
+     * Forbidden redirect configuration.
+     */
+    @ConfigurationProperties("forbidden")
+    public static class ForbiddenRedirectConfigurationProperties implements ForbiddenRedirectConfiguration {
+
+        /**
+         * The default enabled value for forbidden.
+         */
+        public static final Boolean DEFAULT_ENABLED = true;
+
+        /**
+         * The default forbidden rejection target URL.
+         */
+        @SuppressWarnings("WeakerAccess")
+        public static final String DEFAULT_FORBIDDEN = "/";
+
+        private boolean enabled = DEFAULT_ENABLED;
+
+        @NonNull
+        @NotBlank
+        private String url = DEFAULT_FORBIDDEN;
+
+        @Override
+        @NonNull
+        public String getUrl()  {
+            return url;
+        }
+
+        /**
+         * Where the user is redirected to after trying to access a secured route which he is forbidden to access. Default value ({@value #DEFAULT_FORBIDDEN}).
+         *
+         * @param url The URL
+         */
+        public void setUrl(@NonNull String url) {
+            if (StringUtils.isNotEmpty(url)) {
+                this.url = url;
+            }
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        /**
+         * Whether it should redirect on forbidden rejections. Default value ({@value #DEFAULT_ENABLED}).
+         *
+         * @param enabled The enabled flag
+         */
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
         }
     }
 }

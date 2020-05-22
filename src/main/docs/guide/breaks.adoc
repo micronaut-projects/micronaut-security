@@ -117,6 +117,7 @@ You should use instead:
 ** `micronaut.security.redirect.login-success`
 ** `micronaut.security.redirect.login-failure`
 ** `micronaut.security.redirect.logout`
-** `micronaut.security.redirect.unauthorized`
-** `micronaut.security.redirect.forbidden`
-** `micronaut.security.redirect.on-rejection`
+** `micronaut.security.redirect.unauthorized.url`
+** `micronaut.security.redirect.unauthorized.enabled`
+** `micronaut.security.redirect.forbidden.url`
+** `micronaut.security.redirect.forbidden.enabled`

@@ -51,7 +51,7 @@ public class SessionAuthorizationExceptionHandler extends DefaultAuthorizationEx
 
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationException exception) {
-        if (shouldHandleRequest(request)) {
+        if (shouldHandleRequest(request, exception)) {
             try {
                 URI location = new URI(getRedirectUri(request, exception));
                 //prevent redirect loop
@@ -75,10 +75,14 @@ public class SessionAuthorizationExceptionHandler extends DefaultAuthorizationEx
      * Decides whether the request should be handled with a redirect.
      *
      * @param request The HTTP Request
+     * @param exception The authorization exception
      * @return true if the request accepts text/html
      */
-    protected boolean shouldHandleRequest(HttpRequest<?> request) {
-        return redirectConfiguration.isOnRejection() && request.getHeaders()
+    protected boolean shouldHandleRequest(HttpRequest<?> request, AuthorizationException exception) {
+        return (
+                (exception.isForbidden() && redirectConfiguration.getForbidden().isEnabled()) ||
+                (!exception.isForbidden() && redirectConfiguration.getUnauthorized().isEnabled())
+        ) && request.getHeaders()
                 .accept()
                 .stream()
                 .anyMatch(mediaType -> mediaType.equals(MediaType.TEXT_HTML_TYPE));
@@ -90,8 +94,8 @@ public class SessionAuthorizationExceptionHandler extends DefaultAuthorizationEx
      * @return The URI to redirect to
      */
     protected String getRedirectUri(HttpRequest<?> request, AuthorizationException exception) {
-        String uri = exception.isForbidden() ? redirectConfiguration.getForbidden() :
-                redirectConfiguration.getUnauthorized();
+        String uri = exception.isForbidden() ? redirectConfiguration.getForbidden().getUrl() :
+                redirectConfiguration.getUnauthorized().getUrl();
         if (LOG.isDebugEnabled()) {
             LOG.debug("redirect uri: {}", uri);
         }

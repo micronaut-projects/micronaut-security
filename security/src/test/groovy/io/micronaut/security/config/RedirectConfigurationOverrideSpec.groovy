@@ -12,9 +12,10 @@ class RedirectConfigurationOverrideSpec extends ApplicationContextSpecification 
                 'micronaut.security.redirect.login-success': '/welcome',
                 'micronaut.security.redirect.login-failure': '/login',
                 'micronaut.security.redirect.logout': '/goodbye',
-                'micronaut.security.redirect.forbidden': '/forbidden',
-                'micronaut.security.redirect.unauthorized': '/unauthorized',
-                'micronaut.security.redirect.on-rejection': false,
+                'micronaut.security.redirect.forbidden.url': '/forbidden',
+                'micronaut.security.redirect.forbidden.enabled': false,
+                'micronaut.security.redirect.unauthorized.url': '/unauthorized',
+                'micronaut.security.redirect.unauthorized.enabled': false,
         ]
     }
 
@@ -25,11 +26,11 @@ class RedirectConfigurationOverrideSpec extends ApplicationContextSpecification 
     void "it is possible to override success and failure urls via configuration"() {
         expect:
         redirectConfiguration.loginFailure == '/login'
-        redirectConfiguration.forbidden == '/forbidden'
-        redirectConfiguration.unauthorized == '/unauthorized'
-        !redirectConfiguration.onRejection
+        redirectConfiguration.forbidden.url == '/forbidden'
+        redirectConfiguration.unauthorized.url == '/unauthorized'
+        !redirectConfiguration.forbidden.enabled
+        !redirectConfiguration.unauthorized.enabled
         redirectConfiguration.loginSuccess == '/welcome'
         redirectConfiguration.logout == '/goodbye'
-
     }
 }

@@ -47,20 +47,15 @@ public interface RedirectConfiguration {
 
     /**
      *
-     * @return String to be parsed into a URI which represents where the user is redirected to after trying to access a secured route.
+     * @return configuration about where the user is redirected to after trying to access a secured route.
      */
     @NonNull
-    String getUnauthorized();
+    UnauthorizedRedirectConfiguration getUnauthorized();
 
     /**
      *
-     * @return String to be parsed into a URI which represents where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.
+     * @return configuration about where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.
      */
     @NonNull
-    String getForbidden();
-
-    /**
-     * @return True if a redirect should occur when a request is rejected
-     */
-    boolean isOnRejection();
+    ForbiddenRedirectConfiguration getForbidden();
 }

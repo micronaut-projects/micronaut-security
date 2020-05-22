@@ -27,16 +27,21 @@ class RedirectConfigurationSpec extends ApplicationContextSpecification {
 
     void "forbidden defaults to /"() {
         expect:
-        redirectConfiguration.forbidden == '/'
+        redirectConfiguration.forbidden.url == '/'
     }
 
     void "unauthorized defaults to /"() {
         expect:
-        redirectConfiguration.unauthorized == '/'
+        redirectConfiguration.unauthorized.url == '/'
     }
 
-    void "onRejection defaults to true"() {
+    void "unauthorized redirection is enabled by default"() {
         expect:
-        redirectConfiguration.onRejection
+        redirectConfiguration.unauthorized.enabled
+    }
+
+    void "forbidden redirection is enabled by default"() {
+        expect:
+        redirectConfiguration.forbidden.enabled
     }
 }
