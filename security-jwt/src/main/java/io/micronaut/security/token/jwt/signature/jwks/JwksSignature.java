@@ -177,7 +177,7 @@ public class JwksSignature implements SignatureConfiguration {
      * Calculates a list of JWK matches for a JWT.
      *
      * Since the JWTSet is cached it attempts to refresh it (by calling its self recursive)
-     * if the {@code refreshKeysAttempts} is > 0.
+     * if the {@code refreshKeysAttempts} is greater than 0.
      *
      * @param jwt A Signed JWT
      * @param jwkSet A JSON Web Key Set

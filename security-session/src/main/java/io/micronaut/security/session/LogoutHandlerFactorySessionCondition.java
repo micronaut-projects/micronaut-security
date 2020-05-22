@@ -23,7 +23,7 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.handlers.LogoutHandlerMode;
 
 /**
- * Evaluates to true if a bean of type {@link io SecurityConfiguration} is set and {@link SecurityConfiguration#getLogoutHandler()} equals session.
+ * Evaluates to true if a bean of type {@link SecurityConfiguration} is set and {@link SecurityConfiguration#getLogoutHandler()} equals session.
  *
  * @author Sergio del Amo
  * @since 2.0.0

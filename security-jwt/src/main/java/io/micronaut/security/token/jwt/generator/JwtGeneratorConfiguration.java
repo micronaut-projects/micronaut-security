@@ -21,7 +21,7 @@ package io.micronaut.security.token.jwt.generator;
  *
  * @author Sergio del Amo
  * @since 1.0
- * @deprecated Use {@link AccessTokenConfiguration) instead.
+ * @deprecated Use {@link AccessTokenConfiguration}) instead.
  */
 @Deprecated
 public interface JwtGeneratorConfiguration {
