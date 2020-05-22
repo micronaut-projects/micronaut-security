@@ -21,7 +21,6 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.config.RedirectConfiguration;
-import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.handlers.LogoutHandler;
 
 import javax.inject.Inject;
@@ -31,11 +30,11 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 
 /**
- *
+ * Clears the cookie configured via {@link CookieLoginHandler}.
  * @author Sergio del Amo
  * @since 1.0
  */
-@Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "cookie")
+@Requires(condition = CookieHandlerCondition.class)
 @Singleton
 public class JwtCookieClearerLogoutHandler implements LogoutHandler {
 

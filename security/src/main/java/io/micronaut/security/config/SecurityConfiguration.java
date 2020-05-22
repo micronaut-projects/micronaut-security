@@ -15,9 +15,7 @@
  */
 package io.micronaut.security.config;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.core.util.Toggleable;
-import io.micronaut.security.handlers.AuthenticationMode;
 
 import java.util.List;
 
@@ -27,7 +25,7 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 1.0
  */
-public interface SecurityConfiguration extends Toggleable {
+public interface SecurityConfiguration extends Toggleable, AuthenticationModeConfiguration {
 
     /**
      * @return a list of IP Regex patterns. e.g. [192.168.1.*]
@@ -56,11 +54,4 @@ public interface SecurityConfiguration extends Toggleable {
     default boolean isRejectNotFound() {
         return true;
     }
-
-    /**
-     *
-     * @return Login Handler to use.
-     */
-    @Nullable
-    AuthenticationMode getAuthentication();
 }

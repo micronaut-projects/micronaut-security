@@ -8,32 +8,37 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.oauth2.GebEmbeddedServerSpecification
 import io.micronaut.security.oauth2.Keycloak
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
+import io.micronaut.security.token.validator.TokenValidator
 import spock.lang.IgnoreIf
 
 import java.security.Principal
 
 @IgnoreIf({ sys['testcontainers'] == false })
-class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
+class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
 
     @Override
     String getSpecName() {
-        'OpenIdAuthorizationCodeSpec'
+        'AuthenticationModeIdTokenSpec'
     }
 
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.security.authentication': 'cookie',
+                'micronaut.security.authentication': 'idtoken',
                 "micronaut.security.oauth2.clients.keycloak.openid.issuer" : Keycloak.issuer,
                 "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
                 "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret,
-                "micronaut.security.token.jwt.signatures.secret.generator.secret" : 'pleaseChangeThisSecretForANewOne',
         ] as Map<String, Object>
     }
 
     void "test a full login"() {
         given:
         browser.baseUrl = "http://localhost:${embeddedServer.port}"
+
+        expect:
+        applicationContext.containsBean(JwksSignature)
+        applicationContext.containsBean(TokenValidator)
 
         when:
         go "/oauth/login/keycloak"
@@ -55,7 +60,7 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
         homePage.message.matches("Hello .*")
     }
 
-    @Requires(property = 'spec.name', value = 'OpenIdAuthorizationCodeSpec')
+    @Requires(property = 'spec.name', value = 'AuthenticationModeIdTokenSpec')
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Controller
     static class HomeController {
