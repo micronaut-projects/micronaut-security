@@ -17,6 +17,7 @@ package io.micronaut.security.session;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
@@ -38,15 +39,19 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
+    private final PropertyResolver propertyResolver;
     private final RedirectConfigurationProperties redirectConfigurationProperties;
 
     private boolean enabled = DEFAULT_ENABLED;
 
     /**
      *
+     * @param propertyResolver Property resolvers
      * @param redirectConfigurationProperties Redirect configuration
      */
-    public SecuritySessionConfigurationProperties(RedirectConfigurationProperties redirectConfigurationProperties) {
+    public SecuritySessionConfigurationProperties(PropertyResolver propertyResolver,
+                                                  RedirectConfigurationProperties redirectConfigurationProperties) {
+        this.propertyResolver = propertyResolver;
         this.redirectConfigurationProperties = redirectConfigurationProperties;
     }
 
@@ -92,8 +97,10 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
      */
     @Deprecated
     public void setLoginSuccessTargetUrl(String loginSuccessTargetUrl) {
-        if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
-            this.redirectConfigurationProperties.setLoginSuccess(loginSuccessTargetUrl);
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-success")) {
+            if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
+                this.redirectConfigurationProperties.setLoginSuccess(loginSuccessTargetUrl);
+            }
         }
     }
 
@@ -104,8 +111,10 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
      */
     @Deprecated
     public void setLoginFailureTargetUrl(String loginFailureTargetUrl) {
-        if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
-            this.redirectConfigurationProperties.setLoginFailure(loginFailureTargetUrl);
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-failure")) {
+            if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
+                this.redirectConfigurationProperties.setLoginFailure(loginFailureTargetUrl);
+            }
         }
     }
 
@@ -116,8 +125,10 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
      */
     @Deprecated
     public void setLogoutTargetUrl(String logoutTargetUrl) {
-        if (StringUtils.isNotEmpty(logoutTargetUrl)) {
-            this.redirectConfigurationProperties.setLogout(logoutTargetUrl);
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".logout")) {
+            if (StringUtils.isNotEmpty(logoutTargetUrl)) {
+                this.redirectConfigurationProperties.setLogout(logoutTargetUrl);
+            }
         }
     }
 
@@ -128,9 +139,11 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
      */
     @Deprecated
     public void setUnauthorizedTargetUrl(String unauthorizedTargetUrl) {
-        if (StringUtils.isNotEmpty(unauthorizedTargetUrl)) {
-            if (this.redirectConfigurationProperties.getUnauthorized() instanceof RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) {
-                ((RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) this.redirectConfigurationProperties.getUnauthorized()).setUrl(unauthorizedTargetUrl);
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".unauthorized.url")) {
+            if (StringUtils.isNotEmpty(unauthorizedTargetUrl)) {
+                if (this.redirectConfigurationProperties.getUnauthorized() instanceof RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) {
+                    ((RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) this.redirectConfigurationProperties.getUnauthorized()).setUrl(unauthorizedTargetUrl);
+                }
             }
         }
     }
@@ -142,9 +155,11 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
      */
     @Deprecated
     public void setForbiddenTargetUrl(String forbiddenTargetUrl) {
-        if (StringUtils.isNotEmpty(forbiddenTargetUrl)) {
-            if (this.redirectConfigurationProperties.getForbidden() instanceof RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) {
-                ((RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) this.redirectConfigurationProperties.getForbidden()).setUrl(forbiddenTargetUrl);
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".forbidden.url")) {
+            if (StringUtils.isNotEmpty(forbiddenTargetUrl)) {
+                if (this.redirectConfigurationProperties.getForbidden() instanceof RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) {
+                    ((RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) this.redirectConfigurationProperties.getForbidden()).setUrl(forbiddenTargetUrl);
+                }
             }
         }
     }
@@ -154,6 +169,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
      *
      * @param enabled True if it is enabled
      */
+    @Deprecated
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -172,11 +188,14 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
      */
     @Deprecated
     public void setRedirectOnRejection(boolean redirectOnRejection) {
-        if (this.redirectConfigurationProperties.getUnauthorized() instanceof RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) {
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".unauthorized.enabled") &&
+            !propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".forbidden.enabled")) {
+            if (this.redirectConfigurationProperties.getUnauthorized() instanceof RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) {
                 ((RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties) this.redirectConfigurationProperties.getUnauthorized()).setEnabled(redirectOnRejection);
-        }
-        if (this.redirectConfigurationProperties.getForbidden() instanceof RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) {
-            ((RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) this.redirectConfigurationProperties.getForbidden()).setEnabled(redirectOnRejection);
+            }
+            if (this.redirectConfigurationProperties.getForbidden() instanceof RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) {
+                ((RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties) this.redirectConfigurationProperties.getForbidden()).setEnabled(redirectOnRejection);
+            }
         }
     }
 }
