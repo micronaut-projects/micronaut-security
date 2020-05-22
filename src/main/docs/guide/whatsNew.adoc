@@ -8,7 +8,7 @@ Micronaut Security {version} includes the following new features and improvement
 
 * A new constructor for api:security.authentication.AuthenticationFailed[] that takes a string message has been added to allow for custom error messages.
 
-* It is now possible to require all api:security.authentication.AuthenticationProvider[]s to return a successful authentication response. Set `micronaut.security.authentication-strategy: ALL` to enable this functionality.
+* It is now possible to require all api:security.authentication.AuthenticationProvider[]s to return a successful authentication response. Set `micronaut.security.authentication-provider-strategy: ALL` to enable this functionality.
 
 * The token propagation implementation will now no longer override an existing token.
 

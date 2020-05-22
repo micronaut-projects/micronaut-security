@@ -51,7 +51,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     private boolean enabled = DEFAULT_ENABLED;
     private List<InterceptUrlMapPattern> interceptUrlMap = new ArrayList<>();
     private List<String> ipPatterns = Collections.singletonList(ANYWHERE);
-    private AuthenticationStrategy authenticationStrategy = DEFAULT_AUTHENTICATION_STRATEGY;
+    private AuthenticationStrategy authenticationProviderStrategy = DEFAULT_AUTHENTICATION_STRATEGY;
     private boolean rejectNotFound = DEFAULT_REJECT_NOT_FOUND;
 
     @Nullable
@@ -116,16 +116,16 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     @Override
-    public AuthenticationStrategy getAuthenticationStrategy() {
-        return authenticationStrategy;
+    public AuthenticationStrategy getAuthenticationProviderStrategy() {
+        return authenticationProviderStrategy;
     }
 
     /**
      * Determines how authentication providers should be processed. Default value ANY. Possible values: ANY or ALL.
-     * @param authenticationStrategy authentication strategy.
+     * @param authenticationProviderStrategy authentication strategy.
      */
-    public void setAuthenticationStrategy(AuthenticationStrategy authenticationStrategy) {
-        this.authenticationStrategy = authenticationStrategy;
+    public void setAuthenticationProviderStrategy(AuthenticationStrategy authenticationProviderStrategy) {
+        this.authenticationProviderStrategy = authenticationProviderStrategy;
     }
 
     @Override

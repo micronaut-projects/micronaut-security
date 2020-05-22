@@ -42,7 +42,7 @@ public interface SecurityConfiguration extends Toggleable {
     /**
      * @return The authentication strategy
      */
-    default AuthenticationStrategy getAuthenticationStrategy() {
+    default AuthenticationStrategy getAuthenticationProviderStrategy() {
         return AuthenticationStrategy.ANY;
     }
 

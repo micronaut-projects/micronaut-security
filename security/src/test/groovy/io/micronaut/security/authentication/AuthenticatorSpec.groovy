@@ -23,7 +23,7 @@ class AuthenticatorSpec extends Specification {
         }
 
         @Override
-        AuthenticationStrategy getAuthenticationStrategy() {
+        AuthenticationStrategy getAuthenticationProviderStrategy() {
             return AuthenticationStrategy.ALL
         }
 

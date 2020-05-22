@@ -71,7 +71,7 @@ public class Authenticator {
             LOG.debug(authenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
 
-        if (securityConfiguration != null && securityConfiguration.getAuthenticationStrategy() == AuthenticationStrategy.ALL) {
+        if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
             return Flowable.mergeDelayError(
                     authenticationProviders.stream()
                             .map(provider -> {
