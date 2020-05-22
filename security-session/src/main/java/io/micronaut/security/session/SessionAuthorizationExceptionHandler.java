@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.*;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
+import io.micronaut.security.config.RedirectConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,13 +40,13 @@ public class SessionAuthorizationExceptionHandler extends DefaultAuthorizationEx
 
     private static final Logger LOG = LoggerFactory.getLogger(SessionAuthorizationExceptionHandler.class);
 
-    private final SecuritySessionConfiguration configuration;
+    private final RedirectConfiguration redirectConfiguration;
 
     /**
-     * @param configuration The session configuration
+     * @param redirectConfiguration Redirect configuration
      */
-    public SessionAuthorizationExceptionHandler(SecuritySessionConfiguration configuration) {
-        this.configuration = configuration;
+    public SessionAuthorizationExceptionHandler(RedirectConfiguration redirectConfiguration) {
+        this.redirectConfiguration = redirectConfiguration;
     }
 
     @Override
@@ -77,7 +78,7 @@ public class SessionAuthorizationExceptionHandler extends DefaultAuthorizationEx
      * @return true if the request accepts text/html
      */
     protected boolean shouldHandleRequest(HttpRequest<?> request) {
-        return configuration.isRedirectOnRejection() && request.getHeaders()
+        return redirectConfiguration.isOnRejection() && request.getHeaders()
                 .accept()
                 .stream()
                 .anyMatch(mediaType -> mediaType.equals(MediaType.TEXT_HTML_TYPE));
@@ -89,8 +90,8 @@ public class SessionAuthorizationExceptionHandler extends DefaultAuthorizationEx
      * @return The URI to redirect to
      */
     protected String getRedirectUri(HttpRequest<?> request, AuthorizationException exception) {
-        String uri = exception.isForbidden() ? configuration.getForbiddenTargetUrl() :
-                configuration.getUnauthorizedTargetUrl();
+        String uri = exception.isForbidden() ? redirectConfiguration.getForbidden() :
+                redirectConfiguration.getUnauthorized();
         if (LOG.isDebugEnabled()) {
             LOG.debug("redirect uri: {}", uri);
         }
