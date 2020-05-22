@@ -16,7 +16,10 @@
 package io.micronaut.security.token.jwt.generator;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link JwtGeneratorConfiguration} implementation.
@@ -28,17 +31,22 @@ import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 @Deprecated
 @ConfigurationProperties(JwtGeneratorConfigurationProperties.PREFIX)
 public class JwtGeneratorConfigurationProperties implements JwtGeneratorConfiguration {
+    private static final Logger LOG = LoggerFactory.getLogger(JwtGeneratorConfigurationProperties.class);
 
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".generator";
 
     private final AccessTokenConfigurationProperties accessTokenConfiguration;
-    
+    private final PropertyResolver propertyResolver;
+
     /**
      *
      * @param accessTokenConfiguration Access Token configuration
+     * @param propertyResolver Property Resolver
      */
-    public JwtGeneratorConfigurationProperties(AccessTokenConfigurationProperties accessTokenConfiguration) {
+    public JwtGeneratorConfigurationProperties(AccessTokenConfigurationProperties accessTokenConfiguration,
+                                               PropertyResolver propertyResolver) {
         this.accessTokenConfiguration = accessTokenConfiguration;
+        this.propertyResolver = propertyResolver;
     }
 
     @Override
@@ -59,9 +67,12 @@ public class JwtGeneratorConfigurationProperties implements JwtGeneratorConfigur
      */
     @Deprecated
     public void setAccessTokenExpiration(Integer accessTokenExpiration) {
-        if (accessTokenConfiguration != null &&
-                accessTokenConfiguration.getExpiration().equals(AccessTokenConfigurationProperties.DEFAULT_EXPIRATION)) {
+        if (!propertyResolver.containsProperty(AccessTokenConfigurationProperties.PREFIX + ".expiration")) {
             this.accessTokenConfiguration.setExpiration(accessTokenExpiration);
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("ignoring property {} because property {} was set", JwtGeneratorConfigurationProperties.PREFIX + ".access-token-expiration", AccessTokenConfigurationProperties.PREFIX + ".expiration");
+            }
         }
     }
 }

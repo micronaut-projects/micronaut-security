@@ -35,4 +35,20 @@ class JwtGeneratorConfigurationPropertiesSpec extends Specification {
         applicationContext.close()
     }
 
+    @Deprecated
+    void "if micronaut.security.token.jwt.generator.access-token.expiration is set it should be used"() {
+        given:
+        ApplicationContext applicationContext = ApplicationContext.run([
+                'micronaut.security.token.jwt.generator.access-token-expiration': 1,
+                'micronaut.security.token.jwt.generator.access-token.expiration': AccessTokenConfigurationProperties.DEFAULT_EXPIRATION,
+        ])
+        expect:
+        applicationContext.getProperty(JwtGeneratorConfigurationProperties.PREFIX + ".access-token-expiration", Integer).isPresent()
+        applicationContext.getProperty(JwtGeneratorConfigurationProperties.PREFIX + ".access-token-expiration", Integer).get() == 1
+        applicationContext.getBean(AccessTokenConfiguration).expiration == AccessTokenConfigurationProperties.DEFAULT_EXPIRATION
+        applicationContext.getBean(JwtGeneratorConfigurationProperties).accessTokenExpiration == AccessTokenConfigurationProperties.DEFAULT_EXPIRATION
+
+        cleanup:
+        applicationContext.close()
+    }
 }
