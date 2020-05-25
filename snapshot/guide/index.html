@@ -568,6 +568,9 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <li>
 <p>The io.micronaut.security.token.jwt.signature.secret.SecretSignatureFactory was deleted because the beans can be created directly from the SecretSignature class.</p>
 </li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html">AccessRefreshTokenGenerator</a> is now the interface which defines how generate a <a href="../api/io/micronaut/security/token/jwt/render/AccessRefreshToken.html">AccessRefreshToken</a> for a particular user. The implementation has been moved to <a href="../api/io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html">DefaultAccessRefreshTokenGenerator</a>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1811,14 +1814,14 @@ Read the <a href="https://guides.micronaut.io/micronaut-security-jwt-cookie/guid
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token.expiration</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value (3600).</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token-expiration</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">deprecated Use micronaut.security.token.jwt.generator.access-token.expiration instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token.expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value (3600).</p></td>
 </tr>
 </tbody>
 </table>
