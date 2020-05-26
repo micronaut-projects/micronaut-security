@@ -53,7 +53,7 @@ public abstract class HttpHeaderTokenReader implements TokenReader {
     @Override
     public Optional<String> findToken(HttpRequest<?> request) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Looking for bearer token in Authorization header");
+            LOG.debug("Looking for bearer token in {} header", getHeaderName());
         }
         HttpHeaders headers = request.getHeaders();
         Optional<String> authorizationHeader = headers.findFirst(getHeaderName());
