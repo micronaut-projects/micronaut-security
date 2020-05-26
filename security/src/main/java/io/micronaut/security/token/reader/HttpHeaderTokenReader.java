@@ -71,7 +71,7 @@ public abstract class HttpHeaderTokenReader implements TokenReader {
             sb.append(" ");
         }
         String str = sb.toString();
-        if (authorization.startsWith(str)) {
+        if (authorization.toLowerCase().startsWith(str.toLowerCase())) {
             return Optional.of(authorization.substring(str.length()));
         } else {
             LOG.debug("{} does not start with {}", authorization, str);
