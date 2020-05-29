@@ -58,8 +58,8 @@ abstract class InMemoryLdapSpec extends Specification {
         ds
     }
 
-    AuthenticationResponse authenticate(LdapAuthenticationProvider authenticationProvider, String username, String password = "password") {
-        Flowable.fromPublisher(authenticationProvider.authenticate(null, new AuthenticationRequest() {
+    AuthenticationRequest createAuthenticationRequest(String username, String password) {
+        new AuthenticationRequest() {
             @Override
             Object getIdentity() {
                 return username
@@ -69,7 +69,11 @@ abstract class InMemoryLdapSpec extends Specification {
             Object getSecret() {
                 return password
             }
-        })).blockingFirst()
+        }
+    }
+
+    AuthenticationResponse authenticate(LdapAuthenticationProvider authenticationProvider, String username, String password = "password") {
+        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest(username, password))).blockingFirst()
     }
 
 }
