@@ -121,6 +121,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
     /**
      *
      * @param cookies Cookies to be added to the response
+     * @param request The {@link HttpRequest} being executed
      * @return A 303 HTTP Response with cookies
      */
     protected MutableHttpResponse<?> loginSuccessWithCookies(List<Cookie> cookies, HttpRequest<?> request) {
