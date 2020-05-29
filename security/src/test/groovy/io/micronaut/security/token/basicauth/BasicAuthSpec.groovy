@@ -75,7 +75,7 @@ class BasicAuthSpec extends EmbeddedServerSpecification {
         noExceptionThrown()
     }
 
-    void "test /beans is not accesible if you valid Base64 encoded token but authentication fails"() {
+    void "test /beans is not accessible if you valid Base64 encoded token but authentication fails"() {
         expect:
         embeddedServer.applicationContext.getBean(BasicAuthAuthenticationFetcher.class)
         embeddedServer.applicationContext.getBean(AuthenticationProviderUserPassword.class)

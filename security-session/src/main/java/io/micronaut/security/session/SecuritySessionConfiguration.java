@@ -15,7 +15,11 @@
  */
 package io.micronaut.security.session;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
+import io.micronaut.security.config.ForbiddenRedirectConfiguration;
+import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.UnauthorizedRedirectConfiguration;
 
 /**
  * Defines Session-based Authentication configuration properties.
@@ -68,8 +72,71 @@ public interface SecuritySessionConfiguration extends Toggleable {
 
     /**
      * @return True if a redirect should occur when a request is rejected
-     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#isOnRejection()} instead.
+     * @deprecated Use {@link UnauthorizedRedirectConfiguration#isEnabled()} or {@link ForbiddenRedirectConfiguration#isEnabled()} instead.
      */
     @Deprecated
     boolean isRedirectOnRejection();
+
+    default RedirectConfiguration toRedirectConfiguration() {
+        SecuritySessionConfiguration thisConfig = this;
+        return new RedirectConfiguration() {
+            @NonNull
+            @Override
+            public String getLoginSuccess() {
+                return thisConfig.getLoginSuccessTargetUrl();
+            }
+
+            @NonNull
+            @Override
+            public String getLoginFailure() {
+                return thisConfig.getLoginFailureTargetUrl();
+            }
+
+            @NonNull
+            @Override
+            public String getLogout() {
+                return thisConfig.getLogoutTargetUrl();
+            }
+
+            @NonNull
+            @Override
+            public UnauthorizedRedirectConfiguration getUnauthorized() {
+                return new UnauthorizedRedirectConfiguration() {
+
+                    @Override
+                    public boolean isEnabled() {
+                        return thisConfig.isRedirectOnRejection();
+                    }
+
+                    @NonNull
+                    @Override
+                    public String getUrl() {
+                        return thisConfig.getUnauthorizedTargetUrl();
+                    }
+                };
+            }
+
+            @NonNull
+            @Override
+            public ForbiddenRedirectConfiguration getForbidden() {
+                return new ForbiddenRedirectConfiguration() {
+                    @Override
+                    public boolean isEnabled() {
+                        return thisConfig.isRedirectOnRejection();
+                    }
+
+                    @NonNull
+                    @Override
+                    public String getUrl() {
+                        return thisConfig.getForbiddenTargetUrl();
+                    }
+                };
+            }
+
+            @Override
+            public boolean isPriorToLogin() {
+                return false;
+            }
+        };
+    }
 }

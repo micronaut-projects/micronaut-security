@@ -50,6 +50,11 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_LOGIN_FAILURE = "/";
 
+    /**
+     * The default behavior of redirect to the uri prior to login
+     */
+    public static final boolean DEFAULT_PRIOR_TO_LOGIN = false;
+
     @NonNull
     @NotBlank
     private String loginSuccess = DEFAULT_LOGIN_SUCCESS;
@@ -61,6 +66,8 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     @NonNull
     @NotBlank
     private String logout = DEFAULT_LOGOUT_URL;
+
+    private boolean priorToLogin = DEFAULT_PRIOR_TO_LOGIN;
 
     private UnauthorizedRedirectConfigurationProperties unauthorized = new UnauthorizedRedirectConfigurationProperties();
 
@@ -130,6 +137,20 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     @Override
     public ForbiddenRedirectConfiguration getForbidden() {
         return forbidden;
+    }
+
+    /**
+     * @param priorToLogin If true, the user should be redirected back to the unauthorized
+     *                     request that initiated the login flow. Supersedes the {@link #loginSuccess}
+     *                     configuration for those cases.
+     */
+    public void setPriorToLogin(boolean priorToLogin) {
+        this.priorToLogin = priorToLogin;
+    }
+
+    @Override
+    public boolean isPriorToLogin() {
+        return priorToLogin;
     }
 
     /**

@@ -86,7 +86,7 @@ class JwksUriSignatureSpec extends Specification {
 
         when:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer,[
-                'micronaut.security.authentication': 'cookie',
+                'micronaut.security.authentication': 'idtoken',
                 'micronaut.security.oauth2.clients.a.openid.issuer' : "http://localhost:${authServerAPort}/oauth2/default",
                 'micronaut.security.oauth2.clients.b.openid.issuer' : "http://localhost:${authServerBPort}/oauth2/default",
                 'spec.name'                                            : 'JwksUriSignatureSpec',

@@ -21,18 +21,13 @@ import io.micronaut.configuration.security.ldap.context.LdapSearchResult;
 import io.micronaut.configuration.security.ldap.context.LdapSearchService;
 import io.micronaut.configuration.security.ldap.group.LdapGroupProcessor;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationFailed;
-import io.micronaut.security.authentication.AuthenticationFailureReason;
-import io.micronaut.security.authentication.AuthenticationProvider;
-import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.*;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.AuthenticationException;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import java.io.Closeable;
@@ -78,107 +73,111 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        String username = authenticationRequest.getIdentity().toString();
-        String password = authenticationRequest.getSecret().toString();
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Starting authentication with configuration [{}]", configuration.getName());
-        }
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Attempting to initialize manager context");
-        }
-        DirContext managerContext;
-        try {
-            managerContext = contextBuilder.build(configuration.getManagerSettings());
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Manager context initialized successfully");
-            }
-        } catch (NamingException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e);
-            }
-            return Flowable.create(emitter -> {
-                emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN));
-                emitter.onComplete();
-            }, BackpressureStrategy.ERROR);
-        }
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Attempting to authenticate with user [{}]", username);
-        }
-
         return Flowable.create(emitter -> {
-        AuthenticationResponse response = new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND);
+            String username = authenticationRequest.getIdentity().toString();
+            String password = authenticationRequest.getSecret().toString();
 
-        try {
-            Optional<LdapSearchResult> optionalResult = ldapSearchService.searchFirst(managerContext, configuration.getSearch().getSettings(new Object[]{username}));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Starting authentication with configuration [{}]", configuration.getName());
+            }
 
-            if (optionalResult.isPresent()) {
-                LdapSearchResult result = optionalResult.get();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Attempting to initialize manager context");
+            }
+            DirContext managerContext;
+            try {
+                managerContext = contextBuilder.build(configuration.getManagerSettings());
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("User found in context [{}]. Attempting to bind.", result.getDn());
+                    LOG.debug("Manager context initialized successfully");
                 }
+            } catch (NamingException e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e);
+                }
+                emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN)));
+                emitter.onComplete();
+                return;
+            }
 
-                DirContext userContext = null;
-                try {
-                    String dn = result.getDn();
-                    userContext = contextBuilder.build(configuration.getSettings(result.getDn(), password));
-                    if (result.getAttributes() == null) {
-                        result.setAttributes(userContext.getAttributes(dn));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Attempting to authenticate with user [{}]", username);
+            }
+
+            try {
+                Optional<LdapSearchResult> optionalResult = ldapSearchService.searchFirst(managerContext, configuration.getSearch().getSettings(new Object[]{username}));
+
+                if (optionalResult.isPresent()) {
+                    LdapSearchResult result = optionalResult.get();
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("User found in context [{}]. Attempting to bind.", result.getDn());
                     }
-                } finally {
-                    contextBuilder.close(userContext);
-                }
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Successfully bound user [{}]. Attempting to retrieving groups.", result.getDn());
-                }
-
-                Set<String> groups = Collections.emptySet();
-
-                LdapConfiguration.GroupConfiguration groupSettings = configuration.getGroups();
-                if (groupSettings.isEnabled()) {
-                    groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () -> {
-                        return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(new Object[]{result.getDn()}));
-                    });
+                    DirContext userContext = null;
+                    try {
+                        String dn = result.getDn();
+                        userContext = contextBuilder.build(configuration.getSettings(result.getDn(), password));
+                        if (result.getAttributes() == null) {
+                            result.setAttributes(userContext.getAttributes(dn));
+                        }
+                    } finally {
+                        contextBuilder.close(userContext);
+                    }
 
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Group search returned [{}] for user [{}]", groups, username);
+                        LOG.debug("Successfully bound user [{}]. Attempting to retrieving groups.", result.getDn());
+                    }
+
+                    Set<String> groups = Collections.emptySet();
+
+                    LdapConfiguration.GroupConfiguration groupSettings = configuration.getGroups();
+                    if (groupSettings.isEnabled()) {
+                        groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () -> {
+                            return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(new Object[]{result.getDn()}));
+                        });
+
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Group search returned [{}] for user [{}]", groups, username);
+                        }
+                    } else {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Group search is disabled for configuration [{}]", configuration.getName());
+                        }
+                    }
+
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", username, groups);
+                    }
+
+                    AuthenticationResponse response = contextAuthenticationMapper.map(result.getAttributes(), username, groups);
+                    if (response.isAuthenticated()) {
+                        emitter.onNext(response);
+                        emitter.onComplete();
+                    } else {
+                        emitter.onError(new AuthenticationException(response));
+                    }
+
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Response successfully created for [{}]. Response is authenticated: [{}]", username, response.isAuthenticated());
                     }
                 } else {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Group search is disabled for configuration [{}]", configuration.getName());
+                        LOG.debug("User not found [{}]", username);
                     }
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND)));
                 }
-
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Attempting to map [{}] with groups [{}] to an authentication response.", username, groups);
-                }
-
-                response = contextAuthenticationMapper.map(result.getAttributes(), username, groups);
-
+            } catch (NamingException e) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Response successfully created for [{}]. Response is authenticated: [{}]", username, response.isAuthenticated());
+                    LOG.debug("Failed to authenticate with user [{}].  {}", username, e);
                 }
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("User not found [{}]", username);
+                if (e instanceof javax.naming.AuthenticationException) {
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)));
+                } else {
+                    emitter.onError(e);
                 }
+            } finally {
+                contextBuilder.close(managerContext);
             }
-        } catch (NamingException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Failed to authenticate with user [{}].  {}", username, e);
-            }
-            if (e instanceof AuthenticationException) {
-                response = new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
-            }
-        } finally {
-            contextBuilder.close(managerContext);
-        }
 
-            emitter.onNext(response);
-            emitter.onComplete();
         }, BackpressureStrategy.ERROR);
     }
 

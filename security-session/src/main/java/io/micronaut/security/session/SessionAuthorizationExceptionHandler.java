@@ -20,12 +20,15 @@ import io.micronaut.http.*;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.session.Session;
+import io.micronaut.session.http.HttpSessionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * An {@link io.micronaut.http.server.exceptions.ExceptionHandler} for {@link AuthorizationException} that
@@ -94,6 +97,12 @@ public class SessionAuthorizationExceptionHandler extends DefaultAuthorizationEx
      * @return The URI to redirect to
      */
     protected String getRedirectUri(HttpRequest<?> request, AuthorizationException exception) {
+        if (redirectConfiguration.isPriorToLogin() && !exception.isForbidden()) {
+            request.getAttributes().get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class)
+                    .ifPresent(session -> {
+                        session.put("originalUri", request.getUri());
+                    });
+        }
         String uri = exception.isForbidden() ? redirectConfiguration.getForbidden().getUrl() :
                 redirectConfiguration.getUnauthorized().getUrl();
         if (LOG.isDebugEnabled()) {

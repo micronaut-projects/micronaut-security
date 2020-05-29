@@ -36,6 +36,7 @@ public class DefaultState implements MutableState {
 
     @Override
     @Nullable
+    @Deprecated
     public URI getOriginalUri() {
         return originalUri;
     }

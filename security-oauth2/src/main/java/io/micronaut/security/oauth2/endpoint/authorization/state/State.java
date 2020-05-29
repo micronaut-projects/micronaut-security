@@ -31,6 +31,7 @@ public interface State {
      * @return The URI that was redirected from
      */
     @Nullable
+    @Deprecated
     URI getOriginalUri();
 
     /**

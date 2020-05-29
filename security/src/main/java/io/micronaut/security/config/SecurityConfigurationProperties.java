@@ -64,7 +64,8 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     /**
-     * Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie
+     * Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie. Should
+     * only be supplied if the service handles login and logout requests.
      * @param authentication Login Handler Mode
      */
     public void setAuthentication(@Nullable AuthenticationMode authentication) {

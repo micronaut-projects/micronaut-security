@@ -22,7 +22,6 @@ import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.AuthenticationModeConfiguration;
 import io.micronaut.security.handlers.AuthenticationMode;
 import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.response.StateAwareAuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
@@ -87,25 +86,7 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
     @NonNull
     @Override
     public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        UserDetails userDetails = createUserDetails(providerName, tokenResponse, openIdClaims);
-        return new StateAwareAuthenticationResponse() {
-
-            @Nullable
-            @Override
-            public State getState() {
-                return state;
-            }
-
-            @Override
-            public Optional<UserDetails> getUserDetails() {
-                return Optional.of(userDetails);
-            }
-
-            @Override
-            public Optional<String> getMessage() {
-                return Optional.empty();
-            }
-        };
+        return createUserDetails(providerName, tokenResponse, openIdClaims);
     }
 
     /**

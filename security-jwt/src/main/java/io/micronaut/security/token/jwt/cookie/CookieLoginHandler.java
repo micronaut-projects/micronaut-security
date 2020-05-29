@@ -82,7 +82,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
             return HttpResponse.serverError();
         }
         Cookie cookie = cookieOptional.get();
-        return loginSuccessWithCookies(Arrays.asList(cookie));
+        return loginSuccessWithCookies(Arrays.asList(cookie), request);
     }
 
     @Override
@@ -123,7 +123,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
      * @param cookies Cookies to be added to the response
      * @return A 303 HTTP Response with cookies
      */
-    protected MutableHttpResponse<?> loginSuccessWithCookies(List<Cookie> cookies) {
+    protected MutableHttpResponse<?> loginSuccessWithCookies(List<Cookie> cookies, HttpRequest<?> request) {
         try {
             URI location = new URI(loginSuccess);
             MutableHttpResponse<?> mutableHttpResponse = HttpResponse.seeOther(location);

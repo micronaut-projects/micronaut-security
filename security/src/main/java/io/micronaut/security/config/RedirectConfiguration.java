@@ -58,4 +58,11 @@ public interface RedirectConfiguration {
      */
     @NonNull
     ForbiddenRedirectConfiguration getForbidden();
+
+
+    /**
+     * @return If the user attempted to access a URL while unauthenticated, and was subsequently redirected to
+     * login, redirect back to that URL post login (true). Use the static login success URL (false).
+     */
+    boolean isPriorToLogin();
 }

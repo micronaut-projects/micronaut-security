@@ -102,16 +102,34 @@ public class Authenticator {
             Flowable<AuthenticationResponse> authentication = Flowable.mergeDelayError(authenticationProviders.stream()
                     .map(auth -> auth.authenticate(request, authenticationRequest))
                     .map(Flowable::fromPublisher)
-                    .map(flow -> flow.onErrorResumeNext(t -> {
-                        lastError.set(t);
-                        return Flowable.empty();
-                    }))
+                    .map(flow ->
+                        flow.switchMap(response -> {
+                            if (response.isAuthenticated()) {
+                                return Flowable.just(response);
+                            } else {
+                                return Flowable.error(new AuthenticationException(response));
+                            }
+                        }).onErrorResumeNext(t -> {
+                            lastError.set(t);
+                            return Flowable.empty();
+                        })
+                    )
                     .collect(Collectors.toList()));
 
             return authentication.take(1).switchIfEmpty(Flowable.create((emitter) -> {
                 Throwable error = lastError.get();
                 if (error != null) {
-                    emitter.onError(error);
+                    if (error instanceof AuthenticationException) {
+                        AuthenticationResponse response = ((AuthenticationException) error).getResponse();
+                        if (response != null) {
+                            emitter.onNext(response);
+                            emitter.onComplete();
+                        } else {
+                            emitter.onError(error);
+                        }
+                    } else {
+                        emitter.onError(error);
+                    }
                 } else {
                     emitter.onComplete();
                 }

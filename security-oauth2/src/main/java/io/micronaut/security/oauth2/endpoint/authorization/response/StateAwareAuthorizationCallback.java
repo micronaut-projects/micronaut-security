@@ -30,7 +30,7 @@ import java.util.function.Supplier;
  * @since 1.2.0
  */
 @Internal
-public abstract class StateAwareAuthorizationCallback {
+public abstract class StateAwareAuthorizationCallback implements StateAware {
 
     private final Supplier<State> stateSupplier;
 
@@ -58,6 +58,7 @@ public abstract class StateAwareAuthorizationCallback {
      * @return The state in the callback
      */
     @Nullable
+    @Override
     public State getState() {
         return stateSupplier.get();
     }
