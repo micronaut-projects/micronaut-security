@@ -4,6 +4,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -59,11 +60,10 @@ HttpRequest loginRequest = HttpRequest.POST('/login', new LoginForm(username: 's
             Flowable.create({ emitter ->
                 if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "password") {
                     emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
-                    emitter.onComplete()
                 } else {
-                    emitter.onNext(new AuthenticationFailed())
-                    emitter.onComplete()
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
+                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
     }

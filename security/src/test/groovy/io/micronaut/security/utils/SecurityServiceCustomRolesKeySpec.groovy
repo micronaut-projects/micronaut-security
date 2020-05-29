@@ -26,6 +26,7 @@ import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -82,14 +83,12 @@ class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user2' && authenticationRequest.secret == 'password' ) {
                     emitter.onNext(new UserDetails('user', [], [customRoles: ['ROLE_USER']]))
-                    emitter.onComplete()
                 } else if ( authenticationRequest.identity == 'user3' && authenticationRequest.secret == 'password' ) {
                     emitter.onNext(new UserDetails('user', [], [otherCustomRoles: ['ROLE_USER']]))
-                    emitter.onComplete()
                 } else {
-                    emitter.onNext(new AuthenticationFailed())
-                    emitter.onComplete()
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
+                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
     }

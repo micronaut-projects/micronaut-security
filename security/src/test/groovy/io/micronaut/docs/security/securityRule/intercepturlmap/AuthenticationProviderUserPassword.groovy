@@ -2,6 +2,7 @@ package io.micronaut.docs.security.securityRule.intercepturlmap
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -22,14 +23,12 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
         Flowable.create( {emitter ->
             if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
                 emitter.onNext(new UserDetails((String) authenticationRequest.identity, []))
-                emitter.onComplete()
             } else if ( authenticationRequest.identity == 'admin' && authenticationRequest.secret == 'password' ) {
                 emitter.onNext(new UserDetails((String) authenticationRequest.identity, ['ROLE_ADMIN']))
-                emitter.onComplete()
             } else {
-                emitter.onNext(new AuthenticationFailed())
-                emitter.onComplete()
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()))
             }
+            emitter.onComplete()
         }, BackpressureStrategy.ERROR)
 
     }

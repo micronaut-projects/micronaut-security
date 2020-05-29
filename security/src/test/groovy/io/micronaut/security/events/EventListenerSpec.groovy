@@ -45,8 +45,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
     }
 
     def "failed login publishes LoginFailedEvent"() {
-        when:
-        println "sending request to login with bogus/password"
+        when: "sending request to login with bogus/password"
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("bogus", "password"))
         client.exchange(request)
 
@@ -155,11 +154,10 @@ class EventListenerSpec extends EmbeddedServerSpecification {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
                     emitter.onNext(new UserDetails('user', []))
-                    emitter.onComplete()
                 } else {
                     emitter.onNext(new AuthenticationFailed())
-                    emitter.onComplete()
                 }
+                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
     }

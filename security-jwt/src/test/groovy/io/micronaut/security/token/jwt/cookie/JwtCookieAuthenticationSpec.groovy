@@ -12,6 +12,7 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -181,11 +182,10 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
                 if ( authenticationRequest.getIdentity().equals("sherlock") &&
                         authenticationRequest.getSecret().equals("password") ) {
                     emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
-                    emitter.onComplete()
                 } else {
                     emitter.onNext(new AuthenticationFailed())
-                    emitter.onComplete()
                 }
+                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
     }

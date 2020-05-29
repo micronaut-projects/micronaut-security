@@ -10,6 +10,7 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.LoadBalancer
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -110,11 +111,11 @@ class SessionReUseSpec extends EmbeddedServerSpecification {
                         authenticationRequest.getSecret().equals("password") ) {
                     UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>());
                     emitter.onNext(userDetails);
-                    emitter.onComplete();
                 } else {
-                    emitter.onNext(new AuthenticationFailed());
-                    emitter.onComplete();
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()));
                 }
+                emitter.onComplete();
+
             }, BackpressureStrategy.ERROR);
         }
     }

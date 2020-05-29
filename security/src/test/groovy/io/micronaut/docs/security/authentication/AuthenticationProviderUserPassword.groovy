@@ -2,6 +2,7 @@ package io.micronaut.docs.security.authentication
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -27,7 +28,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
                 emitter.onNext(new UserDetails("user", ["ROLE_USER"]));
                 emitter.onComplete();
             } else {
-                emitter.onNext(new AuthenticationFailed());
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
                 emitter.onComplete();
             }
         }, BackpressureStrategy.ERROR);

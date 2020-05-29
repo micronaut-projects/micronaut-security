@@ -2,6 +2,7 @@ package io.micronaut.security.token.jwt.signature.rsagenerationvalidation;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -21,13 +22,12 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flowable.create(emitter -> {
-        if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
-            emitter.onNext(new UserDetails("user", Collections.emptyList()));
+            if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
+                emitter.onNext(new UserDetails("user", Collections.emptyList()));
+            } else {
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
+            }
             emitter.onComplete();
-        } else {
-            emitter.onNext(new AuthenticationFailed());
-            emitter.onComplete();
-        }
         }, BackpressureStrategy.ERROR);
     }
 }
