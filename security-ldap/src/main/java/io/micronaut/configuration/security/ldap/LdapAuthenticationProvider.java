@@ -95,7 +95,6 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                     LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e);
                 }
                 emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN)));
-                emitter.onComplete();
                 return;
             }
 
@@ -177,7 +176,6 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
             } finally {
                 contextBuilder.close(managerContext);
             }
-
         }, BackpressureStrategy.ERROR);
     }
 

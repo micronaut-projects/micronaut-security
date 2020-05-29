@@ -62,8 +62,8 @@ abstract class InMemoryLdapSpec extends Specification {
         ds
     }
 
-    AuthenticationResponse authenticate(LdapAuthenticationProvider authenticationProvider, String username, String password = "password") {
-        Flowable.fromPublisher(authenticationProvider.authenticate(null, new AuthenticationRequest() {
+    AuthenticationRequest createAuthenticationRequest(String username, String password) {
+        new AuthenticationRequest() {
             @Override
             Object getIdentity() {
                 return username
@@ -73,12 +73,17 @@ abstract class InMemoryLdapSpec extends Specification {
             Object getSecret() {
                 return password
             }
-        })).onErrorResumeNext(new io.reactivex.functions.Function<Throwable, Publisher<? extends AuthenticationResponse>>() {
-            @Override
-            Publisher<? extends AuthenticationResponse> apply(@NonNull Throwable throwable) throws Exception {
-                return Flowable.just(((AuthenticationException) throwable).getResponse())
-            }
-        })
+        }
+    }
+
+    AuthenticationResponse authenticate(LdapAuthenticationProvider authenticationProvider, String username, String password = "password") {
+        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest(username, password)))
+                .onErrorResumeNext(new io.reactivex.functions.Function<Throwable, Publisher<? extends AuthenticationResponse>>() {
+                    @Override
+                    Publisher<? extends AuthenticationResponse> apply(@NonNull Throwable throwable) throws Exception {
+                        return Flowable.just(((AuthenticationException) throwable).getResponse())
+                    }
+                })
                 .blockingFirst()
     }
 
