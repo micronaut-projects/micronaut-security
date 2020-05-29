@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>6 Rejection Handling 1.4.1.BUILD-SNAPSHOT</title>
+    <title>8 Rejection Handling 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -44,34 +44,40 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>3</strong><span>Breaking Changes</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityConfiguration.html"><strong>4</strong><span>Security Configuration</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>5</strong><span>Authentication Providers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>6</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>7</strong><span>Authorization Strategies</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>8</strong><span>Rejection Handling</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>9</strong><span>Token Propagation</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>10</strong><span>Built-In Security Controllers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>11</strong><span>Retrieve the authenticated user</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>12</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>13</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/repository.html"><strong>14</strong><span>Repository</span></a>
                         </div>
                         
                     </div>
@@ -92,26 +98,26 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../guide/authenticationStrategies.html">&lt;&lt; <strong>5</strong><span>Authentication Strategies</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/authenticationStrategies.html">&lt;&lt; <strong>7</strong><span>Authorization Strategies</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/tokenPropagation.html"><strong>9</strong><span>Token Propagation</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>6 Rejection Handling</h1>
+                    <h1>8 Rejection Handling</h1>
 
-                    <p><strong>Version:</strong> 1.4.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
 
                 
-<h1 id="rejection"><a class="anchor" href="#rejection"></a>6 Rejection Handling</h1>
+<h1 id="rejection"><a class="anchor" href="#rejection"></a>8 Rejection Handling</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/rejection.adoc"'>
@@ -124,59 +130,48 @@ function addJsClass() {
 <p>Micronaut allows the customization of the response that is sent when a request is not authorized to access a resource, or is not authenticated and the resource requires authentication.</p>
 </div>
 <div class="paragraph">
-<p>To control this response, it is necessary to register a <a href="../api/io/micronaut/security/handlers/RejectionHandler.html">RejectionHandler</a> and ensure your bean replaces the default implementation.</p>
+<p>When a request is rejected, the security filter emits an <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a>. The default implementation (<a href="../api/io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html">DefaultAuthorizationExceptionHandler</a>) simply returns an empty response with either a 401 or 403 status code depending on whether the request was authenticated or not.</p>
 </div>
 <div class="paragraph">
-<p>If both beans (<a href="../api/io/micronaut/security/handlers/UnauthorizedRejectionUriProvider.html">UnauthorizedRejectionUriProvider</a>, <a href="../api/io/micronaut/security/handlers/ForbiddenRejectionUriProvider.html">ForbiddenRejectionUriProvider</a>) exists, then <a href="../api/io/micronaut/security/handlers/RedirectRejectionHandler.html">RedirectRejectionHandler</a>,
-               a generic redirect handler, is registered as a <code>RejectionHandler</code>.</p>
+<p>For those using session based authorization, the default implementation is overridden by <a href="../api/io/micronaut/security/session/SessionAuthorizationExceptionHandler.html">SessionAuthorizationExceptionHandler</a>. The session exception handler redirects based on the session configuration.</p>
 </div>
 <div class="paragraph">
-<p>You can create your own <code>RejectionHandler</code>. You will need to replace the current <code>RejectionHandler</code>.</p>
-</div>
-<div class="paragraph">
-<p>For those using JWT based security, replace <a href="../api/io/micronaut/security/handlers/HttpStatusCodeRejectionHandler.html">HttpStatusCodeRejectionHandler</a>.</p>
+<p>To fully customize the behavior, replace the relevant bean with your own implementation.</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
-@Replaces(HttpStatusCodeRejectionHandler.class)
-public class MyRejectionHandler extends HttpStatusCodeRejectionHandler {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.AuthorizationException;
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
+
+import javax.inject.Singleton;
+
+@Singleton
+@Replaces(DefaultAuthorizationExceptionHandler.class)
+public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
 
     @Override
-    public Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; reject(HttpRequest&lt;?&gt; request, boolean forbidden) {
-        //Let the HttpStatusCodeRejectionHandler create the initial request
+    public MutableHttpResponse&lt;?&gt; handle(HttpRequest request, AuthorizationException exception) {
+        //Let the DefaultAuthorizationExceptionHandler create the initial response
         //then add a header
-        return Flowable.fromPublisher(super.reject(request, forbidden))
-                .map(response -&gt; response.header("X-Reason", "Example Header"));
+        return super.handle(request, exception).header("X-Reason", "Example Header");
     }
 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>For those using session based security, replace <a href="../api/io/micronaut/security/session/SessionSecurityfilterRejectionHandler.html">SessionSecurityfilterRejectionHandler</a>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If you are using session based security to use the <code>RedirectRejectionHandler</code> you will need to disable <code>SessionSecurityfilterRejectionHandler</code> with <code>micronaut.security.session.legacy-redirect-handler: false</code>.
-</td>
-</tr>
-</table>
 </div>
 
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../guide/authenticationStrategies.html">&lt;&lt; <strong>5</strong><span>Authentication Strategies</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/authenticationStrategies.html">&lt;&lt; <strong>7</strong><span>Authorization Strategies</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/tokenPropagation.html"><strong>9</strong><span>Token Propagation</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>

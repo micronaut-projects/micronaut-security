@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>4 Security Rules 1.4.1.BUILD-SNAPSHOT</title>
+    <title>6 Security Rules 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -44,34 +44,40 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>3</strong><span>Breaking Changes</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityConfiguration.html"><strong>4</strong><span>Security Configuration</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>5</strong><span>Authentication Providers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>6</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>7</strong><span>Authorization Strategies</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>8</strong><span>Rejection Handling</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>9</strong><span>Token Propagation</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>10</strong><span>Built-In Security Controllers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>11</strong><span>Retrieve the authenticated user</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>12</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>13</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/repository.html"><strong>14</strong><span>Repository</span></a>
                         </div>
                         
                     </div>
@@ -92,43 +98,43 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../guide/authenticationProviders.html">&lt;&lt; <strong>3</strong><span>Authentication Providers</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/authenticationProviders.html">&lt;&lt; <strong>5</strong><span>Authentication Providers</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>7</strong><span>Authorization Strategies</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>4 Security Rules</h1>
+                    <h1>6 Security Rules</h1>
 
-                    <p><strong>Version:</strong> 1.4.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
                 <div id="table-of-content">
                     <h2>Table of Contents</h2>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#ipPattern"><strong>4.1</strong><span>IP Pattern Rule</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#ipPattern"><strong>6.1</strong><span>IP Pattern Rule</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#secured"><strong>4.2</strong><span>Secured Annotation</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#secured"><strong>6.2</strong><span>Secured Annotation</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#interceptUrlMap"><strong>4.3</strong><span>Intercept URL Map</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#interceptUrlMap"><strong>6.3</strong><span>Intercept URL Map</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#builtInEndpointsAccess"><strong>4.4</strong><span>Built-In Endpoints Security</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#builtInEndpointsAccess"><strong>6.4</strong><span>Built-In Endpoints Security</span></a>
                     </div>
                     
                 </div>
                 
 
                 
-<h1 id="securityRule"><a class="anchor" href="#securityRule"></a>4 Security Rules</h1>
+<h1 id="securityRule"><a class="anchor" href="#securityRule"></a>6 Security Rules</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule.adoc"'>
@@ -142,8 +148,52 @@ function addJsClass() {
 Security Rules. Micronaut ships with several built-in security rules. If they don&#8217;t fulfil your needs,
 you can implement your own <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a>.</p>
 </div>
+<div class="paragraph">
+<p>Security rules implement the ordered interface and they are executed in order. All of the existing rules have a static variable <code>ORDER</code> that stores the order of that rule. You can use those variables to place your own rule before or after any of the existing rules.</p>
+</div>
+<div class="paragraph">
+<p>Security rules return a <a href="../api/io/micronaut/security/rules/SecurityRuleResult.html">SecurityRuleResult</a>. See the following table for a description of each result.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Result</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#ALLOWED">ALLOWED</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be granted and no further rules will be considered.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#REJECTED">REJECTED</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be rejected and no further rules will be considered.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#UNKNOWN">UNKNOWN</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The rule doesn&#8217;t apply to the request resource, or it cannot be determined either way. This result will cause other security rules to be considered.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If all security rules return <code>UNKNOWN</code>, the request will be rejected!
+</td>
+</tr>
+</table>
+</div>
 
-<h2 id="ipPattern"><a class="anchor" href="#ipPattern"></a>4.1 IP Pattern Rule</h2>
+<h2 id="ipPattern"><a class="anchor" href="#ipPattern"></a>6.1 IP Pattern Rule</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/ipPattern.adoc"'>
@@ -162,7 +212,6 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     ip-patterns:
       - 127.0.0.1
       - 192.168.1.*</code></pre>
@@ -172,8 +221,14 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <p>In the previous code, the <a href="../api/io/micronaut/security/rules/IpPatternsRule.html">IpPatternsRule</a> rejects traffic not coming
 either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
 </div>
+<div class="paragraph">
+<p>The IP patterns rule never explicitly allows requests, it only rejects requests if the address does not match. There must be other security rules that determine whether a resource should be accessed.</p>
+</div>
+<div class="paragraph">
+<p>If the desired behavior is to allow access to all resources as long as the address matches, create a security rule that executes after this one that returns <code>ALLOWED</code>.</p>
+</div>
 
-<h2 id="secured"><a class="anchor" href="#secured"></a>4.2 Secured Annotation</h2>
+<h2 id="secured"><a class="anchor" href="#secured"></a>6.2 Secured Annotation</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/secured.adoc"'>
@@ -183,8 +238,8 @@ either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
 
 
 <div class="paragraph">
-<p>As illustrated below, you can use <a href="../api/io/micronaut/security/annotation/Secured.html">Secured</a> annotation to configure
-access at <a href="../api/io/micronaut/http/annotation/Controller.html">Controller</a> or Controller&#8217;s Action level.</p>
+<p>As illustrated below, you can use the <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation to control
+access to controllers or controller methods.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -231,7 +286,7 @@ public class ExampleController {
 </table>
 </div>
 <div class="paragraph">
-<p>Alternatively, you could use <a href="https://jcp.org/en/jsr/detail?id=250">JSR_250</a> annotations (<code>javax.annotation.security.PermitAll</code>, <code>javax.annotation.security.RolesAllowed</code>, <code>javax.annotation.security.DenyAll</code>):</p>
+<p>Alternatively, you can use <a href="https://jcp.org/en/jsr/detail?id=250">JSR_250</a> annotations (<code>javax.annotation.security.PermitAll</code>, <code>javax.annotation.security.RolesAllowed</code>, <code>javax.annotation.security.DenyAll</code>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -266,8 +321,20 @@ public class ExampleController {
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The use of JSR 250 annotations requires <code>io.micronaut:micronaut-security-annotations</code> to be in the annotation processor classpath (<code>annotationProcessor</code>, <code>kapt</code>, <code>compileOnly</code>) respectively for Java, Kotlin, Groovy.
+</td>
+</tr>
+</table>
+</div>
 
-<h2 id="interceptUrlMap"><a class="anchor" href="#interceptUrlMap"></a>4.3 Intercept URL Map</h2>
+<h2 id="interceptUrlMap"><a class="anchor" href="#interceptUrlMap"></a>6.3 Intercept URL Map</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/interceptUrlMap.adoc"'>
@@ -283,7 +350,6 @@ public class ExampleController {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     intercept-url-map:
       -
         pattern: /images/*
@@ -337,7 +403,6 @@ and an optional HTTP method.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
   security:
-    enabled: true
     intercept-url-map:
       - pattern: /v1/myResource/**
         httpMethod: GET <i class="conum" data-value="1"></i><b>(1)</b>
@@ -361,7 +426,7 @@ and an optional HTTP method.</p>
 </table>
 </div>
 
-<h2 id="builtInEndpointsAccess"><a class="anchor" href="#builtInEndpointsAccess"></a>4.4 Built-In Endpoints Security</h2>
+<h2 id="builtInEndpointsAccess"><a class="anchor" href="#builtInEndpointsAccess"></a>6.4 Built-In Endpoints Security</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/builtInEndpointsAccess.adoc"'>
@@ -371,7 +436,7 @@ and an optional HTTP method.</p>
 
 
 <div class="paragraph">
-<p>When you turn on security, <a href="#providedEndpoints">Built-in endpoints</a> are secured depending on their sensitive value.</p>
+<p>When you turn on security, <a href="https://docs.micronaut.io/latest/guide/index.html#providedEndpoints">Built-in endpoints</a> are secured depending on their sensitive value.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -400,9 +465,9 @@ and an optional HTTP method.</p>
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../guide/authenticationProviders.html">&lt;&lt; <strong>3</strong><span>Authentication Providers</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/authenticationProviders.html">&lt;&lt; <strong>5</strong><span>Authentication Providers</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/authenticationStrategies.html"><strong>7</strong><span>Authorization Strategies</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>

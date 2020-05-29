@@ -11,7 +11,7 @@
 
         gtag('config', 'UA-82213539-2');
     </script>
-    <title>2 What's New 1.4.1.BUILD-SNAPSHOT</title>
+    <title>2 What's New 2.0.0.BUILD-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -44,34 +44,40 @@ function addJsClass() {
                         <div class="toc-item" style="margin-left:0"><a href="../guide/whatsNew.html"><strong>2</strong><span>What's New</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>3</strong><span>Breaking Changes</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>4</strong><span>Security Rules</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityConfiguration.html"><strong>4</strong><span>Security Configuration</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>5</strong><span>Authentication Strategies</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>5</strong><span>Authentication Providers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>6</strong><span>Rejection Handling</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityRule.html"><strong>6</strong><span>Security Rules</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>7</strong><span>Token Propagation</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationStrategies.html"><strong>7</strong><span>Authorization Strategies</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>8</strong><span>Built-In Security Controllers</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/rejection.html"><strong>8</strong><span>Rejection Handling</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>9</strong><span>Retrieve the authenticated user</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/tokenPropagation.html"><strong>9</strong><span>Token Propagation</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>10</strong><span>Security Events</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/endpoints.html"><strong>10</strong><span>Built-In Security Controllers</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>11</strong><span>OAuth 2.0</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/retrievingAuthenticatedUser.html"><strong>11</strong><span>Retrieve the authenticated user</span></a>
                         </div>
                         
-                        <div class="toc-item" style="margin-left:0"><a href="../guide/breaks.html"><strong>12</strong><span>Breaking Changes</span></a>
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/securityEvents.html"><strong>12</strong><span>Security Events</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/oauth.html"><strong>13</strong><span>OAuth 2.0</span></a>
+                        </div>
+                        
+                        <div class="toc-item" style="margin-left:0"><a href="../guide/repository.html"><strong>14</strong><span>Repository</span></a>
                         </div>
                         
                     </div>
@@ -98,14 +104,14 @@ function addJsClass() {
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/breaks.html"><strong>3</strong><span>Breaking Changes</span> >></a></div>
                 
 
 
                 <div class="project">
                     <h1>2 What's New</h1>
 
-                    <p><strong>Version:</strong> 1.4.1.BUILD-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 2.0.0.BUILD-SNAPSHOT</p>
                 </div>
 
                 
@@ -121,31 +127,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>Micronaut Security 1.4.1.BUILD-SNAPSHOT includes changes to make the transition to version 2.0 easier.</p>
-</div>
-<div class="sect1">
-<h2 id="_deprecations">Deprecations</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Most of the methods in <a href="../api/io/micronaut/security/token/jwt/validator/JwtTokenValidator.html">JwtTokenValidator</a> and the <a href="../api/io/micronaut/security/token/jwt/validator/JwtTokenValidatorUtils.html">JwtTokenValidatorUtils</a> class has been deprecated in favor of a new builder style syntax. The new class is <a href="../api/io/micronaut/security/token/jwt/validator/JwtValidator.html">JwtValidator</a>. Replace any deprecated usage with the builder style validator.</p>
-</li>
-<li>
-<p>The entire <a href="../api/io/micronaut/security/handlers/RejectionHandler.html">RejectionHandler</a> API has been deprecated in favor of usage of the existing exception handler functionality in Micronaut. A new exception, <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a>, has been created and will be emitted from the security filter. To bridge that API with the current one, a <a href="../api/io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html">DefaultAuthorizationExceptionHandler</a> has been created that delegates to the current <a href="../api/io/micronaut/security/handler/RejectionHandler.html">RejectionHandler</a> API. If you have your own rejection handler, it is recommended to replace the default exception handler with your own implementation.</p>
-</li>
-<li>
-<p>The <a href="../api/io/micronaut/security/handlers/LoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationFailed-">LoginHandler#loginFailed</a> method has been deprecated. Override the new default method that takes an <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> instead.</p>
-</li>
-<li>
-<p>The <a href="../api/io/micronaut/security/authentication/providers/DelegatingAuthenticationProvider.html">DelegatingAuthenticationProvider</a> and its related APIs have been deprecated and will be removed in a future release without any replacement. If your application currently overrides these APIs, copy the code into your codebase.</p>
-</li>
-<li>
-<p>The <a href="../api/io/micronaut/security/token/writer/TokenWriter.html">TokenWriter</a> api has been deprecated in favor of <a href="../api/io/micronaut/security/token/propagation/TokenPropagator.html">TokenPropagator</a>.</p>
-</li>
-</ul>
-</div>
-</div>
+<p>Micronaut Security 2.0.0.BUILD-SNAPSHOT includes the following new features and improvements.</p>
 </div>
 <div class="sect1">
 <h2 id="_annotation_processing">Annotation Processing</h2>
@@ -165,16 +147,10 @@ function addJsClass() {
 <div class="ulist">
 <ul>
 <li>
-<p>It is now possible to gain access to the request in your <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.</p>
-</li>
-<li>
-<p>It is no longer assumed that a failed authentication response is an instance of <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>. That now allows for any subclass of <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> to be emitted in the case of an authentication failure.</p>
-</li>
-<li>
 <p>A new constructor for <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a> that takes a string message has been added to allow for custom error messages.</p>
 </li>
 <li>
-<p>It is now possible to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response. Set <code>micronaut.security.authentication-strategy: ALL</code> to enable this functionality.</p>
+<p>It is now possible to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response. Set <code>micronaut.security.authentication-provider-strategy: ALL</code> to enable this functionality.</p>
 </li>
 <li>
 <p>The token propagation implementation will now no longer override an existing token.</p>
@@ -192,7 +168,7 @@ function addJsClass() {
                 
                     <div class="toc-item prev-left"><a href="../guide/introduction.html">&lt;&lt; <strong>1</strong><span>Introduction</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../guide/authenticationProviders.html"><strong>3</strong><span>Authentication Providers</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/breaks.html"><strong>3</strong><span>Breaking Changes</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
