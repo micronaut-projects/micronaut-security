@@ -25,8 +25,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 public class AuthenticationException extends RuntimeException {
 
-
-
+    @Nullable
     private final AuthenticationResponse response;
 
     /**
@@ -55,6 +54,10 @@ public class AuthenticationException extends RuntimeException {
         response = null;
     }
 
+    /**
+     *
+     * @return The authentication response which caused the exception
+     */
     @Nullable
     public AuthenticationResponse getResponse() {
         return response;

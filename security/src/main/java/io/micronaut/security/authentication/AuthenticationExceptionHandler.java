@@ -16,6 +16,7 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
@@ -23,6 +24,7 @@ import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.hateoas.JsonError;
 import io.micronaut.http.hateoas.Link;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
+import io.micronaut.security.event.LoginFailedEvent;
 
 import javax.inject.Singleton;
 
@@ -37,9 +39,18 @@ import javax.inject.Singleton;
 @Primary
 @Produces
 public class AuthenticationExceptionHandler implements ExceptionHandler<AuthenticationException, MutableHttpResponse<?>> {
+    protected final ApplicationEventPublisher eventPublisher;
+
+    public AuthenticationExceptionHandler(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthenticationException exception) {
+        AuthenticationResponse resp = exception.getResponse();
+        if (resp != null) {
+            eventPublisher.publishEvent(new LoginFailedEvent(resp));
+        }
         JsonError error = new JsonError(exception.getMessage());
         error.link(Link.SELF, Link.of(request.getUri()));
         return HttpResponse.unauthorized().body(error);
