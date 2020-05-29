@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 /**
  * An {@link io.micronaut.http.server.exceptions.ExceptionHandler} for {@link AuthorizationException} that
