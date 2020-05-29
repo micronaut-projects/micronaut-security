@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -148,6 +148,10 @@ var activeTableTab = "activeTableTab";
 <td class="colFirst"><code><a href="../../../../io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config">UnauthorizedRedirectConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html#getUnauthorized--">getUnauthorized</a></span>()</code>&nbsp;</td>
 </tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html#isPriorToLogin--">isPriorToLogin</a></span>()</code>&nbsp;</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -222,7 +226,7 @@ java.lang.String&nbsp;getLogout()</pre>
 <a name="getForbidden--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getForbidden</h4>
 <pre>@NonNull
@@ -230,6 +234,20 @@ java.lang.String&nbsp;getLogout()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>configuration about where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.</dd>
+</dl>
+</li>
+</ul>
+<a name="isPriorToLogin--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>isPriorToLogin</h4>
+<pre>boolean&nbsp;isPriorToLogin()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>If the user attempted to access a URL while unauthenticated, and was subsequently redirected to
+ login, redirect back to that URL post login (true). Use the static login success URL (false).</dd>
 </dl>
 </li>
 </ul>

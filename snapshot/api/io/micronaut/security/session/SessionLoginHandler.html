@@ -151,6 +151,10 @@ implements <a href="../../../../io/micronaut/security/handlers/RedirectingLoginH
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLoginHandler.html#loginSuccess">loginSuccess</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLoginHandler.html#redirectConfiguration">redirectConfiguration</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected io.micronaut.session.SessionStore&lt;io.micronaut.session.Session&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLoginHandler.html#sessionStore">sessionStore</a></span></code>&nbsp;</td>
 </tr>
@@ -201,7 +205,8 @@ implements <a href="../../../../io/micronaut/security/handlers/RedirectingLoginH
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-">loginFailed</a></span>(<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationFailed)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/session/SessionLoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">loginFailed</a></span>(<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationFailed,
+           io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></td>
@@ -246,6 +251,15 @@ implements <a href="../../../../io/micronaut/security/handlers/RedirectingLoginH
 <li class="blockList">
 <h4>loginFailure</h4>
 <pre>protected final&nbsp;java.lang.String loginFailure</pre>
+</li>
+</ul>
+<a name="redirectConfiguration">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>redirectConfiguration</h4>
+<pre>protected final&nbsp;<a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a> redirectConfiguration</pre>
 </li>
 </ul>
 <a name="sessionStore">
@@ -331,18 +345,20 @@ public&nbsp;SessionLoginHandler(<a href="../../../../io/micronaut/security/confi
 </dl>
 </li>
 </ul>
-<a name="loginFailed-io.micronaut.security.authentication.AuthenticationResponse-">
+<a name="loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>loginFailed</h4>
-<pre>public&nbsp;io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;loginFailed(<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationFailed)</pre>
+<pre>public&nbsp;io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;loginFailed(<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationFailed,
+                                                            io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../io/micronaut/security/handlers/LoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-">loginFailed</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></code></dd>
+<dd><code><a href="../../../../io/micronaut/security/handlers/LoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">loginFailed</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>authenticationFailed</code> - Object encapsulates the Login failure</dd>
+<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>An HTTP Response. Eg. a redirect or 401 response</dd>
 </dl>

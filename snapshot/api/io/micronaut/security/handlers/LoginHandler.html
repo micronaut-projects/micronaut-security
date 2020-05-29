@@ -135,7 +135,8 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/handlers/LoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-">loginFailed</a></span>(<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationResponse)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/handlers/LoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">loginFailed</a></span>(<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationResponse,
+           io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></td>
@@ -174,16 +175,18 @@ var activeTableTab = "activeTableTab";
 </dl>
 </li>
 </ul>
-<a name="loginFailed-io.micronaut.security.authentication.AuthenticationResponse-">
+<a name="loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>loginFailed</h4>
-<pre>io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;loginFailed(<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationResponse)</pre>
+<pre>io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;loginFailed(<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;authenticationResponse,
+                                                     io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>authenticationResponse</code> - Object encapsulates the Login failure</dd>
+<dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>An HTTP Response. Eg. a redirect or 401 response</dd>
 </dl>

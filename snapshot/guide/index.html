@@ -715,7 +715,8 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/handlers/AuthenticationMode.html">AuthenticationMode</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie. Should
+ only be supplied if the service handles login and logout requests.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1388,6 +1389,11 @@ compile "io.micronaut:micronaut-security-session"</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL where the user is redirected after logout. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.prior-to-login</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized</p></td>
 </tr>
 </tbody>
 </table>

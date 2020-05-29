@@ -392,7 +392,8 @@ public&nbsp;<a href="../../../../io/micronaut/security/handlers/AuthenticationMo
 <h4>setAuthentication</h4>
 <pre>public&nbsp;void&nbsp;setAuthentication(@Nullable
                               <a href="../../../../io/micronaut/security/handlers/AuthenticationMode.html" title="enum in io.micronaut.security.handlers">AuthenticationMode</a>&nbsp;authentication)</pre>
-<div class="block">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie</div>
+<div class="block">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie. Should
+ only be supplied if the service handles login and logout requests.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>authentication</code> - Login Handler Mode</dd>
