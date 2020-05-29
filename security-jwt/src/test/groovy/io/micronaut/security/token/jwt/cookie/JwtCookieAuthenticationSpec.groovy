@@ -183,7 +183,7 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
                         authenticationRequest.getSecret().equals("password") ) {
                     emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
                 } else {
-                    emitter.onNext(new AuthenticationFailed())
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)

@@ -19,7 +19,8 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.authentication.AuthenticationException;
+import io.micronaut.http.hateoas.JsonError;
+import io.micronaut.http.hateoas.Link;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.SecurityConfigurationProperties;
@@ -59,7 +60,9 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     }
 
     @Override
-        throw new AuthenticationException(authenticationFailed.getMessage().orElse(null));
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
+        JsonError error = new JsonError(authenticationFailed.getMessage().orElse(null));
+        error.link(Link.SELF, Link.of(request.getUri()));
+        return HttpResponse.unauthorized().body(error);
     }
 }
