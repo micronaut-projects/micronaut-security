@@ -3,9 +3,13 @@ package io.micronaut.security.ldap
 import io.micronaut.configuration.security.ldap.LdapAuthenticationProvider
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
+import io.reactivex.Flowable
+import io.reactivex.subscribers.TestSubscriber
+import org.reactivestreams.Publisher
 
 class LdapAuthenticationSpec extends InMemoryLdapSpec {
     
@@ -165,11 +169,15 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         when:
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        AuthenticationResponse response = authenticate(authenticationProvider,"abc")
+        Publisher<AuthenticationResponse> response = authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password"))
+        TestSubscriber subscriber = Flowable.fromPublisher(response).test().assertError(AuthenticationException)
+        List<Throwable> throwableList =subscriber.errors()
 
         then:
-        response instanceof AuthenticationFailed
-        response.message.get() == "User Not Found"
+        throwableList
+        throwableList.any {
+            it instanceof AuthenticationException && it.message == "User Not Found"
+        }
 
         cleanup:
         ctx.close()
@@ -192,11 +200,15 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         when:
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        AuthenticationResponse response = authenticate(authenticationProvider,"euclid", "abc")
+        Publisher<AuthenticationResponse> response = authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc"))
+        TestSubscriber subscriber = Flowable.fromPublisher(response).test().assertError(AuthenticationException)
+        List<Throwable> throwableList =subscriber.errors()
 
         then:
-        response instanceof AuthenticationFailed
-        response.message.get() == "Credentials Do Not Match"
+        throwableList
+        throwableList.any {
+            it instanceof AuthenticationException && it.message == "Credentials Do Not Match"
+        }
 
         cleanup:
         ctx.close()

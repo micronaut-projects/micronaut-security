@@ -32,7 +32,6 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.AuthenticationException;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import java.io.Closeable;
@@ -78,9 +77,27 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        String username = authenticationRequest.getIdentity().toString();
-        String password = authenticationRequest.getSecret().toString();
+        final String username = authenticationRequest.getIdentity().toString();
+        final String password = authenticationRequest.getSecret().toString();
 
+        return Flowable.create(emitter -> {
+            AuthenticationResponse response = authenticate(username, password);
+            if (response instanceof AuthenticationFailed) {
+                emitter.onError(new io.micronaut.security.authentication.AuthenticationException(response));
+            } else {
+                emitter.onNext(response);
+            }
+            emitter.onComplete();
+        }, BackpressureStrategy.ERROR);
+    }
+
+    /**
+     *
+     * @param username Username
+     * @param password Password
+     * @return Authentication Response. For example, {@link AuthenticationFailed} or {@link io.micronaut.security.authentication.UserDetails}.
+     */
+    protected AuthenticationResponse authenticate(String username, String password) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Starting authentication with configuration [{}]", configuration.getName());
         }
@@ -98,17 +115,13 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e);
             }
-            return Flowable.create(emitter -> {
-                emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN));
-                emitter.onComplete();
-            }, BackpressureStrategy.ERROR);
+            return new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN);
         }
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Attempting to authenticate with user [{}]", username);
         }
 
-        return Flowable.create(emitter -> {
         AuthenticationResponse response = new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND);
 
         try {
@@ -170,16 +183,13 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Failed to authenticate with user [{}].  {}", username, e);
             }
-            if (e instanceof AuthenticationException) {
+            if (e instanceof javax.naming.AuthenticationException) {
                 response = new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
             }
         } finally {
             contextBuilder.close(managerContext);
         }
-
-            emitter.onNext(response);
-            emitter.onComplete();
-        }, BackpressureStrategy.ERROR);
+        return response;
     }
 
     @Override
