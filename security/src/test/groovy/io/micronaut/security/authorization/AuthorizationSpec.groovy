@@ -13,6 +13,7 @@ import io.micronaut.management.endpoint.annotation.Read
 import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationProvider
@@ -341,27 +342,32 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create({ emitter ->
                 String username = authenticationRequest.getIdentity().toString()
+                AuthenticationFailed authenticationFailed = null
                 if (username == "disabled") {
-                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED))
-                    emitter.onComplete()
+                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED)
+
                 } else if (username == "accountExpired") {
-                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED))
-                    emitter.onComplete()
+                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED)
+
                 } else if (username == "passwordExpired") {
-                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED))
-                    emitter.onComplete()
+                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED)
+
                 } else if (username == "accountLocked") {
-                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED))
-                    emitter.onComplete()
+                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED)
+
                 } else if (username == "invalidPassword") {
-                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
-                    emitter.onComplete()
+                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
+
                 } else if (username == "notFound") {
-                    emitter.onComplete()
+
+                }
+
+                if (authenticationFailed) {
+                    emitter.onError(new AuthenticationException(authenticationFailed))
                 } else {
                     emitter.onNext(new UserDetails(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"]));
-                    emitter.onComplete()
                 }
+                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
     }

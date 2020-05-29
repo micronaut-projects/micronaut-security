@@ -5,6 +5,7 @@ import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationProvider
@@ -76,39 +77,38 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
 
             return Flowable.create({ emitter ->
                 String username = authenticationRequest.getIdentity().toString()
+                AuthenticationFailed authenticationFailed = null
                 switch (username) {
                     case "disabled":
-                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED))
-                        emitter.onComplete()
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED)
                         break
                     case "accountExpired":
-                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED))
-                        emitter.onComplete()
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED)
                         break
                     case "passwordExpired":
-                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED))
-                        emitter.onComplete()
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED)
                         break
                     case "accountLocked":
-                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED))
-                        emitter.onComplete()
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED)
                         break
                     case "invalidPassword":
-                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
-                        emitter.onComplete()
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
                         break
                     case "notFound":
-                        emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND))
-                        emitter.onComplete()
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND)
                         break
                 }
-                if (authenticationRequest.getSecret().toString() == "invalid") {
-                    emitter.onNext(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH))
-                    emitter.onComplete()
+                if (authenticationFailed) {
+                    emitter.onError(new AuthenticationException(authenticationFailed))
                 } else {
-                    emitter.onNext(new UserDetails(username, (username == "admin") ? ["ROLE_ADMIN"] : ["foo", "bar"]))
-                    emitter.onComplete()
+                    if (authenticationRequest.getSecret().toString() == "invalid") {
+                        emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)))
+                    } else {
+                        emitter.onNext(new UserDetails(username, (username == "admin") ? ["ROLE_ADMIN"] : ["foo", "bar"]))
+                    }
                 }
+                emitter.onComplete()
+
             }, BackpressureStrategy.ERROR)
         }
     }

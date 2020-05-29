@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import com.nimbusds.jwt.JWT;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -135,7 +136,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                             if (LOG.isTraceEnabled()) {
                                 LOG.trace("Token validation failed. Failing authentication");
                             }
-                            emitter.onNext(new AuthenticationFailed("JWT validation failed"));
+                            emitter.onError(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
                             emitter.onComplete();
                         }
                     }, BackpressureStrategy.ERROR);

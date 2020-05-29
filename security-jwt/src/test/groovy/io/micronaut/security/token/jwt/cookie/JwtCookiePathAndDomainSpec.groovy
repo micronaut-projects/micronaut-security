@@ -10,6 +10,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -138,11 +139,10 @@ class JwtCookiePathAndDomainSpec extends EmbeddedServerSpecification {
             Flowable.create({ emitter ->
                 if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "password") {
                     emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
-                    emitter.onComplete()
                 } else {
-                    emitter.onNext(new AuthenticationFailed())
-                    emitter.onComplete()
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
+                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
     }

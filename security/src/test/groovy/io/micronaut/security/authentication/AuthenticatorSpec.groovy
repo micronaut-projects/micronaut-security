@@ -7,6 +7,8 @@ import io.micronaut.security.config.SecurityConfigurationProperties
 import io.micronaut.security.handlers.AuthenticationMode
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import org.reactivestreams.Publisher
+import spock.lang.Ignore
 import spock.lang.Specification
 
 class AuthenticatorSpec extends Specification {
@@ -71,14 +73,14 @@ class AuthenticatorSpec extends Specification {
         given:
         def authProviderFailed = Stub(AuthenticationProvider) {
             authenticate(_, _) >> Flowable.create({ emitter ->
-                emitter.onNext(new AuthenticationFailed())
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 emitter.onComplete()
-                }, BackpressureStrategy.ERROR)
+            }, BackpressureStrategy.ERROR)
         }
         Authenticator authenticator = new Authenticator([authProviderFailed], new SecurityConfigurationProperties())
 
         when:
-        def creds = new UsernamePasswordCredentials('admin', 'admin')
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials('admin', 'admin')
         Flowable<AuthenticationResponse> rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds))
 
         then:
@@ -90,7 +92,7 @@ class AuthenticatorSpec extends Specification {
         def providers = [
                 Stub(AuthenticationProvider) {
                     authenticate(_, _) >> Flowable.create({ emitter ->
-                        emitter.onNext(new AuthenticationFailed("failed"))
+                        emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
@@ -120,7 +122,7 @@ class AuthenticatorSpec extends Specification {
         def providers = [
                 Stub(AuthenticationProvider) {
                     authenticate(_, _) >>  Flowable.create({ emitter ->
-                        emitter.onNext(new AuthenticationFailed("failed"))
+                        emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
@@ -153,7 +155,7 @@ class AuthenticatorSpec extends Specification {
                 },
                 Stub(AuthenticationProvider) {
                     authenticate(_, _) >> Flowable.create({ emitter ->
-                        emitter.onNext(new AuthenticationFailed("failed"))
+                        emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },

@@ -16,6 +16,7 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.context.annotation.Primary;
+import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
@@ -37,6 +38,11 @@ import javax.inject.Singleton;
 @Primary
 @Produces
 public class AuthenticationExceptionHandler implements ExceptionHandler<AuthenticationException, MutableHttpResponse<?>> {
+    protected final ApplicationEventPublisher eventPublisher;
+
+    public AuthenticationExceptionHandler(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthenticationException exception) {

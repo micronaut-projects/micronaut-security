@@ -10,6 +10,7 @@ import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -45,8 +46,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
     }
 
     def "failed login publishes LoginFailedEvent"() {
-        when:
-        println "sending request to login with bogus/password"
+        when: "sending request to login with bogus/password"
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("bogus", "password"))
         client.exchange(request)
 
@@ -155,11 +155,10 @@ class EventListenerSpec extends EmbeddedServerSpecification {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
                     emitter.onNext(new UserDetails('user', []))
-                    emitter.onComplete()
                 } else {
-                    emitter.onNext(new AuthenticationFailed())
-                    emitter.onComplete()
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
+                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
     }
@@ -174,7 +173,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         }
 
         @Override
-        MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
+        MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
             HttpResponse.unauthorized()
         }
     }

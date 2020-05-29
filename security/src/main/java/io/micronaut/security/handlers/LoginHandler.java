@@ -36,7 +36,8 @@ public interface LoginHandler {
 
     /**
      * @param authenticationResponse Object encapsulates the Login failure
+     * @param request The {@link HttpRequest} being executed
      * @return An HTTP Response. Eg. a redirect or 401 response
      */
-    MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationResponse);
+    MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationResponse, HttpRequest<?> request);
 }

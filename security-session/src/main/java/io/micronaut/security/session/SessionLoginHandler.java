@@ -107,7 +107,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
-    public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
+    public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         try {
             URI location = new URI(loginFailure);
             return HttpResponse.seeOther(location);

@@ -16,6 +16,7 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -169,20 +170,14 @@ class TokenPropagationSpec extends Specification {
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             return Flowable.create({ emitter ->
-                if (authenticationRequest.getIdentity() == null) {
-                    emitter.onNext(new AuthenticationFailed())
-                    emitter.onComplete()
-                } else if (authenticationRequest.getSecret() == null) {
-                    emitter.onNext(new AuthenticationFailed())
-                    emitter.onComplete()
-                } else if (Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString()) &&
+                if (authenticationRequest.getIdentity() != null && authenticationRequest.getSecret() != null &&
+                        Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString()) &&
                         authenticationRequest.getSecret().equals("elementary")) {
                     emitter.onNext(new UserDetails(authenticationRequest.getIdentity().toString(), new ArrayList<>()))
-                    emitter.onComplete()
                 } else {
-                    emitter.onNext(new AuthenticationFailed())
-                    emitter.onComplete()
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
+                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
     }
