@@ -83,7 +83,7 @@ subprojects { Project subproject ->
             mod.candidate.version ==~ /.+(-|\.?)(b|M|RC)\d.*/ ||
                     ["alpha", "beta", "milestone"].any {
                         mod.candidate.version.toLowerCase(Locale.ENGLISH).contains(it) } ||
-                    mod.candidate.group == 'io.micronaut' || // managed by the micronaut version
+                    mod.candidate.group.startsWith('io.micronaut') || // managed by the micronaut version
                     mod.candidate.module.contains('htmlunit')
         }
         outputFormatter = { result ->
