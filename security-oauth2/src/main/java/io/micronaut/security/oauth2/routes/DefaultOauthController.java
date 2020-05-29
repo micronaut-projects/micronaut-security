@@ -96,7 +96,7 @@ public class DefaultOauthController implements OauthController {
                     LOG.trace("Authentication failed: {}", response.getMessage().orElse("unknown reason"));
                 }
                 eventPublisher.publishEvent(new LoginFailedEvent(response));
-                return loginHandler.loginFailed(response);
+                return loginHandler.loginFailed(response, request);
             }
         }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
 

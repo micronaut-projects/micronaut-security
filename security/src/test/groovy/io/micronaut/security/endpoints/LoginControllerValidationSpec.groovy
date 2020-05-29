@@ -68,7 +68,7 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
         }
 
         @Override
-        MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
+        MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
             HttpResponse.unauthorized()
         }
     }

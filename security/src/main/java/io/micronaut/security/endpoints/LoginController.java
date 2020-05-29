@@ -91,7 +91,7 @@ public class LoginController {
                 return loginHandler.loginSuccess(userDetails, request);
             } else {
                 eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
-                return loginHandler.loginFailed(authenticationResponse);
+                return loginHandler.loginFailed(authenticationResponse, request);
             }
         }).first(HttpResponse.status(HttpStatus.UNAUTHORIZED));
     }

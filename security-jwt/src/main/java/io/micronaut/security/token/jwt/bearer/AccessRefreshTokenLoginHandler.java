@@ -59,7 +59,7 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     }
 
     @Override
-    public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed) {
         throw new AuthenticationException(authenticationFailed.getMessage().orElse(null));
+    public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
     }
 }
