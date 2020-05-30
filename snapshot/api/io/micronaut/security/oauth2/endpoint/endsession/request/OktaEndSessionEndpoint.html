@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -160,9 +160,11 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html#OktaEndSessionEndpoint-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-">OktaEndSessionEndpoint</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html#OktaEndSessionEndpoint-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-io.micronaut.security.config.SecurityConfiguration-io.micronaut.security.token.reader.TokenResolver-">OktaEndSessionEndpoint</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
                       <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
-                      java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;providerMetadata)</code>&nbsp;</td>
+                      java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;providerMetadata,
+                      <a href="../../../../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration,
+                      <a href="../../../../../../../io/micronaut/security/token/reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a>&nbsp;tokenResolver)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -187,6 +189,13 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html#getUrl--">getUrl</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>protected java.util.Optional&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html#parseIdToken-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-">parseIdToken</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+            <a href="../../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
+<div class="block">/**</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -217,7 +226,7 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="OktaEndSessionEndpoint-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-">
+<a name="OktaEndSessionEndpoint-io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.util.function.Supplier-io.micronaut.security.config.SecurityConfiguration-io.micronaut.security.token.reader.TokenResolver-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -225,12 +234,16 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <h4>OktaEndSessionEndpoint</h4>
 <pre>public&nbsp;OktaEndSessionEndpoint(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/endsession/response/EndSessionCallbackUrlBuilder.html" title="interface in io.micronaut.security.oauth2.endpoint.endsession.response">EndSessionCallbackUrlBuilder</a>&nbsp;endSessionCallbackUrlBuilder,
                               <a href="../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
-                              java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;providerMetadata)</pre>
+                              java.util.function.Supplier&lt;<a href="../../../../../../../io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a>&gt;&nbsp;providerMetadata,
+                              <a href="../../../../../../../io/micronaut/security/config/SecurityConfiguration.html" title="interface in io.micronaut.security.config">SecurityConfiguration</a>&nbsp;securityConfiguration,
+                              <a href="../../../../../../../io/micronaut/security/token/reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a>&nbsp;tokenResolver)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>endSessionCallbackUrlBuilder</code> - The end session callback URL builder</dd>
 <dd><code>clientConfiguration</code> - The client configuration</dd>
 <dd><code>providerMetadata</code> - The provider metadata supplier</dd>
+<dd><code>securityConfiguration</code> - Security configuration</dd>
+<dd><code>tokenResolver</code> - Token Resolver</dd>
 </dl>
 </li>
 </ul>
@@ -260,7 +273,7 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <a name="getArguments-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getArguments</h4>
 <pre>protected&nbsp;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;getArguments(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;originating,
@@ -273,6 +286,24 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/ends
 <dd><code>authentication</code> - The authentication</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The parameters to include in the URL</dd>
+</dl>
+</li>
+</ul>
+<a name="parseIdToken-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>parseIdToken</h4>
+<pre>protected&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;parseIdToken(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                                            <a href="../../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
+<div class="block">/**</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>request</code> - The HTTP Request</dd>
+<dd><code>authentication</code> - The authentication</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>An ID token if it could be resolved</dd>
 </dl>
 </li>
 </ul>

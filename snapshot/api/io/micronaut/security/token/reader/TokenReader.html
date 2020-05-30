@@ -105,9 +105,14 @@ var activeTableTab = "activeTableTab";
 <dt>All Known Implementing Classes:</dt>
 <dd><a href="../../../../../io/micronaut/security/token/jwt/bearer/BearerTokenReader.html" title="class in io.micronaut.security.token.jwt.bearer">BearerTokenReader</a>, <a href="../../../../../io/micronaut/security/token/reader/HttpHeaderTokenReader.html" title="class in io.micronaut.security.token.reader">HttpHeaderTokenReader</a>, <a href="../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieTokenReader</a></dd>
 </dl>
+<dl>
+<dt>Functional Interface:</dt>
+<dd>This is a functional interface and can therefore be used as the assignment target for a lambda expression or method reference.</dd>
+</dl>
 <hr>
 <br>
-<pre>public interface <span class="typeNameLabel">TokenReader</span>
+<pre>@FunctionalInterface
+public interface <span class="typeNameLabel">TokenReader</span>
 extends io.micronaut.core.order.Ordered</pre>
 <div class="block">Responsible for reading the token data from a request.</div>
 <dl>
