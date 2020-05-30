@@ -1,37 +1,24 @@
 package io.micronaut.security.authentication
 
+import groovy.transform.AutoImplement
 import io.micronaut.security.config.AuthenticationStrategy
-import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.config.SecurityConfiguration
 import io.micronaut.security.config.SecurityConfigurationProperties
-import io.micronaut.security.handlers.AuthenticationMode
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import org.reactivestreams.Publisher
-import spock.lang.Ignore
+import spock.lang.Shared
 import spock.lang.Specification
 
 class AuthenticatorSpec extends Specification {
 
-    SecurityConfiguration ALL = new SecurityConfiguration() {
-        @Override
-        List<String> getIpPatterns() {
-            return null
-        }
+    @Shared
+    SecurityConfiguration ALL = new AllSecurityConfiguration()
 
-        @Override
-        List<InterceptUrlMapPattern> getInterceptUrlMap() {
-            return null
-        }
-
+    @AutoImplement
+    static class AllSecurityConfiguration implements SecurityConfiguration {
         @Override
         AuthenticationStrategy getAuthenticationProviderStrategy() {
             return AuthenticationStrategy.ALL
-        }
-
-        @Override
-        AuthenticationMode getAuthentication() {
-            return null
         }
     }
 
