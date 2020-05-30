@@ -25,9 +25,7 @@ The following sequence illustrates the authentication flow:
 
 image::sesssion_based_auth.svg[]
 
-The following configuration properties are available to customize session based authentication behaviour:
-
-include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.adoc[]
+Check the <<redirection, Redirection configuration>> to customize session based authentication behaviour.
 
 == Example of Session-Based Authentication configuration
 

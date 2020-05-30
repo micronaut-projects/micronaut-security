@@ -8,6 +8,7 @@ securityConfiguration:
   authenticationStrategy: Authentication Strategy
   loginHandler: Login Handler
   logoutHandler: Logout Handler
+  redirection: Redirection Configuration
 authenticationProviders: Authentication Providers
 securityRule:
   title: Security Rules
