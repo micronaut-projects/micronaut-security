@@ -17,12 +17,17 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.config.SecurityConfiguration;
+import io.micronaut.security.handlers.AuthenticationMode;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.token.reader.TokenResolver;
 
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -38,15 +43,24 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
     private static final String PARAM_POST_LOGOUT_REDIRECT_URI = "post_logout_redirect_uri";
     private static final String PARAM_ID_TOKEN_HINT = "id_token_hint";
 
+    private final SecurityConfiguration securityConfiguration;
+    private final TokenResolver tokenResolver;
+
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata supplier
+     * @param securityConfiguration Security configuration
+     * @param tokenResolver Token Resolver
      */
     public OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                   OauthClientConfiguration clientConfiguration,
-                                  Supplier<OpenIdProviderMetadata> providerMetadata) {
+                                  Supplier<OpenIdProviderMetadata> providerMetadata,
+                                  SecurityConfiguration securityConfiguration,
+                                  TokenResolver tokenResolver) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
+        this.securityConfiguration = securityConfiguration;
+        this.tokenResolver = tokenResolver;
     }
 
     @Override
@@ -57,15 +71,30 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
     @Override
     protected Map<String, Object> getArguments(HttpRequest<?> originating,
                                                Authentication authentication) {
-        Map<String, Object> attributes = authentication.getAttributes();
+        Optional<String> idToken = parseIdToken(originating, authentication);
         Map<String, Object> arguments = new HashMap<>();
-        if (attributes.containsKey(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY)) {
-            arguments.put(PARAM_ID_TOKEN_HINT, attributes.get(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY));
-        }
+        idToken.ifPresent(token -> arguments.put(PARAM_ID_TOKEN_HINT, token));
         arguments.put(PARAM_POST_LOGOUT_REDIRECT_URI, getRedirectUri(originating));
         return arguments;
     }
 
+    /**
+     *
+     /**
+     * @param request The HTTP Request
+     * @param authentication The authentication
+     * @return An ID token if it could be resolved
+     */
+    protected Optional<String> parseIdToken(HttpRequest<?> request, Authentication authentication) {
+        Map<String, Object> attributes = authentication.getAttributes();
+        if (attributes.containsKey(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY)) {
+            return Optional.of(attributes.get(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY).toString());
+        }
+        if (securityConfiguration.getAuthentication() == AuthenticationMode.IDTOKEN) {
+            return tokenResolver.resolveToken(request);
+        }
+        return Optional.empty();
+    }
 }
 
 

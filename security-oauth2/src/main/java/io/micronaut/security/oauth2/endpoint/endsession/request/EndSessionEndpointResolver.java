@@ -17,10 +17,12 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.token.reader.TokenResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,7 +119,13 @@ public class EndSessionEndpointResolver {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
             }
-            return Optional.of(new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+            SecurityConfiguration securityConfiguration = beanContext.getBean(SecurityConfiguration.class);
+            TokenResolver tokenResolver = beanContext.getBean(TokenResolver.class);
+            return Optional.of(new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder,
+                        oauthClientConfiguration,
+                        openIdProviderMetadata,
+                        securityConfiguration,
+                        tokenResolver));
         }
 
         if (issuer.contains(COGNITO)) {
