@@ -27,6 +27,7 @@ import java.util.Optional;
  * @since 1.1.0
  */
 @DefaultImplementation(DefaultTokenResolver.class)
+@FunctionalInterface
 public interface TokenResolver {
 
     /**
