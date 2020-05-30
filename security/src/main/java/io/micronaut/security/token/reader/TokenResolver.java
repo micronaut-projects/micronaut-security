@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.reader;
 
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 
 import java.util.Optional;
@@ -25,6 +26,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.1.0
  */
+@DefaultImplementation(DefaultTokenResolver.class)
 public interface TokenResolver {
 
     /**
