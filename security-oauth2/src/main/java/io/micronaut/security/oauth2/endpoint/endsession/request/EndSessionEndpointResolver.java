@@ -96,40 +96,48 @@ public class EndSessionEndpointResolver {
 
         EndSessionEndpoint endSessionEndpoint = beanContext.findBean(EndSessionEndpoint.class, Qualifiers.byName(providerName)).orElse(null);
 
-        if (endSessionEndpoint == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No EndSessionEndpoint bean found with a name qualifier of [{}]", providerName);
-            }
-            String issuer = oauthClientConfiguration.getOpenid().flatMap(OpenIdClientConfiguration::getIssuer).map(URL::toString).orElse(null);
-
-            if (issuer != null) {
-                if (issuer.contains(OKTA)) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
-                    }
-                    endSessionEndpoint = new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
-                } else if (issuer.contains(COGNITO)) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Resolved the AwsCognitoEndSessionEndpoint for provider [{}]", providerName);
-                    }
-                    endSessionEndpoint = new AwsCognitoEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
-                } else if (issuer.contains(AUTH0)) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Resolved the Auth0EndSessionEndpoint for provider [{}]", providerName);
-                    }
-                    endSessionEndpoint = new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata);
-                } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("No EndSessionEndpoint can be resolved. The issuer for provider [{}] does not match any of the providers supported by default", providerName);
-                    }
-                }
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("No EndSessionEndpoint can be resolved. Issuer is null for provider [{}]", providerName);
-                }
-            }
+        if (endSessionEndpoint != null) {
+            return Optional.of(endSessionEndpoint);
         }
 
-        return Optional.ofNullable(endSessionEndpoint);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("No EndSessionEndpoint bean found with a name qualifier of [{}]", providerName);
+        }
+
+        String issuer = oauthClientConfiguration.getOpenid().flatMap(OpenIdClientConfiguration::getIssuer).map(URL::toString).orElse(null);
+
+        if (issuer == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No EndSessionEndpoint can be resolved. Issuer is null for provider [{}]", providerName);
+            }
+            return Optional.empty();
+        }
+
+        if (issuer.contains(OKTA)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
+            }
+            return Optional.of(new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+        }
+
+        if (issuer.contains(COGNITO)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Resolved the AwsCognitoEndSessionEndpoint for provider [{}]", providerName);
+            }
+            return Optional.of(new AwsCognitoEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+        }
+
+        if (issuer.contains(AUTH0)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Resolved the Auth0EndSessionEndpoint for provider [{}]", providerName);
+            }
+            return Optional.of(new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+        }
+
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("No EndSessionEndpoint can be resolved. The issuer for provider [{}] does not match any of the providers supported by default", providerName);
+        }
+        return Optional.empty();
     }
 }
