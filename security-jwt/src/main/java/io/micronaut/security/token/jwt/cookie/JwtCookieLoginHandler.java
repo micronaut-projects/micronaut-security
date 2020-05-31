@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.UserDetails;
@@ -69,7 +70,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
                                  JwtCookieConfiguration jwtCookieConfiguration,
                                  AccessTokenConfiguration accessTokenConfiguration,
                                  AccessRefreshTokenGenerator accessRefreshTokenGenerator,
-                                 PriorToLoginPersistence priorToLoginPersistence) {
+                                 @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         super(jwtCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
         this.accessTokenConfiguration = accessTokenConfiguration;
         this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;

@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.UserDetails;
@@ -54,7 +55,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
     public IdTokenLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
                                TokenConfiguration tokenConfiguration,
-                               PriorToLoginPersistence priorToLoginPersistence) {
+                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         super(jwtCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
         this.tokenConfiguration = tokenConfiguration;
     }

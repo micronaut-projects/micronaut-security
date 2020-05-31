@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -58,7 +59,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
     @Inject
     public CookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
                               RedirectConfiguration redirectConfiguration,
-                              PriorToLoginPersistence priorToLoginPersistence) {
+                              @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         this.loginFailure = redirectConfiguration.getLoginFailure();
         this.loginSuccess = redirectConfiguration.getLoginSuccess();
         this.jwtCookieConfiguration = jwtCookieConfiguration;

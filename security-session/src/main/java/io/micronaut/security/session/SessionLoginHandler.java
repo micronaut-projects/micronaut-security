@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.session;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.*;
@@ -81,7 +82,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
                                TokenConfiguration tokenConfiguration,
-                               PriorToLoginPersistence priorToLoginPersistence) {
+                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         this.loginFailure = redirectConfiguration.getLoginFailure();
         this.loginSuccess = redirectConfiguration.getLoginSuccess();
         this.redirectConfiguration = redirectConfiguration;
