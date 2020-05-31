@@ -2,12 +2,15 @@ introduction:
   title: Introduction
 whatsNew: What's New
 breaks: Breaking Changes
+gettingStarted:
+  title: Getting Started
 securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
   authenticationStrategy: Authentication Strategy
   loginHandler: Login Handler
   logoutHandler: Logout Handler
+  redirection: Redirection Configuration
 authenticationProviders: Authentication Providers
 securityRule:
   title: Security Rules

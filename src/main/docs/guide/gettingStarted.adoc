@@ -1,0 +1,22 @@
+[TIP]
+.Using the CLI
+====
+If you are creating your project using the Micronaut CLI, supply either the `security-jwt` or `security-session` features configure the security support in your project:
+----
+$ mn create-app my-app --features security-jwt
+----
+====
+To use the Micronaut's security capabilities you must have the `security` dependency on your classpath. For example in `build.gradle`:
+
+.build.gradle
+[source,groovy]
+----
+//Only required to use JSR 250 annotations
+annotationProcessor "io.micronaut:micronaut-security-annotations"
+
+compile "io.micronaut:micronaut-security-jwt"
+----
+
+By default Micronaut returns HTTP Status Unauthorized (401) for any endpoint invocation. Routes must be explicitly allowed through the provided mechanisms.
+
+image::secured_by_default.svg[]
