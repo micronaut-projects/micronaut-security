@@ -13,27 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.cookie;
+package io.micronaut.security.authentication;
 
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import io.micronaut.security.handlers.AuthenticationMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
- * Condition used to enable {@link JwtCookieClearerLogoutHandler}.
- * It evaluates to true if micronaut.security.authentication is set to idtoken or cookie.
+ * A condition that matches a supplied list of authentication modes.
  *
- * @author Sergio del Amo
+ * @author James Kleeh
  * @since 2.0.0
  */
-public class CookieHandlerCondition implements Condition {
-    private static final Logger LOG = LoggerFactory.getLogger(CookieHandlerCondition.class);
+public abstract class AuthenticationModeCondition implements Condition {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationModeCondition.class);
+    private final List<AuthenticationMode> acceptableModes;
+
+    public AuthenticationModeCondition(List<AuthenticationMode> acceptableModes) {
+        this.acceptableModes = acceptableModes;
+    }
 
     @Override
     public boolean matches(ConditionContext context) {
@@ -42,24 +47,22 @@ public class CookieHandlerCondition implements Condition {
         final String propertyName = SecurityConfigurationProperties.PREFIX + ".authentication";
         if (!propertyResolver.containsProperty(propertyName)) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("cookie handler condition is not fulfilled because {} is not set.", propertyName);
+                LOG.debug("{}} is not fulfilled because {} is not set.", getClass().getSimpleName(), propertyName);
             }
             return false;
         }
         Optional<String> propertyValueOptional = propertyResolver.get(propertyName, String.class);
         if (!propertyValueOptional.isPresent()) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("cookie handler condition is not fulfilled because {} property is not a String.", propertyName);
+                LOG.debug("{} is not fulfilled because {} property is not a String.", getClass().getSimpleName(), propertyName);
             }
             return false;
         }
         final String propertyvalue = propertyValueOptional.get();
-        final boolean result = (propertyvalue.equals(AuthenticationMode.COOKIE.toString()) || propertyvalue.equals(AuthenticationMode.IDTOKEN.toString()));
+        final boolean result = acceptableModes.stream().map(AuthenticationMode::toString).anyMatch(propertyvalue::equals);
         if (!result) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("cookie handler condition is not fulfilled because {} is not {} or {}.", propertyName,
-                        AuthenticationMode.COOKIE.toString(),
-                        AuthenticationMode.IDTOKEN.toString());
+                LOG.debug("{} is not fulfilled because {} is not one of {}.", getClass().getSimpleName(), propertyName, acceptableModes);
             }
         }
         return result;

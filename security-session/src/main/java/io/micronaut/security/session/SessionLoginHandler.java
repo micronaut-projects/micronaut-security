@@ -17,14 +17,12 @@ package io.micronaut.security.session;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.functional.ThrowingSupplier;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.*;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
-import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.token.config.TokenConfiguration;
@@ -44,7 +42,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "session")
+@Requires(condition = SessionAuthenticationModeCondition.class)
 @Singleton
 public class SessionLoginHandler implements RedirectingLoginHandler {
 
@@ -53,6 +51,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     protected final RedirectConfiguration redirectConfiguration;
     protected final SessionStore<Session> sessionStore;
     private final String rolesKeyName;
+    private final PriorToLoginPersistence priorToLoginPersistence;
 
     /**
      * Constructor.
@@ -67,7 +66,8 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
                                TokenConfiguration tokenConfiguration) {
         this(securitySessionConfiguration.toRedirectConfiguration(),
                 sessionStore,
-                tokenConfiguration);
+                tokenConfiguration,
+                null);
     }
 
     /**
@@ -75,16 +75,19 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
      * @param redirectConfiguration Redirect configuration
      * @param sessionStore The session store
      * @param tokenConfiguration Token Configuration
+     * @param priorToLoginPersistence The persistence to store the original url
      */
     @Inject
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
-                               TokenConfiguration tokenConfiguration) {
+                               TokenConfiguration tokenConfiguration,
+                               PriorToLoginPersistence priorToLoginPersistence) {
         this.loginFailure = redirectConfiguration.getLoginFailure();
         this.loginSuccess = redirectConfiguration.getLoginSuccess();
         this.redirectConfiguration = redirectConfiguration;
         this.sessionStore = sessionStore;
         this.rolesKeyName = tokenConfiguration.getRolesName();
+        this.priorToLoginPersistence = priorToLoginPersistence;
     }
 
     @Override
@@ -92,15 +95,16 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
         session.put(SecurityFilter.AUTHENTICATION, new AuthenticationUserDetailsAdapter(userDetails, rolesKeyName));
         try {
+            MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
             ThrowingSupplier<URI, URISyntaxException> uriSupplier = () -> new URI(loginSuccess);
-            if (redirectConfiguration.isPriorToLogin()) {
-                Optional<URI> originalUri = session.get("originalUri", URI.class);
+            if (priorToLoginPersistence != null) {
+                Optional<URI> originalUri = priorToLoginPersistence.getOriginalUri(request, response);
                 if (originalUri.isPresent()) {
                     uriSupplier = originalUri::get;
-                    session.remove("originalUri");
                 }
             }
-            return HttpResponse.seeOther(uriSupplier.get());
+            response.getHeaders().location(uriSupplier.get());
+            return response;
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();
         }

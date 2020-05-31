@@ -20,6 +20,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
@@ -45,7 +46,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
      * @param jwtCookieConfiguration JWT Cookie Configuration
      * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
-     * @deprecated Use {@link JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator)} instead.
+     * @deprecated Use {@link JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator,PriorToLoginPersistence)} instead.
      */
     @Deprecated
     public JwtCookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
@@ -61,13 +62,15 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
      * @param jwtCookieConfiguration JWT Cookie Configuration
      * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
+     * @param priorToLoginPersistence Prior To Login Persistence Mechanism
      */
     @Inject
     public JwtCookieLoginHandler(RedirectConfiguration redirectConfiguration,
-            JwtCookieConfiguration jwtCookieConfiguration,
-            AccessTokenConfiguration accessTokenConfiguration,
-            AccessRefreshTokenGenerator accessRefreshTokenGenerator) {
-        super(jwtCookieConfiguration, redirectConfiguration);
+                                 JwtCookieConfiguration jwtCookieConfiguration,
+                                 AccessTokenConfiguration accessTokenConfiguration,
+                                 AccessRefreshTokenGenerator accessRefreshTokenGenerator,
+                                 PriorToLoginPersistence priorToLoginPersistence) {
+        super(jwtCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
         this.accessTokenConfiguration = accessTokenConfiguration;
         this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
     }

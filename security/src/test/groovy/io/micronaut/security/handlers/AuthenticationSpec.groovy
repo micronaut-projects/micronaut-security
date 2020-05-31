@@ -1,5 +1,6 @@
 package io.micronaut.security.handlers
 
+import io.micronaut.security.authentication.AuthenticationMode
 import spock.lang.Specification
 import spock.lang.Unroll
 

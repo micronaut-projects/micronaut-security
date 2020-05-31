@@ -20,6 +20,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
+import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.handlers.LogoutHandler;
 
@@ -34,7 +35,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Requires(condition = CookieHandlerCondition.class)
+@Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Singleton
 public class JwtCookieClearerLogoutHandler implements LogoutHandler {
 

@@ -4,11 +4,8 @@ import io.micronaut.security.config.AuthenticationStrategy
 import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.config.SecurityConfiguration
 import io.micronaut.security.config.SecurityConfigurationProperties
-import io.micronaut.security.handlers.AuthenticationMode
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import org.reactivestreams.Publisher
-import spock.lang.Ignore
 import spock.lang.Specification
 
 class AuthenticatorSpec extends Specification {

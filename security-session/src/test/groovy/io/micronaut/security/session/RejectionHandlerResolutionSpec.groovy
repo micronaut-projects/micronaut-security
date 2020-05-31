@@ -10,6 +10,7 @@ import io.micronaut.http.server.exceptions.ExceptionHandler
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.ApplicationContextSpecification
 import io.micronaut.security.authentication.AuthorizationException
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
 
 import javax.inject.Singleton
 
@@ -35,13 +36,13 @@ class RejectionHandlerResolutionSpec extends ApplicationContextSpecification {
 
         then:
         noExceptionThrown()
-        exceptionHandler instanceof SessionAuthorizationExceptionHandler
+        exceptionHandler instanceof DefaultAuthorizationExceptionHandler
 
         cleanup:
         ctx.close()
     }
 
-    void "If a bean extended SessionSecurityfilterRejectionHandler that is used as Rejection Handler"() {
+    void "If a bean extended DefaultAuthorizationExceptionHandler that is used as Rejection Handler"() {
         when:
         applicationContext.getBean(ExtendedSessionSecurityfilterRejectionHandler)
 
@@ -58,7 +59,7 @@ class RejectionHandlerResolutionSpec extends ApplicationContextSpecification {
 
     @Requires(property = 'spec.name', value = "RejectionHandlerResolutionSpec")
     @Singleton
-    @Replaces(SessionAuthorizationExceptionHandler)
+    @Replaces(DefaultAuthorizationExceptionHandler)
     static class ExtendedSessionSecurityfilterRejectionHandler implements ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> {
 
         @Override

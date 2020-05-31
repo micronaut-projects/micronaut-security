@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.config;
+package io.micronaut.security.authentication;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.security.authentication.AuthenticationMode;
+import java.util.Arrays;
 
 /**
- * Defines the Authentication mode being used.
+ * It evaluates to true if micronaut.security.authentication is set to idtoken or cookie.
+ *
  * @author Sergio del Amo
  * @since 2.0.0
  */
-@FunctionalInterface
-public interface AuthenticationModeConfiguration {
+public class CookieBasedAuthenticationModeCondition extends AuthenticationModeCondition {
 
-    /**
-     *
-     * @return Authentication Model to use
-     */
-    @Nullable
-    AuthenticationMode getAuthentication();
+    public CookieBasedAuthenticationModeCondition() {
+        super(Arrays.asList(AuthenticationMode.COOKIE, AuthenticationMode.IDTOKEN));
+    }
+
 }

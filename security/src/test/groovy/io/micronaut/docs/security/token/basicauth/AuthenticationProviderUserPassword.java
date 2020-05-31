@@ -3,11 +3,7 @@ package io.micronaut.docs.security.token.basicauth;
 //tag::clazz[]
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationFailed;
-import io.micronaut.security.authentication.AuthenticationProvider;
-import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.*;
 import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
@@ -26,7 +22,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
                 emitter.onSuccess(new UserDetails("user", new ArrayList<>()));
             } else {
-                emitter.onSuccess(new AuthenticationFailed());
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
             }
         }).toFlowable();
     }

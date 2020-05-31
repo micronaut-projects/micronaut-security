@@ -13,32 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.handlers;
+package io.micronaut.security.session;
 
-import io.micronaut.core.annotation.Internal;
+import io.micronaut.security.authentication.AuthenticationModeCondition;
+import io.micronaut.security.authentication.AuthenticationMode;
+
+import java.util.Arrays;
 
 /**
- * Different authentication strategies shipped with Micronaut Security.
+ * A condition to check for session authentication mode.
  *
- * Depending on the authentication used different {@link LoginHandler} and {@link LogoutHandler} are enabled.
- * @author Sergio del Amo
+ * @author James Kleeh
  * @since 2.0.0
  */
-@Internal
-public enum AuthenticationMode {
-    BEARER,
-    COOKIE,
-    IDTOKEN,
-    SESSION;
+public class SessionAuthenticationModeCondition extends AuthenticationModeCondition {
 
-    /**
-     * Constructor.
-     */
-    AuthenticationMode() {
-    }
-
-    @Override
-    public String toString() {
-        return this.name().toLowerCase();
+    public SessionAuthenticationModeCondition() {
+        super(Arrays.asList(AuthenticationMode.SESSION));
     }
 }

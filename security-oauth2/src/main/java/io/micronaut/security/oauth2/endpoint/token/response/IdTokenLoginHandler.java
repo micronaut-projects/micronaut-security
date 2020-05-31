@@ -22,7 +22,8 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import io.micronaut.security.handlers.AuthenticationMode;
+import io.micronaut.security.errors.PriorToLoginPersistence;
+import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
 import io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration;
@@ -52,8 +53,9 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
 
     public IdTokenLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
-                               TokenConfiguration tokenConfiguration) {
-        super(jwtCookieConfiguration, redirectConfiguration);
+                               TokenConfiguration tokenConfiguration,
+                               PriorToLoginPersistence priorToLoginPersistence) {
+        super(jwtCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
         this.tokenConfiguration = tokenConfiguration;
     }
 

@@ -13,10 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.cookie;
+package io.micronaut.security.errors;
 
-/**
- * Wip
- */
-public class JwtCookieAuthorizationExceptionHandler {
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
+
+import java.net.URI;
+import java.util.Optional;
+
+public interface PriorToLoginPersistence {
+
+    void onUnauthorized(HttpRequest<?> request, MutableHttpResponse<?> response);
+
+    Optional<URI> getOriginalUri(HttpRequest<?> request, MutableHttpResponse<?> response);
 }

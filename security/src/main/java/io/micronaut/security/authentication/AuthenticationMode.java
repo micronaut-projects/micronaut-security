@@ -13,23 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.config;
+package io.micronaut.security.authentication;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.security.authentication.AuthenticationMode;
+import io.micronaut.core.annotation.Internal;
 
 /**
- * Defines the Authentication mode being used.
+ * Different authentication strategies shipped with Micronaut Security.
+ *
+ * Depending on the authentication used different {@link io.micronaut.security.handlers.LoginHandler} and
+ * {@link io.micronaut.security.handlers.LogoutHandler} are enabled.
  * @author Sergio del Amo
  * @since 2.0.0
  */
-@FunctionalInterface
-public interface AuthenticationModeConfiguration {
+@Internal
+public enum AuthenticationMode {
+    BEARER,
+    COOKIE,
+    IDTOKEN,
+    SESSION;
 
     /**
-     *
-     * @return Authentication Model to use
+     * Constructor.
      */
-    @Nullable
-    AuthenticationMode getAuthentication();
+    AuthenticationMode() {
+    }
+
+    @Override
+    public String toString() {
+        return this.name().toLowerCase();
+    }
 }

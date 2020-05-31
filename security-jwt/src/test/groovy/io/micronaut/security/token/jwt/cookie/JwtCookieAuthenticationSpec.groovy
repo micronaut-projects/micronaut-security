@@ -20,6 +20,7 @@ import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.endpoints.LogoutController
+import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.bearer.BearerTokenReader
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
@@ -172,6 +173,7 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
         homePage.username() == null
     }
 
+
     @Requires(property = "spec.name", value = "JwtCookieAuthenticationSpec")
     @Singleton
     static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
@@ -199,6 +201,22 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
         @Get
         String index(@Nullable Principal principal) {
             return html(principal != null, principal != null ? principal.getName() : null)
+        }
+
+        @Produces(MediaType.TEXT_HTML)
+        @Get("/secured")
+        @Secured(SecurityRule.IS_AUTHENTICATED)
+        String securedPage() {
+            StringBuilder sb = new StringBuilder()
+            sb.append("<!DOCTYPE html>")
+            sb.append("<html>")
+            sb.append("<head>")
+            sb.append("<title>Secured Page</title>")
+            sb.append("</head>")
+            sb.append("<body>")
+            sb.append("</body>")
+            sb.append("</html>")
+            return sb.toString()
         }
 
         private String html(boolean loggedIn, String username) {

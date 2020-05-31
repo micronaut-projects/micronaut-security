@@ -15,14 +15,19 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
+import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
+
+import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
@@ -41,18 +46,23 @@ import java.util.Optional;
 public abstract class CookieLoginHandler implements RedirectingLoginHandler {
 
     protected final JwtCookieConfiguration jwtCookieConfiguration;
+    protected final PriorToLoginPersistence priorToLoginPersistence;
     protected final String loginFailure;
     protected final String loginSuccess;
 
     /**
      * @param redirectConfiguration Redirect configuration
      * @param jwtCookieConfiguration JWT Cookie Configuration
+     * @param priorToLoginPersistence The prior to login persistence strategy
      */
+    @Inject
     public CookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
-                              RedirectConfiguration redirectConfiguration) {
+                              RedirectConfiguration redirectConfiguration,
+                              PriorToLoginPersistence priorToLoginPersistence) {
         this.loginFailure = redirectConfiguration.getLoginFailure();
         this.loginSuccess = redirectConfiguration.getLoginSuccess();
         this.jwtCookieConfiguration = jwtCookieConfiguration;
+        this.priorToLoginPersistence = priorToLoginPersistence;
     }
 
     /**
@@ -60,7 +70,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
      * @param jwtCookieConfiguration JWT Cookie Configuration
      * @param loginSuccess Url to redirect to after a successful Login
      * @param loginFailure Url to redirect to after an unsuccessful login
-     * @deprecated Use {@link CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration}) instead.
+     * @deprecated Use {@link CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence) instead.
      */
     @Deprecated
     public CookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
@@ -69,6 +79,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
         this.loginFailure = loginFailure;
         this.loginSuccess = loginSuccess;
         this.jwtCookieConfiguration = jwtCookieConfiguration;
+        this.priorToLoginPersistence = null;
     }
 
     protected abstract Optional<String> cookieValue(UserDetails userDetails, HttpRequest<?> request);
@@ -82,7 +93,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
             return HttpResponse.serverError();
         }
         Cookie cookie = cookieOptional.get();
-        return loginSuccessWithCookies(Arrays.asList(cookie));
+        return applyCookies(createResponse(request), Arrays.asList(cookie));
     }
 
     @Override
@@ -119,20 +130,35 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
     }
 
     /**
-     *
-     * @param cookies Cookies to be added to the response
-     * @return A 303 HTTP Response with cookies
+     * @param request The request
+     * @return A 303 HTTP Response
      */
-    protected MutableHttpResponse<?> loginSuccessWithCookies(List<Cookie> cookies) {
+    protected MutableHttpResponse<?> createResponse(HttpRequest<?> request) {
         try {
-            URI location = new URI(loginSuccess);
-            MutableHttpResponse<?> mutableHttpResponse = HttpResponse.seeOther(location);
-            for (Cookie cookie : cookies) {
-                mutableHttpResponse = mutableHttpResponse.cookie(cookie);
+            MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
+            ThrowingSupplier<URI, URISyntaxException> uriSupplier = () -> new URI(loginSuccess);
+            if (priorToLoginPersistence != null) {
+                Optional<URI> originalUri = priorToLoginPersistence.getOriginalUri(request, response);
+                if (originalUri.isPresent()) {
+                    uriSupplier = originalUri::get;
+                }
             }
-            return mutableHttpResponse;
+            response.getHeaders().location(uriSupplier.get());
+            return response;
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();
         }
+    }
+
+    /**
+     * @param response The response
+     * @param cookies Cookies to be added to the response
+     * @return A 303 HTTP Response with cookies
+     */
+    protected MutableHttpResponse<?> applyCookies(MutableHttpResponse<?> response, List<Cookie> cookies) {
+        for (Cookie cookie : cookies) {
+            response = response.cookie(cookie);
+        }
+        return response;
     }
 }

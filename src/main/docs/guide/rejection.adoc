@@ -1,8 +1,12 @@
 Micronaut allows the customization of the response that is sent when a request is not authorized to access a resource, or is not authenticated and the resource requires authentication.
 
-When a request is rejected, the security filter emits an api:security.authentication.AuthorizationException[]. The default implementation (api:security.authentication.DefaultAuthorizationExceptionHandler[]) simply returns an empty response with either a 401 or 403 status code depending on whether the request was authenticated or not.
+When a request is rejected, the security filter emits an api:security.authentication.AuthorizationException[]. The default implementation (api:security.authentication.DefaultAuthorizationExceptionHandler[]) redirects based on the redirect configuration only if the request accepts text/html:
 
-For those using session based authorization, the default implementation is overridden by api:security.session.SessionAuthorizationExceptionHandler[]. The session exception handler redirects based on the session configuration.
+include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.adoc[]
+
+For an unauthorized request, a 401 http response will be sent if `unauthorized.enabled` is false, or the request does not accept text/html.
+
+For a rejected request, a 403 http response will be sent if `forbidden.enabled` is false, or the request does not accept text/html.
 
 To fully customize the behavior, replace the relevant bean with your own implementation.
 

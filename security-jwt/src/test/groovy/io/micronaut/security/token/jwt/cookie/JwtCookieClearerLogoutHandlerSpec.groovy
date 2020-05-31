@@ -1,7 +1,7 @@
 package io.micronaut.security.token.jwt.cookie
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.security.handlers.AuthenticationMode
+import io.micronaut.security.authentication.AuthenticationMode
 import io.micronaut.security.handlers.LogoutHandler
 import spock.lang.Specification
 

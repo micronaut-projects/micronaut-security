@@ -18,7 +18,7 @@ package io.micronaut.security.config;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.CollectionUtils;
-import io.micronaut.security.handlers.AuthenticationMode;
+import io.micronaut.security.authentication.AuthenticationMode;
 
 import java.util.ArrayList;
 import java.util.Collections;

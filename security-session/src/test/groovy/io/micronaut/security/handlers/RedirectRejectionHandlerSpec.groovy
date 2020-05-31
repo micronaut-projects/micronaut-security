@@ -115,7 +115,7 @@ class RedirectRejectionHandlerSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
+            Flowable.<AuthenticationResponse>create({emitter ->
                 emitter.onNext(new UserDetails("sherlock", Collections.emptyList()))
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)
