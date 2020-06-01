@@ -22,6 +22,7 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.config.RedirectConfigurationProperties;
+import io.micronaut.security.config.TokenCookieConfiguration;
 
 import javax.inject.Singleton;
 import java.net.URI;
@@ -43,7 +44,7 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
 
     private final CookieConfiguration cookieConfiguration;
 
-    public CookiePriorToLoginPersistence(CookieConfiguration cookieConfiguration) {
+    public CookiePriorToLoginPersistence(TokenCookieConfiguration cookieConfiguration) {
         this.cookieConfiguration = cookieConfiguration;
     }
 

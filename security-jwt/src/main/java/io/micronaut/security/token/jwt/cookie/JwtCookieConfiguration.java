@@ -17,13 +17,14 @@ package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.cookie.CookieConfiguration;
+import io.micronaut.security.config.TokenCookieConfiguration;
 
 /**
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-public interface JwtCookieConfiguration extends CookieConfiguration, Toggleable {
+public interface JwtCookieConfiguration extends TokenCookieConfiguration {
 
     /**
      *
