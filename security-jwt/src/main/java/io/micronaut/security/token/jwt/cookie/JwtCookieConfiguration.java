@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
-import io.micronaut.core.util.Toggleable;
-import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.config.TokenCookieConfiguration;
 
 /**
