@@ -23,7 +23,7 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 
 /**
- * Http header token propagation configuration
+ * Http header token propagation configuration.
  *
  * @author James Kleeh
  * @since 1.4.0

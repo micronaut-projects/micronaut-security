@@ -62,7 +62,6 @@ public interface OpenIdClientConfiguration extends Named {
     /**
      * @see https://tools.ietf.org/html/rfc6749#section-3.1
      * @see https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint
-     *
      * @return The authorization endpoint configuration
      */
     Optional<AuthorizationEndpointConfiguration> getAuthorization();

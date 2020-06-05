@@ -30,8 +30,7 @@ public enum AuthenticationStrategy {
     ALL,
 
     /**
-     * At least one authentication provider must return a successful
-     * response for authentication to succeed.
+     * At least one authentication provider must return a successful response for authentication to succeed.
      */
     ANY
 }

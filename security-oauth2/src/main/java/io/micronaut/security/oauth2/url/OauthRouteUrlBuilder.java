@@ -23,7 +23,7 @@ import java.net.URI;
 import java.net.URL;
 
 /**
- * Responsible for building URLs to routes the client will receive
+ * Responsible for building URLs to routes the client will receive.
  * requests on.
  *
  * @author James Kleeh
