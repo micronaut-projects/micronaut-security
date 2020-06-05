@@ -20,6 +20,7 @@ import io.micronaut.testutils.GebEmbeddedServerSpecification
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
+import spock.lang.PendingFeature
 
 import javax.inject.Singleton
 
@@ -39,6 +40,7 @@ class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
         ]
     }
 
+    @PendingFeature
     void "test prior login behavior"() {
         given:
         browser.baseUrl = "http://localhost:${embeddedServer.port}"
