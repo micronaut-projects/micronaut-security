@@ -37,6 +37,7 @@ import java.util.Optional;
  * @since 2.0.0
  */
 @Requires(property = RedirectConfigurationProperties.PREFIX + ".prior-to-login", value = StringUtils.TRUE)
+@Requires(beans = TokenCookieConfiguration.class)
 @Singleton
 public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
 
