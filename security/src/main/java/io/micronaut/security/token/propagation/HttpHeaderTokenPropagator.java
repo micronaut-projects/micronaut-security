@@ -25,7 +25,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Propagates a token based off of a header
+ * Propagates a token based off of a header.
  *
  * @author James Kleeh
  * @since 1.4.0

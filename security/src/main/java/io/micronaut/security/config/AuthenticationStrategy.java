@@ -25,13 +25,13 @@ public enum AuthenticationStrategy {
 
     /**
      * All authentication providers must return a successful response
-     * for authentication to succeed
+     * for authentication to succeed.
      */
     ALL,
 
     /**
      * At least one authentication provider must return a successful
-     * response for authentication to succeed
+     * response for authentication to succeed.
      */
     ANY
 }

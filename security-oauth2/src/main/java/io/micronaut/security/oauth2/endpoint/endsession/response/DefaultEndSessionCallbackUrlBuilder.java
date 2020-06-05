@@ -23,7 +23,7 @@ import javax.inject.Singleton;
 import java.net.URL;
 
 /**
- * The default implementation of {@link EndSessionCallbackUrlBuilder}
+ * The default implementation of {@link EndSessionCallbackUrlBuilder}.
  *
  * @author James Kleeh
  * @since 1.2.0

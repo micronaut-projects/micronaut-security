@@ -20,5 +20,5 @@ include::{testssecurity}/security/securityRule/permitall/ExampleController.java[
 <1> Users granted role `ROLE_ADMIN` or `ROLE_X` roles can access `withroles` Controller's action.
 <2> Anonymous users (authenticated and not authenticated users) can access `anonymous` Controller's action.
 
-NOTE: The use of JSR 250 annotations requires `io.micronaut:micronaut-security-annotations` to be in the annotation processor classpath (`annotationProcessor`, `kapt`, `compileOnly`) respectively for Java, Kotlin, Groovy.
+NOTE: The use of JSR 250 annotations requires `io.micronaut.security:micronaut-security-annotations` to be in the annotation processor classpath (`annotationProcessor`, `kapt`, `compileOnly`) respectively for Java, Kotlin, Groovy.
 

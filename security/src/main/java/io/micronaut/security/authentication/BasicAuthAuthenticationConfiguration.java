@@ -20,7 +20,7 @@ import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
 /**
- * Configuration for basic authentication
+ * Configuration for basic authentication.
  *
  * @author James Kleeh
  * @since 2.0.0

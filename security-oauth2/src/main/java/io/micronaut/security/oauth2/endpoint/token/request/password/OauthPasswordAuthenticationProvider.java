@@ -73,7 +73,7 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
     }
 
     /**
-     * Builds the secure endpoint from the client configuration
+     * Builds the secure endpoint from the client configuration.
      *
      * @param clientConfiguration The client configuration
      * @return The token endpoint

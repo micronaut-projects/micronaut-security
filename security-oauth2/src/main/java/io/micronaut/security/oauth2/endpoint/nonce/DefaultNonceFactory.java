@@ -25,7 +25,7 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
- * Generates a random UUID nonce
+ * Generates a random UUID nonce.
  *
  * @author James Kleeh
  * @since 1.2.0

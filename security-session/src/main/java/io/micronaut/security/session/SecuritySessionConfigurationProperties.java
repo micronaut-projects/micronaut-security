@@ -119,7 +119,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     }
 
     /**
-     * deprecated use micronaut.security.redirect.logout
+     * deprecated use {@code micronaut.security.redirect.logout}.
      *
      * @param logoutTargetUrl The URL
      */
@@ -133,7 +133,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     }
 
     /**
-     * deprecated use micronaut.security.redirect.unauthorized
+     * deprecated use {@code micronaut.security.redirect.unauthorized}
      *
      * @param unauthorizedTargetUrl The URL
      */
@@ -149,7 +149,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     }
 
     /**
-     * deprecated use micronaut.security.redirect.forbidden
+     * deprecated use {@code micronaut.security.redirect.forbidden}
      *
      * @param forbiddenTargetUrl The URL
      */

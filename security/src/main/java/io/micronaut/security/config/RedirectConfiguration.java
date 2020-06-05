@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.config;
 
 import edu.umd.cs.findbugs.annotations.NonNull;

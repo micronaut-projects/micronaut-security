@@ -18,7 +18,7 @@ package io.micronaut.security.token.propagation;
 import io.micronaut.core.util.Toggleable;
 
 /**
- * HTTP header token propagation configuration
+ * HTTP header token propagation configuration.
  *
  * @author James Kleeh
  * @since 1.4.0
@@ -26,12 +26,12 @@ import io.micronaut.core.util.Toggleable;
 public interface HttpHeaderTokenPropagatorConfiguration  extends Toggleable {
 
     /**
-     * @return a Prefix before the token in the header value. E.g. Bearer
+     * @return a Prefix before the token in the header value. E.g. Bearer.
      */
     String getPrefix();
 
     /**
-     * @return an HTTP Header name. e.g. Authorization
+     * @return an HTTP Header name. e.g. Authorization.
      */
     String getHeaderName();
 

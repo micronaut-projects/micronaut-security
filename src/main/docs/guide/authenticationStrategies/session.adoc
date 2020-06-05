@@ -10,16 +10,13 @@ $ mn create-app my-app --features security-session
 ====
 
 
-To use the Micronaut's session based authentication capabilities you must have the `security-session` dependency on your classpath. For example in `build.gradle`:
+To use the Micronaut's session based authentication capabilities you must have the `security-session` dependency on your classpath. For example:
 
-.build.gradle
-[source,groovy]
-----
-//Only required to use JSR 250 annotations
-annotationProcessor "io.micronaut:micronaut-security-annotations"
+dependency:io.micronaut.security:micronaut-security-annotations[scope='annotationProcessor']
 
-compile "io.micronaut:micronaut-security-session"
-----
+dependency:io.micronaut.security:micronaut-security-session[]
+
+NOTE: The `micronaut-security-annotations` dependency is only required to use JSR 250 annotations
 
 The following sequence illustrates the authentication flow:
 

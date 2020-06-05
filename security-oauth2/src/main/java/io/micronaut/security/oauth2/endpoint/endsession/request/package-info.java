@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes dealing with end session requests
+ * Classes dealing with end session requests.
  *
  * @author James Kleeh
  * @since 1.2.0
