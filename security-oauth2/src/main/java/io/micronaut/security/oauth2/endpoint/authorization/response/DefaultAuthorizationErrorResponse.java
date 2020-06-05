@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
@@ -31,7 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Default implementation of {@link AuthorizationErrorResponse}
+ * Default implementation of {@link AuthorizationErrorResponse}.
  *
  * @author Sergio del Amo
  * @since 1.2.0

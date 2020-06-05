@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * LDAP authentication support
+ * LDAP authentication support.
  *
  * @author Sergio del Amo
  * @author James Kleeh

@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
- * Classes related to an OAuth 2.0 authorization request
+ * Classes related to an OAuth 2.0 authorization request.
  *
  * @author James Kleeh
  * @since 1.2.0

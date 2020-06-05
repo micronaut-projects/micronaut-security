@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes dealing with end session callbacks
+ * Classes dealing with end session callbacks.
  *
  * @author James Kleeh
  * @since 1.2.0

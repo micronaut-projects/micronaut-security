@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Default implementation of {@link OauthRouteUrlBuilder}
+ * Default implementation of {@link OauthRouteUrlBuilder}.
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -84,7 +84,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     }
 
     /**
-     * Builds a URL with the provided arguments
+     * Builds a URL with the provided arguments.
      *
      * @param originating The originating request
      * @param providerName The oauth provider name
@@ -96,7 +96,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     }
 
     /**
-     * Builds the path portion of the URL
+     * Builds the path portion of the URL.
      *
      * @param uriTemplate The uri template
      * @param providerName The provider name

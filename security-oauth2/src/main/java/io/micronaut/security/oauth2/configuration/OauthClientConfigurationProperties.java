@@ -153,7 +153,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
-     * The OAuth 2.0 token endpoint configuration
+     * The OAuth 2.0 token endpoint configuration.
      *
      * @param token The token endpoint configuration
      */
@@ -167,7 +167,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
-     * The OAuth 2.0 authorization endpoint configuration
+     * The OAuth 2.0 authorization endpoint configuration.
      *
      * @param authorization The authorization endpoint configuration
      */
@@ -223,7 +223,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
-     * OAuth 2.0 authorization endpoint configuration
+     * OAuth 2.0 authorization endpoint configuration.
      */
     @ConfigurationProperties("authorization")
     public static class AuthorizationEndpointConfigurationProperties extends DefaultEndpointConfiguration {
@@ -231,7 +231,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
-     * OAuth 2.0 token endpoint configuration
+     * OAuth 2.0 token endpoint configuration.
      */
     @ConfigurationProperties("token")
     public static class TokenEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration {
@@ -239,13 +239,13 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
-     * Introspection endpoint configuration
+     * Introspection endpoint configuration.
      */
     @ConfigurationProperties("introspection")
     public static class IntrospectionEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements IntrospectionEndpointConfiguration { }
 
     /**
-     * Revocation endpoint configuration
+     * Revocation endpoint configuration.
      */
     @ConfigurationProperties("revocation")
     public static class RevocationEndpointConfigurationProperties extends DefaultSecureEndpointConfiguration implements RevocationEndpointConfiguration { }
@@ -397,7 +397,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         /**
-         * Registration endpoint configuration
+         * Registration endpoint configuration.
          */
         @ConfigurationProperties("registration")
         public static class RegistrationEndpointConfigurationProperties extends DefaultEndpointConfiguration { }

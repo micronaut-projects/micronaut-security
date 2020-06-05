@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.nonce;
 
 import io.micronaut.context.annotation.DefaultImplementation;

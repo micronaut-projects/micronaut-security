@@ -117,7 +117,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     }
 
     /**
-     * The OpenID configuration
+     * The OpenID configuration.
      *
      * @param openid The OpenID configuration
      */
@@ -126,7 +126,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     }
 
     /**
-     * OpenID configuration
+     * OpenID configuration.
      */
     @ConfigurationProperties("openid")
     public static class OpenIdConfigurationProperties implements OpenIdConfiguration {
@@ -160,7 +160,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         }
 
         /**
-         * The end session configuration
+         * The end session configuration.
          *
          * @param endSession The end session configuration
          */
@@ -195,7 +195,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         }
 
         /**
-         * End session configuration
+         * End session configuration.
          */
         @ConfigurationProperties("end-session")
         public static class EndSessionConfigurationProperties implements EndSessionConfiguration {

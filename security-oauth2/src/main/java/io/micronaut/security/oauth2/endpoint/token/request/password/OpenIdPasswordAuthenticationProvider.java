@@ -113,7 +113,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
     }
 
     /**
-     * Builds the secure endpoint from the provider metadata
+     * Builds the secure endpoint from the provider metadata.
      *
      * @param openIdProviderMetadata The provider metadata
      * @return The token endpoint

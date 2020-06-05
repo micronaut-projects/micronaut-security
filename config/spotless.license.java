@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-$YEAR original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Classes related to OAuth2.0 and OpenID endpoints.
- *
- * @author Sergio del Amo
- * @since 1.2.0
- */
-package io.micronaut.security.oauth2.endpoint;

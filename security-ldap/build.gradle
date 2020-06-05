@@ -1,5 +1,3 @@
-group "io.micronaut.configuration"
-
 dependencies {
     api project(":security")
 

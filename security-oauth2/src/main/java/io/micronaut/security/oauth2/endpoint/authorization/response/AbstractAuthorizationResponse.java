@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
@@ -27,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * A base class for authorization responses to extend from
+ * A base class for authorization responses to extend from.
  *
  * @author James Kleeh
  * @since 1.2.0

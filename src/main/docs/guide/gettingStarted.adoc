@@ -6,16 +6,13 @@ If you are creating your project using the Micronaut CLI, supply either the `sec
 $ mn create-app my-app --features security-jwt
 ----
 ====
-To use the Micronaut's security capabilities you must have the `security` dependency on your classpath. For example in `build.gradle`:
+To use the Micronaut's security capabilities you must have the `security` dependency on your classpath:
 
-.build.gradle
-[source,groovy]
-----
-//Only required to use JSR 250 annotations
-annotationProcessor "io.micronaut:micronaut-security-annotations"
+dependency:io.micronaut.security:micronaut-security-annotations[scope='annotationProcessor']
 
-compile "io.micronaut:micronaut-security-jwt"
-----
+dependency:io.micronaut.security:micronaut-security-jwt[]
+
+NOTE: The `micronaut-security-annotations` dependency is only required to use JSR 250 annotations
 
 By default Micronaut returns HTTP Status Unauthorized (401) for any endpoint invocation. Routes must be explicitly allowed through the provided mechanisms.
 

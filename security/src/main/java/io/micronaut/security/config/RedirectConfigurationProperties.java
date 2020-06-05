@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.config;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -51,7 +50,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     public static final String DEFAULT_LOGIN_FAILURE = "/";
 
     /**
-     * The default behavior of redirect to the uri prior to login
+     * The default behavior of redirect to the uri prior to login.
      */
     public static final boolean DEFAULT_PRIOR_TO_LOGIN = false;
 

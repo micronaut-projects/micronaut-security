@@ -43,7 +43,7 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
     private final PriorToLoginPersistence priorToLoginPersistence;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public DefaultAuthorizationExceptionHandler() {
         this.redirectConfiguration = null;

@@ -39,7 +39,7 @@ public class TokenErrorResponse {
     private String errorUri;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public TokenErrorResponse() {
     }

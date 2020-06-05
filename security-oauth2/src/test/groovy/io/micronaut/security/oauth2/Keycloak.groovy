@@ -49,6 +49,7 @@ class Keycloak {
     static void destroy(GenericContainer container) {
         if (container != null) {
             container.stop()
+            container = null
         }
     }
 }

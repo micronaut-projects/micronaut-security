@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.annotation.Executable;
@@ -26,7 +25,7 @@ import io.micronaut.security.rules.SecurityRule;
 import java.util.Optional;
 
 /**
- * Handles a log out request that redirects to an OpenID provider
+ * Handles a log out request that redirects to an OpenID provider.
  *
  * @author James Kleeh
  * @since 1.2.0

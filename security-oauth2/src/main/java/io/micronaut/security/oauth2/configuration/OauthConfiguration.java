@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Optional;
 
 /**
- * OAuth 2.0 Configuration
+ * OAuth 2.0 Configuration.
  *
  * @author James Kleeh
  * @since 1.2.0

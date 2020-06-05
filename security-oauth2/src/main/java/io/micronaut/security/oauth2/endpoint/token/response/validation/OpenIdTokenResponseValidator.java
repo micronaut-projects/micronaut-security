@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Optional;
 
 /**
- * Validates an OpenID token response
+ * Validates an OpenID token response.
  *
  * @author Sergio del Amo
  * @since 1.2.0

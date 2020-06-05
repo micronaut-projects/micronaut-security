@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes related to nonce persistence
+ * Classes related to nonce persistence.
  *
  * @author James Kleeh
  * @since 1.2.0

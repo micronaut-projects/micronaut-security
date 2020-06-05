@@ -32,8 +32,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * Responsible for resolving which end session request to use
- * for a given OpenID client configuration.
+ * Responsible for resolving which end session request to use for a given OpenID client configuration.
  *
  * @author James Kleeh
  * @since 1.2.0

@@ -119,8 +119,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     }
 
     /**
-     * deprecated use micronaut.security.redirect.logout
-     *
+     * @deprecated use {@code micronaut.security.redirect.logout}.
      * @param logoutTargetUrl The URL
      */
     @Deprecated

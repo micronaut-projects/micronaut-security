@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * Classes related to OAuth 2.0 token endpoint requests and responses.
  *
