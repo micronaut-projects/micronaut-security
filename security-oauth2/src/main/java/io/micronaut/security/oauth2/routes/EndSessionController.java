@@ -26,7 +26,7 @@ import io.micronaut.security.rules.SecurityRule;
 import java.util.Optional;
 
 /**
- * Handles a log out request that redirects to an OpenID provider
+ * Handles a log out request that redirects to an OpenID provider.
  *
  * @author James Kleeh
  * @since 1.2.0

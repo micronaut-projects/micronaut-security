@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 
 /**
- * Authorized party claim validation
+ * Authorized party claim validation.
  *
  * @author James Kleeh
  * @since 1.2.0

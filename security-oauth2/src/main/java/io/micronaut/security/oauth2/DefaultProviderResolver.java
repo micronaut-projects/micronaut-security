@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Default implementation of {@link ProviderResolver}
+ * Default implementation of {@link ProviderResolver}.
  *
  * @author James Kleeh
  * @since 1.2.0

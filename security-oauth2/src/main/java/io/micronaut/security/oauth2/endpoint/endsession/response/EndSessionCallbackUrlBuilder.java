@@ -31,7 +31,7 @@ import java.net.URL;
 public interface EndSessionCallbackUrlBuilder {
 
     /**
-     * Builds the URL to redirect back to
+     * Builds the URL to redirect back to.
      *
      * @param originating The originating request
      * @return The URL

@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 /**
- * The response of an authentication attempt
+ * The response of an authentication attempt.
  *
  * @author Sergio del Amo
  * @since 1.0

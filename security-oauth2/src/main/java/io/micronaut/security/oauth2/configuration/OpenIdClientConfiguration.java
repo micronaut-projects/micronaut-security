@@ -47,38 +47,38 @@ public interface OpenIdClientConfiguration extends Named {
     Optional<String> getJwksUri();
 
     /**
-     * https://tools.ietf.org/html/rfc7591#section-3.1
-     * https://openid.net/specs/openid-connect-registration-1_0.html#ClientRegistration
+     * https://tools.ietf.org/html/rfc7591#section-3.1 .
+     * https://openid.net/specs/openid-connect-registration-1_0.html#ClientRegistration .
      *
      * @return The registration endpoint configuration
      */
     Optional<EndpointConfiguration> getRegistration();
 
     /**
-     * https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
+     * https://openid.net/specs/openid-connect-core-1_0.html#UserInfo .
      *
      * @return The user info endpoint configuration
      */
     Optional<EndpointConfiguration> getUserInfo();
 
     /**
-     * https://tools.ietf.org/html/rfc6749#section-3.1
-     * https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint
+     * https://tools.ietf.org/html/rfc6749#section-3.1 .
+     * https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint .
      *
      * @return The authorization endpoint configuration
      */
     Optional<AuthorizationEndpointConfiguration> getAuthorization();
 
     /**
-     * https://tools.ietf.org/html/rfc6749#section-4.1.3
-     * https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint
+     * https://tools.ietf.org/html/rfc6749#section-4.1.3 .
+     * https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint .
      *
      * @return The token endpoint configuration
      */
     Optional<TokenEndpointConfiguration> getToken();
 
     /**
-     * https://openid.net/specs/openid-connect-session-1_0.html
+     * https://openid.net/specs/openid-connect-session-1_0.html .
      *
      * @return The end session configuration
      */

@@ -58,7 +58,7 @@ public class OpenIdPasswordTokenRequestContext extends AbstractTokenRequestConte
     }
 
     /**
-     * Resolves the media type for the request body
+     * Resolves the media type for the request body.
      *
      * @param clientConfiguration The client configuration
      * @return The media type

@@ -41,7 +41,7 @@ public class Address {
     private String country;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public Address() {
 

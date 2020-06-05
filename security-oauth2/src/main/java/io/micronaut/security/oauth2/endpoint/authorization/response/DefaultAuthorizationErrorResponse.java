@@ -31,7 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Default implementation of {@link AuthorizationErrorResponse}
+ * Default implementation of {@link AuthorizationErrorResponse}.
  *
  * @author Sergio del Amo
  * @since 1.2.0

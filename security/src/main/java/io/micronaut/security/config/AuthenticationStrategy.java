@@ -24,14 +24,12 @@ package io.micronaut.security.config;
 public enum AuthenticationStrategy {
 
     /**
-     * All authentication providers must return a successful response
-     * for authentication to succeed
+     * All authentication providers must return a successful response for authentication to succeed.
      */
     ALL,
 
     /**
-     * At least one authentication provider must return a successful
-     * response for authentication to succeed
+     * At least one authentication provider must return a successful response for authentication to succeed.
      */
     ANY
 }

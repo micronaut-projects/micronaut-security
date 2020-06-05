@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import java.net.URL;
 
 /**
- * Builds an absolute URL for the current server
+ * Builds an absolute URL for the current server.
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -30,7 +30,7 @@ import java.net.URL;
 public interface AbsoluteUrlBuilder {
 
     /**
-     * Builds an absolute URL for the given path
+     * Builds an absolute URL for the given path.
      *
      * @param current The current request
      * @param path The path

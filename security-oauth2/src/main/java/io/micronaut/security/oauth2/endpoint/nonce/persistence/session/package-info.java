@@ -15,7 +15,7 @@
  */
 
 /**
- * Classes related to storage of the nonce in a session
+ * Classes related to storage of the nonce in a session.
  *
  * @author James Kleeh
  * @since 1.2.0

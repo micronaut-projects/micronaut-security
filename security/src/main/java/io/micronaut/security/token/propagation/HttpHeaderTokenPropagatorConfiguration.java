@@ -18,7 +18,7 @@ package io.micronaut.security.token.propagation;
 import io.micronaut.core.util.Toggleable;
 
 /**
- * HTTP header token propagation configuration
+ * HTTP header token propagation configuration.
  *
  * @author James Kleeh
  * @since 1.4.0

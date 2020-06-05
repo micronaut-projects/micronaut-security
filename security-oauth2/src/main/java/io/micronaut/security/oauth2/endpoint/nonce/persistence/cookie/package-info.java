@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes related to the persistence of state in a cookie
+ * Classes related to the persistence of state in a cookie.
  *
  * @author James Kleeh
  * @since 1.2.0

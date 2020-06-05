@@ -30,7 +30,7 @@ import io.micronaut.http.MutableHttpResponse;
 public interface AuthorizationRedirectHandler {
 
     /**
-     * Builds the URL string to redirect to
+     * Builds the URL string to redirect to.
      *
      * @param authorizationRequest The authorization request
      * @param authorizationEndpoint The autorization endpoint

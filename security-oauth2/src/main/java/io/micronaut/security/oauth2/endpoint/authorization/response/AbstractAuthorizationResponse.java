@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * A base class for authorization responses to extend from
+ * A base class for authorization responses to extend from.
  *
  * @author James Kleeh
  * @since 1.2.0

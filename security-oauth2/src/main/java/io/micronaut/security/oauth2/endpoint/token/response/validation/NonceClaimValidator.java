@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 
 /**
- * Responsible for validating the nonce claim
+ * Responsible for validating the nonce claim.
  *
  * @author James Kleeh
  * @since 1.2.0
