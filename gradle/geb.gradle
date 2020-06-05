@@ -9,6 +9,14 @@ dependencies {
     testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
 }
 
+micronautBuild {
+    resolutionStrategy {
+        // 2.40.0 breaks HomePageSpec - WebSockets test
+        force "org.seleniumhq.selenium:htmlunit-driver:2.35.1"
+        force 'net.sourceforge.htmlunit:htmlunit:2.35.0'
+    }
+}
+
 test {
     systemProperty "geb.env", System.getProperty('geb.env') ?: "htmlunit"
     systemProperty "webdriver.chrome.driver", System.getProperty('webdriver.chrome.driver')
