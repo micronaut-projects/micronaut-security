@@ -146,7 +146,7 @@ extends <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/Coo
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;io.micronaut.security.token.jwt.cookie.<a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></h3>
-<code><a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#jwtCookieConfiguration">jwtCookieConfiguration</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailure">loginFailure</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess">loginSuccess</a></code></li>
+<code><a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#jwtCookieConfiguration">jwtCookieConfiguration</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailure">loginFailure</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess">loginSuccess</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#priorToLoginPersistence">priorToLoginPersistence</a></code></li>
 </ul>
 </li>
 </ul>
@@ -162,9 +162,10 @@ extends <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/Coo
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#IdTokenLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.config.TokenConfiguration-">IdTokenLoginHandler</a></span>(<a href="../../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#IdTokenLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">IdTokenLoginHandler</a></span>(<a href="../../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
                    <a href="../../../../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
-                   <a href="../../../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration)</code>&nbsp;</td>
+                   <a href="../../../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
+                   <a href="../../../../../../../io/micronaut/security/errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -201,7 +202,7 @@ extends <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/Coo
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;io.micronaut.security.token.jwt.cookie.<a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></h3>
-<code><a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">loginFailed</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">loginSuccess</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccessWithCookies-java.util.List-">loginSuccessWithCookies</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#successCookie-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">successCookie</a></code></li>
+<code><a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#applyCookies-io.micronaut.http.MutableHttpResponse-java.util.List-">applyCookies</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#createResponse-io.micronaut.http.HttpRequest-">createResponse</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">loginFailed</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">loginSuccess</a>, <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#successCookie-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">successCookie</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -224,7 +225,7 @@ extends <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/Coo
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="IdTokenLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.config.TokenConfiguration-">
+<a name="IdTokenLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -232,7 +233,9 @@ extends <a href="../../../../../../../io/micronaut/security/token/jwt/cookie/Coo
 <h4>IdTokenLoginHandler</h4>
 <pre>public&nbsp;IdTokenLoginHandler(<a href="../../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
                            <a href="../../../../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
-                           <a href="../../../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration)</pre>
+                           <a href="../../../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
+                           @Nullable
+                           <a href="../../../../../../../io/micronaut/security/errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence)</pre>
 </li>
 </ul>
 </li>

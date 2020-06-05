@@ -195,7 +195,7 @@ function addJsClass() {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/handlers/AuthenticationMode.html">AuthenticationMode</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/AuthenticationMode.html">AuthenticationMode</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie. Should
  only be supplied if the service handles login and logout requests.</p></td>
 </tr>
@@ -376,7 +376,9 @@ function addJsClass() {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.prior-to-login</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized
+ request that initiated the login flow. Supersedes the &lt;code&gt;login-success&lt;/code&gt;
+ configuration for those cases. Default value {@value DEFAULT_PRIOR_TO_LOGIN}.</p></td>
 </tr>
 </tbody>
 </table>

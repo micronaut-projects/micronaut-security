@@ -139,11 +139,7 @@ function addJsClass() {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationFailed;
-import io.micronaut.security.authentication.AuthenticationProvider;
-import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.*;
 import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
@@ -158,7 +154,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
             if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
                 emitter.onSuccess(new UserDetails("user", new ArrayList&lt;&gt;()));
             } else {
-                emitter.onSuccess(new AuthenticationFailed());
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
             }
         }).toFlowable();
     }

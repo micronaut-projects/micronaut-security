@@ -133,10 +133,53 @@ function addJsClass() {
 <p>Micronaut allows the customization of the response that is sent when a request is not authorized to access a resource, or is not authenticated and the resource requires authentication.</p>
 </div>
 <div class="paragraph">
-<p>When a request is rejected, the security filter emits an <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a>. The default implementation (<a href="../api/io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html">DefaultAuthorizationExceptionHandler</a>) simply returns an empty response with either a 401 or 403 status code depending on whether the request was authenticated or not.</p>
+<p>When a request is rejected, the security filter emits an <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a>. The default implementation (<a href="../api/io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html">DefaultAuthorizationExceptionHandler</a>) redirects based on the redirect configuration only if the request accepts text/html:</p>
+</div>
+<a id="io.micronaut.security.config.RedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.html">RedirectConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a successful login. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a failed login. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL where the user is redirected after logout. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.prior-to-login</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized
+ request that initiated the login flow. Supersedes the &lt;code&gt;login-success&lt;/code&gt;
+ configuration for those cases. Default value {@value DEFAULT_PRIOR_TO_LOGIN}.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For an unauthorized request, a 401 http response will be sent if <code>unauthorized.enabled</code> is false, or the request does not accept text/html.</p>
 </div>
 <div class="paragraph">
-<p>For those using session based authorization, the default implementation is overridden by <a href="../api/io/micronaut/security/session/SessionAuthorizationExceptionHandler.html">SessionAuthorizationExceptionHandler</a>. The session exception handler redirects based on the session configuration.</p>
+<p>For a rejected request, a 403 http response will be sent if <code>forbidden.enabled</code> is false, or the request does not accept text/html.</p>
 </div>
 <div class="paragraph">
 <p>To fully customize the behavior, replace the relevant bean with your own implementation.</p>

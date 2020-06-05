@@ -277,7 +277,10 @@ implements <a href="../../../../io/micronaut/security/config/RedirectConfigurati
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#setPriorToLogin-boolean-">setPriorToLogin</a></span>(boolean&nbsp;priorToLogin)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#setPriorToLogin-boolean-">setPriorToLogin</a></span>(boolean&nbsp;priorToLogin)</code>
+<div class="block">If true, the user should be redirected back to the unauthorized
+ request that initiated the login flow.</div>
+</td>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -546,11 +549,12 @@ public&nbsp;<a href="../../../../io/micronaut/security/config/ForbiddenRedirectC
 <li class="blockList">
 <h4>setPriorToLogin</h4>
 <pre>public&nbsp;void&nbsp;setPriorToLogin(boolean&nbsp;priorToLogin)</pre>
+<div class="block">If true, the user should be redirected back to the unauthorized
+ request that initiated the login flow. Supersedes the <code>login-success</code>
+ configuration for those cases. Default value <a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#DEFAULT_PRIOR_TO_LOGIN">false</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>priorToLogin</code> - If true, the user should be redirected back to the unauthorized
-                     request that initiated the login flow. Supersedes the <a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#loginSuccess"><code>loginSuccess</code></a>
-                     configuration for those cases.</dd>
+<dd><code>priorToLogin</code> - Prior to login setting</dd>
 </dl>
 </li>
 </ul>

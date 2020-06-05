@@ -159,7 +159,7 @@ extends <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Cookie
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;io.micronaut.security.token.jwt.cookie.<a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></h3>
-<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#jwtCookieConfiguration">jwtCookieConfiguration</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailure">loginFailure</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess">loginSuccess</a></code></li>
+<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#jwtCookieConfiguration">jwtCookieConfiguration</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailure">loginFailure</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess">loginSuccess</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#priorToLoginPersistence">priorToLoginPersistence</a></code></li>
 </ul>
 </li>
 </ul>
@@ -179,15 +179,16 @@ extends <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Cookie
                      <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
                      <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
-<div class="block"><span class="deprecationComment">Use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-"><code>JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator)</code></a> instead.</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-"><code>JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator,PriorToLoginPersistence)</code></a> instead.</span></div>
 </div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-">JwtCookieLoginHandler</a></span>(<a href="../../../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-">JwtCookieLoginHandler</a></span>(<a href="../../../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
                      <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
                      <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
-                     <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator)</code>&nbsp;</td>
+                     <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator,
+                     <a href="../../../../../../io/micronaut/security/errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -220,7 +221,7 @@ extends <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Cookie
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;io.micronaut.security.token.jwt.cookie.<a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></h3>
-<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">loginFailed</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">loginSuccess</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccessWithCookies-java.util.List-">loginSuccessWithCookies</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#successCookie-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">successCookie</a></code></li>
+<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#applyCookies-io.micronaut.http.MutableHttpResponse-java.util.List-">applyCookies</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#createResponse-io.micronaut.http.HttpRequest-">createResponse</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">loginFailed</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">loginSuccess</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#successCookie-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">successCookie</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -279,7 +280,7 @@ extends <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Cookie
 public&nbsp;JwtCookieLoginHandler(<a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
                                          <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
                                          <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator)</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-"><code>JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator)</code></a> instead.</span></div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-"><code>JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator,PriorToLoginPersistence)</code></a> instead.</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>jwtCookieConfiguration</code> - JWT Cookie Configuration</dd>
@@ -288,7 +289,7 @@ public&nbsp;JwtCookieLoginHandler(<a href="../../../../../../io/micronaut/securi
 </dl>
 </li>
 </ul>
-<a name="JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-">
+<a name="JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -298,13 +299,16 @@ public&nbsp;JwtCookieLoginHandler(<a href="../../../../../../io/micronaut/securi
 public&nbsp;JwtCookieLoginHandler(<a href="../../../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a>&nbsp;redirectConfiguration,
                                      <a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">JwtCookieConfiguration</a>&nbsp;jwtCookieConfiguration,
                                      <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
-                                     <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator)</pre>
+                                     <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator,
+                                     @Nullable
+                                     <a href="../../../../../../io/micronaut/security/errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a>&nbsp;priorToLoginPersistence)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>redirectConfiguration</code> - Redirect configuration</dd>
 <dd><code>jwtCookieConfiguration</code> - JWT Cookie Configuration</dd>
 <dd><code>accessTokenConfiguration</code> - JWT Generator Configuration</dd>
 <dd><code>accessRefreshTokenGenerator</code> - Access Refresh Token Generator</dd>
+<dd><code>priorToLoginPersistence</code> - Prior To Login Persistence Mechanism</dd>
 </dl>
 </li>
 </ul>

@@ -111,8 +111,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>@Requires(property="micronaut.security.authentication",
-          value="session")
+<pre>@Requires(condition=<a href="../../../../io/micronaut/security/session/SessionAuthenticationModeCondition.html" title="class in io.micronaut.security.session">SessionAuthenticationModeCondition.class</a>)
  @Singleton
 public class <span class="typeNameLabel">SessionLogoutHandler</span>
 extends java.lang.Object

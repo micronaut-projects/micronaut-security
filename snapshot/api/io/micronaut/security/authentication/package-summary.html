@@ -138,30 +138,42 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="../../../../io/micronaut/security/authentication/AuthenticationModeCondition.html" title="class in io.micronaut.security.authentication">AuthenticationModeCondition</a></td>
+<td class="colLast">
+<div class="block">A condition that matches a supplied list of authentication modes.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html" title="class in io.micronaut.security.authentication">AuthenticationUserDetailsAdapter</a></td>
 <td class="colLast">
 <div class="block">Adapter from <a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><code>UserDetails</code></a> to <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../io/micronaut/security/authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a></td>
 <td class="colLast">
 <div class="block">An Authenticator operates on several <a href="../../../../io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationProvider</code></a> instances returning the first
  authenticated <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationConfiguration</a></td>
 <td class="colLast">
 <div class="block">Configuration for basic authentication</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationFetcher</a></td>
 <td class="colLast">
 <div class="block">An implementation of <a href="../../../../io/micronaut/security/filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters"><code>AuthenticationFetcher</code></a> that decodes a username
  and password from the Authorization header and authenticates the credentials
  against any <a href="../../../../io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationProvider</code></a>s available.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../../../io/micronaut/security/authentication/CookieBasedAuthenticationModeCondition.html" title="class in io.micronaut.security.authentication">CookieBasedAuthenticationModeCondition</a></td>
+<td class="colLast">
+<div class="block">It evaluates to true if micronaut.security.authentication is set to idtoken or cookie.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -207,6 +219,12 @@
 <td class="colFirst"><a href="../../../../io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum in io.micronaut.security.authentication">AuthenticationFailureReason</a></td>
 <td class="colLast">
 <div class="block">Enums describes the different authentication failures.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="../../../../io/micronaut/security/authentication/AuthenticationMode.html" title="enum in io.micronaut.security.authentication">AuthenticationMode</a></td>
+<td class="colLast">
+<div class="block">Different authentication strategies shipped with Micronaut Security.</div>
 </td>
 </tr>
 </tbody>

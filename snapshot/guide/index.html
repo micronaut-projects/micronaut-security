@@ -270,7 +270,7 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-To use Micronaut Security 2.x.x requires Micronaut 2.x.x.
+Micronaut Security 2.x requires Micronaut 2.x.
 </td>
 </tr>
 </table>
@@ -316,6 +316,12 @@ To use Micronaut Security 2.x.x requires Micronaut 2.x.x.
 </li>
 <li>
 <p>It is now possible to allow for requests that would normally result in a 404 to return with 404 instead of almost always returning a 401 or 403. The current behavior is still the default because it prevents attackers from discovering what endpoints are available in your application. To enable the alternative behavior, set <code>micronaut.security.reject-not-found: false</code> in your configuration.</p>
+</li>
+<li>
+<p>It is now supported out of the box to redirect back to the prior URL after a successful login. If a user requests a URL that returns an unauthenticated response, after logging in successfully, the user can then be returned to the URL that previously returned unauthorized. This setting can be enabled with <code>micronaut.security.redirect.prior-to-login: true</code> in your configuration. It is disabled by default.</p>
+</li>
+<li>
+<p>Support for using tokens directly from OpenID providers has been added. By default the information from the OpenID JWT token is used to create a new token that uses Micronaut&#8217;s JWT settings. This allows for a common format across providers as well as standardized expiration. Some users may want to use the token coming from the provider directly. That is now supported with the configuration option and value <code>micronaut.security.authentication: idtoken</code>. Note that this authentication mode requires each application to implement any necessary refresh token functionality. The refresh token functionality in this library is specific to the tokens created by this library.</p>
 </li>
 </ul>
 </div>
@@ -479,7 +485,7 @@ To use Micronaut Security 2.x.x requires Micronaut 2.x.x.
 <p>Because they never expire (by default), it requires a list of invalid tokens to be maintained in perpetuity if the ability to revoke tokens is a requirement. <code>JwtGeneratorConfiguration#getRefreshTokenExpiration</code> is deprecated and it is no longer used.</p>
 </li>
 <li>
-<p>The refresh mechanism simply copied the claims from the refresh token JWT back into a new access token. This made any changes to the state of the user (new roles, etc) not be applied at the time of refresh.</p>
+<p>The refresh mechanism simply copied the claims from the refresh token JWT back into a new access token. This made any changes to the state of the user (new roles, etc) were not be applied at the time of refresh.</p>
 <div class="paragraph">
 <p>The functionality has now been changed to generate a token that is not a JWT, but is instead a signed token of a unique key. The default implementation signs a UUID with a secret provided via configuration. After the token is generated, it is up to each application to provide an implementation of <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> to store the token and link it to the user it was created for. That is essential to generate new claims information in new access tokens created by the refresh endpoint. See the <a href="#refresh">refresh section</a> for more information.</p>
 </div>
@@ -498,7 +504,13 @@ To use Micronaut Security 2.x.x requires Micronaut 2.x.x.
 <p>The legacy rejection handler in the session module, which was enabled by default, has been removed. The setting <code>micronaut.security.session.legacy-rejection-handler</code> no longer has any effect and is equivalent to the behavior of <code>false</code> in previous versions.</p>
 </li>
 <li>
-<p>The entire <code>RejectionHandler</code> API and its dependents have been removed in favor of using the built in exception handling API in Micronaut. An <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a> will now be emitted when access to a resource has been rejected. Default exception handlers have been created to mimic the previous behavior. If you haven&#8217;t overridden any of this API or manipulated it through settings there should be no change in behavior.</p>
+<p>The entire <code>RejectionHandler</code> API and its dependents have been removed in favor of using the built in exception handling API in Micronaut. An <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a> will now be emitted when access to a resource has been rejected. A default exception handler has been created that will redirect on forbidden or unauthorized if the accept header of the request allows for text/html. For bearer authentication, that behavior can be disabled with:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut.security.redirect.forbidden.enabled: false
+micronaut.security.redirect.unauthorized.enabled: false</code></pre>
+</div>
+</div>
 </li>
 </ul>
 </div>
@@ -552,69 +564,60 @@ To use Micronaut Security 2.x.x requires Micronaut 2.x.x.
 <div class="ulist">
 <ul>
 <li>
-<p>Redirection configuration have been simplified. The following properties are deprecated:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>micronaut.security.session.login-success-target-url</code></p>
-</li>
-<li>
-<p><code>micronaut.security.session.login-failure-target-url</code></p>
-</li>
-<li>
-<p><code>micronaut.security.session.logout-target-url</code></p>
-</li>
-<li>
-<p><code>micronaut.security.session.unauthorized-target-url</code></p>
-</li>
-<li>
-<p><code>micronaut.security.session.forbidden-target-url</code></p>
-</li>
-<li>
-<p><code>micronaut.security.session.redirect-on-rejection</code></p>
-</li>
-<li>
-<p><code>micronaut.security.token.jwt.cookie.logout-target-url</code></p>
-</li>
-<li>
-<p><code>micronaut.security.token.jwt.cookie.login-success-target-url</code></p>
-</li>
-<li>
-<p><code>micronaut.security.token.jwt.cookie.login-failure-target-url</code></p>
+<p>Redirection configuration has been simplified. The properties in the first column are deprecated and will be removed in a future version. The properties on the right should be used instead. All properties are prefixed with <code>micronaut.security</code>.</p>
 </li>
 </ul>
 </div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You should use instead:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>micronaut.security.redirect.login-success</code></p>
-</li>
-<li>
-<p><code>micronaut.security.redirect.login-failure</code></p>
-</li>
-<li>
-<p><code>micronaut.security.redirect.logout</code></p>
-</li>
-<li>
-<p><code>micronaut.security.redirect.unauthorized.url</code></p>
-</li>
-<li>
-<p><code>micronaut.security.redirect.unauthorized.enabled</code></p>
-</li>
-<li>
-<p><code>micronaut.security.redirect.forbidden.url</code></p>
-</li>
-<li>
-<p><code>micronaut.security.redirect.forbidden.enabled</code></p>
-</li>
-</ul>
-</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Old</th>
+<th class="tableblock halign-left valign-top">New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.login-success-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.login-failure-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.logout-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.unauthorized-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized.url</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.forbidden-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.forbidden.url</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.redirect-on-rejection</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized.enabled</code> and <code>micronaut.security.redirect.forbidden.enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.logout-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-success-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-failure-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -725,7 +728,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/handlers/AuthenticationMode.html">AuthenticationMode</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/AuthenticationMode.html">AuthenticationMode</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie. Should
  only be supplied if the service handles login and logout requests.</p></td>
 </tr>
@@ -906,7 +909,9 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.prior-to-login</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized
+ request that initiated the login flow. Supersedes the &lt;code&gt;login-success&lt;/code&gt;
+ configuration for those cases. Default value {@value DEFAULT_PRIOR_TO_LOGIN}.</p></td>
 </tr>
 </tbody>
 </table>
@@ -986,11 +991,7 @@ compile "io.micronaut:micronaut-security-jwt"</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationFailed;
-import io.micronaut.security.authentication.AuthenticationProvider;
-import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.*;
 import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
@@ -1005,7 +1006,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
             if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
                 emitter.onSuccess(new UserDetails("user", new ArrayList&lt;&gt;()));
             } else {
-                emitter.onSuccess(new AuthenticationFailed());
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
             }
         }).toFlowable();
     }
@@ -2774,10 +2775,53 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 <p>Micronaut allows the customization of the response that is sent when a request is not authorized to access a resource, or is not authenticated and the resource requires authentication.</p>
 </div>
 <div class="paragraph">
-<p>When a request is rejected, the security filter emits an <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a>. The default implementation (<a href="../api/io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html">DefaultAuthorizationExceptionHandler</a>) simply returns an empty response with either a 401 or 403 status code depending on whether the request was authenticated or not.</p>
+<p>When a request is rejected, the security filter emits an <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a>. The default implementation (<a href="../api/io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html">DefaultAuthorizationExceptionHandler</a>) redirects based on the redirect configuration only if the request accepts text/html:</p>
+</div>
+<a id="io.micronaut.security.config.RedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.html">RedirectConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a successful login. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a failed login. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL where the user is redirected after logout. Default value ("/").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.prior-to-login</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized
+ request that initiated the login flow. Supersedes the &lt;code&gt;login-success&lt;/code&gt;
+ configuration for those cases. Default value {@value DEFAULT_PRIOR_TO_LOGIN}.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For an unauthorized request, a 401 http response will be sent if <code>unauthorized.enabled</code> is false, or the request does not accept text/html.</p>
 </div>
 <div class="paragraph">
-<p>For those using session based authorization, the default implementation is overridden by <a href="../api/io/micronaut/security/session/SessionAuthorizationExceptionHandler.html">SessionAuthorizationExceptionHandler</a>. The session exception handler redirects based on the session configuration.</p>
+<p>For a rejected request, a 403 http response will be sent if <code>forbidden.enabled</code> is false, or the request does not accept text/html.</p>
 </div>
 <div class="paragraph">
 <p>To fully customize the behavior, replace the relevant bean with your own implementation.</p>
