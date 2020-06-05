@@ -1,8 +1,3 @@
-configurations.all {
-    resolutionStrategy {
-        force "io.projectreactor:reactor-core:3.3.5.RELEASE"
-    }
-}
 dependencies {
     api "io.micronaut:micronaut-management"
     api "io.micronaut:micronaut-http"

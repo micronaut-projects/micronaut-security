@@ -2,8 +2,6 @@ plugins {
     id "com.github.erdi.webdriver-binaries" version "2.2"
 }
 
-group "io.micronaut.configuration"
-
 dependencies {
     annotationProcessor project(":security-annotations")
 
