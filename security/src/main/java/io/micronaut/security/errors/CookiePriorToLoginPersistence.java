@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.errors;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -27,6 +29,7 @@ import io.micronaut.security.config.TokenCookieConfiguration;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.time.Duration;
+import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 /**
@@ -37,7 +40,6 @@ import java.util.Optional;
  * @since 2.0.0
  */
 @Requires(property = RedirectConfigurationProperties.PREFIX + ".prior-to-login", value = StringUtils.TRUE)
-@Requires(beans = TokenCookieConfiguration.class)
 @Singleton
 public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
 
@@ -45,15 +47,15 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
 
     private final CookieConfiguration cookieConfiguration;
 
-    public CookiePriorToLoginPersistence(TokenCookieConfiguration cookieConfiguration) {
+    public CookiePriorToLoginPersistence(@Nullable TokenCookieConfiguration cookieConfiguration) {
         this.cookieConfiguration = cookieConfiguration;
     }
 
     @Override
     public void onUnauthorized(HttpRequest<?> request, MutableHttpResponse<?> response) {
-        Cookie cookie = Cookie.of(COOKIE_NAME, request.getUri().toString())
-                .configure(cookieConfiguration, request.isSecure())
-                .maxAge(Duration.ofMinutes(5));
+        Cookie cookie = Cookie.of(COOKIE_NAME, request.getUri().toString());
+        configure(cookie, request);
+        cookie.maxAge(Duration.ofMinutes(5));
         response.cookie(cookie);
     }
 
@@ -61,11 +63,19 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
     public Optional<URI> getOriginalUri(HttpRequest<?> request, MutableHttpResponse<?> response) {
         Optional<URI> uri = request.getCookies().get(COOKIE_NAME, URI.class);
         if (uri.isPresent()) {
-            Cookie cookie = Cookie.of(COOKIE_NAME, "")
-                    .configure(cookieConfiguration, request.isSecure())
-                    .maxAge(0);
+            Cookie cookie = Cookie.of(COOKIE_NAME, "");
+            configure(cookie, request);
+            cookie.maxAge(0);
             response.cookie(cookie);
         }
         return uri;
+    }
+
+    protected void configure(Cookie cookie, HttpRequest<?> request) {
+        if (cookieConfiguration != null) {
+            cookie.configure(cookieConfiguration, request.isSecure());
+        } else {
+            cookie.secure(request.isSecure()).httpOnly(true);
+        }
     }
 }
