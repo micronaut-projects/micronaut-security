@@ -13,27 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.endpoints;
+package io.micronaut.security.config;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 /**
- * Encapsulates the configuration of {@link OauthController}.
+ * Configuration about where to redirect after a successful refresh request.
  *
- * @author Sergio del Amo
- * @since 1.0
+ * @author James Kleeh
+ * @since 2.0.0
  */
-public interface OauthControllerConfiguration extends Toggleable {
+public interface RefreshRedirectConfiguration extends Toggleable {
 
-    /**
-     * The path the controller can be accessed at.
-     *
-     * @return The path e.g. /oauth/access_token
-     */
-    String getPath();
+    @NonNull
+    String getUrl();
 
-    /**
-     * @return Whether GET requests are allowed to refresh tokens. Only applies to cookie based requests.
-     */
-    boolean isGetAllowed();
 }

@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull;
  */
 @Introspected
 @Requires(property = RefreshTokenConfigurationProperties.PREFIX + ".secret")
-@Requires(property = RefreshTokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(property = RefreshTokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @ConfigurationProperties(RefreshTokenConfigurationProperties.PREFIX)
 public class RefreshTokenConfigurationProperties implements RefreshTokenConfiguration {
 

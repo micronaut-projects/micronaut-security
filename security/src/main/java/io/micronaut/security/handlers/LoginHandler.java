@@ -35,6 +35,13 @@ public interface LoginHandler {
     MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request);
 
     /**
+     * @param userDetails Authenticated user's representation.
+     * @param request The {@link HttpRequest} being executed
+     * @return An HTTP Response. Eg. a redirect or an JWT token rendered to the response
+     */
+    MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request);
+
+    /**
      * @param authenticationResponse Object encapsulates the Login failure
      * @param request The {@link HttpRequest} being executed
      * @return An HTTP Response. Eg. a redirect or 401 response

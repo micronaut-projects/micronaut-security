@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.endpoints.LogoutController;
 
 /**
  * Configures the provided {@link OauthController}.
@@ -44,8 +45,15 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_PATH = "/oauth/access_token";
 
+    /**
+     * Default Get Allowed.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_GETALLOWED = true;
+
     private boolean enabled = DEFAULT_ENABLED;
     private String path = DEFAULT_PATH;
+    private boolean getAllowed = DEFAULT_GETALLOWED;
 
     /**
      * @return true if you want to enable the {@link OauthController}
@@ -78,5 +86,22 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
         if (StringUtils.isNotEmpty(path)) {
             this.path = path;
         }
+    }
+
+    /**
+     * @return True if refresh requests can be GET
+     */
+    @Override
+    public boolean isGetAllowed() {
+        return this.getAllowed;
+    }
+
+    /**
+     *  Enables HTTP GET invocations of refresh token requests. Only applies
+     *  to requests sending a cookie (JWT_REFRESH_TOKEN). Default value ({@value #DEFAULT_GETALLOWED}).
+     * @param getAllowed Whether Http GET should be supported.
+     */
+    public void setGetAllowed(boolean getAllowed) {
+        this.getAllowed = getAllowed;
     }
 }

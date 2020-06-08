@@ -31,7 +31,6 @@ public interface RedirectConfiguration {
     String getLoginSuccess();
 
     /**
-     *
      * @return String to be parsed into a URI which represents where the user is redirected to after a failed login.
      */
     @NonNull
@@ -45,18 +44,22 @@ public interface RedirectConfiguration {
     String getLogout();
 
     /**
-     *
      * @return configuration about where the user is redirected to after trying to access a secured route.
      */
     @NonNull
     UnauthorizedRedirectConfiguration getUnauthorized();
 
     /**
-     *
      * @return configuration about where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.
      */
     @NonNull
     ForbiddenRedirectConfiguration getForbidden();
+
+    /**
+     * @return configuration about where the user is redirected to after executing the refresh token endpoint.
+     */
+    @NonNull
+    RefreshRedirectConfiguration getRefresh();
 
 
     /**

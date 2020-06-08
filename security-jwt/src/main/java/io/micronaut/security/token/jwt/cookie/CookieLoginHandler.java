@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.cookie;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -25,6 +26,7 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RefreshRedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 
@@ -33,6 +35,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +53,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
     protected final PriorToLoginPersistence priorToLoginPersistence;
     protected final String loginFailure;
     protected final String loginSuccess;
+    protected final String refresh;
 
     /**
      * @param redirectConfiguration Redirect configuration
@@ -62,6 +66,8 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         this.loginFailure = redirectConfiguration.getLoginFailure();
         this.loginSuccess = redirectConfiguration.getLoginSuccess();
+        RefreshRedirectConfiguration refreshConfig = redirectConfiguration.getRefresh();
+        this.refresh = refreshConfig.isEnabled() ? refreshConfig.getUrl() : null;
         this.jwtCookieConfiguration = jwtCookieConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
     }
@@ -79,22 +85,18 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
                               String loginFailure) {
         this.loginFailure = loginFailure;
         this.loginSuccess = loginSuccess;
+        this.refresh = "/";
         this.jwtCookieConfiguration = jwtCookieConfiguration;
         this.priorToLoginPersistence = null;
     }
 
-    protected abstract Optional<String> cookieValue(UserDetails userDetails, HttpRequest<?> request);
+    protected abstract List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request);
 
-    protected abstract Duration cookieExpiration(UserDetails userDetails, HttpRequest<?> request);
+    protected abstract List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request);
 
     @Override
     public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
-        Optional<Cookie> cookieOptional = successCookie(userDetails, request);
-        if (!cookieOptional.isPresent()) {
-            return HttpResponse.serverError();
-        }
-        Cookie cookie = cookieOptional.get();
-        return applyCookies(createResponse(request), Arrays.asList(cookie));
+        return applyCookies(createSuccessResponse(request), getCookies(userDetails, request));
     }
 
     @Override
@@ -107,13 +109,18 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
         }
     }
 
+    @Override
+    public MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        return applyCookies(createRefreshResponse(request), getCookies(userDetails, refreshToken, request));
+    }
+
+
     /**
-     *
      * @param userDetails Authenticated user's representation.
      * @param request The {@link HttpRequest} being executed
      * @return A Cookie containing the JWT or an empty optional.
      */
-    protected Optional<Cookie> successCookie(UserDetails userDetails, HttpRequest<?> request) {
+     /*protected Optional<Cookie> successCookie(UserDetails userDetails, HttpRequest<?> request) {
         Optional<String> cookieValueOptional = cookieValue(userDetails, request);
         if (cookieValueOptional.isPresent()) {
 
@@ -128,13 +135,35 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
             return Optional.of(cookie);
         }
         return Optional.empty();
-    }
+    }*/
+
+    /**
+     *
+     * @param userDetails Authenticated user's representation.
+     * @param request The {@link HttpRequest} being executed
+     * @return A Cookie containing the JWT or an empty optional.
+     */
+    /*protected Optional<Cookie> refreshCookie(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        if (StringUtils.isNotEmpty(refreshToken)) {
+            Cookie cookie = Cookie.of("REFRESH_TOKEN", refreshToken);
+            cookie.configure(jwtCookieConfiguration, request.isSecure());
+            Optional<TemporalAmount> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
+            if (cookieMaxAge.isPresent()) {
+                cookie.maxAge(cookieMaxAge.get());
+            } else {
+                cookie.maxAge(cookieExpiration(userDetails, request));
+            }
+            return Optional.of(cookie);
+        } else {
+            return Optional.empty();
+        }
+    }*/
 
     /**
      * @param request The request
      * @return A 303 HTTP Response
      */
-    protected MutableHttpResponse<?> createResponse(HttpRequest<?> request) {
+    protected MutableHttpResponse<?> createSuccessResponse(HttpRequest<?> request) {
         try {
             MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
             ThrowingSupplier<URI, URISyntaxException> uriSupplier = () -> new URI(loginSuccess);
@@ -146,6 +175,22 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
             }
             response.getHeaders().location(uriSupplier.get());
             return response;
+        } catch (URISyntaxException e) {
+            return HttpResponse.serverError();
+        }
+    }
+
+    /**
+     * @param request The request
+     * @return A 303 HTTP Response
+     */
+    protected MutableHttpResponse<?> createRefreshResponse(HttpRequest<?> request) {
+        try {
+            if (refresh != null) {
+                return HttpResponse.seeOther(new URI(refresh));
+            } else {
+                return HttpResponse.ok();
+            }
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();
         }

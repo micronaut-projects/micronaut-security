@@ -19,24 +19,29 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.errors.OauthErrorResponseException;
+import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
 import io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration;
+import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.text.ParseException;
 import java.time.Duration;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.time.temporal.TemporalAmount;
+import java.util.*;
 
 /**
  * Sets {@link CookieLoginHandler}`s cookie value to the idtoken received from an authentication provider.
@@ -48,6 +53,7 @@ import java.util.Optional;
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
 @Singleton
 public class IdTokenLoginHandler extends CookieLoginHandler {
+
     private static final Logger LOG = LoggerFactory.getLogger(IdTokenLoginHandler.class);
 
     private final TokenConfiguration tokenConfiguration;
@@ -60,9 +66,21 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
         this.tokenConfiguration = tokenConfiguration;
     }
 
+
     @Override
-    protected Optional<String> cookieValue(UserDetails userDetails, HttpRequest<?> request) {
-        return parseIdToken(userDetails);
+    protected List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
+        List<Cookie> cookies = new ArrayList<>(1);
+        String accessToken = parseIdToken(userDetails).orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
+        Cookie jwtCookie = Cookie.of(jwtCookieConfiguration.getCookieName(), accessToken);
+        jwtCookie.configure(jwtCookieConfiguration, request.isSecure());
+        jwtCookie.maxAge(cookieExpiration(userDetails, request));
+        cookies.add(jwtCookie);
+        return cookies;
+    }
+
+    @Override
+    protected List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        throw new OauthErrorResponseException(ObtainingAuthorizationErrorCode.INVALID_REQUEST, "Cannot refresh a provider token through the oauth endpoint. The token must be refreshed directly with the provider", null);
     }
 
     /**
@@ -88,7 +106,6 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
         return Optional.of((String) idTokenObjet);
     }
 
-    @Override
     protected Duration cookieExpiration(UserDetails userDetails, HttpRequest<?> request) {
         Optional<String> idTokenOptional = parseIdToken(userDetails);
         if (!idTokenOptional.isPresent()) {

@@ -25,6 +25,7 @@ class OauthControllerPathConfigurableSpec extends EmbeddedServerSpecification {
         super.configuration + [
             'micronaut.security.token.jwt.generator.refresh-token.secret': 'pleaseChangeThisSecretForANewOne',
             'micronaut.security.endpoints.oauth.path': '/newtoken',
+            'micronaut.security.authentication': 'bearer'
         ]
     }
 

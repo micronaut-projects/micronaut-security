@@ -19,6 +19,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.ForbiddenRedirectConfiguration;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RefreshRedirectConfiguration;
 import io.micronaut.security.config.UnauthorizedRedirectConfiguration;
 
 /**
@@ -129,6 +130,24 @@ public interface SecuritySessionConfiguration extends Toggleable {
                     @Override
                     public String getUrl() {
                         return thisConfig.getForbiddenTargetUrl();
+                    }
+                };
+            }
+
+            @NonNull
+            @Override
+            public RefreshRedirectConfiguration getRefresh() {
+                return new RefreshRedirectConfiguration() {
+
+                    @Override
+                    public boolean isEnabled() {
+                        return true;
+                    }
+
+                    @NonNull
+                    @Override
+                    public String getUrl() {
+                        return "/";
                     }
                 };
             }

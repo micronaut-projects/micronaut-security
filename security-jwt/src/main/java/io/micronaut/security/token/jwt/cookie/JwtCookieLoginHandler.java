@@ -17,10 +17,14 @@ package io.micronaut.security.token.jwt.cookie;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.errors.OauthErrorResponseException;
+import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
@@ -29,7 +33,9 @@ import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.Duration;
-import java.util.Optional;
+import java.time.temporal.TemporalAmount;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -77,13 +83,39 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
     }
 
     @Override
-    protected Optional<String> cookieValue(UserDetails userDetails, HttpRequest<?> request) {
-        Optional<AccessRefreshToken> accessRefreshTokenOptional = accessRefreshTokenGenerator.generate(userDetails);
-        return accessRefreshTokenOptional.map(AccessRefreshToken::getAccessToken);
+    protected List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
+        AccessRefreshToken accessRefreshToken = accessRefreshTokenGenerator.generate(userDetails)
+                .orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
+
+        return getCookies(accessRefreshToken, request);
     }
 
     @Override
-    protected Duration cookieExpiration(UserDetails userDetails, HttpRequest<?> request) {
-        return Duration.ofSeconds(accessTokenConfiguration.getExpiration());
+    protected List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        AccessRefreshToken accessRefreshToken = accessRefreshTokenGenerator.generate(refreshToken, userDetails)
+                .orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
+
+        return getCookies(accessRefreshToken, request);
+    }
+
+    protected List<Cookie> getCookies(AccessRefreshToken accessRefreshToken, HttpRequest<?> request) {
+        List<Cookie> cookies = new ArrayList<>(2);
+
+        Cookie jwtCookie = Cookie.of(jwtCookieConfiguration.getCookieName(), accessRefreshToken.getAccessToken());
+        jwtCookie.configure(jwtCookieConfiguration, request.isSecure());
+        TemporalAmount maxAge = jwtCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofSeconds(accessTokenConfiguration.getExpiration()));
+        jwtCookie.maxAge(maxAge);
+
+        cookies.add(jwtCookie);
+
+        String refreshToken = accessRefreshToken.getRefreshToken();
+        if (StringUtils.isNotEmpty(refreshToken)) {
+            Cookie refreshCookie = Cookie.of("JWT_REFRESH_TOKEN", refreshToken);
+            refreshCookie.configure(jwtCookieConfiguration, request.isSecure());
+            refreshCookie.maxAge(maxAge);
+            cookies.add(refreshCookie);
+        }
+
+        return cookies;
     }
 }

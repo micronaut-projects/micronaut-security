@@ -59,6 +59,15 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     }
 
     @Override
+    public MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        Optional<AccessRefreshToken> accessRefreshToken = accessRefreshTokenGenerator.generate(refreshToken, userDetails);
+        if (accessRefreshToken.isPresent()) {
+            return HttpResponse.ok(accessRefreshToken.get());
+        }
+        return HttpResponse.serverError();
+    }
+
+    @Override
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         throw new AuthenticationException(authenticationFailed.getMessage().orElse(null));
     }

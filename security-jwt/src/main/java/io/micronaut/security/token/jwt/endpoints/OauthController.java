@@ -15,16 +15,16 @@
  */
 package io.micronaut.security.token.jwt.endpoints;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.Consumes;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.*;
+import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode;
 import io.micronaut.security.errors.OauthErrorResponseException;
+import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
@@ -46,8 +46,7 @@ import java.util.Optional;
  * @author Graeme Rocher
  * @since 1.0
  */
-@Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@Requires(beans = AccessRefreshTokenGenerator.class)
+@Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Requires(beans = RefreshTokenPersistence.class)
 @Requires(beans = RefreshTokenValidator.class)
 @Controller("${" + OauthControllerConfigurationProperties.PREFIX + ".path:/oauth/access_token}")
@@ -55,22 +54,23 @@ import java.util.Optional;
 @Validated
 public class OauthController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OauthController.class);
-    protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
     private final RefreshTokenPersistence refreshTokenPersistence;
     private final RefreshTokenValidator refreshTokenValidator;
+    private final OauthControllerConfigurationProperties oauthControllerConfigurationProperties;
+    private final LoginHandler loginHandler;
 
     /**
-     * @param accessRefreshTokenGenerator The access refresh token generator
      * @param refreshTokenPersistence The persistence mechanism for the refresh token
      * @param refreshTokenValidator The refresh token validator
      */
-    public OauthController(AccessRefreshTokenGenerator accessRefreshTokenGenerator,
-                           RefreshTokenPersistence refreshTokenPersistence,
-                           RefreshTokenValidator refreshTokenValidator) {
-        this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+    public OauthController(RefreshTokenPersistence refreshTokenPersistence,
+                           RefreshTokenValidator refreshTokenValidator,
+                           OauthControllerConfigurationProperties oauthControllerConfigurationProperties,
+                           LoginHandler loginHandler) {
         this.refreshTokenPersistence = refreshTokenPersistence;
         this.refreshTokenValidator = refreshTokenValidator;
+        this.oauthControllerConfigurationProperties = oauthControllerConfigurationProperties;
+        this.loginHandler = loginHandler;
     }
 
     /**
@@ -80,28 +80,49 @@ public class OauthController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public Single<HttpResponse<AccessRefreshToken>> index(TokenRefreshRequest tokenRefreshRequest) {
-        if (StringUtils.isEmpty(tokenRefreshRequest.getGrantType()) || StringUtils.isEmpty(tokenRefreshRequest.getRefreshToken())) {
-            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token and grant_type are required", null);
-        }
-        if (!tokenRefreshRequest.getGrantType().equals(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN)) {
-            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.UNSUPPORTED_GRANT_TYPE, "grant_type must be refresh_token", null);
-        }
+    public Single<MutableHttpResponse<?>> index(HttpRequest<?> request,
+                                               @Nullable @Body TokenRefreshRequest tokenRefreshRequest,
+                                               @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
+        String refreshToken = resolveRefreshToken(tokenRefreshRequest, cookieRefreshToken);
+        return createResponse(request, refreshToken);
+    }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("grantType: {} refreshToken: {}", tokenRefreshRequest.getGrantType(), tokenRefreshRequest.getRefreshToken());
+    @Get
+    public Single<MutableHttpResponse<?>> index(HttpRequest<?> request,
+                                                @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
+        if (!oauthControllerConfigurationProperties.isGetAllowed()) {
+            return Single.just(HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED));
         }
-        Optional<String> validRefreshToken = refreshTokenValidator.validate(tokenRefreshRequest.getRefreshToken());
+        String refreshToken = resolveRefreshToken(null, cookieRefreshToken);
+        return createResponse(request, refreshToken);
+    }
+
+    private Single<MutableHttpResponse<?>> createResponse(HttpRequest<?> request, String refreshToken) {
+        Optional<String> validRefreshToken = refreshTokenValidator.validate(refreshToken);
         if (!validRefreshToken.isPresent()) {
             throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT, "Refresh token is invalid", null);
         }
         return Single.fromPublisher(refreshTokenPersistence.getUserDetails(validRefreshToken.get()))
-                .map(userDetails -> {
-            Optional<AccessRefreshToken> accessRefreshToken = accessRefreshTokenGenerator.generate(tokenRefreshRequest.getRefreshToken(), userDetails);
-            if (accessRefreshToken.isPresent()) {
-                return HttpResponse.ok(accessRefreshToken.get());
+                .map(userDetails -> loginHandler.loginRefresh(userDetails, refreshToken, request));
+    }
+
+    @NonNull
+    private String resolveRefreshToken(TokenRefreshRequest tokenRefreshRequest, String cookieRefreshToken) {
+        String refreshToken = null;
+        if (tokenRefreshRequest != null) {
+            if (StringUtils.isEmpty(tokenRefreshRequest.getGrantType()) || StringUtils.isEmpty(tokenRefreshRequest.getRefreshToken())) {
+                throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token and grant_type are required", null);
             }
-            return HttpResponse.serverError();
-        });
+            if (!tokenRefreshRequest.getGrantType().equals(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN)) {
+                throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.UNSUPPORTED_GRANT_TYPE, "grant_type must be refresh_token", null);
+            }
+            refreshToken = tokenRefreshRequest.getRefreshToken();
+        } else if(cookieRefreshToken != null) {
+            refreshToken = cookieRefreshToken;
+        }
+        if (StringUtils.isEmpty(refreshToken)) {
+            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token is required", null);
+        }
+        return refreshToken;
     }
 }

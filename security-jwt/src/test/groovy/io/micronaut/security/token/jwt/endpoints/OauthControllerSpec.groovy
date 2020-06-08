@@ -242,6 +242,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
     @Requires(property = 'spec.name', value = 'OauthControllerSpec')
     @Controller("/echoname")
     static class EchoNameController {
+
         @Produces(MediaType.TEXT_PLAIN)
         @Secured(SecurityRule.IS_AUTHENTICATED)
         @Get

@@ -173,6 +173,11 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         }
 
         @Override
+        MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+            throw new UnsupportedOperationException()
+        }
+
+        @Override
         MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
             HttpResponse.unauthorized()
         }

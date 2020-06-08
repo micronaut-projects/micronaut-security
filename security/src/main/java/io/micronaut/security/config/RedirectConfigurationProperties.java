@@ -72,6 +72,8 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
 
     private ForbiddenRedirectConfigurationProperties forbidden = new ForbiddenRedirectConfigurationProperties();
 
+    private RefreshRedirectConfiguration refresh = new RefreshRedirectConfigurationProperties();
+
     @NonNull
     @Override
     public String getLoginSuccess() {
@@ -108,6 +110,16 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
         return this.logout;
     }
 
+    /**
+     * URL where the user is redirected after logout. Default value ({@value #DEFAULT_LOGOUT_URL}).
+     * @param logout The URL
+     */
+    public void setLogout(@NonNull String logout) {
+        if (StringUtils.isNotEmpty(logout)) {
+            this.logout = logout;
+        }
+    }
+
     @NonNull
     @Override
     public UnauthorizedRedirectConfiguration getUnauthorized() {
@@ -123,6 +135,12 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
         this.unauthorized = unauthorized;
     }
 
+    @NonNull
+    @Override
+    public ForbiddenRedirectConfiguration getForbidden() {
+        return forbidden;
+    }
+
     /**
      * Sets the forbidden redirect configuration.
      *
@@ -134,8 +152,17 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
 
     @NonNull
     @Override
-    public ForbiddenRedirectConfiguration getForbidden() {
-        return forbidden;
+    public RefreshRedirectConfiguration getRefresh() {
+        return refresh;
+    }
+
+    /**
+     * Sets the refresh redirect configuration.
+     *
+     * @param refresh refresh redirect configuration.
+     */
+    public void setRefresh(RefreshRedirectConfigurationProperties refresh) {
+        this.refresh = refresh;
     }
 
     /** If true, the user should be redirected back to the unauthorized
@@ -151,16 +178,6 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     @Override
     public boolean isPriorToLogin() {
         return priorToLogin;
-    }
-
-    /**
-     * URL where the user is redirected after logout. Default value ({@value #DEFAULT_LOGOUT_URL}).
-     * @param logout The URL
-     */
-    public void setLogout(@NonNull String logout) {
-        if (StringUtils.isNotEmpty(logout)) {
-            this.logout = logout;
-        }
     }
 
     /**
@@ -250,6 +267,61 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
 
         /**
          * Where the user is redirected to after trying to access a secured route which he is forbidden to access. Default value ({@value #DEFAULT_FORBIDDEN}).
+         *
+         * @param url The URL
+         */
+        public void setUrl(@NonNull String url) {
+            if (StringUtils.isNotEmpty(url)) {
+                this.url = url;
+            }
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        /**
+         * Whether it should redirect on forbidden rejections. Default value ({@value #DEFAULT_ENABLED}).
+         *
+         * @param enabled The enabled flag
+         */
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
+    /**
+     * Forbidden redirect configuration.
+     */
+    @ConfigurationProperties("refresh")
+    public static class RefreshRedirectConfigurationProperties implements RefreshRedirectConfiguration {
+
+        /**
+         * The default enabled value for forbidden.
+         */
+        public static final Boolean DEFAULT_ENABLED = true;
+
+        /**
+         * The default forbidden rejection target URL.
+         */
+        @SuppressWarnings("WeakerAccess")
+        public static final String DEFAULT_REFRESH_URL = "/";
+
+        private boolean enabled = DEFAULT_ENABLED;
+
+        @NonNull
+        @NotBlank
+        private String url = DEFAULT_REFRESH_URL;
+
+        @Override
+        @NonNull
+        public String getUrl()  {
+            return url;
+        }
+
+        /**
+         * Where the user is redirected to after trying to access a secured route which he is forbidden to access. Default value ({@value #DEFAULT_REFRESH_URL}).
          *
          * @param url The URL
          */

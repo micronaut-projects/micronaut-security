@@ -112,6 +112,11 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
+    public MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        throw new UnsupportedOperationException("Session based logins do not support refresh");
+    }
+
+    @Override
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         try {
             URI location = new URI(loginFailure);
