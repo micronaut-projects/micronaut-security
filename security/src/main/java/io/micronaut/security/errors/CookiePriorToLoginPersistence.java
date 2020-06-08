@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.errors;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
@@ -29,7 +28,6 @@ import io.micronaut.security.config.TokenCookieConfiguration;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.time.Duration;
-import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 /**
@@ -71,6 +69,12 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
         return uri;
     }
 
+    /**
+     * Configure the cookie
+     *
+     * @param cookie The cookie
+     * @param request The current request
+     */
     protected void configure(Cookie cookie, HttpRequest<?> request) {
         if (cookieConfiguration != null) {
             cookie.configure(cookieConfiguration, request.isSecure());
