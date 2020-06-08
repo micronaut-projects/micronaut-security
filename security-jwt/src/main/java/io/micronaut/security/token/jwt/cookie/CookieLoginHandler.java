@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.cookie;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -33,10 +32,6 @@ import io.micronaut.security.handlers.RedirectingLoginHandler;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
-import java.time.temporal.TemporalAmount;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,51 +108,6 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
     public MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
         return applyCookies(createRefreshResponse(request), getCookies(userDetails, refreshToken, request));
     }
-
-
-    /**
-     * @param userDetails Authenticated user's representation.
-     * @param request The {@link HttpRequest} being executed
-     * @return A Cookie containing the JWT or an empty optional.
-     */
-     /*protected Optional<Cookie> successCookie(UserDetails userDetails, HttpRequest<?> request) {
-        Optional<String> cookieValueOptional = cookieValue(userDetails, request);
-        if (cookieValueOptional.isPresent()) {
-
-            Cookie cookie = Cookie.of(jwtCookieConfiguration.getCookieName(), cookieValueOptional.get());
-            cookie.configure(jwtCookieConfiguration, request.isSecure());
-            Optional<TemporalAmount> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
-            if (cookieMaxAge.isPresent()) {
-                cookie.maxAge(cookieMaxAge.get());
-            } else {
-                cookie.maxAge(cookieExpiration(userDetails, request));
-            }
-            return Optional.of(cookie);
-        }
-        return Optional.empty();
-    }*/
-
-    /**
-     *
-     * @param userDetails Authenticated user's representation.
-     * @param request The {@link HttpRequest} being executed
-     * @return A Cookie containing the JWT or an empty optional.
-     */
-    /*protected Optional<Cookie> refreshCookie(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
-        if (StringUtils.isNotEmpty(refreshToken)) {
-            Cookie cookie = Cookie.of("REFRESH_TOKEN", refreshToken);
-            cookie.configure(jwtCookieConfiguration, request.isSecure());
-            Optional<TemporalAmount> cookieMaxAge = jwtCookieConfiguration.getCookieMaxAge();
-            if (cookieMaxAge.isPresent()) {
-                cookie.maxAge(cookieMaxAge.get());
-            } else {
-                cookie.maxAge(cookieExpiration(userDetails, request));
-            }
-            return Optional.of(cookie);
-        } else {
-            return Optional.empty();
-        }
-    }*/
 
     /**
      * @param request The request

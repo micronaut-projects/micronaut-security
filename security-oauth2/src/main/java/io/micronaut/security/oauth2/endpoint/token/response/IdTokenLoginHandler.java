@@ -19,9 +19,7 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
@@ -33,14 +31,12 @@ import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
 import io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration;
-import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.text.ParseException;
 import java.time.Duration;
-import java.time.temporal.TemporalAmount;
 import java.util.*;
 
 /**
@@ -84,7 +80,6 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
     }
 
     /**
-     *
      * @param userDetails User Details
      * @return parse the idtoken from the user details attributes
      */
@@ -106,6 +101,11 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
         return Optional.of((String) idTokenObjet);
     }
 
+    /**
+     * @param userDetails User Details
+     * @param request The current request
+     * @return the expiration of the providers JWT
+     */
     protected Duration cookieExpiration(UserDetails userDetails, HttpRequest<?> request) {
         Optional<String> idTokenOptional = parseIdToken(userDetails);
         if (!idTokenOptional.isPresent()) {

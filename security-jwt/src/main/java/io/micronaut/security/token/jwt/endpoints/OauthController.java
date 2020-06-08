@@ -26,14 +26,10 @@ import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode;
 import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
-import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.validation.Validated;
 import io.reactivex.Single;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -62,6 +58,8 @@ public class OauthController {
     /**
      * @param refreshTokenPersistence The persistence mechanism for the refresh token
      * @param refreshTokenValidator The refresh token validator
+     * @param oauthControllerConfigurationProperties The controller configuration
+     * @param loginHandler The login handler
      */
     public OauthController(RefreshTokenPersistence refreshTokenPersistence,
                            RefreshTokenValidator refreshTokenValidator,
@@ -74,9 +72,10 @@ public class OauthController {
     }
 
     /**
-     *
+     * @param request The current request
      * @param tokenRefreshRequest An instance of {@link TokenRefreshRequest} present in the request
-     * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
+     * @param cookieRefreshToken The refresh token stored in a cookie
+     * @return A response or a failure indicated by the HTTP status
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
@@ -87,6 +86,11 @@ public class OauthController {
         return createResponse(request, refreshToken);
     }
 
+    /**
+     * @param request The current request
+     * @param cookieRefreshToken The refresh token stored in a cookie
+     * @return A response or a failure indicated by the HTTP status
+     */
     @Get
     public Single<MutableHttpResponse<?>> index(HttpRequest<?> request,
                                                 @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
@@ -117,7 +121,7 @@ public class OauthController {
                 throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.UNSUPPORTED_GRANT_TYPE, "grant_type must be refresh_token", null);
             }
             refreshToken = tokenRefreshRequest.getRefreshToken();
-        } else if(cookieRefreshToken != null) {
+        } else if (cookieRefreshToken != null) {
             refreshToken = cookieRefreshToken;
         }
         if (StringUtils.isEmpty(refreshToken)) {

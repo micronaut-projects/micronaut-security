@@ -98,6 +98,13 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
         return getCookies(accessRefreshToken, request);
     }
 
+    /**
+     * Return the cookies for the given parameters
+     *
+     * @param accessRefreshToken The access refresh token
+     * @param request The current request
+     * @return A list of cookies
+     */
     protected List<Cookie> getCookies(AccessRefreshToken accessRefreshToken, HttpRequest<?> request) {
         List<Cookie> cookies = new ArrayList<>(2);
 
