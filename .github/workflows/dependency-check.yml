@@ -5,10 +5,14 @@
 # and edit them there. Note that it will be sync'ed to all the Micronaut repos
 name: Check Dependencies
 on:
-  schedule:
-    - cron: '0 16 * * MON-FRI'
+#  schedule:
+#    - cron: '0 16 * * MON-FRI'
+  push:
+    branches:
+      - master
 jobs:
   check-dependencies:
+    if: github.repository == 'micronaut-projects/micronaut-project-template'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,3 +28,9 @@ jobs:
           java-version: 1.8
       - name: Check Dependencies
         run: ./gradlew dependencyUpdates
+      - name: Google Chat Notification
+        uses: Co-qn/google-chat-notification@releases/v1
+        with:
+          name: Check Dependencies
+          url: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+          status: ${{ job.status }}
