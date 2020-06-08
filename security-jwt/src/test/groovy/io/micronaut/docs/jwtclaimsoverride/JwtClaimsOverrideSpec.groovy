@@ -47,7 +47,7 @@ class JwtClaimsOverrideSpec extends EmbeddedServerSpecification {
 
         when:
         String accessToken = rsp.body.get().accessToken
-        Authentication authentication = Flowable.fromPublisher(tokenValidator.validateToken(accessToken)).blockingFirst()
+        Authentication authentication = Flowable.fromPublisher(tokenValidator.validateToken(accessToken, null)).blockingFirst()
         println authentication.getAttributes()
 
         then:

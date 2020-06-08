@@ -124,8 +124,8 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
         when:
         TokenValidator tokenValidator = applicationContext.getBean(JwtTokenValidator.class)
-        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(refreshRsp.body().accessToken)).blockingFirst().getAttributes()
-        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(originalAccessToken)).blockingFirst().getAttributes()
+        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(refreshRsp.body().accessToken, null)).blockingFirst().getAttributes()
+        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(originalAccessToken, null)).blockingFirst().getAttributes()
         List<String> expectedClaims = [JwtClaims.SUBJECT,
                                        JwtClaims.ISSUED_AT,
                                        JwtClaims.EXPIRATION_TIME,
