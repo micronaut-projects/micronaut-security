@@ -220,16 +220,53 @@ JWT is an <a href="https://tools.ietf.org/html/rfc7519">IETF standard</a> which 
 </table>
 </div>
 <div class="paragraph">
-<p>To use the Micronaut&#8217;s JWT based authentication capabilities you must have the <code>security-jwt</code> dependency on your classpath. For example in <code>build.gradle</code>:</p>
+<p>To use the Micronaut&#8217;s JWT based authentication capabilities you must have the <code>security-jwt</code> dependency on your classpath. For example:</p>
 </div>
-<div class="listingblock">
-<div class="title">build.gradle</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">//Only required to use JSR 250 annotations
-annotationProcessor "io.micronaut:micronaut-security-annotations"
-
-compile "io.micronaut:micronaut-security-jwt"</code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.security:micronaut-security-annotations")</span></code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-security-annotations&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.security:micronaut-security-jwt")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-security-jwt&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>micronaut-security-annotations</code> dependency is only required to use JSR 250 annotations
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The following configuration properties are available to customize JWT based authentication behaviour:</p>
