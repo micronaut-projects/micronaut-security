@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -148,6 +148,12 @@ implements <a href="../../../../io/micronaut/security/config/RedirectConfigurati
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.RefreshRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.RefreshRedirectConfigurationProperties</a></span></code>
+<div class="block">Forbidden redirect configuration.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a></span></code>
 <div class="block">Unauthorized redirect configuration.</div>
 </td>
@@ -244,45 +250,55 @@ implements <a href="../../../../io/micronaut/security/config/RedirectConfigurati
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#getLogout--">getLogout</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="../../../../io/micronaut/security/config/RefreshRedirectConfiguration.html" title="interface in io.micronaut.security.config">RefreshRedirectConfiguration</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#getRefresh--">getRefresh</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config">UnauthorizedRedirectConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#getUnauthorized--">getUnauthorized</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#isPriorToLogin--">isPriorToLogin</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#setForbidden-io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties-">setForbidden</a></span>(<a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a>&nbsp;forbidden)</code>
 <div class="block">Sets the forbidden redirect configuration.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#setLoginFailure-java.lang.String-">setLoginFailure</a></span>(java.lang.String&nbsp;loginFailure)</code>
 <div class="block">Where the user is redirected to after a failed login.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#setLoginSuccess-java.lang.String-">setLoginSuccess</a></span>(java.lang.String&nbsp;loginSuccess)</code>
 <div class="block">Where the user is redirected to after a successful login.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#setLogout-java.lang.String-">setLogout</a></span>(java.lang.String&nbsp;logout)</code>
 <div class="block">URL where the user is redirected after logout.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#setPriorToLogin-boolean-">setPriorToLogin</a></span>(boolean&nbsp;priorToLogin)</code>
 <div class="block">If true, the user should be redirected back to the unauthorized
  request that initiated the login flow.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#setRefresh-io.micronaut.security.config.RedirectConfigurationProperties.RefreshRedirectConfigurationProperties-">setRefresh</a></span>(<a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.RefreshRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.RefreshRedirectConfigurationProperties</a>&nbsp;refresh)</code>
+<div class="block">Sets the refresh redirect configuration.</div>
+</td>
+</tr>
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#setUnauthorized-io.micronaut.security.config.RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties-">setUnauthorized</a></span>(<a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties</a>&nbsp;unauthorized)</code>
 <div class="block">Sets the unauthorized redirect configuration.</div>
@@ -482,6 +498,21 @@ public&nbsp;java.lang.String&nbsp;getLogout()</pre>
 </dl>
 </li>
 </ul>
+<a name="setLogout-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setLogout</h4>
+<pre>public&nbsp;void&nbsp;setLogout(@NonNull
+                      java.lang.String&nbsp;logout)</pre>
+<div class="block">URL where the user is redirected after logout. Default value (<a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#DEFAULT_LOGOUT_URL">"/"</a>).</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>logout</code> - The URL</dd>
+</dl>
+</li>
+</ul>
 <a name="getUnauthorized--">
 <!--   -->
 </a>
@@ -512,6 +543,22 @@ public&nbsp;<a href="../../../../io/micronaut/security/config/UnauthorizedRedire
 </dl>
 </li>
 </ul>
+<a name="getForbidden--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getForbidden</h4>
+<pre>@NonNull
+public&nbsp;<a href="../../../../io/micronaut/security/config/ForbiddenRedirectConfiguration.html" title="interface in io.micronaut.security.config">ForbiddenRedirectConfiguration</a>&nbsp;getForbidden()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html#getForbidden--">getForbidden</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a></code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>configuration about where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.</dd>
+</dl>
+</li>
+</ul>
 <a name="setForbidden-io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties-">
 <!--   -->
 </a>
@@ -526,19 +573,33 @@ public&nbsp;<a href="../../../../io/micronaut/security/config/UnauthorizedRedire
 </dl>
 </li>
 </ul>
-<a name="getForbidden--">
+<a name="getRefresh--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getForbidden</h4>
+<h4>getRefresh</h4>
 <pre>@NonNull
-public&nbsp;<a href="../../../../io/micronaut/security/config/ForbiddenRedirectConfiguration.html" title="interface in io.micronaut.security.config">ForbiddenRedirectConfiguration</a>&nbsp;getForbidden()</pre>
+public&nbsp;<a href="../../../../io/micronaut/security/config/RefreshRedirectConfiguration.html" title="interface in io.micronaut.security.config">RefreshRedirectConfiguration</a>&nbsp;getRefresh()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html#getForbidden--">getForbidden</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a></code></dd>
+<dd><code><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html#getRefresh--">getRefresh</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config">RedirectConfiguration</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>configuration about where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.</dd>
+<dd>configuration about where the user is redirected to after executing the refresh token endpoint.</dd>
+</dl>
+</li>
+</ul>
+<a name="setRefresh-io.micronaut.security.config.RedirectConfigurationProperties.RefreshRedirectConfigurationProperties-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setRefresh</h4>
+<pre>public&nbsp;void&nbsp;setRefresh(<a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.RefreshRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.RefreshRedirectConfigurationProperties</a>&nbsp;refresh)</pre>
+<div class="block">Sets the refresh redirect configuration.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>refresh</code> - refresh redirect configuration.</dd>
 </dl>
 </li>
 </ul>
@@ -561,7 +622,7 @@ public&nbsp;<a href="../../../../io/micronaut/security/config/ForbiddenRedirectC
 <a name="isPriorToLogin--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>isPriorToLogin</h4>
 <pre>public&nbsp;boolean&nbsp;isPriorToLogin()</pre>
@@ -571,21 +632,6 @@ public&nbsp;<a href="../../../../io/micronaut/security/config/ForbiddenRedirectC
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>If the user attempted to access a URL while unauthenticated, and was subsequently redirected to
  login, redirect back to that URL post login (true). Use the static login success URL (false).</dd>
-</dl>
-</li>
-</ul>
-<a name="setLogout-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>setLogout</h4>
-<pre>public&nbsp;void&nbsp;setLogout(@NonNull
-                      java.lang.String&nbsp;logout)</pre>
-<div class="block">URL where the user is redirected after logout. Default value (<a href="../../../../io/micronaut/security/config/RedirectConfigurationProperties.html#DEFAULT_LOGOUT_URL">"/"</a>).</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>logout</code> - The URL</dd>
 </dl>
 </li>
 </ul>

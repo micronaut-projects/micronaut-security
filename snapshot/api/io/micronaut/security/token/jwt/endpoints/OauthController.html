@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -73,13 +73,13 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -107,7 +107,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <hr>
 <br>
-<pre>@Requires(property="micronaut.security.endpoints.oauth.enabled",notEquals="false",defaultValue="true") @Requires(beans=<a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator.class</a>) @Requires(beans=<a href="../../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence.class</a>) @Requires(beans=<a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator.class</a>)
+<pre>@Requires(property="micronaut.security.endpoints.oauth.enabled",notEquals="false") @Requires(beans=<a href="../../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence.class</a>) @Requires(beans=<a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator.class</a>)
  @Controller(value="${micronaut.security.endpoints.oauth.path:/oauth/access_token}")
  <a href="../../../../../../io/micronaut/security/annotation/Secured.html" title="annotation in io.micronaut.security.annotation">@Secured</a>(<a href="../../../../../../io/micronaut/security/annotation/Secured.html#value--">value</a>="isAnonymous()")
  @Validated
@@ -128,25 +128,6 @@ extends java.lang.Object</pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== FIELD SUMMARY =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.summary">
-<!--   -->
-</a>
-<h3>Field Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
-<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Field and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>protected <a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html#accessRefreshTokenGenerator">accessRefreshTokenGenerator</a></span></code>&nbsp;</td>
-</tr>
-</table>
-</li>
-</ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.summary">
@@ -159,9 +140,10 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html#OauthController-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.token.refresh.RefreshTokenPersistence-io.micronaut.security.token.validator.RefreshTokenValidator-">OauthController</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator,
-               <a href="../../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence</a>&nbsp;refreshTokenPersistence,
-               <a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html#OauthController-io.micronaut.security.token.refresh.RefreshTokenPersistence-io.micronaut.security.token.validator.RefreshTokenValidator-io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties-io.micronaut.security.handlers.LoginHandler-">OauthController</a></span>(<a href="../../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence</a>&nbsp;refreshTokenPersistence,
+               <a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator,
+               <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.endpoints">OauthControllerConfigurationProperties</a>&nbsp;oauthControllerConfigurationProperties,
+               <a href="../../../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&nbsp;loginHandler)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -179,8 +161,15 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>io.reactivex.Single&lt;io.micronaut.http.HttpResponse&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html#index-io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest-">index</a></span>(<a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest)</code>&nbsp;</td>
+<td class="colFirst"><code>io.reactivex.Single&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html#index-io.micronaut.http.HttpRequest-java.lang.String-">index</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+     java.lang.String&nbsp;cookieRefreshToken)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>io.reactivex.Single&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html#index-io.micronaut.http.HttpRequest-io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest-java.lang.String-">index</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+     <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest,
+     java.lang.String&nbsp;cookieRefreshToken)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -198,43 +187,28 @@ extends java.lang.Object</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
-<!-- ============ FIELD DETAIL =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.detail">
-<!--   -->
-</a>
-<h3>Field Detail</h3>
-<a name="accessRefreshTokenGenerator">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>accessRefreshTokenGenerator</h4>
-<pre>protected final&nbsp;<a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a> accessRefreshTokenGenerator</pre>
-</li>
-</ul>
-</li>
-</ul>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.detail">
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="OauthController-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.token.refresh.RefreshTokenPersistence-io.micronaut.security.token.validator.RefreshTokenValidator-">
+<a name="OauthController-io.micronaut.security.token.refresh.RefreshTokenPersistence-io.micronaut.security.token.validator.RefreshTokenValidator-io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties-io.micronaut.security.handlers.LoginHandler-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>OauthController</h4>
-<pre>public&nbsp;OauthController(<a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a>&nbsp;accessRefreshTokenGenerator,
-                       <a href="../../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence</a>&nbsp;refreshTokenPersistence,
-                       <a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator)</pre>
+<pre>public&nbsp;OauthController(<a href="../../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html" title="interface in io.micronaut.security.token.refresh">RefreshTokenPersistence</a>&nbsp;refreshTokenPersistence,
+                       <a href="../../../../../../io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a>&nbsp;refreshTokenValidator,
+                       <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.endpoints">OauthControllerConfigurationProperties</a>&nbsp;oauthControllerConfigurationProperties,
+                       <a href="../../../../../../io/micronaut/security/handlers/LoginHandler.html" title="interface in io.micronaut.security.handlers">LoginHandler</a>&nbsp;loginHandler)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>accessRefreshTokenGenerator</code> - The access refresh token generator</dd>
 <dd><code>refreshTokenPersistence</code> - The persistence mechanism for the refresh token</dd>
 <dd><code>refreshTokenValidator</code> - The refresh token validator</dd>
+<dd><code>oauthControllerConfigurationProperties</code> - The controller configuration</dd>
+<dd><code>loginHandler</code> - The login handler</dd>
 </dl>
 </li>
 </ul>
@@ -246,20 +220,45 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="index-io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest-">
+<a name="index-io.micronaut.http.HttpRequest-io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>index</h4>
+<pre>@Consumes(value={"application/x-www-form-urlencoded","application/json"})
+ @Post
+public&nbsp;io.reactivex.Single&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;index(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                                                                                                                                            @Nullable @Body
+                                                                                                                                                            <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest,
+                                                                                                                                                            @Nullable @CookieValue(value="JWT_REFRESH_TOKEN")
+                                                                                                                                                            java.lang.String&nbsp;cookieRefreshToken)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>request</code> - The current request</dd>
+<dd><code>tokenRefreshRequest</code> - An instance of <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>TokenRefreshRequest</code></a> present in the request</dd>
+<dd><code>cookieRefreshToken</code> - The refresh token stored in a cookie</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>A response or a failure indicated by the HTTP status</dd>
+</dl>
+</li>
+</ul>
+<a name="index-io.micronaut.http.HttpRequest-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>index</h4>
-<pre>@Consumes(value={"application/x-www-form-urlencoded","application/json"})
- @Post
-public&nbsp;io.reactivex.Single&lt;io.micronaut.http.HttpResponse&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;&gt;&nbsp;index(<a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest)</pre>
+<pre>@Get
+public&nbsp;io.reactivex.Single&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;index(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                                                                @Nullable @CookieValue(value="JWT_REFRESH_TOKEN")
+                                                                                java.lang.String&nbsp;cookieRefreshToken)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>tokenRefreshRequest</code> - An instance of <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>TokenRefreshRequest</code></a> present in the request</dd>
+<dd><code>request</code> - The current request</dd>
+<dd><code>cookieRefreshToken</code> - The refresh token stored in a cookie</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status</dd>
+<dd>A response or a failure indicated by the HTTP status</dd>
 </dl>
 </li>
 </ul>
@@ -316,13 +315,13 @@ public&nbsp;io.reactivex.Single&lt;io.micronaut.http.HttpResponse&lt;<a href="..
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

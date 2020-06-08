@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -150,12 +150,18 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#DEFAULT_GETALLOWED">DEFAULT_GETALLOWED</a></span></code>
+<div class="block">Default Get Allowed.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#DEFAULT_PATH">DEFAULT_PATH</a></span></code>
 <div class="block">The default path.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#PREFIX">PREFIX</a></span></code>&nbsp;</td>
 </tr>
@@ -202,12 +208,22 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#isEnabled--">isEnabled</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#isGetAllowed--">isGetAllowed</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#setEnabled-boolean-">setEnabled</a></span>(boolean&nbsp;enabled)</code>
 <div class="block">Sets whether the <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>OauthController</code></a> is enabled.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#setGetAllowed-boolean-">setGetAllowed</a></span>(boolean&nbsp;getAllowed)</code>
+<div class="block">Enables HTTP GET invocations of refresh token requests.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#setPath-java.lang.String-">setPath</a></span>(java.lang.String&nbsp;path)</code>
 <div class="block">Sets the path to map the <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthController.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>OauthController</code></a> to.</div>
@@ -265,7 +281,7 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/
 <a name="DEFAULT_PATH">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>DEFAULT_PATH</h4>
 <pre>public static final&nbsp;java.lang.String DEFAULT_PATH</pre>
@@ -273,6 +289,20 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../../constant-values.html#io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties.DEFAULT_PATH">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="DEFAULT_GETALLOWED">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>DEFAULT_GETALLOWED</h4>
+<pre>public static final&nbsp;boolean DEFAULT_GETALLOWED</pre>
+<div class="block">Default Get Allowed.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../constant-values.html#io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties.DEFAULT_GETALLOWED">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
@@ -350,7 +380,7 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/
 <a name="setPath-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setPath</h4>
 <pre>public&nbsp;void&nbsp;setPath(java.lang.String&nbsp;path)</pre>
@@ -358,6 +388,36 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/endpoints/
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>path</code> - The path</dd>
+</dl>
+</li>
+</ul>
+<a name="isGetAllowed--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isGetAllowed</h4>
+<pre>public&nbsp;boolean&nbsp;isGetAllowed()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfiguration.html#isGetAllowed--">isGetAllowed</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfiguration.html" title="interface in io.micronaut.security.token.jwt.endpoints">OauthControllerConfiguration</a></code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>True if refresh requests can be GET</dd>
+</dl>
+</li>
+</ul>
+<a name="setGetAllowed-boolean-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setGetAllowed</h4>
+<pre>public&nbsp;void&nbsp;setGetAllowed(boolean&nbsp;getAllowed)</pre>
+<div class="block">Enables HTTP GET invocations of refresh token requests. Only applies
+  to requests sending a cookie (JWT_REFRESH_TOKEN). Default value (<a href="../../../../../../io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#DEFAULT_GETALLOWED">true</a>).</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>getAllowed</code> - Whether Http GET should be supported.</dd>
 </dl>
 </li>
 </ul>

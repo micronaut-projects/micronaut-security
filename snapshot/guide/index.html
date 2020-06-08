@@ -3315,6 +3315,12 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path to map the <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthController.html">OauthController</a> to. Default value ("/oauth/access_token").</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.oauth.get-allowed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables HTTP GET invocations of refresh token requests. Only applies
+  to requests sending a cookie (JWT_REFRESH_TOKEN). Default value (true).</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">

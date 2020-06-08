@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -145,10 +145,14 @@ var activeTableTab = "activeTableTab";
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html#getLogout--">getLogout</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="../../../../io/micronaut/security/config/RefreshRedirectConfiguration.html" title="interface in io.micronaut.security.config">RefreshRedirectConfiguration</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html#getRefresh--">getRefresh</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config">UnauthorizedRedirectConfiguration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html#getUnauthorized--">getUnauthorized</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/config/RedirectConfiguration.html#isPriorToLogin--">isPriorToLogin</a></span>()</code>&nbsp;</td>
 </tr>
@@ -234,6 +238,20 @@ java.lang.String&nbsp;getLogout()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>configuration about where the user is redirected to after trying to access a secured route for which the does not have sufficient roles.</dd>
+</dl>
+</li>
+</ul>
+<a name="getRefresh--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getRefresh</h4>
+<pre>@NonNull
+<a href="../../../../io/micronaut/security/config/RefreshRedirectConfiguration.html" title="interface in io.micronaut.security.config">RefreshRedirectConfiguration</a>&nbsp;getRefresh()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>configuration about where the user is redirected to after executing the refresh token endpoint.</dd>
 </dl>
 </li>
 </ul>
