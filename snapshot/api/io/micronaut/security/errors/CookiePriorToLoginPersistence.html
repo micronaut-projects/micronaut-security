@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -111,7 +111,8 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>@Requires(property="micronaut.security.redirect.prior-to-login",value="true") @Requires(beans=<a href="../../../../io/micronaut/security/config/TokenCookieConfiguration.html" title="interface in io.micronaut.security.config">TokenCookieConfiguration.class</a>)
+<pre>@Requires(property="micronaut.security.redirect.prior-to-login",
+          value="true")
  @Singleton
 public class <span class="typeNameLabel">CookiePriorToLoginPersistence</span>
 extends java.lang.Object
@@ -160,11 +161,18 @@ implements <a href="../../../../io/micronaut/security/errors/PriorToLoginPersist
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/errors/CookiePriorToLoginPersistence.html#configure-io.micronaut.http.cookie.Cookie-io.micronaut.http.HttpRequest-">configure</a></span>(io.micronaut.http.cookie.Cookie&nbsp;cookie,
+         io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>
+<div class="block">Configure the cookie</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.net.URI&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/errors/CookiePriorToLoginPersistence.html#getOriginalUri-io.micronaut.http.HttpRequest-io.micronaut.http.MutableHttpResponse-">getOriginalUri</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
               io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response)</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/errors/CookiePriorToLoginPersistence.html#onUnauthorized-io.micronaut.http.HttpRequest-io.micronaut.http.MutableHttpResponse-">onUnauthorized</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
               io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;response)</code>&nbsp;</td>
@@ -197,7 +205,8 @@ implements <a href="../../../../io/micronaut/security/errors/PriorToLoginPersist
 <ul class="blockListLast">
 <li class="blockList">
 <h4>CookiePriorToLoginPersistence</h4>
-<pre>public&nbsp;CookiePriorToLoginPersistence(<a href="../../../../io/micronaut/security/config/TokenCookieConfiguration.html" title="interface in io.micronaut.security.config">TokenCookieConfiguration</a>&nbsp;cookieConfiguration)</pre>
+<pre>public&nbsp;CookiePriorToLoginPersistence(@Nullable
+                                     <a href="../../../../io/micronaut/security/config/TokenCookieConfiguration.html" title="interface in io.micronaut.security.config">TokenCookieConfiguration</a>&nbsp;cookieConfiguration)</pre>
 </li>
 </ul>
 </li>
@@ -225,7 +234,7 @@ implements <a href="../../../../io/micronaut/security/errors/PriorToLoginPersist
 <a name="getOriginalUri-io.micronaut.http.HttpRequest-io.micronaut.http.MutableHttpResponse-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getOriginalUri</h4>
 <pre>public&nbsp;java.util.Optional&lt;java.net.URI&gt;&nbsp;getOriginalUri(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
@@ -233,6 +242,22 @@ implements <a href="../../../../io/micronaut/security/errors/PriorToLoginPersist
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../io/micronaut/security/errors/PriorToLoginPersistence.html#getOriginalUri-io.micronaut.http.HttpRequest-io.micronaut.http.MutableHttpResponse-">getOriginalUri</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/errors/PriorToLoginPersistence.html" title="interface in io.micronaut.security.errors">PriorToLoginPersistence</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="configure-io.micronaut.http.cookie.Cookie-io.micronaut.http.HttpRequest-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>configure</h4>
+<pre>protected&nbsp;void&nbsp;configure(io.micronaut.http.cookie.Cookie&nbsp;cookie,
+                         io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
+<div class="block">Configure the cookie</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>cookie</code> - The cookie</dd>
+<dd><code>request</code> - The current request</dd>
 </dl>
 </li>
 </ul>

@@ -323,6 +323,9 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <li>
 <p>Support for using tokens directly from OpenID providers has been added. By default the information from the OpenID JWT token is used to create a new token that uses Micronaut&#8217;s JWT settings. This allows for a common format across providers as well as standardized expiration. Some users may want to use the token coming from the provider directly. That is now supported with the configuration option and value <code>micronaut.security.authentication: idtoken</code>. Note that this authentication mode requires each application to implement any necessary refresh token functionality. The refresh token functionality in this library is specific to the tokens created by this library.</p>
 </li>
+<li>
+<p>The TokenValidator API now has access to the current request.</p>
+</li>
 </ul>
 </div>
 </div>
