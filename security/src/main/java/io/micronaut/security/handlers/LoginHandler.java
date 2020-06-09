@@ -36,6 +36,7 @@ public interface LoginHandler {
 
     /**
      * @param userDetails Authenticated user's representation.
+     * @param refreshToken The refresh token
      * @param request The {@link HttpRequest} being executed
      * @return An HTTP Response. Eg. a redirect or an JWT token rendered to the response
      */

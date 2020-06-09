@@ -70,7 +70,7 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
     }
 
     /**
-     * Configure the cookie
+     * Configure the cookie.
      *
      * @param cookie The cookie
      * @param request The current request
