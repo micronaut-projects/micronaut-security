@@ -19,7 +19,7 @@ import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import org.reactivestreams.Publisher;
 
 /**
@@ -38,12 +38,12 @@ public interface OauthAuthorizationResponseHandler {
      *
      * @param authorizationResponse The authorization response
      * @param clientConfiguration The client configuration
-     * @param userDetailsMapper The user details mapper
+     * @param authenticationMapper The authetncation mapper
      * @param tokenEndpoint The token endpoint
      * @return An authentication response publisher
      */
     Publisher<AuthenticationResponse> handle(AuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,
-                                             OauthUserDetailsMapper userDetailsMapper,
+                                             OauthAuthenticationMapper authenticationMapper,
                                              SecureEndpoint tokenEndpoint);
 }

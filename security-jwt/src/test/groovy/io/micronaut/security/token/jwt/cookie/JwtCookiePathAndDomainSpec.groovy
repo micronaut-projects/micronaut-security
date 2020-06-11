@@ -10,12 +10,13 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.testutils.EmbeddedServerSpecification
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -138,7 +139,7 @@ class JwtCookiePathAndDomainSpec extends EmbeddedServerSpecification {
 
             Flowable.create({ emitter ->
                 if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "password") {
-                    emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
+                    emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }

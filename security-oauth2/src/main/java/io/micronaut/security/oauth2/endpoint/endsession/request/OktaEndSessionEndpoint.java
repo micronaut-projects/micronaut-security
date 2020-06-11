@@ -21,7 +21,7 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.reader.TokenResolver;
 
@@ -87,8 +87,8 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
      */
     protected Optional<String> parseIdToken(HttpRequest<?> request, Authentication authentication) {
         Map<String, Object> attributes = authentication.getAttributes();
-        if (attributes.containsKey(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY)) {
-            return Optional.of(attributes.get(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY).toString());
+        if (attributes.containsKey(OpenIdAuthenticationMapper.OPENID_TOKEN_KEY)) {
+            return Optional.of(attributes.get(OpenIdAuthenticationMapper.OPENID_TOKEN_KEY).toString());
         }
         if (securityConfiguration.getAuthentication() == AuthenticationMode.IDTOKEN) {
             return tokenResolver.resolveToken(request);

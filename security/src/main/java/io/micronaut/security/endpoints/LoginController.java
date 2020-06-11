@@ -28,9 +28,9 @@ import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.Authenticator;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
@@ -85,10 +85,10 @@ public class LoginController {
         Flowable<AuthenticationResponse> authenticationResponseFlowable = Flowable.fromPublisher(authenticator.authenticate(request, usernamePasswordCredentials));
 
         return authenticationResponseFlowable.map(authenticationResponse -> {
-            if (authenticationResponse.isAuthenticated() && authenticationResponse.getUserDetails().isPresent()) {
-                UserDetails userDetails = authenticationResponse.getUserDetails().get();
-                eventPublisher.publishEvent(new LoginSuccessfulEvent(userDetails));
-                return loginHandler.loginSuccess(userDetails, request);
+            if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
+                Authentication authentication = authenticationResponse.getAuthentication().get();
+                eventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
+                return loginHandler.loginSuccess(authentication, request);
             } else {
                 eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
                 return loginHandler.loginFailed(authenticationResponse, request);

@@ -1,15 +1,12 @@
 package io.micronaut.security.denyall
 
-import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.AuthenticationException
@@ -17,14 +14,11 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 
 import javax.annotation.security.DenyAll
 import javax.inject.Singleton
@@ -98,7 +92,8 @@ class DenyAllSpec extends EmbeddedServerSpecification {
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', ['ROLE_USER']))
+                    emitter.onNext(AuthenticationResponse.build("user",  ["ROLE_USER"], new TokenConfiguration() {}))
+
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }

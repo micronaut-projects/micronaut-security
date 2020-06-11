@@ -1,16 +1,15 @@
-package io.microanut.security.oauth2.docs.endpoint
-
+package io.micronaut.security.oauth2.docs.endpoint
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
@@ -54,17 +53,12 @@ class CsrfFilterSpec extends EmbeddedServerSpecification {
     @Singleton
     @Named("twitter")
     @Requires(property = "spec.name", value = "CsrfFilterSpec")
-    static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
+    static class TwitterAuthenticationMapper implements OauthAuthenticationMapper {
 
         @Override
-        Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
-            Publishers.just(new UnsupportedOperationException())
-        }
-
-        @Override
-        Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
+        Publisher<Authentication> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
             Flowable.create({ emitter ->
-                emitter.onNext(new UserDetails("twitterUser", Collections.emptyList()))
+                emitter.onNext(Authentication.build("twitterUser", new TokenConfiguration() {}))
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }

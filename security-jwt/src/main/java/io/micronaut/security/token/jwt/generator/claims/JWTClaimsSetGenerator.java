@@ -18,7 +18,7 @@ package io.micronaut.security.token.jwt.generator.claims;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.env.Environment;
 import io.micronaut.runtime.ApplicationConfiguration;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,23 +43,19 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(JWTClaimsSetGenerator.class);
 
-    private final TokenConfiguration tokenConfiguration;
     private final JwtIdGenerator jwtIdGenerator;
     private final ClaimsAudienceProvider claimsAudienceProvider;
     private final String appName;
 
     /**
-     * @param tokenConfiguration       Token Configuration
      * @param jwtIdGenerator           Generator which creates unique JWT ID
      * @param claimsAudienceProvider   Provider which identifies the recipients that the JWT is intended for.
      * @param applicationConfiguration The application configuration
      */
     @Inject
-    public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                 @Nullable JwtIdGenerator jwtIdGenerator,
+    public JWTClaimsSetGenerator(@Nullable JwtIdGenerator jwtIdGenerator,
                                  @Nullable ClaimsAudienceProvider claimsAudienceProvider,
                                  @Nullable ApplicationConfiguration applicationConfiguration) {
-        this.tokenConfiguration = tokenConfiguration;
         this.jwtIdGenerator = jwtIdGenerator;
         this.claimsAudienceProvider = claimsAudienceProvider;
         this.appName = applicationConfiguration != null ? applicationConfiguration.getName().orElse(Environment.MICRONAUT) : Environment.MICRONAUT;
@@ -69,22 +65,22 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param tokenConfiguration     Token Configuration
      * @param jwtIdGenerator         Generator which creates unique JWT ID
      * @param claimsAudienceProvider Provider which identifies the recipients that the JWT is intented for.
-     * @deprecated Use {@link JWTClaimsSetGenerator#JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)} instead.
+     * @deprecated Use {@link JWTClaimsSetGenerator#JWTClaimsSetGenerator(JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)} instead.
      */
     @Deprecated
     public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
                                  @Nullable JwtIdGenerator jwtIdGenerator,
                                  @Nullable ClaimsAudienceProvider claimsAudienceProvider) {
-        this(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, null);
+        this(jwtIdGenerator, claimsAudienceProvider, null);
     }
 
     /**
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @param expiration  expiration time in seconds
      * @return The authentication claims
      */
     @Override
-    public Map<String, Object> generateClaims(UserDetails userDetails, @Nullable Integer expiration) {
+    public Map<String, Object> generateClaims(Authentication authentication, @Nullable Integer expiration) {
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
         populateIat(builder);
         populateExp(builder, expiration);
@@ -92,7 +88,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         populateIss(builder);
         populateAud(builder);
         populateNbf(builder);
-        populateWithUserDetails(builder, userDetails);
+        populateWithAuthentication(builder, authentication);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Generated claim set: {}", builder.build().toJSONObject().toString());
         }
@@ -115,11 +111,11 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * Populates sub claim.
      *
      * @param builder     The Claims Builder
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @see <a href="https://tools.ietf.org/html/rfc7519#section-4.1.2">sub (Subject) Claim</a>
      */
-    protected void populateSub(JWTClaimsSet.Builder builder, UserDetails userDetails) {
-        builder.subject(userDetails.getUsername()); // sub
+    protected void populateSub(JWTClaimsSet.Builder builder, Authentication authentication) {
+        builder.subject(authentication.getName()); // sub
     }
 
     /**
@@ -181,14 +177,13 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
     }
 
     /**
-     * Populates Claims with UserDetails object.
+     * Populates Claims with Authentication object.
      *
      * @param builder     the Claims Builder
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      */
-    protected void populateWithUserDetails(JWTClaimsSet.Builder builder, UserDetails userDetails) {
-        userDetails.getAttributes(tokenConfiguration.getRolesName(), JwtClaims.SUBJECT)
-                .forEach(builder::claim);
+    protected void populateWithAuthentication(JWTClaimsSet.Builder builder, Authentication authentication) {
+        authentication.getAttributes().forEach(builder::claim);
     }
 
     /**

@@ -3,6 +3,7 @@ package io.micronaut.security.token.multitenancy.principal
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.*
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
@@ -18,9 +19,11 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
         Flowable.create({ emitter ->
             if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "elementary") {
-                emitter.onNext(new UserDetails('sherlock', []))
+                emitter.onNext(AuthenticationResponse.build('sherlock', new TokenConfiguration() {}))
+
             } else if ( authenticationRequest.getIdentity() == "watson" && authenticationRequest.getSecret() == "elementary") {
-                emitter.onNext(new UserDetails('watson', []))
+                emitter.onNext(AuthenticationResponse.build('watson', new TokenConfiguration() {}))
+
             } else {
                 emitter.onError(new AuthenticationException(new AuthenticationFailed()))
             }

@@ -18,36 +18,22 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Responsible for converting an OpenID token response to
- * a {@link UserDetails} representing the authenticated user.
+ * a {@link io.micronaut.security.authentication.Authentication} representing the authenticated user.
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-@DefaultImplementation(DefaultOpenIdUserDetailsMapper.class)
-public interface OpenIdUserDetailsMapper {
+@DefaultImplementation(DefaultOpenIdAuthenticationMapper.class)
+@FunctionalInterface
+public interface OpenIdAuthenticationMapper {
 
     String OPENID_TOKEN_KEY = "openIdToken";
-
-    /**
-     * @param providerName The OpenID provider name
-     * @param tokenResponse The token response
-     * @param openIdClaims The OpenID claims
-     * @return A user details object
-     * @deprecated Use {@link #createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims, State)} instead.
-     * This method will only be called if the new method is not implemented.
-     */
-    @Deprecated
-    @NonNull
-    UserDetails createUserDetails(String providerName,
-                                  OpenIdTokenResponse tokenResponse,
-                                  OpenIdClaims openIdClaims);
 
     /**
      * @param providerName The OpenID provider name
@@ -57,10 +43,8 @@ public interface OpenIdUserDetailsMapper {
      * @return An authentication response
      */
     @NonNull
-    default AuthenticationResponse createAuthenticationResponse(String providerName,
-                                                                OpenIdTokenResponse tokenResponse,
-                                                                OpenIdClaims openIdClaims,
-                                                                @Nullable State state) {
-        return createUserDetails(providerName, tokenResponse, openIdClaims);
-    }
+    AuthenticationResponse createAuthenticationResponse(String providerName,
+                                                        OpenIdTokenResponse tokenResponse,
+                                                        OpenIdClaims openIdClaims,
+                                                        @Nullable State state);
 }

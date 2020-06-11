@@ -19,9 +19,9 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
@@ -50,8 +50,8 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     }
 
     @Override
-    public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
-        Optional<AccessRefreshToken> accessRefreshTokenOptional = accessRefreshTokenGenerator.generate(userDetails);
+    public MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {
+        Optional<AccessRefreshToken> accessRefreshTokenOptional = accessRefreshTokenGenerator.generate(authentication);
         if (accessRefreshTokenOptional.isPresent()) {
             return HttpResponse.ok(accessRefreshTokenOptional.get());
         }
@@ -59,8 +59,8 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     }
 
     @Override
-    public MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
-        Optional<AccessRefreshToken> accessRefreshToken = accessRefreshTokenGenerator.generate(refreshToken, userDetails);
+    public MutableHttpResponse<?> loginRefresh(Authentication authentication, String refreshToken, HttpRequest<?> request) {
+        Optional<AccessRefreshToken> accessRefreshToken = accessRefreshTokenGenerator.generate(refreshToken, authentication);
         if (accessRefreshToken.isPresent()) {
             return HttpResponse.ok(accessRefreshToken.get());
         }

@@ -16,8 +16,15 @@
 package io.micronaut.security.authentication;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.security.token.config.TokenConfiguration;
+
 import java.io.Serializable;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,4 +47,72 @@ public interface Authentication extends Principal, Serializable {
      */
     @NonNull
     Map<String, Object> getAttributes();
+
+    /**
+     * Builds an {@link Authentication} instance for the user.
+     * @param username User's name
+     * @param tokenConfiguration Token configuration
+     * @return An {@link Authentication} for the User
+     */
+    @NonNull
+    static Authentication build(@NonNull String username,
+                                @NonNull TokenConfiguration tokenConfiguration) {
+        return Authentication.build(username, Collections.emptyList(), Collections.emptyMap(), tokenConfiguration);
+    }
+
+    /**
+     * Builds an {@link Authentication} instance for the user.
+     * @param username User's name
+     * @param roles Users's roles
+     * @param tokenConfiguration Token configuration
+     * @return An {@link Authentication} for the User
+     */
+    @NonNull
+    static Authentication build(@NonNull String username,
+                                @NonNull Collection<String> roles,
+                                @NonNull TokenConfiguration tokenConfiguration) {
+        return Authentication.build(username, roles, Collections.emptyMap(), tokenConfiguration);
+    }
+
+    /**
+     * Builds an {@link Authentication} instance for the user.
+     * @param username User's name
+     * @param roles Users's roles
+     * @param attributes User's attributes
+     * @param tokenConfiguration Token configuration
+     * @return An {@link Authentication} for the User
+     */
+    @NonNull
+    static Authentication build(@NonNull String username,
+                                @NonNull Collection<String> roles,
+                                @NonNull Map<String, Object> attributes,
+                                @NonNull TokenConfiguration tokenConfiguration) {
+        Map<String, Object> attrs = new HashMap<>(attributes);
+        attrs.put(tokenConfiguration.getNameKey(), username);
+        attrs.put(tokenConfiguration.getRolesName(), roles);
+        return new DefaultAuthentication(username, attrs);
+    }
+
+    /**
+     * Builds an {@link Authentication} instance for the user.
+     * @param username User's name
+     * @param attributes User's attributes
+     * @param tokenConfiguration Token configuration
+     * @return An {@link Authentication} for the User
+     */
+    @NonNull
+    static Authentication build(@NonNull String username,
+                                @NonNull Map<String, Object> attributes,
+                                @NonNull TokenConfiguration tokenConfiguration) {
+        List<String> roles = new ArrayList<>();
+        if (attributes.containsKey(tokenConfiguration.getRolesName())) {
+            Object obj = attributes.get(tokenConfiguration.getRolesName());
+            if (obj instanceof  Iterable) {
+                for (Object itemObj : (Iterable<?>) obj) {
+                    roles.add(itemObj.toString());
+                }
+            }
+        }
+        return build(username, roles, attributes, tokenConfiguration);
+    }
 }

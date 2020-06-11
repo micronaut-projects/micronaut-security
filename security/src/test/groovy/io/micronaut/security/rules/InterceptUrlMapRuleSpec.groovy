@@ -1,7 +1,9 @@
 package io.micronaut.security.rules
 
+import edu.umd.cs.findbugs.annotations.Nullable
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.DefaultRolesFinder
@@ -18,12 +20,7 @@ class InterceptUrlMapRuleSpec extends Specification {
     @Unroll
     void "test query arguments are ignored by matching logic"() {
         given:
-        SecurityRule rule = new InterceptUrlMapRule(new RolesFinder() {
-            @Override
-            List<String> findInClaims(@NonNull Claims claims) {
-                claims.get("roles")
-            }
-        }) {
+        SecurityRule rule = new InterceptUrlMapRule(new DefaultRolesFinder(new TokenConfiguration() {})) {
             @Override
             protected List<InterceptUrlMapPattern> getPatternList() {
                 [new InterceptUrlMapPattern("/foo", ["ROLE_ADMIN"], HttpMethod.GET)]

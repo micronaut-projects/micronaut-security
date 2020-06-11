@@ -27,7 +27,7 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.generator.RefreshTokenGenerator;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import org.slf4j.Logger;
@@ -79,13 +79,13 @@ public class SignedRefreshTokenGenerator implements RefreshTokenGenerator, Refre
 
     @NonNull
     @Override
-    public String createKey(@NonNull UserDetails userDetails) {
+    public String createKey(@NonNull Authentication authentication) {
         return UUID.randomUUID().toString();
     }
 
     @NonNull
     @Override
-    public Optional<String> generate(@NonNull UserDetails userDetails, @NonNull String token) {
+    public Optional<String> generate(@NonNull Authentication authentication, @NonNull String token) {
         try {
             JWSObject jwsObject = new JWSObject(new JWSHeader(algorithm), new Payload(token));
             jwsObject.sign(signer);

@@ -35,7 +35,9 @@ public interface TokenConfiguration extends Toggleable {
      * @return The key used for the user's roles within the user's attributes. e.g. "roles".
      */
     @NonNull
-    String getRolesName();
+    default String getRolesName() {
+        return DEFAULT_ROLES_NAME;
+    }
 
     /**
      * Key which will be used in the {@link io.micronaut.security.authentication.Authentication#getAttributes()} for the User`s name.
@@ -43,5 +45,7 @@ public interface TokenConfiguration extends Toggleable {
      * @return The key used for the user's name within the user's attributes. e.g. "sub".
      */
     @NonNull
-    String getNameKey();
+    default String getNameKey() {
+        return DEFAULT_NAME_KEY;
+    }
 }

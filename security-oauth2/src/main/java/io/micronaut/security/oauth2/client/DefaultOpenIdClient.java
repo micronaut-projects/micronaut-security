@@ -31,7 +31,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.*;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     private final OauthClientConfiguration clientConfiguration;
     private final Supplier<OpenIdProviderMetadata> openIdProviderMetadata;
-    private final OpenIdUserDetailsMapper userDetailsMapper;
+    private final OpenIdAuthenticationMapper openIdAuthenticationMapper;
     private final AuthorizationRedirectHandler redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
     private final Supplier<SecureEndpoint> tokenEndpoint;
@@ -66,7 +66,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     /**
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
-     * @param userDetailsMapper The user details mapper
+     * @param openIdAuthenticationMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
@@ -74,14 +74,14 @@ public class DefaultOpenIdClient implements OpenIdClient {
      */
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
-                               @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                               @Nullable OpenIdAuthenticationMapper openIdAuthenticationMapper,
                                AuthorizationRedirectHandler redirectUrlBuilder,
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                BeanContext beanContext,
                                @Nullable EndSessionEndpoint endSessionEndpoint) {
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
-        this.userDetailsMapper = userDetailsMapper;
+        this.openIdAuthenticationMapper = openIdAuthenticationMapper;
         this.redirectUrlBuilder = redirectUrlBuilder;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
@@ -145,7 +145,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
                     openIdProviderMetadata.get(),
-                    userDetailsMapper,
+                    openIdAuthenticationMapper,
                     tokenEndpoint.get());
         }
     }

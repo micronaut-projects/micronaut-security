@@ -1,8 +1,8 @@
-Beyond configuration, an implementation of api:security.oauth2.endpoint.token.response.OauthUserDetailsMapper[] is required by the user to be implemented. The implementation must be qualified by name that matches the name present in the client configuration.
+Beyond configuration, an implementation of api:security.oauth2.endpoint.token.response.OauthAuthenticationMapper[] is required by the user to be implemented. The implementation must be qualified by name that matches the name present in the client configuration.
 
-The purpose of the user details mapper is to transform the api:security.oauth2.endpoint.token.response.TokenResponse[] into a api:security.authentication.UserDetails[]. That will entail calling some endpoint the provider exposes to retrieve the user's information. Once that information is received, the user details can be populated per your requirements.
+The purpose of the user details mapper is to transform the api:security.oauth2.endpoint.token.response.TokenResponse[] into a api:security.authentication.Authentication[]. That will entail calling some endpoint the provider exposes to retrieve the user's information. Once that information is received, the user details can be populated per your requirements.
 
-Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The api:security.authentication.UserDetails[] object stores three basic properties: `username`, `roles`, and arbitrary `attributes`. All data stored in the user details will be retrievable in controllers that accept an api:security.authentication.Authentication[].
+Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The api:security.authentication.Authentication[] object stores three basic properties: `username`, `roles`, and arbitrary `attributes`. All data stored in the user details will be retrievable in controllers that accept an api:security.authentication.Authentication[].
 
 For example, here is how it might be implemented for Github.
 
@@ -16,9 +16,9 @@ snippet::io.micronaut.security.oauth2.docs.github.GithubApiClient[tags="clazz"]
 
 Create the user details mapper that pulls it together:
 
-snippet::io.micronaut.security.oauth2.docs.github.GithubUserDetailsMapper[tags="clazz"]
+snippet::io.micronaut.security.oauth2.docs.github.GithubAuthenticationMapper[tags="clazz"]
 
 <1> The bean must have a named qualifier that matches the name in configuration.
 <2> How the request is made to retrieve the user information is totally up to you, however in this example we're using a declarative client.
 <3> The token endpoint response is passed to the method.
-<4> The user information is converted to a api:security.authentication.UserDetails[].
+<4> The user information is converted to a api:security.authentication.Authentication[].

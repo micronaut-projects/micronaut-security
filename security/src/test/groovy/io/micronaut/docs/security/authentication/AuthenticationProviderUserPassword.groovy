@@ -7,7 +7,7 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
@@ -25,12 +25,12 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flowable.create({emitter ->
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
-                emitter.onNext(new UserDetails("user", ["ROLE_USER"]));
-                emitter.onComplete();
+                emitter.onNext(AuthenticationResponse.build('user', ['ROLE_USER'], new TokenConfiguration() {}))
+
             } else {
                 emitter.onError(new AuthenticationException(new AuthenticationFailed()));
-                emitter.onComplete();
             }
+            emitter.onComplete()
         }, BackpressureStrategy.ERROR);
 
     }

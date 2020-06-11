@@ -13,8 +13,8 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.testutils.GebEmbeddedServerSpecification
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -64,8 +64,8 @@ class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
             return Flowable.create({ emitter ->
                 if ( authenticationRequest.getIdentity().equals("sherlock") &&
                         authenticationRequest.getSecret().equals("password") ) {
-                    UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>());
-                    emitter.onNext(userDetails);
+                    emitter.onNext(AuthenticationResponse.build(authenticationRequest.getIdentity() as String, new TokenConfiguration() {}))
+
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()));
                 }

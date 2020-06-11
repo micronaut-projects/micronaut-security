@@ -3,7 +3,8 @@ package io.micronaut.security.token.jwt.cookie
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpMethod
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.endpoints.OauthController
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
@@ -97,18 +98,22 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
     @Singleton
     static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
 
-        Map<String, UserDetails> tokens = [:]
+        private final TokenConfiguration tokenConfiguration
+        InMemoryRefreshTokenPersistence(TokenConfiguration tokenConfiguration) {
+            this.tokenConfiguration = tokenConfiguration
+        }
+
+        Map<String, Authentication> tokens = [:]
 
         @Override
         void persistToken(RefreshTokenGeneratedEvent event) {
-            tokens.put(event.getRefreshToken(), event.getUserDetails())
+            tokens.put(event.getRefreshToken(), event.getAuthentication())
         }
 
         @Override
-        Publisher<UserDetails> getUserDetails(String refreshToken) {
-            UserDetails userDetails = tokens.get(refreshToken)
-            userDetails.setUsername(userDetails.getUsername() + "-refreshed")
-            Publishers.just(userDetails)
+        Publisher<Authentication> getAuthentication(String refreshToken) {
+            Authentication authentication = tokens.get(refreshToken)
+            Publishers.just(Authentication.build(authentication.name + "-refreshed", authentication.attributes, tokenConfiguration))
         }
     }
 }

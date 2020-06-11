@@ -3,7 +3,7 @@ The minimum requirements to allow authorization with an OAuth 2.0 provider are:
 * Configuration of the authorization endpoint
 * Configuration of the token endpoint
 * Configuration of the client id and secret
-* An implementation of api:security.oauth2.endpoint.token.response.OauthUserDetailsMapper[]
+* An implementation of api:security.oauth2.endpoint.token.response.OauthAuthenticationMapper[]
 
 Configuration is quite simple. For example to configure authorization with Github:
 

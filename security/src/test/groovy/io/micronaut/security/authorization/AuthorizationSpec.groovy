@@ -20,8 +20,8 @@ import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.PrincipalArgumentBinder
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -365,7 +365,7 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
                 if (authenticationFailed) {
                     emitter.onError(new AuthenticationException(authenticationFailed))
                 } else {
-                    emitter.onNext(new UserDetails(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"]));
+                    emitter.onNext(AuthenticationResponse.build(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"], new TokenConfiguration() {}))
                 }
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)

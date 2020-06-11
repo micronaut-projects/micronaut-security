@@ -3,26 +3,25 @@ package io.micronaut.security.oauth2.docs.openid;
 //tag::clazz[]
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.security.token.config.TokenConfiguration;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.Collections;
 
 @Singleton
 @Named("okta") // <1>
-public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
+public class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @NonNull
-    @Override
-    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException();
+    private final TokenConfiguration tokenConfiguration;
+
+    public OktaAuthenticationMapper(TokenConfiguration tokenConfiguration) {
+        this.tokenConfiguration = tokenConfiguration;
     }
 
     @Override
@@ -31,9 +30,7 @@ public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
                                                                OpenIdTokenResponse tokenResponse, // <3>
                                                                OpenIdClaims openIdClaims, // <4>
                                                                @Nullable State state) { // <5>
-        return new UserDetails("name", Collections.emptyList()); // <6>
+        return AuthenticationResponse.build("name",tokenConfiguration); // <6>
     }
-
-
 }
 //end::clazz[]

@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2;
 
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 import javax.inject.Singleton;
@@ -40,7 +40,7 @@ public class DefaultProviderResolver implements ProviderResolver {
 
     @Override
     public Optional<String> resolveProvider(Authentication authentication) {
-        Object providerKey = authentication.getAttributes().get(OauthUserDetailsMapper.PROVIDER_KEY);
+        Object providerKey = authentication.getAttributes().get(OauthAuthenticationMapper.PROVIDER_KEY);
         if (providerKey != null) {
             return Optional.of(providerKey.toString());
         }

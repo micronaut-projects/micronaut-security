@@ -55,25 +55,25 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdAuthorizationResponseHandler.class);
 
     private final OpenIdTokenResponseValidator tokenResponseValidator;
-    private final OpenIdUserDetailsMapper defaultUserDetailsMapper;
+    private final OpenIdAuthenticationMapper defaultAuthenticationMapper;
     private final TokenEndpointClient tokenEndpointClient;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
     private final @Nullable StateValidator stateValidator;
 
     /**
      * @param tokenResponseValidator The token response validator
-     * @param userDetailsMapper The user details mapper
+     * @param authenticationMapper The user details mapper
      * @param tokenEndpointClient The token endpoint client
      * @param oauthRouteUrlBuilder The oauth route url builder
      * @param stateValidator The state validator
      */
     public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
-                                                     DefaultOpenIdUserDetailsMapper userDetailsMapper,
+                                                     DefaultOpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,
                                                      OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                                      @Nullable StateValidator stateValidator) {
         this.tokenResponseValidator = tokenResponseValidator;
-        this.defaultUserDetailsMapper = userDetailsMapper;
+        this.defaultAuthenticationMapper = authenticationMapper;
         this.tokenEndpointClient = tokenEndpointClient;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateValidator = stateValidator;
@@ -84,7 +84,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             OpenIdAuthorizationResponse authorizationResponse,
             OauthClientConfiguration clientConfiguration,
             OpenIdProviderMetadata openIdProviderMetadata,
-            @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+            @Nullable OpenIdAuthenticationMapper authenticationMapper,
             SecureEndpoint tokenEndpoint) {
 
         State state;
@@ -121,11 +121,11 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                         if (jwt.isPresent()) {
                             try {
                                 if (LOG.isTraceEnabled()) {
-                                    LOG.trace("Token validation succeeded. Creating a user details");
+                                    LOG.trace("Token validation succeeded. Creating an authentication");
                                 }
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                                OpenIdUserDetailsMapper openIdUserDetailsMapper = userDetailsMapper != null ? userDetailsMapper : defaultUserDetailsMapper;
-                                emitter.onNext(openIdUserDetailsMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, state));
+                                OpenIdAuthenticationMapper openIdAuthenticationMapper = authenticationMapper != null ? authenticationMapper : defaultAuthenticationMapper;
+                                emitter.onNext(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, state));
                                 emitter.onComplete();
                             } catch (ParseException e) {
                                 //Should never happen as validation succeeded

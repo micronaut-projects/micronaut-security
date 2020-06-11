@@ -29,9 +29,9 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.endpoints.KeysController
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
@@ -314,10 +314,11 @@ class JwksUriSignatureSpec extends Specification {
     @Requires(property = 'spec.name', value = 'AuthServerAJwksUriSignatureSpec')
     @Singleton
     static class AuthServerAAuthenticationProvider implements AuthenticationProvider {
+
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create({ emitter ->
-                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
@@ -325,10 +326,11 @@ class JwksUriSignatureSpec extends Specification {
     @Requires(property = 'spec.name', value = 'AuthServerBJwksUriSignatureSpec')
     @Singleton
     static class AuthServerBAuthenticationProvider implements AuthenticationProvider {
+
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create( {emitter ->
-                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }

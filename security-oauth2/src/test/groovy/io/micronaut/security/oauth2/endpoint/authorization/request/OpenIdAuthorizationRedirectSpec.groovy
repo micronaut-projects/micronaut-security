@@ -1,23 +1,24 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.EmbeddedServerSpecification
 import io.micronaut.security.oauth2.Keycloak
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
@@ -99,17 +100,12 @@ class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
     @Named("twitter")
     @Requires(property = "spec.name", value = "OpenIdAuthorizationRedirectSpec")
     @Requires(property = "micronaut.security.oauth2.clients.twitter")
-    static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
+    static class TwitterAuthenticationMapper implements OauthAuthenticationMapper {
 
         @Override
-        Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
-            return Publishers.just(new UnsupportedOperationException())
-        }
-
-        @Override
-        Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
+        Publisher<Authentication> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
             Flowable.create({ emitter ->
-                emitter.onNext(new UserDetails("twitterUser", Collections.emptyList()))
+                emitter.onNext(AuthenticationResponse.build('twitterUser', new TokenConfiguration() {}))
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }

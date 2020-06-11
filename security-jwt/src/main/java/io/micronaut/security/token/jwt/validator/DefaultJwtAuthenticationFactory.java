@@ -18,19 +18,16 @@ package io.micronaut.security.token.jwt.validator;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.text.ParseException;
-import java.util.Collections;
 import java.util.Optional;
 
 /**
- * Extracts the JWT claims and uses the {@link AuthenticationJWTClaimsSetAdapter} to construction an {@link Authentication} object.
+ * Extracts the JWT claims and builds an {@link Authentication} object.
  *
  * @author Sergio del Amo
  * @since 1.1.0
@@ -39,7 +36,6 @@ import java.util.Optional;
 public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultJwtAuthenticationFactory.class);
-
     private final TokenConfiguration tokenConfiguration;
 
     public DefaultJwtAuthenticationFactory(TokenConfiguration tokenConfiguration) {
@@ -54,7 +50,7 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
                 return Optional.empty();
             }
 
-            return usernameForClaims(claimSet).map(username -> new AuthenticationUserDetailsAdapter(new UserDetails(username, Collections.emptyList(), claimSet.getClaims()), tokenConfiguration.getRolesName(), tokenConfiguration.getNameKey()));
+            return usernameForClaims(claimSet).map(username -> Authentication.build(username, claimSet.getClaims(), tokenConfiguration));
 
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
@@ -67,7 +63,7 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
     /**
      *
      * @param claimSet JWT Claims
-     * @return the username defined by {@link TokenConfiguration#getNameKey()} ()} or the sub claim.
+     * @return the username defined by {@link TokenConfiguration#getNameKey()} or the sub claim.
      * @throws ParseException might be thrown parsing claims
      */
     protected Optional<String> usernameForClaims(JWTClaimsSet claimSet) throws ParseException {

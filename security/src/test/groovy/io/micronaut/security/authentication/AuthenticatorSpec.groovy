@@ -4,10 +4,13 @@ import groovy.transform.AutoImplement
 import io.micronaut.security.config.AuthenticationStrategy
 import io.micronaut.security.config.SecurityConfiguration
 import io.micronaut.security.config.SecurityConfigurationProperties
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import spock.lang.Shared
 import spock.lang.Specification
+
+import static io.reactivex.Flowable.create
 
 class AuthenticatorSpec extends Specification {
 
@@ -41,8 +44,8 @@ class AuthenticatorSpec extends Specification {
             authenticate(_, _) >> { Flowable.error( new Exception('Authentication provider raised exception') ) }
         }
         def authProviderOK = Stub(AuthenticationProvider) {
-            authenticate(_, _) >> Flowable.create({emitter ->
-                emitter.onNext(new UserDetails('admin', []))
+            authenticate(_, _) >> create({emitter ->
+                emitter.onNext(AuthenticationResponse.build("admin", new TokenConfiguration() {}))
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
@@ -53,13 +56,14 @@ class AuthenticatorSpec extends Specification {
         Flowable<AuthenticationResponse> rsp = authenticator.authenticate(null, creds)
 
         then:
-        rsp.blockingFirst() instanceof UserDetails
+        rsp.blockingFirst() instanceof AuthenticationResponse
+        rsp.blockingFirst().isAuthenticated()
     }
 
     void "if no authentication provider can authentication, the last error is sent back"() {
         given:
         def authProviderFailed = Stub(AuthenticationProvider) {
-            authenticate(_, _) >> Flowable.create({ emitter ->
+            authenticate(_, _) >> create({ emitter ->
                 emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)
@@ -78,7 +82,7 @@ class AuthenticatorSpec extends Specification {
         given:
         def providers = [
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> Flowable.create({ emitter ->
+                    authenticate(_, _) >> create({ emitter ->
                         emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
@@ -87,8 +91,8 @@ class AuthenticatorSpec extends Specification {
                     authenticate(_, _) >> Flowable.empty()
                 },
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> Flowable.create({ emitter ->
-                        emitter.onNext(new UserDetails("a", []))
+                    authenticate(_, _) >> create({ emitter ->
+                        emitter.onNext(AuthenticationResponse.build("a", new TokenConfiguration() {}))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
@@ -108,14 +112,14 @@ class AuthenticatorSpec extends Specification {
         given:
         def providers = [
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >>  Flowable.create({ emitter ->
+                    authenticate(_, _) >>  create({ emitter ->
                         emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >>  Flowable.create({ emitter ->
-                        emitter.onNext(new UserDetails("a", []))
+                    authenticate(_, _) >>  create({ emitter ->
+                        emitter.onNext(AuthenticationResponse.build("a", new TokenConfiguration() {}))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
@@ -135,13 +139,13 @@ class AuthenticatorSpec extends Specification {
         given:
         def providers = [
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> Flowable.create({ emitter ->
-                        emitter.onNext(new UserDetails("a", []))
+                    authenticate(_, _) >> create({ emitter ->
+                        emitter.onNext(AuthenticationResponse.build("a", new TokenConfiguration() {}))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> Flowable.create({ emitter ->
+                    authenticate(_, _) >> create({ emitter ->
                         emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
@@ -162,14 +166,14 @@ class AuthenticatorSpec extends Specification {
         given:
         def providers = [
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> Flowable.create({ emitter ->
-                        emitter.onNext(new UserDetails("a", []))
+                    authenticate(_, _) >> create({ emitter ->
+                        emitter.onNext(AuthenticationResponse.build("a", new TokenConfiguration() {}))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> Flowable.create({ emitter ->
-                        emitter.onNext(new UserDetails("b", []))
+                    authenticate(_, _) >> create({ emitter ->
+                        emitter.onNext(AuthenticationResponse.build("b", new TokenConfiguration() {}))
                         emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
@@ -181,7 +185,8 @@ class AuthenticatorSpec extends Specification {
         AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds)).blockingFirst()
 
         then: //The last error is returned
-        rsp instanceof UserDetails
-        ((UserDetails) rsp).username == "b"
+        rsp.authentication
+        rsp.authentication.isPresent()
+        rsp.authentication.get().name == "b"
     }
 }

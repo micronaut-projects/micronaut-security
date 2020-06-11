@@ -19,7 +19,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
@@ -125,13 +125,13 @@ public class JwtTokenGenerator implements TokenGenerator {
 
     /**
      *
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @param expiration The amount of time in seconds until the token expires
      * @return JWT token
      */
     @Override
-    public Optional<String> generateToken(UserDetails userDetails, @Nullable Integer expiration) {
-        Map<String, Object> claims = claimsGenerator.generateClaims(userDetails, expiration);
+    public Optional<String> generateToken(Authentication authentication, @Nullable Integer expiration) {
+        Map<String, Object> claims = claimsGenerator.generateClaims(authentication, expiration);
         return generateToken(claims);
     }
 

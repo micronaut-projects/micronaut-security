@@ -22,7 +22,6 @@ import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import io.micronaut.security.token.config.TokenConfiguration;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -45,16 +44,12 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthAuthenticationFetcher.class);
     private static final String PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC + " ";
     private final Authenticator authenticator;
-    private final TokenConfiguration configuration;
 
     /**
      * @param authenticator The authenticator to authenticate the credentials
-     * @param configuration The basic authentication configuration
      */
-    public BasicAuthAuthenticationFetcher(Authenticator authenticator,
-                                          TokenConfiguration configuration) {
+    public BasicAuthAuthenticationFetcher(Authenticator authenticator) {
         this.authenticator = authenticator;
-        this.configuration = configuration;
     }
 
     @Override
@@ -67,9 +62,9 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
             Flowable<AuthenticationResponse> authenticationResponse = Flowable.fromPublisher(authenticator.authenticate(request, credentials.get()));
 
             return authenticationResponse.switchMap(response -> {
-                if (response.isAuthenticated() && response.getUserDetails().isPresent()) {
-                    UserDetails userDetails = response.getUserDetails().get();
-                    return Flowable.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName(), configuration.getNameKey()));
+                if (response.isAuthenticated() && response.getAuthentication().isPresent()) {
+                    Authentication authentication = response.getAuthentication().get();
+                    return Flowable.just(authentication);
                 } else {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Could not authenticate {}", credentials.get().getUsername());

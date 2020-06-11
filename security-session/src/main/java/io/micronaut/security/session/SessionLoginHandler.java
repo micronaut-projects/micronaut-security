@@ -22,9 +22,8 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.filters.SecurityFilter;
@@ -54,7 +53,6 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     protected final String loginFailure;
     protected final RedirectConfiguration redirectConfiguration;
     protected final SessionStore<Session> sessionStore;
-    private final TokenConfiguration tokenConfiguration;
     private final PriorToLoginPersistence priorToLoginPersistence;
 
     /**
@@ -62,7 +60,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
      * @param securitySessionConfiguration Security Session Configuration
      * @param sessionStore The session store
      * @param tokenConfiguration Token Configuration
-     * @deprecated Use {@link SessionLoginHandler#SessionLoginHandler(RedirectConfiguration, SessionStore, TokenConfiguration, PriorToLoginPersistence)} instead.
+     * @deprecated Use {@link SessionLoginHandler#SessionLoginHandler(RedirectConfiguration, SessionStore, PriorToLoginPersistence)} instead.
      */
     @Deprecated
     public SessionLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,
@@ -70,34 +68,30 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
                                TokenConfiguration tokenConfiguration) {
         this(securitySessionConfiguration.toRedirectConfiguration(),
                 sessionStore,
-                tokenConfiguration,
-                null);
+        null);
     }
 
     /**
      * Constructor.
      * @param redirectConfiguration Redirect configuration
      * @param sessionStore The session store
-     * @param tokenConfiguration Token Configuration
      * @param priorToLoginPersistence The persistence to store the original url
      */
     @Inject
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
-                               TokenConfiguration tokenConfiguration,
                                @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         this.loginFailure = redirectConfiguration.getLoginFailure();
         this.loginSuccess = redirectConfiguration.getLoginSuccess();
         this.redirectConfiguration = redirectConfiguration;
         this.sessionStore = sessionStore;
-        this.tokenConfiguration = tokenConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
     }
 
     @Override
-    public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+    public MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
-        session.put(SecurityFilter.AUTHENTICATION, new AuthenticationUserDetailsAdapter(userDetails, tokenConfiguration.getRolesName(), tokenConfiguration.getNameKey()));
+        session.put(SecurityFilter.AUTHENTICATION, authentication);
         try {
             MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
             ThrowingSupplier<URI, URISyntaxException> uriSupplier = () -> new URI(loginSuccess);
@@ -115,7 +109,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
-    public MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+    public MutableHttpResponse<?> loginRefresh(Authentication authentication, String refreshToken, HttpRequest<?> request) {
         throw new UnsupportedOperationException("Session based logins do not support refresh");
     }
 

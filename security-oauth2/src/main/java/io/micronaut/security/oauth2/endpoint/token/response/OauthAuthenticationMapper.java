@@ -16,20 +16,18 @@
 package io.micronaut.security.oauth2.endpoint.token.response;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import org.reactivestreams.Publisher;
 
 /**
  * A contract for mapping an OAuth 2.0 token endpoint
- * response to a {@link UserDetails} object.
+ * response to a {@link io.micronaut.security.authentication.Authentication} object.
  *
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface OauthUserDetailsMapper {
+public interface OauthAuthenticationMapper {
 
     /**
      * A key to be stored in the user details to denote which
@@ -50,24 +48,11 @@ public interface OauthUserDetailsMapper {
     String REFRESH_TOKEN_KEY = "refreshToken";
 
     /**
-     * Convert the token response into a user details.
-     *
-     * @param tokenResponse The token response
-     * @return The user details
-     * @deprecated Use {@link #createAuthenticationResponse(TokenResponse, State) instead}. This
-     * method will only be called if the new method is not overridden.
-     */
-    @Deprecated
-    Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse);
-
-    /**
      * Convert the token response and state into an authentication response.
      *
      * @param tokenResponse The token response
      * @param state The OAuth state
      * @return The authentication response
      */
-    default Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) {
-        return Publishers.map(createUserDetails(tokenResponse), AuthenticationResponse.class::cast);
-    }
+    Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state);
 }

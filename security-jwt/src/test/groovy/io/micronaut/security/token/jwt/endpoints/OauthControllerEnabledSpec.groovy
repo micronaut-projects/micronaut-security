@@ -2,9 +2,8 @@ package io.micronaut.security.token.jwt.endpoints
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
-import io.micronaut.security.token.generator.RefreshTokenGenerator
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.RefreshTokenValidator
@@ -62,7 +61,7 @@ class OauthControllerEnabledSpec extends ApplicationContextSpecification {
         }
 
         @Override
-        Publisher<UserDetails> getUserDetails(String refreshToken) {
+        Publisher<Authentication> getAuthentication(String refreshToken) {
             return null
         }
     }

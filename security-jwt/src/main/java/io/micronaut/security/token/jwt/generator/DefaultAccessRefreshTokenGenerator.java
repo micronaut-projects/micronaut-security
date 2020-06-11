@@ -19,7 +19,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.generator.RefreshTokenGenerator;
 import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.security.token.event.AccessTokenGeneratedEvent;
@@ -86,29 +86,29 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      * Generate an {@link AccessRefreshToken} response for the given
      * user details.
      *
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @return The http response
      */
     @NonNull
     @Override
-    public Optional<AccessRefreshToken> generate(@NonNull UserDetails userDetails) {
-        return generate(generateRefreshToken(userDetails).orElse(null), userDetails);
+    public Optional<AccessRefreshToken> generate(@NonNull Authentication authentication) {
+        return generate(generateRefreshToken(authentication).orElse(null), authentication);
     }
 
     /**
      * Generates a refresh token and emits a {@link RefreshTokenGeneratedEvent}.
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @return {@literal Optional#empty()} if refresh token was not generated or the refresh token wrapped in an Optional.
      */
     @NonNull
-    public Optional<String> generateRefreshToken(@NonNull UserDetails userDetails) {
+    public Optional<String> generateRefreshToken(@NonNull Authentication authentication) {
         Optional<String> refreshToken = Optional.empty();
         if (beanContext.containsBean(RefreshTokenValidator.class)) {
             if (beanContext.containsBean(RefreshTokenPersistence.class)) {
                 if (refreshTokenGenerator != null) {
-                    String key = refreshTokenGenerator.createKey(userDetails);
-                    refreshToken = refreshTokenGenerator.generate(userDetails, key);
-                    refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(userDetails, key)));
+                    String key = refreshTokenGenerator.createKey(authentication);
+                    refreshToken = refreshTokenGenerator.generate(authentication, key);
+                    refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(authentication, key)));
                 } else {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenGenerator.class.getName());
@@ -159,32 +159,32 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      * Generate a new access refresh token.
      *
      * @param refreshToken The refresh token
-     * @param userDetails The user details to create a new access token
+     * @param authentication The user details to create a new access token
      * @return The optional access refresh token
      */
     @NonNull
     @Override
-    public Optional<AccessRefreshToken> generate(@NonNull String refreshToken, @NonNull UserDetails userDetails) {
-        Optional<String> optionalAccessToken = tokenGenerator.generateToken(userDetails, accessTokenExpiration(userDetails));
+    public Optional<AccessRefreshToken> generate(@NonNull String refreshToken, @NonNull Authentication authentication) {
+        Optional<String> optionalAccessToken = tokenGenerator.generateToken(authentication, accessTokenExpiration(authentication));
         if (!optionalAccessToken.isPresent()) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Failed to generate access token for user {}", userDetails.getUsername());
+                LOG.debug("Failed to generate access token for user {}", authentication.getName());
             }
             return Optional.empty();
         }
 
         String accessToken = optionalAccessToken.get();
         eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
-        return Optional.of(tokenRenderer.render(userDetails, accessTokenExpiration(userDetails), accessToken, refreshToken));
+        return Optional.of(tokenRenderer.render(authentication, accessTokenExpiration(authentication), accessToken, refreshToken));
     }
 
     /**
      *
-     * @param userDetails User details for which the access token is being generated
+     * @param authentication User details for which the access token is being generated
      * @return expiration of the new access token
      */
     @NonNull
-    public Integer accessTokenExpiration(@NonNull UserDetails userDetails) {
+    public Integer accessTokenExpiration(@NonNull Authentication authentication) {
         return accessTokenConfiguration.getExpiration();
     }
 

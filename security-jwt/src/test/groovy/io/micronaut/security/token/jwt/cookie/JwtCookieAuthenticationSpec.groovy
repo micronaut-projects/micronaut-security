@@ -17,11 +17,10 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.endpoints.LogoutController
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.token.jwt.bearer.BearerTokenReader
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.testutils.GebEmbeddedServerSpecification
@@ -173,7 +172,6 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
         homePage.username() == null
     }
 
-
     @Requires(property = "spec.name", value = "JwtCookieAuthenticationSpec")
     @Singleton
     static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
@@ -183,7 +181,7 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
             Flowable.create({emitter ->
                 if ( authenticationRequest.getIdentity().equals("sherlock") &&
                         authenticationRequest.getSecret().equals("password") ) {
-                    emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
+                    emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }

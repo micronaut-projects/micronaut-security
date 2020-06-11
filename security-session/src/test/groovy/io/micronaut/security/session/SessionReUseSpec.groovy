@@ -15,8 +15,8 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.filters.SecurityFilter
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.session.Session
 import io.micronaut.session.SessionStore
 import io.reactivex.BackpressureStrategy
@@ -104,13 +104,13 @@ class SessionReUseSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(property = "spec.name", value = "SessionReUseSpec")
     static class AuthenticationProviderUserPassword implements AuthenticationProvider  { // <2>
+
         @Override
         public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             return Flowable.create({ emitter ->
                 if ( authenticationRequest.getIdentity().equals("sherlock") &&
                         authenticationRequest.getSecret().equals("password") ) {
-                    UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>());
-                    emitter.onNext(userDetails);
+                    emitter.onNext(AuthenticationResponse.build(authenticationRequest.getIdentity() as String, new TokenConfiguration() {}))
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()));
                 }

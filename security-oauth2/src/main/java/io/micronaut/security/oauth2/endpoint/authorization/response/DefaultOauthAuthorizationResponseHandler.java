@@ -24,7 +24,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
     public Publisher<AuthenticationResponse> handle(
             AuthorizationResponse authorizationResponse,
             OauthClientConfiguration clientConfiguration,
-            OauthUserDetailsMapper userDetailsMapper,
+            OauthAuthenticationMapper authenticationMapper,
             SecureEndpoint tokenEndpoint) {
 
         State state;
@@ -93,7 +93,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
                     if (LOG.isTraceEnabled()) {
                         LOG.trace("Token endpoint returned a success response. Creating a user details");
                     }
-                    return Flowable.fromPublisher(userDetailsMapper.createAuthenticationResponse(response, state))
+                    return Flowable.fromPublisher(authenticationMapper.createAuthenticationResponse(response, state))
                             .map(AuthenticationResponse.class::cast);
                 });
     }
