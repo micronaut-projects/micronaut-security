@@ -33,6 +33,22 @@ public class SecureGrantMap extends HashMap<String, String> implements SecureGra
     }
 
     /**
+     * @param initialCapacity The initial capacity
+     * @param clientId        The client id
+     * @param clientSecret    The client secret
+     * @since 2.0.0
+     */
+    public SecureGrantMap(int initialCapacity, String clientId, String clientSecret) {
+        this(initialCapacity);
+        if (clientId != null) {
+            setClientId(clientId);
+        }
+        if (clientSecret != null) {
+            setClientSecret(clientSecret);
+        }
+    }
+
+    /**
      * Default constructor.
      */
     public SecureGrantMap() {

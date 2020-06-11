@@ -18,10 +18,11 @@ package io.micronaut.security.oauth2.grants;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -33,10 +34,10 @@ import java.util.Map;
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ClientCredentialsGrant implements AsMap {
+public class ClientCredentialsGrant extends AbstractSecureGrant implements AsMap {
 
     public static final String KEY_GRANT_TYPE = "grant_type";
-    public static final String KEY_SCOPES = "scopes";
+    public static final String KEY_SCOPE = "scope";
 
     private String grantType = GrantType.CLIENT_CREDENTIALS.toString();
     private String scope;
@@ -45,6 +46,15 @@ public class ClientCredentialsGrant implements AsMap {
      * Default Constructor.
      */
     public ClientCredentialsGrant() {
+    }
+
+    /**
+     * @param clientConfiguration The client configuration
+     */
+    public ClientCredentialsGrant(OauthClientConfiguration clientConfiguration) {
+        scope = clientConfiguration.getScopes().stream()
+                .reduce((a, b) -> a + StringUtils.SPACE + b)
+                .orElse(null);
     }
 
     /**
@@ -75,9 +85,12 @@ public class ClientCredentialsGrant implements AsMap {
      */
     @Override
     public Map<String, String> toMap() {
-        Map<String, String> m = new HashMap<>(2);
+        Map<String, String> m = new SecureGrantMap(4, getClientId(), getClientSecret());
         m.put(KEY_GRANT_TYPE, getGrantType());
-        m.put(KEY_SCOPES, getScope());
+        String scope = getScope();
+        if (StringUtils.isNotEmpty(scope)) {
+            m.put(KEY_SCOPE, scope);
+        }
         return m;
     }
 }

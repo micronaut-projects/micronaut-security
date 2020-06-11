@@ -36,18 +36,14 @@ import java.util.Map;
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class PasswordGrant implements SecureGrant, AsMap {
+public class PasswordGrant extends AbstractSecureGrant implements AsMap {
 
     private static final String KEY_GRANT_TYPE = "grant_type";
-    private static final String KEY_CLIENT_ID = "client_id";
-    private static final String KEY_CLIENT_SECRET = "client_secret";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_SCOPE = "scope";
 
     private String grantType = GrantType.PASSWORD.toString();
-    private String clientId;
-    private String clientSecret;
     private String username;
     private String password;
     private String scope;
@@ -85,39 +81,6 @@ public class PasswordGrant implements SecureGrant, AsMap {
      */
     public void setGrantType(@NonNull String grantType) {
         this.grantType = grantType;
-    }
-
-    /**
-     *
-     * @return The application's Client identifier.
-     */
-    @NonNull
-    public String getClientId() {
-        return clientId;
-    }
-
-    /**
-     *
-     * @param clientId Application's Client identifier.
-     */
-    public void setClientId(@NonNull String clientId) {
-        this.clientId = clientId;
-    }
-
-    /**
-     *
-     * @param clientSecret Application's Client clientSecret.
-     */
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    /**
-     *
-     * @return The application's Client clientSecret.
-     */
-    public String getClientSecret() {
-        return this.clientSecret;
     }
 
     /**
@@ -176,18 +139,13 @@ public class PasswordGrant implements SecureGrant, AsMap {
      * @return this object as a Map
      */
     public Map<String, String> toMap() {
-        Map<String, String> m = new SecureGrantMap();
-        m.put(KEY_GRANT_TYPE, grantType);
-        m.put(KEY_USERNAME, username);
-        m.put(KEY_PASSWORD, password);
+        Map<String, String> m = new SecureGrantMap(6, getClientId(), getClientSecret());
+        m.put(KEY_GRANT_TYPE, getGrantType());
+        m.put(KEY_USERNAME, getUsername());
+        m.put(KEY_PASSWORD, getPassword());
+        String scope = getScope();
         if (StringUtils.isNotEmpty(scope)) {
             m.put(KEY_SCOPE, scope);
-        }
-        if (clientId != null) {
-            m.put(KEY_CLIENT_ID, clientId);
-        }
-        if (clientSecret != null) {
-            m.put(KEY_CLIENT_SECRET, clientSecret);
         }
         return m;
     }

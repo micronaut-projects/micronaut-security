@@ -18,9 +18,13 @@ package io.micronaut.security.oauth2.grants;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
+import java.util.Map;
 
 /**
  * Refresh Token Grant.
@@ -31,7 +35,11 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class RefreshTokenGrant {
+public class RefreshTokenGrant extends AbstractSecureGrant implements AsMap {
+
+    private static final String KEY_GRANT_TYPE = "grant_type";
+    private static final String KEY_REFRESH_TOKEN = "refresh_token";
+    private static final String KEY_SCOPE = "scope";
 
     private String grantType = GrantType.REFRESH_TOKEN.toString();
     private String refreshToken;
@@ -41,12 +49,23 @@ public class RefreshTokenGrant {
      * Default constructor.
      */
     public RefreshTokenGrant() {
+    }
 
+    /**
+     * @param refreshToken The refresh token
+     * @param clientConfiguration The client configuration
+     * @since 2.0.0
+     */
+    public RefreshTokenGrant(String refreshToken, OauthClientConfiguration clientConfiguration) {
+        this.refreshToken = refreshToken;
+        scope = clientConfiguration.getScopes().stream()
+                .reduce((a, b) -> a + StringUtils.SPACE + b)
+                .orElse(null);
     }
 
     /**
      *
-     * @return refresh_token
+     * @return {@code "refresh_token"}
      */
     @NonNull
     public String getGrantType() {
@@ -86,4 +105,21 @@ public class RefreshTokenGrant {
     public void setRefreshToken(@NonNull String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    /**
+     *
+     * @return this object as a Map
+     */
+    @Override
+    public Map<String, String> toMap() {
+        Map<String, String> m = new SecureGrantMap(5, getClientId(), getClientSecret());
+        m.put(KEY_GRANT_TYPE, getGrantType());
+        m.put(KEY_REFRESH_TOKEN, getRefreshToken());
+        String scope = getScope();
+        if (StringUtils.isNotEmpty(scope)) {
+            m.put(KEY_SCOPE, scope);
+        }
+        return m;
+    }
+
 }

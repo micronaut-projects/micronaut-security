@@ -31,17 +31,13 @@ import java.util.Map;
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class AuthorizationCodeGrant implements SecureGrant, AsMap {
+public class AuthorizationCodeGrant extends AbstractSecureGrant implements AsMap {
 
     private static final String KEY_GRANT_TYPE = "grant_type";
-    private static final String KEY_CLIENT_ID = "client_id";
-    private static final String KEY_CLIENT_SECRET = "client_secret";
     private static final String KEY_REDIRECT_URI = "redirect_uri";
     private static final String KEY_CODE = "code";
 
     private String grantType = GrantType.AUTHORIZATION_CODE.toString();
-    private String clientId;
-    private String clientSecret;
     private String redirectUri;
     private String code;
 
@@ -49,7 +45,6 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      * Default Constructor.
      */
     public AuthorizationCodeGrant() {
-
     }
 
     /**
@@ -67,39 +62,6 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      */
     public void setGrantType(@NonNull String grantType) {
         this.grantType = grantType;
-    }
-
-    /**
-     *
-     * @return The application's Client identifier.
-     */
-    @NonNull
-    public String getClientId() {
-        return clientId;
-    }
-
-    /**
-     *
-     * @param clientId Application's Client identifier.
-     */
-    public void setClientId(@NonNull String clientId) {
-        this.clientId = clientId;
-    }
-
-    /**
-     *
-     * @param clientSecret Application's Client clientSecret.
-     */
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    /**
-     *
-     * @return The application's Client clientSecret.
-     */
-    public String getClientSecret() {
-        return this.clientSecret;
     }
 
     /**
@@ -142,15 +104,9 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      */
     @Override
     public Map<String, String> toMap() {
-        Map<String, String> m = new SecureGrantMap(5);
+        Map<String, String> m = new SecureGrantMap(5, getClientId(), getClientSecret());
         m.put(KEY_GRANT_TYPE, getGrantType());
         m.put(KEY_CODE, getCode());
-        if (clientId != null) {
-            m.put(KEY_CLIENT_ID, clientId);
-        }
-        if (clientSecret != null) {
-            m.put(KEY_CLIENT_SECRET, clientSecret);
-        }
         if (redirectUri != null) {
             m.put(KEY_REDIRECT_URI, getRedirectUri());
         }
