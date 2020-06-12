@@ -45,7 +45,11 @@ import java.util.Optional;
 @EachProperty(OauthConfigurationProperties.PREFIX + ".clients")
 public class OauthClientConfigurationProperties implements OauthClientConfiguration {
 
-    private static final boolean DEFAULT_ENABLED = true;
+    /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ENABLED = true;
     private List<String> DEFAULT_SCOPES = new ArrayList<>();
 
     private final String name;
@@ -553,7 +557,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @ConfigurationProperties("end-session")
         public static class EndSessionConfigurationProperties extends DefaultEndpointConfiguration implements EndSessionEndpointConfiguration {
 
-            private static final Boolean DEFAULT_ENABLED = true;
+            private static final boolean DEFAULT_ENABLED = true;
             private boolean enabled = DEFAULT_ENABLED;
 
             @Override

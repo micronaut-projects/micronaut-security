@@ -30,7 +30,11 @@ public class BasicAuthAuthenticationConfiguration implements Toggleable {
 
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".basic-auth";
 
-    private static final boolean DEFAULT_ENABLED = true;
+    /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ENABLED = true;
     private static final String DEFAULT_ROLES_NAME = "roles";
 
     private boolean enabled = DEFAULT_ENABLED;

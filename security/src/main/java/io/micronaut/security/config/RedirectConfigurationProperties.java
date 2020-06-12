@@ -190,7 +190,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
          * The default enabled value for unauthorized.
          */
         @SuppressWarnings("WeakerAccess")
-        public static final Boolean DEFAULT_ENABLED = true;
+        public static final boolean DEFAULT_ENABLED = true;
 
         /**
          * The default unauthorized rejection target URL.
@@ -246,7 +246,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
          * The default enabled value for forbidden.
          */
         @SuppressWarnings("WeakerAccess")
-        public static final Boolean DEFAULT_ENABLED = true;
+        public static final boolean DEFAULT_ENABLED = true;
 
         /**
          * The default forbidden rejection target URL.
@@ -301,7 +301,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
         /**
          * The default enabled value for forbidden.
          */
-        public static final Boolean DEFAULT_ENABLED = true;
+        public static final boolean DEFAULT_ENABLED = true;
 
         /**
          * The default forbidden rejection target URL.
