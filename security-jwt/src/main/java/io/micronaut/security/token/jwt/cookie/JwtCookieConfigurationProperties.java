@@ -280,7 +280,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     }
 
     /**
-     * Sets the same-site setting of the cookie. Default value ({@value #DEFAULT_COOKIESAMESITE}.
+     * Sets the same-site setting of the cookie. Default value null.
      * @param cookieSameSite The same-site setting of the cookie.
      */
     public void setCookieSameSite(@Nullable SameSite cookieSameSite) {
