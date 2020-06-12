@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.config;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 /**
@@ -31,5 +32,7 @@ public interface TokenConfiguration extends Toggleable {
      *
      * @return The roles claim name, e.g. roles.
      */
+    @NonNull
     String getRolesName();
+
 }
