@@ -64,7 +64,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      * @param beanContext Bean Context
      * @param refreshTokenGenerator The refresh token generator
      * @param claimsGenerator Claims generator
-     * @param eventPublisher The Application event publiser
+     * @param eventPublisher The Application event publisher
      */
     public DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration accessTokenConfiguration,
                                        TokenRenderer tokenRenderer,
