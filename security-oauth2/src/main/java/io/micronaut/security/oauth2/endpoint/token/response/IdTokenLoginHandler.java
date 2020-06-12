@@ -62,7 +62,6 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
         this.tokenConfiguration = tokenConfiguration;
     }
 
-
     @Override
     protected List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
         List<Cookie> cookies = new ArrayList<>(1);
