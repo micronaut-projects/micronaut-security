@@ -165,7 +165,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     }
 
     /**
-     * Sets whether JWT cookie based security is enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * Sets whether JWT cookie configuration is enabled. Default value ({@value #DEFAULT_ENABLED}).
      * @param enabled True if it is enabled
      */
     public void setEnabled(boolean enabled) {
