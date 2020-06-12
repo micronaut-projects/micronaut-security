@@ -373,6 +373,21 @@ Micronaut Security 2.x requires Micronaut 2.x.
 </div>
 </div>
 <div class="sect2">
+<h3 id="_userdetails_deleted_in_favour_of_authentication">UserDetails deleted in favour of Authentication</h3>
+<div class="paragraph">
+<p><code>UserDetails</code> has been removed. Every api which previously used <code>UserDetails</code> uses <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> instead. <code>Authentication</code> provides several static <code>build</code> methods to creates instances of <code>Authentication</code> for a particular user.</p>
+</div>
+<div class="paragraph">
+<p><code>io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper</code> has been renamed to  <code>io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper</code></p>
+</div>
+<div class="paragraph">
+<p><code>io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper</code> has been renamed to  <code>io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper</code> renamed to <code>io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper</code>.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_authentication_provider">Authentication Provider</h3>
 <div class="ulist">
 <ul>
@@ -393,7 +408,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>DelegatingAuthenticationProvider</code> and it&#8217;s related interfaces has been removed. If you provided implementations for <code>UserFetcher</code>, <code>UserState</code>, <code>PasswordEncoder</code>, and <code>AuthoritiesFetcher</code>, integrate them into your own implementation of <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. This API was removed because it only served a niche use case and increased the surface of this library&#8217;s API. None of the classes mentioned were directly used in this library and thus belong in the realm of user&#8217;s applications.</p>
+<p>The <code>DelegatingAuthenticationProvider</code> and it&#8217;s related interfaces has been removed. If you provided implementations for <code>UserFetcher</code>, <code>UserState</code>, <code>PasswordEncoder</code>, and <code>AuthoritiesFetcher</code>, integrate them into your own implementation of <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. This API was removed because it only served a niche use case and increased the surface of this library&#8217;s API. None of the classes mentioned were directly used in this library and thus belong in the realm of user&#8217;s applications. Check <a href="https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html">LDAP and Database authentication providers tutorial</a> to learn how to write a <code>DelegatingAuthenticationProvider</code>.</p>
 </li>
 </ul>
 </div>
@@ -418,11 +433,16 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <li>
 <p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a></p>
 </li>
+<li>
+<p><code>micronaut.security.authentication: idtoken</code> to enable <a href="../api/io/micronaut/oauth2/endpoint/token/response/IdTokenLoginHandler.html">IdTokenLoginHandler</a></p>
+</li>
 </ul>
 </div>
 </li>
 </ul>
 </div>
+<div class="sect3">
+<h4 id="_migration_example_a">Migration Example A</h4>
 <div class="paragraph">
 <p>If you were using the default bearer authentication, you should set:</p>
 </div>
@@ -433,6 +453,9 @@ Micronaut Security 2.x requires Micronaut 2.x.
         authentication: bearer</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_migration_example_b">Migration Example B</h4>
 <div class="paragraph">
 <p>For a previous configuration such as:</p>
 </div>
@@ -459,6 +482,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 </div>
 </div>
 </div>
+</div>
 <div class="sect2">
 <h3 id="_logouthandler">LogoutHandler</h3>
 <div class="ulist">
@@ -468,7 +492,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <div class="ulist">
 <ul>
 <li>
-<p><code>micronaut.security.authentication: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p>
+<p><code>micronaut.security.authentication:</code> <code>cookie</code> or <code>idtoken</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p>
 </li>
 <li>
 <p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a></p>
@@ -1221,7 +1245,20 @@ public class ExampleController {
 </table>
 </div>
 <div class="paragraph">
-<p>Alternatively, you can use <a href="https://jcp.org/en/jsr/detail?id=250">JSR_250</a> annotations (<code>javax.annotation.security.PermitAll</code>, <code>javax.annotation.security.RolesAllowed</code>, <code>javax.annotation.security.DenyAll</code>):</p>
+<p>Alternatively, you can use <a href="https://jcp.org/en/jsr/detail?id=250">JSR_250</a> annotations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>javax.annotation.security.PermitAll</code></p>
+</li>
+<li>
+<p><code>javax.annotation.security.RolesAllowed</code></p>
+</li>
+<li>
+<p><code>javax.annotation.security.DenyAll</code></p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="content">
