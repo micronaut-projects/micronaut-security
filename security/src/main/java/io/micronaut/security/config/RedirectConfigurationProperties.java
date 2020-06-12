@@ -167,7 +167,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
 
     /** If true, the user should be redirected back to the unauthorized
      * request that initiated the login flow. Supersedes the <code>login-success</code>
-     * configuration for those cases. Default value {@value DEFAULT_PRIOR_TO_LOGIN}.
+     * configuration for those cases. Default value {@value #DEFAULT_PRIOR_TO_LOGIN}.
      *
      * @param priorToLogin Prior to login setting
      */
