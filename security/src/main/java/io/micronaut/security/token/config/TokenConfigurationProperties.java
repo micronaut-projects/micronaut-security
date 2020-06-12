@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.config;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
@@ -36,6 +37,8 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     public static final boolean DEFAULT_ENABLED = true;
 
     private boolean enabled = DEFAULT_ENABLED;
+
+    @NonNull
     private String rolesName = TokenConfiguration.DEFAULT_ROLES_NAME;
 
     @Override
@@ -49,6 +52,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
      * If not specified, defaults to {@link #DEFAULT_ROLES_NAME}.
      */
     @Override
+    @NonNull
     public String getRolesName() {
         return rolesName;
     }
@@ -63,10 +67,10 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     }
 
     /**
-     * Name of the roles property. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME}.
+     * {@link io.micronaut.security.authentication.Authentication} attributes map key for the user's roles. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME}.
      * @param rolesName The roles name
      */
-    public void setRolesName(String rolesName) {
+    public void setRolesName(@NonNull String rolesName) {
         if (StringUtils.isNotEmpty(rolesName)) {
             this.rolesName = rolesName;
         }
