@@ -26,7 +26,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *
  * After receiving and validating a valid and authorized Token Request from the Client, the Authorization Server returns a successful response that includes an ID Token and an Access Token.
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse>Successful Token Response</a>
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse">Successful Token Response</a>
  * @author Sergio del Amo
  * @since 1.2.0
  */

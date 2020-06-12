@@ -64,25 +64,25 @@ public interface OauthClientConfiguration extends Toggleable {
     GrantType getGrantType();
 
     /**
-     * @see https://tools.ietf.org/html/rfc6749#section-4.1.3
+     * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.1.3">RFC 6749 Section 4.1.3</a>
      * @return The optional token endpoint configuration
      */
     Optional<SecureEndpointConfiguration> getToken();
 
     /**
-     * @see https://tools.ietf.org/html/rfc6749#section-3.1
+     * @see <a href="https://tools.ietf.org/html/rfc6749#section-3.1">RFC 6749 Section 3.1</a>
      * @return The optional authorization endpoint configuration
      */
     Optional<EndpointConfiguration> getAuthorization();
 
     /**
-     * @see https://tools.ietf.org/html/rfc7662
+     * @see <a href="https://tools.ietf.org/html/rfc7662">RFC 7662</a>
      * @return The introspection endpoint configuration
      */
     Optional<SecureEndpointConfiguration> getIntrospection();
 
     /**
-     * @see https://tools.ietf.org/html/rfc7009
+     * @see <a href="https://tools.ietf.org/html/rfc7009">RFC 7009</a>
      * @return The revocation endpoint configuration
      */
     Optional<SecureEndpointConfiguration> getRevocation();

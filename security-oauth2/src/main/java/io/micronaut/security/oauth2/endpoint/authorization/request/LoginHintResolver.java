@@ -22,7 +22,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Resolves a LoginHint. Hint to the Authorization Server about the login identifier the End-User might use to log in.
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken>ID Token login_hint description</a>
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token login_hint description</a>
  *
  * @author Sergio del Amo
  * @since 1.2.0

@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Generates a nonce. A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken>ID Token Nonce description</a>
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token Nonce description</a>
  *
  * @author Sergio del Amo
  * @since 1.2.0

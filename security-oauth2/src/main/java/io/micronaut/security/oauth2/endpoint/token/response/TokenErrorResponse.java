@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * Represent the response of an authorization server to an invalid access token request.
  *
- * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2>RFC 6749 Access Token Error Response</a>
+ * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2">RFC 6749 Access Token Error Response</a>
  *
  * @author James Kleeh
  * @since 1.2.0

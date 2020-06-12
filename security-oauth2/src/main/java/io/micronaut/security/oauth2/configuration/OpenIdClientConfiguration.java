@@ -47,34 +47,34 @@ public interface OpenIdClientConfiguration extends Named {
     Optional<String> getJwksUri();
 
     /**
-     * @see https://tools.ietf.org/html/rfc7591#section-3.1
-     * @see https://openid.net/specs/openid-connect-registration-1_0.html#ClientRegistration
+     * @see <a href="https://tools.ietf.org/html/rfc7591#section-3.1">RFC 7591 - Section 3.1</a>
+     * @see <a href="https://openid.net/specs/openid-connect-registration-1_0.html#ClientRegistration">OpenID Connect Client Registration</a>
      * @return The registration endpoint configuration
      */
     Optional<EndpointConfiguration> getRegistration();
 
     /**
-     * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
+     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">OpenID Connect Core 1.0 - UserInfo</a>
      * @return The user info endpoint configuration
      */
     Optional<EndpointConfiguration> getUserInfo();
 
     /**
-     * @see https://tools.ietf.org/html/rfc6749#section-3.1
-     * @see https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint
+     * @see <a href="https://tools.ietf.org/html/rfc6749#section-3.1">RFC 6749 - Section 3.1</a>
+     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint">OpenID Connect Core 1.0 - Authorization Endpoint</a>
      * @return The authorization endpoint configuration
      */
     Optional<AuthorizationEndpointConfiguration> getAuthorization();
 
     /**
-     * @see https://tools.ietf.org/html/rfc6749#section-4.1.3
-     * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint
+     * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.1.3">RFC 6749 - Section 4.1.3</a>
+     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint">OpenID Connect Core 1.0</a>
      * @return The token endpoint configuration
      */
     Optional<TokenEndpointConfiguration> getToken();
 
     /**
-     * @see https://openid.net/specs/openid-connect-session-1_0.html
+     * @see <a href="https://openid.net/specs/openid-connect-session-1_0.html">OpenID Connect Session 1.0</a>
      * @return The end session configuration
      */
     @NonNull
