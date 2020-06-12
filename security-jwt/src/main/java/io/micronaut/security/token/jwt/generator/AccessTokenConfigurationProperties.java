@@ -35,7 +35,7 @@ public class AccessTokenConfigurationProperties implements AccessTokenConfigurat
      * The default expiration.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final Integer DEFAULT_EXPIRATION = 3600;
+    public static final int DEFAULT_EXPIRATION = 3600;
 
     @NonNull
     private Integer expiration = DEFAULT_EXPIRATION;
