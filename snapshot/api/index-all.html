@@ -767,7 +767,7 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#CookieLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-java.lang.String-java.lang.String-">CookieLoginHandler(JwtCookieConfiguration, String, String)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use {@link CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence) instead.</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#CookieLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-"><code>CookieLoginHandler.CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)</code></a> instead.</span></div>
 </div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie"><span class="typeNameLink">CookieNoncePersistence</span></a> - Class in <a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/package-summary.html">io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie</a></dt>
@@ -881,6 +881,18 @@
 <dd>
 <div class="block">The default same-site setting for the JWT cookie.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.configuration.security.ldap.configuration.<a href="io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.html" title="class in io.micronaut.configuration.security.ldap.configuration">LdapConfiguration</a></dt>
+<dd>
+<div class="block">The default enable value.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.configuration.security.ldap.configuration.<a href="io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html" title="class in io.micronaut.configuration.security.ldap.configuration">LdapConfiguration.GroupConfiguration</a></dt>
+<dd>
+<div class="block">The default enable value.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationConfiguration</a></dt>
+<dd>
+<div class="block">The default enable value.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default enabled value for forbidden.</div>
@@ -905,7 +917,19 @@
 <dd>
 <div class="block">The default enable value.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default enable value.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default enable value.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state">DefaultStateConfiguration</a></dt>
+<dd>
+<div class="block">The default enable value.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.oauth2.endpoint.nonce.<a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce">DefaultNonceConfiguration</a></dt>
 <dd>
 <div class="block">The default enable value.</div>
 </dd>
@@ -1687,7 +1711,7 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/Authentication.html#getAttributes--">getAttributes()</a></span> - Method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></dt>
 <dd>
 <div class="block">In order to correctly implement the <code>Serializable</code> specification, this map
- should be <code>Map<String, Serializable></code>, however that would place a burden on
+ should be Map&lt;String, Serializable&gt;, however that would place a burden on
  those not requiring serialization, forcing their values to conform to that spec.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html#getAttributes--">getAttributes()</a></span> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html" title="class in io.micronaut.security.authentication">AuthenticationUserDetailsAdapter</a></dt>
@@ -3764,7 +3788,7 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-">JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider)</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.claims.<a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html" title="class in io.micronaut.security.token.jwt.generator.claims">JWTClaimsSetGenerator</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use <code>instead.</code></span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-io.micronaut.runtime.ApplicationConfiguration-"><code>JWTClaimsSetGenerator.JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)</code></a> instead.</span></div>
 </div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/validator/JWTClaimsSetUtils.html" title="class in io.micronaut.security.token.jwt.validator"><span class="typeNameLink">JWTClaimsSetUtils</span></a> - Class in <a href="io/micronaut/security/token/jwt/validator/package-summary.html">io.micronaut.security.token.jwt.validator</a></dt>
@@ -3816,7 +3840,7 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-">JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-"><code>JwtCookieLoginHandler.JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator,PriorToLoginPersistence)</code></a> instead.</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-"><code>JwtCookieLoginHandler.JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)</code></a> instead.</span></div>
 </div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-">JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
@@ -5178,7 +5202,7 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionLoginHandler.html#SessionLoginHandler-io.micronaut.security.session.SecuritySessionConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-">SessionLoginHandler(SecuritySessionConfiguration, SessionStore&lt;Session&gt;, TokenConfiguration)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use <code>SessionLogoutHandler(RedirectConfiguration, SessionStore, TokenConfiguration, PriorToLoginPersistence)</code> instead.</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/session/SessionLoginHandler.html#SessionLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-"><code>SessionLoginHandler.SessionLoginHandler(RedirectConfiguration, SessionStore, TokenConfiguration, PriorToLoginPersistence)</code></a> instead.</span></div>
 </div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionLoginHandler.html#SessionLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">SessionLoginHandler(RedirectConfiguration, SessionStore&lt;Session&gt;, TokenConfiguration, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>

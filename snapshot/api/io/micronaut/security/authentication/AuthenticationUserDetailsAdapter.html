@@ -163,7 +163,7 @@ implements <a href="../../../../io/micronaut/security/authentication/Authenticat
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html#getAttributes--">getAttributes</a></span>()</code>
 <div class="block">In order to correctly implement the <code>Serializable</code> specification, this map
- should be <code>Map<String, Serializable></code>, however that would place a burden on
+ should be Map&lt;String, Serializable&gt;, however that would place a burden on
  those not requiring serialization, forcing their values to conform to that spec.</div>
 </td>
 </tr>
@@ -233,7 +233,7 @@ implements <a href="../../../../io/micronaut/security/authentication/Authenticat
 public&nbsp;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;getAttributes()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../io/micronaut/security/authentication/Authentication.html#getAttributes--">Authentication</a></code></span></div>
 <div class="block">In order to correctly implement the <code>Serializable</code> specification, this map
- should be <code>Map<String, Serializable></code>, however that would place a burden on
+ should be Map&lt;String, Serializable&gt;, however that would place a burden on
  those not requiring serialization, forcing their values to conform to that spec.
 
  This is left intentionally as Object in order to meet both use cases and those
