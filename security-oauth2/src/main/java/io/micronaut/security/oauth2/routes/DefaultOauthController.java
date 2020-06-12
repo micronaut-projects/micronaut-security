@@ -84,7 +84,7 @@ public class DefaultOauthController implements OauthController {
         Publisher<AuthenticationResponse> authenticationResponse = oauthClient.onCallback(request);
         return Flowable.fromPublisher(authenticationResponse).map(response -> {
 
-            if (response.isAuthenticated()) {
+            if (response.isAuthenticated() && response.getUserDetails().isPresent()) {
                 UserDetails userDetails = response.getUserDetails().get();
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Authentication succeeded. User [{}] is now logged in", userDetails.getUsername());
