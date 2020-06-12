@@ -92,7 +92,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                 }
             } catch (NamingException e) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e);
+                    LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e.getMessage());
                 }
                 emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN)));
                 return;
