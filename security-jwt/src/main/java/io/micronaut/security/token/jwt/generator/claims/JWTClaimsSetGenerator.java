@@ -69,7 +69,9 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param tokenConfiguration     Token Configuration
      * @param jwtIdGenerator         Generator which creates unique JWT ID
      * @param claimsAudienceProvider Provider which identifies the recipients that the JWT is intented for.
+     * @deprecated Use {@link JWTClaimsSetGenerator(JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration) instead.}
      */
+    @Deprecated
     public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
                                  @Nullable JwtIdGenerator jwtIdGenerator,
                                  @Nullable ClaimsAudienceProvider claimsAudienceProvider) {
