@@ -72,7 +72,7 @@ public class RefreshTokenConfigurationProperties implements RefreshTokenConfigur
     private boolean base64 = DEFAULT_BASE64;
 
     /**
-     * Sets whether {@link SignedRefreshTokenGenerator} is enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * Sets whether {@link io.micronaut.security.token.jwt.generator.SignedRefreshTokenGenerator} is enabled. Default value ({@value #DEFAULT_ENABLED}).
      *
      * @param enabled True if it is enabled
      */
