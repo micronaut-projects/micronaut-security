@@ -25,7 +25,6 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
                 emitter.onNext(new UserDetails('user', []))
             } else {
                 emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                emitter.onComplete()
             }
             emitter.onComplete()
 
