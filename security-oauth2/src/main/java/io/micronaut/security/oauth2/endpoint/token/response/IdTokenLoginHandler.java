@@ -83,7 +83,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
      * @return parse the idtoken from the user details attributes
      */
     protected Optional<String> parseIdToken(UserDetails userDetails) {
-        Map<String, Object> attributes = userDetails.getAttributes(tokenConfiguration.getRolesName(), "username");
+        Map<String, Object> attributes = userDetails.getAttributes(tokenConfiguration.getRolesName(), tokenConfiguration.getNameKey());
         if (!attributes.containsKey(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY)) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("{} should be present in user details attributes to use {}:{}", OpenIdUserDetailsMapper.OPENID_TOKEN_KEY, SecurityConfigurationProperties.PREFIX + ".authentication", AuthenticationMode.IDTOKEN.toString());

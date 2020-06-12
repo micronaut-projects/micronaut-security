@@ -18,6 +18,7 @@ package io.micronaut.security.token.config;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
 /**
@@ -40,6 +41,9 @@ public class TokenConfigurationProperties implements TokenConfiguration {
 
     @NonNull
     private String rolesName = TokenConfiguration.DEFAULT_ROLES_NAME;
+
+    @NonNull
+    private String nameKey = TokenConfiguration.DEFAULT_NAME_KEY;
 
     @Override
     public boolean isEnabled() {
@@ -74,5 +78,23 @@ public class TokenConfigurationProperties implements TokenConfiguration {
         if (StringUtils.isNotEmpty(rolesName)) {
             this.rolesName = rolesName;
         }
+    }
+
+    /**
+     * @see TokenConfiguration#getNameKey()
+     * If not specified, defaults to {@link #DEFAULT_NAME_KEY}.
+     */
+    @Override
+    @NonNull
+    public String getNameKey() {
+        return nameKey;
+    }
+
+    /**
+     * Key which will be used in the {@link Authentication#getAttributes()} for the User`s name. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_NAME_KEY}.
+     * @param nameKey key for name
+     */
+    public void setNameKey(@NonNull String nameKey) {
+        this.nameKey = nameKey;
     }
 }

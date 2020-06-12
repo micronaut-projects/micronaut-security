@@ -27,12 +27,21 @@ public interface TokenConfiguration extends Toggleable {
 
     String DEFAULT_ROLES_NAME = "roles";
 
+    String DEFAULT_NAME_KEY = "sub";
+
     /**
-     * The name in the claims object that stores the granted roles.
+     * Key which will be used in the {@link io.micronaut.security.authentication.Authentication#getAttributes()} for the User`s roles.
      *
-     * @return The roles claim name, e.g. roles.
+     * @return The key used for the user's roles within the user's attributes. e.g. "roles".
      */
     @NonNull
     String getRolesName();
 
+    /**
+     * Key which will be used in the {@link io.micronaut.security.authentication.Authentication#getAttributes()} for the User`s name.
+     *
+     * @return The key used for the user's name within the user's attributes. e.g. "sub".
+     */
+    @NonNull
+    String getNameKey();
 }

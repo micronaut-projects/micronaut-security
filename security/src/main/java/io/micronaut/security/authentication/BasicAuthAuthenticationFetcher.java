@@ -69,7 +69,7 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
             return authenticationResponse.switchMap(response -> {
                 if (response.isAuthenticated() && response.getUserDetails().isPresent()) {
                     UserDetails userDetails = response.getUserDetails().get();
-                    return Flowable.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName()));
+                    return Flowable.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName(), configuration.getNameKey()));
                 } else {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Could not authenticate {}", credentials.get().getUsername());

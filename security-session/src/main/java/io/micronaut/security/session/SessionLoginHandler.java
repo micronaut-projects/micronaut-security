@@ -54,7 +54,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     protected final String loginFailure;
     protected final RedirectConfiguration redirectConfiguration;
     protected final SessionStore<Session> sessionStore;
-    private final String rolesKeyName;
+    private final TokenConfiguration tokenConfiguration;
     private final PriorToLoginPersistence priorToLoginPersistence;
 
     /**
@@ -90,14 +90,14 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
         this.loginSuccess = redirectConfiguration.getLoginSuccess();
         this.redirectConfiguration = redirectConfiguration;
         this.sessionStore = sessionStore;
-        this.rolesKeyName = tokenConfiguration.getRolesName();
+        this.tokenConfiguration = tokenConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
     }
 
     @Override
     public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
-        session.put(SecurityFilter.AUTHENTICATION, new AuthenticationUserDetailsAdapter(userDetails, rolesKeyName));
+        session.put(SecurityFilter.AUTHENTICATION, new AuthenticationUserDetailsAdapter(userDetails, tokenConfiguration.getRolesName(), tokenConfiguration.getNameKey()));
         try {
             MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
             ThrowingSupplier<URI, URISyntaxException> uriSupplier = () -> new URI(loginSuccess);
