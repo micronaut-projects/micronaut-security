@@ -6,7 +6,6 @@ import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.AuthenticationArgumentBinder
 import io.micronaut.security.authentication.AuthenticationExceptionHandler
-import io.micronaut.security.authentication.BasicAuthAuthenticationConfiguration
 import io.micronaut.security.authentication.BasicAuthAuthenticationFetcher
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
 import io.micronaut.security.authentication.PrincipalArgumentBinder
@@ -71,7 +70,6 @@ class SecurityDisabledSpec extends Specification {
                 SecuredAnnotationRule,
                 SensitiveEndpointRule,
                 BasicAuthAuthenticationFetcher,
-                BasicAuthAuthenticationConfiguration,
                 TokenConfigurationProperties,
                 TokenPropagationConfigurationProperties,
                 TokenPropagationHttpClientFilter,
