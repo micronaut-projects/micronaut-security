@@ -245,6 +245,7 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
         /**
          * The default enabled value for forbidden.
          */
+        @SuppressWarnings("WeakerAccess")
         public static final Boolean DEFAULT_ENABLED = true;
 
         /**
