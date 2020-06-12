@@ -99,7 +99,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
     }
 
     /**
-     * Return the cookies for the given parameters
+     * Return the cookies for the given parameters.
      *
      * @param accessRefreshToken The access refresh token
      * @param request The current request
