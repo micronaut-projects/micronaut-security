@@ -72,7 +72,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
      * @param jwtCookieConfiguration JWT Cookie Configuration
      * @param loginSuccess Url to redirect to after a successful Login
      * @param loginFailure Url to redirect to after an unsuccessful login
-     * @deprecated Use {@link CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence) instead.
+     * @deprecated Use {@link CookieLoginHandler#CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)} instead.
      */
     @Deprecated
     public CookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,

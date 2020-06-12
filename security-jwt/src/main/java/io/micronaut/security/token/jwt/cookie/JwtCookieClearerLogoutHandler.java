@@ -44,7 +44,7 @@ public class JwtCookieClearerLogoutHandler implements LogoutHandler {
 
     /**
      * @param jwtCookieConfiguration JWT Cookie Configuration
-     * @deprecated Use {@link JwtCookieClearerLogoutHandler(JwtCookieConfiguration, RedirectConfiguration)} instead.
+     * @deprecated Use {@link JwtCookieClearerLogoutHandler#JwtCookieClearerLogoutHandler(JwtCookieConfiguration, RedirectConfiguration)} instead.
      */
     @Deprecated
     public JwtCookieClearerLogoutHandler(JwtCookieConfiguration jwtCookieConfiguration) {

@@ -62,7 +62,7 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
      * @param securitySessionConfiguration Security Session Configuration
      * @param sessionStore The session store
      * @param tokenConfiguration Token Configuration
-     * @deprecated Use {@link SessionLogoutHandler(RedirectConfiguration, SessionStore, TokenConfiguration, PriorToLoginPersistence)} instead.
+     * @deprecated Use {@link SessionLoginHandler#SessionLoginHandler(RedirectConfiguration, SessionStore, TokenConfiguration, PriorToLoginPersistence)} instead.
      */
     @Deprecated
     public SessionLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,

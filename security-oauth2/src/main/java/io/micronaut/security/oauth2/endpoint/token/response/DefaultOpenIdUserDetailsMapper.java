@@ -65,7 +65,7 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
     }
 
     /**
-     * @deprecated Use {@link DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration, AuthenticationModeConfiguration)} instead.
+     * @deprecated Use {@link DefaultOpenIdUserDetailsMapper#DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration, AuthenticationModeConfiguration)} instead.
      * @param openIdAdditionalClaimsConfiguration The additional claims configuration
      */
     @Deprecated

@@ -53,7 +53,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
      * @param jwtCookieConfiguration JWT Cookie Configuration
      * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
-     * @deprecated Use {@link JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator,PriorToLoginPersistence)} instead.
+     * @deprecated Use {@link JwtCookieLoginHandler#JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)} instead.
      */
     @Deprecated
     public JwtCookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
