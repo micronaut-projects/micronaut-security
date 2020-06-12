@@ -41,6 +41,9 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     @NonNull
     private String rolesName = TokenConfiguration.DEFAULT_ROLES_NAME;
 
+    @NonNull
+    private String nameKey = TokenConfiguration.DEFAULT_NAME_KEY;
+
     @Override
     public boolean isEnabled() {
         return enabled;
@@ -74,5 +77,23 @@ public class TokenConfigurationProperties implements TokenConfiguration {
         if (StringUtils.isNotEmpty(rolesName)) {
             this.rolesName = rolesName;
         }
+    }
+
+    /**
+     * @see TokenConfiguration#getNameKey()
+     * If not specified, defaults to {@link #DEFAULT_NAME_KEY}.
+     */
+    @Override
+    @NonNull
+    public String getNameKey() {
+        return nameKey;
+    }
+
+    /**
+     * {@link io.micronaut.security.authentication.Authentication} attributes map key for the user's name. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_NAME_KEY}.
+     * @param nameKey key for name
+     */
+    public void setNameKey(@NonNull String nameKey) {
+        this.nameKey = nameKey;
     }
 }

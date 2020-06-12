@@ -28,21 +28,24 @@ public class AuthenticationUserDetailsAdapter implements Authentication {
 
     private final UserDetails userDetails;
     private final String rolesKey;
+    private final String nameKey;
 
     /**
      *
      * @param userDetails Authenticated user's representation.
      * @param rolesKey The key name that should used to store the roles
+     * @param nameKey The key name that should used to store the user's name
      */
-    public AuthenticationUserDetailsAdapter(UserDetails userDetails, String rolesKey) {
+    public AuthenticationUserDetailsAdapter(UserDetails userDetails, String rolesKey, String nameKey) {
         this.userDetails = userDetails;
         this.rolesKey = rolesKey;
+        this.nameKey = nameKey;
     }
 
     @Override
     @NonNull
     public Map<String, Object> getAttributes() {
-        return userDetails.getAttributes(rolesKey, "username");
+        return userDetails.getAttributes(rolesKey, nameKey);
     }
 
     @Override
