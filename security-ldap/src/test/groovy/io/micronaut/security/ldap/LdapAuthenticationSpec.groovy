@@ -168,9 +168,10 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         when:
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        Publisher<AuthenticationResponse> response = authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password"))
-        TestSubscriber subscriber = Flowable.fromPublisher(response).test().assertError(AuthenticationException)
-        List<Throwable> throwableList =subscriber.errors()
+        TestSubscriber subscriber = new TestSubscriber<>()
+        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password"))).blockingSubscribe(subscriber)
+        subscriber.assertError(AuthenticationException)
+        List<Throwable> throwableList = subscriber.errors()
 
         then:
         throwableList
@@ -199,9 +200,10 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         when:
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        Publisher<AuthenticationResponse> response = authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc"))
-        TestSubscriber subscriber = Flowable.fromPublisher(response).test().assertError(AuthenticationException)
-        List<Throwable> throwableList =subscriber.errors()
+        TestSubscriber subscriber = new TestSubscriber<>()
+        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc"))).blockingSubscribe(subscriber)
+        subscriber.assertError(AuthenticationException)
+        List<Throwable> throwableList = subscriber.errors()
 
         then:
         throwableList

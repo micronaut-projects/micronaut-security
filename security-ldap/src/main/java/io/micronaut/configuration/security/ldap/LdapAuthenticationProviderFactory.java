@@ -22,6 +22,10 @@ import io.micronaut.configuration.security.ldap.group.LdapGroupProcessor;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.scheduling.TaskExecutors;
+
+import javax.inject.Named;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Factory to create an LDAP authentication provider if the configuration is enabled.
@@ -38,6 +42,7 @@ public class LdapAuthenticationProviderFactory {
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
+     * @param executorService             Executor Service
      * @return an {@link LdapAuthenticationProvider} if the corresponding {@link LdapConfiguration} is enabled
      */
     @EachBean(LdapConfiguration.class)
@@ -45,9 +50,10 @@ public class LdapAuthenticationProviderFactory {
                                                                            LdapSearchService ldapSearchService,
                                                                            ContextBuilder contextBuilder,
                                                                            ContextAuthenticationMapper contextAuthenticationMapper,
-                                                                           LdapGroupProcessor ldapGroupProcessor) {
+                                                                           LdapGroupProcessor ldapGroupProcessor,
+                                                                 @Named(TaskExecutors.IO) ExecutorService executorService) {
         if (configuration.isEnabled()) {
-            return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor);
+            return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor, executorService);
         } else {
             return null;
         }
