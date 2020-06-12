@@ -115,6 +115,29 @@ micronaut.security.redirect.unauthorized.enabled: false
 
 * Basic authentication configuration has moved from `micronaut.security.token.basic-auth` to `micronaut.security.basic-auth`. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a `TokenValidatedEvent` was triggered as a result of basic authentication, however that is no longer the case.
 
+=== TokenPropagation
+
+Several classes related to <<tokenPropagation, token propagation>> have been renamed and relocated:
+
+|===
+| Old | New
+
+| `io.micronaut.security.token.writer.HttpHeaderTokenWriter`
+| api:io.micronaut.security.token.propagation.HttpHeaderTokenPropagator[]
+
+| `io.micronaut.security.token.writer.HttpHeaderTokenWriterConfiguration`
+| api:io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfiguration[]
+
+| `io.micronaut.security.token.writer.HttpHeaderTokenWriterConfigurationProperties`
+| api:io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties[]
+
+| `io.micronaut.security.token.writer.TokenWriter`
+| api:io.micronaut.security.token.propagation.TokenPropagator[]
+
+|===
+
+Read <<tokenPropagation, token propagation>> section to learn more.
+
 === Misc
 
 * Several APIs that lacked generics have been changed to add them. For example `HttpRequest` -> `HttpRequest<?>`.
