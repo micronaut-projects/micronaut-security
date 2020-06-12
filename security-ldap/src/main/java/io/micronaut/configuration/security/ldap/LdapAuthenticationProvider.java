@@ -101,6 +101,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                     LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e.getMessage());
                 }
                 emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN)));
+                emitter.onComplete();
                 return;
             }
 
@@ -155,7 +156,6 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                     AuthenticationResponse response = contextAuthenticationMapper.map(result.getAttributes(), username, groups);
                     if (response.isAuthenticated()) {
                         emitter.onNext(response);
-                        emitter.onComplete();
                     } else {
                         emitter.onError(new AuthenticationException(response));
                     }
@@ -180,6 +180,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                 }
             } finally {
                 contextBuilder.close(managerContext);
+                emitter.onComplete();
             }
         }, BackpressureStrategy.ERROR);
     }
