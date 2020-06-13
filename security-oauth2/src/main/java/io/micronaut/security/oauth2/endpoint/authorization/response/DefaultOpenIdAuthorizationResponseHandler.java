@@ -136,7 +136,6 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                                 LOG.trace("Token validation failed. Failing authentication");
                             }
                             emitter.onError(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
-                            emitter.onComplete();
                         }
                     }, BackpressureStrategy.ERROR);
                 });

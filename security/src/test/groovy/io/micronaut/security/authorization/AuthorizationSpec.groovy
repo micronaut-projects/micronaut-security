@@ -366,8 +366,8 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
                     emitter.onError(new AuthenticationException(authenticationFailed))
                 } else {
                     emitter.onNext(new UserDetails(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"]));
+                    emitter.onComplete()
                 }
-                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
     }

@@ -29,7 +29,6 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
                 emitter.onComplete();
             } else {
                 emitter.onError(new AuthenticationException(new AuthenticationFailed()));
-                emitter.onComplete();
             }
         }, BackpressureStrategy.ERROR);
 

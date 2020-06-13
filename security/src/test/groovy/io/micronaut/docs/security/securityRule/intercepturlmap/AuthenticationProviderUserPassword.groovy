@@ -25,10 +25,11 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
                 emitter.onNext(new UserDetails((String) authenticationRequest.identity, []))
             } else if ( authenticationRequest.identity == 'admin' && authenticationRequest.secret == 'password' ) {
                 emitter.onNext(new UserDetails((String) authenticationRequest.identity, ['ROLE_ADMIN']))
+                emitter.onComplete()
             } else {
                 emitter.onError(new AuthenticationException(new AuthenticationFailed()))
             }
-            emitter.onComplete()
+
         }, BackpressureStrategy.ERROR)
 
     }

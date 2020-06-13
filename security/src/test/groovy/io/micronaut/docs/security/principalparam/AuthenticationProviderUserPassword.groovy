@@ -26,10 +26,11 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
         return Flowable.create({emitter ->
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
                 emitter.onNext(new UserDetails("user", new ArrayList<>()));
+                emitter.onComplete();
             } else {
                 emitter.onError(new AuthenticationException(new AuthenticationFailed()));
             }
-            emitter.onComplete();
+
 
         }, BackpressureStrategy.ERROR)
 

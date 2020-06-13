@@ -19,12 +19,14 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
         Flowable.create({ emitter ->
             if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "elementary") {
                 emitter.onNext(new UserDetails('sherlock', []))
+                emitter.onComplete()
             } else if ( authenticationRequest.getIdentity() == "watson" && authenticationRequest.getSecret() == "elementary") {
                 emitter.onNext(new UserDetails('watson', []))
+                emitter.onComplete()
             } else {
                 emitter.onError(new AuthenticationException(new AuthenticationFailed()))
             }
-            emitter.onComplete()
+
 
         }, BackpressureStrategy.ERROR)
     }
