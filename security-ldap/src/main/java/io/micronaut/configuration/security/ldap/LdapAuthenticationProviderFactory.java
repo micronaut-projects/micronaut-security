@@ -47,10 +47,10 @@ public class LdapAuthenticationProviderFactory {
      */
     @EachBean(LdapConfiguration.class)
     public LdapAuthenticationProvider ldapAuthenticationProvider(@Parameter LdapConfiguration configuration,
-                                                                           LdapSearchService ldapSearchService,
-                                                                           ContextBuilder contextBuilder,
-                                                                           ContextAuthenticationMapper contextAuthenticationMapper,
-                                                                           LdapGroupProcessor ldapGroupProcessor,
+                                                                 LdapSearchService ldapSearchService,
+                                                                 ContextBuilder contextBuilder,
+                                                                 ContextAuthenticationMapper contextAuthenticationMapper,
+                                                                 LdapGroupProcessor ldapGroupProcessor,
                                                                  @Named(TaskExecutors.IO) ExecutorService executorService) {
         if (configuration.isEnabled()) {
             return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor, executorService);
