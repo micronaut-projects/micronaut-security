@@ -1,4 +1,4 @@
-Out-of-the-box, Micronaut supports https://tools.ietf.org/html/rfc7617[RFC7617] which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default.
+Out-of-the-box, Micronaut supports https://tools.ietf.org/html/rfc7617[RFC7617] which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default. You can disable it by setting `micronaut.security.basic-auth.enabled` to `false`.  
 
 The following sequence illustrates the authentication flow:
 
