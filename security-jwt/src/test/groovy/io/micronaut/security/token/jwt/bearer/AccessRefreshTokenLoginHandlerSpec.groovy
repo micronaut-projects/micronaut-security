@@ -5,14 +5,15 @@ import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.testutils.EmbeddedServerSpecification
@@ -104,7 +105,7 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
                     if (authenticationRequest.getSecret().toString() == "invalid") {
                         emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)))
                     } else {
-                        emitter.onNext(new UserDetails(username, (username == "admin") ? ["ROLE_ADMIN"] : ["foo", "bar"]))
+                        emitter.onNext(AuthenticationResponse.build(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"], new TokenConfiguration() {}))
                     }
                 }
                 emitter.onComplete()

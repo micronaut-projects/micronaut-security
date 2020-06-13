@@ -12,8 +12,8 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
@@ -104,12 +104,12 @@ class LoginControllerSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(property = 'spec.name', value = 'LoginControllerSpec')
     static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onNext(AuthenticationResponse.build('user', new TokenConfiguration() {}))
+
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }

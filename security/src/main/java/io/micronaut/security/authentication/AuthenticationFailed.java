@@ -73,7 +73,7 @@ public class AuthenticationFailed implements AuthenticationResponse {
     }
 
     @Override
-    public Optional<UserDetails> getUserDetails() {
+    public Optional<Authentication> getAuthentication() {
         return Optional.empty();
     }
 

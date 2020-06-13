@@ -17,12 +17,11 @@ package io.micronaut.security.utils;
 
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.security.token.RolesFinder;
 
 import javax.inject.Singleton;
 import java.security.Principal;
 import java.util.Optional;
-import java.util.Collection;
 
 /**
  * Default implementation of {@link io.micronaut.security.utils.SecurityService}. It uses {@link ServerRequestContext#currentRequest()} to retrieve the {@link io.micronaut.security.authentication.Authentication} object if any.
@@ -34,14 +33,14 @@ import java.util.Collection;
 public class DefaultSecurityService implements SecurityService {
 
     public static final String ROLES = "roles";
-    private final TokenConfiguration tokenConfiguration;
+    private final RolesFinder rolesFinder;
 
     /**
-     *
-     * @param tokenConfiguration Token Configuration
+     * Constructor.
+     * @param rolesFinder Roles Finder
      */
-    public DefaultSecurityService(TokenConfiguration tokenConfiguration) {
-        this.tokenConfiguration = tokenConfiguration;
+    public DefaultSecurityService(RolesFinder rolesFinder) {
+        this.rolesFinder = rolesFinder;
     }
 
     /**
@@ -83,32 +82,13 @@ public class DefaultSecurityService implements SecurityService {
      */
     @Override
     public boolean hasRole(String role) {
-        return hasRole(role, tokenConfiguration.isEnabled() ? tokenConfiguration.getRolesName() : ROLES);
-    }
-
-    /**
-     * If the current user has a specific role.
-     *
-     * @param role the authority to check
-     * @param  rolesKey The map key to be used in the authentications attributes. E.g. "roles".
-     * @return true if the current user has the authority, false otherwise
-     */
-    @Override
-    public boolean hasRole(String role, String rolesKey) {
-        if (role == null || rolesKey == null) {
+        if (role == null) {
             return false;
         }
         return getAuthentication().map(authentication -> {
-            if (authentication.getAttributes() != null && authentication.getAttributes().containsKey(rolesKey)) {
-                Object authorities = authentication.getAttributes().get(rolesKey);
-                if (authorities instanceof Collection) {
-                    return ((Collection) authorities).contains(role);
-                } else if (authorities instanceof String) {
-                    return ((String) authorities).equalsIgnoreCase(role);
-                }
-            }
-            return false;
+            return rolesFinder.resolveRoles(authentication.getAttributes()).contains(role);
         }).orElse(false);
+
     }
 
 }

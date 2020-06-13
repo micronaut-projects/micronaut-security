@@ -14,8 +14,8 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
@@ -68,7 +68,7 @@ class IpAuthorizationApprovedSpec extends EmbeddedServerSpecification {
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             return Flowable.create({emitter ->
-                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }

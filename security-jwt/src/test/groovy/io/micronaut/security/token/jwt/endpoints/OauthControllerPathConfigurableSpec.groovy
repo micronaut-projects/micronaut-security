@@ -5,7 +5,7 @@ import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.testutils.EmbeddedServerSpecification
@@ -55,15 +55,15 @@ class OauthControllerPathConfigurableSpec extends EmbeddedServerSpecification {
     @Singleton
     static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
 
-        Map<String, UserDetails> tokens = [:]
+        Map<String, Authentication> tokens = [:]
 
         @Override
         void persistToken(RefreshTokenGeneratedEvent event) {
-            tokens.put(event.getRefreshToken(), event.getUserDetails())
+            tokens.put(event.getRefreshToken(), event.getAuthentication())
         }
 
         @Override
-        Publisher<UserDetails> getUserDetails(String refreshToken) {
+        Publisher<Authentication> getAuthentication(String refreshToken) {
             Publishers.just(tokens.get(refreshToken))
         }
     }

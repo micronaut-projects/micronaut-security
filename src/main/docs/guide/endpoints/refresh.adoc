@@ -38,7 +38,7 @@ The controller exposes an endpoint as defined by https://tools.ietf.org/html/rfc
 
 The refresh token endpoint uses the api:security.token.validator.RefreshTokenValidator[] API to verify the token matches the format that is expected. api:io.micronaut.security.token.jwt.generator.SignedRefreshTokenGenerator[] attempts to verify the signature and returns the payload. Any validator implementations should not be concerned with revocation status, existence, or any other persistence related validation.
 
-If the validator successfully validates the token, it is then passed to a api:security.token.refresh.RefreshTokenPersistence[] implementation, which each application must provide. A new access token is then created from the user details returned by `RefreshTokenPersistence::getUserDetails` and then sent in the response.
+If the validator successfully validates the token, it is then passed to a api:security.token.refresh.RefreshTokenPersistence[] implementation, which each application must provide. A new access token is then created from the user details returned by `RefreshTokenPersistence::getAuthentication` and then sent in the response.
 
 Here is an example of a refresh token request. Send a POST request to the `/oauth/access_token` endpoint:
 

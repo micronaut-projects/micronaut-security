@@ -37,7 +37,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthor
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +108,7 @@ class OpenIdClientFactory {
      * @param openIdClientConfiguration The openid client configuration
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The open id provider metadata
-     * @param userDetailsMapper The user details mapper
+     * @param openIdAuthenticationMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param endSessionEndpointResolver The end session resolver
@@ -120,7 +120,7 @@ class OpenIdClientFactory {
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
                                      @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
-                                     @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                                     @Parameter @Nullable OpenIdAuthenticationMapper openIdAuthenticationMapper,
                                      AuthorizationRedirectHandler redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                      EndSessionEndpointResolver endSessionEndpointResolver,
@@ -133,7 +133,7 @@ class OpenIdClientFactory {
 
         return new DefaultOpenIdClient(clientConfiguration,
                 metadataSupplier,
-                userDetailsMapper,
+                openIdAuthenticationMapper,
                 redirectUrlBuilder,
                 authorizationResponseHandler,
                 beanContext,

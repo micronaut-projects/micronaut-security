@@ -15,7 +15,7 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.annotations.NonNull
@@ -216,7 +216,7 @@ class HealthSensitivitySpec extends Specification {
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onNext(AuthenticationResponse.build("user", new TokenConfiguration() {}))
 
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))

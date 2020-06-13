@@ -20,6 +20,7 @@ import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
@@ -36,23 +37,19 @@ import java.util.Optional;
  * and password from the Authorization header and authenticates the credentials
  * against any {@link AuthenticationProvider}s available.
  */
-@Requires(property = BasicAuthAuthenticationConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@Requires(property = SecurityConfigurationProperties.PREFIX + ".basic-auth.enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Singleton
 public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
 
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthAuthenticationFetcher.class);
     private static final String PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC + " ";
     private final Authenticator authenticator;
-    private final BasicAuthAuthenticationConfiguration configuration;
 
     /**
      * @param authenticator The authenticator to authenticate the credentials
-     * @param configuration The basic authentication configuration
      */
-    public BasicAuthAuthenticationFetcher(Authenticator authenticator,
-                                          BasicAuthAuthenticationConfiguration configuration) {
+    public BasicAuthAuthenticationFetcher(Authenticator authenticator) {
         this.authenticator = authenticator;
-        this.configuration = configuration;
     }
 
     @Override
@@ -65,9 +62,9 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
             Flowable<AuthenticationResponse> authenticationResponse = Flowable.fromPublisher(authenticator.authenticate(request, credentials.get()));
 
             return authenticationResponse.switchMap(response -> {
-                if (response.isAuthenticated()) {
-                    UserDetails userDetails = response.getUserDetails().get();
-                    return Flowable.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName()));
+                if (response.isAuthenticated() && response.getAuthentication().isPresent()) {
+                    Authentication authentication = response.getAuthentication().get();
+                    return Flowable.just(authentication);
                 } else {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Could not authenticate {}", credentials.get().getUsername());

@@ -16,9 +16,10 @@
 package io.micronaut.security.token.jwt.render;
 
 import io.micronaut.http.HttpHeaderValues;
-import io.micronaut.security.authentication.UserDetails;
-
+import io.micronaut.security.authentication.Authentication;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.security.token.RolesFinder;
+
 import javax.inject.Singleton;
 
 /**
@@ -29,8 +30,16 @@ import javax.inject.Singleton;
 
 @Singleton
 public class BearerTokenRenderer implements TokenRenderer {
+    private final RolesFinder rolesFinder;
 
     private final String BEARER_TOKEN_TYPE = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
+
+    /**
+     * @param rolesFinder Roles Finder
+     */
+    public BearerTokenRenderer(RolesFinder rolesFinder) {
+        this.rolesFinder = rolesFinder;
+    }
 
     @Override
     public AccessRefreshToken render(Integer expiresIn, String accessToken, @Nullable String refreshToken) {
@@ -38,7 +47,7 @@ public class BearerTokenRenderer implements TokenRenderer {
     }
 
     @Override
-    public AccessRefreshToken render(UserDetails userDetails, Integer expiresIn, String accessToken, @Nullable String refreshToken) {
-        return new BearerAccessRefreshToken(userDetails.getUsername(), userDetails.getRoles(), expiresIn, accessToken, refreshToken, BEARER_TOKEN_TYPE);
+    public AccessRefreshToken render(Authentication authentication, Integer expiresIn, String accessToken, @Nullable String refreshToken) {
+        return new BearerAccessRefreshToken(authentication.getName(), rolesFinder.resolveRoles(authentication), expiresIn, accessToken, refreshToken, BEARER_TOKEN_TYPE);
     }
 }

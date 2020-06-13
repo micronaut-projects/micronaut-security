@@ -4,12 +4,13 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.testutils.EmbeddedServerSpecification
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -55,13 +56,14 @@ class JwtCookieSameSiteSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "JwtCookieSameSiteSpec")
     @Singleton
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
+    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create({ emitter ->
                 if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "password") {
-                    emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
+                    emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
+
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }

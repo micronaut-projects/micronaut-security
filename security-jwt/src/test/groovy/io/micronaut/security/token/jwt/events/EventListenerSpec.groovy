@@ -3,13 +3,14 @@ package io.micronaut.security.token.jwt.events
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.event.AccessTokenGeneratedEvent
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.testutils.EmbeddedServerSpecification
@@ -74,7 +75,8 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onNext(AuthenticationResponse.build('user', new TokenConfiguration() {}))
+
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }

@@ -21,9 +21,9 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -173,7 +173,8 @@ class TokenPropagationSpec extends Specification {
                 if (authenticationRequest.getIdentity() != null && authenticationRequest.getSecret() != null &&
                         Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString()) &&
                         authenticationRequest.getSecret().equals("elementary")) {
-                    emitter.onNext(new UserDetails(authenticationRequest.getIdentity().toString(), new ArrayList<>()))
+                    emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
+
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }

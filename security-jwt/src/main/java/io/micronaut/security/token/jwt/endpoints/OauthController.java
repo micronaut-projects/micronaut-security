@@ -106,8 +106,8 @@ public class OauthController {
         if (!validRefreshToken.isPresent()) {
             throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT, "Refresh token is invalid", null);
         }
-        return Single.fromPublisher(refreshTokenPersistence.getUserDetails(validRefreshToken.get()))
-                .map(userDetails -> loginHandler.loginRefresh(userDetails, refreshToken, request));
+        return Single.fromPublisher(refreshTokenPersistence.getAuthentication(validRefreshToken.get()))
+                .map(authentication -> loginHandler.loginRefresh(authentication, refreshToken, request));
     }
 
     @NonNull

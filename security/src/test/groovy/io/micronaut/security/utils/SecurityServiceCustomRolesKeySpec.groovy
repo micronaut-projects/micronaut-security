@@ -22,8 +22,6 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.http.client.BlockingHttpClient
-import io.micronaut.http.client.HttpClient
 import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.AuthenticationException
@@ -31,8 +29,8 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.config.TokenConfiguration
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
@@ -82,9 +80,11 @@ class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
                                                        AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user2' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', [], [customRoles: ['ROLE_USER']]))
+                    emitter.onNext(AuthenticationResponse.build('user', [], [customRoles: 'ROLE_USER'], new TokenConfiguration() {}))
+
                 } else if ( authenticationRequest.identity == 'user3' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', [], [otherCustomRoles: ['ROLE_USER']]))
+                    emitter.onNext(AuthenticationResponse.build('user', [], [otherCustomRoles: 'ROLE_USER'], new TokenConfiguration() {}))
+
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }

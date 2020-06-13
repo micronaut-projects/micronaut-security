@@ -19,8 +19,8 @@ import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import org.reactivestreams.Publisher;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -42,13 +42,13 @@ public interface OpenIdAuthorizationResponseHandler {
      * @param authorizationResponse The authorization response
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
-     * @param userDetailsMapper The user details mapper
+     * @param authenticationMapper The user details mapper
      * @param tokenEndpoint The token endpoint
      * @return An authentication response publisher
      */
     Publisher<AuthenticationResponse> handle(OpenIdAuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,
                                              OpenIdProviderMetadata openIdProviderMetadata,
-                                             @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                                             @Nullable OpenIdAuthenticationMapper authenticationMapper,
                                              SecureEndpoint tokenEndpoint);
 }

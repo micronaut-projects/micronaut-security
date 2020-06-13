@@ -17,14 +17,15 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims
@@ -255,15 +256,15 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
     @Singleton
     static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
 
-        Map<String, UserDetails> tokens = [:]
+        Map<String, Authentication> tokens = [:]
 
         @Override
         void persistToken(RefreshTokenGeneratedEvent event) {
-            tokens.put(event.getRefreshToken(), event.getUserDetails())
+            tokens.put(event.getRefreshToken(), event.getAuthentication())
         }
 
         @Override
-        Publisher<UserDetails> getUserDetails(String refreshToken) {
+        Publisher<Authentication> getAuthentication(String refreshToken) {
             Publishers.just(tokens.get(refreshToken))
         }
     }
@@ -271,12 +272,12 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(property = 'spec.name', value = 'OauthControllerSpec')
     static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onNext(AuthenticationResponse.build('user', new TokenConfiguration() {}))
+
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }

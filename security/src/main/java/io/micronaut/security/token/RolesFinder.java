@@ -16,7 +16,11 @@
 package io.micronaut.security.token;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.security.authentication.Authentication;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * Retrieves roles from token claims.
@@ -34,4 +38,23 @@ public interface RolesFinder {
      */
     @NonNull
     List<String> findInClaims(@NonNull Claims claims);
+
+    /**
+     * Retrieves the list of roles from the User Attributes.
+     *
+     * @param authentication User's authentication representation
+     * @return The granted roles.
+     */
+    @NonNull
+    List<String> resolveRoles(@NonNull Authentication authentication);
+
+    /**
+     * Retrieves the list of roles from the User Attributes.
+     *
+     * @param attributes User's attributes
+     * @return The granted roles.
+     */
+    @NonNull
+    List<String> resolveRoles(@Nullable Map<String, Object> attributes);
+
 }

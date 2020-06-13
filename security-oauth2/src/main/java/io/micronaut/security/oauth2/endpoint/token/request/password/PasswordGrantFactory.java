@@ -22,9 +22,9 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
@@ -48,37 +48,37 @@ class PasswordGrantFactory {
 
     /**
      * For authentication providers delegating to OAuth 2.0 providers,
-     * the {@param openIdUserDetailsMapper}, {@param openIdProviderMetadata},
+     * the {@param openIdAuthenticationMapper}, {@param openIdProviderMetadata},
      * and {@param tokenResponseValidator} parameters are expected
      * to be null.
      *
      * For authentication providers delegating to OpenID providers,
-     * the {@param userDetailsMapper} parameter is expected to be null.
+     * the {@param openIdAuthenticationMapper} parameter is expected to be null.
      *
      * @param clientConfiguration The client configuration
-     * @param userDetailsMapper The OAuth 2.0 user details mapper
-     * @param openIdUserDetailsMapper The client specific OpenID user details mapper
+     * @param oauthAuthenticationMapper The OAuth 2.0 user details mapper
+     * @param openIdAuthenticationMapper The client specific OpenID authentication mapper
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param tokenEndpointClient The token endpoint client
-     * @param defaultOpenIdUserDetailsMapper The default OpenID user details mapper
+     * @param defaultOpenIdAuthenticationMapper The default OpenID user details mapper
      * @param tokenResponseValidator The OpenID token response validator
      * @return The authentication provider
      */
     @EachBean(OauthClientConfiguration.class)
     AuthenticationProvider passwordGrantProvider(
             @Parameter OauthClientConfiguration clientConfiguration,
-            @Parameter @Nullable OauthUserDetailsMapper userDetailsMapper,
-            @Parameter @Nullable OpenIdUserDetailsMapper openIdUserDetailsMapper,
+            @Parameter @Nullable OauthAuthenticationMapper oauthAuthenticationMapper,
+            @Parameter @Nullable OpenIdAuthenticationMapper openIdAuthenticationMapper,
             @Parameter @Nullable OpenIdProviderMetadata openIdProviderMetadata,
             TokenEndpointClient tokenEndpointClient,
-            @Nullable DefaultOpenIdUserDetailsMapper defaultOpenIdUserDetailsMapper,
+            @Nullable DefaultOpenIdAuthenticationMapper defaultOpenIdAuthenticationMapper,
             @Nullable OpenIdTokenResponseValidator tokenResponseValidator) {
 
         if (clientConfiguration.isEnabled()) {
             if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
                 if (clientConfiguration.getToken().isPresent()) {
-                    if (userDetailsMapper != null) {
-                        return new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, userDetailsMapper);
+                    if (oauthAuthenticationMapper != null) {
+                        return new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, oauthAuthenticationMapper);
                     } else {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Skipped password grant flow for provider [{}] because no user details mapper could be found", clientConfiguration.getName());
@@ -86,11 +86,11 @@ class PasswordGrantFactory {
                     }
                 } else if (clientConfiguration.getOpenid().isPresent()) {
                     if (openIdProviderMetadata != null && tokenResponseValidator != null) {
-                        if (openIdUserDetailsMapper == null) {
-                            openIdUserDetailsMapper = defaultOpenIdUserDetailsMapper;
+                        if (openIdAuthenticationMapper == null) {
+                            openIdAuthenticationMapper = defaultOpenIdAuthenticationMapper;
                         }
-                        if (openIdUserDetailsMapper != null) {
-                            return new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdUserDetailsMapper, tokenResponseValidator);
+                        if (openIdAuthenticationMapper != null) {
+                            return new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator);
                         } else {
                             if (LOG.isDebugEnabled()) {
                                 LOG.debug("Skipped password grant flow for provider [{}] because no user details mapper could be found", clientConfiguration.getName());

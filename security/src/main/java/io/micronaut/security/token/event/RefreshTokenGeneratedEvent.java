@@ -16,7 +16,7 @@
 package io.micronaut.security.token.event;
 
 import io.micronaut.context.event.ApplicationEvent;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 
 /**
  * Triggered when a JWT refresh token is generated.
@@ -26,7 +26,7 @@ import io.micronaut.security.authentication.UserDetails;
  */
 public class RefreshTokenGeneratedEvent extends ApplicationEvent {
 
-    private final UserDetails userDetails;
+    private final Authentication authentication;
     private final String refreshToken;
 
     /**
@@ -34,33 +34,33 @@ public class RefreshTokenGeneratedEvent extends ApplicationEvent {
      *
      * @param source A String with the JWT refresh token generated.
      * @throws IllegalArgumentException if source is null.
-     * @deprecated Use {@link #RefreshTokenGeneratedEvent(UserDetails, String)} instead
+     * @deprecated Use {@link #RefreshTokenGeneratedEvent(Authentication, String)} instead
      */
     @Deprecated
     public RefreshTokenGeneratedEvent(Object source) {
         super(source);
-        this.userDetails = null;
+        this.authentication = null;
         this.refreshToken = source.toString();
     }
 
     /**
      * Triggered when a refresh token is generated.
      *
-     * @param userDetails The user details
+     * @param authentication Authentication
      * @param refreshToken The refresh token
      * @throws IllegalArgumentException if source is null.
      */
-    public RefreshTokenGeneratedEvent(UserDetails userDetails, String refreshToken) {
+    public RefreshTokenGeneratedEvent(Authentication authentication, String refreshToken) {
         super(refreshToken);
-        this.userDetails = userDetails;
+        this.authentication = authentication;
         this.refreshToken = refreshToken;
     }
 
     /**
-     * @return The user details
+     * @return The Authentication
      */
-    public UserDetails getUserDetails() {
-        return userDetails;
+    public Authentication getAuthentication() {
+        return authentication;
     }
 
     /**

@@ -22,8 +22,8 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
@@ -84,13 +84,13 @@ public class DefaultOauthController implements OauthController {
         Publisher<AuthenticationResponse> authenticationResponse = oauthClient.onCallback(request);
         return Flowable.fromPublisher(authenticationResponse).map(response -> {
 
-            if (response.isAuthenticated() && response.getUserDetails().isPresent()) {
-                UserDetails userDetails = response.getUserDetails().get();
+            if (response.isAuthenticated() && response.getAuthentication().isPresent()) {
+                Authentication authentication = response.getAuthentication().get();
                 if (LOG.isTraceEnabled()) {
-                    LOG.trace("Authentication succeeded. User [{}] is now logged in", userDetails.getUsername());
+                    LOG.trace("Authentication succeeded. User [{}] is now logged in", authentication.getName());
                 }
-                eventPublisher.publishEvent(new LoginSuccessfulEvent(userDetails));
-                return loginHandler.loginSuccess(userDetails, request);
+                eventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
+                return loginHandler.loginSuccess(authentication, request);
             } else {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Authentication failed: {}", response.getMessage().orElse("unknown reason"));
