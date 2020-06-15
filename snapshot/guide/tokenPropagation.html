@@ -167,7 +167,7 @@ that token to other requests in your network.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The previous configuration, configures a <a href="../api/io/micronaut/security/token/writer/HttpHeaderTokenWriter.html">HttpHeaderTokenWriter</a> and a
+<p>The previous configuration, configures a <a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html">HttpHeaderTokenPropagator</a> and a
 and a propagation filter, <a href="../api/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a>, which
 will propagate the security token seamlessly.</p>
 </div>
@@ -179,6 +179,83 @@ will propagate the security token seamlessly.</p>
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">micronaut.security.token.propagation.service-id-regex="catalogue|recommendations|inventory"</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Several configuration options are available:</p>
+</div>
+<a id="io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties" href="#io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html">TokenPropagationConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a>. Default value false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.service-id-regex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a regular expression to match the service id.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.uri-regex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a regular expression to match the uri.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures <a href="../api/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a> path. Default value "/**"</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For propagation via an HTTP Header, you can configure:</p>
+</div>
+<a id="io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties" href="#io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html">HttpHeaderTokenPropagatorConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.prefix</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value prefix for Http Header. Default value (HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.header-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Http Header to be used to propagate the token. Default value (HttpHeaders.AUTHORIZATION)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable <a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html">HttpHeaderTokenPropagator</a>. Default value (true).</p></td>
+</tr>
+</tbody>
+</table>
 <div class="admonitionblock tip">
 <table>
 <tr>

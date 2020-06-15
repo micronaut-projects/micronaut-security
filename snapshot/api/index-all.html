@@ -344,7 +344,7 @@
 <dd>
 <div class="block">Adapter from <a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><code>UserDetails</code></a> to <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html#AuthenticationUserDetailsAdapter-io.micronaut.security.authentication.UserDetails-java.lang.String-">AuthenticationUserDetailsAdapter(UserDetails, String)</a></span> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html" title="class in io.micronaut.security.authentication">AuthenticationUserDetailsAdapter</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html#AuthenticationUserDetailsAdapter-io.micronaut.security.authentication.UserDetails-java.lang.String-java.lang.String-">AuthenticationUserDetailsAdapter(UserDetails, String, String)</a></span> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html" title="class in io.micronaut.security.authentication">AuthenticationUserDetailsAdapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/Authenticator.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">Authenticator</span></a> - Class in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>
@@ -450,7 +450,7 @@
  and password from the Authorization header and authenticates the credentials
  against any <a href="io/micronaut/security/authentication/AuthenticationProvider.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationProvider</code></a>s available.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html#BasicAuthAuthenticationFetcher-io.micronaut.security.authentication.Authenticator-io.micronaut.security.authentication.BasicAuthAuthenticationConfiguration-">BasicAuthAuthenticationFetcher(Authenticator, BasicAuthAuthenticationConfiguration)</a></span> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationFetcher</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html#BasicAuthAuthenticationFetcher-io.micronaut.security.authentication.Authenticator-io.micronaut.security.token.config.TokenConfiguration-">BasicAuthAuthenticationFetcher(Authenticator, TokenConfiguration)</a></span> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationFetcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#beanContext">beanContext</a></span> - Variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
@@ -1012,6 +1012,8 @@
 <dd>
 <div class="block">The default logout URL.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_NAME_KEY">DEFAULT_NAME_KEY</a></span> - Static variable in interface io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html#DEFAULT_PATH">DEFAULT_PATH</a></span> - Static variable in class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html" title="class in io.micronaut.security.endpoints">LoginControllerConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default path.</div>
@@ -1129,7 +1131,7 @@
 <dd>
 <div class="block">Extracts the JWT claims and uses the <a href="io/micronaut/security/token/jwt/validator/AuthenticationJWTClaimsSetAdapter.html" title="class in io.micronaut.security.token.jwt.validator"><code>AuthenticationJWTClaimsSetAdapter</code></a> to construction an <a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> object.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/DefaultJwtAuthenticationFactory.html#DefaultJwtAuthenticationFactory--">DefaultJwtAuthenticationFactory()</a></span> - Constructor for class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/DefaultJwtAuthenticationFactory.html" title="class in io.micronaut.security.token.jwt.validator">DefaultJwtAuthenticationFactory</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/DefaultJwtAuthenticationFactory.html#DefaultJwtAuthenticationFactory-io.micronaut.security.token.config.TokenConfiguration-">DefaultJwtAuthenticationFactory(TokenConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/DefaultJwtAuthenticationFactory.html" title="class in io.micronaut.security.token.jwt.validator">DefaultJwtAuthenticationFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/configuration/security/ldap/group/DefaultLdapGroupProcessor.html" title="class in io.micronaut.configuration.security.ldap.group"><span class="typeNameLink">DefaultLdapGroupProcessor</span></a> - Class in <a href="io/micronaut/configuration/security/ldap/group/package-summary.html">io.micronaut.configuration.security.ldap.group</a></dt>
 <dd>
@@ -2438,6 +2440,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/AuthenticationJWTClaimsSetAdapter.html#getName--">getName()</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/AuthenticationJWTClaimsSetAdapter.html" title="class in io.micronaut.security.token.jwt.validator">AuthenticationJWTClaimsSetAdapter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfiguration.html#getNameKey--">getNameKey()</a></span> - Method in interface io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></dt>
+<dd>
+<div class="block"><a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> attributes map key for the user's name.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfigurationProperties.html#getNameKey--">getNameKey()</a></span> - Method in class io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfigurationProperties.html" title="class in io.micronaut.security.token.config">TokenConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html#getNickname--">getNickname()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">JWTOpenIdClaims</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#getNickname--">getNickname()</a></span> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></dt>
@@ -2791,11 +2799,9 @@
 <dd>
 <div class="block">roles getter.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html#getRolesName--">getRolesName()</a></span> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationConfiguration</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfiguration.html#getRolesName--">getRolesName()</a></span> - Method in interface io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></dt>
 <dd>
-<div class="block">The name in the claims object that stores the granted roles.</div>
+<div class="block">Key which will be used in the <a href="io/micronaut/security/authentication/Authentication.html#getAttributes--"><code>Authentication.getAttributes()</code></a> for the User`s roles.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfigurationProperties.html#getRolesName--">getRolesName()</a></span> - Method in class io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfigurationProperties.html" title="class in io.micronaut.security.token.config">TokenConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -3951,9 +3957,9 @@
 <div class="block">Authenticates against an LDAP server using the configuration provided through
  <a href="io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.html" title="class in io.micronaut.configuration.security.ldap.configuration"><code>LdapConfiguration</code></a>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/LdapAuthenticationProvider.html#LdapAuthenticationProvider-io.micronaut.configuration.security.ldap.configuration.LdapConfiguration-io.micronaut.configuration.security.ldap.context.LdapSearchService-io.micronaut.configuration.security.ldap.context.ContextBuilder-io.micronaut.configuration.security.ldap.ContextAuthenticationMapper-io.micronaut.configuration.security.ldap.group.LdapGroupProcessor-">LdapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)</a></span> - Constructor for class io.micronaut.configuration.security.ldap.<a href="io/micronaut/configuration/security/ldap/LdapAuthenticationProvider.html" title="class in io.micronaut.configuration.security.ldap">LdapAuthenticationProvider</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/LdapAuthenticationProvider.html#LdapAuthenticationProvider-io.micronaut.configuration.security.ldap.configuration.LdapConfiguration-io.micronaut.configuration.security.ldap.context.LdapSearchService-io.micronaut.configuration.security.ldap.context.ContextBuilder-io.micronaut.configuration.security.ldap.ContextAuthenticationMapper-io.micronaut.configuration.security.ldap.group.LdapGroupProcessor-java.util.concurrent.ExecutorService-">LdapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor, ExecutorService)</a></span> - Constructor for class io.micronaut.configuration.security.ldap.<a href="io/micronaut/configuration/security/ldap/LdapAuthenticationProvider.html" title="class in io.micronaut.configuration.security.ldap">LdapAuthenticationProvider</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/LdapAuthenticationProviderFactory.html#ldapAuthenticationProvider-io.micronaut.configuration.security.ldap.configuration.LdapConfiguration-io.micronaut.configuration.security.ldap.context.LdapSearchService-io.micronaut.configuration.security.ldap.context.ContextBuilder-io.micronaut.configuration.security.ldap.ContextAuthenticationMapper-io.micronaut.configuration.security.ldap.group.LdapGroupProcessor-">ldapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor)</a></span> - Method in class io.micronaut.configuration.security.ldap.<a href="io/micronaut/configuration/security/ldap/LdapAuthenticationProviderFactory.html" title="class in io.micronaut.configuration.security.ldap">LdapAuthenticationProviderFactory</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/LdapAuthenticationProviderFactory.html#ldapAuthenticationProvider-io.micronaut.configuration.security.ldap.configuration.LdapConfiguration-io.micronaut.configuration.security.ldap.context.LdapSearchService-io.micronaut.configuration.security.ldap.context.ContextBuilder-io.micronaut.configuration.security.ldap.ContextAuthenticationMapper-io.micronaut.configuration.security.ldap.group.LdapGroupProcessor-java.util.concurrent.ExecutorService-">ldapAuthenticationProvider(LdapConfiguration, LdapSearchService, ContextBuilder, ContextAuthenticationMapper, LdapGroupProcessor, ExecutorService)</a></span> - Method in class io.micronaut.configuration.security.ldap.<a href="io/micronaut/configuration/security/ldap/LdapAuthenticationProviderFactory.html" title="class in io.micronaut.configuration.security.ldap">LdapAuthenticationProviderFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/configuration/security/ldap/LdapAuthenticationProviderFactory.html" title="class in io.micronaut.configuration.security.ldap"><span class="typeNameLink">LdapAuthenticationProviderFactory</span></a> - Class in <a href="io/micronaut/configuration/security/ldap/package-summary.html">io.micronaut.configuration.security.ldap</a></dt>
 <dd>
@@ -3977,6 +3983,12 @@
 <dd>
 <div class="block">The user search configuration.</div>
 </dd>
+<dt><a href="io/micronaut/configuration/security/ldap/LdapEnabledCondition.html" title="class in io.micronaut.configuration.security.ldap"><span class="typeNameLink">LdapEnabledCondition</span></a> - Class in <a href="io/micronaut/configuration/security/ldap/package-summary.html">io.micronaut.configuration.security.ldap</a></dt>
+<dd>
+<div class="block">Condition to enable the LDAP authentication provider.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/LdapEnabledCondition.html#LdapEnabledCondition--">LdapEnabledCondition()</a></span> - Constructor for class io.micronaut.configuration.security.ldap.<a href="io/micronaut/configuration/security/ldap/LdapEnabledCondition.html" title="class in io.micronaut.configuration.security.ldap">LdapEnabledCondition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/configuration/security/ldap/group/LdapGroupProcessor.html" title="interface in io.micronaut.configuration.security.ldap.group"><span class="typeNameLink">LdapGroupProcessor</span></a> - Interface in <a href="io/micronaut/configuration/security/ldap/group/package-summary.html">io.micronaut.configuration.security.ldap.group</a></dt>
 <dd>
 <div class="block">Contract to allow the list of groups returned from LDAP to be transformed
@@ -4139,11 +4151,15 @@
 <dd>
 <div class="block">Creates a MapClaims with the corresponding backing map.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/configuration/security/ldap/LdapEnabledCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.configuration.security.ldap.<a href="io/micronaut/configuration/security/ldap/LdapEnabledCondition.html" title="class in io.micronaut.configuration.security.ldap">LdapEnabledCondition</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/AuthenticationModeCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationModeCondition.html" title="class in io.micronaut.security.authentication">AuthenticationModeCondition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/condition/OauthClientCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.oauth2.client.condition.<a href="io/micronaut/security/oauth2/client/condition/OauthClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OauthClientCondition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/condition/OpenIdClientCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.oauth2.client.condition.<a href="io/micronaut/security/oauth2/client/condition/OpenIdClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OpenIdClientCondition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/PasswordGrantCondition.html#matches-io.micronaut.context.condition.ConditionContext-">matches(ConditionContext)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.request.password.<a href="io/micronaut/security/oauth2/endpoint/token/request/password/PasswordGrantCondition.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">PasswordGrantCondition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#matches-com.nimbusds.jwt.SignedJWT-com.nimbusds.jose.jwk.JWKSet-int-">matches(SignedJWT, JWKSet, int)</a></span> - Method in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignature</a></dt>
 <dd>
@@ -4567,6 +4583,12 @@
 <div class="block">Default constructor.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html#PasswordGrant-io.micronaut.security.authentication.AuthenticationRequest-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-">PasswordGrant(AuthenticationRequest, OauthClientConfiguration)</a></span> - Constructor for class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/request/password/PasswordGrantCondition.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password"><span class="typeNameLink">PasswordGrantCondition</span></a> - Class in <a href="io/micronaut/security/oauth2/endpoint/token/request/password/package-summary.html">io.micronaut.security.oauth2.endpoint.token.request.password</a></dt>
+<dd>
+<div class="block">Condition to enable the password grant authentication flow for an OAuth provider.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/PasswordGrantCondition.html#PasswordGrantCondition--">PasswordGrantCondition()</a></span> - Constructor for class io.micronaut.security.oauth2.endpoint.token.request.password.<a href="io/micronaut/security/oauth2/endpoint/token/request/password/PasswordGrantCondition.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">PasswordGrantCondition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/annotation/PermitAllAnnotationMapper.html" title="class in io.micronaut.security.annotation"><span class="typeNameLink">PermitAllAnnotationMapper</span></a> - Class in <a href="io/micronaut/security/annotation/package-summary.html">io.micronaut.security.annotation</a></dt>
 <dd>
@@ -5548,7 +5570,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>
-<div class="block">Sets whether JWT cookie based security is enabled.</div>
+<div class="block">Sets whether JWT cookie configuration is enabled.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.endpoints">KeysControllerConfigurationProperties</a></dt>
 <dd>
@@ -5772,6 +5794,10 @@
 <dd>
 <div class="block">method Setter.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfigurationProperties.html#setNameKey-java.lang.String-">setNameKey(String)</a></span> - Method in class io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfigurationProperties.html" title="class in io.micronaut.security.token.config">TokenConfigurationProperties</a></dt>
+<dd>
+<div class="block"><a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> attributes map key for the user's name.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultState.html#setNonce-java.lang.String-">setNonce(String)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultState.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state">DefaultState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html#setNonce-java.lang.String-">setNonce(String)</a></span> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">MutableState</a></dt>
@@ -5930,11 +5956,9 @@
 <dd>
 <div class="block">roles property setter.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html#setRolesName-java.lang.String-">setRolesName(String)</a></span> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationConfiguration</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfigurationProperties.html#setRolesName-java.lang.String-">setRolesName(String)</a></span> - Method in class io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfigurationProperties.html" title="class in io.micronaut.security.token.config">TokenConfigurationProperties</a></dt>
 <dd>
-<div class="block">Name of the roles property.</div>
+<div class="block"><a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> attributes map key for the user's roles.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setScope-java.lang.String-">setScope(String)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a></dt>
 <dd>&nbsp;</dd>
@@ -6421,6 +6445,8 @@
 <dd>
 <div class="block">Get the username of the current user.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/DefaultJwtAuthenticationFactory.html#usernameForClaims-com.nimbusds.jwt.JWTClaimsSet-">usernameForClaims(JWTClaimsSet)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/DefaultJwtAuthenticationFactory.html" title="class in io.micronaut.security.token.jwt.validator">DefaultJwtAuthenticationFactory</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">UsernamePasswordCredentials</span></a> - Class in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html#UsernamePasswordCredentials--">UsernamePasswordCredentials()</a></span> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a></dt>

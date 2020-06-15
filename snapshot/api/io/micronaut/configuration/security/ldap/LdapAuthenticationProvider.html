@@ -140,11 +140,12 @@ implements <a href="../../../../../io/micronaut/security/authentication/Authenti
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/configuration/security/ldap/LdapAuthenticationProvider.html#LdapAuthenticationProvider-io.micronaut.configuration.security.ldap.configuration.LdapConfiguration-io.micronaut.configuration.security.ldap.context.LdapSearchService-io.micronaut.configuration.security.ldap.context.ContextBuilder-io.micronaut.configuration.security.ldap.ContextAuthenticationMapper-io.micronaut.configuration.security.ldap.group.LdapGroupProcessor-">LdapAuthenticationProvider</a></span>(<a href="../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.html" title="class in io.micronaut.configuration.security.ldap.configuration">LdapConfiguration</a>&nbsp;configuration,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/configuration/security/ldap/LdapAuthenticationProvider.html#LdapAuthenticationProvider-io.micronaut.configuration.security.ldap.configuration.LdapConfiguration-io.micronaut.configuration.security.ldap.context.LdapSearchService-io.micronaut.configuration.security.ldap.context.ContextBuilder-io.micronaut.configuration.security.ldap.ContextAuthenticationMapper-io.micronaut.configuration.security.ldap.group.LdapGroupProcessor-java.util.concurrent.ExecutorService-">LdapAuthenticationProvider</a></span>(<a href="../../../../../io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.html" title="class in io.micronaut.configuration.security.ldap.configuration">LdapConfiguration</a>&nbsp;configuration,
                           <a href="../../../../../io/micronaut/configuration/security/ldap/context/LdapSearchService.html" title="interface in io.micronaut.configuration.security.ldap.context">LdapSearchService</a>&nbsp;ldapSearchService,
                           <a href="../../../../../io/micronaut/configuration/security/ldap/context/ContextBuilder.html" title="interface in io.micronaut.configuration.security.ldap.context">ContextBuilder</a>&nbsp;contextBuilder,
                           <a href="../../../../../io/micronaut/configuration/security/ldap/ContextAuthenticationMapper.html" title="interface in io.micronaut.configuration.security.ldap">ContextAuthenticationMapper</a>&nbsp;contextAuthenticationMapper,
-                          <a href="../../../../../io/micronaut/configuration/security/ldap/group/LdapGroupProcessor.html" title="interface in io.micronaut.configuration.security.ldap.group">LdapGroupProcessor</a>&nbsp;ldapGroupProcessor)</code>&nbsp;</td>
+                          <a href="../../../../../io/micronaut/configuration/security/ldap/group/LdapGroupProcessor.html" title="interface in io.micronaut.configuration.security.ldap.group">LdapGroupProcessor</a>&nbsp;ldapGroupProcessor,
+                          java.util.concurrent.ExecutorService&nbsp;executorService)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -194,7 +195,7 @@ implements <a href="../../../../../io/micronaut/security/authentication/Authenti
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="LdapAuthenticationProvider-io.micronaut.configuration.security.ldap.configuration.LdapConfiguration-io.micronaut.configuration.security.ldap.context.LdapSearchService-io.micronaut.configuration.security.ldap.context.ContextBuilder-io.micronaut.configuration.security.ldap.ContextAuthenticationMapper-io.micronaut.configuration.security.ldap.group.LdapGroupProcessor-">
+<a name="LdapAuthenticationProvider-io.micronaut.configuration.security.ldap.configuration.LdapConfiguration-io.micronaut.configuration.security.ldap.context.LdapSearchService-io.micronaut.configuration.security.ldap.context.ContextBuilder-io.micronaut.configuration.security.ldap.ContextAuthenticationMapper-io.micronaut.configuration.security.ldap.group.LdapGroupProcessor-java.util.concurrent.ExecutorService-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -204,7 +205,9 @@ implements <a href="../../../../../io/micronaut/security/authentication/Authenti
                                   <a href="../../../../../io/micronaut/configuration/security/ldap/context/LdapSearchService.html" title="interface in io.micronaut.configuration.security.ldap.context">LdapSearchService</a>&nbsp;ldapSearchService,
                                   <a href="../../../../../io/micronaut/configuration/security/ldap/context/ContextBuilder.html" title="interface in io.micronaut.configuration.security.ldap.context">ContextBuilder</a>&nbsp;contextBuilder,
                                   <a href="../../../../../io/micronaut/configuration/security/ldap/ContextAuthenticationMapper.html" title="interface in io.micronaut.configuration.security.ldap">ContextAuthenticationMapper</a>&nbsp;contextAuthenticationMapper,
-                                  <a href="../../../../../io/micronaut/configuration/security/ldap/group/LdapGroupProcessor.html" title="interface in io.micronaut.configuration.security.ldap.group">LdapGroupProcessor</a>&nbsp;ldapGroupProcessor)</pre>
+                                  <a href="../../../../../io/micronaut/configuration/security/ldap/group/LdapGroupProcessor.html" title="interface in io.micronaut.configuration.security.ldap.group">LdapGroupProcessor</a>&nbsp;ldapGroupProcessor,
+                                  @Named(value="io")
+                                  java.util.concurrent.ExecutorService&nbsp;executorService)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>configuration</code> - The configuration to use to authenticate</dd>
@@ -212,6 +215,7 @@ implements <a href="../../../../../io/micronaut/security/authentication/Authenti
 <dd><code>contextBuilder</code> - The context builder</dd>
 <dd><code>contextAuthenticationMapper</code> - The authentication mapper</dd>
 <dd><code>ldapGroupProcessor</code> - The group processor</dd>
+<dd><code>executorService</code> - Executor Service</dd>
 </dl>
 </li>
 </ul>

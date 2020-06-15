@@ -141,8 +141,9 @@ implements <a href="../../../../io/micronaut/security/authentication/Authenticat
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html#AuthenticationUserDetailsAdapter-io.micronaut.security.authentication.UserDetails-java.lang.String-">AuthenticationUserDetailsAdapter</a></span>(<a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
-                                java.lang.String&nbsp;rolesKey)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html#AuthenticationUserDetailsAdapter-io.micronaut.security.authentication.UserDetails-java.lang.String-java.lang.String-">AuthenticationUserDetailsAdapter</a></span>(<a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+                                java.lang.String&nbsp;rolesKey,
+                                java.lang.String&nbsp;nameKey)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -200,18 +201,20 @@ implements <a href="../../../../io/micronaut/security/authentication/Authenticat
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="AuthenticationUserDetailsAdapter-io.micronaut.security.authentication.UserDetails-java.lang.String-">
+<a name="AuthenticationUserDetailsAdapter-io.micronaut.security.authentication.UserDetails-java.lang.String-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>AuthenticationUserDetailsAdapter</h4>
 <pre>public&nbsp;AuthenticationUserDetailsAdapter(<a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
-                                        java.lang.String&nbsp;rolesKey)</pre>
+                                        java.lang.String&nbsp;rolesKey,
+                                        java.lang.String&nbsp;nameKey)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>userDetails</code> - Authenticated user's representation.</dd>
 <dd><code>rolesKey</code> - The key name that should used to store the roles</dd>
+<dd><code>nameKey</code> - The key name that should used to store the user's name</dd>
 </dl>
 </li>
 </ul>

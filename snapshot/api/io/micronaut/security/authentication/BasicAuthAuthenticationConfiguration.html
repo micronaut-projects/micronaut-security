@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -183,22 +183,14 @@ implements io.micronaut.core.util.Toggleable</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html#getRolesName--">getRolesName</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html#isEnabled--">isEnabled</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html#setEnabled-boolean-">setEnabled</a></span>(boolean&nbsp;enabled)</code>
 <div class="block">Enables the <a href="../../../../io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html" title="class in io.micronaut.security.authentication"><code>BasicAuthAuthenticationFetcher</code></a>.</div>
 </td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/BasicAuthAuthenticationConfiguration.html#setRolesName-java.lang.String-">setRolesName</a></span>(java.lang.String&nbsp;rolesName)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -290,7 +282,7 @@ implements io.micronaut.core.util.Toggleable</pre>
 <a name="setEnabled-boolean-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>setEnabled</h4>
 <pre>public&nbsp;void&nbsp;setEnabled(boolean&nbsp;enabled)</pre>
@@ -298,32 +290,6 @@ implements io.micronaut.core.util.Toggleable</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>enabled</code> - True if enabled</dd>
-</dl>
-</li>
-</ul>
-<a name="getRolesName--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getRolesName</h4>
-<pre>public&nbsp;java.lang.String&nbsp;getRolesName()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>The name in the <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> that represents the roles</dd>
-</dl>
-</li>
-</ul>
-<a name="setRolesName-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>setRolesName</h4>
-<pre>public&nbsp;void&nbsp;setRolesName(java.lang.String&nbsp;rolesName)</pre>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>rolesName</code> - The key to store the roles in the <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> attributes</dd>
 </dl>
 </li>
 </ul>

@@ -197,7 +197,7 @@ function addJsClass() {
 
 
 <div class="paragraph">
-<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default.</p>
+<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default. You can disable it by setting <code>micronaut.security.basic-auth.enabled</code> to <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p>The following sequence illustrates the authentication flow:</p>
@@ -398,7 +398,12 @@ Read the <a href="https://guides.micronaut.io/micronaut-security-session/guide/i
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.roles-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the roles property. Default value "roles".</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s roles. Default value "roles".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.name-key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s name. Default value "username".</p></td>
 </tr>
 </tbody>
 </table>
@@ -726,7 +731,7 @@ Check out the <a href="https://guides.micronaut.io/micronaut-security-jwt/guide/
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT cookie based security is enabled. Default value (true).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT cookie configuration is enabled. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-name</code></p></td>
@@ -821,7 +826,7 @@ Read the <a href="https://guides.micronaut.io/micronaut-security-jwt-cookie/guid
 <a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a> specification.</p>
 </div>
 <div class="paragraph">
-<p>To enable a JWT signature in token generation, you need to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a>
+<p>To enable a JWT signature in token generation, you need to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/SignatureGeneratorConfiguration.html">SignatureGeneratorConfiguration</a>
 qualified with name <code>generator</code>.</p>
 </div>
 <div class="paragraph">
@@ -1228,7 +1233,7 @@ public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
 
 
 <div class="paragraph">
-<p>When you use JWT authentication and the built-in <a href="#login">LoginController</a>,
+<p>When you use <a href="#loginHandler"><code>bearer</code> authentication</a> and the built-in <a href="#login">LoginController</a>,
 the JWT tokens are returned to the client as part of an OAuth 2.0 <a href="https://tools.ietf.org/html/RFC6749">RFC6749</a> access token response.</p>
 </div>
 <div class="paragraph">

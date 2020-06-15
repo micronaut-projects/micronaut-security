@@ -414,6 +414,12 @@ Micronaut Security 2.x requires Micronaut 2.x.
 </div>
 </div>
 <div class="sect2">
+<h3 id="_ldapauthenticationprovider">LdapAuthenticationProvider</h3>
+<div class="paragraph">
+<p>The constructor for <a href="../api/io/micronaut/configuration/security/ldap/LdapAuthenticationProvider.html">LdapAuthenticationProvider</a> has been changed to accept an executor to schedule the LDAP lookup operation on. By default it is now scheduled on the IO thread pool.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_loginhandler">LoginHandler</h3>
 <div class="ulist">
 <ul>
@@ -556,6 +562,45 @@ micronaut.security.redirect.unauthorized.enabled: false</code></pre>
 <p>Basic authentication configuration has moved from <code>micronaut.security.token.basic-auth</code> to <code>micronaut.security.basic-auth</code>. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a <code>TokenValidatedEvent</code> was triggered as a result of basic authentication, however that is no longer the case.</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tokenpropagation">TokenPropagation</h3>
+<div class="paragraph">
+<p>Several classes related to <a href="#tokenPropagation">token propagation</a> have been renamed and relocated:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Old</th>
+<th class="tableblock halign-left valign-top">New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.HttpHeaderTokenWriter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html">HttpHeaderTokenPropagator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.HttpHeaderTokenWriterConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html">HttpHeaderTokenPropagatorConfiguration</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.HttpHeaderTokenWriterConfigurationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html">HttpHeaderTokenPropagatorConfigurationProperties</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.TokenWriter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/TokenPropagator.html">TokenPropagator</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Read <a href="#tokenPropagation">token propagation</a> section to learn more.</p>
 </div>
 </div>
 <div class="sect2">
@@ -981,7 +1026,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized
  request that initiated the login flow. Supersedes the &lt;code&gt;login-success&lt;/code&gt;
- configuration for those cases. Default value {@value DEFAULT_PRIOR_TO_LOGIN}.</p></td>
+ configuration for those cases. Default value false.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1455,7 +1500,7 @@ and an optional HTTP method.</p>
 
 
 <div class="paragraph">
-<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default.</p>
+<p>Out-of-the-box, Micronaut supports <a href="https://tools.ietf.org/html/rfc7617">RFC7617</a> which defines the "Basic" Hypertext Transfer Protocol (HTTP) authentication scheme, which transmits credentials as user-id/password pairs, encoded using Base64. Basic authentication is enabled by default. You can disable it by setting <code>micronaut.security.basic-auth.enabled</code> to <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p>The following sequence illustrates the authentication flow:</p>
@@ -1656,7 +1701,12 @@ Read the <a href="https://guides.micronaut.io/micronaut-security-session/guide/i
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.roles-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the roles property. Default value "roles".</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s roles. Default value "roles".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.name-key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s name. Default value "username".</p></td>
 </tr>
 </tbody>
 </table>
@@ -1984,7 +2034,7 @@ Check out the <a href="https://guides.micronaut.io/micronaut-security-jwt/guide/
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT cookie based security is enabled. Default value (true).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT cookie configuration is enabled. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-name</code></p></td>
@@ -2079,7 +2129,7 @@ Read the <a href="https://guides.micronaut.io/micronaut-security-jwt-cookie/guid
 <a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a> specification.</p>
 </div>
 <div class="paragraph">
-<p>To enable a JWT signature in token generation, you need to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html">SecretSignatureConfiguration</a>
+<p>To enable a JWT signature in token generation, you need to have in your app a bean of type <a href="../api/io/micronaut/security/token/jwt/signature/SignatureGeneratorConfiguration.html">SignatureGeneratorConfiguration</a>
 qualified with name <code>generator</code>.</p>
 </div>
 <div class="paragraph">
@@ -2486,7 +2536,7 @@ public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
 
 
 <div class="paragraph">
-<p>When you use JWT authentication and the built-in <a href="#login">LoginController</a>,
+<p>When you use <a href="#loginHandler"><code>bearer</code> authentication</a> and the built-in <a href="#login">LoginController</a>,
 the JWT tokens are returned to the client as part of an OAuth 2.0 <a href="https://tools.ietf.org/html/RFC6749">RFC6749</a> access token response.</p>
 </div>
 <div class="paragraph">
@@ -2970,7 +3020,7 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized
  request that initiated the login flow. Supersedes the &lt;code&gt;login-success&lt;/code&gt;
- configuration for those cases. Default value {@value DEFAULT_PRIOR_TO_LOGIN}.</p></td>
+ configuration for those cases. Default value false.</p></td>
 </tr>
 </tbody>
 </table>
@@ -3058,7 +3108,7 @@ that token to other requests in your network.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The previous configuration, configures a <a href="../api/io/micronaut/security/token/writer/HttpHeaderTokenWriter.html">HttpHeaderTokenWriter</a> and a
+<p>The previous configuration, configures a <a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html">HttpHeaderTokenPropagator</a> and a
 and a propagation filter, <a href="../api/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a>, which
 will propagate the security token seamlessly.</p>
 </div>
@@ -3070,6 +3120,83 @@ will propagate the security token seamlessly.</p>
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">micronaut.security.token.propagation.service-id-regex="catalogue|recommendations|inventory"</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Several configuration options are available:</p>
+</div>
+<a id="io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties" href="#io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html">TokenPropagationConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a>. Default value false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.service-id-regex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a regular expression to match the service id.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.uri-regex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a regular expression to match the uri.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures <a href="../api/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a> path. Default value "/**"</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For propagation via an HTTP Header, you can configure:</p>
+</div>
+<a id="io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties" href="#io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html">HttpHeaderTokenPropagatorConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.prefix</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value prefix for Http Header. Default value (HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.header-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Http Header to be used to propagate the token. Default value (HttpHeaders.AUTHORIZATION)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable <a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html">HttpHeaderTokenPropagator</a>. Default value (true).</p></td>
+</tr>
+</tbody>
+</table>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -3276,7 +3403,7 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether {@link SignedRefreshTokenGenerator} is enabled. Default value (true).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> is enabled. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.jws-algorithm</code></p></td>
@@ -3668,15 +3795,14 @@ public class UserController {
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.configuration:micronaut-security-oauth2:2.0.0.BUILD-SNAPSHOT")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut:micronaut-security-oauth2")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
-    &lt;groupId&gt;io.micronaut.configuration&lt;/groupId&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-security-oauth2&lt;/artifactId&gt;
-    &lt;version&gt;2.0.0.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
