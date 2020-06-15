@@ -5,12 +5,17 @@ buildscript {
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "io.micronaut.build:micronaut-gradle-plugins:2.0.0.RC10"
+        classpath "io.micronaut.build:micronaut-gradle-plugins:2.0.0.RC11"
     }
 }
 
 subprojects { Project subproject ->
     group "io.micronaut.security"
+
+    repositories {
+        maven { url "https://dl.bintray.com/micronaut/core-releases-local" }
+        jcenter()
+    }
 
     apply plugin: "io.micronaut.build.common"
 
@@ -40,6 +45,10 @@ subprojects { Project subproject ->
         }
         testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"        
     }
+
+    project.tasks.withType(Test) {
+        useJUnitPlatform()
+    }        
 }
 
 apply plugin: "io.micronaut.build.docs"

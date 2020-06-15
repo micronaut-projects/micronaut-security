@@ -21,7 +21,7 @@ dependencies {
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut:micronaut-multitenancy"
-    testImplementation "io.micronaut:micronaut-views"
+    testImplementation "io.micronaut.views:micronaut-views-velocity"
     testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.2"
 }
 
