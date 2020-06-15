@@ -111,10 +111,10 @@ class SessionReUseSpec extends EmbeddedServerSpecification {
                         authenticationRequest.getSecret().equals("password") ) {
                     UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>());
                     emitter.onNext(userDetails);
+                    emitter.onComplete();
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()));
                 }
-                emitter.onComplete();
 
             }, BackpressureStrategy.ERROR);
         }

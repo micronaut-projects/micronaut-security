@@ -99,10 +99,11 @@ class DenyAllSpec extends EmbeddedServerSpecification {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
                     emitter.onNext(new UserDetails('user', ['ROLE_USER']))
+                    emitter.onComplete()
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
-                emitter.onComplete()
+
 
             }, BackpressureStrategy.ERROR)
         }

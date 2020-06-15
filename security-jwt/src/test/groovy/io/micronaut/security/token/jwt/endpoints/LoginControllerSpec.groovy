@@ -110,10 +110,11 @@ class LoginControllerSpec extends EmbeddedServerSpecification {
             Flowable.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
                     emitter.onNext(new UserDetails('user', []))
+                    emitter.onComplete()
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
-                emitter.onComplete()
+
 
             }, BackpressureStrategy.ERROR)
         }

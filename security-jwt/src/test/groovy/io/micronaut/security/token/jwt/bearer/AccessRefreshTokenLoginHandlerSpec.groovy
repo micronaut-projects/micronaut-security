@@ -105,10 +105,9 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
                         emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)))
                     } else {
                         emitter.onNext(new UserDetails(username, (username == "admin") ? ["ROLE_ADMIN"] : ["foo", "bar"]))
+                        emitter.onComplete()
                     }
                 }
-                emitter.onComplete()
-
             }, BackpressureStrategy.ERROR)
         }
     }

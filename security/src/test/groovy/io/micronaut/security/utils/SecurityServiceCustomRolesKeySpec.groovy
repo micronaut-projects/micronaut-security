@@ -85,10 +85,11 @@ class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
                     emitter.onNext(new UserDetails('user', [], [customRoles: ['ROLE_USER']]))
                 } else if ( authenticationRequest.identity == 'user3' && authenticationRequest.secret == 'password' ) {
                     emitter.onNext(new UserDetails('user', [], [otherCustomRoles: ['ROLE_USER']]))
+                    emitter.onComplete()
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
-                emitter.onComplete()
+
             }, BackpressureStrategy.ERROR)
         }
     }

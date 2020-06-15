@@ -174,10 +174,11 @@ class TokenPropagationSpec extends Specification {
                         Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString()) &&
                         authenticationRequest.getSecret().equals("elementary")) {
                     emitter.onNext(new UserDetails(authenticationRequest.getIdentity().toString(), new ArrayList<>()))
+                    emitter.onComplete()
                 } else {
                     emitter.onError(new AuthenticationException(new AuthenticationFailed()))
                 }
-                emitter.onComplete()
+
             }, BackpressureStrategy.ERROR)
         }
     }

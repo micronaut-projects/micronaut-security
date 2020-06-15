@@ -61,7 +61,6 @@ class AuthenticatorSpec extends Specification {
         def authProviderFailed = Stub(AuthenticationProvider) {
             authenticate(_, _) >> Flowable.create({ emitter ->
                 emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
         Authenticator authenticator = new Authenticator([authProviderFailed], new SecurityConfigurationProperties())
@@ -80,7 +79,6 @@ class AuthenticatorSpec extends Specification {
                 Stub(AuthenticationProvider) {
                     authenticate(_, _) >> Flowable.create({ emitter ->
                         emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
-                        emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
@@ -110,7 +108,6 @@ class AuthenticatorSpec extends Specification {
                 Stub(AuthenticationProvider) {
                     authenticate(_, _) >>  Flowable.create({ emitter ->
                         emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
-                        emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
@@ -143,7 +140,6 @@ class AuthenticatorSpec extends Specification {
                 Stub(AuthenticationProvider) {
                     authenticate(_, _) >> Flowable.create({ emitter ->
                         emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
-                        emitter.onComplete()
                     }, BackpressureStrategy.ERROR)
                 },
         ]
