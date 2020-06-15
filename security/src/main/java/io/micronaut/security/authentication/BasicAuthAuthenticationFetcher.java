@@ -38,7 +38,7 @@ import java.util.Optional;
  * and password from the Authorization header and authenticates the credentials
  * against any {@link AuthenticationProvider}s available.
  */
-@Requires(property = SecurityConfigurationProperties.PREFIX + ".basic-auth.enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(property = BasicAuthAuthenticationConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Singleton
 public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
 
