@@ -21,19 +21,29 @@ import io.micronaut.configuration.security.ldap.context.LdapSearchResult;
 import io.micronaut.configuration.security.ldap.context.LdapSearchService;
 import io.micronaut.configuration.security.ldap.group.LdapGroupProcessor;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.*;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.security.authentication.AuthenticationException;
+import io.micronaut.security.authentication.AuthenticationFailureReason;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.Scheduler;
 
+import javax.inject.Named;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import java.io.Closeable;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Authenticates against an LDAP server using the configuration provided through
@@ -51,6 +61,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
     private final ContextBuilder contextBuilder;
     private final ContextAuthenticationMapper contextAuthenticationMapper;
     private final LdapGroupProcessor ldapGroupProcessor;
+    private final Scheduler scheduler;
 
     /**
      * @param configuration               The configuration to use to authenticate
@@ -58,22 +69,25 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
      * @param contextBuilder              The context builder
      * @param contextAuthenticationMapper The authentication mapper
      * @param ldapGroupProcessor          The group processor
+     * @param executorService             Executor Service
      */
     public LdapAuthenticationProvider(LdapConfiguration configuration,
                                       LdapSearchService ldapSearchService,
                                       ContextBuilder contextBuilder,
                                       ContextAuthenticationMapper contextAuthenticationMapper,
-                                      LdapGroupProcessor ldapGroupProcessor) {
+                                      LdapGroupProcessor ldapGroupProcessor,
+                                      @Named(TaskExecutors.IO) ExecutorService executorService) {
         this.configuration = configuration;
         this.ldapSearchService = ldapSearchService;
         this.contextBuilder = contextBuilder;
         this.contextAuthenticationMapper = contextAuthenticationMapper;
         this.ldapGroupProcessor = ldapGroupProcessor;
+        this.scheduler = Schedulers.from(executorService);
     }
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        return Flowable.create(emitter -> {
+        Flowable<AuthenticationResponse> responseFlowable = Flowable.create(emitter -> {
             String username = authenticationRequest.getIdentity().toString();
             String password = authenticationRequest.getSecret().toString();
 
@@ -92,7 +106,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                 }
             } catch (NamingException e) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e);
+                    LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e.getMessage());
                 }
                 emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN)));
                 return;
@@ -130,9 +144,8 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
 
                     LdapConfiguration.GroupConfiguration groupSettings = configuration.getGroups();
                     if (groupSettings.isEnabled()) {
-                        groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () -> {
-                            return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(new Object[]{result.getDn()}));
-                        });
+                        groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () ->
+                                ldapSearchService.search(managerContext, groupSettings.getSearchSettings(new Object[]{result.getDn()})));
 
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Group search returned [{}] for user [{}]", groups, username);
@@ -177,6 +190,8 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                 contextBuilder.close(managerContext);
             }
         }, BackpressureStrategy.ERROR);
+        responseFlowable = responseFlowable.subscribeOn(scheduler);
+        return responseFlowable;
     }
 
     @Override
