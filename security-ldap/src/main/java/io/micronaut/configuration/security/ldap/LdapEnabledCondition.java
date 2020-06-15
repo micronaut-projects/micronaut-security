@@ -27,7 +27,7 @@ import io.micronaut.inject.qualifiers.Qualifiers;
 import java.util.Optional;
 
 /**
- * Condition to enable the LDAP authentication provider
+ * Condition to enable the LDAP authentication provider.
  *
  * @author James Kleeh
  * @since 2.0.0

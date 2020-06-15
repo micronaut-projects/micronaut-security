@@ -35,7 +35,7 @@ import io.micronaut.security.oauth2.grants.GrantType;
 import java.util.Optional;
 
 /**
- * Condition to enable the password grant authentication flow for an OAuth provider
+ * Condition to enable the password grant authentication flow for an OAuth provider.
  *
  * @author James Kleeh
  * @since 2.0.0
