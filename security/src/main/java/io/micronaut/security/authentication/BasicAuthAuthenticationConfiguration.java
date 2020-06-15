@@ -33,12 +33,9 @@ public class BasicAuthAuthenticationConfiguration implements Toggleable {
     /**
      * The default enable value.
      */
-    @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
-    private static final String DEFAULT_ROLES_NAME = "roles";
 
     private boolean enabled = DEFAULT_ENABLED;
-    private String rolesName = DEFAULT_ROLES_NAME;
 
     @Override
     public boolean isEnabled() {
@@ -54,17 +51,4 @@ public class BasicAuthAuthenticationConfiguration implements Toggleable {
         this.enabled = enabled;
     }
 
-    /**
-     * @return The name in the {@link Authentication} that represents the roles
-     */
-    public String getRolesName() {
-        return rolesName;
-    }
-
-    /**
-     * @param rolesName The key to store the roles in the {@link Authentication} attributes
-     */
-    public void setRolesName(String rolesName) {
-        this.rolesName = rolesName;
-    }
 }

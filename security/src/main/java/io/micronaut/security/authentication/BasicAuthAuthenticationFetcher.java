@@ -20,7 +20,9 @@ import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.filters.AuthenticationFetcher;
+import io.micronaut.security.token.config.TokenConfiguration;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -43,14 +45,14 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthAuthenticationFetcher.class);
     private static final String PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC + " ";
     private final Authenticator authenticator;
-    private final BasicAuthAuthenticationConfiguration configuration;
+    private final TokenConfiguration configuration;
 
     /**
      * @param authenticator The authenticator to authenticate the credentials
      * @param configuration The basic authentication configuration
      */
     public BasicAuthAuthenticationFetcher(Authenticator authenticator,
-                                          BasicAuthAuthenticationConfiguration configuration) {
+                                          TokenConfiguration configuration) {
         this.authenticator = authenticator;
         this.configuration = configuration;
     }
@@ -67,7 +69,7 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
             return authenticationResponse.switchMap(response -> {
                 if (response.isAuthenticated()) {
                     UserDetails userDetails = response.getUserDetails().get();
-                    return Flowable.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName()));
+                    return Flowable.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName(), configuration.getNameKey()));
                 } else {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Could not authenticate {}", credentials.get().getUsername());
