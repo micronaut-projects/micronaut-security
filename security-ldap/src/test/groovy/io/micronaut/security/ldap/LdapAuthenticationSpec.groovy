@@ -9,7 +9,9 @@ import io.micronaut.security.authentication.UserDetails
 import io.reactivex.Flowable
 import io.reactivex.subscribers.TestSubscriber
 import org.reactivestreams.Publisher
+import spock.lang.Retry
 
+@Retry
 class LdapAuthenticationSpec extends InMemoryLdapSpec {
     
     void "test authentication and role retrieval with uniquemember"() {
