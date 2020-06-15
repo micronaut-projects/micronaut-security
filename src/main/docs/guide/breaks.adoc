@@ -37,9 +37,9 @@ The Maven Group ID has changed from `io.micronaut` to `io.micronaut.security`.
 
 * The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications. Check https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html[LDAP and Database authentication providers tutorial] to learn how to write a `DelegatingAuthenticationProvider`.
 
-=== LdapAuthenticationProvided
+=== LdapAuthenticationProvider
 
-api:configuration.security.ldap.LdapAuthenticationProvider[] is offloaded to the IO thread pool to avoid blocking the Event loop when running within the Netty server runtime.
+The constructor for api:configuration.security.ldap.LdapAuthenticationProvider[] has been changed to accept an executor to schedule the LDAP lookup operation on. By default it is now scheduled on the IO thread pool.
 
 === LoginHandler
 
