@@ -27,7 +27,7 @@ public interface TokenConfiguration extends Toggleable {
 
     String DEFAULT_ROLES_NAME = "roles";
 
-    String DEFAULT_NAME_KEY = "sub";
+    String DEFAULT_NAME_KEY = "username";
 
     /**
      * Key which will be used in the {@link io.micronaut.security.authentication.Authentication#getAttributes()} for the User`s roles.  Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME}.
