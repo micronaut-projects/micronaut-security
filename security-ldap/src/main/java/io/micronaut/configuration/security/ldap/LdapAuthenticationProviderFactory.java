@@ -22,6 +22,7 @@ import io.micronaut.configuration.security.ldap.group.LdapGroupProcessor;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.scheduling.TaskExecutors;
 
 import javax.inject.Named;
@@ -46,16 +47,13 @@ public class LdapAuthenticationProviderFactory {
      * @return an {@link LdapAuthenticationProvider} if the corresponding {@link LdapConfiguration} is enabled
      */
     @EachBean(LdapConfiguration.class)
+    @Requires(condition = LdapEnabledCondition.class)
     public LdapAuthenticationProvider ldapAuthenticationProvider(@Parameter LdapConfiguration configuration,
                                                                  LdapSearchService ldapSearchService,
                                                                  ContextBuilder contextBuilder,
                                                                  ContextAuthenticationMapper contextAuthenticationMapper,
                                                                  LdapGroupProcessor ldapGroupProcessor,
                                                                  @Named(TaskExecutors.IO) ExecutorService executorService) {
-        if (configuration.isEnabled()) {
-            return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor, executorService);
-        } else {
-            return null;
-        }
+        return new LdapAuthenticationProvider(configuration, ldapSearchService, contextBuilder, contextAuthenticationMapper, ldapGroupProcessor, executorService);
     }
 }
