@@ -37,14 +37,14 @@ import io.micronaut.security.token.jwt.endpoints.KeysController
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import spock.lang.AutoCleanup
-import spock.lang.Shared
 import spock.lang.Specification
+import spock.util.concurrent.PollingConditions
 
 import javax.inject.Named
 import javax.inject.Singleton
@@ -55,62 +55,52 @@ import java.security.interfaces.RSAPublicKey
 class JwksUriSignatureSpec extends Specification {
     private static final Logger LOG = LoggerFactory.getLogger(JwksUriSignatureSpec.class)
 
-    @Shared
-    int authServerAPort = SocketUtils.findAvailableTcpPort()
-
-    @Shared
-    int authServerBPort = SocketUtils.findAvailableTcpPort()
-
-    Map<String, Object> getMinimumConfig() {
-        [
-                'micronaut.security.enabled'                         : true,
-                'micronaut.security.oauth2.enabled'                  : true,
-                'micronaut.security.token.jwt.enabled'               : true,
-        ] as Map<String, Object>
-    }
-
-    @AutoCleanup
-    @Shared
-    EmbeddedServer authServerA = ApplicationContext.run(EmbeddedServer,  minimumConfig + [
-            'micronaut.server.port'                              : authServerAPort,
-            'spec.name'                                          : 'AuthServerAJwksUriSignatureSpec',
-            'micronaut.security.endpoints.login.enabled'         : true,
-            'micronaut.security.endpoints.keys.enabled'          : true,
-    ] as Map<String, Object>)
-
-    @Shared
-    BlockingHttpClient authServerAClient = authServerA.applicationContext.createBean(HttpClient, authServerA.URL).toBlocking()
-
-    @AutoCleanup
-    @Shared
-    EmbeddedServer authServerB = ApplicationContext.run(EmbeddedServer,  minimumConfig + [
-            'micronaut.server.port'                              : authServerBPort,
-            'spec.name'                                          : 'AuthServerBJwksUriSignatureSpec',
-            'micronaut.security.endpoints.login.enabled'         : true,
-            'micronaut.security.endpoints.keys.enabled'          : true,
-    ] as Map<String, Object>)
-
-    @Shared
-    BlockingHttpClient authServerBClient = authServerA.applicationContext.createBean(HttpClient, authServerB.URL).toBlocking()
-
-    @AutoCleanup
-    @Shared
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, minimumConfig + [
-            'micronaut.security.token.jwt.bearer.enabled'          : true,
-            'micronaut.security.token.jwt.cookie.enabled'          : true,
-            'micronaut.security.oauth2.clients.a.openid.issuer' : "http://localhost:${authServerAPort}/oauth2/default",
-            'micronaut.security.oauth2.clients.b.openid.issuer' : "http://localhost:${authServerBPort}/oauth2/default",
-            'spec.name'                                            : 'JwksUriSignatureSpec',
-    ] as Map<String, Object>)
-
-    @Shared
-    BlockingHttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.URL).toBlocking()
-
     void "registering an open id client, creates a JwskUriSignature with the jws_uri exposed in the openid-configuration endpoint"() {
-        expect:
+        given:
+        int authServerAPort = SocketUtils.findAvailableTcpPort()
+        int authServerBPort = SocketUtils.findAvailableTcpPort()
+
+        when:
+        Map<String, Object> authServerAConfig = [
+                'micronaut.server.port': authServerAPort,
+                'micronaut.security.authentication': 'bearer',
+                'spec.name': 'AuthServerAJwksUriSignatureSpec']
+        EmbeddedServer authServerA = ApplicationContext.run(EmbeddedServer, authServerAConfig)
+
+        then:
+        new PollingConditions().eventually {
+            assert authServerA.isRunning()
+        }
+
+        when:
+        Map<String, Object> authServerBConfig = [
+                'micronaut.server.port': authServerBPort,
+                'micronaut.security.authentication': 'bearer',
+                'spec.name': 'AuthServerBJwksUriSignatureSpec']
+        EmbeddedServer authServerB = ApplicationContext.run(EmbeddedServer, authServerBConfig)
+
+        then:
+        new PollingConditions().eventually {
+            assert authServerB.isRunning()
+        }
+
+        when:
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer,[
+                'micronaut.security.authentication': 'idtoken',
+                'micronaut.security.oauth2.clients.a.openid.issuer' : "http://localhost:${authServerAPort}/oauth2/default",
+                'micronaut.security.oauth2.clients.b.openid.issuer' : "http://localhost:${authServerBPort}/oauth2/default",
+                'spec.name'                                            : 'JwksUriSignatureSpec',
+        ] as Map<String, Object>)
+
+        then:
+        new PollingConditions().eventually {
+            assert embeddedServer.isRunning()
+        }
         embeddedServer.applicationContext.containsBean(SignatureConfiguration)
 
+
         when: 'it is possible to get a JWT from the auth server A'
+        BlockingHttpClient authServerAClient = authServerA.applicationContext.createBean(HttpClient, authServerA.URL).toBlocking()
         HttpResponse<AccessRefreshToken> accessRefreshTokenHttpResponse = authServerAClient.exchange(loginRequest(), AccessRefreshToken)
 
         then:
@@ -126,6 +116,7 @@ class JwksUriSignatureSpec extends Specification {
         JWTParser.parse(jwtA) instanceof SignedJWT
 
         when: 'it is possible to get a JWT from the auth server B'
+        BlockingHttpClient authServerBClient = authServerA.applicationContext.createBean(HttpClient, authServerB.URL).toBlocking()
         accessRefreshTokenHttpResponse = authServerBClient.exchange(loginRequest(), AccessRefreshToken)
 
         then:
@@ -147,6 +138,7 @@ class JwksUriSignatureSpec extends Specification {
         authServerB.applicationContext.getBean(AuthServerBKeysController).invocations == 0
 
         when: 'authentication should work since the auth server JWKS endpoint is configured automatically'
+        BlockingHttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.URL).toBlocking()
         HttpResponse<String> usernameRsp = client.exchange(HttpRequest.GET('/username').bearerAuth(jwtA), String)
 
         then:
@@ -169,6 +161,11 @@ class JwksUriSignatureSpec extends Specification {
         and:
         authServerB.applicationContext.getBean(AuthServerBOpenIdConfigurationController).invocations == 1
         authServerB.applicationContext.getBean(AuthServerBKeysController).invocations >= 1
+
+        cleanup:
+        authServerA.close()
+        authServerB.close()
+        embeddedServer.close()
     }
 
     @Requires(property = 'spec.name', value = 'JwksUriSignatureSpec')
@@ -318,16 +315,22 @@ class JwksUriSignatureSpec extends Specification {
     @Singleton
     static class AuthServerAAuthenticationProvider implements AuthenticationProvider {
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-            Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create({ emitter ->
+                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.onComplete()
+            }, BackpressureStrategy.ERROR)
         }
     }
     @Requires(property = 'spec.name', value = 'AuthServerBJwksUriSignatureSpec')
     @Singleton
     static class AuthServerBAuthenticationProvider implements AuthenticationProvider {
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-            Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create( {emitter ->
+                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.onComplete()
+            }, BackpressureStrategy.ERROR)
         }
     }
 
@@ -344,7 +347,7 @@ class JwksUriSignatureSpec extends Specification {
                         .algorithm(alg)
                         .keyUse(KeyUse.SIGNATURE) // indicate the intended use of the key
                         .keyID(UUID.randomUUID().toString()) // give the key a unique ID
-                        .generate();
+                        .generate()
             } catch (JOSEException e) {
                 if (LOG.isErrorEnabled()) {
                     LOG.error("error while generating a JWK");

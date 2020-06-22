@@ -1,4 +1,3 @@
-
 package io.micronaut.security.token.jwt.cookie
 
 class LoginForm {

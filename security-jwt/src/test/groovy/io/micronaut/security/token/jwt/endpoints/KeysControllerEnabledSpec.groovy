@@ -1,37 +1,31 @@
-
 package io.micronaut.security.token.jwt.endpoints
 
+import com.nimbusds.jose.jwk.JWK
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
+import javax.inject.Singleton
 
 class KeysControllerEnabledSpec extends Specification {
 
-    @Unroll("if m.s.enabled=true and m.s.token.jwt.enabled=true and m.s.token.jwt.endpoints.oauth.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    @Unroll("if micronaut.security.endpoints.keys.enabled=false bean [#description] is not loaded")
+    void "if micronaut.security.endpoints.keys.enabled=false security related beans are not loaded"(Class clazz, String description) {
         given:
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-                'spec.name'                                          : KeysControllerEnabledSpec.simpleName,
-                'micronaut.security.enabled'                         : true,
-                'micronaut.security.token.jwt.enabled'               : true,
-                'micronaut.security.token.jwt.endpoints.keys.enabled': false,
-
-        ], Environment.TEST)
+        ApplicationContext applicationContext = ApplicationContext.run([
+                'micronaut.security.endpoints.keys.enabled': false,
+        ])
 
         when:
-        embeddedServer.applicationContext.getBean(clazz)
+        applicationContext.getBean(clazz)
 
         then:
-        def e = thrown(NoSuchBeanException)
+        NoSuchBeanException e = thrown()
         e.message.contains('No bean of type [' + clazz.name + '] exists.')
 
         cleanup:
-        embeddedServer.close()
+        applicationContext.close()
 
         where:
         clazz << [
@@ -39,32 +33,32 @@ class KeysControllerEnabledSpec extends Specification {
                 KeysControllerConfiguration,
                 KeysControllerConfigurationProperties,
         ]
-
         description = clazz.name
     }
 
     @Unroll
-    void "#description loads if micronaut.security.endpoints.keys.enabled=true"(Class clazz, String description) {
+    void "#description is loaded by default"(Class clazz, String description) {
         given:
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-                'spec.name'                 : KeysControllerEnabledSpec.simpleName,
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
-                'micronaut.security.endpoints.keys.enabled': true,
+        ApplicationContext applicationContext = ApplicationContext.run(["spec.name": 'KeysControllerEnabledSpec'])
 
-        ], Environment.TEST)
-
-        when:
-        embeddedServer.applicationContext.getBean(clazz)
-
-        then:
-        noExceptionThrown()
+        expect:
+        applicationContext.containsBean(clazz)
 
         cleanup:
-        embeddedServer.close()
+        applicationContext.close()
 
         where:
         clazz << [KeysController, KeysControllerConfiguration, KeysControllerConfigurationProperties]
         description = clazz.name
+    }
+
+    @Requires(property = "spec.name", value = 'KeysControllerEnabledSpec')
+    @Singleton
+    static class CustomJwkProvider implements JwkProvider {
+
+        @Override
+        List<JWK> retrieveJsonWebKeys() {
+            []
+        }
     }
 }

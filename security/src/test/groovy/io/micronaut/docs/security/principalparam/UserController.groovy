@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.security.principalparam;
 
 //tag::imports[]
@@ -7,7 +6,7 @@ import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.security.annotation.Secured;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.security.Principal;
 //end::imports[]
 

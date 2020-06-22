@@ -1,4 +1,3 @@
-
 package io.micronaut.security
 
 import io.micronaut.context.ApplicationContext
@@ -7,6 +6,9 @@ import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.AuthenticationArgumentBinder
 import io.micronaut.security.authentication.AuthenticationExceptionHandler
+import io.micronaut.security.authentication.BasicAuthAuthenticationConfiguration
+import io.micronaut.security.authentication.BasicAuthAuthenticationFetcher
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
 import io.micronaut.security.authentication.PrincipalArgumentBinder
 import io.micronaut.security.config.InterceptUrlMapConverter
 import io.micronaut.security.config.SecurityConfigurationProperties
@@ -15,20 +17,17 @@ import io.micronaut.security.endpoints.LoginControllerConfigurationProperties
 import io.micronaut.security.endpoints.LogoutController
 import io.micronaut.security.endpoints.LogoutControllerConfigurationProperties
 import io.micronaut.security.filters.SecurityFilter
-import io.micronaut.security.handlers.HttpStatusCodeRejectionHandler
 import io.micronaut.security.rules.ConfigurationInterceptUrlMapRule
 import io.micronaut.security.rules.IpPatternsRule
 import io.micronaut.security.rules.SecuredAnnotationRule
 import io.micronaut.security.rules.SensitiveEndpointRule
 import io.micronaut.security.token.TokenAuthenticationFetcher
-import io.micronaut.security.token.basicauth.BasicAuthTokenReader
-import io.micronaut.security.token.basicauth.BasicAuthTokenReaderConfigurationProperties
-import io.micronaut.security.token.basicauth.BasicAuthTokenValidator
 import io.micronaut.security.token.config.TokenConfigurationProperties
+import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator
+import io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfiguration
 import io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
-import io.micronaut.security.token.writer.HttpHeaderTokenWriter
-import io.micronaut.security.token.writer.HttpHeaderTokenWriterConfigurationProperties
+import io.micronaut.security.token.propagation.TokenPropagator
 import io.micronaut.security.utils.DefaultSecurityService
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -66,22 +65,20 @@ class SecurityDisabledSpec extends Specification {
                 LoginControllerConfigurationProperties,
                 LogoutController,
                 LogoutControllerConfigurationProperties,
-                HttpStatusCodeRejectionHandler,
+                DefaultAuthorizationExceptionHandler,
                 ConfigurationInterceptUrlMapRule,
                 IpPatternsRule,
                 SecuredAnnotationRule,
                 SensitiveEndpointRule,
-                BasicAuthTokenReader,
-                BasicAuthTokenReaderConfigurationProperties,
-                BasicAuthTokenValidator,
+                BasicAuthAuthenticationFetcher,
+                BasicAuthAuthenticationConfiguration,
                 TokenConfigurationProperties,
                 TokenPropagationConfigurationProperties,
                 TokenPropagationHttpClientFilter,
-                HttpHeaderTokenWriter,
-                HttpHeaderTokenWriterConfigurationProperties,
+                HttpHeaderTokenPropagator,
+                HttpHeaderTokenPropagatorConfiguration,
                 TokenAuthenticationFetcher,
                 DefaultSecurityService,
-
         ]
 
         description = clazz.name

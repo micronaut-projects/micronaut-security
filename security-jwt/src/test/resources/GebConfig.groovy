@@ -1,11 +1,18 @@
-
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
+import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 
+driver = {
+    new HtmlUnitDriver(true)
+}
+
 environments {
-    chrome { driver = { new ChromeDriver() } }
+
+    chrome {
+        driver = { new ChromeDriver() }
+    }
 
     chromeHeadless {
         driver = {
@@ -15,7 +22,17 @@ environments {
         }
     }
 
-    htmlunit { driver = { new HtmlUnitDriver(true) } }
+    firefoxHeadless {
+        driver = {
+            FirefoxOptions o = new FirefoxOptions()
+            o.addArguments('-headless')
+            new FirefoxDriver(o)
+        }
+    }
 
-    firefox { driver = { new FirefoxDriver() } }
+    firefox {
+        driver = { new FirefoxDriver() }
+    }
+
+    htmlunit { driver = { new HtmlUnitDriver(true) } }
 }

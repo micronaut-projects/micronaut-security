@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import io.micronaut.context.annotation.Requires;
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 
 /**
- * Authorized party claim validation
+ * Authorized party claim validation.
  *
  * @author James Kleeh
  * @since 1.2.0

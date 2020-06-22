@@ -1,13 +1,17 @@
-
 package io.micronaut.security.ldap
 
 import io.micronaut.configuration.security.ldap.LdapAuthenticationProvider
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.security.authentication.AuthenticationFailed
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
+import io.reactivex.Flowable
+import io.reactivex.subscribers.TestSubscriber
+import org.reactivestreams.Publisher
+import spock.lang.Retry
 
+@Retry
 class LdapAuthenticationSpec extends InMemoryLdapSpec {
     
     void "test authentication and role retrieval with uniquemember"() {
@@ -15,7 +19,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -65,7 +68,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -92,7 +94,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -118,7 +119,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("member.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.foo.enabled': true,
                 'micronaut.security.ldap.foo.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.foo.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -159,7 +159,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -171,11 +170,16 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         when:
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        AuthenticationResponse response = authenticate(authenticationProvider,"abc")
+        TestSubscriber subscriber = new TestSubscriber<>()
+        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password"))).blockingSubscribe(subscriber)
+        subscriber.assertError(AuthenticationException)
+        List<Throwable> throwableList = subscriber.errors()
 
         then:
-        response instanceof AuthenticationFailed
-        response.message.get() == "User Not Found"
+        throwableList
+        throwableList.any {
+            it instanceof AuthenticationException && it.message == "User Not Found"
+        }
 
         cleanup:
         ctx.close()
@@ -187,7 +191,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         def s = createServer("basic.ldif")
         s.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -199,11 +202,16 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         when:
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        AuthenticationResponse response = authenticate(authenticationProvider,"euclid", "abc")
+        TestSubscriber subscriber = new TestSubscriber<>()
+        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc"))).blockingSubscribe(subscriber)
+        subscriber.assertError(AuthenticationException)
+        List<Throwable> throwableList = subscriber.errors()
 
         then:
-        response instanceof AuthenticationFailed
-        response.message.get() == "Credentials Do Not Match"
+        throwableList
+        throwableList.any {
+            it instanceof AuthenticationException && it.message == "Credentials Do Not Match"
+        }
 
         cleanup:
         ctx.close()
@@ -217,7 +225,6 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         s.startListening()
         s2.startListening()
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.basic.enabled': true,
                 'micronaut.security.ldap.basic.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.basic.context.managerDn': "cn=admin,dc=example,dc=com",

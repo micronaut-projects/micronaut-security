@@ -19,14 +19,14 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Id Token Access Token Response.
  *
  * After receiving and validating a valid and authorized Token Request from the Client, the Authorization Server returns a successful response that includes an ID Token and an Access Token.
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse>Successful Token Response</a>
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse">Successful Token Response</a>
  * @author Sergio del Amo
  * @since 1.2.0
  */
@@ -47,7 +47,7 @@ public class OpenIdTokenResponse extends TokenResponse {
      *
      * @return ID Token value associated with the authenticated session.
      */
-    @Nonnull
+    @NonNull
     public String getIdToken() {
         return idToken;
     }
@@ -56,7 +56,7 @@ public class OpenIdTokenResponse extends TokenResponse {
      *
      * @param idToken ID Token value associated with the authenticated session.
      */
-    public void setIdToken(@Nonnull String idToken) {
+    public void setIdToken(@NonNull String idToken) {
         this.idToken = idToken;
     }
 }

@@ -1,0 +1,4 @@
+The following global configuration options are available:
+
+include::{includedir}configurationProperties/io.micronaut.security.config.SecurityConfigurationProperties.adoc[]
+

@@ -19,6 +19,8 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -51,7 +53,7 @@ public abstract class HttpHeaderTokenReader implements TokenReader {
     @Override
     public Optional<String> findToken(HttpRequest<?> request) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Looking for bearer token in Authorization header");
+            LOG.debug("Looking for bearer token in {} header", getHeaderName());
         }
         HttpHeaders headers = request.getHeaders();
         Optional<String> authorizationHeader = headers.findFirst(getHeaderName());
@@ -70,8 +72,8 @@ public abstract class HttpHeaderTokenReader implements TokenReader {
             sb.append(prefix);
             sb.append(" ");
         }
-        String str = sb.toString();
-        if (authorization.startsWith(str)) {
+        String str = sb.toString().toLowerCase(Locale.ROOT);
+        if (authorization.toLowerCase(Locale.ROOT).startsWith(str)) {
             return Optional.of(authorization.substring(str.length()));
         } else {
             LOG.debug("{} does not start with {}", authorization, str);

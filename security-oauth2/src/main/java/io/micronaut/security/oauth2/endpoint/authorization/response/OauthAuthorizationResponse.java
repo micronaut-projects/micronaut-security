@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 /**
- * A marker interface for normal OAuth 2.0 authorization responses
+ * A marker interface for normal OAuth 2.0 authorization responses.
  *
  * @author James Kleeh
  * @since 1.2.0

@@ -17,8 +17,8 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.KeyType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * JSON Web Key Set Configuration.
@@ -32,7 +32,7 @@ public interface JwksSignatureConfiguration {
      * Json Web Key Set endpoint url.
      * @return returns a url where a JWKS is exposed.
      */
-    @Nonnull
+    @NonNull
     String getUrl();
 
     /**

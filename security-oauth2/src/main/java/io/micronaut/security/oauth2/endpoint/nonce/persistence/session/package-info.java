@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
- * Classes related to storage of the nonce in a session
+ * Classes related to storage of the nonce in a session.
  *
  * @author James Kleeh
  * @since 1.2.0

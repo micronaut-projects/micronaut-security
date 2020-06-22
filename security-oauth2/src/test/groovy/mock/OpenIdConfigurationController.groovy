@@ -7,7 +7,8 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 
-@Requires(property="spec.name", value="mockopenidprovider")
+@Requires(property="mockserver.url")
+@Requires(property="mockserver.path")
 @Controller('${mockserver.path}/.well-known')
 class OpenIdConfigurationController {
 

@@ -1,53 +1,70 @@
-
 package io.micronaut.security.token.jwt.endpoints
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.context.annotation.Requires
+import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
+import io.micronaut.security.token.refresh.RefreshTokenPersistence
+import io.micronaut.testutils.EmbeddedServerSpecification
+import org.reactivestreams.Publisher
 
-class OauthControllerPathConfigurableSpec extends Specification {
+import javax.inject.Singleton
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'refreshpathconfigurable',
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
-            'micronaut.security.endpoints.oauth.enabled': true,
+class OauthControllerPathConfigurableSpec extends EmbeddedServerSpecification {
+
+    @Override
+    String getSpecName() {
+        'OauthControllerPathConfigurableSpec'
+    }
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+            'micronaut.security.token.jwt.generator.refresh-token.secret': 'pleaseChangeThisSecretForANewOne',
             'micronaut.security.endpoints.oauth.path': '/newtoken',
-    ], Environment.TEST)
-
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
-
+            'micronaut.security.authentication': 'bearer'
+        ]
+    }
 
     void "OauthController is not accessible at /oauth/access_token but at /newtoken"() {
         given:
         TokenRefreshRequest creds = new TokenRefreshRequest('foo', 'XXXXXXXXXX')
 
         expect:
-        embeddedServer.applicationContext.getBean(OauthController.class)
+        applicationContext.getBean(OauthController.class)
 
         when:
-        client.toBlocking().exchange(HttpRequest.POST('/oauth/access_token', creds))
+        client.exchange(HttpRequest.POST('/oauth/access_token', creds))
 
         then:
-        HttpClientResponseException e = thrown(HttpClientResponseException)
+        HttpClientResponseException e = thrown()
         e.status == HttpStatus.UNAUTHORIZED
 
         when:
-        client.toBlocking().exchange(HttpRequest.POST('/newtoken', creds))
+        client.exchange(HttpRequest.POST('/newtoken', creds))
 
         then:
-        e = thrown(HttpClientResponseException)
+        e = thrown()
         e.status == HttpStatus.BAD_REQUEST
+    }
+
+    @Requires(property = 'spec.name', value = 'OauthControllerPathConfigurableSpec')
+    @Singleton
+    static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
+
+        Map<String, UserDetails> tokens = [:]
+
+        @Override
+        void persistToken(RefreshTokenGeneratedEvent event) {
+            tokens.put(event.getRefreshToken(), event.getUserDetails())
+        }
+
+        @Override
+        Publisher<UserDetails> getUserDetails(String refreshToken) {
+            Publishers.just(tokens.get(refreshToken))
+        }
     }
 }

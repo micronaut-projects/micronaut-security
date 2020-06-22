@@ -30,13 +30,15 @@ import javax.validation.constraints.Pattern;
 @Introspected
 public class TokenRefreshRequest {
 
+    public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
+
     @NotBlank
-    @Pattern(regexp = "refresh_token")
+    @Pattern(regexp = GRANT_TYPE_REFRESH_TOKEN)
     @JsonProperty("grant_type")
     private String grantType;
 
     @NotBlank
-    @JsonProperty("refresh_token")
+    @JsonProperty(GRANT_TYPE_REFRESH_TOKEN)
     private String refreshToken;
 
     /**
@@ -46,9 +48,20 @@ public class TokenRefreshRequest {
 
     /**
      *
+     * @param refreshToken Refresh token
+     */
+    public TokenRefreshRequest(String refreshToken) {
+        this.grantType = GRANT_TYPE_REFRESH_TOKEN;
+        this.refreshToken = refreshToken;
+    }
+
+    /**
+     *
      * @param grantType e.g refresh_token
      * @param refreshToken e.g. XXXXX
+     * @deprecated Use {@link TokenRefreshRequest#TokenRefreshRequest(String)} instead.
      */
+    @Deprecated
     public TokenRefreshRequest(String grantType, String refreshToken) {
         this.grantType = grantType;
         this.refreshToken = refreshToken;

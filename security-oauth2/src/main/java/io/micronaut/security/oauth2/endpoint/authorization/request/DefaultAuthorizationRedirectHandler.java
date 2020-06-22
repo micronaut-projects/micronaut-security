@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.core.util.StringUtils;
@@ -25,7 +24,7 @@ import io.micronaut.http.uri.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,8 +63,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param queryParams Query Parameters
      * @return The Expanded URI
      */
-    protected String expandedUri(@Nonnull String baseUrl,
-                                 @Nonnull Map<String, Object> queryParams) {
+    protected String expandedUri(@NonNull String baseUrl,
+                                 @NonNull Map<String, Object> queryParams) {
         UriBuilder builder = UriBuilder.of(baseUrl);
         for (String k : queryParams.keySet()) {
             Object val = queryParams.get(k);
@@ -108,8 +107,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateScope(@Nonnull AuthorizationRequest authorizationRequest,
-                                 @Nonnull Map<String, Object> parameters) {
+    protected void populateScope(@NonNull AuthorizationRequest authorizationRequest,
+                                 @NonNull Map<String, Object> parameters) {
         Optional<String> optionalScope = authorizationRequest.getScopes().stream().reduce((a, b) -> a + StringUtils.SPACE + b);
         String defaultScope = authorizationRequest instanceof OpenIdAuthorizationRequest ? OpenIdScope.OPENID.toString() : null;
         String scope = optionalScope.orElse(defaultScope);
@@ -123,8 +122,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateResponseType(@Nonnull AuthorizationRequest authorizationRequest,
-                                        @Nonnull Map<String, Object> parameters) {
+    protected void populateResponseType(@NonNull AuthorizationRequest authorizationRequest,
+                                        @NonNull Map<String, Object> parameters) {
         parameters.put(AuthorizationRequest.PARAMETER_RESPONSE_TYPE, authorizationRequest.getResponseType());
     }
 
@@ -133,8 +132,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateClientId(@Nonnull AuthorizationRequest authorizationRequest,
-                                    @Nonnull Map<String, Object> parameters) {
+    protected void populateClientId(@NonNull AuthorizationRequest authorizationRequest,
+                                    @NonNull Map<String, Object> parameters) {
         parameters.put(AuthorizationRequest.PARAMETER_CLIENT_ID, authorizationRequest.getClientId());
     }
 
@@ -143,8 +142,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateRedirectUri(@Nonnull AuthorizationRequest authorizationRequest,
-                                       @Nonnull Map<String, Object> parameters) {
+    protected void populateRedirectUri(@NonNull AuthorizationRequest authorizationRequest,
+                                       @NonNull Map<String, Object> parameters) {
         authorizationRequest.getRedirectUri().ifPresent(uri ->
                 parameters.put(AuthorizationRequest.PARAMETER_REDIRECT_URI, uri));
     }
@@ -155,9 +154,9 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param parameters Authentication Request Parameters
      * @param response Authorization Redirect Response
      */
-    protected void populateState(@Nonnull AuthorizationRequest authorizationRequest,
-                                 @Nonnull Map<String, Object> parameters,
-                                 @Nonnull MutableHttpResponse response) {
+    protected void populateState(@NonNull AuthorizationRequest authorizationRequest,
+                                 @NonNull Map<String, Object> parameters,
+                                 @NonNull MutableHttpResponse response) {
         authorizationRequest.getState(response).ifPresent(state ->
                 parameters.put(AuthorizationRequest.PARAMETER_STATE, state));
     }
@@ -167,8 +166,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateResponseMode(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                        @Nonnull Map<String, Object> parameters) {
+    protected void populateResponseMode(@NonNull OpenIdAuthorizationRequest authorizationRequest,
+                                        @NonNull Map<String, Object> parameters) {
         authorizationRequest.getResponseMode().ifPresent(rm ->
                 parameters.put(OpenIdAuthorizationRequest.PARAMETER_RESPONSE_MODE, rm));
     }
@@ -179,9 +178,9 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param parameters Authentication Request Parameters
      * @param response Authorization Redirect Response
      */
-    protected void populateNonce(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                 @Nonnull Map<String, Object> parameters,
-                                 @Nonnull MutableHttpResponse response) {
+    protected void populateNonce(@NonNull OpenIdAuthorizationRequest authorizationRequest,
+                                 @NonNull Map<String, Object> parameters,
+                                 @NonNull MutableHttpResponse response) {
         authorizationRequest.getNonce(response).ifPresent(nonce ->
                 parameters.put(OpenIdAuthorizationRequest.PARAMETER_NONCE, nonce));
     }
@@ -191,8 +190,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateDisplay(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                   @Nonnull Map<String, Object> parameters) {
+    protected void populateDisplay(@NonNull OpenIdAuthorizationRequest authorizationRequest,
+                                   @NonNull Map<String, Object> parameters) {
         authorizationRequest.getDisplay().ifPresent(display ->
                 parameters.put(OpenIdAuthorizationRequest.PARAMETER_DISPLAY, display));
     }
@@ -202,8 +201,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populatePrompt(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                  @Nonnull Map<String, Object> parameters) {
+    protected void populatePrompt(@NonNull OpenIdAuthorizationRequest authorizationRequest,
+                                  @NonNull Map<String, Object> parameters) {
         authorizationRequest.getPrompt().ifPresent(prompt ->
                 parameters.put(OpenIdAuthorizationRequest.PARAMETER_PROMPT, prompt));
     }
@@ -213,8 +212,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateMaxAge(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                  @Nonnull Map<String, Object> parameters) {
+    protected void populateMaxAge(@NonNull OpenIdAuthorizationRequest authorizationRequest,
+                                  @NonNull Map<String, Object> parameters) {
         authorizationRequest.getMaxAge().ifPresent(maxAge ->
                 parameters.put(OpenIdAuthorizationRequest.PARAMETER_MAX_AGE, maxAge));
     }
@@ -224,8 +223,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateUiLocales(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                     @Nonnull Map<String, Object> parameters) {
+    protected void populateUiLocales(@NonNull OpenIdAuthorizationRequest authorizationRequest,
+                                     @NonNull Map<String, Object> parameters) {
         authorizationRequest.getUiLocales()
                 .flatMap(uiLocales -> uiLocales.stream().reduce((a, b) -> a + StringUtils.SPACE + b))
                 .ifPresent(uiLocales -> parameters.put(OpenIdAuthorizationRequest.PARAMETER_UI_LOCALES, uiLocales));
@@ -236,8 +235,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateIdTokenHint(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                       @Nonnull Map<String, Object> parameters) {
+    protected void populateIdTokenHint(@NonNull OpenIdAuthorizationRequest authorizationRequest,
+                                       @NonNull Map<String, Object> parameters) {
         authorizationRequest.getIdTokenHint().ifPresent(idTokenHint ->
                 parameters.put(OpenIdAuthorizationRequest.PARAMETER_ID_TOKEN_HINT, idTokenHint));
     }
@@ -247,8 +246,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateLoginHint(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                     @Nonnull Map<String, Object> parameters) {
+    protected void populateLoginHint(@NonNull OpenIdAuthorizationRequest authorizationRequest,
+                                     @NonNull Map<String, Object> parameters) {
         authorizationRequest.getLoginHint().ifPresent(loginHint ->
                 parameters.put(OpenIdAuthorizationRequest.PARAMETER_LOGIN_HINT, loginHint));
     }
@@ -258,8 +257,8 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      * @param authorizationRequest Authentication Request
      * @param parameters Authentication Request Parameters
      */
-    protected void populateAcrValues(@Nonnull OpenIdAuthorizationRequest authorizationRequest,
-                                     @Nonnull Map<String, Object> parameters) {
+    protected void populateAcrValues(@NonNull OpenIdAuthorizationRequest authorizationRequest,
+                                     @NonNull Map<String, Object> parameters) {
         authorizationRequest.getAcrValues()
                 .flatMap(acrValues -> acrValues.stream().reduce((a, b) -> a + StringUtils.SPACE + b))
                 .ifPresent(acrValues -> parameters.put(OpenIdAuthorizationRequest.PARAMETER_ACR_VALUES, acrValues));

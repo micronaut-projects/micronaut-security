@@ -19,7 +19,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +41,7 @@ public interface AuthorizationEndpointConfiguration extends EndpointConfiguratio
      *
      * @return Value that determines the authorization processing flow to be used
      */
-    @Nonnull
+    @NonNull
     ResponseType getResponseType();
 
     /**

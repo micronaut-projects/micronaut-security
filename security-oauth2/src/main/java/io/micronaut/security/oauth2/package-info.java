@@ -19,7 +19,7 @@
  * @author Sergio del Amo
  * @since 1.2.0
  */
-@Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Configuration
 package io.micronaut.security.oauth2;
 

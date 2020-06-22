@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.annotation.Executable;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
@@ -26,7 +25,7 @@ import io.micronaut.security.rules.SecurityRule;
 import java.util.Optional;
 
 /**
- * Handles a log out request that redirects to an OpenID provider
+ * Handles a log out request that redirects to an OpenID provider.
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -42,5 +41,5 @@ public interface EndSessionController {
      */
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Executable
-    Optional<HttpResponse> endSession(HttpRequest request, Authentication authentication);
+    Optional<MutableHttpResponse<?>> endSession(HttpRequest<?> request, Authentication authentication);
 }

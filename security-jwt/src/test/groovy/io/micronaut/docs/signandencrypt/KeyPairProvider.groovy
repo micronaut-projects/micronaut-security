@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.signandencrypt
 
 import groovy.util.logging.Slf4j

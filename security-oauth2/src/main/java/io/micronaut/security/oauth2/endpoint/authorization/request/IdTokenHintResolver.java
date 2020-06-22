@@ -17,12 +17,12 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.http.HttpRequest;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Resolves a Id Token Hint. A Token previously issued by the Authorization Server being passed as a hint about the End-User's current or past authenticated session with the Client.
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken>ID Token id_token_hint description</a>
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token id_token_hint description</a>
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -33,6 +33,6 @@ public interface IdTokenHintResolver {
      * @param request The originating request
      * @return A IdTokenHint.
      */
-    @Nonnull
+    @NonNull
     String resolve(HttpRequest<?> request);
 }

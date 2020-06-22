@@ -30,7 +30,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 
 /**
@@ -66,11 +66,12 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             OauthUserDetailsMapper userDetailsMapper,
             SecureEndpoint tokenEndpoint) {
 
+        State state;
         if (stateValidator != null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Validating state found in the authorization response from provider [{}]", clientConfiguration.getName());
             }
-            State state = authorizationResponse.getState();
+            state = authorizationResponse.getState();
             try {
                 stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
             } catch (InvalidStateException e) {
@@ -78,6 +79,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             }
 
         } else {
+            state = null;
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Skipping state validation, no state validator found");
             }
@@ -91,7 +93,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
                     if (LOG.isTraceEnabled()) {
                         LOG.trace("Token endpoint returned a success response. Creating a user details");
                     }
-                    return Flowable.fromPublisher(userDetailsMapper.createUserDetails(response))
+                    return Flowable.fromPublisher(userDetailsMapper.createAuthenticationResponse(response, state))
                             .map(AuthenticationResponse.class::cast);
                 });
     }

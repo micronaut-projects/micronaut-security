@@ -1,12 +1,20 @@
 dependencies {
     testImplementation "org.gebish:geb-spock:$gebVersion"
     testImplementation "org.seleniumhq.selenium:htmlunit-driver:2.35.1"
-    testRuntime 'net.sourceforge.htmlunit:htmlunit:2.35.0'
+    testRuntimeOnly 'net.sourceforge.htmlunit:htmlunit:2.35.0'
     testImplementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
     testImplementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
     testImplementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+}
+
+micronautBuild {
+    resolutionStrategy {
+        // 2.40.0 breaks HomePageSpec - WebSockets test
+        force "org.seleniumhq.selenium:htmlunit-driver:2.35.1"
+        force 'net.sourceforge.htmlunit:htmlunit:2.35.0'
+    }
 }
 
 test {

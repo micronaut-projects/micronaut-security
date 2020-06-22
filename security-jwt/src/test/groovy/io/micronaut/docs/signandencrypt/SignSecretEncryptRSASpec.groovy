@@ -1,16 +1,10 @@
-
 package io.micronaut.docs.signandencrypt
 
 import com.nimbusds.jwt.EncryptedJWT
 import com.nimbusds.jwt.JWTParser
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
-import io.micronaut.testutils.YamlAsciidocTagCleaner
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.AuthorizationUtils
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
@@ -18,21 +12,18 @@ import io.micronaut.security.token.jwt.encryption.rsa.RSAEncryption
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.secret.SecretSignature
+import io.micronaut.testutils.EmbeddedServerSpecification
+import io.micronaut.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 
-class SignSecretEncryptRSASpec extends Specification implements AuthorizationUtils, YamlAsciidocTagCleaner {
+class SignSecretEncryptRSASpec extends EmbeddedServerSpecification implements AuthorizationUtils, YamlAsciidocTagCleaner {
 
-    String yamlConfig = """
+    private final static String yamlConfig = """
 #tag::yamlconfig[]
 micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           secret:
             generator: 
@@ -41,17 +32,13 @@ micronaut:
 #end::yamlconfig[]
 """
 
-    @Shared
-    File pemFile = new File('src/test/resources/rsa-2048bit-key-pair.pem')
+    private final static File pemFile = new File('src/test/resources/rsa-2048bit-key-pair.pem')
 
-    @Shared
-    Map<String, Object> configMap = [
+    private final static Map<String, Object> configMap = [
             'micronaut': [
                     'security': [
-                            'enabled': true,
                             'token': [
                                     'jwt': [
-                                        'enabled': true,
                                         'signatures': [
                                                 'secret': [
                                                         'generator': [
@@ -66,19 +53,20 @@ micronaut:
             ]
     ]
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'signandencrypt',
-            'micronaut.security.endpoints.login.enabled': true,
-            'endpoints.beans.enabled': true,
-            'endpoints.beans.sensitive': true,
-            'pem.path': pemFile.absolutePath,
-    ] << flatten(configMap), Environment.TEST)
+    @Override
+    String getSpecName() {
+        'signandencrypt'
+    }
 
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'endpoints.beans.enabled': true,
+                'endpoints.beans.sensitive': true,
+                'pem.path': pemFile.absolutePath,
+                'micronaut.security.authentication': 'bearer',
+        ] << flatten(configMap)
+    }
 
     void "test /beans is secured"() {
         when:

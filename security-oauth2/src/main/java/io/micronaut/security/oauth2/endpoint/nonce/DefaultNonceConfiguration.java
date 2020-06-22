@@ -31,7 +31,11 @@ public class DefaultNonceConfiguration implements NonceConfiguration {
 
     public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".nonce";
 
-    private static final boolean DEFAULT_ENABLED = true;
+    /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ENABLED = true;
     private static final String DEFAULT_PERSISTENCE = "cookie";
 
     private String persistence = DEFAULT_PERSISTENCE;

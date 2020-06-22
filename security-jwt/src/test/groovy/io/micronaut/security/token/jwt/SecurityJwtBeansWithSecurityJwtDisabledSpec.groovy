@@ -1,4 +1,3 @@
-
 package io.micronaut.security.token.jwt
 
 import io.micronaut.context.ApplicationContext
@@ -23,7 +22,7 @@ import io.micronaut.security.token.jwt.encryption.secret.SecretEncryptionFactory
 import io.micronaut.security.token.jwt.endpoints.OauthController
 import io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator
-import io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties
+import io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator
 import io.micronaut.security.token.jwt.render.BearerTokenRenderer
@@ -31,7 +30,6 @@ import io.micronaut.security.token.jwt.signature.ec.ECSignatureFactory
 import io.micronaut.security.token.jwt.signature.ec.ECSignatureGeneratorFactory
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureFactory
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorFactory
-import io.micronaut.security.token.jwt.signature.secret.SecretSignatureFactory
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -44,12 +42,11 @@ class SecurityJwtBeansWithSecurityJwtDisabledSpec extends Specification {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : SecurityJwtBeansWithSecurityJwtDisabledSpec.simpleName,
-            'micronaut.security.enabled': true,
             'micronaut.security.token.jwt.enabled': false,
     ], Environment.TEST)
 
     @Unroll("if micronaut.security.enabled=true and micronaut.security.token.jwt.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    void "if micronaut.security.token.jwt.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
         embeddedServer.applicationContext.getBean(clazz)
 
@@ -78,14 +75,13 @@ class SecurityJwtBeansWithSecurityJwtDisabledSpec extends Specification {
                 OauthControllerConfigurationProperties,
                 JWTClaimsSetGenerator,
                 AccessRefreshTokenGenerator,
-                JwtGeneratorConfigurationProperties,
+                AccessTokenConfigurationProperties,
                 JwtTokenGenerator,
                 BearerTokenRenderer,
                 ECSignatureFactory,
                 ECSignatureGeneratorFactory,
                 RSASignatureFactory,
                 RSASignatureGeneratorFactory,
-                SecretSignatureFactory,
                 JwtTokenValidator,
         ]
 

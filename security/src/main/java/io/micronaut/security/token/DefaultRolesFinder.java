@@ -17,7 +17,7 @@ package io.micronaut.security.token;
 
 import io.micronaut.security.token.config.TokenConfiguration;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +42,8 @@ public class DefaultRolesFinder implements RolesFinder {
     }
 
     @Override
-    @Nonnull
-    public List<String> findInClaims(@Nonnull Claims claims) {
+    @NonNull
+    public List<String> findInClaims(@NonNull Claims claims) {
         List<String> roles = new ArrayList<>();
         Object rolesObject = claims.get(tokenConfiguration.getRolesName());
         if (rolesObject != null) {

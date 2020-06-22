@@ -22,7 +22,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -39,27 +39,7 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
 
     protected final EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder;
     protected final OauthClientConfiguration clientConfiguration;
-
-    /**
-     * @deprecated Use {@link #providerMetadataSupplier} instead.
-     */
-    @Deprecated
-    protected final OpenIdProviderMetadata providerMetadata;
     protected final Supplier<OpenIdProviderMetadata> providerMetadataSupplier;
-
-    /**
-     * @deprecated Use {@link #AbstractEndSessionRequest(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)} instead.
-     * @param endSessionCallbackUrlBuilder The end session callback URL builder
-     * @param clientConfiguration The client configuration
-     * @param providerMetadata The provider metadata
-     */
-    @Deprecated
-    public AbstractEndSessionRequest(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                     OauthClientConfiguration clientConfiguration,
-                                     OpenIdProviderMetadata providerMetadata) {
-        this(endSessionCallbackUrlBuilder, clientConfiguration, () -> providerMetadata);
-    }
-
 
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
@@ -71,17 +51,16 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
                                      Supplier<OpenIdProviderMetadata> providerMetadata) {
         this.endSessionCallbackUrlBuilder = endSessionCallbackUrlBuilder;
         this.clientConfiguration = clientConfiguration;
-        this.providerMetadata = null;
         this.providerMetadataSupplier = providerMetadata;
     }
 
     @Nullable
     @Override
-    public String getUrl(HttpRequest originating, Authentication authentication) {
+    public String getUrl(HttpRequest<?> originating, Authentication authentication) {
         return getTemplate().expand(getParameters(originating, authentication));
     }
 
-    private Map<String, Object> getParameters(HttpRequest originating, Authentication authentication) {
+    private Map<String, Object> getParameters(HttpRequest<?> originating, Authentication authentication) {
         return Collections.singletonMap(PARAMETERS_KEY, getArguments(originating, authentication));
     }
 
@@ -99,13 +78,13 @@ public abstract class AbstractEndSessionRequest implements EndSessionEndpoint {
      * @param authentication The authentication
      * @return The parameters to include in the URL
      */
-    protected abstract Map<String, Object> getArguments(HttpRequest originating, Authentication authentication);
+    protected abstract Map<String, Object> getArguments(HttpRequest<?> originating, Authentication authentication);
 
     /**
      * @param originating The originating request
      * @return The absolute redirect URI
      */
-    protected String getRedirectUri(HttpRequest originating) {
+    protected String getRedirectUri(HttpRequest<?> originating) {
         return endSessionCallbackUrlBuilder.build(originating).toString();
     }
 }

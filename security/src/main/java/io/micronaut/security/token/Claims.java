@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Set;
 
 /**
@@ -40,7 +40,7 @@ public interface Claims {
      *
      * @return All claim names.
      */
-    @Nonnull
+    @NonNull
     Set<String> names();
 
     /**

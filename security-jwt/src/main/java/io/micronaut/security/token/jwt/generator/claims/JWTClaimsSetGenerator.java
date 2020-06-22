@@ -23,7 +23,7 @@ import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.Instant;
@@ -69,7 +69,9 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param tokenConfiguration     Token Configuration
      * @param jwtIdGenerator         Generator which creates unique JWT ID
      * @param claimsAudienceProvider Provider which identifies the recipients that the JWT is intented for.
+     * @deprecated Use {@link JWTClaimsSetGenerator#JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)} instead.
      */
+    @Deprecated
     public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
                                  @Nullable JwtIdGenerator jwtIdGenerator,
                                  @Nullable ClaimsAudienceProvider claimsAudienceProvider) {

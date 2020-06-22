@@ -21,11 +21,11 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Optional;
 
 /**
- * Validates an OpenID token response
+ * Validates an OpenID token response.
  *
  * @author Sergio del Amo
  * @since 1.2.0

@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.config;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 /**
@@ -26,10 +27,21 @@ public interface TokenConfiguration extends Toggleable {
 
     String DEFAULT_ROLES_NAME = "roles";
 
+    String DEFAULT_NAME_KEY = "username";
+
     /**
-     * The name in the claims object that stores the granted roles.
+     * Key which will be used in the {@link io.micronaut.security.authentication.Authentication#getAttributes()} for the User`s roles.  Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME}.
      *
-     * @return The roles claim name, e.g. roles.
+     * @return The key used for the user's roles within the user's attributes. e.g. "roles".
      */
+    @NonNull
     String getRolesName();
+
+    /**
+     {@link io.micronaut.security.authentication.Authentication} attributes map key for the user's name. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_NAME_KEY}.
+     *
+     * @return The key used for the user's name within the user's attributes. e.g. "sub".
+     */
+    @NonNull
+    String getNameKey();
 }

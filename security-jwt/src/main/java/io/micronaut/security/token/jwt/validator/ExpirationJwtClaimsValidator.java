@@ -22,7 +22,7 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Singleton;
 import java.util.Date;
 
@@ -43,7 +43,7 @@ public class ExpirationJwtClaimsValidator implements GenericJwtClaimsValidator {
      * @param claimsSet The JWT Claims
      * @return true if the expiration claim denotes a date after now.
      */
-    protected boolean validate(@Nonnull JWTClaimsSet claimsSet) {
+    protected boolean validate(@NonNull JWTClaimsSet claimsSet) {
         final Date expTime = claimsSet.getExpirationTime();
         if (expTime != null) {
             final Date now = new Date();

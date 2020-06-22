@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.security.securityRule.secured;
 
 import io.micronaut.context.annotation.Requires;

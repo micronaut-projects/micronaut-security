@@ -19,6 +19,7 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -30,6 +31,7 @@ import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
@@ -69,17 +71,11 @@ class JwksSpec extends Specification {
     @Shared
     RxHttpClient gatewayClient
 
-    def setupSpec() {
-    }
-
     def "setup gateway server"() {
         given:
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY)                           : 'jwks.gateway',
-                'micronaut.security.enabled'                   : true,
-                'micronaut.security.token.jwt.enabled'         : true,
-                'micronaut.security.endpoints.login.enabled'   : true,
-                'micronaut.security.endpoints.keys.enabled'    : true,
+                'micronaut.security.authentication': 'bearer',
         ]
 
         gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig, Environment.TEST)
@@ -112,8 +108,6 @@ class JwksSpec extends Specification {
         given:
         Map booksConfig = [
                 (SPEC_NAME_PROPERTY)                           : 'jwks.books',
-                'micronaut.security.enabled'                   : true,
-                'micronaut.security.token.jwt.enabled'         : true,
                 'micronaut.security.token.jwt.signatures.jwks.gateway.url' : "http://localhost:${gatewayPort}/keys",
         ]
 
@@ -153,7 +147,7 @@ class JwksSpec extends Specification {
         then:
         rsp.status() == HttpStatus.OK
         rsp.body().accessToken
-        rsp.body().refreshToken
+        !rsp.body().refreshToken
 
         when:
         String username = booksClient.toBlocking().retrieve(HttpRequest.GET('/').bearerAuth(rsp.body().accessToken), String)
@@ -180,11 +174,16 @@ class JwksSpec extends Specification {
     static class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-            if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                return Flowable.just(new UserDetails('user', []))
-            }
-            return Flowable.just(new AuthenticationFailed())
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create({emitter ->
+                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onComplete()
+                } else {
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                }
+
+            }, BackpressureStrategy.ERROR)
         }
     }
 

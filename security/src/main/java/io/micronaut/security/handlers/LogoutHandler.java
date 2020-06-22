@@ -16,7 +16,7 @@
 package io.micronaut.security.handlers;
 
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 
 /**
  * Responsible for logging the user out and returning
@@ -25,11 +25,12 @@ import io.micronaut.http.HttpResponse;
  * @author Sergio del Amo
  * @since 1.0.0
  */
+@FunctionalInterface
 public interface LogoutHandler {
 
     /**
      * @param request The {@link HttpRequest} being executed
      * @return An HttpResponse built after the user logs out
      */
-    HttpResponse logout(HttpRequest<?> request);
+    MutableHttpResponse<?> logout(HttpRequest<?> request);
 }

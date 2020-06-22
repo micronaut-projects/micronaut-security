@@ -1,6 +1,6 @@
 package io.micronaut.security.token.jwt.signature.jwks
 
-import com.nimbusds.jose.JOSEException
+
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
@@ -10,7 +10,6 @@ import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
@@ -34,51 +33,43 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import io.micronaut.security.token.views.UserDetailsEmail
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import spock.lang.Shared
+import spock.lang.Retry
 import spock.lang.Specification
+import spock.util.concurrent.PollingConditions
 
 import javax.inject.Named
 import javax.inject.Singleton
 import java.security.Principal
-import java.security.PublicKey
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
 class NotAvailableRemoteJwksSpec extends Specification {
-    private static final Logger LOG = LoggerFactory.getLogger(NotAvailableRemoteJwksSpec.class)
 
-    @Shared
-    int authServerPort = SocketUtils.findAvailableTcpPort()
-
-    Map<String, Object> getConfiguration() {
-        [
-        'spec.name': 'NotAvailableRemoteJwksSpec',
-        'micronaut.security.enabled'                         : true,
-        'micronaut.security.token.jwt.enabled'               : true,
-        'micronaut.security.token.jwt.signatures.jwks.foo.url': "http://localhost:${authServerPort}/keys",
-        'micronaut.http.client.read-timeout': '1s',
-        ]
-    }
-
-    Map<String, Object> getAuthServerConfiguration() {
-        [
-                'micronaut.server.port': authServerPort,
-                'spec.name': 'AuthServerNotAvailableRemoteJwksSpec',
-                'micronaut.security.enabled'                         : true,
-                'micronaut.security.token.jwt.enabled'               : true,
-                'micronaut.security.endpoints.login.enabled': true,
-                'micronaut.security.endpoints.keys.enabled': true,
-        ]
-    }
-
+    @Retry
     void "start an app, validation fails if remote jwks down. If the jwks endpoint goes live validation works"() {
+        given:
+        int authServerPort = SocketUtils.findAvailableTcpPort()
+
+        Map<String, Object> configuration =
+            [
+                    'spec.name': 'NotAvailableRemoteJwksSpec',
+                    'micronaut.security.token.jwt.signatures.jwks.foo.url': "http://localhost:${authServerPort}/keys",
+                    'micronaut.http.client.read-timeout': '1s',
+            ]
+
+
+        Map<String, Object> authServerConfiguration =
+            [
+                    'micronaut.server.port': authServerPort,
+                    'spec.name': 'AuthServerNotAvailableRemoteJwksSpec',
+                    'micronaut.security.authentication': 'bearer',
+            ]
+
+
         when: 'start auth server and expose an endpoint with JKWS'
         EmbeddedServer authEmbeddedServer = ApplicationContext.run(EmbeddedServer, authServerConfiguration)
         BlockingHttpClient authServerClient = authEmbeddedServer.applicationContext.createBean(HttpClient, authEmbeddedServer.URL).toBlocking()
@@ -107,6 +98,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
 
         when: 'Stop auth server, start server which uses the remote JWKS (Json Web Key Set) exposed by the auth server'
         authEmbeddedServer.stop()
+        authServerClient.close()
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
         then:
@@ -121,12 +113,15 @@ class NotAvailableRemoteJwksSpec extends Specification {
         e.status == HttpStatus.UNAUTHORIZED
 
         when: 'start auth server'
-        authEmbeddedServer.start()
-        authServerClient.exchange(HttpRequest.GET('/keys'))
+        authEmbeddedServer = ApplicationContext.run(EmbeddedServer, authServerConfiguration)
+        authServerClient = authEmbeddedServer.applicationContext.createBean(HttpClient, authEmbeddedServer.URL).toBlocking()
+
+        PollingConditions pollingConditions = new PollingConditions()
 
         then:
-        noExceptionThrown()
-        rsp.status() == HttpStatus.OK
+        pollingConditions.eventually {
+            authServerClient.exchange(HttpRequest.GET('/keys')).status() == HttpStatus.OK
+        }
 
         when: 'authentication should work since JWKS endpoint is up'
         HttpResponse<String> usernameRsp = client.exchange(HttpRequest.GET('/username').bearerAuth(jwt), String)
@@ -139,6 +134,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
         cleanup:
         embeddedServer.close()
         authEmbeddedServer.close()
+        authServerClient.close()
     }
 
     @Requires(property = 'spec.name', value = 'NotAvailableRemoteJwksSpec')
@@ -158,30 +154,24 @@ class NotAvailableRemoteJwksSpec extends Specification {
     @Requires(property = 'spec.name', value = 'AuthServerNotAvailableRemoteJwksSpec')
     @Singleton
     static class AuthServerJwkProvider implements JwkProvider, RSASignatureGeneratorConfiguration {
-        JWK jwk
+        private static JWK jwk
+
+        //storing this statically to use the same key across restarts
+        static {
+            jwk = new RSAKeyGenerator(2048)
+                    .algorithm(JWSAlgorithm.RS256)
+                    .keyUse(KeyUse.SIGNATURE) // indicate the intended use of the key
+                    .keyID(UUID.randomUUID().toString()) // give the key a unique ID
+                    .generate();
+        }
+
 
         AuthServerJwkProvider() {
-            this.jwk = generateJwk()
         }
 
         @Override
         List<JWK> retrieveJsonWebKeys() {
             [jwk.toPublicJWK()]
-        }
-
-        JWK generateJwk() {
-            try {
-                return new RSAKeyGenerator(2048)
-                        .algorithm(jwsAlgorithm)
-                        .keyUse(KeyUse.SIGNATURE) // indicate the intended use of the key
-                        .keyID(UUID.randomUUID().toString()) // give the key a unique ID
-                        .generate();
-            } catch (JOSEException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("error while generating a JWK");
-                }
-            }
-            return null
         }
 
         @Override
@@ -204,8 +194,11 @@ class NotAvailableRemoteJwksSpec extends Specification {
     @Singleton
     static class MockAuthenticationProvider implements AuthenticationProvider {
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-            Flowable.just(new UserDetails(authenticationRequest.identity as String, []))
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create({emitter ->
+                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.onComplete()
+            }, BackpressureStrategy.ERROR)
         }
     }
 

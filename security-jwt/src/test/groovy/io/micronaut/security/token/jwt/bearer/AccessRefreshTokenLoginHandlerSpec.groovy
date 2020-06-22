@@ -1,53 +1,57 @@
-
 package io.micronaut.security.token.jwt.bearer
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.authentication.AuthenticationException
+import io.micronaut.security.authentication.AuthenticationFailed
+import io.micronaut.security.authentication.AuthenticationFailureReason
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.testutils.EmbeddedServerSpecification
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import org.reactivestreams.Publisher
 import spock.lang.Unroll
 
-class AccessRefreshTokenLoginHandlerSpec extends Specification {
+import javax.inject.Singleton
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'accessrefershtokenloginhandler',
-            'micronaut.security.enabled': true,
-            'micronaut.security.endpoints.login.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
-            'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
-            ], Environment.TEST)
+class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    String getSpecName() {
+        'AccessRefreshTokenLoginHandlerSpec'
+    }
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
+                'micronaut.security.authentication'   : 'bearer',
+        ]
+    }
 
     @Unroll
     void "test invalid authentication with username #username"() {
         expect:
-        embeddedServer.applicationContext.getBean(SignatureConfiguration.class)
+        applicationContext.getBean(SignatureConfiguration.class)
 
         when:
-        embeddedServer.applicationContext.getBean(EncryptionConfiguration.class)
+        applicationContext.getBean(EncryptionConfiguration.class)
 
         then:
         thrown(NoSuchBeanException)
 
         when:
         def creds = new UsernamePasswordCredentials(username, password)
-        client.toBlocking().exchange(HttpRequest.POST('/login', creds))
+        client.exchange(HttpRequest.POST('/login', creds))
 
         then:
         HttpClientResponseException e = thrown(HttpClientResponseException)
@@ -64,24 +68,47 @@ class AccessRefreshTokenLoginHandlerSpec extends Specification {
         "accountLocked"   | "valid"   | "Account Locked"
     }
 
-    void "test valid authentication"() {
-        when:
-        def creds = new UsernamePasswordCredentials("valid", "valid")
-        def resp = client.toBlocking().exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
+    @Singleton
+    @Requires(property = 'spec.name', value = 'AccessRefreshTokenLoginHandlerSpec')
+    static class TestingAuthenticationProvider implements AuthenticationProvider {
 
-        then:
-        resp.status == HttpStatus.OK
-        resp.body().accessToken
-        resp.body().refreshToken
-        resp.body().username == "valid"
-        resp.body().roles == ["foo", "bar"]
-        resp.body().expiresIn
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
 
-        when: 'validate json response contains access_token and refresh_token keys as described in RFC6759'
-        String json = client.toBlocking().retrieve(HttpRequest.POST('/login', creds), String)
-
-        then:
-        json.contains('access_token')
-        json.contains('refresh_token')
+            return Flowable.create({ emitter ->
+                String username = authenticationRequest.getIdentity().toString()
+                AuthenticationFailed authenticationFailed = null
+                switch (username) {
+                    case "disabled":
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED)
+                        break
+                    case "accountExpired":
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED)
+                        break
+                    case "passwordExpired":
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED)
+                        break
+                    case "accountLocked":
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED)
+                        break
+                    case "invalidPassword":
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
+                        break
+                    case "notFound":
+                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND)
+                        break
+                }
+                if (authenticationFailed) {
+                    emitter.onError(new AuthenticationException(authenticationFailed))
+                } else {
+                    if (authenticationRequest.getSecret().toString() == "invalid") {
+                        emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)))
+                    } else {
+                        emitter.onNext(new UserDetails(username, (username == "admin") ? ["ROLE_ADMIN"] : ["foo", "bar"]))
+                        emitter.onComplete()
+                    }
+                }
+            }, BackpressureStrategy.ERROR)
+        }
     }
 }

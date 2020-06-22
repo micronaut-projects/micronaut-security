@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.security.session
 
 import geb.spock.GebSpec
@@ -10,12 +9,9 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.handlers.RejectionHandler
-import io.micronaut.security.session.SessionSecurityfilterRejectionHandler
 import io.micronaut.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
-import spock.lang.Requires
 import spock.lang.Shared
 
 class SessionAuthenticationSpec extends GebSpec implements YamlAsciidocTagCleaner {
@@ -24,32 +20,17 @@ class SessionAuthenticationSpec extends GebSpec implements YamlAsciidocTagCleane
 //tag::yamlconfig[]
 micronaut:
   security:
-    enabled: true
-    endpoints:
-      login:
-        enabled: true
-      logout:
-        enabled: true
-    session:
-      enabled: true
-      login-failure-target-url: /login/authFailed
+    authentication: session
+    redirect:
+      login-failure: /login/authFailed
 '''//end::yamlconfig[]
 
     @Shared
     Map<String, Object> configMap = ['micronaut': [
             'security': [
-                    'enabled': true,
-                    'endpoints': [
-                            'login': [
-                                    'enabled': true,
-                            ],
-                            'logout': [
-                                    'enabled': true,
-                            ],
-                    ],
-                    'session': [
-                            'enabled': true,
-                            'login-failure-target-url': '/login/authFailed',
+                    'authentication': 'session',
+                    'redirect': [
+                            'login-failure': '/login/authFailed',
                     ]
             ]
         ]
@@ -59,7 +40,7 @@ micronaut:
     @AutoCleanup
     ApplicationContext context = ApplicationContext.run([
                     'spec.name': 'securitysession',
-                    'micronaut.http.client.followRedirects': false
+                    'micronaut.http.client.followRedirects': false,
             ] << flatten(configMap), Environment.TEST)
 
     @Shared
@@ -177,7 +158,8 @@ micronaut:
         cookie.endsWith('; HTTPOnly')
 
         when:
-        String sessionId = cookie.replaceAll('SESSION=', '').replaceAll('; HTTPOnly', '')
+
+        String sessionId = cookie.split(";")[0].split("=")[1]
         request = HttpRequest.GET('/').cookie(Cookie.of('SESSION', sessionId))
         rsp = client.toBlocking().exchange(request, String)
 
@@ -185,14 +167,5 @@ micronaut:
         rsp.status().code == 200
         rsp.body()
         rsp.body().contains('sherlock')
-    }
-
-    def "verifies default RejectionHandler is SessionSecurityfilterRejectionHandler"() {
-        when:
-        RejectionHandler rejectionHandler = context.getBean(RejectionHandler)
-
-        then:
-        noExceptionThrown()
-        rejectionHandler instanceof SessionSecurityfilterRejectionHandler
     }
 }

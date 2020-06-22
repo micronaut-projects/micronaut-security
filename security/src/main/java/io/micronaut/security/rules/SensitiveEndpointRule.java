@@ -23,7 +23,7 @@ import io.micronaut.web.router.RouteMatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 import java.util.Map;
 
@@ -62,7 +62,7 @@ public class SensitiveEndpointRule implements SecurityRule {
     }
 
     @Override
-    public SecurityRuleResult check(HttpRequest request, @Nullable RouteMatch routeMatch, @Nullable Map<String, Object> claims) {
+    public SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             ExecutableMethod method = ((MethodBasedRouteMatch) routeMatch).getExecutableMethod();
 

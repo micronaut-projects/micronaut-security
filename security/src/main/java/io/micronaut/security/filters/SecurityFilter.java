@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.filters;
 
+import io.micronaut.context.annotation.Replaces;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
@@ -24,10 +24,11 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
+import io.micronaut.http.filter.ServerFilterPhase;
+import io.micronaut.management.endpoint.EndpointsFilter;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.config.SecurityConfiguration;
-import io.micronaut.security.handlers.RejectionHandler;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
@@ -36,8 +37,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
@@ -50,6 +50,7 @@ import java.util.stream.Collectors;
  * @author Graeme Rocher
  * @since 1.0
  */
+@Replaces(EndpointsFilter.class)
 @Filter("/**")
 public class SecurityFilter extends OncePerRequestHttpServerFilter {
 
@@ -73,7 +74,7 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     /**
      * The order of the Security Filter.
      */
-    protected final Integer order;
+    private static final Integer ORDER = ServerFilterPhase.SECURITY.order();
 
     protected final Collection<SecurityRule> securityRules;
     protected final Collection<AuthenticationFetcher> authenticationFetchers;
@@ -81,50 +82,29 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     protected final SecurityConfiguration securityConfiguration;
 
     /**
-     * @param securityRules               The list of rules that will allow or reject the request
-     * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
-     * @param rejectionHandler            Bean which handles routes which need to be rejected
-     * @param securityFilterOrderProvider filter order provider
-     * @deprecated Use {@link #SecurityFilter(Collection, Collection, SecurityConfiguration, SecurityFilterOrderProvider)} instead
-     */
-    @Deprecated
-    public SecurityFilter(Collection<SecurityRule> securityRules,
-                          Collection<AuthenticationFetcher> authenticationFetchers,
-                          RejectionHandler rejectionHandler,
-                          @Nullable SecurityFilterOrderProvider securityFilterOrderProvider) {
-        this.securityRules = securityRules;
-        this.authenticationFetchers = authenticationFetchers;
-        this.order = securityFilterOrderProvider != null ? securityFilterOrderProvider.getOrder() : 0;
-        this.securityConfiguration = null;
-    }
-
-    /**
-     * @param securityRules               The list of rules that will allow or reject the request
-     * @param authenticationFetchers      List of {@link AuthenticationFetcher} beans in the context.
-     * @param securityConfiguration       The security configuration
-     * @param securityFilterOrderProvider filter order provider
+     * @param securityRules          The list of rules that will allow or reject the request
+     * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
+     * @param securityConfiguration  The security configuration
      */
     @Inject
     public SecurityFilter(Collection<SecurityRule> securityRules,
                           Collection<AuthenticationFetcher> authenticationFetchers,
-                          SecurityConfiguration securityConfiguration,
-                          @Nullable SecurityFilterOrderProvider securityFilterOrderProvider) {
+                          SecurityConfiguration securityConfiguration) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
         this.securityConfiguration = securityConfiguration;
-        this.order = securityFilterOrderProvider != null ? securityFilterOrderProvider.getOrder() : 0;
     }
 
     @Override
     public int getOrder() {
-        return order;
+        return ORDER;
     }
 
     @Override
     protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
         String method = request.getMethod().toString();
         String path = request.getPath();
-        RouteMatch routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
 
         return Flowable.fromIterable(authenticationFetchers)
             .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
@@ -148,8 +128,8 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
                 }
             })
             .toFlowable()
-            .flatMap(authentication -> checkRules(request, chain, routeMatch, authentication.getAttributes(), true))
-            .switchIfEmpty(Flowable.defer(() -> checkRules(request, chain, routeMatch, null, false)));
+            .flatMap(authentication -> checkRules(request, chain, routeMatch, authentication))
+            .switchIfEmpty(Flowable.defer(() -> checkRules(request, chain, routeMatch, null)));
     }
 
     /**
@@ -190,42 +170,11 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
             LOG.debug("Authorized request {} {}. No rule provider authorized or rejected the request.", method, path);
         }
         //no rule found for the given request
-        if (routeMatch == null && securityConfiguration != null && !securityConfiguration.isRejectNotFound()) {
+        if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
             return chain.proceed(request);
         } else {
             request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
             return Publishers.just(new AuthorizationException(authentication));
         }
-    }
-
-    /**
-     * Check the security rules against the provided arguments.
-     *
-     * @param request The request
-     * @param chain The server chain
-     * @param routeMatch The route match
-     * @param attributes The authentication attributes
-     * @param forbidden Whether a rejection should be forbidden
-     * @return A response publisher
-     * @deprecated Use {@link #checkRules(HttpRequest, ServerFilterChain, RouteMatch, Authentication)} instead
-     */
-    @Deprecated
-    protected Publisher<MutableHttpResponse<?>> checkRules(HttpRequest<?> request,
-                                                           ServerFilterChain chain,
-                                                           @Nullable RouteMatch routeMatch,
-                                                           @Nullable Map<String, Object> attributes,
-                                                           boolean forbidden) {
-        return checkRules(request, chain, routeMatch, forbidden ? new Authentication() {
-            @Nonnull
-            @Override
-            public Map<String, Object> getAttributes() {
-                return attributes;
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-        } : null);
     }
 }

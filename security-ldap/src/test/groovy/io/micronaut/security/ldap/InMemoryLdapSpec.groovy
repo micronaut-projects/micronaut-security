@@ -1,4 +1,3 @@
-
 package io.micronaut.security.ldap
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer
@@ -8,14 +7,19 @@ import com.unboundid.ldif.LDIFReader
 import com.unboundid.util.ssl.SSLUtil
 import io.micronaut.configuration.security.ldap.LdapAuthenticationProvider
 import io.micronaut.core.io.ResourceResolver
+import io.micronaut.http.HttpVersion
 import io.micronaut.http.ssl.SslBuilder
 import io.micronaut.http.ssl.SslConfiguration
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.reactivex.Flowable
+import io.reactivex.annotations.NonNull
+import org.reactivestreams.Publisher
 import spock.lang.Specification
 
 import javax.net.ssl.TrustManagerFactory
+import java.util.function.Function
 
 abstract class InMemoryLdapSpec extends Specification {
 
@@ -32,9 +36,13 @@ abstract class InMemoryLdapSpec extends Specification {
             sslConfiguration.setCiphers(["TLS_DH_anon_WITH_AES_128_CBC_SHA"] as String[])
 
             def builder = new SslBuilder<Object>(new ResourceResolver()) {
-
                 TrustManagerFactory getTrust() {
                     getTrustManagerFactory(sslConfiguration)
+                }
+
+                @Override
+                Optional<Object> build(SslConfiguration sslConfig, HttpVersion version) {
+                    return null
                 }
 
                 @Override
@@ -54,8 +62,8 @@ abstract class InMemoryLdapSpec extends Specification {
         ds
     }
 
-    AuthenticationResponse authenticate(LdapAuthenticationProvider authenticationProvider, String username, String password = "password") {
-        Flowable.fromPublisher(authenticationProvider.authenticate(new AuthenticationRequest() {
+    AuthenticationRequest createAuthenticationRequest(String username, String password) {
+        new AuthenticationRequest() {
             @Override
             Object getIdentity() {
                 return username
@@ -65,7 +73,18 @@ abstract class InMemoryLdapSpec extends Specification {
             Object getSecret() {
                 return password
             }
-        })).blockingFirst()
+        }
+    }
+
+    AuthenticationResponse authenticate(LdapAuthenticationProvider authenticationProvider, String username, String password = "password") {
+        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest(username, password)))
+                .onErrorResumeNext(new io.reactivex.functions.Function<Throwable, Publisher<? extends AuthenticationResponse>>() {
+                    @Override
+                    Publisher<? extends AuthenticationResponse> apply(@NonNull Throwable throwable) throws Exception {
+                        return Flowable.just(((AuthenticationException) throwable).getResponse())
+                    }
+                })
+                .blockingFirst()
     }
 
 }

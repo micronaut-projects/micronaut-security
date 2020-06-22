@@ -1,4 +1,3 @@
-
 package io.micronaut.security.token.views
 
 import groovy.transform.CompileStatic

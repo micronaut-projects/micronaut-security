@@ -19,8 +19,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * SAML 2.0 bearer assertion grant.
@@ -47,7 +47,7 @@ public class SamlBearerAssertionGrant {
     /**
      * @return urn:ietf:params:oauth:grant-type:saml2-bearer
      */
-    @Nonnull
+    @NonNull
     public String getGrantType() {
         return grantType;
     }
@@ -73,7 +73,7 @@ public class SamlBearerAssertionGrant {
      *
      * @return The SAML 2.0 assertion, base 64 URL encoded.
      */
-    @Nonnull
+    @NonNull
     public String getAssertion() {
         return assertion;
     }
@@ -82,7 +82,7 @@ public class SamlBearerAssertionGrant {
      *
      * @param assertion The SAML 2.0 assertion, base 64 URL encoded.
      */
-    public void setAssertion(@Nonnull String assertion) {
+    public void setAssertion(@NonNull String assertion) {
         this.assertion = assertion;
     }
 }

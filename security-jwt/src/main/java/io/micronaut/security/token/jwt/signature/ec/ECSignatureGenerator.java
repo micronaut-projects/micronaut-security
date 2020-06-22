@@ -23,7 +23,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.security.interfaces.ECPrivateKey;
 
 /**
@@ -59,7 +59,7 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
      * @return A signed JWT
      * @throws JOSEException thrown in the JWT signing
      */
-    protected SignedJWT signWithPrivateKey(JWTClaimsSet claims, @Nonnull ECPrivateKey privateKey) throws JOSEException {
+    protected SignedJWT signWithPrivateKey(JWTClaimsSet claims, @NonNull ECPrivateKey privateKey) throws JOSEException {
         final JWSSigner signer = new ECDSASigner(privateKey);
         final SignedJWT signedJWT = new SignedJWT(new JWSHeader(algorithm), claims);
         signedJWT.sign(signer);

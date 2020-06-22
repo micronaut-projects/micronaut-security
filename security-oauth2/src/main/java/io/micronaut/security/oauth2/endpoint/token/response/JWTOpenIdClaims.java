@@ -18,8 +18,8 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.core.util.functional.ThrowingFunction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -43,31 +43,31 @@ public class JWTOpenIdClaims implements OpenIdClaims {
         this.claimsSet = claimsSet;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getIssuer() {
         return claimsSet.getIssuer();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public List<String> getAudience() {
         return claimsSet.getAudience();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Date getExpirationTime() {
         return claimsSet.getExpirationTime();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Date getIssuedAt() {
         return claimsSet.getIssueTime();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getSubject() {
         return claimsSet.getSubject();
@@ -243,7 +243,7 @@ public class JWTOpenIdClaims implements OpenIdClaims {
         return claimsSet.getClaim(claimName);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Set<String> names() {
         return claimsSet.getClaims().keySet();

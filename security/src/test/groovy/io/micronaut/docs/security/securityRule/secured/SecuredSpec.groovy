@@ -16,8 +16,7 @@ class SecuredSpec extends Specification {
     @Shared
     Map<String, Object> config = [
             'spec.name': 'docsecured',
-            'micronaut.security.enabled': true,
-    ]
+            ]
 
     @Shared
     @AutoCleanup

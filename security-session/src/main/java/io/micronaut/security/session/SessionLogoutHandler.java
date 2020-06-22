@@ -15,14 +15,18 @@
  */
 package io.micronaut.security.session;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.security.handlers.LogoutHandler;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.filters.SecurityFilter;
+import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,21 +37,34 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(condition = SessionAuthenticationModeCondition.class)
 @Singleton
 public class SessionLogoutHandler implements LogoutHandler {
-    protected final SecuritySessionConfiguration securitySessionConfiguration;
+
+    protected final String logout;
 
     /**
      * Constructor.
      *
      * @param securitySessionConfiguration Security Session Configuration session store
+     * @deprecated Use {@link SessionLogoutHandler(RedirectConfiguration)} instead.
      */
+    @Deprecated
     public SessionLogoutHandler(SecuritySessionConfiguration securitySessionConfiguration) {
-        this.securitySessionConfiguration = securitySessionConfiguration;
+        this.logout = securitySessionConfiguration.getLogoutTargetUrl();
+    }
+
+    /**
+     * Constructor.
+     * @param redirectConfiguration Redirect Configuration
+     */
+    @Inject
+    public SessionLogoutHandler(RedirectConfiguration redirectConfiguration) {
+        this.logout = redirectConfiguration.getLogout();
     }
 
     @Override
-    public HttpResponse logout(HttpRequest<?> request) {
+    public MutableHttpResponse<?> logout(HttpRequest<?> request) {
         MutableConvertibleValues<Object> attrs = request.getAttributes();
         Optional<Session> existing = attrs.get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class);
         if (existing.isPresent()) {
@@ -55,7 +72,7 @@ public class SessionLogoutHandler implements LogoutHandler {
             session.remove(SecurityFilter.AUTHENTICATION);
         }
         try {
-            URI location = new URI(securitySessionConfiguration.getLogoutTargetUrl());
+            URI location = new URI(logout);
             return HttpResponse.seeOther(location);
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();

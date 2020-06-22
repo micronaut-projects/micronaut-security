@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -28,8 +29,6 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPassword
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,8 +41,6 @@ import java.util.List;
  * @since 1.2.0
  */
 public class OauthPasswordAuthenticationProvider implements AuthenticationProvider {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OauthPasswordAuthenticationProvider.class);
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -65,20 +62,18 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
         return Flowable.fromPublisher(
                 tokenEndpointClient.sendRequest(context))
-                .switchMap(response -> {
-                    return Flowable.fromPublisher(userDetailsMapper.createUserDetails(response))
-                            .map(AuthenticationResponse.class::cast);
-                });
+                .switchMap(response -> Flowable.fromPublisher(userDetailsMapper.createAuthenticationResponse(response, null))
+                        .map(AuthenticationResponse.class::cast));
     }
 
     /**
-     * Builds the secure endpoint from the client configuration
+     * Builds the secure endpoint from the client configuration.
      *
      * @param clientConfiguration The client configuration
      * @return The token endpoint

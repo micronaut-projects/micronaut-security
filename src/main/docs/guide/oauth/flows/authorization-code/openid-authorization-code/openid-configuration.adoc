@@ -8,9 +8,7 @@ The requirements to allow authorization with an OpenID provider are:
 ----
 micronaut:
     security:
-        enabled: true
         oauth2:
-            enabled: true
             clients:
                 okta: // <1>
                     client-id: <<my client id>> // <2>

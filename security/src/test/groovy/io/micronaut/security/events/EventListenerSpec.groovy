@@ -1,17 +1,16 @@
-
 package io.micronaut.security.events
 
-import io.micronaut.context.ApplicationContext
+
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
@@ -23,32 +22,33 @@ import io.micronaut.security.event.LoginSuccessfulEvent
 import io.micronaut.security.event.LogoutEvent
 import io.micronaut.security.event.TokenValidatedEvent
 import io.micronaut.security.handlers.LoginHandler
+import io.micronaut.security.handlers.LogoutHandler
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
 import javax.inject.Singleton
 
-class EventListenerSpec extends Specification {
+class EventListenerSpec extends EmbeddedServerSpecification {
 
-    @Shared @AutoCleanup EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': "io.micronaut.security.events.EventListenerSpec",
+    @Override
+    String getSpecName() {
+        'EventListenerSpec'
+    }
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
             'endpoints.beans.enabled': true,
             'endpoints.beans.sensitive': true,
-            'micronaut.security.enabled': true,
-            'micronaut.security.endpoints.login.enabled': true,
-            'micronaut.security.endpoints.logout.enabled': true,
-    ], Environment.TEST)
-    @Shared @AutoCleanup RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+        ]
+    }
 
     def "failed login publishes LoginFailedEvent"() {
-        when:
-        println "sending request to login with bogus/password"
+        when: "sending request to login with bogus/password"
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("bogus", "password"))
-        client.toBlocking().exchange(request)
+        client.exchange(request)
 
         then:
         def e = thrown(HttpClientResponseException)
@@ -61,7 +61,7 @@ class EventListenerSpec extends Specification {
     def "successful login publishes LoginSuccessfulEvent"() {
         when:
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("user", "password"))
-        client.toBlocking().exchange(request)
+        client.exchange(request)
 
         then:
         new PollingConditions().eventually {
@@ -69,31 +69,20 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    def "accessing a secured endpoints, validates Basic auth token and triggers TokenValidatedEvent"() {
-        when:
-        HttpRequest request = HttpRequest.GET("/beans").basicAuth("user", "password")
-        client.toBlocking().exchange(request)
-
-        then:
-        new PollingConditions().eventually {
-            embeddedServer.applicationContext.getBean(TokenValidatedEventListener).events.size() == 1
-        }
-    }
-
     def "invoking logout triggers LogoutEvent"() {
         when:
         HttpRequest request = HttpRequest.POST("/logout", "").basicAuth("user", "password")
-        client.toBlocking().exchange(request)
+        client.exchange(request)
 
         then:
-        thrown(HttpClientResponseException)
+        noExceptionThrown()
         new PollingConditions().eventually {
             embeddedServer.applicationContext.getBean(LogoutEventListener).events.size() == 1
             (embeddedServer.applicationContext.getBean(LogoutEventListener).events*.getSource() as List<Authentication>).any { it.name == 'user'}
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class LoginSuccessfulEventListener implements ApplicationEventListener<LoginSuccessfulEvent> {
         List<LoginSuccessfulEvent> events = []
@@ -103,7 +92,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class LogoutEventListener implements ApplicationEventListener<LogoutEvent> {
         List<LogoutEvent> events = []
@@ -114,7 +103,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class LoginFailedEventListener implements ApplicationEventListener<LoginFailedEvent> {
         volatile List<LoginFailedEvent> events = []
@@ -125,7 +114,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class TokenValidatedEventListener implements ApplicationEventListener<TokenValidatedEvent> {
         List<TokenValidatedEvent> events = []
@@ -136,7 +125,7 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class LogoutFailedEventListener implements ApplicationEventListener<LogoutEvent> {
         List<LogoutEvent> events = []
@@ -147,34 +136,50 @@ class EventListenerSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
+    @Singleton
+    static class CustomLogoutHandler implements LogoutHandler {
+
+        @Override
+        MutableHttpResponse<?> logout(HttpRequest<?> request) {
+            HttpResponse.ok()
+        }
+    }
+
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class CustomAuthenticationProvider implements AuthenticationProvider {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-            System.out.println(authenticationRequest.identity)
-            System.out.println(authenticationRequest.secret)
-            if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                System.out.println("returning a new user details")
-                return Flowable.just(new UserDetails('user', []))
-            }
-            System.out.println("returning authentication failed")
-            return Flowable.just(new AuthenticationFailed())
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create({emitter ->
+                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onComplete()
+                } else {
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                }
+
+            }, BackpressureStrategy.ERROR)
         }
     }
 
-    @Requires(property = "spec.name", value = "io.micronaut.security.events.EventListenerSpec")
+    @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
     static class CustomLoginHandler implements LoginHandler {
 
         @Override
-        HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+        MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
             HttpResponse.ok()
         }
 
         @Override
-        HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+        MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+            throw new UnsupportedOperationException()
+        }
+
+        @Override
+        MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
             HttpResponse.unauthorized()
         }
     }

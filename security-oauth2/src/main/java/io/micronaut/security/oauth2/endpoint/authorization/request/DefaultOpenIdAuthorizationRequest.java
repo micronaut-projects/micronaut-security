@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.context.annotation.Parameter;
@@ -29,8 +28,8 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.endpoint.nonce.NonceFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,7 +81,7 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getClientId() {
         return oauthConfiguration.getClientId();
     }
@@ -101,12 +100,12 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public List<String> getScopes() {
         return oauthConfiguration.getScopes();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getResponseType() {
         if (endpointConfiguration != null) {

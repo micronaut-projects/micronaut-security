@@ -1,0 +1,20 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.72"
+}
+
+dependencies {
+    testImplementation "io.micronaut:micronaut-http-server-netty"
+    testImplementation "io.micronaut:micronaut-http-client"
+    testImplementation project(":security-jwt")
+    testImplementation project(":security-oauth2")
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72"
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+        javaParameters = true
+    }
+}
+
+apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

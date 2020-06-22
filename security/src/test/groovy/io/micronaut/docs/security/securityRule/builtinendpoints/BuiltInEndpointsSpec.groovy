@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.security.securityRule.builtinendpoints
 
 import io.micronaut.context.ApplicationContext
@@ -44,8 +43,6 @@ endpoints:
     @Shared
     Map<String, Object> config = [
             'spec.name': 'docbuiltinendpoints',
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.enabled': true,
     ] << flatten(endpointsMap)
 
     @Shared
@@ -85,6 +82,7 @@ endpoints:
 
         when:
         Map m = new Yaml().load(cleanYamlAsciidocTag(yamlConfig))
+
         then:
         m == endpointsMap
     }

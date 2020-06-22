@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.List;
 
 /**
@@ -32,6 +32,6 @@ public interface RolesFinder {
      * @param claims The claims of the token.
      * @return The granted roles.
      */
-    @Nonnull
-    List<String> findInClaims(@Nonnull Claims claims);
+    @NonNull
+    List<String> findInClaims(@NonNull Claims claims);
 }

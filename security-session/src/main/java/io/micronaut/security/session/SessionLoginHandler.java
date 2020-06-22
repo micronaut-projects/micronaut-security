@@ -15,11 +15,18 @@
  */
 package io.micronaut.security.session;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.token.config.TokenConfiguration;
@@ -27,11 +34,11 @@ import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * A {@link RedirectingLoginHandler} implementation for session based authentication.
@@ -39,60 +46,83 @@ import java.net.URISyntaxException;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(condition = SessionAuthenticationModeCondition.class)
 @Singleton
 public class SessionLoginHandler implements RedirectingLoginHandler {
 
+    protected final String loginSuccess;
+    protected final String loginFailure;
+    protected final RedirectConfiguration redirectConfiguration;
     protected final SessionStore<Session> sessionStore;
-    protected final SecuritySessionConfiguration securitySessionConfiguration;
-
-    @Nullable
-    private final String rolesKeyName;
-
-    /**
-     * Constructor.
-     * @deprecated use {@link #SessionLoginHandler(SecuritySessionConfiguration, SessionStore, TokenConfiguration)}
-     * @param securitySessionConfiguration Security Session Configuration
-     * @param sessionStore The session store
-     */
-    @Deprecated
-    public SessionLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,
-                               SessionStore<Session> sessionStore) {
-        this.securitySessionConfiguration = securitySessionConfiguration;
-        this.sessionStore = sessionStore;
-        this.rolesKeyName = null;
-    }
+    private final TokenConfiguration tokenConfiguration;
+    private final PriorToLoginPersistence priorToLoginPersistence;
 
     /**
      * Constructor.
      * @param securitySessionConfiguration Security Session Configuration
      * @param sessionStore The session store
      * @param tokenConfiguration Token Configuration
+     * @deprecated Use {@link SessionLoginHandler#SessionLoginHandler(RedirectConfiguration, SessionStore, TokenConfiguration, PriorToLoginPersistence)} instead.
      */
-    @Inject
+    @Deprecated
     public SessionLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,
                                SessionStore<Session> sessionStore,
                                TokenConfiguration tokenConfiguration) {
-        this.securitySessionConfiguration = securitySessionConfiguration;
+        this(securitySessionConfiguration.toRedirectConfiguration(),
+                sessionStore,
+                tokenConfiguration,
+                null);
+    }
+
+    /**
+     * Constructor.
+     * @param redirectConfiguration Redirect configuration
+     * @param sessionStore The session store
+     * @param tokenConfiguration Token Configuration
+     * @param priorToLoginPersistence The persistence to store the original url
+     */
+    @Inject
+    public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
+                               SessionStore<Session> sessionStore,
+                               TokenConfiguration tokenConfiguration,
+                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        this.loginFailure = redirectConfiguration.getLoginFailure();
+        this.loginSuccess = redirectConfiguration.getLoginSuccess();
+        this.redirectConfiguration = redirectConfiguration;
         this.sessionStore = sessionStore;
-        this.rolesKeyName = tokenConfiguration.getRolesName();
+        this.tokenConfiguration = tokenConfiguration;
+        this.priorToLoginPersistence = priorToLoginPersistence;
     }
 
     @Override
-    public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+    public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
         Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
-        session.put(SecurityFilter.AUTHENTICATION, new AuthenticationUserDetailsAdapter(userDetails, rolesKeyName));
+        session.put(SecurityFilter.AUTHENTICATION, new AuthenticationUserDetailsAdapter(userDetails, tokenConfiguration.getRolesName(), tokenConfiguration.getNameKey()));
         try {
-            URI location = new URI(securitySessionConfiguration.getLoginSuccessTargetUrl());
-            return HttpResponse.seeOther(location);
+            MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
+            ThrowingSupplier<URI, URISyntaxException> uriSupplier = () -> new URI(loginSuccess);
+            if (priorToLoginPersistence != null) {
+                Optional<URI> originalUri = priorToLoginPersistence.getOriginalUri(request, response);
+                if (originalUri.isPresent()) {
+                    uriSupplier = originalUri::get;
+                }
+            }
+            response.getHeaders().location(uriSupplier.get());
+            return response;
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();
         }
     }
 
     @Override
-    public HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+    public MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        throw new UnsupportedOperationException("Session based logins do not support refresh");
+    }
+
+    @Override
+    public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         try {
-            URI location = new URI(securitySessionConfiguration.getLoginFailureTargetUrl());
+            URI location = new URI(loginFailure);
             return HttpResponse.seeOther(location);
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();

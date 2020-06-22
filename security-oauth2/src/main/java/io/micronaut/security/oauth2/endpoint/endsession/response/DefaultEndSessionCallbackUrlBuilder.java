@@ -23,7 +23,7 @@ import javax.inject.Singleton;
 import java.net.URL;
 
 /**
- * The default implementation of {@link EndSessionCallbackUrlBuilder}
+ * The default implementation of {@link EndSessionCallbackUrlBuilder}.
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -45,7 +45,7 @@ public class DefaultEndSessionCallbackUrlBuilder implements EndSessionCallbackUr
     }
 
     @Override
-    public URL build(HttpRequest originating) {
+    public URL build(HttpRequest<?> originating) {
         return absoluteUrlBuilder.buildUrl(originating, endSessionConfiguration.getRedirectUri());
     }
 }
