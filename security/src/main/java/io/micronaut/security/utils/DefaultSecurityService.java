@@ -17,12 +17,13 @@ package io.micronaut.security.utils;
 
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.security.token.DefaultRolesFinder;
+import io.micronaut.security.token.MapClaims;
+import io.micronaut.security.token.RolesFinder;
 
 import javax.inject.Singleton;
 import java.security.Principal;
 import java.util.Optional;
-import java.util.Collection;
 
 /**
  * Default implementation of {@link io.micronaut.security.utils.SecurityService}. It uses {@link ServerRequestContext#currentRequest()} to retrieve the {@link io.micronaut.security.authentication.Authentication} object if any.
@@ -33,15 +34,14 @@ import java.util.Collection;
 @Singleton
 public class DefaultSecurityService implements SecurityService {
 
-    public static final String ROLES = "roles";
-    private final TokenConfiguration tokenConfiguration;
+    private final RolesFinder rolesFinder;
 
     /**
      *
-     * @param tokenConfiguration Token Configuration
+     * @param rolesFinder RolesFinder
      */
-    public DefaultSecurityService(TokenConfiguration tokenConfiguration) {
-        this.tokenConfiguration = tokenConfiguration;
+    public DefaultSecurityService(RolesFinder rolesFinder) {
+        this.rolesFinder = rolesFinder;
     }
 
     /**
@@ -83,7 +83,7 @@ public class DefaultSecurityService implements SecurityService {
      */
     @Override
     public boolean hasRole(String role) {
-        return hasRole(role, tokenConfiguration.isEnabled() ? tokenConfiguration.getRolesName() : ROLES);
+        return hasRole(role, rolesFinder);
     }
 
     /**
@@ -98,17 +98,16 @@ public class DefaultSecurityService implements SecurityService {
         if (role == null || rolesKey == null) {
             return false;
         }
-        return getAuthentication().map(authentication -> {
-            if (authentication.getAttributes() != null && authentication.getAttributes().containsKey(rolesKey)) {
-                Object authorities = authentication.getAttributes().get(rolesKey);
-                if (authorities instanceof Collection) {
-                    return ((Collection) authorities).contains(role);
-                } else if (authorities instanceof String) {
-                    return ((String) authorities).equalsIgnoreCase(role);
-                }
-            }
-            return false;
-        }).orElse(false);
+        return hasRole(role, new DefaultRolesFinder(rolesKey));
+    }
+
+    private boolean hasRole(String role, RolesFinder rolesFinder) {
+        return getAuthentication()
+                .map(Authentication::getAttributes)
+                .map(MapClaims::new)
+                .map(rolesFinder::findInClaims)
+                .map(it -> it.contains(role))
+                .orElse(false);
     }
 
 }
