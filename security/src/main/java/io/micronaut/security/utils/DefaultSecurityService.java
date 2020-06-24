@@ -111,7 +111,7 @@ public class DefaultSecurityService implements SecurityService {
      * Performed checks are case-insensitive.
      *
      * @param role        the role to check
-     * @param authorities a role or collection or roles
+     * @param authorities a role or collection of roles
      * @return true if role is available otherwise false
      */
     private boolean containsRoleIgnoreCase(String role, Object authorities) {
