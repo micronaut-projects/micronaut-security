@@ -79,6 +79,40 @@ class SecurityServiceSpec extends Specification {
         !hasRole
     }
 
+    void "verify SecurityService.isCurrentUserInRole() with case insensitive roles"() {
+        when:
+        HttpRequest request = HttpRequest.GET("${controllerPath}/roles?role=ROLE_USER")
+                .basicAuth("user", "password")
+        Boolean hasRole = client.toBlocking().retrieve(request, Boolean)
+
+        then:
+        hasRole
+
+        when:
+        request = HttpRequest.GET("${controllerPath}/roles?role=role_user")
+                .basicAuth("user", "password")
+        hasRole = client.toBlocking().retrieve(request, Boolean)
+
+        then:
+        hasRole
+
+        when:
+        request = HttpRequest.GET("${controllerPath}/roles?role=Role_User")
+                .basicAuth("user", "password")
+        hasRole = client.toBlocking().retrieve(request, Boolean)
+
+        then:
+        hasRole
+
+        when:
+        request = HttpRequest.GET("${controllerPath}/roles?role=role_admin")
+                .basicAuth("user", "password")
+        hasRole = client.toBlocking().retrieve(request, Boolean)
+
+        then:
+        !hasRole
+    }
+
     void "verify SecurityService.currentUserLogin()"() {
         when:
         String username = client.toBlocking().retrieve(HttpRequest.GET("${controllerPath}/currentuser").basicAuth("user", "password"), String)

@@ -37,7 +37,6 @@ public class DefaultSecurityService implements SecurityService {
     private final TokenConfiguration tokenConfiguration;
 
     /**
-     *
      * @param tokenConfiguration Token Configuration
      */
     public DefaultSecurityService(TokenConfiguration tokenConfiguration) {
@@ -89,8 +88,8 @@ public class DefaultSecurityService implements SecurityService {
     /**
      * If the current user has a specific role.
      *
-     * @param role the authority to check
-     * @param  rolesKey The map key to be used in the authentications attributes. E.g. "roles".
+     * @param role     the authority to check
+     * @param rolesKey The map key to be used in the authentications attributes. E.g. "roles".
      * @return true if the current user has the authority, false otherwise
      */
     @Override
@@ -101,14 +100,30 @@ public class DefaultSecurityService implements SecurityService {
         return getAuthentication().map(authentication -> {
             if (authentication.getAttributes() != null && authentication.getAttributes().containsKey(rolesKey)) {
                 Object authorities = authentication.getAttributes().get(rolesKey);
-                if (authorities instanceof Collection) {
-                    return ((Collection) authorities).contains(role);
-                } else if (authorities instanceof String) {
-                    return ((String) authorities).equalsIgnoreCase(role);
-                }
+                return containsRoleIgnoreCase(role, authorities);
             }
             return false;
         }).orElse(false);
+    }
+
+    /**
+     * Checks if current role is available in authorities instance.
+     * Performed checks are case-insensitive.
+     *
+     * @param role        the role to check
+     * @param authorities a role or collection or roles
+     * @return true if role is available otherwise false
+     */
+    private boolean containsRoleIgnoreCase(String role, Object authorities) {
+        boolean contains = false;
+        if (authorities instanceof Collection) {
+            Collection roles = ((Collection) authorities);
+            contains = roles.stream().anyMatch((currentRole) -> role.equalsIgnoreCase(currentRole.toString()));
+        } else if (authorities instanceof String) {
+            contains = ((String) authorities).equalsIgnoreCase(role);
+        }
+
+        return contains;
     }
 
 }
