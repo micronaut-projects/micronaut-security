@@ -48,6 +48,9 @@ subprojects { Project subproject ->
 
     project.tasks.withType(Test) {
         useJUnitPlatform()
+        reports {
+          junitXml.enabled = true
+        }        
     }        
 }
 
