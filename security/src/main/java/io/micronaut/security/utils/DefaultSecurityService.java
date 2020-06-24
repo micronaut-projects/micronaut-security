@@ -100,7 +100,7 @@ public class DefaultSecurityService implements SecurityService {
         return getAuthentication().map(authentication -> {
             if (authentication.getAttributes() != null && authentication.getAttributes().containsKey(rolesKey)) {
                 Object authorities = authentication.getAttributes().get(rolesKey);
-                return containsRoleIgnoreCase(role, authorities);
+                return hasRoleIgnoreCase(role, authorities);
             }
             return false;
         }).orElse(false);
@@ -114,16 +114,16 @@ public class DefaultSecurityService implements SecurityService {
      * @param authorities a role or collection of roles
      * @return true if role is available otherwise false
      */
-    private boolean containsRoleIgnoreCase(String role, Object authorities) {
-        boolean contains = false;
+    private boolean hasRoleIgnoreCase(String role, Object authorities) {
+        boolean hasRole = false;
         if (authorities instanceof Collection) {
             Collection roles = ((Collection) authorities);
-            contains = roles.stream().anyMatch((currentRole) -> role.equalsIgnoreCase(currentRole.toString()));
+            hasRole = roles.stream().anyMatch((currentRole) -> role.equalsIgnoreCase(currentRole.toString()));
         } else if (authorities instanceof String) {
-            contains = ((String) authorities).equalsIgnoreCase(role);
+            hasRole = ((String) authorities).equalsIgnoreCase(role);
         }
 
-        return contains;
+        return hasRole;
     }
 
 }
