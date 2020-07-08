@@ -24,8 +24,8 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +61,7 @@ class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getClientId() {
         return oauthClientConfiguration.getClientId();
     }
@@ -73,12 +73,12 @@ class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public List<String> getScopes() {
         return oauthClientConfiguration.getScopes();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getResponseType() {
         return ResponseType.CODE.toString();

@@ -1,4 +1,3 @@
-
 package io.micronaut.security
 
 import io.micronaut.context.ApplicationContext
@@ -11,11 +10,13 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.management.endpoint.health.HealthLevelOfDetail
 import io.micronaut.management.health.indicator.HealthResult
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.annotations.NonNull
 import io.reactivex.functions.Function
@@ -28,7 +29,7 @@ import javax.inject.Singleton
 class HealthSensitivitySpec extends Specification {
 
     @Unroll
-    void "If endpoints.health.sensitive=true #description => 401"(boolean security, String description) {
+    void "If endpoints.health.sensitive=true #description => 401"(Boolean security, String description) {
         given:
         Map m = [
                 'spec.name'                            : 'healthsensitivity',
@@ -36,7 +37,7 @@ class HealthSensitivitySpec extends Specification {
                 'endpoints.health.disk-space.threshold': '9999GB',
                 'endpoints.health.sensitive'           : true,
         ]
-        if (security) {
+        if (security != null) {
             m['micronaut.security.enabled'] = security
         }
 
@@ -57,8 +58,8 @@ class HealthSensitivitySpec extends Specification {
         rxClient.close()
 
         where:
-        security << [true, false]
-        description = security ? 'with security but unauthenticated' : 'without security'
+        security << [null, true, false]
+        description = security == null ? 'with default security enabled' : (security ? 'with security but unauthenticated' : 'without security')
     }
 
     @Unroll
@@ -126,8 +127,7 @@ class HealthSensitivitySpec extends Specification {
             'spec.name'                            : 'healthsensitivity',
             'endpoints.health.enabled'             : true,
             'endpoints.health.sensitive'           : false,
-            'endpoints.health.detailsVisible'      : 'AUTHENTICATED',
-            'micronaut.security.enabled'           : true])
+            'endpoints.health.detailsVisible'      : 'AUTHENTICATED'])
         URL server = embeddedServer.getURL()
         RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
 
@@ -163,8 +163,7 @@ class HealthSensitivitySpec extends Specification {
                 'spec.name'                            : 'healthsensitivity',
                 'endpoints.health.enabled'             : true,
                 'endpoints.health.sensitive'           : false,
-                'endpoints.health.detailsVisible'      : 'ANONYMOUS',
-                'micronaut.security.enabled'           : true])
+                'endpoints.health.detailsVisible'      : 'ANONYMOUS'])
         URL server = embeddedServer.getURL()
         RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
 
@@ -190,8 +189,7 @@ class HealthSensitivitySpec extends Specification {
                 'spec.name'                            : 'healthsensitivity',
                 'endpoints.health.enabled'             : true,
                 'endpoints.health.sensitive'           : false,
-                'endpoints.health.detailsVisible'      : 'NEVER',
-                'micronaut.security.enabled'           : true])
+                'endpoints.health.detailsVisible'      : 'NEVER'])
         URL server = embeddedServer.getURL()
         RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
 
@@ -215,11 +213,16 @@ class HealthSensitivitySpec extends Specification {
     static class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-            if (authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password') {
-                return Flowable.just(new UserDetails('user', []))
-            }
-            return Flowable.just(new AuthenticationFailed())
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create({emitter ->
+                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onComplete()
+                } else {
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                }
+
+            }, BackpressureStrategy.ERROR)
         }
     }
 }

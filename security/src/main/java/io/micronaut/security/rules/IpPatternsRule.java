@@ -19,12 +19,11 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.web.router.RouteMatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.InetSocketAddress;
@@ -52,22 +51,6 @@ public class IpPatternsRule extends AbstractSecurityRule {
     private final List<Pattern> patternList;
 
     /**
-     * @deprecated use {@link #IpPatternsRule(RolesFinder, SecurityConfiguration)} instead.
-     * @param tokenConfiguration Token Configuration
-     * @param securityConfiguration Security Configuration
-     */
-    @Deprecated
-    public IpPatternsRule(TokenConfiguration tokenConfiguration,
-                          SecurityConfiguration securityConfiguration) {
-        super(tokenConfiguration);
-        this.patternList = securityConfiguration.getIpPatterns()
-                        .stream()
-                        .map(Pattern::compile)
-                        .collect(Collectors.toList());
-    }
-
-    /**
-     *
      * @param rolesFinder Roles Parser
      * @param securityConfiguration Security Configuration
      */
@@ -87,7 +70,7 @@ public class IpPatternsRule extends AbstractSecurityRule {
     }
 
     @Override
-    public SecurityRuleResult check(HttpRequest request, @Nullable RouteMatch routeMatch, @Nullable Map<String, Object> claims) {
+    public SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
 
         if (patternList.isEmpty()) {
             if (LOG.isDebugEnabled()) {

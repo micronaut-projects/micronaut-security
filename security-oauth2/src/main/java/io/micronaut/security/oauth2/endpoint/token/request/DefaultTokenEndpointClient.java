@@ -32,7 +32,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
@@ -64,7 +64,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
         this.defaultTokenClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultClientConfiguration);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public <G, R extends TokenResponse> Publisher<R> sendRequest(TokenRequestContext<G, R> requestContext) {
         if (LOG.isTraceEnabled()) {
@@ -92,7 +92,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      * @param <G> The token request grant or body
      * @param <R> The token response type
      */
-    protected <G, R extends TokenResponse> void secureRequest(@Nonnull MutableHttpRequest<G> request,
+    protected <G, R extends TokenResponse> void secureRequest(@NonNull MutableHttpRequest<G> request,
                                  TokenRequestContext<G, R> requestContext) {
         List<AuthenticationMethod> authMethodsSupported = requestContext.getEndpoint().getSupportedAuthenticationMethods().orElseGet(() ->
                 Collections.singletonList(AuthenticationMethod.CLIENT_SECRET_BASIC));

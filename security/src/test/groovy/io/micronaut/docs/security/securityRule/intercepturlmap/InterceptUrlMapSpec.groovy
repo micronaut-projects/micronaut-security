@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.security.securityRule.intercepturlmap
 
 import io.micronaut.context.ApplicationContext
@@ -20,7 +19,6 @@ class InterceptUrlMapSpec extends Specification implements YamlAsciidocTagCleane
 //tag::yamlconfig[]
 micronaut:
   security:
-    enabled: true
     intercept-url-map:
       -
         pattern: /images/*
@@ -47,7 +45,6 @@ micronaut:
     @Shared
     Map<String, Object> ipPatternsMap = ['micronaut': [
             'security': [
-                    'enabled'    : true,
                     'intercept-url-map' : [
                             [
                                     pattern: '/images/*',

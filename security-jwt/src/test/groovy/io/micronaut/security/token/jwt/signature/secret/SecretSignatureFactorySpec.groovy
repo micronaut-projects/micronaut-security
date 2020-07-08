@@ -11,8 +11,6 @@ class SecretSignatureFactorySpec extends Specification {
     void "secret configuration triggers the creation of both SignatureGeneratorConfiguration and SignatureConfiguration"() {
         given:
         ApplicationContext applicationContext = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne'
         ])
 
@@ -30,10 +28,7 @@ class SecretSignatureFactorySpec extends Specification {
 
     void "by default no SignatureGeneratorConfiguration and SignatureConfiguration bean exist"() {
         given:
-        ApplicationContext applicationContext = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
-        ])
+        ApplicationContext applicationContext = ApplicationContext.run()
 
         expect:
         !applicationContext.containsBean(SignatureGeneratorConfiguration)
@@ -44,20 +39,12 @@ class SecretSignatureFactorySpec extends Specification {
     }
 
     void "test failing to provide a secret"() {
-        given:
-        ApplicationContext applicationContext = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
+        when:
+        ApplicationContext.run([
                 'micronaut.security.token.jwt.signatures.secret.generator.jwsAlgorithm': 'HS256'
         ])
 
-        when:
-        applicationContext.getBeansOfType(SecretSignature)
-
         then:
         thrown(BeanInstantiationException)
-
-        cleanup:
-        applicationContext.close()
     }
 }

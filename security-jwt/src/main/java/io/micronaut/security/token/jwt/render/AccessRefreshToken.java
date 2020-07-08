@@ -32,6 +32,7 @@ public class AccessRefreshToken {
     private String accessToken;
 
     @JsonProperty("refresh_token")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String refreshToken;
 
     @JsonProperty("token_type")

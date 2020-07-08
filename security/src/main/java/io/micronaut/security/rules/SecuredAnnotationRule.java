@@ -18,10 +18,9 @@ package io.micronaut.security.rules;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
@@ -44,15 +43,6 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
     public static final Integer ORDER = ConfigurationInterceptUrlMapRule.ORDER - 100;
 
     /**
-     * @deprecated use {@link #SecuredAnnotationRule(RolesFinder)} instead.
-     * @param tokenConfiguration Token Configuration.
-     */
-    @Deprecated
-    public SecuredAnnotationRule(TokenConfiguration tokenConfiguration) {
-        super(tokenConfiguration);
-    }
-
-    /**
      *
      * @param rolesFinder Roles Parser
      */
@@ -71,7 +61,7 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
      * @return The result
      */
     @Override
-    public SecurityRuleResult check(HttpRequest request, @Nullable RouteMatch routeMatch, @Nullable Map<String, Object> claims) {
+    public SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             MethodBasedRouteMatch methodRoute = ((MethodBasedRouteMatch) routeMatch);
             if (methodRoute.hasAnnotation(Secured.class)) {

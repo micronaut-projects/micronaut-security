@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.http.MutableHttpResponse;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,14 +38,14 @@ public interface AuthorizationRequest {
      *
      * @return OAuth 2.0 scopes.
      */
-    @Nonnull
+    @NonNull
     List<String> getScopes();
 
     /**
      *
      * @return OAuth 2.0 Client Identifier valid at the Authorization Server.
      */
-    @Nonnull
+    @NonNull
     String getClientId();
 
     /**
@@ -58,7 +57,7 @@ public interface AuthorizationRequest {
     /**
      * @return OAuth 2.0 Response Type value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used.
      */
-    @Nonnull
+    @NonNull
     String getResponseType();
 
     /**

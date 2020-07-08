@@ -1,4 +1,3 @@
-
 package io.micronaut.security.token.jwt.signature.rsa
 
 import com.nimbusds.jose.JWSAlgorithm

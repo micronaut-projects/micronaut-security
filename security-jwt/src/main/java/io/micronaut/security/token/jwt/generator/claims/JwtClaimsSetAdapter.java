@@ -16,8 +16,8 @@
 package io.micronaut.security.token.jwt.generator.claims;
 
 import com.nimbusds.jwt.JWTClaimsSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Set;
 
 /**
@@ -44,7 +44,7 @@ public class JwtClaimsSetAdapter implements JwtClaims {
         return jwtClaimsSet.getClaim(claimName);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Set<String> names() {
         return jwtClaimsSet.getClaims().keySet();

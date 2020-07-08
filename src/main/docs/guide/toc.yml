@@ -1,6 +1,16 @@
 introduction:
   title: Introduction
 whatsNew: What's New
+breaks: Breaking Changes
+gettingStarted:
+  title: Getting Started
+securityConfiguration:
+  title: Security Configuration
+  rejectNotFound: Reject Not Found Routes
+  authenticationStrategy: Authentication Strategy
+  loginHandler: Login Handler
+  logoutHandler: Logout Handler
+  redirection: Redirection Configuration
 authenticationProviders: Authentication Providers
 securityRule:
   title: Security Rules
@@ -9,9 +19,9 @@ securityRule:
   interceptUrlMap: Intercept URL Map
   builtInEndpointsAccess: Built-In Endpoints Security
 authenticationStrategies:
-  title: Authentication Strategies
-  basicAuth: Basic Auth
-  session: Session Authentication
+  title: Authorization Strategies
+  basicAuth: Basic Authentication
+  session: Session Authorization
   jwt:
     title: JSON Web Token
     reader:
@@ -32,6 +42,7 @@ authenticationStrategies:
     title: LDAP Authentication
     configuration: Configuration
     extending: Extending Default Behavior
+  custom: Custom Authorization Strategies
 rejection: Rejection Handling
 tokenPropagation: Token Propagation
 endpoints:
@@ -77,4 +88,4 @@ oauth:
     revocation: Revocation
     user-info: OpenID User Info
   custom-client: Custom Clients
-breaks: Breaking Changes
+repository: Repository

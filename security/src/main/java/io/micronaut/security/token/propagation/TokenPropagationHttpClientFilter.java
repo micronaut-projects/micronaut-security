@@ -25,11 +25,8 @@ import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import io.micronaut.http.util.OutgoingHttpRequestProcessor;
-import io.micronaut.security.token.writer.TokenWriter;
 import org.reactivestreams.Publisher;
 
-import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
@@ -46,45 +43,8 @@ import static io.micronaut.security.filters.SecurityFilter.TOKEN;
 public class TokenPropagationHttpClientFilter implements HttpClientFilter {
 
     protected final TokenPropagationConfiguration tokenPropagationConfiguration;
-    protected final TokenWriter tokenWriter;
     protected final OutgoingHttpRequestProcessor outgoingHttpRequestProcessor;
     protected final TokenPropagator tokenPropagator;
-
-    /**
-     * @param tokenWriter bean responsible of writing the token to the target request
-     * @param tokenPropagationConfiguration JWT Propagation configuration
-     * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
-     * @deprecated Use {@link #TokenPropagationHttpClientFilter(TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)} instead
-     */
-    @Deprecated
-    public TokenPropagationHttpClientFilter(TokenWriter tokenWriter,
-                                            TokenPropagationConfiguration tokenPropagationConfiguration,
-                                            OutgoingHttpRequestProcessor outgoingHttpRequestProcessor) {
-        this.tokenWriter = tokenWriter;
-        this.tokenPropagationConfiguration = tokenPropagationConfiguration;
-        this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
-        this.tokenPropagator = null;
-    }
-
-    /**
-     *
-     * @param tokenWriter bean responsible of writing the token to the target request
-     * @param tokenPropagationConfiguration JWT Propagation configuration
-     * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
-     * @param tokenPropagator The token propagator
-     * @deprecated Use {@link #TokenPropagationHttpClientFilter(TokenPropagationConfiguration, OutgoingHttpRequestProcessor, TokenPropagator)} instead
-     */
-    @Deprecated
-    @Inject
-    public TokenPropagationHttpClientFilter(@Nullable TokenWriter tokenWriter,
-                                            TokenPropagationConfiguration tokenPropagationConfiguration,
-                                            OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
-                                            TokenPropagator tokenPropagator) {
-        this.tokenWriter = tokenWriter;
-        this.tokenPropagationConfiguration = tokenPropagationConfiguration;
-        this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
-        this.tokenPropagator = tokenPropagator;
-    }
 
     /**
      *
@@ -95,7 +55,6 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
     public TokenPropagationHttpClientFilter(TokenPropagationConfiguration tokenPropagationConfiguration,
                                             OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
                                             TokenPropagator tokenPropagator) {
-        this.tokenWriter = null;
         this.tokenPropagationConfiguration = tokenPropagationConfiguration;
         this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
         this.tokenPropagator = tokenPropagator;
@@ -137,11 +96,7 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
             if (obj instanceof String) {
                 String tokenValue = (String) obj;
                 if (!hasExistingToken(targetRequest)) {
-                    if (tokenWriter != null) {
-                        tokenWriter.writeToken(targetRequest, tokenValue);
-                    } else if (tokenPropagator != null) {
-                        tokenPropagator.writeToken(targetRequest, tokenValue);
-                    }
+                    tokenPropagator.writeToken(targetRequest, tokenValue);
                 }
                 return chain.proceed(targetRequest);
             }
@@ -150,6 +105,6 @@ public class TokenPropagationHttpClientFilter implements HttpClientFilter {
     }
 
     private boolean hasExistingToken(MutableHttpRequest<?> targetRequest) {
-        return tokenPropagator != null && tokenPropagator.findToken(targetRequest).isPresent();
+        return tokenPropagator.findToken(targetRequest).isPresent();
     }
 }

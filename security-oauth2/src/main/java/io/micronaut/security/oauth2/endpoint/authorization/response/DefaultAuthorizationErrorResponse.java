@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
@@ -23,13 +22,15 @@ import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.security.errors.ErrorCode;
+
 import java.util.Locale;
 import java.util.Map;
 
 /**
- * Default implementation of {@link AuthorizationErrorResponse}
+ * Default implementation of {@link AuthorizationErrorResponse}.
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -54,11 +55,11 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
                 }).orElseGet(request::getParameters);
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public AuthorizationError getError() {
+    public ErrorCode getError() {
         String name = responseData.get(JSON_KEY_ERROR).toUpperCase(Locale.ENGLISH);
-        return AuthorizationError.valueOf(name);
+        return AuthorizationErrorCode.valueOf(name);
     }
 
     @Nullable

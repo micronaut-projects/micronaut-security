@@ -25,7 +25,7 @@ import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.security.interfaces.ECPublicKey;
 
 /**
@@ -72,7 +72,7 @@ public class ECSignature extends AbstractSignatureConfiguration {
         return verify(jwt, this.publicKey);
     }
 
-    private boolean verify(final SignedJWT jwt, @Nonnull ECPublicKey publicKey) throws JOSEException {
+    private boolean verify(final SignedJWT jwt, @NonNull ECPublicKey publicKey) throws JOSEException {
         final JWSVerifier verifier = new ECDSAVerifier(this.publicKey);
         return jwt.verify(verifier);
     }

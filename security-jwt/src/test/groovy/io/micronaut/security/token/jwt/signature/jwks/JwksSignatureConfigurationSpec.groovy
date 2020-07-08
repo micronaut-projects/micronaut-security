@@ -10,8 +10,6 @@ class JwksSignatureConfigurationSpec extends Specification {
 
     @Shared
     Map<String, Object> conf = [
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
             'micronaut.security.token.jwt.signatures.jwks.opes.url': "http://localhost:8081/keys",
             'micronaut.security.token.jwt.signatures.jwks.opes.key-type': "EC",
     ]

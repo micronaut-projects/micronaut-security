@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.security.securityRule.permitall
 
 import io.micronaut.context.ApplicationContext
@@ -19,8 +18,7 @@ class PermitAllSpec extends Specification {
     @Shared
     Map<String, Object> config = [
             'spec.name': 'docpermitall',
-            'micronaut.security.enabled': true,
-    ]
+            ]
 
     @Shared
     @AutoCleanup

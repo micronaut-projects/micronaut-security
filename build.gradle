@@ -1,193 +1,61 @@
 buildscript {
     repositories {
-        maven { url "https://repo.grails.org/grails/core" }
         jcenter()
+        maven { url "https://dl.bintray.com/micronaut/core-releases-local" }
+        maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "org.grails:grails-docs:$grailsVersion"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
-        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
-        classpath 'io.github.groovylang.groovydoc:groovydoc-gradle-plugin:1.0.1'
-        classpath "gradle.plugin.org.aim42:htmlSanityCheck:$htmlSanityCheckVersion"
-        classpath "io.spring.nohttp:nohttp-gradle:0.0.4.RELEASE"
-        classpath "io.micronaut.docs:micronaut-docs-asciidoc-extensions:$micronautDocsVersion"
-        classpath "io.micronaut.docs:micronaut-docs-gradle-plugins:$micronautDocsVersion", {
-            exclude module:'shadow'
-            exclude module:'plugin-shadow'
-        }
+        classpath "io.micronaut.build:micronaut-gradle-plugins:2.0.0.RC11"
     }
-}
-
-plugins {
-    id 'com.github.hierynomus.license' version '0.15.0' apply false
-    id 'com.github.ben-manes.versions' version '0.28.0'
-}
-
-apply plugin: 'org.aim42.htmlSanityCheck'
-
-repositories {
-    maven { url "https://oss.jfrog.org/oss-snapshot-local" }
-    maven { url "https://repo.grails.org/grails/core" }
-}
-
-version project.projectVersion
-
-ext {
-    distInstallDir = file("$buildDir/dist-tmp")
-    homeBinDir = file("bin")
-    homeLibDir = file("lib")
-    homeSrcDir = file("src")
 }
 
 subprojects { Project subproject ->
+    group "io.micronaut.security"
 
     repositories {
+        maven { url "https://dl.bintray.com/micronaut/core-releases-local" }
         jcenter()
-        maven { url "https://repo.grails.org/grails/core" }
-        maven { url "https://oss.jfrog.org/oss-snapshot-local" }
     }
 
-    apply plugin: "io.spring.nohttp"
-    apply plugin:"groovy"
-    apply plugin:"java-library"
+    apply plugin: "io.micronaut.build.common"
 
-
-    version project.projectVersion
-    group "io.micronaut"
-
-    ext {
-        isConfiguration = false
-        isBuildSnapshot = version.toString().endsWith("-SNAPSHOT")
+    micronautBuild {
+        enforcedPlatform = true
     }
 
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-
-    apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-build/v${micronautBuildVersion}/publishing.gradle"
-
-
-    jar {
-        manifest {
-            attributes('Automatic-Module-Name': "${subproject.group}.${subproject.name}".replaceAll('[^\\w\\.\\$_]', "_"))
-            attributes('Implementation-Version': projectVersion)
-            attributes('Implementation-Title': title)
-        }
+    if (subproject.parent.name == "examples" || subproject.name == "examples") {
+        return
     }
 
-    bintray.publish = true
-
-    tasks.withType(Test) {
-        jvmArgs '-Duser.country=US'
-        jvmArgs '-Duser.language=en'
-        testLogging {
-            exceptionFormat = 'full'
-        }
-        afterSuite {
-            System.out.print(".")
-            System.out.flush()
-        }
-
-        reports.html.enabled = !System.getenv("GITHUB_ACTIONS")
-        reports.junitXml.enabled = !System.getenv("GITHUB_ACTIONS")
-
-        systemProperty "micronaut.cloud.platform", "OTHER"
+    apply plugin: "io.micronaut.build.dependency-updates"
+    if (!subproject.name.startsWith("test-suite")) {
+        apply plugin: "io.micronaut.build.publishing"
     }
 
-    configurations {
-        documentation
-        all {
-            resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-                String group = details.requested.group
-                if (group == 'org.codehaus.groovy') {
-                    details.useVersion(groovyVersion)
-                }
-            }
-        }
-    }
     dependencies {
-        annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
-        testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
-        implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
-        api platform("io.micronaut:micronaut-bom:$micronautVersion")
-
-        documentation "org.codehaus.groovy:groovy-templates:$groovyVersion"
-        documentation "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
-
         annotationProcessor "io.micronaut:micronaut-inject-java"
         annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
         annotationProcessor "io.micronaut:micronaut-graal"
 
         api "io.micronaut:micronaut-inject"
-
+        
+        testAnnotationProcessor "io.micronaut:micronaut-inject-java"
         testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module:'groovy-all'
         }
-
-        testImplementation "io.micronaut:micronaut-inject-groovy"
-        testImplementation "cglib:cglib-nodep:3.3.0"
-        testImplementation "org.objenesis:objenesis:3.1"
-
-        testRuntimeOnly "ch.qos.logback:logback-classic:1.2.3"
-        testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
+        testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"        
     }
 
-    groovydoc {
-        classpath += project.configurations.documentation
-    }
-
-    task allDeps(type: DependencyReportTask) {}
-
-    apply plugin: 'checkstyle'
-
-    checkstyle {
-        toolVersion = 8.16
-        configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
-
-        // Per submodule
-        maxErrors = 0
-        maxWarnings = 10
-
-        showViolations = true
-    }
-
-    checkstyleTest.enabled = false
-
-    tasks.withType(GroovyCompile) {
-        groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
-    }
-
-    tasks.withType(JavaCompile){
-        options.encoding = "UTF-8"
-        options.compilerArgs.add('-parameters')
-    }
+    project.tasks.withType(Test) {
+        useJUnitPlatform()
+        reports {
+          junitXml.enabled = true
+        }        
+    }        
 }
 
-apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-docs/v${micronautDocsVersion}/gradle/docs.gradle"
-
-allprojects {
-    apply plugin: 'idea'
-
-    idea {
-        module {
-            outputDir file('build/classes/java/main')
-            testOutputDir file('build/classes/groovy/test')
-        }
-    }
-    apply from: rootProject.file('gradle/license.gradle')
-
-    tasks.withType(Test) {
-        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-        forkEvery = 100
-    }
-}
-
-htmlSanityCheck {
-    sourceDir = new File("${rootProject.buildDir}/docs/")
-    sourceDocuments = ["index.html"]
-
-}
-
-docs.finalizedBy(htmlSanityCheck)
+apply plugin: "io.micronaut.build.docs"
+apply plugin: "io.micronaut.build.dependency-updates"
 
 dependencyUpdates.resolutionStrategy {
     componentSelection { rules ->
@@ -201,3 +69,7 @@ dependencyUpdates.resolutionStrategy {
         }
     }
 }
+
+
+
+

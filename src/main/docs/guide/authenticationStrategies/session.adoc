@@ -10,22 +10,19 @@ $ mn create-app my-app --features security-session
 ====
 
 
-To use the Micronaut's session based authentication capabilities you must have the `security-session` dependency on your classpath. For example in `build.gradle`:
+To use the Micronaut's session based authentication capabilities you must have the `security-session` dependency on your classpath. For example:
 
-.build.gradle
-[source,groovy]
-----
-annotationProcessor "io.micronaut:micronaut-security"
-compile "io.micronaut:micronaut-security-session"
-----
+dependency:io.micronaut.security:micronaut-security-annotations[scope='annotationProcessor']
+
+dependency:io.micronaut.security:micronaut-security-session[]
+
+NOTE: The `micronaut-security-annotations` dependency is only required to use JSR 250 annotations
 
 The following sequence illustrates the authentication flow:
 
 image::sesssion_based_auth.svg[]
 
-The following configuration properties are available to customize session based authentication behaviour:
-
-include::{includedir}configurationProperties/io.micronaut.security.session.SecuritySessionConfigurationProperties.adoc[]
+Check the <<redirection, Redirection configuration>> to customize session based authentication behaviour.
 
 == Example of Session-Based Authentication configuration
 
@@ -34,4 +31,4 @@ include::{includedir}configurationProperties/io.micronaut.security.session.Secur
 include::{testssecuritysession}/security/session/SessionAuthenticationSpec.groovy[tag=yamlconfig,indent=0]
 ----
 
-TIP: Read the http://guides.micronaut.io/micronaut-security-session/guide/index.html[Session-Based Authentication Micronaut Guide] to learn more.
+TIP: Read the https://guides.micronaut.io/micronaut-security-session/guide/index.html[Session-Based Authentication Micronaut Guide] to learn more.

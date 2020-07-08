@@ -19,13 +19,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Represent the response of an authorization server to a valid access token request.
  *
- * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.1>RFC 6749 Access Token Successful Response</a>
+ * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.1">RFC 6749 Access Token Successful Response</a>
  *
  * @author Sergio del Amo
  * @since 1.2.0
@@ -51,7 +51,7 @@ public class TokenResponse {
      *
      * @return The access token issued by the authorization server.
      */
-    @Nonnull
+    @NonNull
     public String getAccessToken() {
         return accessToken;
     }
@@ -60,7 +60,7 @@ public class TokenResponse {
      *
      * @param accessToken The access token issued by the authorization server.
      */
-    public void setAccessToken(@Nonnull String accessToken) {
+    public void setAccessToken(@NonNull String accessToken) {
         this.accessToken = accessToken;
     }
 
@@ -68,7 +68,7 @@ public class TokenResponse {
      *
      * @return The type of the token issued.
      */
-    @Nonnull
+    @NonNull
     public String getTokenType() {
         return tokenType;
     }
@@ -77,7 +77,7 @@ public class TokenResponse {
      *
      * @param tokenType The type of the token issued.
      */
-    public void setTokenType(@Nonnull String tokenType) {
+    public void setTokenType(@NonNull String tokenType) {
         this.tokenType = tokenType;
     }
 

@@ -17,8 +17,8 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -83,35 +83,35 @@ public interface OpenIdClaims extends JwtClaims {
      *
      * @return Subject Identifier. A locally unique and never reassigned identifier within the Issuer for the End-User, which is intended to be consumed by the Client,
      */
-    @Nonnull
+    @NonNull
     String getIssuer();
 
     /**
      *
      * @return Audience(s) that this ID Token is intended for.
      */
-    @Nonnull
+    @NonNull
     List<String> getAudience();
 
     /**
      *
      * @return Expiration time on or after which the ID Token MUST NOT be accepted for processing.
      */
-    @Nonnull
+    @NonNull
     Date getExpirationTime();
 
     /**
      *
      * @return Time at which the JWT was issued.
      */
-    @Nonnull
+    @NonNull
     Date getIssuedAt();
 
     /**
      * sub.
      * @return Identifier for the End-User at the Issuer.
      */
-    @Nonnull
+    @NonNull
     String getSubject();
 
     /**

@@ -21,12 +21,12 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
 /**
- * Configures the provided OAuth controller.
+ * Configures the provided {@link OauthController}.
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-@Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(OauthControllerConfigurationProperties.PREFIX)
 public class OauthControllerConfigurationProperties implements OauthControllerConfiguration {
 
@@ -36,7 +36,7 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
 
     /**
      * The default path.
@@ -44,8 +44,15 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_PATH = "/oauth/access_token";
 
+    /**
+     * Default Get Allowed.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_GETALLOWED = true;
+
     private boolean enabled = DEFAULT_ENABLED;
     private String path = DEFAULT_PATH;
+    private boolean getAllowed = DEFAULT_GETALLOWED;
 
     /**
      * @return true if you want to enable the {@link OauthController}
@@ -78,5 +85,22 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
         if (StringUtils.isNotEmpty(path)) {
             this.path = path;
         }
+    }
+
+    /**
+     * @return True if refresh requests can be GET
+     */
+    @Override
+    public boolean isGetAllowed() {
+        return this.getAllowed;
+    }
+
+    /**
+     *  Enables HTTP GET invocations of refresh token requests. Only applies
+     *  to requests sending a cookie (JWT_REFRESH_TOKEN). Default value ({@value #DEFAULT_GETALLOWED}).
+     * @param getAllowed Whether Http GET should be supported.
+     */
+    public void setGetAllowed(boolean getAllowed) {
+        this.getAllowed = getAllowed;
     }
 }

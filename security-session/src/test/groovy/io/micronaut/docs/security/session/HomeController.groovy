@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.security.session
 
 import io.micronaut.context.annotation.Requires
@@ -8,7 +7,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.security.annotation.Secured
 
-import javax.annotation.Nullable
+import edu.umd.cs.findbugs.annotations.Nullable
 import java.security.Principal
 
 @Requires(property = "spec.name", value = "securitysession")

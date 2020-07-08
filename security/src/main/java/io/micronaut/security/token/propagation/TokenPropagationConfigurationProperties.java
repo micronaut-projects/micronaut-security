@@ -99,7 +99,6 @@ public class TokenPropagationConfigurationProperties implements TokenPropagation
         this.enabled = enabled;
     }
 
-
     /**
      * Configures {@link io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter} path. Default value {@value #DEFAULT_PATH}
      * @param path Path to be matched by Token Propagation Filter.

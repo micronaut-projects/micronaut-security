@@ -11,9 +11,7 @@ Configuration is quite simple. For example to configure authorization with Githu
 ----
 micronaut:
   security:
-    enabled: true
     oauth2:
-      enabled: true
       clients:
         github: // <1>
           client-id: <<my client id>> // <2>

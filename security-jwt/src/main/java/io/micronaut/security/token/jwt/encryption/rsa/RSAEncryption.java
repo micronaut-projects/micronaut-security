@@ -23,7 +23,7 @@ import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
@@ -72,7 +72,7 @@ public class RSAEncryption extends AbstractEncryptionConfiguration {
         return buildEncrypterWithPublicKey(this.publicKey);
     }
 
-    private JWEEncrypter buildEncrypterWithPublicKey(@Nonnull RSAPublicKey publicKey) {
+    private JWEEncrypter buildEncrypterWithPublicKey(@NonNull RSAPublicKey publicKey) {
         return new RSAEncrypter(publicKey);
     }
 
@@ -81,7 +81,7 @@ public class RSAEncryption extends AbstractEncryptionConfiguration {
         return buildDecrypterWithPrivateKey(this.privateKey);
     }
 
-    private JWEDecrypter buildDecrypterWithPrivateKey(@Nonnull RSAPrivateKey privateKey) {
+    private JWEDecrypter buildDecrypterWithPrivateKey(@NonNull RSAPrivateKey privateKey) {
         return new RSADecrypter(privateKey);
     }
 }

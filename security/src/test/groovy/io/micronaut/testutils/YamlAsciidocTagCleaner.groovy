@@ -1,4 +1,3 @@
-
 package io.micronaut.testutils
 
 trait YamlAsciidocTagCleaner {

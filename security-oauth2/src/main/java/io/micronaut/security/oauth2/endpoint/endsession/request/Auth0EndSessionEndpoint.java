@@ -38,19 +38,6 @@ import java.util.function.Supplier;
 public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
 
     /**
-     * @deprecated use {@link #Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder, OauthClientConfiguration, Supplier)} instead.
-     * @param endSessionCallbackUrlBuilder The end session callback URL builder
-     * @param clientConfiguration The client configuration
-     * @param providerMetadata The provider metadata
-     */
-    @Deprecated
-    public Auth0EndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                   OauthClientConfiguration clientConfiguration,
-                                   OpenIdProviderMetadata providerMetadata) {
-        super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
-    }
-
-    /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata supplier
@@ -70,7 +57,7 @@ public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
     }
 
     @Override
-    protected Map<String, Object> getArguments(HttpRequest originating,
+    protected Map<String, Object> getArguments(HttpRequest<?> originating,
                                                Authentication authentication) {
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("client_id", clientConfiguration.getClientId());

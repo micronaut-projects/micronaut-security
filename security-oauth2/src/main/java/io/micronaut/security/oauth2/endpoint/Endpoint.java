@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * An OAuth 2.0 provider endpoint.
@@ -29,6 +28,6 @@ public interface Endpoint {
     /**
      * @return The endpoint URL
      */
-    @Nonnull
+    @NonNull
     String getUrl();
 }

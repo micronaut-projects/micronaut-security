@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.client;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -35,7 +34,7 @@ public interface OpenIdProviderMetadata {
      * REQUIRED.
      * @return URL using the https scheme with no query or fragment component that the Open ID Provider asserts as its Issuer Identifier.
      */
-    @Nonnull
+    @NonNull
     String getIssuer();
 
     /**
@@ -43,7 +42,7 @@ public interface OpenIdProviderMetadata {
      * REQUIRED.
      * @return URL of the Open ID Provider's OAuth 2.0 Authorization Endpoint
      */
-    @Nonnull
+    @NonNull
     String getAuthorizationEndpoint();
 
     /**
@@ -51,7 +50,7 @@ public interface OpenIdProviderMetadata {
      * This is REQUIRED unless only the Implicit Flow is used.
      * @return URL of the Open ID Provider's OAuth 2.0 Token Endpoint
      */
-    @Nonnull
+    @NonNull
     String getTokenEndpoint();
 
     /**
@@ -68,7 +67,7 @@ public interface OpenIdProviderMetadata {
      * REQUIRED
      * @return URL of the Open ID Provider's JSON Web Key Set
      */
-    @Nonnull
+    @NonNull
     String getJwksUri();
 
     /**
@@ -124,7 +123,7 @@ public interface OpenIdProviderMetadata {
      * REQUIRED
      * @return List of the Subject Identifier types that this OP supports.
      */
-    @Nonnull
+    @NonNull
     List<String> getSubjectTypesSupported();
 
     /**
@@ -132,7 +131,7 @@ public interface OpenIdProviderMetadata {
      * REQUIRED.
      * @return List of the JWS signing algorithms (alg values) supported by the OP for the ID Token to encode the Claims in a JWT [JWT].
      */
-    @Nonnull
+    @NonNull
     List<String> getIdTokenSigningAlgValuesSupported();
 
     /**

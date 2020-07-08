@@ -20,8 +20,8 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateExc
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 import java.util.Optional;
 
@@ -44,7 +44,7 @@ public class DefaultStateValidator implements StateValidator {
     }
 
     @Override
-    public void validate(@Nonnull HttpRequest<?> request, @Nullable State state) throws InvalidStateException {
+    public void validate(@NonNull HttpRequest<?> request, @Nullable State state) throws InvalidStateException {
         if (state == null) {
             throw new InvalidStateException("Provided state is null");
         }

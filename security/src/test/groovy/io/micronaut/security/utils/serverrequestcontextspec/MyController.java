@@ -1,4 +1,3 @@
-
 package io.micronaut.security.utils.serverrequestcontextspec;
 
 import io.micronaut.context.annotation.Requires;

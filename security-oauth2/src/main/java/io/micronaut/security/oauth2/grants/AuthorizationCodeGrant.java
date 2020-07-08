@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Map;
 
 /**
@@ -56,7 +56,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      *
      * @return OAuth 2.0 Grant Type.
      */
-    @Nonnull
+    @NonNull
     public String getGrantType() {
         return grantType;
     }
@@ -65,7 +65,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      *
      * @param grantType OAuth 2.0 Grant Type.
      */
-    public void setGrantType(@Nonnull String grantType) {
+    public void setGrantType(@NonNull String grantType) {
         this.grantType = grantType;
     }
 
@@ -73,7 +73,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      *
      * @return The application's Client identifier.
      */
-    @Nonnull
+    @NonNull
     public String getClientId() {
         return clientId;
     }
@@ -82,7 +82,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      *
      * @param clientId Application's Client identifier.
      */
-    public void setClientId(@Nonnull String clientId) {
+    public void setClientId(@NonNull String clientId) {
         this.clientId = clientId;
     }
 
@@ -106,7 +106,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      *
      * @return Redirection URI to which the response will be sent.
      */
-    @Nonnull
+    @NonNull
     public String getRedirectUri() {
         return redirectUri;
     }
@@ -115,7 +115,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      *
      * @param redirectUri Redirection URI to which the response will be sent.
      */
-    public void setRedirectUri(@Nonnull String redirectUri) {
+    public void setRedirectUri(@NonNull String redirectUri) {
         this.redirectUri = redirectUri;
     }
 
@@ -123,7 +123,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      *
      * @return An authorization code.
      */
-    @Nonnull
+    @NonNull
     public String getCode() {
         return code;
     }
@@ -132,7 +132,7 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      *
      * @param code An authorization code.
      */
-    public void setCode(@Nonnull String code) {
+    public void setCode(@NonNull String code) {
         this.code = code;
     }
 

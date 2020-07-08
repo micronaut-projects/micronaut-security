@@ -22,7 +22,7 @@ import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.web.router.exceptions.RoutingException;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Default implementation of {@link OauthRouteUrlBuilder}
+ * Default implementation of {@link OauthRouteUrlBuilder}.
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -56,12 +56,12 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     }
 
     @Override
-    public URL buildLoginUrl(@Nullable HttpRequest originating, String providerName) {
+    public URL buildLoginUrl(@Nullable HttpRequest<?> originating, String providerName) {
         return build(originating, providerName, loginUriTemplate);
     }
 
     @Override
-    public URL buildCallbackUrl(@Nullable HttpRequest originating, String providerName) {
+    public URL buildCallbackUrl(@Nullable HttpRequest<?> originating, String providerName) {
         return build(originating, providerName, callbackUriTemplate);
     }
 
@@ -84,19 +84,19 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     }
 
     /**
-     * Builds a URL with the provided arguments
+     * Builds a URL with the provided arguments.
      *
      * @param originating The originating request
      * @param providerName The oauth provider name
      * @param uriTemplate The URI template
      * @return The URL
      */
-    protected URL build(@Nullable HttpRequest originating, String providerName, String uriTemplate) {
+    protected URL build(@Nullable HttpRequest<?> originating, String providerName, String uriTemplate) {
         return buildUrl(originating, getPath(uriTemplate, providerName));
     }
 
     /**
-     * Builds the path portion of the URL
+     * Builds the path portion of the URL.
      *
      * @param uriTemplate The uri template
      * @param providerName The provider name
@@ -109,7 +109,7 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     }
 
     @Override
-    public URL buildUrl(@Nullable HttpRequest current, String path) {
+    public URL buildUrl(@Nullable HttpRequest<?> current, String path) {
         try {
             return UriBuilder.of(hostResolver.resolve(current))
                     .path(path)

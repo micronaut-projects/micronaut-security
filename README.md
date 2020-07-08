@@ -14,8 +14,6 @@ The official Micronaut security solution.
 [![Known Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/micronaut-projects/micronaut-security/security-oauth2/build.gradle?label=micronaut-security-oauth2)](https://snyk.io/test/github/micronaut-projects/micronaut-security?targetFile=security-oauth2/build.gradle)
 [![Known Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/micronaut-projects/micronaut-security/security-session/build.gradle?label=micronaut-security-session)](https://snyk.io/test/github/micronaut-projects/micronaut-security?targetFile=security-session/build.gradle)
 
-
- 
 ## Documentation
 
 See the [Documentation](https://micronaut-projects.github.io/micronaut-security/latest/guide) for more information.
@@ -23,3 +21,6 @@ See the [Documentation](https://micronaut-projects.github.io/micronaut-security/
 [Snapshot Documentation](https://micronaut-projects.github.io/micronaut-security/snapshot/guide).
 
 
+## Build and Run tests Locally
+
+`./gradlew -Dgeb.env=firefox build`

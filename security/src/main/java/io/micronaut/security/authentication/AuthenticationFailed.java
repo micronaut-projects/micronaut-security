@@ -27,7 +27,7 @@ import java.util.Optional;
 public class AuthenticationFailed implements AuthenticationResponse {
 
     private final AuthenticationFailureReason authenticationFailure;
-    private String message;
+    private final String message;
 
     /**
      * Necessary for JSON Serialization.
@@ -70,6 +70,11 @@ public class AuthenticationFailed implements AuthenticationResponse {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public Optional<UserDetails> getUserDetails() {
+        return Optional.empty();
     }
 
     /**

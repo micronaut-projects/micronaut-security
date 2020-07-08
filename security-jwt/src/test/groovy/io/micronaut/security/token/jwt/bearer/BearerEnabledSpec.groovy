@@ -1,28 +1,20 @@
-
 package io.micronaut.security.token.jwt.bearer
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.testutils.EmbeddedServerSpecification
 import spock.lang.Unroll
 
-class BearerEnabledSpec extends Specification {
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name'                 : BearerEnabledSpec.simpleName,
-            'micronaut.security.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
-            'micronaut.security.token.jwt.bearer.enabled': false,
+class BearerEnabledSpec extends EmbeddedServerSpecification {
 
-    ], Environment.TEST)
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.token.jwt.bearer.enabled': false,
+        ]
+    }
 
-    @Unroll("if micronaut.security.enabled=true and m.s.token.jwt.enabled=true and m.s.token.jwt.bearer.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    @Unroll("if micronaut.security.token.jwt.bearer.enabled=false bean [#description] is not loaded")
+    void "if micronaut.security.token.jwt.bearer.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
         embeddedServer.applicationContext.getBean(clazz)
 

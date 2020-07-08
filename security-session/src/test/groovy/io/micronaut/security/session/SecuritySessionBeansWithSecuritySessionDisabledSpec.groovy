@@ -1,34 +1,22 @@
-
 package io.micronaut.security.session
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.http.client.RxHttpClient
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.security.ApplicationContextSpecification
 import spock.lang.Unroll
 
-class SecuritySessionBeansWithSecuritySessionDisabledSpec extends Specification {
+class SecuritySessionBeansWithSecuritySessionDisabledSpec extends ApplicationContextSpecification {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name'                 : SecuritySessionBeansWithSecuritySessionDisabledSpec.simpleName,
-            'micronaut.security.enabled': true,
-            'micronaut.security.session.enabled': false,
-    ], Environment.TEST)
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.session.enabled': false,
+        ]
+    }
 
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
-
-    @Unroll("if micronaut.security.enabled=true and micronaut.security.session.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    @Unroll("if micronaut.security.session.enabled=false bean [#description] is not loaded")
+    void "if micronaut.security.session.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
-        embeddedServer.applicationContext.getBean(clazz)
+        applicationContext.getBean(clazz)
 
         then:
         def e = thrown(NoSuchBeanException)
@@ -39,9 +27,7 @@ class SecuritySessionBeansWithSecuritySessionDisabledSpec extends Specification 
                 SecuritySessionConfigurationProperties,
                 SessionAuthenticationFetcher,
                 SessionLoginHandler,
-                SessionLogoutHandler,
-                SessionSecurityFilterOrderProvider,
-                SessionSecurityfilterRejectionHandler,
+                SessionLogoutHandler
         ]
 
         description = clazz.name

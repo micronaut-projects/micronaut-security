@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.utils
 
-import io.micronaut.context.ApplicationContext
+import edu.umd.cs.findbugs.annotations.Nullable
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
@@ -24,35 +24,34 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 
-import javax.annotation.Nullable
 import javax.inject.Singleton
 
-class SecurityServiceCustomRolesKeySpec extends Specification {
+class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name' : 'SecurityServiceCustomRolesKeySpec',
-            'micronaut.security.enabled': true,
+    @Override
+    String getSpecName() {
+        'SecurityServiceCustomRolesKeySpec'
+    }
+
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
             'micronaut.security.token.roles-name' : 'customRoles',
-    ])
-
-    @Shared
-    BlockingHttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL()).toBlocking()
+        ]
+    }
 
     void "verify SecurityService.isCurrentUserInRole() with custom roleKey"() {
         when:
@@ -79,15 +78,19 @@ class SecurityServiceCustomRolesKeySpec extends Specification {
     static class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
         @Override
-        Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-            if ( authenticationRequest.identity == 'user2' && authenticationRequest.secret == 'password' ) {
-                return Flowable.just(new UserDetails('user', [], [customRoles: ['ROLE_USER']]))
-            }
+        Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest,
+                                                       AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create({emitter ->
+                if ( authenticationRequest.identity == 'user2' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', [], [customRoles: ['ROLE_USER']]))
+                } else if ( authenticationRequest.identity == 'user3' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', [], [otherCustomRoles: ['ROLE_USER']]))
+                    emitter.onComplete()
+                } else {
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                }
 
-            if ( authenticationRequest.identity == 'user3' && authenticationRequest.secret == 'password' ) {
-                return Flowable.just(new UserDetails('user', [], [otherCustomRoles: ['ROLE_USER']]))
-            }
-            return Flowable.just(new AuthenticationFailed())
+            }, BackpressureStrategy.ERROR)
         }
     }
 

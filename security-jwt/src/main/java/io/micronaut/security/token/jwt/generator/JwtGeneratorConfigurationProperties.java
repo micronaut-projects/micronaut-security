@@ -16,56 +16,63 @@
 package io.micronaut.security.token.jwt.generator;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link JwtGeneratorConfiguration} implementation.
  *
+ * @deprecated Use {@link AccessTokenConfigurationProperties} instead.
  * @author Sergio del Amo
  * @since 1.0
  */
+@Deprecated
 @ConfigurationProperties(JwtGeneratorConfigurationProperties.PREFIX)
 public class JwtGeneratorConfigurationProperties implements JwtGeneratorConfiguration {
+    private static final Logger LOG = LoggerFactory.getLogger(JwtGeneratorConfigurationProperties.class);
 
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".generator";
 
+    private final AccessTokenConfigurationProperties accessTokenConfiguration;
+    private final PropertyResolver propertyResolver;
+
     /**
-     * The default expiration.
+     *
+     * @param accessTokenConfiguration Access Token configuration
+     * @param propertyResolver Property Resolver
      */
-    @SuppressWarnings("WeakerAccess")
-    public static final Integer DEFAULT_EXPIRATION = 3600;
-
-    private Integer refreshTokenExpiration = null;
-    private Integer accessTokenExpiration = DEFAULT_EXPIRATION;
-
-    @Override
-    public Integer getRefreshTokenExpiration() {
-        return refreshTokenExpiration;
+    public JwtGeneratorConfigurationProperties(AccessTokenConfigurationProperties accessTokenConfiguration,
+                                               PropertyResolver propertyResolver) {
+        this.accessTokenConfiguration = accessTokenConfiguration;
+        this.propertyResolver = propertyResolver;
     }
 
-    /**
-     * If not specified, defaults to {@link #DEFAULT_EXPIRATION}.
-     */
+    @Override
+    @Deprecated
+    public Integer getRefreshTokenExpiration() {
+        return null;
+    }
+
+    @Deprecated
     @Override
     public Integer getAccessTokenExpiration() {
-        return accessTokenExpiration;
+        return this.accessTokenConfiguration.getExpiration();
     }
 
     /**
-     * Refresh token expiration. By default refresh tokens, do not expire.
-     * @param refreshTokenExpiration The expiration
-     */
-    public void setRefreshTokenExpiration(Integer refreshTokenExpiration) {
-        this.refreshTokenExpiration = refreshTokenExpiration;
-    }
-
-    /**
-     * Access token expiration. Default value ({@value #DEFAULT_EXPIRATION}).
+     * deprecated Use micronaut.security.token.jwt.generator.access-token.expiration instead.
      * @param accessTokenExpiration The expiration
      */
+    @Deprecated
     public void setAccessTokenExpiration(Integer accessTokenExpiration) {
-        if (accessTokenExpiration != null) {
-            this.accessTokenExpiration = accessTokenExpiration;
+        if (!propertyResolver.containsProperty(AccessTokenConfigurationProperties.PREFIX + ".expiration")) {
+            this.accessTokenConfiguration.setExpiration(accessTokenExpiration);
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("ignoring property {} because property {} was set", JwtGeneratorConfigurationProperties.PREFIX + ".access-token-expiration", AccessTokenConfigurationProperties.PREFIX + ".expiration");
+            }
         }
     }
 }

@@ -31,4 +31,9 @@ public interface OauthControllerConfiguration extends Toggleable {
      * @return The path e.g. /oauth/access_token
      */
     String getPath();
+
+    /**
+     * @return Whether GET requests are allowed to refresh tokens. Only applies to cookie based requests.
+     */
+    boolean isGetAllowed();
 }

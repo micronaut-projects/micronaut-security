@@ -15,10 +15,8 @@
  */
 package io.micronaut.security.rules;
 
-import io.micronaut.security.token.DefaultRolesFinder;
 import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,16 +40,6 @@ public abstract class AbstractSecurityRule implements SecurityRule {
     private final RolesFinder rolesFinder;
 
     /**
-     * @deprecated use {@link AbstractSecurityRule( RolesFinder )} instead.
-     * @param tokenConfiguration General Token Configuration
-     */
-    @Deprecated
-    AbstractSecurityRule(TokenConfiguration tokenConfiguration) {
-        this.rolesFinder = new DefaultRolesFinder(tokenConfiguration);
-    }
-
-    /**
-     *
      * @param rolesFinder Roles Parser
      */
     @Inject

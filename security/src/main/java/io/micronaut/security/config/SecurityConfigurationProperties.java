@@ -15,8 +15,10 @@
  */
 package io.micronaut.security.config;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.security.authentication.AuthenticationMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,14 +40,37 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
+    /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final AuthenticationStrategy DEFAULT_AUTHENTICATION_STRATEGY = AuthenticationStrategy.ANY;
     public static final boolean DEFAULT_REJECT_NOT_FOUND = true;
 
     private boolean enabled = DEFAULT_ENABLED;
     private List<InterceptUrlMapPattern> interceptUrlMap = new ArrayList<>();
     private List<String> ipPatterns = Collections.singletonList(ANYWHERE);
-    private AuthenticationStrategy authenticationStrategy = AuthenticationStrategy.ANY;
+    private AuthenticationStrategy authenticationProviderStrategy = DEFAULT_AUTHENTICATION_STRATEGY;
     private boolean rejectNotFound = DEFAULT_REJECT_NOT_FOUND;
+
+    @Nullable
+    private AuthenticationMode authentication = null;
+
+    @Override
+    @Nullable
+    public AuthenticationMode getAuthentication() {
+        return authentication;
+    }
+
+    /**
+     * Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie. Should
+     * only be supplied if the service handles login and logout requests.
+     * @param authentication Login Handler Mode
+     */
+    public void setAuthentication(@Nullable AuthenticationMode authentication) {
+        this.authentication = authentication;
+    }
 
     @Override
     public boolean isEnabled() {
@@ -92,16 +117,16 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     @Override
-    public AuthenticationStrategy getAuthenticationStrategy() {
-        return authenticationStrategy;
+    public AuthenticationStrategy getAuthenticationProviderStrategy() {
+        return authenticationProviderStrategy;
     }
 
     /**
-     * @param authenticationStrategy Determines how authentication providers should be processed.
-     *                               Default value ({@link AuthenticationStrategy#ANY}).
+     * Determines how authentication providers should be processed. Default value ANY. Possible values: ANY or ALL.
+     * @param authenticationProviderStrategy authentication strategy.
      */
-    public void setAuthenticationStrategy(AuthenticationStrategy authenticationStrategy) {
-        this.authenticationStrategy = authenticationStrategy;
+    public void setAuthenticationProviderStrategy(AuthenticationStrategy authenticationProviderStrategy) {
+        this.authenticationProviderStrategy = authenticationProviderStrategy;
     }
 
     @Override

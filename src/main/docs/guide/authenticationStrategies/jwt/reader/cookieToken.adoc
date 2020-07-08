@@ -8,4 +8,4 @@ Reading tokens from Cookies is disabled by default. Note that using JWT tokens f
 
 include::{includedir}configurationProperties/io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties.adoc[]
 
-TIP: Read the http://guides.micronaut.io/micronaut-security-jwt-cookie/guide/index.html[Micronaut JWT Authentication with Cookies] to learn more.
+TIP: Read the https://guides.micronaut.io/micronaut-security-jwt-cookie/guide/index.html[Micronaut JWT Authentication with Cookies] to learn more.
