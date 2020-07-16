@@ -60,6 +60,7 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
         Optional<UsernamePasswordCredentials> credentials = request.getHeaders().getAuthorization()
+                .filter(s -> s.length() >= PREFIX.length())
                 .map(s -> s.substring(PREFIX.length()))
                 .flatMap(this::decode);
 
