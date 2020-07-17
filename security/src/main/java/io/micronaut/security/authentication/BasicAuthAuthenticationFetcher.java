@@ -20,7 +20,6 @@ import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.reactivex.Flowable;
