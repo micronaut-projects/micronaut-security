@@ -20,7 +20,7 @@ class SecurityConfigurationAuthenticationSpec extends Specification {
     }
 
     @Unroll
-    void "if property micronaut.security.authentication = #mode io.micronaut.security.config.SecurityConfiguration#getAuthentication = #mode"(AuthenticationMode mode) {
+    void "if property micronaut.security.authentication = #modeStr io.micronaut.security.config.SecurityConfiguration::getAuthentication = #modeStr"(AuthenticationMode mode) {
         when:
         ApplicationContext applicationContext = ApplicationContext.run(['micronaut.security.authentication': mode.toString()])
 
@@ -33,6 +33,6 @@ class SecurityConfigurationAuthenticationSpec extends Specification {
 
         where:
         mode << [AuthenticationMode.SESSION, AuthenticationMode.COOKIE, AuthenticationMode.BEARER]
-
+        modeStr = mode.toString()
     }
 }
