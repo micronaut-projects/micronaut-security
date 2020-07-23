@@ -10,12 +10,17 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.DefaultAuthentication
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.token.config.TokenConfiguration
+import io.micronaut.security.utils.DefaultSecurityService
+import io.micronaut.security.utils.SecurityService
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
@@ -43,6 +48,28 @@ class SecuredRolesCaseSensitiveSpec extends EmbeddedServerSpecification {
         then:
         HttpClientResponseException e = thrown()
         e.status == HttpStatus.FORBIDDEN
+    }
+
+    void "SecurityService::hasRole should be case sensitive"() {
+        when:
+        Authentication authentication = new DefaultAuthentication("sherlock", ["roles": ["ROLE_DETECTIVE"]])
+        SecurityService securityService = new CustomSecurityService(applicationContext.getBean(TokenConfiguration), authentication)
+
+        then:
+        securityService.hasRole('ROLE_DETECTIVE')
+
+        and:
+        !securityService.hasRole('role_detective')
+
+        when:
+        authentication = new DefaultAuthentication("sherlock", ["roles": "ROLE_DETECTIVE"])
+        securityService = new CustomSecurityService(applicationContext.getBean(TokenConfiguration), authentication)
+
+        then:
+        securityService.hasRole('ROLE_DETECTIVE')
+
+        and:
+        !securityService.hasRole('role_detective')
     }
 
     @Requires(property = 'spec.name', value = 'SecuredRolesCaseSensitiveSpec')
@@ -79,6 +106,22 @@ class SecuredRolesCaseSensitiveSpec extends EmbeddedServerSpecification {
                 }
 
             }, BackpressureStrategy.ERROR)
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'SecuredRolesCaseSensitiveSpec')
+    static class CustomSecurityService extends DefaultSecurityService {
+
+        Authentication authentication
+
+        CustomSecurityService(TokenConfiguration tokenConfiguration, Authentication authentication) {
+            super(tokenConfiguration)
+            this.authentication = authentication
+        }
+
+        @Override
+        Optional<Authentication> getAuthentication() {
+            Optional.of(authentication)
         }
     }
 }
