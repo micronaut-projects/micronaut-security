@@ -15,7 +15,7 @@ dependencies {
     api "com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"
 
     testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
-    testImplementation "org.bouncycastle:bcprov-jdk15on:1.65.01"
+    testImplementation "org.bouncycastle:bcprov-jdk15on:1.66"
 
     testImplementation "io.micronaut:micronaut-http-client"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
