@@ -17,7 +17,12 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
     TokenConfiguration tokenConfiguration = new TokenConfiguration() {
         @Override
         String getRolesName() {
-            return 'roles'
+            'roles'
+        }
+
+        @Override
+        String getNameKey() {
+            'username'
         }
     }
     @Shared
