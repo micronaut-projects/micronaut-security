@@ -89,9 +89,9 @@ class HealthSensitivitySpec extends Specification {
             @Override
             Publisher<? extends HttpResponse<HealthResult>> apply(@NonNull Throwable throwable) throws Exception {
 
-                def response = ((HttpClientResponseException) throwable).response
-                response.getBody(Map)
-                return Flowable.just(response)
+                HttpResponse<?> httpResponse = ((HttpClientResponseException) throwable).response
+                httpResponse.getBody(Map)
+                return Flowable.just(httpResponse)
             }
         }).blockingFirst()
         Map result = response.getBody(Map).get()
