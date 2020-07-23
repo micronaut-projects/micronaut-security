@@ -1,4 +1,3 @@
-
 package io.micronaut.security.utils.serverrequestcontextspec
 
 import groovy.transform.CompileStatic

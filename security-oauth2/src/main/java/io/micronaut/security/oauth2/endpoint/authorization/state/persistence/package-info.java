@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes related to state persistence
+ * Classes related to state persistence.
  *
  * @author James Kleeh
  * @since 1.2.0

@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.endpoints;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.util.StringUtils;
@@ -22,6 +23,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -32,7 +34,6 @@ import io.micronaut.security.event.LogoutEvent;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.rules.SecurityRule;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**
@@ -40,7 +41,8 @@ import javax.inject.Inject;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Requires(property = LogoutControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = LogoutControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(beans = LogoutHandler.class)
 @Controller("${" + LogoutControllerConfigurationProperties.PREFIX + ".path:/logout}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LogoutController {
@@ -56,25 +58,12 @@ public class LogoutController {
      * @param logoutControllerConfiguration Configuration for the Logout controller
      */
     @Inject
-    public LogoutController(@Nullable LogoutHandler logoutHandler,
+    public LogoutController(LogoutHandler logoutHandler,
                             ApplicationEventPublisher eventPublisher,
                             LogoutControllerConfiguration logoutControllerConfiguration) {
         this.logoutHandler = logoutHandler;
         this.eventPublisher = eventPublisher;
         this.getAllowed = logoutControllerConfiguration.isGetAllowed();
-    }
-
-    /**
-     *
-     * @param logoutHandler A collaborator which helps to build HTTP response if user logout.
-     * @param eventPublisher The application event publisher
-     */
-    @Deprecated
-    public LogoutController(@Nullable LogoutHandler logoutHandler,
-                            ApplicationEventPublisher eventPublisher) {
-        this.logoutHandler = logoutHandler;
-        this.eventPublisher = eventPublisher;
-        this.getAllowed = LogoutControllerConfigurationProperties.DEFAULT_GETALLOWED;
     }
 
     /**
@@ -86,7 +75,7 @@ public class LogoutController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public HttpResponse index(HttpRequest<?> request, @Nullable Authentication authentication) {
+    public MutableHttpResponse<?> index(HttpRequest<?> request, @Nullable Authentication authentication) {
         return handleLogout(request, authentication);
     }
 
@@ -98,7 +87,7 @@ public class LogoutController {
      * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
      */
     @Get
-    public HttpResponse indexGet(HttpRequest<?> request, @Nullable Authentication authentication) {
+    public MutableHttpResponse<?> indexGet(HttpRequest<?> request, @Nullable Authentication authentication) {
         if (!getAllowed) {
            return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);
         }
@@ -112,13 +101,10 @@ public class LogoutController {
      * @param authentication {@link Authentication} instance for current user
      * @return An AccessRefreshToken encapsulated in the HttpResponse or a failure indicated by the HTTP status
      */
-    protected HttpResponse handleLogout(HttpRequest<?> request, @Nullable Authentication authentication) {
+    protected MutableHttpResponse<?> handleLogout(HttpRequest<?> request, @Nullable Authentication authentication) {
         if (authentication != null) {
             eventPublisher.publishEvent(new LogoutEvent(authentication));
         }
-        if (logoutHandler != null) {
-            return logoutHandler.logout(request);
-        }
-        return HttpResponse.notFound();
+        return logoutHandler.logout(request);
     }
 }

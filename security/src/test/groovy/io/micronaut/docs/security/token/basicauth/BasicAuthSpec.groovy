@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.security.token.basicauth
 
 import io.micronaut.context.ApplicationContext
@@ -14,28 +13,13 @@ import spock.lang.Specification
 
 class BasicAuthSpec extends Specification implements YamlAsciidocTagCleaner {
 
-    String yamlConfig = '''\
-//tag::yamlconfig[]
-micronaut:
-  security:
-    enabled: true
-'''//end::yamlconfig[]
-
-    @Shared
-    Map<String, Object> confMap = [
-            'micronaut': [
-                    'security': [
-                            'enabled'    : true
-                    ]
-            ]
-    ]
 
     @Shared
     Map<String, Object> config = [
             'spec.name' : 'docsbasicauth',
             'endpoints.beans.enabled'                 : true,
             'endpoints.beans.sensitive'               : true,
-    ] << flatten(confMap)
+    ]
 
     @Shared
     @AutoCleanup
@@ -46,12 +30,6 @@ micronaut:
     RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
 
     void "test /beans is secured but accesible if you supply valid credentials with Basic Auth"() {
-        when:
-        Map m = new Yaml().load(cleanYamlAsciidocTag(yamlConfig))
-
-        then:
-        m == confMap
-
         when:
         String token = 'dXNlcjpwYXNzd29yZA==' // user:passsword Base64
         client.toBlocking().exchange(HttpRequest.GET("/beans")

@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.configuration.endpoints;
 
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Optional;
 
 /**
@@ -39,7 +39,7 @@ public class DefaultSecureEndpointConfiguration extends DefaultEndpointConfigura
      *
      * @param authMethod Authentication Method
      */
-    public void setAuthMethod(@Nonnull AuthenticationMethod authMethod) {
+    public void setAuthMethod(@NonNull AuthenticationMethod authMethod) {
         this.authMethod = authMethod;
     }
 }

@@ -20,20 +20,26 @@ package io.micronaut.security.token.jwt.generator;
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @deprecated Use {@link AccessTokenConfiguration}) instead.
  */
+@Deprecated
 public interface JwtGeneratorConfiguration {
 
     /**
      * How long until the access token expires in seconds.
      *
      * @return The time, or null if not set to expire
+     * @deprecated Use {@link AccessTokenConfiguration#getExpiration()}) instead.
      */
+    @Deprecated
     Integer getAccessTokenExpiration();
 
     /**
      * How long until the refresh token expires in seconds.
      *
      * @return The time, or null if not set to expire
+     * @deprecated refresh token are no longer a JWT with a exp claim
      */
+    @Deprecated
     Integer getRefreshTokenExpiration();
 }

@@ -15,14 +15,14 @@
  */
 package io.micronaut.security.token.jwt.bearer;
 
-import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthenticationException;
-import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
@@ -36,8 +36,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Requires(property = BearerTokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
-@Primary
+@Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "bearer")
 @Singleton
 public class AccessRefreshTokenLoginHandler implements LoginHandler {
 
@@ -51,7 +50,7 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     }
 
     @Override
-    public HttpResponse loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+    public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
         Optional<AccessRefreshToken> accessRefreshTokenOptional = accessRefreshTokenGenerator.generate(userDetails);
         if (accessRefreshTokenOptional.isPresent()) {
             return HttpResponse.ok(accessRefreshTokenOptional.get());
@@ -60,7 +59,16 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     }
 
     @Override
-    public HttpResponse loginFailed(AuthenticationFailed authenticationFailed) {
+    public MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        Optional<AccessRefreshToken> accessRefreshToken = accessRefreshTokenGenerator.generate(refreshToken, userDetails);
+        if (accessRefreshToken.isPresent()) {
+            return HttpResponse.ok(accessRefreshToken.get());
+        }
+        return HttpResponse.serverError();
+    }
+
+    @Override
+    public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         throw new AuthenticationException(authenticationFailed.getMessage().orElse(null));
     }
 }

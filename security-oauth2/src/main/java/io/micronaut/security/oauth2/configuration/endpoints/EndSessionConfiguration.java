@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * OpenID end session configuration.
@@ -29,6 +29,6 @@ public interface EndSessionConfiguration {
      * @return The URI that the provider should redirect
      * back to after logout.
      */
-    @Nonnull
+    @NonNull
     String getRedirectUri();
 }

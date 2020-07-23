@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.configuration;
 import io.micronaut.core.naming.Named;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.net.URL;
 import java.util.Optional;
 
@@ -47,41 +47,36 @@ public interface OpenIdClientConfiguration extends Named {
     Optional<String> getJwksUri();
 
     /**
-     * https://tools.ietf.org/html/rfc7591#section-3.1
-     * https://openid.net/specs/openid-connect-registration-1_0.html#ClientRegistration
-     *
+     * @see <a href="https://tools.ietf.org/html/rfc7591#section-3.1">RFC 7591 - Section 3.1</a>
+     * @see <a href="https://openid.net/specs/openid-connect-registration-1_0.html#ClientRegistration">OpenID Connect Client Registration</a>
      * @return The registration endpoint configuration
      */
     Optional<EndpointConfiguration> getRegistration();
 
     /**
-     * https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
-     *
+     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">OpenID Connect Core 1.0 - UserInfo</a>
      * @return The user info endpoint configuration
      */
     Optional<EndpointConfiguration> getUserInfo();
 
     /**
-     * https://tools.ietf.org/html/rfc6749#section-3.1
-     * https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint
-     *
+     * @see <a href="https://tools.ietf.org/html/rfc6749#section-3.1">RFC 6749 - Section 3.1</a>
+     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint">OpenID Connect Core 1.0 - Authorization Endpoint</a>
      * @return The authorization endpoint configuration
      */
     Optional<AuthorizationEndpointConfiguration> getAuthorization();
 
     /**
-     * https://tools.ietf.org/html/rfc6749#section-4.1.3
-     * https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint
-     *
+     * @see <a href="https://tools.ietf.org/html/rfc6749#section-4.1.3">RFC 6749 - Section 4.1.3</a>
+     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint">OpenID Connect Core 1.0</a>
      * @return The token endpoint configuration
      */
     Optional<TokenEndpointConfiguration> getToken();
 
     /**
-     * https://openid.net/specs/openid-connect-session-1_0.html
-     *
+     * @see <a href="https://openid.net/specs/openid-connect-session-1_0.html">OpenID Connect Session 1.0</a>
      * @return The end session configuration
      */
-    @Nonnull
+    @NonNull
     EndSessionEndpointConfiguration getEndSession();
 }

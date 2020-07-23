@@ -1,31 +1,27 @@
 package io.micronaut.security.endpoints
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import io.micronaut.context.annotation.Requires
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.security.handlers.LoginHandler
 import spock.lang.Unroll
 
-class LoginControllerValidationSpec extends Specification {
+import javax.inject.Singleton
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'loginpathconfigurable',
-            'micronaut.security.enabled': true,
-            'micronaut.security.endpoints.login.enabled': true,
-    ], Environment.TEST)
+class LoginControllerValidationSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    String getSpecName() {
+        'LoginControllerValidationSpec'
+    }
 
     @Unroll("{\"username\": \"#username\", \"password\": \"#password\"} is invalid payload")
     void "LoginController responds BAD_REQUEST if POJO sent to /login is invalid"(String username, String password) {
@@ -33,11 +29,26 @@ class LoginControllerValidationSpec extends Specification {
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials(username, password)
 
         when:
-        client.toBlocking().exchange(HttpRequest.POST('/login', creds))
+        Argument<String> okArg = Argument.of(String)
+        Argument<String> errorArgument = Argument.of(String)
+
+        client.exchange(HttpRequest.POST('/login', creds), okArg, errorArgument)
 
         then:
         HttpClientResponseException e = thrown(HttpClientResponseException)
         e.status == HttpStatus.BAD_REQUEST
+
+        when:
+        Optional<String> errorOptional = e.response.getBody(String)
+
+        then:
+        errorOptional.isPresent()
+
+        when:
+        String jsonError = errorOptional.get()
+
+        then:
+        jsonError.contains('must not be blank') || jsonError.contains('must not be null')
 
         where:
         username | password
@@ -45,5 +56,25 @@ class LoginControllerValidationSpec extends Specification {
         ''       | 'aabbc12345678'
         'johnny' | null
         'johnny' | ''
+    }
+
+    @Requires(property = 'spec.name', value = 'LoginControllerValidationSpec')
+    @Singleton
+    static class CustomLoginHandler implements LoginHandler {
+
+        @Override
+        MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+            HttpResponse.ok()
+        }
+
+        @Override
+        MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+            throw new UnsupportedOperationException()
+        }
+
+        @Override
+        MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
+            HttpResponse.unauthorized()
+        }
     }
 }

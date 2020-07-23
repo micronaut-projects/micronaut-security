@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 /**
+ * The response of an authentication attempt.
  *
  * @author Sergio del Amo
  * @since 1.0
@@ -26,12 +27,19 @@ import java.util.Optional;
 public interface AuthenticationResponse extends Serializable {
 
     /**
-     * Defaults to false.
+     * If true, it is expected the {@link #getUserDetails()} method will return
+     * a non empty optional.
+     *
      * @return true or false depending on whether the user is authenticated
      */
     default boolean isAuthenticated() {
-        return false;
+        return getUserDetails().isPresent();
     }
+
+    /**
+     * @return The user details if the response is authenticated
+     */
+    Optional<UserDetails> getUserDetails();
 
     /**
      * @return A message if the response chose to include one

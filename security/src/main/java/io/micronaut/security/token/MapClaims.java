@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +46,7 @@ public class MapClaims implements Claims {
         return map.get(claimName);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Set<String> names() {
         return Collections.unmodifiableSet(map.keySet());

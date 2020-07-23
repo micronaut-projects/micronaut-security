@@ -1,4 +1,3 @@
-
 package io.micronaut.security.utils.serverrequestcontextspec
 
 import io.micronaut.context.ApplicationContext
@@ -7,6 +6,7 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.reactivex.Flowable
 import spock.lang.AutoCleanup
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -16,8 +16,7 @@ class ServerRequestContextReactiveSpec extends Specification {
 
     @Shared @AutoCleanup EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'ServerRequestContextReactiveSpec',
-            'micronaut.security.enabled': true,
-    ])
+            ])
 
     @Shared @AutoCleanup RxHttpClient httpClient =
             embeddedServer.getApplicationContext().createBean(RxHttpClient.class, embeddedServer.URL)
@@ -99,6 +98,7 @@ class ServerRequestContextReactiveSpec extends Specification {
         message.message == 'Sergio'
     }
 
+    @Ignore
     def "verify flux subscribe on"() {
         when:
         def messages = httpClient.retrieve(HttpRequest.GET("/test/request-context/flux-subscribeon"), Message)

@@ -19,8 +19,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Refresh Token Grant.
@@ -48,7 +48,7 @@ public class RefreshTokenGrant {
      *
      * @return refresh_token
      */
-    @Nonnull
+    @NonNull
     public String getGrantType() {
         return grantType;
     }
@@ -74,7 +74,7 @@ public class RefreshTokenGrant {
      *
      * @return The refresh token issued to the client.
      */
-    @Nonnull
+    @NonNull
     public String getRefreshToken() {
         return refreshToken;
     }
@@ -83,7 +83,7 @@ public class RefreshTokenGrant {
      *
      * @param refreshToken The refresh token issued to the client.
      */
-    public void setRefreshToken(@Nonnull String refreshToken) {
+    public void setRefreshToken(@NonNull String refreshToken) {
         this.refreshToken = refreshToken;
     }
 }

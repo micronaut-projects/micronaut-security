@@ -18,7 +18,6 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
     void "default TokenPropagationHttpClientFilter path is /**"() {
         given:
         ApplicationContext context = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.token.writer.header.enabled': true,
                 'micronaut.security.token.propagation.enabled': true,
                 (SPEC_NAME_PROPERTY):getClass().simpleName
@@ -37,8 +36,6 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
         noExceptionThrown()
 
         when:
-
-
         String[] patterns
         Optional<AnnotationValue<Filter>> filterOpt = annotationMetadataResolver.resolveMetadata(filter).findAnnotation(Filter.class)
         if (filterOpt.isPresent()) {
@@ -63,7 +60,6 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
     void "you can customize TokenPropagationHttpClientFilter pattern with micronaut.security.token.propagation.path"() {
         given:
         ApplicationContext context = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.token.writer.header.enabled': true,
                 'micronaut.security.token.propagation.enabled': true,
                 'micronaut.security.token.propagation.path': '/books/**',
@@ -83,8 +79,6 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
         noExceptionThrown()
 
         when:
-
-
         String[] patterns
         Optional<AnnotationValue<Filter>> filterOpt = annotationMetadataResolver.resolveMetadata(filter).findAnnotation(Filter.class)
         if (filterOpt.isPresent()) {

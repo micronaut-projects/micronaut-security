@@ -16,9 +16,12 @@
 package io.micronaut.security.token.jwt.signature.secret;
 
 import com.nimbusds.jose.JWSAlgorithm;
+import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Create a {@link io.micronaut.context.annotation.ConfigurationProperties} bean for each sub-property of micronaut.security.token.jwt.signatures.secret.*.
@@ -26,7 +29,9 @@ import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
  * @since 1.0
  */
 @EachProperty(JwtConfigurationProperties.PREFIX + ".signatures.secret")
+@Context
 public class SecretSignatureConfiguration {
+
     private JWSAlgorithm jwsAlgorithm = JWSAlgorithm.HS256;
     private String secret;
     private boolean base64 = false;
@@ -58,6 +63,7 @@ public class SecretSignatureConfiguration {
     /**
      * @return Secret's length must be at least 256 bits. it is used to sign JWT.
      */
+    @NotNull
     public String getSecret() {
         return secret;
     }

@@ -23,7 +23,7 @@ import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 import java.util.Optional;
 
 /**
- * Nonce persistence with a cookie
+ * Nonce persistence with a cookie.
  *
  * @author James Kleeh
  * @since 1.2.0

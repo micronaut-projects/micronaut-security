@@ -1,78 +1,75 @@
-
 package io.micronaut.security.token.jwt.cookie
 
-import geb.spock.GebSpec
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationException
+import io.micronaut.security.authentication.AuthenticationFailed
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.endpoints.LogoutController
+import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.bearer.BearerTokenReader
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import spock.lang.AutoCleanup
-import spock.lang.Requires
-import spock.lang.Shared
+import io.micronaut.testutils.GebEmbeddedServerSpecification
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import org.reactivestreams.Publisher
 
-class JwtCookieAuthenticationSpec extends GebSpec {
+import javax.inject.Singleton
+import java.security.Principal
 
-    @Shared
-    @AutoCleanup
-    ApplicationContext context = ApplicationContext.run(
-            [
-                    'spec.name': 'jwtcookie',
-                    'micronaut.http.client.followRedirects': false,
-                    'micronaut.security.enabled': true,
-                    'micronaut.security.endpoints.login.enabled': true,
-                    'micronaut.security.endpoints.logout.enabled': true,
-                    'micronaut.security.token.jwt.enabled': true,
-                    'micronaut.security.token.jwt.bearer.enabled': false,
-                    'micronaut.security.token.jwt.cookie.enabled': true,
-                    'micronaut.security.token.jwt.cookie.login-failure-target-url': '/login/authFailed',
-                    'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
-            ], Environment.TEST)
+class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
 
-    @Shared
-    EmbeddedServer embeddedServer = context.getBean(EmbeddedServer).start()
+    @Override
+    String getSpecName() {
+        'JwtCookieAuthenticationSpec'
+    }
 
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.http.client.followRedirects': false,
+                'micronaut.security.authentication': 'cookie',
+                'micronaut.security.redirect.login-failure': '/login/authFailed',
+                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
+        ]
+    }
 
     def "verify jwt cookie authentication works without Geb"() {
-        context.getBean(HomeController.class)
-        context.getBean(LoginAuthController.class)
-        context.getBean(AuthenticationProviderUserPassword.class)
-        context.getBean(AuthenticationProviderUserPassword.class)
-        context.getBean(LoginController.class)
-        context.getBean(LogoutController.class)
-        context.getBean(JwtCookieLoginHandler.class)
-        context.getBean(JwtCookieClearerLogoutHandler.class)
-        context.getBean(SignatureConfiguration.class)
-        context.getBean(SignatureConfiguration.class, Qualifiers.byName("generator"))
+        applicationContext.getBean(HomeController.class)
+        applicationContext.getBean(LoginAuthController.class)
+        applicationContext.getBean(AuthenticationProviderUserPassword.class)
+        applicationContext.getBean(AuthenticationProviderUserPassword.class)
+        applicationContext.getBean(LoginController.class)
+        applicationContext.getBean(LogoutController.class)
+        applicationContext.getBean(JwtCookieLoginHandler.class)
+        applicationContext.getBean(JwtCookieClearerLogoutHandler.class)
+        applicationContext.getBean(SignatureConfiguration.class)
+        applicationContext.getBean(SignatureConfiguration.class, Qualifiers.byName("generator"))
 
         when:
-        context.getBean(EncryptionConfiguration.class)
-
-        then:
-        thrown(NoSuchBeanException)
-
-        when:
-        context.getBean(BearerTokenReader.class)
+        applicationContext.getBean(EncryptionConfiguration.class)
 
         then:
         thrown(NoSuchBeanException)
 
         when:
         HttpRequest request = HttpRequest.GET('/')
-        HttpResponse<String> rsp = client.toBlocking().exchange(request, String)
+        HttpResponse<String> rsp = client.exchange(request, String)
 
         then:
         rsp.status().code == 200
@@ -83,7 +80,7 @@ class JwtCookieAuthenticationSpec extends GebSpec {
         HttpRequest loginRequest = HttpRequest.POST('/login', new LoginForm(username: 'foo', password: 'foo'))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 
-        HttpResponse<String> loginRsp = client.toBlocking().exchange(loginRequest, String)
+        HttpResponse<String> loginRsp = client.exchange(loginRequest, String)
 
         then:
         loginRsp.status().code == 303
@@ -95,7 +92,7 @@ class JwtCookieAuthenticationSpec extends GebSpec {
         loginRequest = HttpRequest.POST('/login', new LoginForm(username: 'sherlock', password: 'password'))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 
-        loginRsp = client.toBlocking().exchange(loginRequest, String)
+        loginRsp = client.exchange(loginRequest, String)
 
         then:
         loginRsp.status().code == 303
@@ -111,7 +108,7 @@ class JwtCookieAuthenticationSpec extends GebSpec {
         when:
         String sessionId = cookie.substring('JWT='.size(), cookie.indexOf(';'))
         request = HttpRequest.GET('/').cookie(Cookie.of('JWT', sessionId))
-        rsp = client.toBlocking().exchange(request, String)
+        rsp = client.exchange(request, String)
 
         then:
         rsp.status().code == 200
@@ -175,5 +172,133 @@ class JwtCookieAuthenticationSpec extends GebSpec {
         then:
         homePage.username() == null
     }
+
+
+    @Requires(property = "spec.name", value = "JwtCookieAuthenticationSpec")
+    @Singleton
+    static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create({emitter ->
+                if ( authenticationRequest.getIdentity().equals("sherlock") &&
+                        authenticationRequest.getSecret().equals("password") ) {
+                    emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
+                    emitter.onComplete()
+                } else {
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                }
+            }, BackpressureStrategy.ERROR)
+        }
+    }
+
+    @Requires(property = "spec.name", value = "JwtCookieAuthenticationSpec")
+    @Secured("isAnonymous()")
+    @Controller("/")
+    static class HomeController {
+
+        @Produces(MediaType.TEXT_HTML)
+        @Get
+        String index(@Nullable Principal principal) {
+            return html(principal != null, principal != null ? principal.getName() : null)
+        }
+
+        @Produces(MediaType.TEXT_HTML)
+        @Get("/secured")
+        @Secured(SecurityRule.IS_AUTHENTICATED)
+        String securedPage() {
+            StringBuilder sb = new StringBuilder()
+            sb.append("<!DOCTYPE html>")
+            sb.append("<html>")
+            sb.append("<head>")
+            sb.append("<title>Secured Page</title>")
+            sb.append("</head>")
+            sb.append("<body>")
+            sb.append("</body>")
+            sb.append("</html>")
+            return sb.toString()
+        }
+
+        private String html(boolean loggedIn, String username) {
+            StringBuilder sb = new StringBuilder()
+            sb.append("<!DOCTYPE html>")
+            sb.append("<html>")
+            sb.append("<head>")
+            sb.append("<title>Home</title>")
+            sb.append("</head>")
+            sb.append("<body>")
+            if( loggedIn ) {
+                sb.append("<h1>username: <span> "+username+"</span></h1>")
+            } else {
+                sb.append("<h1>You are not logged in</h1>")
+            }
+            if( loggedIn ) {
+                sb.append("<form action=\"logout\" method=\"POST\">")
+                sb.append("<input type=\"submit\" value=\"Logout\" />")
+                sb.append("</form>")
+            } else {
+                sb.append("<p><a href=\"/login/auth\">Login</a></p>")
+            }
+            sb.append("</body>")
+            sb.append("</html>")
+            return sb.toString()
+        }
+    }
+
+    @Requires(property = "spec.name", value = "JwtCookieAuthenticationSpec")
+    @Secured("isAnonymous()")
+    @Controller("/login")
+    static class LoginAuthController {
+
+        @Produces(MediaType.TEXT_HTML)
+        @Get("/auth")
+        String auth() {
+            return html(false)
+        }
+
+        @Produces(MediaType.TEXT_HTML)
+        @Get("/authFailed")
+        String authFailed() {
+            return html(true)
+        }
+
+        private String html(boolean errors) {
+            StringBuilder sb = new StringBuilder()
+            sb.append("<!DOCTYPE html>")
+            sb.append("<html>")
+            sb.append("<head>")
+            if( errors ) {
+                sb.append("<title>Login Failed</title>")
+            } else {
+                sb.append("<title>Login</title>")
+            }
+            sb.append("</head>")
+            sb.append("<body>")
+            sb.append("<form action=\"/login\" method=\"POST\">")
+            sb.append("<ol>")
+            sb.append("<li>")
+            sb.append("<label for=\"username\">Username</label>")
+            sb.append("<input type=\"text\" name=\"username\" id=\"username\"/>")
+            sb.append("</li>")
+            sb.append("<li>")
+            sb.append("<label for=\"password\">Password</label>")
+            sb.append("<input type=\"text\" name=\"password\" id=\"password\"/>")
+            sb.append("</li>")
+            sb.append("<li>")
+            sb.append("<input type=\"submit\" value=\"Login\"/>")
+            sb.append("</li>")
+            if( errors ) {
+                sb.append("<li id=\"errors\">")
+                sb.append("<span style=\"color:red\">Login Failed</span>")
+                sb.append("</li>")
+            }
+            sb.append("</ol>")
+            sb.append("</form>")
+            sb.append("</body>")
+            sb.append("</html>")
+            return sb.toString()
+        }
+    }
+
 }
 

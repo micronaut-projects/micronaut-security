@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.List;
 
 /**

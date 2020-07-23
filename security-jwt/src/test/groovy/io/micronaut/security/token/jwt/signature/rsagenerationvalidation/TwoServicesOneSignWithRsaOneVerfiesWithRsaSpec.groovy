@@ -9,9 +9,9 @@ import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.runtime.server.EmbeddedServer
@@ -85,8 +85,6 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         Map booksConfig = [
                 (SPEC_NAME_PROPERTY)                          : 'rsajwtbooks',
                 'micronaut.server.port'                       : -1,
-                'micronaut.security.enabled'                  : true,
-                'micronaut.security.token.jwt.enabled'        : true,
         ]
 
         booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig, Environment.TEST)
@@ -121,10 +119,8 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         given:
         Map gatewayConfig = [
                 (SPEC_NAME_PROPERTY)                        : 'rsajwtgateway',
-                'micronaut.security.enabled'                : true,
-                'micronaut.security.token.jwt.enabled'      : true,
-                'micronaut.security.endpoints.login.enabled': true,
                 'micronaut.http.services.books.url'         : "http://localhost:${booksPort}",
+                'micronaut.security.authentication'   : 'bearer',
         ]
 
         gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig, Environment.TEST)
@@ -175,7 +171,7 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
     }
 
     @Override
-    RxHttpClient getClient() {
-        return gatewayClient
+    BlockingHttpClient getClient() {
+        return gatewayClient.toBlocking()
     }
 }

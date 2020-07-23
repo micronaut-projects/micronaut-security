@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.signandencrypt
 
 import io.micronaut.context.annotation.Bean

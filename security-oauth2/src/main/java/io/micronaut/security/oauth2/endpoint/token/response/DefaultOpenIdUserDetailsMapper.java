@@ -15,12 +15,19 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.config.AuthenticationModeConfiguration;
+import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,23 +49,43 @@ import java.util.Map;
 public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
     private final OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration;
+    private final AuthenticationModeConfiguration authenticationModeConfiguration;
 
     /**
      * Default constructor.
      *
      * @param openIdAdditionalClaimsConfiguration The additional claims configuration
+     * @param authenticationModeConfiguration Authentication Mode Configuration
      */
-    public DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration) {
+    @Inject
+    public DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration,
+                                          AuthenticationModeConfiguration authenticationModeConfiguration) {
         this.openIdAdditionalClaimsConfiguration = openIdAdditionalClaimsConfiguration;
+        this.authenticationModeConfiguration = authenticationModeConfiguration;
     }
 
+    /**
+     * @deprecated Use {@link DefaultOpenIdUserDetailsMapper#DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration, AuthenticationModeConfiguration)} instead.
+     * @param openIdAdditionalClaimsConfiguration The additional claims configuration
+     */
+    @Deprecated
+    public DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration) {
+        this(openIdAdditionalClaimsConfiguration, null);
+    }
+
+    @NonNull
     @Override
-    @Nonnull
     public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         Map<String, Object> claims = buildAttributes(providerName, tokenResponse, openIdClaims);
         List<String> roles = getRoles(providerName, tokenResponse, openIdClaims);
         String username = getUsername(providerName, tokenResponse, openIdClaims);
         return new UserDetails(username, roles, claims);
+    }
+
+    @NonNull
+    @Override
+    public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
+        return createUserDetails(providerName, tokenResponse, openIdClaims);
     }
 
     /**
@@ -71,13 +98,14 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
         Map<String, Object> claims = new HashMap<>(openIdClaims.getClaims());
         JwtClaims.ALL_CLAIMS.forEach(claims::remove);
         claims.put(OauthUserDetailsMapper.PROVIDER_KEY, providerName);
-        if (openIdAdditionalClaimsConfiguration.isJwt()) {
+        boolean idtokenAuthentication = authenticationModeConfiguration.getAuthentication() != null && authenticationModeConfiguration.getAuthentication() == AuthenticationMode.IDTOKEN;
+        if (idtokenAuthentication || openIdAdditionalClaimsConfiguration.isJwt()) {
             claims.put(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY, tokenResponse.getIdToken());
         }
-        if (openIdAdditionalClaimsConfiguration.isAccessToken()) {
+        if (idtokenAuthentication || openIdAdditionalClaimsConfiguration.isAccessToken()) {
             claims.put(OauthUserDetailsMapper.ACCESS_TOKEN_KEY, tokenResponse.getAccessToken());
         }
-        if (openIdAdditionalClaimsConfiguration.isRefreshToken() && tokenResponse.getRefreshToken() != null) {
+        if (idtokenAuthentication || openIdAdditionalClaimsConfiguration.isRefreshToken() && tokenResponse.getRefreshToken() != null) {
             claims.put(OauthUserDetailsMapper.REFRESH_TOKEN_KEY, tokenResponse.getRefreshToken());
         }
         return claims;

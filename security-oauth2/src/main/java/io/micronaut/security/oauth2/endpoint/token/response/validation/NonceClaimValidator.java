@@ -19,11 +19,11 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 
 /**
- * Responsible for validating the nonce claim
+ * Responsible for validating the nonce claim.
  *
  * @author James Kleeh
  * @since 1.2.0

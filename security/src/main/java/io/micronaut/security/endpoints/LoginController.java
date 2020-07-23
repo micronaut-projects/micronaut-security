@@ -22,6 +22,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
@@ -48,7 +49,9 @@ import javax.validation.Valid;
  * @author Graeme Rocher
  * @since 1.0
  */
-@Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(beans = LoginHandler.class)
+@Requires(beans = Authenticator.class)
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Validated
@@ -78,17 +81,17 @@ public class LoginController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public Single<HttpResponse> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
+    public Single<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
         Flowable<AuthenticationResponse> authenticationResponseFlowable = Flowable.fromPublisher(authenticator.authenticate(request, usernamePasswordCredentials));
 
         return authenticationResponseFlowable.map(authenticationResponse -> {
-            if (authenticationResponse.isAuthenticated()) {
-                UserDetails userDetails = (UserDetails) authenticationResponse;
+            if (authenticationResponse.isAuthenticated() && authenticationResponse.getUserDetails().isPresent()) {
+                UserDetails userDetails = authenticationResponse.getUserDetails().get();
                 eventPublisher.publishEvent(new LoginSuccessfulEvent(userDetails));
                 return loginHandler.loginSuccess(userDetails, request);
             } else {
                 eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
-                return loginHandler.loginFailed(authenticationResponse);
+                return loginHandler.loginFailed(authenticationResponse, request);
             }
         }).first(HttpResponse.status(HttpStatus.UNAUTHORIZED));
     }

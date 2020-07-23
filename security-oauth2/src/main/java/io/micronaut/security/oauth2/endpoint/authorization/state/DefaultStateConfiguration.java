@@ -32,7 +32,11 @@ public class DefaultStateConfiguration implements StateValidationConfiguration {
 
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".state";
 
-    private static final boolean DEFAULT_ENABLED = true;
+    /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ENABLED = true;
     private static final String DEFAULT_PERSISTENCE = "cookie";
 
     private String persistence = DEFAULT_PERSISTENCE;

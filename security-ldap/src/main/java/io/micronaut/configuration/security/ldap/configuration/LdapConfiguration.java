@@ -38,7 +38,11 @@ public class LdapConfiguration implements Toggleable {
 
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".ldap";
 
-    private static final boolean DEFAULT_ENABLED = true;
+    /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ENABLED = true;
 
     private boolean enabled = DEFAULT_ENABLED;
     private ContextConfiguration context = new ContextConfiguration();
@@ -105,7 +109,6 @@ public class LdapConfiguration implements Toggleable {
     public void setSearch(SearchConfiguration searchConfiguration) {
         this.search = searchConfiguration;
     }
-
 
     /**
      * @return The group configuration
@@ -341,7 +344,12 @@ public class LdapConfiguration implements Toggleable {
 
         public static final String PREFIX = LdapConfiguration.PREFIX + ".groups";
 
-        private static final boolean DEFAULT_ENABLED = false;
+        /**
+         * The default enable value.
+         */
+        @SuppressWarnings("WeakerAccess")
+        public static final boolean DEFAULT_ENABLED = false;
+
         private static final boolean DEFAULT_SUBTREE = true;
         private static final String DEFAULT_FILTER = "uniquemember={0}";
         private static final String DEFAULT_ATTR = "cn";

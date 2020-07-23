@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.signandencrypt
 
 import com.nimbusds.jose.EncryptionMethod

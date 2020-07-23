@@ -1,30 +1,24 @@
-
 package io.micronaut.security.endpoints
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.security.ApplicationContextSpecification
 import spock.lang.Unroll
 
-class LogoutControllerEnabledSpec extends Specification {
+class LogoutControllerEnabledSpec extends ApplicationContextSpecification {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name'                 : LogoutControllerEnabledSpec.simpleName,
-            'micronaut.security.enabled': true,
-            'micronaut.security.endpoints.logout.enabled': false,
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.endpoints.logout.enabled': false,
 
-    ], Environment.TEST)
+        ]
+    }
 
-    @Unroll("if micronaut.security.enabled=true and micronaut.security.endpoints.logout.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    @Unroll("if micronaut.security.endpoints.logout.enabled=false bean [#description] is not loaded")
+    void "if micronaut.security.endpoints.logout.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
-        embeddedServer.applicationContext.getBean(clazz)
+        applicationContext.getBean(clazz)
 
         then:
         def e = thrown(NoSuchBeanException)

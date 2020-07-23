@@ -49,7 +49,7 @@ public final class JwtValidator {
     }
 
     /**
-     * Validates the supplied token with any configurations and claim validators present
+     * Validates the supplied token with any configurations and claim validators present.
      *
      * @param token The JWT string
      * @return An optional JWT token if validation succeeds
@@ -67,7 +67,7 @@ public final class JwtValidator {
     }
 
     /**
-     * Validates the supplied token with any configurations and claim validators present
+     * Validates the supplied token with any configurations and claim validators present.
      *
      * @param token The JWT token
      * @return An optional JWT token if validation succeeds
@@ -218,7 +218,7 @@ public final class JwtValidator {
     }
 
     /**
-     * A builder for {@link JwtValidator}
+     * A builder for {@link JwtValidator}.
      */
     public static final class Builder {
 
@@ -229,7 +229,7 @@ public final class JwtValidator {
         private Builder() { }
 
         /**
-         * Replaces any existing configurations with the ones supplied
+         * Replaces any existing configurations with the ones supplied.
          *
          * @param signatureConfigurations The signature configurations to validate with
          * @return The builder
@@ -240,7 +240,7 @@ public final class JwtValidator {
         }
 
         /**
-         * Replaces any existing configurations with the ones supplied
+         * Replaces any existing configurations with the ones supplied.
          *
          * @param signatureConfigurations The signature configurations to validate with
          * @return The builder
@@ -251,7 +251,7 @@ public final class JwtValidator {
         }
 
         /**
-         * Replaces any existing configurations with the ones supplied
+         * Replaces any existing configurations with the ones supplied.
          *
          * @param encryptionConfigurations The encryption configurations to validate with
          * @return The builder
@@ -262,7 +262,7 @@ public final class JwtValidator {
         }
 
         /**
-         * Replaces any existing configurations with the ones supplied
+         * Replaces any existing configurations with the ones supplied.
          *
          * @param encryptionConfigurations The encryption configurations to validate with
          * @return The builder
@@ -273,7 +273,7 @@ public final class JwtValidator {
         }
 
         /**
-         * Replaces any existing claim validators with the ones supplied
+         * Replaces any existing claim validators with the ones supplied.
          *
          * @param jwtClaimsValidators The claims validators to use
          * @return The builder
@@ -284,7 +284,7 @@ public final class JwtValidator {
         }
 
         /**
-         * Replaces any existing claim validators with the ones supplied
+         * Replaces any existing claim validators with the ones supplied.
          *
          * @param jwtClaimsValidators The claims validators to use
          * @return The builder
@@ -295,7 +295,7 @@ public final class JwtValidator {
         }
 
         /**
-         * Builds the validator
+         * Builds the validator.
          *
          * @return The validator
          */

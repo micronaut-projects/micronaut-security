@@ -26,6 +26,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@FunctionalInterface
 public interface TokenReader extends Ordered {
 
     /**

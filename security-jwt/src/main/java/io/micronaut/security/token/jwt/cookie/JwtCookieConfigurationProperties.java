@@ -16,12 +16,15 @@
 package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.http.cookie.SameSite;
+import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
@@ -31,6 +34,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(property = JwtCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(JwtCookieConfigurationProperties.PREFIX)
 public class JwtCookieConfigurationProperties implements JwtCookieConfiguration {
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".cookie";
@@ -39,7 +43,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
 
     /**
      * The default secure value.
@@ -66,28 +70,13 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     public static final String DEFAULT_COOKIEPATH = "/";
 
     /**
-     * The default logout target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_LOGOUTTARGETURL = "/";
-
-    /**
-     * The default login success target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_LOGINSUCCESSTARGETURL = "/";
-
-    /**
-     * The default login failure target URL.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_LOGINFAILURETARGETURL = "/";
-
-    /**
      * The default same-site setting for the JWT cookie.
      */
     @SuppressWarnings("WeakerAccess")
     public static final SameSite DEFAULT_COOKIESAMESITE = null;
+
+    private final RedirectConfigurationProperties redirectConfiguration;
+    private final PropertyResolver propertyResolver;
 
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
@@ -96,10 +85,18 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     private Duration cookieMaxAge;
     private SameSite cookieSameSite = DEFAULT_COOKIESAMESITE;
     private boolean enabled = DEFAULT_ENABLED;
-    private String logoutTargetUrl = DEFAULT_LOGOUTTARGETURL;
     private String cookieName = DEFAULT_COOKIENAME;
-    private String loginSuccessTargetUrl = DEFAULT_LOGINSUCCESSTARGETURL;
-    private String loginFailureTargetUrl = DEFAULT_LOGINFAILURETARGETURL;
+
+    /**
+     *
+     * @param redirectConfiguration Redirect Configuration
+     * @param propertyResolver Property Resolver
+     */
+    public JwtCookieConfigurationProperties(RedirectConfigurationProperties redirectConfiguration,
+                                            PropertyResolver propertyResolver) {
+        this.redirectConfiguration = redirectConfiguration;
+        this.propertyResolver = propertyResolver;
+    }
 
     /**
      *
@@ -111,52 +108,64 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     }
 
     @Override
+    @Deprecated
     public String getLogoutTargetUrl() {
-        return this.logoutTargetUrl;
+        return redirectConfiguration.getLogout();
     }
 
     @Override
+    @Deprecated
     public String getLoginSuccessTargetUrl() {
-        return loginSuccessTargetUrl;
+        return redirectConfiguration.getLoginSuccess();
     }
 
     @Override
+    @Deprecated
     public String getLoginFailureTargetUrl() {
-        return loginFailureTargetUrl;
+        return redirectConfiguration.getLoginFailure();
     }
 
     /**
-     * Sets the logout target URL. Default value ({@value #DEFAULT_LOGOUTTARGETURL}).
+     * Deprecated. user micronaut.security.redirect.logout instead
      * @param logoutTargetUrl The URL
      */
+    @Deprecated
     public void setLogoutTargetUrl(String logoutTargetUrl) {
-        if (StringUtils.isNotEmpty(logoutTargetUrl)) {
-            this.logoutTargetUrl = logoutTargetUrl;
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".logout")) {
+            if (StringUtils.isNotEmpty(logoutTargetUrl)) {
+                redirectConfiguration.setLogout(logoutTargetUrl);
+            }
         }
     }
 
     /**
-     * Sets the login success target URL. Default value ({@value #DEFAULT_LOGINSUCCESSTARGETURL}).
+     * Deprecated. user micronaut.security.redirect.login-success instead
      * @param loginSuccessTargetUrl The URL
      */
+    @Deprecated
     public void setLoginSuccessTargetUrl(String loginSuccessTargetUrl) {
-        if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
-            this.loginSuccessTargetUrl = loginSuccessTargetUrl;
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-success")) {
+            if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
+                redirectConfiguration.setLoginSuccess(loginSuccessTargetUrl);
+            }
         }
     }
 
     /**
-     * Sets the login failure target URL. Default value ({@value #DEFAULT_LOGINFAILURETARGETURL}).
+     * Deprecated. user micronaut.security.redirect.login-failure instead
      * @param loginFailureTargetUrl The URL
      */
+    @Deprecated
     public void setLoginFailureTargetUrl(String loginFailureTargetUrl) {
-        if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
-            this.loginFailureTargetUrl = loginFailureTargetUrl;
+        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-failure")) {
+            if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
+                redirectConfiguration.setLoginFailure(loginFailureTargetUrl);
+            }
         }
     }
 
     /**
-     * Sets whether JWT cookie based security is enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * Sets whether JWT cookie configuration is enabled. Default value ({@value #DEFAULT_ENABLED}).
      * @param enabled True if it is enabled
      */
     public void setEnabled(boolean enabled) {
@@ -175,7 +184,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      *
      * @return a name for the cookie
      */
-    @Nonnull
+    @NonNull
     @Override
     public String getCookieName() {
         return this.cookieName;
@@ -271,7 +280,7 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     }
 
     /**
-     * Sets the same-site setting of the cookie. Default value ({@value #DEFAULT_COOKIESAMESITE}.
+     * Sets the same-site setting of the cookie. Default value null.
      * @param cookieSameSite The same-site setting of the cookie.
      */
     public void setCookieSameSite(@Nullable SameSite cookieSameSite) {

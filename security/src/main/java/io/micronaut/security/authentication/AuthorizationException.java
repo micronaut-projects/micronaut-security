@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Exception thrown when access to a protected resource is denied.

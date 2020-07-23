@@ -25,7 +25,7 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 1.0
  */
-public interface SecurityConfiguration extends Toggleable {
+public interface SecurityConfiguration extends Toggleable, AuthenticationModeConfiguration {
 
     /**
      * @return a list of IP Regex patterns. e.g. [192.168.1.*]
@@ -40,7 +40,7 @@ public interface SecurityConfiguration extends Toggleable {
     /**
      * @return The authentication strategy
      */
-    default AuthenticationStrategy getAuthenticationStrategy() {
+    default AuthenticationStrategy getAuthenticationProviderStrategy() {
         return AuthenticationStrategy.ANY;
     }
 

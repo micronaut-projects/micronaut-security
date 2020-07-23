@@ -1,32 +1,23 @@
-
 package io.micronaut.docs.base64
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
-import io.micronaut.testutils.YamlAsciidocTagCleaner
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.AuthorizationUtils
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
+import io.micronaut.testutils.EmbeddedServerSpecification
+import io.micronaut.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 
-class JwtBase64Spec extends Specification implements AuthorizationUtils, YamlAsciidocTagCleaner {
+class JwtBase64Spec extends EmbeddedServerSpecification implements AuthorizationUtils, YamlAsciidocTagCleaner {
 
-    String yamlConfig = """
+    private final static String yamlConfig = """
 #tag::yamlconfig[]
 micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           secret:
             generator: 
@@ -36,14 +27,11 @@ micronaut:
 #end::yamlconfig[]
 """
 
-    @Shared
-    Map<String, Object> configMap = [
+    private final static Map<String, Object> configMap = [
             'micronaut': [
                     'security': [
-                            'enabled': true,
                             'token': [
                                     'jwt': [
-                                        'enabled': true,
                                         'signatures': [
                                                 'secret': [
                                                         'generator': [
@@ -59,17 +47,17 @@ micronaut:
             ]
     ]
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'base64',
-            'endpoints.beans.enabled': true,
-            'endpoints.beans.sensitive': true,
-    ] << flatten(configMap), Environment.TEST)
+    @Override
+    String getSpecName() {
+        'base64'
+    }
 
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [ 'endpoints.beans.enabled': true,
+                                'endpoints.beans.sensitive': true,
+        ] << flatten(configMap)
+    }
 
     void "a JWT signed with HS256 with a base 64 encoded secret can be used to acccess a micronaut app secured with the same base64 encoded secret"() {
         expect:

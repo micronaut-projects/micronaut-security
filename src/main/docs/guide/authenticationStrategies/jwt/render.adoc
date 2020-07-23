@@ -1,4 +1,4 @@
-When you use JWT authentication and the built-in <<login, LoginController>>,
+When you use <<loginHandler, `bearer` authentication>> and the built-in <<login, LoginController>>,
 the JWT tokens are returned to the client as part of an OAuth 2.0 https://tools.ietf.org/html/RFC6749[RFC6749] access token response.
 
 An example of such a response is:

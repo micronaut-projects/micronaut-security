@@ -16,6 +16,7 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.http.HttpRequest;
+import io.reactivex.BackpressureStrategy;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.reactivex.Flowable;
@@ -23,11 +24,8 @@ import io.reactivex.exceptions.CompositeException;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -42,6 +40,7 @@ import java.util.stream.Collectors;
  */
 @Singleton
 public class Authenticator {
+
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
     protected final Collection<AuthenticationProvider> authenticationProviders;
@@ -49,34 +48,12 @@ public class Authenticator {
 
     /**
      * @param authenticationProviders A list of available authentication providers
-     */
-    @Deprecated
-    public Authenticator(Collection<AuthenticationProvider> authenticationProviders) {
-        this.authenticationProviders = authenticationProviders;
-        this.securityConfiguration = null;
-    }
-
-    /**
-     * @param authenticationProviders A list of available authentication providers
      * @param securityConfiguration The security configuration
      */
-    @Inject
     public Authenticator(Collection<AuthenticationProvider> authenticationProviders,
                          SecurityConfiguration securityConfiguration) {
         this.authenticationProviders = authenticationProviders;
         this.securityConfiguration = securityConfiguration;
-    }
-
-    /**
-     * Authenticates the user with the provided credentials.
-     *
-     * @param authenticationRequest Represents a request to authenticate.
-     * @return A publisher that emits {@link AuthenticationResponse} objects
-     * @deprecated Use {@link #authenticate(HttpRequest, AuthenticationRequest)} instead.
-     */
-    @Deprecated
-    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-        return authenticate(null, authenticationRequest);
     }
 
     /**
@@ -93,7 +70,8 @@ public class Authenticator {
         if (LOG.isDebugEnabled()) {
             LOG.debug(authenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
-        if (securityConfiguration != null && securityConfiguration.getAuthenticationStrategy() == AuthenticationStrategy.ALL) {
+
+        if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
             return Flowable.mergeDelayError(
                     authenticationProviders.stream()
                             .map(provider -> {
@@ -119,62 +97,44 @@ public class Authenticator {
                     })
                     .toFlowable();
         } else {
-            Iterator<AuthenticationProvider> providerIterator = authenticationProviders.iterator();
-            if (providerIterator.hasNext()) {
-                Flowable<AuthenticationProvider> providerFlowable = Flowable.just(providerIterator.next());
-                AtomicReference<AuthenticationResponse> lastFailure = new AtomicReference<>();
-                return attemptAuthenticationRequest(request, authenticationRequest, providerIterator, providerFlowable, lastFailure);
-            } else {
-                return Flowable.empty();
-            }
+            AtomicReference<Throwable> lastError = new AtomicReference<>();
+
+            Flowable<AuthenticationResponse> authentication = Flowable.mergeDelayError(authenticationProviders.stream()
+                    .map(auth -> auth.authenticate(request, authenticationRequest))
+                    .map(Flowable::fromPublisher)
+                    .map(flow ->
+                        flow.switchMap(response -> {
+                            if (response.isAuthenticated()) {
+                                return Flowable.just(response);
+                            } else {
+                                return Flowable.error(new AuthenticationException(response));
+                            }
+                        }).onErrorResumeNext(t -> {
+                            lastError.set(t);
+                            return Flowable.empty();
+                        })
+                    )
+                    .collect(Collectors.toList()));
+
+            return authentication.take(1).switchIfEmpty(Flowable.create((emitter) -> {
+                Throwable error = lastError.get();
+                if (error != null) {
+                    if (error instanceof AuthenticationException) {
+                        AuthenticationResponse response = ((AuthenticationException) error).getResponse();
+                        if (response != null) {
+                            emitter.onNext(response);
+                            emitter.onComplete();
+                        } else {
+                            emitter.onError(error);
+                        }
+                    } else {
+                        emitter.onError(error);
+                    }
+                } else {
+                    emitter.onComplete();
+                }
+            }, BackpressureStrategy.ERROR));
         }
     }
 
-    private Flowable<AuthenticationResponse> attemptAuthenticationRequest(
-            HttpRequest<?> request,
-        AuthenticationRequest authenticationRequest,
-        Iterator<AuthenticationProvider> providerIterator,
-        Flowable<AuthenticationProvider> providerFlowable, AtomicReference<AuthenticationResponse> lastFailure) {
-
-        return providerFlowable.switchMap(authenticationProvider -> {
-            Flowable<AuthenticationResponse> responseFlowable = Flowable.fromPublisher(authenticationProvider.authenticate(request, authenticationRequest));
-            Flowable<AuthenticationResponse> authenticationAttemptFlowable = responseFlowable.switchMap(authenticationResponse -> {
-                if (authenticationResponse.isAuthenticated()) {
-                    return Flowable.just(authenticationResponse);
-                } else if (providerIterator.hasNext()) {
-                    lastFailure.set(authenticationResponse);
-                    // recurse
-                    return attemptAuthenticationRequest(
-                            request,
-                        authenticationRequest,
-                        providerIterator,
-                        Flowable.just(providerIterator.next()),
-                        lastFailure);
-                } else {
-                    lastFailure.set(authenticationResponse);
-                    return Flowable.just(authenticationResponse);
-                }
-            });
-            return authenticationAttemptFlowable.onErrorResumeNext(throwable -> {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Authentication provider threw exception", throwable);
-                }
-                if (providerIterator.hasNext()) {
-                    // recurse
-                    return attemptAuthenticationRequest(
-                            request,
-                        authenticationRequest,
-                        providerIterator,
-                        Flowable.just(providerIterator.next()),
-                        lastFailure);
-                } else {
-                    AuthenticationResponse lastFailureResponse = lastFailure.get();
-                    if (lastFailureResponse != null) {
-                        return Flowable.just(lastFailureResponse);
-                    }
-                    return Flowable.empty();
-                }
-            });
-        });
-    }
 }

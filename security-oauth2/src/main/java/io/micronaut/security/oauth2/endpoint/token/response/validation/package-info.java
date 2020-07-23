@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes related to validating an OpenID token response
+ * Classes related to validating an OpenID token response.
  *
  * @author James Kleeh
  * @since 1.2.0

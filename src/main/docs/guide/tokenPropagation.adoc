@@ -12,7 +12,7 @@ You can configure token propagation to achieve that.
 include::{testssecurity}/security/token/propagation/TokenPropagationSpec.groovy[tag=yamlconfig,indent=0]
 ----
 
-The previous configuration, configures a link:{api}/io/micronaut/security/token/writer/HttpHeaderTokenWriter.html[HttpHeaderTokenWriter] and a
+The previous configuration, configures a link:{api}/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html[HttpHeaderTokenPropagator] and a
 and a propagation filter, link:{api}/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html[TokenPropagationHttpClientFilter], which
 will propagate the security token seamlessly.
 
@@ -23,4 +23,13 @@ If you use <<serviceDiscovery, Service Discovery>> features, you can use the ser
 micronaut.security.token.propagation.service-id-regex="catalogue|recommendations|inventory"
 ----
 
+Several configuration options are available:
+
+include::{includedir}configurationProperties/io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties.adoc[]
+
+For propagation via an HTTP Header, you can configure:
+
+include::{includedir}configurationProperties/io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties.adoc[]
+
 TIP: Read the https://guides.micronaut.io/micronaut-token-propagation/guide/index.html[Token Propagation tutorial] to learn more.
+

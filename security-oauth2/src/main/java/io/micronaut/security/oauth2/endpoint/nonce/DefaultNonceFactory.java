@@ -20,12 +20,12 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
- * Generates a random UUID nonce
+ * Generates a random UUID nonce.
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -43,7 +43,7 @@ public class DefaultNonceFactory implements NonceFactory {
         this.noncePersistence = noncePersistence;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String buildNonce(HttpRequest<?> request, MutableHttpResponse response) {
         String nonce = UUID.randomUUID().toString();

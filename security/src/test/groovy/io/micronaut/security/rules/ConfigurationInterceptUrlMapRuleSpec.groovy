@@ -1,4 +1,3 @@
-
 package io.micronaut.security.rules
 
 import io.micronaut.http.HttpMethod

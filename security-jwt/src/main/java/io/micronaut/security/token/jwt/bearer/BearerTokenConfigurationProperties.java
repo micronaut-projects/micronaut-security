@@ -54,8 +54,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
     public String getHeaderName() {
         return headerName;
     }
-
-
+    
     /**
      * Set whether to enable bearer token authentication. Default value {@value #DEFAULT_ENABLED}.
      *
@@ -66,7 +65,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
     }
 
     /**
-     * Sets the header name to use. Default value {@value io.micronaut.http.HttpHeaders#AUTHORIZATION}.
+     * Sets the header name to use. Default value Authorization.
      *
      * @param headerName The header name to use
      */
@@ -75,7 +74,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
     }
 
     /**
-     * Sets the prefix to use for the auth token. Default value {@value io.micronaut.http.HttpHeaderValues#AUTHORIZATION_PREFIX_BEARER}.
+     * Sets the prefix to use for the auth token. Default value Bearer.
      * @param prefix The prefix to use
      */
     public void setPrefix(String prefix) {

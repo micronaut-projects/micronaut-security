@@ -10,8 +10,6 @@ class SecretEncryptionSpec extends Specification {
     void "SecretEncryption constructor does not raise exception if jwe algorithm and encryption method set are valid"() {
         given:
         ApplicationContext ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.encryptions.secret.generator.secret': 'XXX',
                 'micronaut.security.token.jwt.encryptions.secret.generator.jwe-algorithm': 'dir',
                 'micronaut.security.token.jwt.encryptions.secret.generator.encryption-method': 'A128CBC-HS256',

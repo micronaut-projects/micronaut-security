@@ -1,27 +1,28 @@
 package io.micronaut.docs.rejection;
 
+//tag::clazz[]
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.handlers.HttpStatusCodeRejectionHandler;
-import io.reactivex.Flowable;
-import org.reactivestreams.Publisher;
+import io.micronaut.security.authentication.AuthorizationException;
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
 
 import javax.inject.Singleton;
+
+//end::clazz[]
 
 @Requires(property = "spec.name", value = "rejection-handler")
 //tag::clazz[]
 @Singleton
-@Replaces(HttpStatusCodeRejectionHandler.class)
-public class MyRejectionHandler extends HttpStatusCodeRejectionHandler {
+@Replaces(DefaultAuthorizationExceptionHandler.class)
+public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
 
     @Override
-    public Publisher<MutableHttpResponse<?>> reject(HttpRequest<?> request, boolean forbidden) {
-        //Let the HttpStatusCodeRejectionHandler create the initial request
+    public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationException exception) {
+        //Let the DefaultAuthorizationExceptionHandler create the initial response
         //then add a header
-        return Flowable.fromPublisher(super.reject(request, forbidden))
-                .map(response -> response.header("X-Reason", "Example Header"));
+        return super.handle(request, exception).header("X-Reason", "Example Header");
     }
 }
 //end::clazz[]

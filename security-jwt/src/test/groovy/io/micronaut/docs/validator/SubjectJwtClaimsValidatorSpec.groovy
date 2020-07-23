@@ -13,8 +13,6 @@ class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : SubjectNotNullJwtClaimsValidatorSpec.simpleName,
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true
 
         ], Environment.TEST)
 
@@ -33,8 +31,6 @@ class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : SubjectNotNullJwtClaimsValidatorSpec.simpleName,
-                'micronaut.security.enabled': true,
-                'micronaut.security.token.jwt.enabled': true,
                 'micronaut.security.token.jwt.claims-validators.subject-not-null': false
 
         ], Environment.TEST)

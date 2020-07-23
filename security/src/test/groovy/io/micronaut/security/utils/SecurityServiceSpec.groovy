@@ -1,40 +1,42 @@
-
 package io.micronaut.security.utils
 
-import io.micronaut.context.ApplicationContext
+import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.client.RxHttpClient
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
+import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationException
+import io.micronaut.security.authentication.AuthenticationFailed
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import org.reactivestreams.Publisher
 
-class SecurityServiceSpec extends Specification {
+import javax.inject.Singleton
 
-    static final SPEC_NAME_PROPERTY = 'spec.name'
-    static  final String controllerPath = "/securityutils"
+class SecurityServiceSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            (SPEC_NAME_PROPERTY): SecurityServiceSpec.class.simpleName,
-            'micronaut.security.enabled': true,
-    ], Environment.TEST)
-
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
-
+    @Override
+    String getSpecName() {
+        'SecurityServiceSpec'
+    }
     void "SecurityServiceSpec collaborators are loaded"() {
         when:
-        embeddedServer.applicationContext.getBean(SecurityServiceController)
+        applicationContext.getBean(SecurityServiceController)
 
         then:
         noExceptionThrown()
 
         when:
-        embeddedServer.applicationContext.getBean(AuthenticationProviderUserPassword)
+        applicationContext.getBean(AuthenticationProviderUserPassword)
 
         then:
         noExceptionThrown()
@@ -42,13 +44,15 @@ class SecurityServiceSpec extends Specification {
 
     void "verify SecurityService.isAuthenticated()"() {
         when:
-        Boolean authenticated = client.toBlocking().retrieve(HttpRequest.GET("${controllerPath}/authenticated").basicAuth("user", "password"), Boolean)
+        Boolean authenticated = client.retrieve(HttpRequest.GET("/securityutils/authenticated")
+                .accept(MediaType.TEXT_PLAIN)
+                .basicAuth("user", "password"), Boolean)
 
         then:
         authenticated
 
         when:
-        authenticated = client.toBlocking().retrieve(HttpRequest.GET("${controllerPath}/authenticated"), Boolean)
+        authenticated = client.retrieve(HttpRequest.GET("/securityutils/authenticated").accept(MediaType.TEXT_PLAIN), Boolean)
 
         then:
         !authenticated
@@ -56,24 +60,24 @@ class SecurityServiceSpec extends Specification {
 
     void "verify SecurityService.isCurrentUserInRole()"() {
         when:
-        HttpRequest request = HttpRequest.GET("${controllerPath}/roles?role=ROLE_USER")
+        HttpRequest request = HttpRequest.GET("/securityutils/roles?role=ROLE_USER").accept(MediaType.TEXT_PLAIN)
                 .basicAuth("user", "password")
-        Boolean hasRole = client.toBlocking().retrieve(request, Boolean)
+        Boolean hasRole = client.retrieve(request, Boolean)
 
         then:
         hasRole
 
         when:
-        request = HttpRequest.GET("${controllerPath}/roles?role=ROLE_ADMIN")
+        request = HttpRequest.GET("/securityutils/roles?role=ROLE_ADMIN").accept(MediaType.TEXT_PLAIN)
                 .basicAuth("user", "password")
-        hasRole = client.toBlocking().retrieve(request, Boolean)
+        hasRole = client.retrieve(request, Boolean)
 
         then:
         !hasRole
 
         when:
-        request = HttpRequest.GET("${controllerPath}/roles?role=ROLE_USER")
-        hasRole = client.toBlocking().retrieve(request, Boolean)
+        request = HttpRequest.GET("/securityutils/roles?role=ROLE_USER").accept(MediaType.TEXT_PLAIN)
+        hasRole = client.retrieve(request, Boolean)
 
         then:
         !hasRole
@@ -81,15 +85,70 @@ class SecurityServiceSpec extends Specification {
 
     void "verify SecurityService.currentUserLogin()"() {
         when:
-        String username = client.toBlocking().retrieve(HttpRequest.GET("${controllerPath}/currentuser").basicAuth("user", "password"), String)
+        String username = client.retrieve(HttpRequest.GET("/securityutils/currentuser")
+                .accept(MediaType.TEXT_PLAIN)
+                .basicAuth("user", "password"), String)
 
         then:
         username == "user"
 
         when:
-        username = client.toBlocking().retrieve(HttpRequest.GET("${controllerPath}/currentuser"), String)
+        username = client.retrieve(HttpRequest.GET("/securityutils/currentuser").accept(MediaType.TEXT_PLAIN), String)
 
         then:
         username == "Anonymous"
+    }
+
+    @Singleton
+    @Requires(env = Environment.TEST)
+    @Requires(property = 'spec.name', value = 'SecurityServiceSpec')
+    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create({emitter ->
+                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', ['ROLE_USER']))
+                    emitter.onComplete()
+                } else {
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                }
+
+            }, BackpressureStrategy.ERROR)
+        }
+    }
+
+    @Requires(env = Environment.TEST)
+    @Requires(property = 'spec.name', value = 'SecurityServiceSpec')
+    @Controller('/securityutils')
+    static class SecurityServiceController {
+
+        private final SecurityService securityService
+
+        SecurityServiceController(SecurityService securityService) {
+            this.securityService = securityService
+        }
+
+        @Produces(MediaType.TEXT_PLAIN)
+        @Secured("isAnonymous()")
+        @Get("/authenticated")
+        boolean authenticated() {
+            securityService.isAuthenticated()
+        }
+
+        @Produces(MediaType.TEXT_PLAIN)
+        @Secured("isAnonymous()")
+        @Get("/currentuser")
+        String currentuser() {
+            Optional<String> str = securityService.username()
+            str.map { m -> m}.orElse("Anonymous")
+        }
+
+        @Produces(MediaType.TEXT_PLAIN)
+        @Secured("isAnonymous()")
+        @Get("/roles{?role}")
+        Boolean roles(@Nullable String role) {
+            securityService.hasRole(role)
+        }
     }
 }
