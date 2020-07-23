@@ -104,7 +104,7 @@ public class DefaultSecurityService implements SecurityService {
                 if (authorities instanceof Collection) {
                     return ((Collection) authorities).contains(role);
                 } else if (authorities instanceof String) {
-                    return ((String) authorities).equalsIgnoreCase(role);
+                    return ((String) authorities).equals(role);
                 }
             }
             return false;
