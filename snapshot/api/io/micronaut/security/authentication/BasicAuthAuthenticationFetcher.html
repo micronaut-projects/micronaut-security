@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -177,6 +177,10 @@ implements <a href="../../../../io/micronaut/security/filters/AuthenticationFetc
 <div class="block">Attempts to read an <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> from a <code>HttpRequest</code> being executed.</div>
 </td>
 </tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html#parseCredentials-java.lang.String-">parseCredentials</a></span>(java.lang.String&nbsp;authorization)</code>&nbsp;</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -232,7 +236,7 @@ implements <a href="../../../../io/micronaut/security/filters/AuthenticationFetc
 <a name="fetchAuthentication-io.micronaut.http.HttpRequest-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>fetchAuthentication</h4>
 <pre>public&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;&nbsp;fetchAuthentication(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
@@ -245,6 +249,23 @@ implements <a href="../../../../io/micronaut/security/filters/AuthenticationFetc
 <dd><code>request</code> - <code>HttpRequest</code> being executed.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd><a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> if found</dd>
+</dl>
+</li>
+</ul>
+<a name="parseCredentials-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>parseCredentials</h4>
+<pre>@NonNull
+public&nbsp;java.util.Optional&lt;<a href="../../../../io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a>&gt;&nbsp;parseCredentials(@NonNull
+                                                                                 java.lang.String&nbsp;authorization)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>authorization</code> - Authorization HTTP Header value</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Extracted Credentials as a <a href="../../../../io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication"><code>UsernamePasswordCredentials</code></a> or an empty optional if not possible.</dd>
 </dl>
 </li>
 </ul>
