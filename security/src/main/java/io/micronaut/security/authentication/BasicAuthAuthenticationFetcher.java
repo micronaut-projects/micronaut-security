@@ -15,12 +15,12 @@
  */
 package io.micronaut.security.authentication;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.reactivex.Flowable;
@@ -59,9 +59,7 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
 
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
-        Optional<UsernamePasswordCredentials> credentials = request.getHeaders().getAuthorization()
-                .map(s -> s.substring(PREFIX.length()))
-                .flatMap(this::decode);
+        Optional<UsernamePasswordCredentials> credentials = request.getHeaders().getAuthorization().flatMap(this::parseCredentials);
 
         if (credentials.isPresent()) {
             Flowable<AuthenticationResponse> authenticationResponse = Flowable.fromPublisher(authenticator.authenticate(request, credentials.get()));
@@ -81,6 +79,19 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
         } else {
             return Publishers.empty();
         }
+    }
+
+    /**
+     *
+     * @param authorization Authorization HTTP Header value
+     * @return Extracted Credentials as a {@link UsernamePasswordCredentials} or an empty optional if not possible.
+     */
+    @NonNull
+    public Optional<UsernamePasswordCredentials> parseCredentials(@NonNull String authorization) {
+        return Optional.of(authorization)
+                .filter(s -> s.startsWith(PREFIX))
+                .map(s -> s.substring(PREFIX.length()))
+                .flatMap(this::decode);
     }
 
     private Optional<UsernamePasswordCredentials> decode(String credentials) {
