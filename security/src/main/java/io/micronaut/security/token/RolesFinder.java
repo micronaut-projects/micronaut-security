@@ -16,6 +16,7 @@
 package io.micronaut.security.token;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,4 +35,16 @@ public interface RolesFinder {
      */
     @Nonnull
     List<String> findInClaims(@Nonnull Claims claims);
+
+    /**
+     *
+     * @param requiredRoles The list of roles required to be authorized
+     * @param grantedRoles The list of roles granted to the user
+     * @return true if any of the granted roles is in the required roles list.
+     */
+    default boolean hasAnyRequiredRoles(List<String> requiredRoles, List<String> grantedRoles) {
+        List<String> l = new ArrayList<>(requiredRoles);
+        l.retainAll(grantedRoles);
+        return !l.isEmpty();
+    }
 }

@@ -20,9 +20,12 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.DefaultRolesFinder;
 import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
+import io.micronaut.security.token.config.TokenConfiguration;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -33,13 +36,29 @@ import java.util.Optional;
  */
 @Singleton
 public class DefaultSecurityService implements SecurityService {
+    /**
+     * @deprecated This constant is no longer used and it will be removed in the next mayor version
+     */
+    @Deprecated
+    public static final String ROLES = "roles";
 
     private final RolesFinder rolesFinder;
 
     /**
      *
-     * @param rolesFinder RolesFinder
+     * @param tokenConfiguration Token Configuration
+     * @deprecated Use {@link DefaultSecurityService( RolesFinder )} instead.
      */
+    @Deprecated
+    public DefaultSecurityService(TokenConfiguration tokenConfiguration) {
+        this(new DefaultRolesFinder(tokenConfiguration));
+    }
+
+    /**
+     *
+     * @param rolesFinder Roles Parser
+     */
+    @Inject
     public DefaultSecurityService(RolesFinder rolesFinder) {
         this.rolesFinder = rolesFinder;
     }
@@ -83,7 +102,12 @@ public class DefaultSecurityService implements SecurityService {
      */
     @Override
     public boolean hasRole(String role) {
-        return hasRole(role, rolesFinder);
+        return getAuthentication()
+                .map(Authentication::getAttributes)
+                .map(MapClaims::new)
+                .map(rolesFinder::findInClaims)
+                .map(grantedRoles -> rolesFinder.hasAnyRequiredRoles(Collections.singletonList(role), grantedRoles))
+                .orElse(false);
     }
 
     /**
@@ -92,22 +116,14 @@ public class DefaultSecurityService implements SecurityService {
      * @param role the authority to check
      * @param  rolesKey The map key to be used in the authentications attributes. E.g. "roles".
      * @return true if the current user has the authority, false otherwise
+     * @deprecated use {@link DefaultSecurityService#hasRole(String) instead}
      */
+    @Deprecated
     @Override
     public boolean hasRole(String role, String rolesKey) {
         if (role == null || rolesKey == null) {
             return false;
         }
-        return hasRole(role, new DefaultRolesFinder(rolesKey));
+        return hasRole(role);
     }
-
-    private boolean hasRole(String role, RolesFinder rolesFinder) {
-        return getAuthentication()
-                .map(Authentication::getAttributes)
-                .map(MapClaims::new)
-                .map(rolesFinder::findInClaims)
-                .map(it -> it.contains(role))
-                .orElse(false);
-    }
-
 }

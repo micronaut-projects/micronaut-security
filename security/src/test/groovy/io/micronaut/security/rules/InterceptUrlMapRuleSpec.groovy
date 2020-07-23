@@ -19,7 +19,6 @@ class InterceptUrlMapRuleSpec extends Specification {
         TokenConfiguration configuration = Mock()
 
         and: 'the expected mock behaviour'
-        (0..1) * configuration.isEnabled() >> true
         (0..1) * configuration.rolesName >> "roles"
         0 * _
 
@@ -49,7 +48,6 @@ class InterceptUrlMapRuleSpec extends Specification {
         TokenConfiguration configuration = Mock()
 
         and: 'the expected mock behaviour'
-        (0..1) * configuration.isEnabled() >> true
         (0..1) * configuration.rolesName >> "roles"
         0 * _
 

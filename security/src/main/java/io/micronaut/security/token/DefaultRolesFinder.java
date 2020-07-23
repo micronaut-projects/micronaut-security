@@ -18,7 +18,6 @@ package io.micronaut.security.token;
 import io.micronaut.security.token.config.TokenConfiguration;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,31 +31,21 @@ import java.util.List;
 @Singleton
 public class DefaultRolesFinder implements RolesFinder {
 
-    private static final String ROLES = "roles";
-    private final String rolesName;
+    private final TokenConfiguration tokenConfiguration;
 
     /**
      * Constructs a Roles Parser.
      * @param tokenConfiguration General Token Configuration
      */
-    @Inject
     public DefaultRolesFinder(TokenConfiguration tokenConfiguration) {
-        this.rolesName = tokenConfiguration.isEnabled() ? tokenConfiguration.getRolesName() : ROLES;
-    }
-
-    /**
-     * Constructs a Roles Parser.
-     * @param rolesName The claims roles name
-     */
-    public DefaultRolesFinder(String rolesName) {
-        this.rolesName = rolesName;
+        this.tokenConfiguration = tokenConfiguration;
     }
 
     @Override
     @Nonnull
     public List<String> findInClaims(@Nonnull Claims claims) {
         List<String> roles = new ArrayList<>();
-        Object rolesObject = claims.get(rolesName);
+        Object rolesObject = claims.get(tokenConfiguration.getRolesName());
         if (rolesObject != null) {
             if (rolesObject instanceof Iterable) {
                 for (Object o : ((Iterable) rolesObject)) {
