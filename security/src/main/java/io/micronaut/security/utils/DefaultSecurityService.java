@@ -103,10 +103,7 @@ public class DefaultSecurityService implements SecurityService {
     @Override
     public boolean hasRole(String role) {
         return getAuthentication()
-                .map(Authentication::getAttributes)
-                .map(MapClaims::new)
-                .map(rolesFinder::findInClaims)
-                .map(grantedRoles -> rolesFinder.hasAnyRequiredRoles(Collections.singletonList(role), grantedRoles))
+                .map(authentication -> rolesFinder.hasAnyRequiredRoles(Collections.singletonList(role), authentication))
                 .orElse(false);
     }
 

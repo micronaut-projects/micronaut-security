@@ -1,5 +1,6 @@
 package io.micronaut.security.authorization
 
+import edu.umd.cs.findbugs.annotations.NonNull
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
@@ -54,7 +55,7 @@ class SecuredRolesCaseInsensitiveViaRolesFinderReplacementSpec extends EmbeddedS
         }
 
         @Override
-        boolean hasAnyRequiredRoles(List<String> requiredRoles, List<String> grantedRoles) {
+        boolean hasAnyRequiredRoles(@NonNull List<String> requiredRoles, @NonNull List<String> grantedRoles) {
             for (String role : requiredRoles) {
                 if (grantedRoles.stream().anyMatch(grantedRole -> grantedRole.equalsIgnoreCase(role))) {
                     return true;
