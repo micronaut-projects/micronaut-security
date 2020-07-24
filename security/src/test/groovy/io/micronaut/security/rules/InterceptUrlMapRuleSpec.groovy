@@ -20,6 +20,7 @@ class InterceptUrlMapRuleSpec extends Specification {
         given:
         SecurityRule rule = new InterceptUrlMapRule(new RolesFinder() {
             @Override
+            @NonNull
             List<String> findInClaims(@NonNull Claims claims) {
                 claims.get("roles")
             }

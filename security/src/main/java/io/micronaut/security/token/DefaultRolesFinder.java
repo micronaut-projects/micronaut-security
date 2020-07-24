@@ -31,7 +31,7 @@ import java.util.List;
 @Singleton
 public class DefaultRolesFinder implements RolesFinder {
 
-    private TokenConfiguration tokenConfiguration;
+    private final TokenConfiguration tokenConfiguration;
 
     /**
      * Constructs a Roles Parser.

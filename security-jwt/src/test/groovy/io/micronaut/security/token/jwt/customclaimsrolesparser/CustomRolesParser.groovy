@@ -19,6 +19,7 @@ class CustomRolesParser implements RolesFinder {
     private static final String ROLES_KEY = "roles"
 
     @Override
+    @NonNull
     List<String> findInClaims(@NonNull Claims claims) {
         List<String> roles = []
         if (claims[REALM_ACCESS_KEY]) {
