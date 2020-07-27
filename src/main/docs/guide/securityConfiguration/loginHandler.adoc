@@ -1,0 +1,24 @@
+The api:security.handlers.LoginHandler[] API defines how to respond to a successful or failed login attempt. For example, with the <<login, Login Controller>> or with <<oauth, OAuth 2.0>> support.
+
+You can provide your own implementation of api:security.handlers.LoginHandler[]. However, Micronaut security modules ship with several implementations which you can enable by setting the configuration `micronaut.security.authentication`
+
+|===
+| Configuration Value | Required Module | Bean Registered
+
+| `cookie`
+| `micronaut-jwt`
+| api:security.token.jwt.cookie.JwtCookieLoginHandler[]
+
+| `session`
+| `micronaut-session`
+| api:security.session.SessionLoginHandler[]
+
+| `bearer`
+| `micronaut-jwt`
+| api:security.token.jwt.bearer.AccessRefreshTokenLoginHandler[]
+
+| `idtoken`
+| `micronaut-oauth`
+| api:security.oauth2.endpoint.token.response.IdTokenLoginHandler[]
+
+|===

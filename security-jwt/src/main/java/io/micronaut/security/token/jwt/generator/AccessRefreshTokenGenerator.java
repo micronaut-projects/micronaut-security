@@ -15,112 +15,30 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
-import io.micronaut.context.event.ApplicationEventPublisher;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.authentication.UserDetails;
-import io.micronaut.security.token.generator.TokenGenerator;
-import io.micronaut.security.token.jwt.event.AccessTokenGeneratedEvent;
-import io.micronaut.security.token.jwt.event.RefreshTokenGeneratedEvent;
-import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
-import io.micronaut.security.token.jwt.render.TokenRenderer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
- * Generates http responses with access and refresh token.
- *
+ * Contract to generate {@link AccessRefreshToken} for a particular user.
  * @author Sergio del Amo
- * @since 1.0
+ * @since 2.0.0
  */
-@Singleton
-public class AccessRefreshTokenGenerator {
+@DefaultImplementation(DefaultAccessRefreshTokenGenerator.class)
+public interface AccessRefreshTokenGenerator {
+    @NonNull
+    Optional<AccessRefreshToken> generate(@NonNull UserDetails userDetails);
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccessRefreshTokenGenerator.class);
+    @NonNull
+    Optional<String> generateRefreshToken(@NonNull UserDetails userDetails);
 
-    protected final ClaimsGenerator claimsGenerator;
-    protected final JwtGeneratorConfiguration jwtGeneratorConfiguration;
-    protected final TokenRenderer tokenRenderer;
-    protected final TokenGenerator tokenGenerator;
-    protected final ApplicationEventPublisher eventPublisher;
+    @NonNull
+    Optional<AccessRefreshToken> generate(@NonNull String refreshToken, @NonNull Map<String, ?> oldClaims);
 
-    /**
-     *
-     * @param jwtGeneratorConfiguration Instance of {@link JwtGeneratorConfiguration}
-     * @param tokenRenderer Instance of {@link TokenRenderer}
-     * @param tokenGenerator Intance of {@link TokenGenerator}
-     * @param claimsGenerator Claims generator
-     * @param eventPublisher The Application event publiser
-     */
-    public AccessRefreshTokenGenerator(JwtGeneratorConfiguration jwtGeneratorConfiguration,
-                                       TokenRenderer tokenRenderer,
-                                       TokenGenerator tokenGenerator,
-                                       ClaimsGenerator claimsGenerator,
-                                       ApplicationEventPublisher eventPublisher) {
-        this.jwtGeneratorConfiguration = jwtGeneratorConfiguration;
-        this.tokenRenderer = tokenRenderer;
-        this.tokenGenerator = tokenGenerator;
-        this.claimsGenerator = claimsGenerator;
-        this.eventPublisher = eventPublisher;
-    }
-
-    /**
-     * Generate an {@link AccessRefreshToken} response for the given
-     * user details.
-     *
-     * @param userDetails Authenticated user's representation.
-     * @return The http response
-     */
-    public Optional<AccessRefreshToken> generate(UserDetails userDetails) {
-
-        Optional<String> accessToken = tokenGenerator.generateToken(userDetails, jwtGeneratorConfiguration.getAccessTokenExpiration());
-        Optional<String> refreshToken = tokenGenerator.generateToken(userDetails, jwtGeneratorConfiguration.getRefreshTokenExpiration());
-        if (!accessToken.isPresent() || !refreshToken.isPresent()) {
-            if (LOG.isDebugEnabled()) {
-                if (!accessToken.isPresent()) {
-                    LOG.debug("tokenGenerator failed to generate access token for userDetails {}", userDetails.getUsername());
-                }
-                if (!refreshToken.isPresent()) {
-                    LOG.debug("tokenGenerator failed to generate refreshToken token for userDetails {}", userDetails.getUsername());
-                }
-            }
-            return Optional.empty();
-
-        }
-        AccessRefreshToken accessRefreshToken = tokenRenderer.render(userDetails, jwtGeneratorConfiguration.getAccessTokenExpiration(), accessToken.get(), refreshToken.get());
-        eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessRefreshToken.getAccessToken()));
-        eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(accessRefreshToken.getRefreshToken()));
-        return Optional.of(accessRefreshToken);
-    }
-
-    /**
-     * Generate an {@link AccessRefreshToken} response for the given
-     * refresh token and claims.
-     *
-     * @param refreshToken The refresh token
-     * @param oldClaims The claims to generate the access token
-     * @return The http response
-     */
-    public Optional<AccessRefreshToken> generate(String refreshToken, Map<String, Object> oldClaims) {
-        Map<String, Object> claims = claimsGenerator.generateClaimsSet(oldClaims, jwtGeneratorConfiguration.getAccessTokenExpiration());
-
-        Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
-        if (!optionalAccessToken.isPresent()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("tokenGenerator failed to generate access token claims: {}", claims.entrySet()
-                        .stream()
-                        .map((entry) -> entry.getKey() + "=>" + entry.getValue().toString())
-                        .collect(Collectors.joining(", ")));
-            }
-            return Optional.empty();
-        }
-        String accessToken = optionalAccessToken.get();
-        eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
-        return Optional.of(tokenRenderer.render(jwtGeneratorConfiguration.getAccessTokenExpiration(), accessToken, refreshToken));
-
-    }
+    @NonNull
+    Optional<AccessRefreshToken> generate(@NonNull String refreshToken, @NonNull UserDetails userDetails);
 }

@@ -19,7 +19,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.authentication.Authentication;
 import io.reactivex.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +41,7 @@ public class AuthenticationJWTClaimsSetAdapter implements Authentication {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Map<String, Object> getAttributes() {
         return claimSet == null ? new HashMap<>() : claimSet.getClaims();
     }

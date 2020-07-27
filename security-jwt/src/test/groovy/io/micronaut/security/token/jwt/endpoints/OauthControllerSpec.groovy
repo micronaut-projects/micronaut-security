@@ -1,88 +1,131 @@
-
 package io.micronaut.security.token.jwt.endpoints
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.nimbusds.jose.JWSObject
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.async.publisher.Publishers
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.HttpClient
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.AuthenticationException
+import io.micronaut.security.authentication.AuthenticationFailed
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
+import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.TokenValidator
+import io.micronaut.testutils.EmbeddedServerSpecification
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import org.reactivestreams.Publisher
 import spock.lang.Unroll
+import javax.inject.Singleton
+import java.security.Principal
 
-class OauthControllerSpec extends Specification {
+class OauthControllerSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    ApplicationContext context = ApplicationContext.run(
-            [
-                    'spec.name': 'endpoints',
-                    'micronaut.security.enabled': true,
-                    'micronaut.security.endpoints.login.enabled': true,
-                    'micronaut.security.endpoints.oauth.enabled': true,
-                    'micronaut.security.token.jwt.enabled': true,
-                    'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa'
-            ], Environment.TEST)
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
+                'micronaut.security.token.jwt.generator.refresh-token.secret': 'pleaseChangeThisSecretForANewOne',
+                'micronaut.security.authentication': 'bearer',
+         ] as Map<String, Object>
+    }
 
-    @Shared
-    EmbeddedServer embeddedServer = context.getBean(EmbeddedServer).start()
-
-    @Shared
-    @AutoCleanup
-    HttpClient client = context.createBean(HttpClient, embeddedServer.getURL())
+    @Override
+    String getSpecName() {
+        'OauthControllerSpec'
+    }
 
     def "can obtain a new access token using the refresh token"() {
         expect:
-        context.getBean(SignatureConfiguration.class)
-        context.getBean(SignatureConfiguration.class, Qualifiers.byName("generator"))
+        applicationContext.getBean(SignatureConfiguration.class)
+        applicationContext.getBean(SignatureConfiguration.class, Qualifiers.byName("generator"))
 
         when:
-        context.getBean(EncryptionConfiguration.class)
+        applicationContext.getBean(EncryptionConfiguration.class)
 
         then:
         thrown(NoSuchBeanException)
 
         when:
-        def creds = new UsernamePasswordCredentials('user', 'password')
-        HttpResponse rsp = client.toBlocking().exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')
+        HttpResponse<BearerAccessRefreshToken> rsp = client.exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
 
         then:
+        noExceptionThrown()
         rsp.status() == HttpStatus.OK
-        rsp.body().accessToken
-        rsp.body().refreshToken
+
+        when:
+        BearerAccessRefreshToken accessRefreshToken = rsp.body()
+
+        then:
+        accessRefreshToken.accessToken
+        accessRefreshToken.refreshToken
+
+        when: 'refresh token is a JWS'
+        JWSObject.parse(accessRefreshToken.refreshToken)
+
+        then:
+        noExceptionThrown()
+
+        when: 'it is possible to access a secured endpoint with an access token'
+        String name = client.retrieve(HttpRequest.GET('/echoname').accept(MediaType.TEXT_PLAIN).bearerAuth(accessRefreshToken.accessToken), String)
+
+        then:
+        noExceptionThrown()
+        name == 'user'
+
+        when: 'it is not possible to access a secured endpoint with a refresh token'
+        client.retrieve(HttpRequest.GET('/echoname').accept(MediaType.TEXT_PLAIN).bearerAuth(accessRefreshToken.refreshToken))
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.status == HttpStatus.UNAUTHORIZED
 
         when:
         sleep(1_000) // Sleep for one second to give time for Claims issue date to be different
-        final String originalAccessToken = rsp.body().accessToken
-        String refreshToken = rsp.body().refreshToken
-        def tokenRefreshReq = new TokenRefreshRequest("refresh_token", refreshToken)
-        HttpResponse refreshRsp = client.toBlocking().exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), AccessRefreshToken)
+        String originalAccessToken = accessRefreshToken.accessToken
+        String refreshToken = accessRefreshToken.refreshToken
+        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(refreshToken)
+        HttpResponse<BearerAccessRefreshToken> refreshRsp = client.exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), BearerAccessRefreshToken)
 
         then:
+        noExceptionThrown()
         refreshRsp.status() == HttpStatus.OK
-        refreshRsp.body().accessToken
-        and:
-        refreshRsp.body().accessToken != originalAccessToken
 
         when:
-        TokenValidator tokenValidator = context.getBean(JwtTokenValidator.class)
-        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(refreshRsp.body().accessToken)).blockingFirst().getAttributes()
-        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(originalAccessToken)).blockingFirst().getAttributes()
+        accessRefreshToken = refreshRsp.body()
+
+        then:
+        accessRefreshToken.accessToken
+        accessRefreshToken.accessToken != originalAccessToken
+
+        when:
+        TokenValidator tokenValidator = applicationContext.getBean(JwtTokenValidator.class)
+        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(refreshRsp.body().accessToken, null)).blockingFirst().getAttributes()
+        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(originalAccessToken, null)).blockingFirst().getAttributes()
         List<String> expectedClaims = [JwtClaims.SUBJECT,
                                        JwtClaims.ISSUED_AT,
                                        JwtClaims.EXPIRATION_TIME,
@@ -98,22 +141,159 @@ class OauthControllerSpec extends Specification {
         originalAccessTokenClaims.get(JwtClaims.ISSUED_AT) != newAccessTokenClaims.get(JwtClaims.ISSUED_AT)
         originalAccessTokenClaims.get(JwtClaims.EXPIRATION_TIME) != newAccessTokenClaims.get(JwtClaims.EXPIRATION_TIME)
         originalAccessTokenClaims.get(JwtClaims.NOT_BEFORE) != newAccessTokenClaims.get(JwtClaims.NOT_BEFORE)
+
+        cleanup:
+        applicationContext.getBean(InMemoryRefreshTokenPersistence).tokens.clear()
+    }
+
+    void "trying to get a new access token with an unsigned refresh token throws exception"() {
+        given:
+        String refreshToken = 'XXX'
+
+        when:
+        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(refreshToken)
+        Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
+        Argument<CustomErrorResponse> errorType = Argument.of(CustomErrorResponse)
+        client.exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), bodyType, errorType)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.response.status() == HttpStatus.BAD_REQUEST
+
+        when:
+        Optional<CustomErrorResponse> errorResponseOptional = e.response.getBody(CustomErrorResponse)
+
+        then:
+        errorResponseOptional.isPresent()
+
+        when:
+        CustomErrorResponse errorResponse = errorResponseOptional.get()
+
+        then:
+        errorResponse.error
+        errorResponse.error == 'invalid_grant'
+        errorResponse.errorDescription == 'Refresh token is invalid'
+    }
+
+    void "grant_type other than refresh_token returns 400 with {\"error\": \"unsupported_grant_type\"...}"() {
+        given:
+        HttpRequest request = HttpRequest.POST('/oauth/access_token', new TokenRefreshRequest("foo", "XXX"))
+
+        when:
+        Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
+        Argument<CustomErrorResponse> errorType = Argument.of(CustomErrorResponse)
+        client.exchange(request, bodyType, errorType)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.response.status() == HttpStatus.BAD_REQUEST
+
+        when:
+        Optional<CustomErrorResponse> errorResponseOptional = e.response.getBody(CustomErrorResponse)
+
+        then:
+        errorResponseOptional.isPresent()
+
+        when:
+        CustomErrorResponse errorResponse = errorResponseOptional.get()
+
+        then:
+        errorResponse.error
+        errorResponse.error == 'unsupported_grant_type'
+        errorResponse.errorDescription == 'grant_type must be refresh_token'
     }
 
     @Unroll
-    def "grantType: #grantType refreshToken: #refreshToken is invalid"(String grantType, String refreshToken) {
+    void "missing #paramName returns 400 with {\"error\": \"invalid_request\"...}"(String grantType, String refreshToken, String paramName) {
+        given:
+        HttpRequest request = HttpRequest.POST('/oauth/access_token', new TokenRefreshRequest(grantType, refreshToken))
+
         when:
-        client.toBlocking().exchange(HttpRequest.POST('/oauth/access_token',
-                new TokenRefreshRequest(grantType, refreshToken)))
+        Argument<AccessRefreshToken> bodyType =  Argument.of(AccessRefreshToken)
+        Argument<CustomErrorResponse> errorType =  Argument.of(CustomErrorResponse)
+        client.exchange(request, bodyType, errorType)
 
         then:
-        def e = thrown(HttpClientResponseException)
+        HttpClientResponseException e = thrown()
         e.response.status() == HttpStatus.BAD_REQUEST
 
+        when:
+        Optional<CustomErrorResponse> errorResponseOptional = e.response.getBody(CustomErrorResponse)
+
+        then:
+        errorResponseOptional.isPresent()
+
+        when:
+        CustomErrorResponse errorResponse = errorResponseOptional.get()
+
+        then:
+        errorResponse.error
+        errorResponse.error == 'invalid_request'
+        errorResponse.errorDescription == 'refresh_token and grant_type are required'
+
         where:
-        grantType        | refreshToken
-        null             | "XXXX"
-        'foo'            | "XXXX"
-        'refresh_token'  | null
+        grantType       | refreshToken
+        'refresh_token' | null
+        null            | 'XXXX'
+
+        paramName = grantType == null ? 'grant_type' : (refreshToken == null ? 'refresh_token': '')
+    }
+
+    @Requires(property = 'spec.name', value = 'OauthControllerSpec')
+    @Controller("/echoname")
+    static class EchoNameController {
+
+        @Produces(MediaType.TEXT_PLAIN)
+        @Secured(SecurityRule.IS_AUTHENTICATED)
+        @Get
+        String index(Principal principal) {
+            principal.name
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'OauthControllerSpec')
+    @Singleton
+    static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
+
+        Map<String, UserDetails> tokens = [:]
+
+        @Override
+        void persistToken(RefreshTokenGeneratedEvent event) {
+            tokens.put(event.getRefreshToken(), event.getUserDetails())
+        }
+
+        @Override
+        Publisher<UserDetails> getUserDetails(String refreshToken) {
+            Publishers.just(tokens.get(refreshToken))
+        }
+    }
+
+    @Singleton
+    @Requires(property = 'spec.name', value = 'OauthControllerSpec')
+    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            Flowable.create({emitter ->
+                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
+                    emitter.onNext(new UserDetails('user', []))
+                    emitter.onComplete()
+                } else {
+                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                }
+
+            }, BackpressureStrategy.ERROR)
+        }
+    }
+
+    @Introspected
+    static class CustomErrorResponse {
+        String error
+
+        @JsonProperty("error_description")
+        String errorDescription
+
+        @JsonProperty("error_uri")
+        String errorUri
     }
 }

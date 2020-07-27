@@ -19,10 +19,8 @@ class JwksSpec extends Specification implements YamlAsciidocTagCleaner {
 #tag::yamlconfig[]
 micronaut:
   security:
-    enabled: true
     token:
       jwt:
-        enabled: true
         signatures:
           jwks:
             awscognito: 
@@ -37,10 +35,8 @@ micronaut:
     Map<String, Object> configMap = [
             'micronaut': [
                     'security': [
-                            'enabled': true,
                             'token': [
                                     'jwt': [
-                                            'enabled': true,
                                             'signatures': [
                                                     'jwks': [
                                                             'awscognito': [

@@ -1,12 +1,14 @@
-
 package io.micronaut.docs.security.session
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
@@ -16,11 +18,15 @@ import javax.inject.Singleton
 @Singleton
 class AuthenticationProviderUserPassword implements AuthenticationProvider  {
     @Override
-    Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
-        if ( authenticationRequest.getIdentity().equals("sherlock") &&
-                authenticationRequest.getSecret().equals("password") ) {
-            return Flowable.just(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
-        }
-        return Flowable.just(new AuthenticationFailed())
+    Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+        Flowable.create({ emitter ->
+            if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "password") {
+                emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
+                emitter.onComplete()
+            } else {
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+            }
+
+        }, BackpressureStrategy.ERROR)
     }
 }

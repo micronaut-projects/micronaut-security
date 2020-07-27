@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
 
 import com.nimbusds.jwt.JWT;
@@ -29,13 +29,12 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
-import io.micronaut.security.token.jwt.validator.JwtTokenValidatorUtils;
+import io.micronaut.security.token.jwt.validator.JwtValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -78,9 +77,10 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         if (LOG.isTraceEnabled()) {
             LOG.trace("Validating the JWT signature using the JWKS uri [{}]", openIdProviderMetadata.getJwksUri());
         }
-        Optional<JWT> jwt = JwtTokenValidatorUtils.parseJwtIfValidSignature(openIdTokenResponse.getIdToken(),
-                Collections.singletonList(new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator)),
-                Collections.emptyList());
+        Optional<JWT> jwt = JwtValidator.builder()
+                .withSignatures(new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator))
+                .build()
+                .validate(openIdTokenResponse.getIdToken());
 
         if (jwt.isPresent()) {
             try {

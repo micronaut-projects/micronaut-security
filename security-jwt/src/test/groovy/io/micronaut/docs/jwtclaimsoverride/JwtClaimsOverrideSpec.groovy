@@ -1,4 +1,3 @@
-
 package io.micronaut.docs.jwtclaimsoverride
 
 import io.micronaut.context.ApplicationContext
@@ -14,43 +13,41 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.validator.TokenValidator
+import io.micronaut.testutils.EmbeddedServerSpecification
 import io.reactivex.Flowable
 import spock.lang.AutoCleanup
 import spock.lang.Shared
-import spock.lang.Specification
 
-class JwtClaimsOverrideSpec extends Specification {
+class JwtClaimsOverrideSpec extends EmbeddedServerSpecification {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'jwtclaimsoverride',
-            'micronaut.security.enabled': true,
-            'micronaut.security.endpoints.login.enabled': true,
-            'micronaut.security.token.jwt.enabled': true,
-            'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne'
-    ], Environment.TEST)
+    @Override
+    String getSpecName() {
+        'jwtclaimsoverride'
+    }
 
-    @Shared
-    @AutoCleanup
-    HttpClient client = HttpClient.create(embeddedServer.URL)
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
+                'micronaut.security.authentication': 'bearer',
+        ]
+    }
 
     void 'customize JWT claims'() {
         when:
         HttpRequest request = HttpRequest.create(HttpMethod.POST, '/login')
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(new UsernamePasswordCredentials('sherlock', 'elementary')) // <4>
-        HttpResponse<AccessRefreshToken> rsp = client.toBlocking().exchange(request, AccessRefreshToken)
+        HttpResponse<AccessRefreshToken> rsp = client.exchange(request, AccessRefreshToken)
 
         then:
         rsp.status.code == 200
         rsp.body.isPresent()
         rsp.body.get().accessToken
-        rsp.body.get().refreshToken
+        !rsp.body.get().refreshToken
 
         when:
         String accessToken = rsp.body.get().accessToken
-        Authentication authentication = Flowable.fromPublisher(tokenValidator.validateToken(accessToken)).blockingFirst()
+        Authentication authentication = Flowable.fromPublisher(tokenValidator.validateToken(accessToken, null)).blockingFirst()
         println authentication.getAttributes()
 
         then:

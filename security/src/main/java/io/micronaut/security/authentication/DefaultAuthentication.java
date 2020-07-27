@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javax.annotation.concurrent.Immutable;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class DefaultAuthentication implements Authentication {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Map<String, Object> getAttributes() {
         return new HashMap<>(attributes);
     }

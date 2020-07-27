@@ -1,4 +1,4 @@
-When you turn on security, <<providedEndpoints, Built-in endpoints>> are secured depending on their sensitive value.
+When you turn on security, https://docs.micronaut.io/latest/guide/index.html#providedEndpoints[Built-in endpoints] are secured depending on their sensitive value.
 
 [source, yaml]
 ----

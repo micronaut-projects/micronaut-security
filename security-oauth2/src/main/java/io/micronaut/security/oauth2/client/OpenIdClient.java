@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
 
 import java.util.Optional;
@@ -45,5 +45,5 @@ public interface OpenIdClient extends OauthClient {
      * @param authentication The current authentication
      * @return An optional response
      */
-    Optional<HttpResponse> endSessionRedirect(HttpRequest request, Authentication authentication);
+    Optional<MutableHttpResponse<?>> endSessionRedirect(HttpRequest<?> request, Authentication authentication);
 }

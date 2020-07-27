@@ -18,7 +18,6 @@ package io.micronaut.security.rules;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.security.token.config.TokenConfiguration;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,18 +38,6 @@ public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
     public static final Integer ORDER = SensitiveEndpointRule.ORDER - 100;
 
     private final List<InterceptUrlMapPattern> patternList;
-
-    /**
-     * @deprecated use {@link #ConfigurationInterceptUrlMapRule(RolesFinder, SecurityConfiguration)} instead.
-     * @param tokenConfiguration The Token Configuration
-     * @param securityConfiguration The Security Configuration
-     */
-    @Deprecated
-    public ConfigurationInterceptUrlMapRule(TokenConfiguration tokenConfiguration,
-                                            SecurityConfiguration securityConfiguration) {
-        super(tokenConfiguration);
-        this.patternList = securityConfiguration.getInterceptUrlMap();
-    }
 
      /**
      *

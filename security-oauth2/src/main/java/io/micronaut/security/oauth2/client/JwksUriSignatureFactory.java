@@ -19,13 +19,15 @@ import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Provider;
 
 /**
@@ -44,11 +46,12 @@ public class JwksUriSignatureFactory {
      * @param jwkValidator JWK Validator
      * @return a {@link JwksSignature} pointed to the jwks_uri exposed via OpenID configuration
      */
+    @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
     @EachBean(DefaultOpenIdProviderMetadata.class)
     public JwksSignature createJwksUriSignature(@Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
-                                                   JwkValidator jwkValidator) {
+                                                JwkValidator jwkValidator) {
         return new JwksSignature(new JwksSignatureConfiguration() {
-            @Nonnull
+            @NonNull
             @Override
             public String getUrl() {
                 return openIdProviderMetadata.get().getJwksUri();

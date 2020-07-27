@@ -1,5 +1,5 @@
-As illustrated below, you can use link:{api}/io/micronaut/security/annotation/Secured.html[Secured] annotation to configure
-access at link:{api}/io/micronaut/http/annotation/Controller.html[Controller] or Controller's Action level.
+As illustrated below, you can use the ann:security.annotation.Secured[] annotation to control
+access to controllers or controller methods.
 
 [source, groovy]
 ----
@@ -10,7 +10,11 @@ include::{testssecurity}/security/securityRule/secured/ExampleController.java[ta
 <2> Users granted role `ROLE_ADMIN` or `ROLE_X` roles can access `withroles` Controller's action.
 <3> Anonymous users (authenticated and not authenticated users) can access `anonymous` Controller's action.
 
-Alternatively, you could use https://jcp.org/en/jsr/detail?id=250[JSR_250] annotations (`javax.annotation.security.PermitAll`, `javax.annotation.security.RolesAllowed`, `javax.annotation.security.DenyAll`):
+Alternatively, you can use https://jcp.org/en/jsr/detail?id=250[JSR_250] annotations:
+
+* `javax.annotation.security.PermitAll`
+* `javax.annotation.security.RolesAllowed`
+* `javax.annotation.security.DenyAll`
 
 [source, java]
 ----
@@ -19,4 +23,6 @@ include::{testssecurity}/security/securityRule/permitall/ExampleController.java[
 
 <1> Users granted role `ROLE_ADMIN` or `ROLE_X` roles can access `withroles` Controller's action.
 <2> Anonymous users (authenticated and not authenticated users) can access `anonymous` Controller's action.
+
+NOTE: The use of JSR 250 annotations requires `io.micronaut.security:micronaut-security-annotations` to be in the annotation processor classpath (`annotationProcessor`, `kapt`, `compileOnly`) respectively for Java, Kotlin, Groovy.
 

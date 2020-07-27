@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -41,7 +41,7 @@ public class Address {
     private String country;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public Address() {
 

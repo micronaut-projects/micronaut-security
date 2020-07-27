@@ -16,13 +16,11 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.Optional;
 
 /**
@@ -31,7 +29,6 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.2.0
  */
-@Requires(property = OauthConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(OauthConfigurationProperties.PREFIX)
 public class OauthConfigurationProperties implements OauthConfiguration {
 
@@ -41,7 +38,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
     private static final String DEFAULT_LOGIN = "/oauth/login{/provider}";
     private static final String DEFAULT_CALLBACK = "/oauth/callback{/provider}";
 
@@ -67,7 +64,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getLoginUri() {
         return loginUri;
     }
@@ -78,12 +75,12 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      *
      * @param loginUri The Login uri
      */
-    public void setLoginUri(@Nonnull String loginUri) {
+    public void setLoginUri(@NonNull String loginUri) {
         this.loginUri = loginUri;
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getCallbackUri() {
         return callbackUri;
     }
@@ -109,27 +106,27 @@ public class OauthConfigurationProperties implements OauthConfiguration {
      *
      * @param callbackUri The callback Uri
      */
-    public void setCallbackUri(@Nonnull String callbackUri) {
+    public void setCallbackUri(@NonNull String callbackUri) {
         this.callbackUri = callbackUri;
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public OpenIdConfiguration getOpenid() {
         return openid;
     }
 
     /**
-     * The OpenID configuration
+     * The OpenID configuration.
      *
      * @param openid The OpenID configuration
      */
-    public void setOpenid(@Nonnull OpenIdConfigurationProperties openid) {
+    public void setOpenid(@NonNull OpenIdConfigurationProperties openid) {
         this.openid = openid;
     }
 
     /**
-     * OpenID configuration
+     * OpenID configuration.
      */
     @ConfigurationProperties("openid")
     public static class OpenIdConfigurationProperties implements OpenIdConfiguration {
@@ -163,7 +160,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         }
 
         /**
-         * The end session configuration
+         * The end session configuration.
          *
          * @param endSession The end session configuration
          */
@@ -198,7 +195,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
         }
 
         /**
-         * End session configuration
+         * End session configuration.
          */
         @ConfigurationProperties("end-session")
         public static class EndSessionConfigurationProperties implements EndSessionConfiguration {
@@ -208,7 +205,7 @@ public class OauthConfigurationProperties implements OauthConfiguration {
             private String redirectUri = DEFAULT_REDIRECT_URI;
 
             @Override
-            @Nonnull
+            @NonNull
             public String getRedirectUri() {
                 return redirectUri;
             }

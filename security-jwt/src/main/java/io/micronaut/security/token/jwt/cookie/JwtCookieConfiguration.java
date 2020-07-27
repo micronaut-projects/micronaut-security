@@ -15,31 +15,37 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
-import io.micronaut.core.util.Toggleable;
-import io.micronaut.http.cookie.CookieConfiguration;
+import io.micronaut.security.config.TokenCookieConfiguration;
 
 /**
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-public interface JwtCookieConfiguration extends CookieConfiguration, Toggleable {
+public interface JwtCookieConfiguration extends TokenCookieConfiguration {
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after a successful login.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getLoginSuccess()} instead.
      */
+    @Deprecated
     String getLoginSuccessTargetUrl();
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after logout.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getLogout()} instead.
      */
+    @Deprecated
     String getLogoutTargetUrl();
 
     /**
      *
      * @return String to be parsed into a URI which represents where the user is redirected to after a failed login.
+     * @deprecated Use {@link io.micronaut.security.config.RedirectConfiguration#getLoginFailure()} instead.
      */
+    @Deprecated
     String getLoginFailureTargetUrl();
+
 }

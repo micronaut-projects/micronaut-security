@@ -109,7 +109,6 @@ public class SecretEncryption extends AbstractEncryptionConfiguration {
         return new String(secret, UTF_8);
     }
 
-
     /**
      * Sets secret byte[] with a string with UTF_8 charset.
      * @param secret UTF_8 string

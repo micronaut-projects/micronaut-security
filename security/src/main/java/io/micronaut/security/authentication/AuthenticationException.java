@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.authentication;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
+
 /**
  * A runtime exception thrown when authentication fails.
  *
@@ -23,6 +25,8 @@ package io.micronaut.security.authentication;
  */
 public class AuthenticationException extends RuntimeException {
 
+    private final AuthenticationResponse response;
+
     /**
      * Sets the message based on the response.
      *
@@ -30,6 +34,7 @@ public class AuthenticationException extends RuntimeException {
      */
     public AuthenticationException(AuthenticationResponse response) {
         super(response.getMessage().orElse(null));
+        this.response = response;
     }
 
     /**
@@ -37,6 +42,7 @@ public class AuthenticationException extends RuntimeException {
      */
     public AuthenticationException() {
         super();
+        response = null;
     }
 
     /**
@@ -44,5 +50,14 @@ public class AuthenticationException extends RuntimeException {
      */
     public AuthenticationException(String message) {
         super(message);
+        response = null;
+    }
+
+    /**
+     * @return The authentication response, or null if the exception is not tied to a response
+     */
+    @Nullable
+    public AuthenticationResponse getResponse() {
+        return response;
     }
 }

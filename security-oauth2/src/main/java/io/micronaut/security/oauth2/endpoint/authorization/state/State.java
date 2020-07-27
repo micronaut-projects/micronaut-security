@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.net.URI;
 
 /**
@@ -31,12 +31,13 @@ public interface State {
      * @return The URI that was redirected from
      */
     @Nullable
+    @Deprecated
     URI getOriginalUri();
 
     /**
      * @return A nonce value
      */
-    @Nonnull
+    @NonNull
     String getNonce();
 
     /**

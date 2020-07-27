@@ -26,7 +26,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  * @author Sergio del Amo
  * @since 1.1.0
  */
-@Requires(property = KeysControllerConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
+@Requires(property = KeysControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(KeysControllerConfigurationProperties.PREFIX)
 public class KeysControllerConfigurationProperties implements KeysControllerConfiguration {
 
@@ -36,7 +36,7 @@ public class KeysControllerConfigurationProperties implements KeysControllerConf
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
 
     /**
      * The default path.

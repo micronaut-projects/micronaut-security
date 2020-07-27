@@ -17,12 +17,16 @@ package io.micronaut.security.utils;
 
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.DefaultRolesFinder;
+import io.micronaut.security.token.MapClaims;
+import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.Optional;
-import java.util.Collection;
 
 /**
  * Default implementation of {@link io.micronaut.security.utils.SecurityService}. It uses {@link ServerRequestContext#currentRequest()} to retrieve the {@link io.micronaut.security.authentication.Authentication} object if any.
@@ -32,16 +36,31 @@ import java.util.Collection;
  */
 @Singleton
 public class DefaultSecurityService implements SecurityService {
-
+    /**
+     * @deprecated This constant is no longer used and it will be removed in the next mayor version
+     */
+    @Deprecated
     public static final String ROLES = "roles";
-    private final TokenConfiguration tokenConfiguration;
+
+    private final RolesFinder rolesFinder;
 
     /**
      *
      * @param tokenConfiguration Token Configuration
+     * @deprecated Use {@link DefaultSecurityService( RolesFinder )} instead.
      */
+    @Deprecated
     public DefaultSecurityService(TokenConfiguration tokenConfiguration) {
-        this.tokenConfiguration = tokenConfiguration;
+        this(new DefaultRolesFinder(tokenConfiguration));
+    }
+
+    /**
+     *
+     * @param rolesFinder Roles Parser
+     */
+    @Inject
+    public DefaultSecurityService(RolesFinder rolesFinder) {
+        this.rolesFinder = rolesFinder;
     }
 
     /**
@@ -83,7 +102,9 @@ public class DefaultSecurityService implements SecurityService {
      */
     @Override
     public boolean hasRole(String role) {
-        return hasRole(role, tokenConfiguration.isEnabled() ? tokenConfiguration.getRolesName() : ROLES);
+        return getAuthentication()
+                .map(authentication -> rolesFinder.hasAnyRequiredRoles(Collections.singletonList(role), authentication))
+                .orElse(false);
     }
 
     /**
@@ -92,23 +113,14 @@ public class DefaultSecurityService implements SecurityService {
      * @param role the authority to check
      * @param  rolesKey The map key to be used in the authentications attributes. E.g. "roles".
      * @return true if the current user has the authority, false otherwise
+     * @deprecated use {@link DefaultSecurityService#hasRole(String) instead}
      */
+    @Deprecated
     @Override
     public boolean hasRole(String role, String rolesKey) {
         if (role == null || rolesKey == null) {
             return false;
         }
-        return getAuthentication().map(authentication -> {
-            if (authentication.getAttributes() != null && authentication.getAttributes().containsKey(rolesKey)) {
-                Object authorities = authentication.getAttributes().get(rolesKey);
-                if (authorities instanceof Collection) {
-                    return ((Collection) authorities).contains(role);
-                } else if (authorities instanceof String) {
-                    return ((String) authorities).equalsIgnoreCase(role);
-                }
-            }
-            return false;
-        }).orElse(false);
+        return hasRole(role);
     }
-
 }

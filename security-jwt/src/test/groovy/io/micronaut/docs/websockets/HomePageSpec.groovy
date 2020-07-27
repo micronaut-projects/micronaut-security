@@ -1,42 +1,36 @@
 package io.micronaut.docs.websockets
 
-import geb.Browser
-import io.micronaut.context.ApplicationContext
-import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import spock.lang.AutoCleanup
-import spock.lang.Requires
-import spock.lang.Shared
-import spock.lang.Specification
+import io.micronaut.testutils.GebEmbeddedServerSpecification
 import spock.util.concurrent.PollingConditions
 
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-class HomePageSpec extends Specification {
+class HomePageSpec extends GebEmbeddedServerSpecification {
 
-    @Shared
-    Map<String, Object> conf = [
-            'spec.name': 'websockets',
-            'micronaut.security.enabled': true,
-            'micronaut.security.intercept-url-map': [
-                    [
-                            pattern: '/assets/*',
-                            ('http-method'): 'GET',
-                            'access': ['isAnonymous()']
-                    ]
-            ],
-            'micronaut.security.token.jwt.enabled': true,
-            'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
-            'micronaut.router.static-resources.default.enabled': true,
-            'micronaut.router.static-resources.default.mapping': '/assets/**',
-            'micronaut.router.static-resources.default.paths': ['classpath:websockets'],
-    ]
+    @Override
+    String getSpecName() {
+        'websockets'
+    }
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, conf)
+    @Override
+    Map<String, Object> getConfiguration() {
+        super.configuration + [
+                'micronaut.security.intercept-url-map'                           : [
+                        [
+                                pattern        : '/assets/*',
+                                ('http-method'): 'GET',
+                                'access'       : ['isAnonymous()']
+                        ]
+                ],
+                'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
+                'micronaut.router.static-resources.default.enabled'              : true,
+                'micronaut.router.static-resources.default.mapping'              : '/assets/**',
+                'micronaut.router.static-resources.default.paths'                : ['classpath:websockets'],
+        ]
+    }
 
     Optional<String> generateJwt(TokenGenerator tokenGenerator) {
         LocalDateTime time = LocalDateTime.now()
@@ -51,7 +45,6 @@ class HomePageSpec extends Specification {
 
     def "check websocket connects"() {
         given:
-        Browser browser = new Browser()
         browser.baseUrl = embeddedServer.URL.toString()
 
         expect:

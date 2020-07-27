@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.configuration;
 
 /**
- * Configuration to determine if a claim validation is enabled
+ * Configuration to determine if a claim validation is enabled.
  *
  * @author Sergio del Amo
  * @since 1.2.0

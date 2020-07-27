@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.config;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
@@ -35,16 +36,13 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
-    /**
-     * The default roles name.
-     * @deprecated Use {@link TokenConfiguration#DEFAULT_ROLES_NAME} instead
-     */
-    @SuppressWarnings("WeakerAccess")
-    @Deprecated
-    public static final String DEFAULT_ROLES_NAME = TokenConfiguration.DEFAULT_ROLES_NAME;
-
     private boolean enabled = DEFAULT_ENABLED;
+
+    @NonNull
     private String rolesName = TokenConfiguration.DEFAULT_ROLES_NAME;
+
+    @NonNull
+    private String nameKey = TokenConfiguration.DEFAULT_NAME_KEY;
 
     @Override
     public boolean isEnabled() {
@@ -57,6 +55,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
      * If not specified, defaults to {@link #DEFAULT_ROLES_NAME}.
      */
     @Override
+    @NonNull
     public String getRolesName() {
         return rolesName;
     }
@@ -71,12 +70,30 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     }
 
     /**
-     * Name of the roles property. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME}.
+     * {@link io.micronaut.security.authentication.Authentication} attributes map key for the user's roles. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME}.
      * @param rolesName The roles name
      */
-    public void setRolesName(String rolesName) {
+    public void setRolesName(@NonNull String rolesName) {
         if (StringUtils.isNotEmpty(rolesName)) {
             this.rolesName = rolesName;
         }
+    }
+
+    /**
+     * @see TokenConfiguration#getNameKey()
+     * If not specified, defaults to {@link #DEFAULT_NAME_KEY}.
+     */
+    @Override
+    @NonNull
+    public String getNameKey() {
+        return nameKey;
+    }
+
+    /**
+     * {@link io.micronaut.security.authentication.Authentication} attributes map key for the user's name. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_NAME_KEY}.
+     * @param nameKey key for name
+     */
+    public void setNameKey(@NonNull String nameKey) {
+        this.nameKey = nameKey;
     }
 }

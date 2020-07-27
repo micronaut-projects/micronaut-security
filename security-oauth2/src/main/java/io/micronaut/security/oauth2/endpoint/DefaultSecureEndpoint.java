@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,14 +35,14 @@ public class DefaultSecureEndpoint implements SecureEndpoint {
      * @param url The endpoint URL
      * @param supportedAuthenticationMethods The endpoint authentication methods
      */
-    public DefaultSecureEndpoint(@Nonnull String url,
+    public DefaultSecureEndpoint(@NonNull String url,
                                  @Nullable List<AuthenticationMethod> supportedAuthenticationMethods) {
         this.url = url;
         this.supportedAuthenticationMethods = supportedAuthenticationMethods;
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String getUrl() {
         return url;
     }

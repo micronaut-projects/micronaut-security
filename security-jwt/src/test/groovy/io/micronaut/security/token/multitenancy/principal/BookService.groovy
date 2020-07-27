@@ -1,4 +1,3 @@
-
 package io.micronaut.security.token.multitenancy.principal
 
 import io.micronaut.context.annotation.Requires

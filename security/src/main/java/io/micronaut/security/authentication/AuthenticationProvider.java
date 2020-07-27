@@ -18,6 +18,8 @@ package io.micronaut.security.authentication;
 import io.micronaut.http.HttpRequest;
 import org.reactivestreams.Publisher;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
+
 /**
  * Defines an authentication provider.
  *
@@ -31,22 +33,13 @@ public interface AuthenticationProvider {
      * Authenticates a user with the given request. If a successful authentication is
      * returned, the object must be an instance of {@link UserDetails}.
      *
-     * @param authenticationRequest The request to authenticate
-     * @return A publisher that emits 0 or 1 responses
-     * @deprecated Use {@link #authenticate(HttpRequest, AuthenticationRequest)} instead.
-     */
-    @Deprecated
-    Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest);
-
-    /**
-     * Authenticates a user with the given request. If a successful authentication is
-     * returned, the object must be an instance of {@link UserDetails}.
+     * Publishers <b>MUST emit cold observables</b>! This method will be called for
+     * all authenticators for each authentication request and it is assumed no work
+     * will be done until the publisher is subscribed to.
      *
-     * @param request The HTTP request
-     * @param authenticationRequest The request to authenticate
+     * @param httpRequest The http request
+     * @param authenticationRequest The credentials to authenticate
      * @return A publisher that emits 0 or 1 responses
      */
-    default Publisher<AuthenticationResponse> authenticate(HttpRequest<?> request, AuthenticationRequest<?, ?> authenticationRequest) {
-        return authenticate(authenticationRequest);
-    }
+    Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest);
 }

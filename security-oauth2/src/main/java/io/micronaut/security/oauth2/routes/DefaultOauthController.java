@@ -21,11 +21,11 @@ import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
-import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.reactivex.Flowable;
@@ -47,7 +47,7 @@ public class DefaultOauthController implements OauthController {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthController.class);
 
     private final OauthClient oauthClient;
-    private final LoginHandler loginHandler;
+    private final RedirectingLoginHandler loginHandler;
     private final ApplicationEventPublisher eventPublisher;
 
     /**
@@ -69,7 +69,7 @@ public class DefaultOauthController implements OauthController {
     }
 
     @Override
-    public Publisher<HttpResponse> login(HttpRequest request) {
+    public Publisher<MutableHttpResponse<?>> login(HttpRequest<?> request) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received login request for provider [{}]", oauthClient.getName());
         }
@@ -77,15 +77,15 @@ public class DefaultOauthController implements OauthController {
     }
 
     @Override
-    public Publisher<HttpResponse> callback(HttpRequest<Map<String, Object>> request) {
+    public Publisher<MutableHttpResponse<?>> callback(HttpRequest<Map<String, Object>> request) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());
         }
         Publisher<AuthenticationResponse> authenticationResponse = oauthClient.onCallback(request);
         return Flowable.fromPublisher(authenticationResponse).map(response -> {
 
-            if (response.isAuthenticated()) {
-                UserDetails userDetails = (UserDetails) response;
+            if (response.isAuthenticated() && response.getUserDetails().isPresent()) {
+                UserDetails userDetails = response.getUserDetails().get();
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Authentication succeeded. User [{}] is now logged in", userDetails.getUsername());
                 }
@@ -96,7 +96,7 @@ public class DefaultOauthController implements OauthController {
                     LOG.trace("Authentication failed: {}", response.getMessage().orElse("unknown reason"));
                 }
                 eventPublisher.publishEvent(new LoginFailedEvent(response));
-                return loginHandler.loginFailed(response);
+                return loginHandler.loginFailed(response, request);
             }
         }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
 

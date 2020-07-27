@@ -1,4 +1,3 @@
-
 package io.micronaut.security.token.views
 
 import io.micronaut.context.ApplicationContext
@@ -15,7 +14,6 @@ class SecurityViewModelProcessorSpec extends Specification {
     def "if micronaut.security.views-model-decorator.enabled=true SecurityViewsModelDecorator bean exists"() {
         given:
         ApplicationContext applicationContext = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.views-model-decorator.enabled': false,
         ])
 
@@ -28,9 +26,7 @@ class SecurityViewModelProcessorSpec extends Specification {
 
     def "by default SecurityViewsModelDecorator bean exists"() {
         given:
-        ApplicationContext applicationContext = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-        ])
+        ApplicationContext applicationContext = ApplicationContext.run()
 
         expect:
         applicationContext.containsBean(SecurityViewModelProcessor)
@@ -43,7 +39,6 @@ class SecurityViewModelProcessorSpec extends Specification {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name': 'SecurityViewModelProcessorSpec',
-                'micronaut.security.enabled': true,
                 'micronaut.security.views-model-decorator.security-key': 'securitycustom',
                 'micronaut.views.handlebars.enabled': false,
                 'micronaut.views.thymeleaf.enabled': false,
@@ -92,7 +87,6 @@ class SecurityViewModelProcessorSpec extends Specification {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name': 'SecurityViewModelProcessorSpec',
-                'micronaut.security.enabled': true,
                 'micronaut.views.handlebars.enabled': false,
                 'micronaut.views.thymeleaf.enabled': false,
                 'micronaut.views.velocity.enabled': true,

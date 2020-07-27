@@ -28,7 +28,7 @@ import java.util.Optional;
 public interface ProviderResolver {
 
     /**
-     * Resolves the provider
+     * Resolves the provider.
      *
      * @param authentication The authentication
      * @return An optional provider name

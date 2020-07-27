@@ -1,15 +1,32 @@
-
 package io.micronaut.security.rules
 
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.config.SecurityConfigurationProperties
+import io.micronaut.security.token.DefaultRolesFinder
+import io.micronaut.security.token.RolesFinder
 import io.micronaut.security.token.config.TokenConfiguration
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
 class ConfigurationInterceptUrlMapRuleSpec extends Specification {
+
+    @Shared
+    TokenConfiguration tokenConfiguration = new TokenConfiguration() {
+        @Override
+        String getRolesName() {
+            'roles'
+        }
+
+        @Override
+        String getNameKey() {
+            'username'
+        }
+    }
+    @Shared
+    RolesFinder rolesFinder = new DefaultRolesFinder(tokenConfiguration)
 
     @Unroll('#description')
     def "verify behaviour different intercept url map configurations"(SecurityRuleResult securityRuleResult, List<InterceptUrlMapPattern> interceptUrlMap, String description) {
@@ -21,7 +38,7 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
             getUri() >> new URI('/books')
             getMethod() >> HttpMethod.GET
         }
-        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(Mock(TokenConfiguration), securityConfiguration)
+        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration)
 
         expect:
         provider.check(request, null, null) == securityRuleResult
@@ -36,7 +53,7 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
     @Unroll("comparing required: #requiredRoles and granted should return #description")
     def 'verify compare role behaviour'(List<String> requiredRoles, List<String> grantedRoles, SecurityRuleResult expected, String description) {
         given:
-        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(Mock(TokenConfiguration), Mock(SecurityConfigurationProperties))
+        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, Mock(SecurityConfigurationProperties))
 
         expect:
         expected == provider.compareRoles(requiredRoles, grantedRoles)

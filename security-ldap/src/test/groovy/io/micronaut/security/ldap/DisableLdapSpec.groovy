@@ -11,7 +11,6 @@ class DisableLdapSpec extends Specification {
     void "LDAP support can be globally disabled"() {
         given:
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
                 'micronaut.security.ldap.enabled': false,
                 'micronaut.security.ldap.basic.enabled': true
         ], "test")
@@ -26,8 +25,6 @@ class DisableLdapSpec extends Specification {
     void "LDAP support can be disabled on a provider basis"() {
         given:
         def ctx = ApplicationContext.run([
-                'micronaut.security.enabled': true,
-                'micronaut.security.ldap.enabled': true,
                 'micronaut.security.ldap.basic.enabled': false,
                 'micronaut.security.ldap.advanced.enabled': true
         ], "test")

@@ -20,8 +20,8 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Validates a state parameter.
@@ -41,5 +41,5 @@ public interface StateValidator {
      * @param state The state value returned by the authorization server
      * @throws InvalidStateException If the state validation failed
      */
-    void validate(@Nonnull HttpRequest<?> request, @Nullable State state) throws InvalidStateException;
+    void validate(@NonNull HttpRequest<?> request, @Nullable State state) throws InvalidStateException;
 }

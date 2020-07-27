@@ -19,13 +19,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Represent the response of an authorization server to an invalid access token request.
  *
- * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2>RFC 6749 Access Token Error Response</a>
+ * @see <a href="https://tools.ietf.org/html/rfc6749#section-5.2">RFC 6749 Access Token Error Response</a>
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -39,7 +39,7 @@ public class TokenErrorResponse {
     private String errorUri;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public TokenErrorResponse() {
     }
@@ -47,7 +47,7 @@ public class TokenErrorResponse {
     /**
      * @return The error code
      */
-    @Nonnull
+    @NonNull
     public TokenError getError() {
         return error;
     }

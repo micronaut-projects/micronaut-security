@@ -6,7 +6,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.DefaultRolesFinder
 import io.micronaut.security.token.RolesFinder
-import javax.annotation.Nonnull
+import edu.umd.cs.findbugs.annotations.NonNull
 import javax.inject.Singleton
 
 @CompileStatic
@@ -19,7 +19,8 @@ class CustomRolesParser implements RolesFinder {
     private static final String ROLES_KEY = "roles"
 
     @Override
-    List<String> findInClaims(@Nonnull Claims claims) {
+    @NonNull
+    List<String> findInClaims(@NonNull Claims claims) {
         List<String> roles = []
         if (claims[REALM_ACCESS_KEY]) {
             if (claims[REALM_ACCESS_KEY] && claims[REALM_ACCESS_KEY] instanceof Map) {

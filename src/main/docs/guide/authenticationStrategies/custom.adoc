@@ -1,0 +1,9 @@
+All authorization strategies implement the api:security.filters.AuthenticationFetcher[] interface. The contract is designed to return an api:security.authentication.Authentication[] object from the request. To implement custom logic to retrieve the currently logged in user, simply create a bean that implements the contract and it will be picked up automatically.
+
+For example to retrieve information from an X509 certificate:
+
+[source, java]
+.X509 Authentication Fetcher
+----
+include::{testssecurity}/security/authorization/X509AuthenticationFetcher.java[tag=clazz, indent=0]
+----

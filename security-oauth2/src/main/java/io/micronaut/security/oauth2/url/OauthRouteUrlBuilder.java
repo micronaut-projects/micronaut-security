@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.url;
 
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.net.URI;
 import java.net.URL;
 
 /**
- * Responsible for building URLs to routes the client will receive
+ * Responsible for building URLs to routes the client will receive.
  * requests on.
  *
  * @author James Kleeh
@@ -34,26 +33,26 @@ import java.net.URL;
 public interface OauthRouteUrlBuilder extends AbsoluteUrlBuilder {
 
     /**
-     * Builds the URL to start the OAuth 2.0 authorization code flow
+     * Builds the URL to start the OAuth 2.0 authorization code flow.
      *
      * @param originating The originating request
      * @param providerName The oauth provider name
      * @return The URL
      */
-    URL buildLoginUrl(@Nullable HttpRequest originating, String providerName);
+    URL buildLoginUrl(@Nullable HttpRequest<?> originating, String providerName);
 
     /**
-     * Builds the URL to receive the OAuth 2.0 authorization callback request
+     * Builds the URL to receive the OAuth 2.0 authorization callback request.
      *
      * @param originating The originating request
      * @param providerName The oauth provider name
      * @return The URL
      */
-    URL buildCallbackUrl(@Nullable HttpRequest originating, String providerName);
+    URL buildCallbackUrl(@Nullable HttpRequest<?> originating, String providerName);
 
 
     /**
-     * Builds the URI to start the OAuth 2.0 authorization code flow
+     * Builds the URI to start the OAuth 2.0 authorization code flow.
      *
      * @param providerName The oauth provider name
      * @return The URL
@@ -61,7 +60,7 @@ public interface OauthRouteUrlBuilder extends AbsoluteUrlBuilder {
     URI buildLoginUri(String providerName);
 
     /**
-     * Builds the URI to receive the OAuth 2.0 authorization callback request
+     * Builds the URI to receive the OAuth 2.0 authorization callback request.
      *
      * @param providerName The oauth provider name
      * @return The URL

@@ -10,9 +10,7 @@ For example, to configure Google as a provider:
 ----
 micronaut:
   security:
-    enabled: true
     oauth2:
-      enabled: true
       clients:
         google:
           client-secret: <<your client secret>>
@@ -23,13 +21,7 @@ micronaut:
 
 For normal OAuth 2.0, different steps are required to allow for the authorization code grant flow.
 
-For the full authorization code flow to work there are also some additional requirements. A api:security.handlers.RedirectingLoginHandler[] must be in the context to determine how to respond after a failed or successful login. A custom implementation can of course be provided, however the following options are available out of the box.
-
-|===
-| Type  | Configuration Required | Module
-| JWT Cookie Storage | `micronaut.security.token.jwt.cookie.enabled: true` | `micronaut-jwt`
-| Session Storage | `micronaut.security.session.enabled: true` | `micronaut-session`
-|====
+For the full authorization code flow to work there are also some additional requirements. A api:security.handlers.LoginHandler[] must be in the context to determine how to respond after a failed or successful login. A custom implementation can, of course, be provided. However, several <<loginHandler, Login Handlers>> implementations are available out of the box.
 
 See the following guide for a full walk-through with Okta.
 

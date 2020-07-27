@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
@@ -25,9 +24,8 @@ import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.client.HttpClientConfiguration;
-import io.micronaut.http.client.LoadBalancer;
-import io.micronaut.http.client.RxHttpClient;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -43,7 +41,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMap
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Provider;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -78,19 +76,17 @@ class OpenIdClientFactory {
      *
      * @param oauthClientConfiguration The client configuration
      * @param openIdClientConfiguration The openid client configuration
-     * @param defaultHttpConfiguration The default HTTP client configuration
+     * @param issuerClient The client to request the metadata
      * @return The OpenID configuration
      */
     @EachBean(OpenIdClientConfiguration.class)
     DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                                       @Parameter OpenIdClientConfiguration openIdClientConfiguration,
-                                                      HttpClientConfiguration defaultHttpConfiguration) {
+                                                      @Client HttpClient issuerClient) {
         DefaultOpenIdProviderMetadata providerMetadata = openIdClientConfiguration.getIssuer()
                 .map(issuer -> {
-                    RxHttpClient issuerClient = null;
                     try {
                         URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
-                        issuerClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultHttpConfiguration);
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                         }
@@ -99,10 +95,6 @@ class OpenIdClientFactory {
                         throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
                     } catch (MalformedURLException e) {
                         throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
-                    } finally {
-                        if (issuerClient != null) {
-                            issuerClient.stop();
-                        }
                     }
                 }).orElse(new DefaultOpenIdProviderMetadata());
 

@@ -15,10 +15,8 @@
  */
 package io.micronaut.security.rules;
 
-import io.micronaut.security.token.DefaultRolesFinder;
 import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,16 +40,6 @@ public abstract class AbstractSecurityRule implements SecurityRule {
     private final RolesFinder rolesFinder;
 
     /**
-     * @deprecated use {@link AbstractSecurityRule( RolesFinder )} instead.
-     * @param tokenConfiguration General Token Configuration
-     */
-    @Deprecated
-    AbstractSecurityRule(TokenConfiguration tokenConfiguration) {
-        this.rolesFinder = new DefaultRolesFinder(tokenConfiguration);
-    }
-
-    /**
-     *
      * @param rolesFinder Roles Parser
      */
     @Inject
@@ -92,18 +80,16 @@ public abstract class AbstractSecurityRule implements SecurityRule {
      *  appears in the required roles list. {@link SecurityRuleResult#ALLOWED} otherwise.
      */
     protected SecurityRuleResult compareRoles(List<String> requiredRoles, List<String> grantedRoles) {
-        requiredRoles = new ArrayList<>(requiredRoles);
-        requiredRoles.retainAll(grantedRoles);
-        if (requiredRoles.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("None of the given roles [{}] matched the required roles [{}]. Rejecting the request", grantedRoles, requiredRoles);
-            }
-            return SecurityRuleResult.REJECTED;
-        } else {
+        if (rolesFinder.hasAnyRequiredRoles(requiredRoles, grantedRoles)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("The given roles [{}] matched one or more of the required roles [{}]. Allowing the request", grantedRoles, requiredRoles);
             }
             return SecurityRuleResult.ALLOWED;
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("None of the given roles [{}] matched the required roles [{}]. Rejecting the request", grantedRoles, requiredRoles);
+            }
+            return SecurityRuleResult.REJECTED;
         }
     }
 }

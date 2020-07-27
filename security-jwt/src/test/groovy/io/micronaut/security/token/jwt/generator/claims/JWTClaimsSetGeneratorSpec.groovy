@@ -1,4 +1,3 @@
-
 package io.micronaut.security.token.jwt.generator.claims
 
 import io.micronaut.security.authentication.UserDetails

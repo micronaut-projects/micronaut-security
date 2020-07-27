@@ -25,7 +25,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Propagates a token based off of a header
+ * Propagates a token based off of a header.
  *
  * @author James Kleeh
  * @since 1.4.0
@@ -64,7 +64,6 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
         Optional<String> authorizationHeader = headers.findFirst(configuration.getHeaderName());
         return authorizationHeader.flatMap(this::extractTokenFromAuthorization);
     }
-
 
     /**
      * @param token the token being written

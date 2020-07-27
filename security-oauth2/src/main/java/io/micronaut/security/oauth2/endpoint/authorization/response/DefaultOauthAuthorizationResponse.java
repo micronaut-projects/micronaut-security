@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
@@ -23,7 +22,7 @@ import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Map;
 import java.util.Objects;
 
@@ -61,15 +60,15 @@ public class DefaultOauthAuthorizationResponse extends AbstractAuthorizationResp
         return responseData.get(AuthorizationResponse.KEY_STATE);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getCode() {
         return Objects.requireNonNull(responseData.get(AuthorizationResponse.KEY_CODE));
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public HttpRequest getCallbackRequest() {
+    public HttpRequest<?> getCallbackRequest() {
         return request;
     }
 }

@@ -20,8 +20,6 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.event.TokenValidatedEvent;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import io.micronaut.security.token.reader.DefaultTokenResolver;
-import io.micronaut.security.token.reader.TokenReader;
 import io.micronaut.security.token.reader.TokenResolver;
 import io.micronaut.security.token.validator.TokenValidator;
 import io.reactivex.Flowable;
@@ -68,21 +66,6 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
         this.tokenValidators = tokenValidators;
     }
 
-    /**
-     * @deprecated Use {@link #TokenAuthenticationFetcher(Collection, TokenResolver, ApplicationEventPublisher)} instead.
-     * A {@link TokenResolver} can be created using {@link DefaultTokenResolver#DefaultTokenResolver(Collection)}.
-     *
-     * @param tokenValidators The list of {@link TokenValidator} which attempt to validate the request
-     * @param tokenReaders    The list {@link TokenReader} which attempt to read the request
-     * @param eventPublisher  The Application event publisher
-     */
-    @Deprecated
-    public TokenAuthenticationFetcher(Collection<TokenValidator> tokenValidators,
-                                      Collection<TokenReader> tokenReaders,
-                                      ApplicationEventPublisher eventPublisher) {
-        this(tokenValidators, new DefaultTokenResolver(tokenReaders), eventPublisher);
-    }
-
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
 
@@ -108,5 +91,4 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
     public int getOrder() {
         return ORDER;
     }
-
 }

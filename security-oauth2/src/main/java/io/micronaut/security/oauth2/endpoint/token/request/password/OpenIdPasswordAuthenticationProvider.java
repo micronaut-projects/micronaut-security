@@ -16,6 +16,8 @@
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import com.nimbusds.jwt.JWT;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -36,8 +38,6 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.List;
@@ -52,8 +52,6 @@ import java.util.stream.Collectors;
  * @since 1.2.0
  */
 public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvider {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OauthPasswordAuthenticationProvider.class);
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -88,7 +86,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
 
         OpenIdPasswordTokenRequestContext requestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
@@ -100,22 +98,21 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
                         if (jwt.isPresent()) {
                             try {
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                                emitter.onNext(openIdUserDetailsMapper.createUserDetails(clientConfiguration.getName(), response, claims));
+                                emitter.onNext(openIdUserDetailsMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null));
                                 emitter.onComplete();
                             } catch (ParseException e) {
                                 //Should never happen as validation succeeded
                                 emitter.onError(e);
                             }
                         } else {
-                            emitter.onNext(new AuthenticationFailed("JWT validation failed"));
-                            emitter.onComplete();
+                            emitter.onError(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
                         }
                     }, BackpressureStrategy.ERROR);
                 });
     }
 
     /**
-     * Builds the secure endpoint from the provider metadata
+     * Builds the secure endpoint from the provider metadata.
      *
      * @param openIdProviderMetadata The provider metadata
      * @return The token endpoint

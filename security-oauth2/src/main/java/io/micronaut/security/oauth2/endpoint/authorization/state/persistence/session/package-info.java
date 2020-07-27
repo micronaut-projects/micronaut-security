@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes related to storage of the state in a session
+ * Classes related to storage of the state in a session.
  *
  * @author James Kleeh
  * @since 1.2.0

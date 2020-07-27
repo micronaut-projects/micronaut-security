@@ -1,4 +1,3 @@
-
 package io.micronaut.security.token.jwt.bearer
 
 import io.micronaut.http.HttpMethod
