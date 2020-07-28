@@ -28,7 +28,6 @@ import org.reactivestreams.Publisher;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
@@ -76,29 +75,20 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
             return Flowable.empty();
         }
 
-        Iterator<TokenValidator> tokenValidatorIterator = tokenValidators.iterator();
-        String tokenString = token.get();
-        return attemptTokenValidation(request, tokenValidatorIterator, tokenString);
+        String tokenValue = token.get();
+
+        return Flowable.fromIterable(tokenValidators)
+                .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue))
+                .firstElement()
+                .map(authentication -> {
+                    request.setAttribute(TOKEN, tokenValue);
+                    eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
+                    return authentication;
+                }).toFlowable();
     }
 
     @Override
     public int getOrder() {
         return ORDER;
-    }
-
-    private Flowable<Authentication> attemptTokenValidation(HttpRequest<?> request, Iterator<TokenValidator> tokenValidatorIterator, String tokenString) {
-        if (tokenValidatorIterator.hasNext()) {
-            TokenValidator tokenValidator = tokenValidatorIterator.next();
-            return Flowable.just(tokenString).switchMap(tokenValue ->
-                Flowable.fromPublisher(tokenValidator.validateToken(tokenValue, request)).map(authentication -> {
-                    request.setAttribute(TOKEN, tokenValue);
-                    eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
-                    return authentication;
-                })
-            ).switchIfEmpty(attemptTokenValidation(
-                    request, tokenValidatorIterator, tokenString
-            ));
-        }
-        return Flowable.empty();
     }
 }
