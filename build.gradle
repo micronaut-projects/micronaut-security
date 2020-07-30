@@ -5,7 +5,7 @@ buildscript {
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "io.micronaut.build:micronaut-gradle-plugins:2.0.5"
+        classpath "io.micronaut.build:micronaut-gradle-plugins:2.0.6"
     }
 }
 
@@ -53,7 +53,6 @@ subprojects { Project subproject ->
     }
 
     project.tasks.withType(Test) {
-        useJUnitPlatform()
         reports {
           junitXml.enabled = true
         }        
