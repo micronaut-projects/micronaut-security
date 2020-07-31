@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.3.72"
+    id "org.jetbrains.kotlin.jvm" version "1.4.0-rc"
 }
 
 dependencies {
@@ -7,7 +7,7 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation project(":security-jwt")
     testImplementation project(":security-oauth2")
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0-rc"
 }
 
 compileTestKotlin {
