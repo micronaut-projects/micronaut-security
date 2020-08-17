@@ -1,6 +1,5 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request
 
-
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpHeaders
@@ -64,11 +63,12 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
         location.contains("client_id=myclient")
 
         when:
-        String parsedLocation = StateUtils.stateParser(location)
+        Map<String, String> queryValues = StateUtils.queryValuesAsMap(location)
+        String state = StateUtils.decodeState(queryValues)
 
         then:
-        parsedLocation.contains('"nonce":"')
-        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/twitter"')
+        state.contains('"nonce":"')
+        state.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/twitter"')
     }
 
     @Singleton
