@@ -72,11 +72,16 @@ class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecifi
         location.startsWith(Keycloak.issuer + "/protocol/openid-connect/auth")
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
-        location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
-        String parsedLocation = StateUtils.stateParser(location)
-        parsedLocation.contains('"nonce":"')
-        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
         location.contains("client_id=$Keycloak.CLIENT_ID")
+        location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
+
+        when:
+        Map<String, String> queryValues = StateUtils.queryValuesAsMap(location)
+        String state = StateUtils.decodeState(queryValues)
+
+        then:
+        state.contains('"nonce":"')
+        state.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
 
         when:
         client.toBlocking().exchange("/oauth/login/twitter")
