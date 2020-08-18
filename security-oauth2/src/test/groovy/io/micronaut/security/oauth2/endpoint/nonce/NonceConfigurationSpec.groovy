@@ -5,7 +5,13 @@ import io.micronaut.security.oauth2.ApplicationContextSpecification
 class NonceConfigurationSpec extends ApplicationContextSpecification {
 
     void "Bean of type NonceConfiguration exists by default"() {
-        expect:
-        applicationContext.containsBean(NonceConfiguration.class)
+        when:
+        NonceConfiguration nonceConfiguration = applicationContext.getBean(NonceConfiguration.class)
+
+        then:
+        noExceptionThrown()
+
+        and: 'default persistence is cookie'
+        nonceConfiguration.getPersistence().get() == 'cookie'
     }
 }
