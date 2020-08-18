@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of {@link OpenIdTokenResponseValidator}.
@@ -95,6 +96,11 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
                             validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
                         if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
                             return jwt;
+                        } else {
+                            if (LOG.isErrorEnabled()) {
+                                LOG.error("Nonce {} validation failed for claims {}", nonce, claims.getClaims().keySet().stream().map(key -> key + "=" + claims.getClaims().get(key))
+                                        .collect(Collectors.joining(", ", "{", "}")));
+                            }
                         }
                     } else {
                         if (LOG.isErrorEnabled()) {
