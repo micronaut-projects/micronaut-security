@@ -107,7 +107,9 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <hr>
 <br>
-<pre>@Singleton
+<pre>@Requires(property="micronaut.security.token.jwt.claims-validators.nonce",
+          notEquals="false")
+ @Singleton
 public class <span class="typeNameLabel">NonceClaimValidator</span>
 extends java.lang.Object</pre>
 <div class="block">Responsible for validating the nonce claim.</div>
