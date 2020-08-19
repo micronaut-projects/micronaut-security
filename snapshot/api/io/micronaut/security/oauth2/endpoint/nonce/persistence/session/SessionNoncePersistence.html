@@ -111,7 +111,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>@Requires(beans=io.micronaut.session.SessionStore.class)
+<pre>@Requires(beans=io.micronaut.session.SessionStore.class) @Requires(property="micronaut.security.oauth2.openid.nonce.persistence",value="session")
  @Singleton
 public class <span class="typeNameLabel">SessionNoncePersistence</span>
 extends java.lang.Object
