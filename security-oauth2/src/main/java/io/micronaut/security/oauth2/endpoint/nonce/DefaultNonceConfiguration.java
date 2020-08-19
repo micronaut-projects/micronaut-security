@@ -30,13 +30,15 @@ import java.util.Optional;
 public class DefaultNonceConfiguration implements NonceConfiguration {
 
     public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".nonce";
+    public static final String PERSISTENCE_COOKIE = "cookie";
+    public static final String PERSISTENCE_SESSION = "session";
+    public static final String DEFAULT_PERSISTENCE = PERSISTENCE_COOKIE;
 
     /**
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
-    private static final String DEFAULT_PERSISTENCE = "cookie";
 
     private String persistence = DEFAULT_PERSISTENCE;
     private boolean enabled = DEFAULT_ENABLED;
@@ -48,7 +50,7 @@ public class DefaultNonceConfiguration implements NonceConfiguration {
 
     /**
      * Sets the mechanism to persist the nonce for later retrieval for validation.
-     * Supported values ("session", "cookie"). Default value ({@value #DEFAULT_PERSISTENCE}).
+     * Supported values ({@value #PERSISTENCE_SESSION}, {@value #PERSISTENCE_COOKIE}). Default value ({@value #PERSISTENCE_COOKIE}).
      *
      * @param persistence The persistence mechanism
      */
