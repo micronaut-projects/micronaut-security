@@ -1,12 +1,18 @@
 By default, this library will include a `nonce` parameter as described in the https://openid.net/specs/openid-connect-core-1_0.html#IDToken[OpenID Connect] specification in authentication requests.
 
-Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[] bean must be present to retrieve the nonce for validation. The default implementation stores the nonce in an HTTP cookie. To configure how the cookie is built, see the following configuration options:
+Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[] bean must be present to retrieve the nonce for validation.
+
+Micronaut ships with two implementations of `NoncePersistence`. One implementation to store it in a HTTP cookie (api:security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistence[]`) and another one to persist it with a HTTP Session (api:security.oauth2.endpoint.nonce.persistence.session.SessionNoncePersistence[]`).
+
+You can configure which implementation to use:
+
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration.adoc[]
+
+If you use the default implementation, which stores the nonce in a HTTP cookie, you can  configure how the cookie is built. See the following configuration options:
 
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration.adoc[]
 
-You can provide your own implementation, however an implementation of nonce persistence that stores the nonce in an http session has also been provided.
-
-To enable state persistence with an http session:
+To use (api:security.oauth2.endpoint.nonce.persistence.session.SessionNoncePersistence[]`). which stores the nonce in a HTTP session:
 
 . Add a dependency to `micronaut-session`
 +
@@ -20,7 +26,9 @@ micronaut.security.oauth2.nonce.persistence: session
 ----
 +
 
-If nonce validation fails, the user will not be authenticated.
+NOTE: You can provide your own implementation of api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[]
+
+WARNING: If nonce validation fails, the user will not be authenticated.
 
 === Customization
 
@@ -29,7 +37,8 @@ There are several interfaces that implementations can be provided for to overrid
 |===
 |Interface |Responsibility |Default Implementation
 |api:security.oauth2.endpoint.nonce.NonceFactory[] |Builds a `java.lang.String` nonce value |api:security.oauth2.endpoint.nonce.DefaultNonceFactory[]
-|api:security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator[] |Validates the nonce claim in the token response |api:security.oauth2.endpoint.token.response.validation.NonceClaimValidator[]
+| api:security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator[] |  Validates an OpenID token response (including the nonce). | api:security.oauth2.endpoint.token.response.validation.DefaultOpenIdTokenResponseValidator[]
+| |Validates the nonce claim in the token response |api:security.oauth2.endpoint.token.response.validation.NonceClaimValidator[]
 |api:security.oauth2.endpoint.nonce.persistence.NoncePersistence[] |Stores the nonce to be retrieved later to allow validation |api:security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistence[]
 |===
 
