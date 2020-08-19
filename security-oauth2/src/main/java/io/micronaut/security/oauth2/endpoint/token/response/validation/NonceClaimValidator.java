@@ -15,11 +15,15 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.security.token.jwt.validator.JwtClaimsValidator;
+
 import javax.inject.Singleton;
 
 /**
@@ -28,6 +32,7 @@ import javax.inject.Singleton;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(property = JwtClaimsValidator.PREFIX + ".nonce", notEquals = StringUtils.FALSE)
 @Singleton
 public class NonceClaimValidator {
 

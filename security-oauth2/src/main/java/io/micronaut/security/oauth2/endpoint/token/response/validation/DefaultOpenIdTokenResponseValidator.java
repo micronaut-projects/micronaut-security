@@ -62,7 +62,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      */
     public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
                                                Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
-                                               NonceClaimValidator nonceClaimValidator,
+                                               @Nullable NonceClaimValidator nonceClaimValidator,
                                                JwkValidator jwkValidator) {
         this.openIdClaimsValidators = idTokenValidators;
         this.genericJwtClaimsValidators = genericJwtClaimsValidators;
@@ -94,6 +94,12 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
                 if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims))) {
                     if (openIdClaimsValidators.stream().allMatch(validator ->
                             validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
+                        if (nonceClaimValidator == null) {
+                            if (LOG.isTraceEnabled()) {
+                                LOG.trace("Skipping nonce validation because no bean of type {} present. ", NonceClaimValidator.class.getSimpleName());
+                            }
+                            return jwt;
+                        }
                         if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
                             return jwt;
                         } else {
