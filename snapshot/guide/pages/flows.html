@@ -1437,11 +1437,49 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 <p>By default, this library will include a <code>nonce</code> parameter as described in the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> specification in authentication requests.</p>
 </div>
 <div class="paragraph">
-<p>Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a> bean must be present to retrieve the nonce for validation. The default implementation stores the nonce in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>
+<p>Because the validation of the nonce requires the nonce to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a> bean must be present to retrieve the nonce for validation.</p>
+</div>
+<div class="paragraph">
+<p>Micronaut ships with two implementations of <code>NoncePersistence</code>. One implementation to store it in a HTTP cookie (<a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistence.html">CookieNoncePersistence</a><code>) and another one to persist it with a HTTP Session (<a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/session/SessionNoncePersistence.html">SessionNoncePersistence</a></code>).</p>
+</div>
+<div class="paragraph">
+<p>You can configure which implementation to use:</p>
+</div>
+<a id="io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration" href="#io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html">DefaultNonceConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.persistence</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the mechanism to persist the nonce for later retrieval for validation.
+ Supported values ("session", "cookie"). Default value ("cookie").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether a nonce parameter will be sent. Default (true).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If you use the default implementation, which stores the nonce in a HTTP cookie, you can  configure how the cookie is built. See the following configuration options:</p>
 </div>
 <a id="io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration" href="#io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html">CookieNoncePersistenceConfiguration</a></caption>
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html">CookieNoncePersistenceConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1488,10 +1526,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 </tbody>
 </table>
 <div class="paragraph">
-<p>You can provide your own implementation, however an implementation of nonce persistence that stores the nonce in an http session has also been provided.</p>
-</div>
-<div class="paragraph">
-<p>To enable state persistence with an http session:</p>
+<p>To use (<a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/session/SessionNoncePersistence.html">SessionNoncePersistence</a>`). which stores the nonce in a HTTP session:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1523,11 +1558,32 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 <pre>micronaut.security.oauth2.nonce.persistence: session</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>If nonce validation fails, the user will not be authenticated.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can provide your own implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html">NoncePersistence</a>
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If nonce validation fails, the user will not be authenticated.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_customization">Customization</h3>
@@ -1553,6 +1609,11 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html">OpenIdTokenResponseValidator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates an OpenID token response (including the nonce).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/DefaultOpenIdTokenResponseValidator.html">DefaultOpenIdTokenResponseValidator</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Validates the nonce claim in the token response</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/token/response/validation/NonceClaimValidator.html">NonceClaimValidator</a></p></td>
 </tr>
