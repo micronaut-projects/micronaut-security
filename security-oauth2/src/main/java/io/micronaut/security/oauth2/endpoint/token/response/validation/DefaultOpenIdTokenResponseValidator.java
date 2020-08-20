@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Singleton;
@@ -37,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of {@link OpenIdTokenResponseValidator}.
@@ -62,7 +62,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      */
     public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
                                                Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
-                                               NonceClaimValidator nonceClaimValidator,
+                                               @Nullable NonceClaimValidator nonceClaimValidator,
                                                JwkValidator jwkValidator) {
         this.openIdClaimsValidators = idTokenValidators;
         this.genericJwtClaimsValidators = genericJwtClaimsValidators;
@@ -93,7 +93,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         return Optional.empty();
     }
 
-     /**
+    /**
      *
      * @param clientConfiguration The OAuth 2.0 client configuration
      * @param openIdProviderMetadata The OpenID provider metadata
@@ -109,12 +109,21 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         try {
             JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
             OpenIdClaims claims = new JWTOpenIdClaims(claimsSet);
-
             if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims))) {
                 if (openIdClaimsValidators.stream().allMatch(validator ->
                         validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
+                    if (nonceClaimValidator == null) {
+                        if (LOG.isTraceEnabled()) {
+                            LOG.trace("Skipping nonce validation because no bean of type {} present. ", NonceClaimValidator.class.getSimpleName());
+                        }
+                        return Optional.of(jwt);
+                    }
                     if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
                         return Optional.of(jwt);
+                    } else {
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("Nonce {} validation failed for claims {}", nonce, claims.getClaims().keySet().stream().map(key -> key + "=" + claims.getClaims().get(key)).collect(Collectors.joining(", ", "{", "}")));
+                        }
                     }
                 } else {
                     if (LOG.isErrorEnabled()) {

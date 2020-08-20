@@ -37,6 +37,7 @@ import java.util.*;
 public final class JwtValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwtValidator.class);
+    private static final String DOT = ".";
 
     private final List<SignatureConfiguration> signatures;
     private final List<EncryptionConfiguration> encryptions;
@@ -56,14 +57,30 @@ public final class JwtValidator {
      */
     public Optional<JWT> validate(String token) {
         try {
-            JWT jwt = JWTParser.parse(token);
-            return validate(jwt);
-        } catch (final ParseException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Failed to parse JWT: {}", e.getMessage());
+            if (hasAtLeastTwoDots(token)) {
+                JWT jwt = JWTParser.parse(token);
+                return validate(jwt);
+            } else {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("token {} does not contain two dots", token);
+                }
             }
-            return Optional.empty();
+        } catch (final ParseException e) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Failed to parse JWT: {}", e.getMessage());
+            }
         }
+        return Optional.empty();
+    }
+
+    /**
+     *
+     * @param token The JWT string
+     * @return {@literal true} if the string has at least two dots. We must have 2 (JWS) or 4 dots (JWE).
+     */
+    private boolean hasAtLeastTwoDots(String token) {
+        return (token.contains(DOT)) &&
+                (token.indexOf(DOT, token.indexOf(DOT) + 1) != -1);
     }
 
     /**
