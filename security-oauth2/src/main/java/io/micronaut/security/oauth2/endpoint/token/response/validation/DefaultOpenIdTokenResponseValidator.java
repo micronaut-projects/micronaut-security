@@ -35,7 +35,9 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +55,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     private final Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators;
     private final NonceClaimValidator nonceClaimValidator;
     private final JwkValidator jwkValidator;
+    private final Map<String, JwksSignature> jwksSignatures = new ConcurrentHashMap<>();
 
     /**
      * @param idTokenValidators OpenID JWT claim validators
@@ -152,10 +155,23 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     @NonNull
     protected Optional<JWT> parseJwtWithValidSignature(@NonNull OpenIdProviderMetadata openIdProviderMetadata,
                                                        @NonNull OpenIdTokenResponse openIdTokenResponse) {
+
         return JwtValidator.builder()
-                .withSignatures(new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator))
+                .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
                 .build()
                 .validate(openIdTokenResponse.getIdToken());
     }
 
+    /**
+     *
+     * @param openIdProviderMetadata The OpenID provider metadata
+     * @return A {@link JwksSignature} for the OpenID provider JWKS uri.
+     */
+    protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
+        final String jwksuri = openIdProviderMetadata.getJwksUri();
+        if (!jwksSignatures.containsKey(jwksuri)) {
+            jwksSignatures.put(jwksuri, new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator));
+        }
+        return jwksSignatures.get(jwksuri);
+    }
 }
