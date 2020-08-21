@@ -35,9 +35,9 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -55,7 +55,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     private final Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators;
     private final NonceClaimValidator nonceClaimValidator;
     private final JwkValidator jwkValidator;
-    private final Map<String, JwksSignature> jwksSignatures = new HashMap<>();
+    private final Map<String, JwksSignature> jwksSignatures = new ConcurrentHashMap<>();
 
     /**
      * @param idTokenValidators OpenID JWT claim validators
