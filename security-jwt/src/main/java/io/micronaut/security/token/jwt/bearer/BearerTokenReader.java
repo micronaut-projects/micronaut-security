@@ -63,4 +63,16 @@ public class BearerTokenReader extends HttpHeaderTokenReader implements TokenRea
     public int getOrder() {
         return ORDER;
     }
+
+    @Override
+    public Optional<String> findToken(HttpRequest<?> request) {
+        Optional<String> extractedToken = super.findToken(request);
+
+        if (extractedToken.isEmpty()) {
+            HttpParameters params = request.getParameters();
+            Optional<String> authorizationParam = params.getFirst("access_token");
+            extractedToken = authorizationParam.flatMap(this::extractTokenFromAuthorization);
+        }
+        return extractedToken;
+    }
 }
