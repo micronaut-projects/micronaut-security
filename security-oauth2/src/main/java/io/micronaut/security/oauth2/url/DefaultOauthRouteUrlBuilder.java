@@ -111,6 +111,9 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     @Override
     public URL buildUrl(@Nullable HttpRequest<?> current, String path) {
         try {
+            if (path.startsWith("http")) {
+                return new URL(path);
+            }
             return UriBuilder.of(hostResolver.resolve(current))
                     .path(path)
                     .build()
