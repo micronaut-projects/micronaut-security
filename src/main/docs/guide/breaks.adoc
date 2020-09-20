@@ -50,7 +50,7 @@ The constructor for api:configuration.security.ldap.LdapAuthenticationProvider[]
 ** `micronaut.security.authentication: bearer` to enable api:security.token.jwt.bearer.AccessRefreshTokenLoginHandler[]
 ** `micronaut.security.authentication: cookie` to enable api:security.token.jwt.cookie.JwtCookieLoginHandler[]
 ** `micronaut.security.authentication: session` to enable api:security.session.SessionLoginHandler[]
-** `micronaut.security.authentication: idtoken` to enable api:oauth2.endpoint.token.response.IdTokenLoginHandler[]
+** `micronaut.security.authentication: idtoken` to enable api:security.oauth2.endpoint.token.response.IdTokenLoginHandler[]
 
 ==== Migration Example A
 
