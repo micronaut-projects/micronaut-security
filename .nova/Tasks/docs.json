@@ -1,0 +1,13 @@
+{
+  "actions" : {
+    "build" : {
+      "enabled" : true,
+      "script" : ".\/gradlew docs"
+    },
+    "clean" : {
+      "enabled" : true,
+      "script" : ".\/gradlew clean"
+    }
+  },
+  "identifier" : "CB4B7CBD-3AB4-45AB-AD60-5CB41EAC5319"
+}
