@@ -1,0 +1,3 @@
+For this project, you can find a list of releases (with release notes) here:
+
+https://github.com/{githubSlug}/releases[https://github.com/{githubSlug}/releases]
