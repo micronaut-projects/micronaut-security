@@ -18,7 +18,6 @@ package io.micronaut.security.utils;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.DefaultRolesFinder;
-import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
 
