@@ -26,8 +26,6 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
-import net.minidev.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -43,7 +41,7 @@ import java.util.Collection;
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class KeysController {
 
-    private static final JSONObject EMPTY_KEYS = new JSONObject().appendField("keys", new ArrayList<>());
+    private static final String EMPTY_KEYS = "{\"keys\": []}";
 
     private final Collection<JwkProvider> jwkProviders;
     private final ObjectMapper objectMapper;
@@ -65,8 +63,7 @@ public class KeysController {
     @Get
     public Single<String> keys() {
         if (jwkProviders.isEmpty()) {
-            return Single.just(objectMapper)
-                    .map(om -> om.writeValueAsString(EMPTY_KEYS));
+            return Single.just(EMPTY_KEYS);
         }
         return Flowable.fromIterable(jwkProviders)
                 .flatMapIterable(JwkProvider::retrieveJsonWebKeys)
