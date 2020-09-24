@@ -31,7 +31,7 @@ public interface TokenValidator extends Ordered {
 
     /**
      * Validates the provided token and returns the authentication state.
-     *
+     * @deprecated Use {@link TokenValidator#validateToken(String, HttpRequest)} instead.
      * @param token The token string
      * @return An authentication publisher. If the publisher emits an error, no further validators will
      * be attempted and the validation will fail. If the publisher is empty, further validators will be
@@ -39,7 +39,7 @@ public interface TokenValidator extends Ordered {
      */
     @Deprecated
     Publisher<Authentication> validateToken(String token);
-
+  
     /**
      * Validates the provided token and returns the authentication state.
      *
@@ -49,7 +49,8 @@ public interface TokenValidator extends Ordered {
      * be attempted and the validation will fail. If the publisher is empty, further validators will be
      * attempted. If the publisher emits an authentication, that authentication will be used.
      */
-    default Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
+    default Publisher<Authentication> validateToken(String token,
+                                                    @Nullable HttpRequest<?> request) {
         return validateToken(token);
     }
 }

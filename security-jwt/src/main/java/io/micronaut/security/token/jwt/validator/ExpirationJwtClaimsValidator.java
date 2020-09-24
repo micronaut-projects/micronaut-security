@@ -57,6 +57,7 @@ public class ExpirationJwtClaimsValidator implements GenericJwtClaimsValidator {
         return true;
     }
 
+    @Deprecated
     @Override
     public boolean validate(JwtClaims claims) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));

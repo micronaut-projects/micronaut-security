@@ -21,6 +21,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.inject.Singleton;
 
 /**
@@ -51,8 +52,9 @@ public class SubjectNotNullJwtClaimsValidator implements GenericJwtClaimsValidat
         return hasSubject;
     }
 
+    @Deprecated
     @Override
     public boolean validate(JwtClaims claims) {
-        return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
+        return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));        
     }
 }
