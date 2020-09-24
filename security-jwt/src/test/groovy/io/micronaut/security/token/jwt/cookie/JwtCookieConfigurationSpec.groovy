@@ -10,6 +10,10 @@ class JwtCookieConfigurationSpec extends ApplicationContextSpecification {
     @Shared
     JwtCookieConfiguration jwtCookieConfiguration = applicationContext.getBean(JwtCookieConfiguration)
 
+    Map<String, Object> getConfiguration() {
+        ['micronaut.security.authentication': 'cookie']
+    }
+
     @Deprecated
     void "it is possible to override success and failure urls via configuration"() {
         expect:

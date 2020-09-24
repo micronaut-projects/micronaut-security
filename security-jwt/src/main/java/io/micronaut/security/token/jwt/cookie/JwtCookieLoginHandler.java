@@ -15,11 +15,13 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
+import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
@@ -36,6 +38,7 @@ import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -47,13 +50,14 @@ import java.util.List;
 public class JwtCookieLoginHandler extends CookieLoginHandler {
 
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
+    protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
     protected final AccessTokenConfiguration accessTokenConfiguration;
 
     /**
      * @param jwtCookieConfiguration JWT Cookie Configuration
      * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
-     * @deprecated Use {@link JwtCookieLoginHandler#JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)} instead.
+     * @deprecated Use {@link JwtCookieLoginHandler#JwtCookieLoginHandler(RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)} instead.
      */
     @Deprecated
     public JwtCookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
@@ -62,6 +66,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
         super(jwtCookieConfiguration, jwtCookieConfiguration.getLoginSuccessTargetUrl(), jwtCookieConfiguration.getCookieName());
         this.accessTokenConfiguration = accessTokenConfiguration;
         this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+        this.refreshTokenCookieConfiguration = createDefaultConfiguration(jwtCookieConfiguration);
     }
 
     /**
@@ -71,7 +76,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
      * @param priorToLoginPersistence Prior To Login Persistence Mechanism
      */
-    @Inject
+    @Deprecated
     public JwtCookieLoginHandler(RedirectConfiguration redirectConfiguration,
                                  JwtCookieConfiguration jwtCookieConfiguration,
                                  AccessTokenConfiguration accessTokenConfiguration,
@@ -80,6 +85,63 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
         super(jwtCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
         this.accessTokenConfiguration = accessTokenConfiguration;
         this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+        this.refreshTokenCookieConfiguration = createDefaultConfiguration(jwtCookieConfiguration);
+    }
+
+    /**
+     * @param redirectConfiguration Redirect configuration
+     * @param accessTokenCookieConfiguration JWT Access Token Cookie Configuration
+     * @param refreshTokenCookieConfiguration Refresh Token Cookie Configuration
+     * @param accessTokenConfiguration JWT Generator Configuration
+     * @param accessRefreshTokenGenerator Access Refresh Token Generator
+     * @param priorToLoginPersistence Prior To Login Persistence Mechanism
+     */
+    @Inject
+    public JwtCookieLoginHandler(RedirectConfiguration redirectConfiguration,
+                                 AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                                 RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
+                                 AccessTokenConfiguration accessTokenConfiguration,
+                                 AccessRefreshTokenGenerator accessRefreshTokenGenerator,
+                                 @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        super(accessTokenCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
+        this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
+        this.accessTokenConfiguration = accessTokenConfiguration;
+        this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+    }
+
+    private static RefreshTokenCookieConfiguration createDefaultConfiguration(JwtCookieConfiguration jwtCookieConfiguration) {
+        return new RefreshTokenCookieConfiguration() {
+            @NonNull
+            @Override
+            public String getCookieName() {
+                return "JWT_REFRESH_TOKEN";
+            }
+
+            @Override
+            public Optional<String> getCookieDomain() {
+                return jwtCookieConfiguration.getCookieDomain();
+            }
+
+            @Override
+            public Optional<String> getCookiePath() {
+                return jwtCookieConfiguration.getCookiePath();
+            }
+
+            @Override
+            public Optional<Boolean> isCookieHttpOnly() {
+                return jwtCookieConfiguration.isCookieHttpOnly();
+            }
+
+            @Override
+            public Optional<Boolean> isCookieSecure() {
+                return jwtCookieConfiguration.isCookieSecure();
+            }
+
+            @Override
+            public Optional<TemporalAmount> getCookieMaxAge() {
+                return Optional.empty();
+            }
+        };
     }
 
     @Override
@@ -107,19 +169,19 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
      */
     protected List<Cookie> getCookies(AccessRefreshToken accessRefreshToken, HttpRequest<?> request) {
         List<Cookie> cookies = new ArrayList<>(2);
-
-        Cookie jwtCookie = Cookie.of(jwtCookieConfiguration.getCookieName(), accessRefreshToken.getAccessToken());
-        jwtCookie.configure(jwtCookieConfiguration, request.isSecure());
-        TemporalAmount maxAge = jwtCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofSeconds(accessTokenConfiguration.getExpiration()));
+        CookieConfiguration cookieConfiguration = accessTokenCookieConfiguration == null ? jwtCookieConfiguration : accessTokenCookieConfiguration;
+        Cookie jwtCookie = Cookie.of(cookieConfiguration.getCookieName(), accessRefreshToken.getAccessToken());
+        jwtCookie.configure(cookieConfiguration, request.isSecure());
+        TemporalAmount maxAge = cookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofSeconds(accessTokenConfiguration.getExpiration()));
         jwtCookie.maxAge(maxAge);
 
         cookies.add(jwtCookie);
 
         String refreshToken = accessRefreshToken.getRefreshToken();
         if (StringUtils.isNotEmpty(refreshToken)) {
-            Cookie refreshCookie = Cookie.of("JWT_REFRESH_TOKEN", refreshToken);
-            refreshCookie.configure(jwtCookieConfiguration, request.isSecure());
-            refreshCookie.maxAge(maxAge);
+            Cookie refreshCookie = Cookie.of(refreshTokenCookieConfiguration.getCookieName(), refreshToken);
+            refreshCookie.configure(refreshTokenCookieConfiguration, request.isSecure());
+            refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofDays(30)));
             cookies.add(refreshCookie);
         }
 

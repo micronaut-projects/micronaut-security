@@ -15,17 +15,15 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
-import io.micronaut.security.config.RedirectConfigurationProperties;
-import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+import io.micronaut.security.token.config.TokenConfigurationProperties;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
@@ -36,11 +34,11 @@ import java.util.Optional;
  * @since 1.0
  */
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
-@Requires(property = JwtCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@ConfigurationProperties(JwtCookieConfigurationProperties.PREFIX)
-public class JwtCookieConfigurationProperties implements JwtCookieConfiguration {
+@Requires(property = RefreshTokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@ConfigurationProperties(RefreshTokenCookieConfigurationProperties.PREFIX)
+public class RefreshTokenCookieConfigurationProperties implements RefreshTokenCookieConfiguration {
 
-    public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".cookie";
+    public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".refresh.cookie";
 
     /**
      * The default enable value.
@@ -64,22 +62,19 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
      * The default cookie name.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_COOKIENAME = "JWT";
+    public static final String DEFAULT_COOKIENAME = "JWT_REFRESH_TOKEN";
 
     /**
      * Default Cookie Path.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_COOKIEPATH = "/";
+    public static final String DEFAULT_COOKIEPATH = "/oauth/access_token";
 
     /**
      * The default same-site setting for the JWT cookie.
      */
     @SuppressWarnings("WeakerAccess")
     public static final SameSite DEFAULT_COOKIESAMESITE = null;
-
-    private final RedirectConfigurationProperties redirectConfiguration;
-    private final PropertyResolver propertyResolver;
 
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
@@ -92,79 +87,11 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
 
     /**
      *
-     * @param redirectConfiguration Redirect Configuration
-     * @param propertyResolver Property Resolver
-     */
-    public JwtCookieConfigurationProperties(RedirectConfigurationProperties redirectConfiguration,
-                                            PropertyResolver propertyResolver) {
-        this.redirectConfiguration = redirectConfiguration;
-        this.propertyResolver = propertyResolver;
-    }
-
-    /**
-     *
      * @return a boolean flag indicating whether the JwtCookieTokenReader should be enabled or not
      */
     @Override
     public boolean isEnabled() {
         return enabled;
-    }
-
-    @Override
-    @Deprecated
-    public String getLogoutTargetUrl() {
-        return redirectConfiguration.getLogout();
-    }
-
-    @Override
-    @Deprecated
-    public String getLoginSuccessTargetUrl() {
-        return redirectConfiguration.getLoginSuccess();
-    }
-
-    @Override
-    @Deprecated
-    public String getLoginFailureTargetUrl() {
-        return redirectConfiguration.getLoginFailure();
-    }
-
-    /**
-     * Deprecated. user micronaut.security.redirect.logout instead
-     * @param logoutTargetUrl The URL
-     */
-    @Deprecated
-    public void setLogoutTargetUrl(String logoutTargetUrl) {
-        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".logout")) {
-            if (StringUtils.isNotEmpty(logoutTargetUrl)) {
-                redirectConfiguration.setLogout(logoutTargetUrl);
-            }
-        }
-    }
-
-    /**
-     * Deprecated. user micronaut.security.redirect.login-success instead
-     * @param loginSuccessTargetUrl The URL
-     */
-    @Deprecated
-    public void setLoginSuccessTargetUrl(String loginSuccessTargetUrl) {
-        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-success")) {
-            if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
-                redirectConfiguration.setLoginSuccess(loginSuccessTargetUrl);
-            }
-        }
-    }
-
-    /**
-     * Deprecated. user micronaut.security.redirect.login-failure instead
-     * @param loginFailureTargetUrl The URL
-     */
-    @Deprecated
-    public void setLoginFailureTargetUrl(String loginFailureTargetUrl) {
-        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-failure")) {
-            if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
-                redirectConfiguration.setLoginFailure(loginFailureTargetUrl);
-            }
-        }
     }
 
     /**

@@ -21,6 +21,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
+import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
@@ -29,11 +30,13 @@ import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
 import io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.text.ParseException;
 import java.time.Duration;
@@ -54,6 +57,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
 
     private final TokenConfiguration tokenConfiguration;
 
+    @Deprecated
     public IdTokenLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
                                TokenConfiguration tokenConfiguration,
@@ -62,12 +66,22 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
         this.tokenConfiguration = tokenConfiguration;
     }
 
+    @Inject
+    public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                               RedirectConfiguration redirectConfiguration,
+                               TokenConfiguration tokenConfiguration,
+                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        super(accessTokenCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
+        this.tokenConfiguration = tokenConfiguration;
+    }
+
     @Override
     protected List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
         List<Cookie> cookies = new ArrayList<>(1);
         String accessToken = parseIdToken(userDetails).orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
-        Cookie jwtCookie = Cookie.of(jwtCookieConfiguration.getCookieName(), accessToken);
-        jwtCookie.configure(jwtCookieConfiguration, request.isSecure());
+
+        Cookie jwtCookie = Cookie.of(accessTokenCookieConfiguration.getCookieName(), accessToken);
+        jwtCookie.configure(accessTokenCookieConfiguration, request.isSecure());
         jwtCookie.maxAge(cookieExpiration(userDetails, request));
         cookies.add(jwtCookie);
         return cookies;

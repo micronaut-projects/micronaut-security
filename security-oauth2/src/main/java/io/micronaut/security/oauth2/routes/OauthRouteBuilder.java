@@ -89,13 +89,15 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Registering login route [GET: {}] for oauth configuration [{}]", loginPath, name);
                     }
-                    buildRoute(HttpMethod.GET, loginPath, ExecutionHandle.of(controller, m));
+                    buildRoute(HttpMethod.GET, loginPath, ExecutionHandle.of(controller, m))
+                            .produces(MediaType.TEXT_HTML_TYPE);
                     if (isDefaultProvider) {
                         final String defaultLoginPath = oauthRouteUrlBuilder.buildLoginUri(null).getPath();
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Registering default login route [GET: {}] for oauth configuration [{}]", defaultLoginPath, name);
                         }
-                        buildRoute(HttpMethod.GET, defaultLoginPath, ExecutionHandle.of(controller, m));
+                        buildRoute(HttpMethod.GET, defaultLoginPath, ExecutionHandle.of(controller, m))
+                                .produces(MediaType.TEXT_HTML_TYPE);
                     }
                 });
 
@@ -106,8 +108,10 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                         LOG.debug("Registering callback route [GET: {}] for oauth configuration [{}]", callbackPath, name);
                         LOG.debug("Registering callback route [POST: {}] for oauth configuration [{}]", callbackPath, name);
                     }
-                    buildRoute(HttpMethod.GET, callbackPath, executionHandle);
-                    buildRoute(HttpMethod.POST, callbackPath, executionHandle).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+                    buildRoute(HttpMethod.GET, callbackPath, executionHandle).produces(MediaType.TEXT_HTML_TYPE);
+                    buildRoute(HttpMethod.POST, callbackPath, executionHandle)
+                            .produces(MediaType.TEXT_HTML_TYPE)
+                            .consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
 
                     if (isDefaultProvider) {
                         final String defaultCallbackPath = oauthRouteUrlBuilder.buildCallbackUri(null).getPath();
@@ -115,8 +119,10 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                             LOG.debug("Registering default callback route [GET: {}] for oauth configuration [{}]", defaultCallbackPath, name);
                             LOG.debug("Registering default callback route [POST: {}] for oauth configuration [{}]", defaultCallbackPath, name);
                         }
-                        buildRoute(HttpMethod.GET, defaultCallbackPath, executionHandle);
-                        buildRoute(HttpMethod.POST, defaultCallbackPath, executionHandle).consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+                        buildRoute(HttpMethod.GET, defaultCallbackPath, executionHandle).produces(MediaType.TEXT_HTML_TYPE);
+                        buildRoute(HttpMethod.POST, defaultCallbackPath, executionHandle)
+                                .produces(MediaType.TEXT_HTML_TYPE)
+                                .consumes(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
                     }
                 });
 
@@ -129,7 +135,8 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                             if (LOG.isDebugEnabled()) {
                                 LOG.debug("Registering end session route [GET: {}]", logoutUri);
                             }
-                            buildRoute(HttpMethod.GET, logoutUri, executionHandle);
+                            buildRoute(HttpMethod.GET, logoutUri, executionHandle)
+                                    .produces(MediaType.TEXT_HTML_TYPE);
                         });
                     }
                 }
