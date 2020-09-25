@@ -15,14 +15,13 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
-import io.micronaut.security.config.TokenCookieConfiguration;
-
 /**
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-public interface JwtCookieConfiguration extends TokenCookieConfiguration {
+@Deprecated
+public interface JwtCookieConfiguration extends AccessTokenCookieConfiguration {
 
     /**
      *

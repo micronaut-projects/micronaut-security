@@ -14,6 +14,8 @@ class JwtCookieConfigurationOverrideSpec extends Specification {
                 'micronaut.security.token.jwt.cookie.logout-target-url': '/logout',
                 'micronaut.security.token.jwt.cookie.login-success-target-url': '/welcome',
                 'micronaut.security.token.jwt.cookie.login-failure-target-url': '/login',
+                'micronaut.security.authentication': 'cookie',
+
         ])
         JwtCookieConfiguration jwtCookieConfiguration = applicationContext.getBean(JwtCookieConfiguration)
         RedirectConfiguration redirectConfiguration = applicationContext.getBean(RedirectConfiguration)
@@ -38,6 +40,8 @@ class JwtCookieConfigurationOverrideSpec extends Specification {
                 'micronaut.security.token.jwt.cookie.logout-target-url': '/logout',
                 'micronaut.security.token.jwt.cookie.login-success-target-url': '/welcome',
                 'micronaut.security.token.jwt.cookie.login-failure-target-url': '/login',
+
+                'micronaut.security.authentication': 'cookie',
         ])
         JwtCookieConfiguration jwtCookieConfiguration = applicationContext.getBean(JwtCookieConfiguration)
         RedirectConfiguration redirectConfiguration = applicationContext.getBean(RedirectConfiguration)

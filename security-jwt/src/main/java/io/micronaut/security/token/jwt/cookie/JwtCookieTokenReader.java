@@ -19,8 +19,10 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
+import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.reader.TokenReader;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 
@@ -30,6 +32,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Requires(property = JwtCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Singleton
 public class JwtCookieTokenReader implements TokenReader {
@@ -40,19 +43,34 @@ public class JwtCookieTokenReader implements TokenReader {
      */
     public static final Integer ORDER = 0;
 
+    @Deprecated
     protected final JwtCookieConfiguration jwtCookieConfiguration;
+    protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
 
     /**
      *
      * @param jwtCookieConfiguration Configuration properties for JWT Cookie support
+     * @deprecated Use {@link JwtCookieTokenReader#JwtCookieTokenReader(AccessTokenCookieConfiguration)} instead
      */
+    @Deprecated
     public JwtCookieTokenReader(JwtCookieConfiguration jwtCookieConfiguration) {
         this.jwtCookieConfiguration = jwtCookieConfiguration;
+        this.accessTokenCookieConfiguration = jwtCookieConfiguration;
+    }
+
+    /**
+     *
+     * @param accessTokenCookieConfiguration Configuration properties for JWT Cookie support
+     */
+    @Inject
+    public JwtCookieTokenReader(AccessTokenCookieConfiguration accessTokenCookieConfiguration) {
+        this.jwtCookieConfiguration = null;
+        this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
     }
 
     @Override
     public Optional<String> findToken(HttpRequest<?> request) {
-        Optional<Cookie> optionalCookie = request.getCookies().findCookie(jwtCookieConfiguration.getCookieName());
+        Optional<Cookie> optionalCookie = request.getCookies().findCookie(accessTokenCookieConfiguration.getCookieName());
         return optionalCookie.map(Cookie::getValue);
     }
 

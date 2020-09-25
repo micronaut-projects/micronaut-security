@@ -26,6 +26,8 @@ class CookieEnabledSpec extends ApplicationContextSpecification {
         where:
         clazz << [
                 JwtCookieConfiguration,
+                AccessTokenCookieConfiguration,
+                RefreshTokenCookieConfiguration,
                 JwtCookieConfigurationProperties,
                 JwtCookieTokenReader,
         ]
