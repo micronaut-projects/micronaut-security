@@ -44,18 +44,39 @@ import java.util.Optional;
  */
 public abstract class CookieLoginHandler implements RedirectingLoginHandler {
 
+    @Deprecated
     protected final JwtCookieConfiguration jwtCookieConfiguration;
+    protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
     protected final PriorToLoginPersistence priorToLoginPersistence;
     protected final String loginFailure;
     protected final String loginSuccess;
     protected final String refresh;
 
     /**
+     * @param accessTokenCookieConfiguration Access token cookie configuration
      * @param redirectConfiguration Redirect configuration
-     * @param jwtCookieConfiguration JWT Cookie Configuration
      * @param priorToLoginPersistence The prior to login persistence strategy
      */
     @Inject
+    public CookieLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                              RedirectConfiguration redirectConfiguration,
+                              @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        this.loginFailure = redirectConfiguration.getLoginFailure();
+        this.loginSuccess = redirectConfiguration.getLoginSuccess();
+        RefreshRedirectConfiguration refreshConfig = redirectConfiguration.getRefresh();
+        this.refresh = refreshConfig.isEnabled() ? refreshConfig.getUrl() : null;
+        this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
+        this.priorToLoginPersistence = priorToLoginPersistence;
+        this.jwtCookieConfiguration = null;
+    }
+
+    /**
+     * @param redirectConfiguration Redirect configuration
+     * @param jwtCookieConfiguration JWT Cookie Configuration
+     * @param priorToLoginPersistence The prior to login persistence strategy
+     * @deprecated Use {@link CookieLoginHandler#CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)} instead.
+     */
+    @Deprecated
     public CookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
                               RedirectConfiguration redirectConfiguration,
                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
@@ -64,6 +85,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
         RefreshRedirectConfiguration refreshConfig = redirectConfiguration.getRefresh();
         this.refresh = refreshConfig.isEnabled() ? refreshConfig.getUrl() : null;
         this.jwtCookieConfiguration = jwtCookieConfiguration;
+        this.accessTokenCookieConfiguration = jwtCookieConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
     }
 
@@ -72,7 +94,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
      * @param jwtCookieConfiguration JWT Cookie Configuration
      * @param loginSuccess Url to redirect to after a successful Login
      * @param loginFailure Url to redirect to after an unsuccessful login
-     * @deprecated Use {@link CookieLoginHandler#CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)} instead.
+     * @deprecated Use {@link CookieLoginHandler#CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)} instead.
      */
     @Deprecated
     public CookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
@@ -82,6 +104,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
         this.loginSuccess = loginSuccess;
         this.refresh = "/";
         this.jwtCookieConfiguration = jwtCookieConfiguration;
+        this.accessTokenCookieConfiguration = jwtCookieConfiguration;
         this.priorToLoginPersistence = null;
     }
 
