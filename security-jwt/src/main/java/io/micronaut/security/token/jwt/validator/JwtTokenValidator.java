@@ -24,7 +24,7 @@ import org.reactivestreams.Publisher;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Collection;
 
 /**
  * @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/validating-jwt-access-tokens">Validating JWT Access Tokens</a>
@@ -36,7 +36,7 @@ import java.util.*;
 public class JwtTokenValidator implements TokenValidator {
 
     protected final JwtAuthenticationFactory jwtAuthenticationFactory;
-    private final JwtValidator validator;
+    protected final JwtValidator validator;
 
     /**
      * Constructor.
@@ -69,6 +69,7 @@ public class JwtTokenValidator implements TokenValidator {
     }
 
     /***
+     * @deprecated Use {@link JwtTokenValidator#validateToken(String, io.micronaut.http.HttpRequest)} instead.
      * @param token The token string.
      * @return Publishes {@link Authentication} based on the JWT or empty if the validation fails.
      */
@@ -80,5 +81,4 @@ public class JwtTokenValidator implements TokenValidator {
                 .map(Flowable::just)
                 .orElse(Flowable.empty());
     }
-
 }

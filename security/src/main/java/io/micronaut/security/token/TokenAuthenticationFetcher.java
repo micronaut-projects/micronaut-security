@@ -78,7 +78,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
         String tokenValue = token.get();
 
         return Flowable.fromIterable(tokenValidators)
-                .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue))
+                .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                 .firstElement()
                 .map(authentication -> {
                     request.setAttribute(TOKEN, tokenValue);

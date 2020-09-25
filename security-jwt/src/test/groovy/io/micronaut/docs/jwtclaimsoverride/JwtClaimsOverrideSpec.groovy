@@ -15,8 +15,6 @@ import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.testutils.EmbeddedServerSpecification
 import io.reactivex.Flowable
-import spock.lang.AutoCleanup
-import spock.lang.Shared
 
 class JwtClaimsOverrideSpec extends EmbeddedServerSpecification {
 
