@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 /**
- * Security login, logout and introspection endpoints.
- *
- * @author Graeme Rocher
- * @since 1.0
+ * Introspection endpoint related classes.
+ * @see <a href="https://tools.ietf.org/html/rfc7662">OAuth 2.0 Token Introspection</a>
+ * @author Sergio del Amo
+ * @since 2.1.0
  */
-package io.micronaut.security.endpoints;
+@Configuration
+@Requires(property = IntrospectionConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+package io.micronaut.security.endpoints.introspection;
+
+import io.micronaut.context.annotation.Configuration;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;

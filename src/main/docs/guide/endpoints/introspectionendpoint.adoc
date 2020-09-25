@@ -1,0 +1,1 @@
+The https://tools.ietf.org/html/rfc7662#section-5.1[Introspection endpoint] exposes an endpoint to inquire the current state of a token.
