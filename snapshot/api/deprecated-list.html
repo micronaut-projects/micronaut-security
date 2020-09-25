@@ -314,10 +314,35 @@
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#setUnauthorizedTargetUrl-java.lang.String-">io.micronaut.security.session.SecuritySessionConfigurationProperties.setUnauthorizedTargetUrl(String)</a></td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-">io.micronaut.security.token.validator.TokenValidator.validateToken(String)</a></td>
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtValidator.html#validate-com.nimbusds.jwt.JWT-">io.micronaut.security.token.jwt.validator.JwtValidator.validate(JWT)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/validator/JwtValidator.html#validate-com.nimbusds.jwt.JWT-io.micronaut.http.HttpRequest-"><code>JwtValidator.validate(JWT, HttpRequest)</code></a> instead</span></div>
+</td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#validateToken-java.lang.String-">io.micronaut.security.token.jwt.validator.JwtTokenValidator.validateToken(String)</a></td>
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">io.micronaut.security.token.jwt.validator.ExpirationJwtClaimsValidator.validate(JwtClaims)</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">io.micronaut.security.token.jwt.validator.JwtClaimsValidator.validate(JwtClaims)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-"><code>JwtClaimsValidator.validate(JwtClaims, HttpRequest)</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">io.micronaut.security.token.jwt.validator.SubjectNotNullJwtClaimsValidator.validate(JwtClaims)</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtValidator.html#validate-java.lang.String-">io.micronaut.security.token.jwt.validator.JwtValidator.validate(String)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/validator/JwtValidator.html#validate-java.lang.String-io.micronaut.http.HttpRequest-"><code>JwtValidator.validate(String, HttpRequest)</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-">io.micronaut.security.token.validator.TokenValidator.validateToken(String)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-"><code>TokenValidator.validateToken(String, HttpRequest)</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#validateToken-java.lang.String-">io.micronaut.security.token.jwt.validator.JwtTokenValidator.validateToken(String)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-"><code>TokenValidator.validateToken(String, io.micronaut.http.HttpRequest)</code></a> instead.</span></div>
+</td>
 </tr>
 </tbody>
 </table>
