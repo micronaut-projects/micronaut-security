@@ -157,6 +157,16 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html#AccessTokenConfigurationProperties--">AccessTokenConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">AccessTokenConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/jwt/cookie/AccessTokenCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie"><span class="typeNameLink">AccessTokenCookieConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
+<dd>
+<div class="block">Configuration for the access token cookie.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#accessTokenCookieConfiguration">accessTokenCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#accessTokenCookieConfiguration">accessTokenCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html#accessTokenCookieConfiguration">accessTokenCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieTokenReader</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#accessTokenExpiration-io.micronaut.security.authentication.UserDetails-">accessTokenExpiration(UserDetails)</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#accessTokenExpiration-java.util.Map-">accessTokenExpiration(Map&lt;String, ?&gt;)</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
@@ -766,12 +776,18 @@
 <dd>
 <div class="block">Abstract class which defines an implementation of <a href="io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers"><code>RedirectingLoginHandler</code></a> where a redirect response is issued.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#CookieLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#CookieLoginHandler-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#CookieLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#CookieLoginHandler-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-"><code>CookieLoginHandler.CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)</code></a> instead.</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#CookieLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-java.lang.String-java.lang.String-">CookieLoginHandler(JwtCookieConfiguration, String, String)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#CookieLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-"><code>CookieLoginHandler.CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)</code></a> instead.</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#CookieLoginHandler-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-"><code>CookieLoginHandler.CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)</code></a> instead.</span></div>
 </div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie"><span class="typeNameLink">CookieNoncePersistence</span></a> - Class in <a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/package-summary.html">io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie</a></dt>
@@ -877,11 +893,23 @@
 <dd>
 <div class="block">The default cookie name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#DEFAULT_COOKIENAME">DEFAULT_COOKIENAME</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default cookie name.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_COOKIEPATH">DEFAULT_COOKIEPATH</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">Default Cookie Path.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#DEFAULT_COOKIEPATH">DEFAULT_COOKIEPATH</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Default Cookie Path.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_COOKIESAMESITE">DEFAULT_COOKIESAMESITE</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default same-site setting for the JWT cookie.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#DEFAULT_COOKIESAMESITE">DEFAULT_COOKIESAMESITE</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default same-site setting for the JWT cookie.</div>
 </dd>
@@ -956,6 +984,10 @@
 <dd>
 <div class="block">The default enable value.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default enable value.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></span> - Static variable in class io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.endpoints">KeysControllerConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default enable value.</div>
@@ -993,6 +1025,10 @@
 <div class="block">Default Get Allowed.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_HTTPONLY">DEFAULT_HTTPONLY</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default http only value.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#DEFAULT_HTTPONLY">DEFAULT_HTTPONLY</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default http only value.</div>
 </dd>
@@ -1055,6 +1091,10 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_ROLES_NAME">DEFAULT_ROLES_NAME</a></span> - Static variable in interface io.micronaut.security.token.config.<a href="io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_SECURE">DEFAULT_SECURE</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default secure value.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#DEFAULT_SECURE">DEFAULT_SECURE</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default secure value.</div>
 </dd>
@@ -1920,11 +1960,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookieDomain--">getCookieDomain()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#getCookieDomain--">getCookieDomain()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#getCookieMaxAge--">getCookieMaxAge()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#getCookieMaxAge--">getCookieMaxAge()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookieMaxAge--">getCookieMaxAge()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#getCookieMaxAge--">getCookieMaxAge()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#getCookieName--">getCookieName()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -1932,11 +1976,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookieName--">getCookieName()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#getCookieName--">getCookieName()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#getCookiePath--">getCookiePath()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#getCookiePath--">getCookiePath()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookiePath--">getCookiePath()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#getCookiePath--">getCookiePath()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#getCookies-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">getCookies(UserDetails, HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></dt>
 <dd>&nbsp;</dd>
@@ -1955,6 +2003,8 @@
 <div class="block">Return the cookies for the given parameters.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookieSameSite--">getCookieSameSite()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#getCookieSameSite--">getCookieSameSite()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html#getCountry--">getCountry()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">Address</a></dt>
 <dd>&nbsp;</dd>
@@ -3232,6 +3282,10 @@
 <div class="block">Sets <a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie"><code>CookieLoginHandler</code></a>`s cookie value to the idtoken received from an authentication provider.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#IdTokenLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">IdTokenLoginHandler(JwtCookieConfiguration, RedirectConfiguration, TokenConfiguration, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#IdTokenLoginHandler-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, TokenConfiguration, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/endpoints/LogoutController.html#index-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-">index(HttpRequest&lt;?&gt;, Authentication)</a></span> - Method in class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LogoutController.html" title="class in io.micronaut.security.endpoints">LogoutController</a></dt>
 <dd>
@@ -3577,11 +3631,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#isCookieHttpOnly--">isCookieHttpOnly()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#isCookieHttpOnly--">isCookieHttpOnly()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#isCookieSecure--">isCookieSecure()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#isCookieSecure--">isCookieSecure()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#isCookieSecure--">isCookieSecure()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#isCookieSecure--">isCookieSecure()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html#isEmailVerified--">isEmailVerified()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">JWTOpenIdClaims</a></dt>
 <dd>&nbsp;</dd>
@@ -3630,6 +3688,8 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/config/JwtConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.token.jwt.config.<a href="io/micronaut/security/token/jwt/config/JwtConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.config">JwtConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html#isEnabled--">isEnabled()</a></span> - Method in class io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.endpoints">KeysControllerConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -3848,19 +3908,33 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-">JwtCookieClearerLogoutHandler(JwtCookieConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-"><code>JwtCookieClearerLogoutHandler.JwtCookieClearerLogoutHandler(JwtCookieConfiguration, RedirectConfiguration)</code></a> instead.</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-"><code>JwtCookieClearerLogoutHandler.JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, RedirectConfiguration)</code></a> instead.</span></div>
 </div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-">JwtCookieClearerLogoutHandler(JwtCookieConfiguration, RedirectConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-"><code>JwtCookieClearerLogoutHandler.JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, RedirectConfiguration)</code></a> instead.</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-">JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, RedirectConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#jwtCookieConfiguration">jwtCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#jwtCookieConfiguration">jwtCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie"><span class="typeNameLink">JwtCookieConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html#jwtCookieConfiguration">jwtCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieTokenReader</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie"><span class="typeNameLink">JwtCookieConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#JwtCookieConfigurationProperties-io.micronaut.security.config.RedirectConfigurationProperties-io.micronaut.core.value.PropertyResolver-">JwtCookieConfigurationProperties(RedirectConfigurationProperties, PropertyResolver)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
@@ -3870,16 +3944,28 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-">JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-"><code>JwtCookieLoginHandler.JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)</code></a> instead.</span></div>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-"><code>JwtCookieLoginHandler.JwtCookieLoginHandler(RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)</code></a> instead.</span></div>
 </div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-">JwtCookieLoginHandler(RedirectConfiguration, JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-"><code>JwtCookieLoginHandler.JwtCookieLoginHandler(RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)</code></a> instead.</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#JwtCookieLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration-io.micronaut.security.token.jwt.generator.AccessTokenConfiguration-io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator-io.micronaut.security.errors.PriorToLoginPersistence-">JwtCookieLoginHandler(RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html" title="class in io.micronaut.security.token.jwt.cookie"><span class="typeNameLink">JwtCookieTokenReader</span></a> - Class in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
 <dd>
 <div class="block">Reads the token from the configured io.micronaut.security.token.jwt.cookie.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html#JwtCookieTokenReader-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-">JwtCookieTokenReader(JwtCookieConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieTokenReader</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html#JwtCookieTokenReader-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-"><code>JwtCookieTokenReader.JwtCookieTokenReader(AccessTokenCookieConfiguration)</code></a> instead</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html#JwtCookieTokenReader-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-">JwtCookieTokenReader(AccessTokenCookieConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieTokenReader</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><span class="typeNameLink">JwtGeneratorConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/jwt/generator/package-summary.html">io.micronaut.security.token.jwt.generator</a></dt>
 <dd>
@@ -4764,6 +4850,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.endpoints">KeysControllerConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.endpoints">OauthControllerConfigurationProperties</a></dt>
@@ -4880,6 +4968,18 @@
 <div class="block"><code>ConfigurationProperties</code> implementation of <a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><code>RefreshTokenConfiguration</code></a> to configure <a href="io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator"><code>SignedRefreshTokenGenerator</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#RefreshTokenConfigurationProperties--">RefreshTokenConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#refreshTokenCookieConfiguration">refreshTokenCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#refreshTokenCookieConfiguration">refreshTokenCookieConfiguration</a></span> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie"><span class="typeNameLink">RefreshTokenCookieConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
+<dd>
+<div class="block">Configuration for the refresh token cookie.</div>
+</dd>
+<dt><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie"><span class="typeNameLink">RefreshTokenCookieConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#RefreshTokenCookieConfigurationProperties-java.lang.String-">RefreshTokenCookieConfigurationProperties(String)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><span class="typeNameLink">RefreshTokenGeneratedEvent</span></a> - Class in <a href="io/micronaut/security/token/event/package-summary.html">io.micronaut.security.token.event</a></dt>
 <dd>
@@ -5456,6 +5556,10 @@
 <dd>
 <div class="block">Sets the domain name of this Cookie.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#setCookieDomain-java.lang.String-">setCookieDomain(String)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the domain name of this Cookie.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#setCookieHttpOnly-java.lang.Boolean-">setCookieHttpOnly(Boolean)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
 <dd>
 <div class="block">Whether the Cookie can only be accessed via HTTP.</div>
@@ -5465,6 +5569,10 @@
 <div class="block">Whether the Cookie can only be accessed via HTTP.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieHttpOnly-java.lang.Boolean-">setCookieHttpOnly(Boolean)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Whether the Cookie can only be accessed via HTTP.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#setCookieHttpOnly-java.lang.Boolean-">setCookieHttpOnly(Boolean)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">Whether the Cookie can only be accessed via HTTP.</div>
 </dd>
@@ -5480,6 +5588,10 @@
 <dd>
 <div class="block">Sets the maximum age of the cookie.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#setCookieMaxAge-java.time.Duration-">setCookieMaxAge(Duration)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the maximum age of the cookie.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#setCookieName-java.lang.String-">setCookieName(String)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
 <dd>
 <div class="block">Cookie Name.</div>
@@ -5489,6 +5601,10 @@
 <div class="block">Cookie Name.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieName-java.lang.String-">setCookieName(String)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Cookie Name.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#setCookieName-java.lang.String-">setCookieName(String)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">Cookie Name.</div>
 </dd>
@@ -5504,7 +5620,15 @@
 <dd>
 <div class="block">Sets the path of the cookie.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#setCookiePath-java.lang.String-">setCookiePath(String)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the path of the cookie.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieSameSite-io.micronaut.http.cookie.SameSite-">setCookieSameSite(SameSite)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the same-site setting of the cookie.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#setCookieSameSite-io.micronaut.http.cookie.SameSite-">setCookieSameSite(SameSite)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">Sets the same-site setting of the cookie.</div>
 </dd>
@@ -5517,6 +5641,10 @@
 <div class="block">Sets whether the cookie is secured.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieSecure-java.lang.Boolean-">setCookieSecure(Boolean)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets whether the cookie is secured.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#setCookieSecure-java.lang.Boolean-">setCookieSecure(Boolean)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">Sets whether the cookie is secured.</div>
 </dd>
@@ -5609,6 +5737,10 @@
 <div class="block">Sets whether JWT security is enabled.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets whether JWT cookie configuration is enabled.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#setEnabled-boolean-">setEnabled(boolean)</a></span> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">Sets whether JWT cookie configuration is enabled.</div>
 </dd>
