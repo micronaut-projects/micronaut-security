@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.routes;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -69,6 +70,7 @@ public class DefaultOauthController implements OauthController {
     }
 
     @Override
+    @SingleResult
     public Publisher<MutableHttpResponse<?>> login(HttpRequest<?> request) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received login request for provider [{}]", oauthClient.getName());
@@ -77,6 +79,7 @@ public class DefaultOauthController implements OauthController {
     }
 
     @Override
+    @SingleResult
     public Publisher<MutableHttpResponse<?>> callback(HttpRequest<Map<String, Object>> request) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());
