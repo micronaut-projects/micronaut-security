@@ -26,7 +26,6 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
