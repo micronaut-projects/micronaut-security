@@ -111,7 +111,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
      * @param clientConfiguration The client configuration
      * @throws InvalidStateException if the state did not pass validation
      */
-    protected void validateState(OpenIdAuthorizationResponse authorizationResponse, OauthClientConfiguration clientConfiguration) throws InvalidStateException {
+    private void validateState(OpenIdAuthorizationResponse authorizationResponse, OauthClientConfiguration clientConfiguration) throws InvalidStateException {
         if (stateValidator != null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Validating state found in the authorization response from provider [{}]", clientConfiguration.getName());
@@ -132,7 +132,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
      * @param tokenEndpoint The token endpoint
      * @return The open id token response from the Authorization server
      */
-    protected Publisher<OpenIdTokenResponse> sendRequest(OpenIdAuthorizationResponse authorizationResponse,
+    private Publisher<OpenIdTokenResponse> sendRequest(OpenIdAuthorizationResponse authorizationResponse,
                                                OauthClientConfiguration clientConfiguration,
                                                SecureEndpoint tokenEndpoint) {
         OpenIdCodeTokenRequestContext requestContext = new OpenIdCodeTokenRequestContext(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration);
@@ -149,7 +149,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
      * @param state State
      * @return An authentication response publisher
      */
-    protected Flowable<AuthenticationResponse> createAuthenticationResponse(String nonce,
+    private Flowable<AuthenticationResponse> createAuthenticationResponse(String nonce,
                                                                             OauthClientConfiguration clientConfiguration,
                                                                             OpenIdProviderMetadata openIdProviderMetadata,
                                                                             OpenIdTokenResponse openIdTokenResponse,
@@ -190,7 +190,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
      * @return An Authentication response if the open id token could  be validated
      * @throws ParseException If the payload of the JWT doesn't represent a valid JSON object and a JWT claims set.
      */
-    protected Optional<AuthenticationResponse> validateOpenIdTokenResponse(String nonce,
+    private Optional<AuthenticationResponse> validateOpenIdTokenResponse(String nonce,
                                                                            OauthClientConfiguration clientConfiguration,
                                                                            OpenIdProviderMetadata openIdProviderMetadata,
                                                                            OpenIdTokenResponse openIdTokenResponse,
