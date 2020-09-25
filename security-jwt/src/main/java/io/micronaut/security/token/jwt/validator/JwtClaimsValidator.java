@@ -15,6 +15,9 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
@@ -29,9 +32,14 @@ public interface JwtClaimsValidator {
     String PREFIX = JwtConfigurationProperties.PREFIX + ".claims-validators";
 
     /**
-     *
+     * @deprecated Use {@link JwtClaimsValidator#validate(JwtClaims, HttpRequest)} instead.
      * @param claims JWT Claims
      * @return whether the JWT claims pass validation.
      */
+    @Deprecated
     boolean validate(JwtClaims claims);
+
+    default boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+        return validate(claims);
+    }
 }
