@@ -9,10 +9,14 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.validator.TokenValidator
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import javax.inject.Singleton
@@ -30,6 +34,7 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
         when: 'invalid introspection request'
         HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .basicAuth('user', 'password')
         client.exchange(request, Map)
 
         then:
@@ -39,6 +44,7 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
         when:
         request = HttpRequest.POST("/token_info", new IntrospectionRequest("XXX"))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .basicAuth('user', 'password')
         HttpResponse<Map> response = client.exchange(request, Map)
 
         then:
@@ -55,6 +61,7 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
         when:
         request = HttpRequest.POST("/token_info", new IntrospectionRequest("2YotnFZFEjr1zCsicMWpAA"))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .basicAuth('user', 'password')
         response = client.exchange(request, Map)
 
         then:
@@ -117,6 +124,19 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
                 return Flowable.just(authentication)
             }
             return Flowable.empty()
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'IntrospectionControllerSpec')
+    @Singleton
+    static class MockAuthenticationProvider implements AuthenticationProvider {
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            return Flowable.create(emitter -> {
+                emitter.onNext(new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io']))
+                emitter.onComplete()
+            }, BackpressureStrategy.ERROR)
         }
     }
 

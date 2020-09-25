@@ -53,6 +53,7 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
         String refreshToken = loginRsp.body().refreshToken
         HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest(refreshToken))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .basicAuth('user', 'password')
         HttpResponse<Map> response = client.exchange(request, Map)
 
         then:
@@ -101,4 +102,5 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
             }, BackpressureStrategy.ERROR)
         }
     }
+
 }

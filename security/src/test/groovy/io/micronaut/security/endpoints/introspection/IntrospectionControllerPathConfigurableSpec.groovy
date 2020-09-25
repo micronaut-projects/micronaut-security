@@ -8,10 +8,14 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.security.EmbeddedServerSpecification
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.AuthenticationRequest
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.validator.TokenValidator
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
@@ -33,6 +37,7 @@ class IntrospectionControllerPathConfigurableSpec extends EmbeddedServerSpecific
         when:
         HttpRequest request = HttpRequest.POST("/introspection", new IntrospectionRequest("XXX"))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .basicAuth('user', 'password')
         HttpResponse<Map> response = client.exchange(request, Map)
 
         then:
@@ -60,4 +65,16 @@ class IntrospectionControllerPathConfigurableSpec extends EmbeddedServerSpecific
         }
     }
 
+    @Requires(property = 'spec.name', value = 'IntrospectionControllerPathConfigurableSpec')
+    @Singleton
+    static class MockAuthenticationProvider implements AuthenticationProvider {
+
+        @Override
+        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+            return Flowable.create(emitter -> {
+                emitter.onNext(new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io']))
+                emitter.onComplete()
+            }, BackpressureStrategy.ERROR)
+        }
+    }
 }

@@ -17,6 +17,7 @@ package io.micronaut.security.endpoints.introspection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;
 
 /**
@@ -25,7 +26,6 @@ import org.reactivestreams.Publisher;
  * @author Sergio del Amo
  * @since 2.1.0
  */
-@FunctionalInterface
 public interface IntrospectionProcessor {
 
     /**
@@ -36,5 +36,15 @@ public interface IntrospectionProcessor {
      */
     @NonNull
     Publisher<IntrospectionResponse> introspect(@NonNull IntrospectionRequest introspectionRequest,
+                                                @NonNull HttpRequest<?> httpRequest);
+
+    /**
+     *
+     * @param authentication The authentication
+     * @param httpRequest HTTP Request
+     * @return Introspection Response
+     */
+    @NonNull
+    Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
                                                 @NonNull HttpRequest<?> httpRequest);
 }

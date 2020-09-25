@@ -18,7 +18,6 @@ package io.micronaut.security.endpoints.introspection;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -26,8 +25,10 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -47,17 +48,13 @@ import javax.validation.constraints.NotNull;
 public class IntrospectionController {
     private static final Logger LOG = LoggerFactory.getLogger(IntrospectionController.class);
 
-    protected final IntrospectionEndpointAuthorizer authorizer;
     protected final IntrospectionProcessor processor;
 
     /**
      *
      * @param processor Introspection Processor
-     * @param authorizer Introspection Authorizer
      */
-    public IntrospectionController(IntrospectionProcessor processor,
-                                   @Nullable IntrospectionEndpointAuthorizer authorizer) {
-        this.authorizer = authorizer;
+    public IntrospectionController(IntrospectionProcessor processor) {
         this.processor = processor;
     }
 
@@ -68,25 +65,34 @@ public class IntrospectionController {
      * @return The HTTP Response containing an introspection response in the body
      */
     @Post
+    @Secured(SecurityRule.IS_AUTHENTICATED)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Single<MutableHttpResponse<?>> tokenInfo(@NonNull @Body @Valid @NotNull IntrospectionRequest introspectionRequest,
                                                     @NonNull HttpRequest<?> request) {
-        return (authorizer == null ?
-                Single.just(true) :
-                Flowable.fromPublisher(authorizer.isAuthorized(introspectionRequest, request)).first(false)
-        ).flatMap(authorized -> {
-            if (authorized) {
-                return Flowable.fromPublisher(processor.introspect(introspectionRequest, request))
-                        .map(introspectionResponse -> HttpResponse.ok(introspectionResponseAsJsonString(introspectionResponse)))
-                        .first(HttpResponse.ok(introspectionResponseAsJsonString(new IntrospectionResponse(false))));
-            } else {
-                return Single.just(HttpResponse.unauthorized());
-            }
-        });
+        return Flowable.fromPublisher(processor.introspect(introspectionRequest, request))
+                .map(this::introspectionResponseAsJsonString)
+                .first(introspectionResponseAsJsonString(new IntrospectionResponse(false)))
+                .map(HttpResponse::ok);
     }
 
     /**
-     * This is necessary due to https://github.com/micronaut-projects/micronaut-core/issues/4179
+     *
+     * @param authentication Currently authenticated user
+     * @param request HTTP Request
+     * @return The HTTP Response containing an introspection response in the body
+     */
+    @Get
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    public Single<MutableHttpResponse<?>> echo(@NonNull Authentication authentication,
+                                               @NonNull HttpRequest<?> request) {
+        return Flowable.fromPublisher(processor.introspect(authentication, request))
+                .map(this::introspectionResponseAsJsonString)
+                .first(introspectionResponseAsJsonString(new IntrospectionResponse(false)))
+                .map(HttpResponse::ok);
+    }
+
+    /**
+     * This is necessary due to https://github.com/micronaut-projects/micronaut-core/issues/4179 .
      */
     @NonNull
     private String introspectionResponseAsJsonString(@NonNull IntrospectionResponse introspectionResponse) {

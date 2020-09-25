@@ -45,7 +45,7 @@ class IntrospectionEndpointSpec extends EmbeddedServerSpecification {
         loginRsp.body().accessToken
 
         when:
-        String accessToken =  loginRsp.body().accessToken
+        String accessToken = loginRsp.body().accessToken
         HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest("XXX"))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .bearerAuth(accessToken)
@@ -64,6 +64,56 @@ class IntrospectionEndpointSpec extends EmbeddedServerSpecification {
 
         when:
         request = HttpRequest.POST("/token_info", new IntrospectionRequest(accessToken, "access_token"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .bearerAuth(accessToken)
+        HttpResponse<IntrospectionResponse> rsp = client.exchange(request, IntrospectionResponse)
+
+        then:
+        noExceptionThrown()
+        rsp.status() == HttpStatus.OK
+
+        when:
+        IntrospectionResponse introspectionResponse = rsp.body()
+
+        then:
+        introspectionResponse.username == 'user'
+        introspectionResponse.active
+        !introspectionResponse.tokenType
+        !introspectionResponse.scope
+        !introspectionResponse.clientId
+        !introspectionResponse.tokenType
+        introspectionResponse.exp
+        introspectionResponse.exp > 0
+        introspectionResponse.iat
+        introspectionResponse.iat > 0
+        introspectionResponse.nbf
+        introspectionResponse.nbf > 0
+        introspectionResponse.sub == 'user'
+        introspectionResponse.iss
+        !introspectionResponse.aud
+        !introspectionResponse.jti
+        introspectionResponse.extensions
+        introspectionResponse.extensions['roles'] == ['ROLE_ADMIN', 'ROLE_USER']
+        introspectionResponse.extensions['email'] == 'john@micronaut.io'
+
+    }
+    void "authenticated GET /token_info returns the user introspection"() {
+        when:
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')
+        HttpResponse loginRsp = client.exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
+
+        then:
+        noExceptionThrown()
+        loginRsp.status() == HttpStatus.OK
+
+        when:
+        String accessToken = loginRsp.body().accessToken
+
+        then:
+        accessToken
+
+        when:
+        HttpRequest request = HttpRequest.GET("/token_info")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .bearerAuth(accessToken)
         HttpResponse<IntrospectionResponse> rsp = client.exchange(request, IntrospectionResponse)

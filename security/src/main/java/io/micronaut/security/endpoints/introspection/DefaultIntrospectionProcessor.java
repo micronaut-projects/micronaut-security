@@ -91,17 +91,26 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
         return Flowable.fromIterable(tokenValidators)
                 .flatMap(tokenValidator -> tokenValidator.validateToken(token, httpRequest))
                 .firstElement()
-                .map(this::createIntrospectionResponse)
+                .map(authentication -> createIntrospectionResponse(authentication, httpRequest))
                 .defaultIfEmpty(new IntrospectionResponse(refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent()))
                 .toFlowable();
+    }
+
+    @NonNull
+    @Override
+    public Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
+                                                       @NonNull HttpRequest<?> httpRequest) {
+        return Flowable.just(createIntrospectionResponse(authentication, httpRequest));
     }
 
     /**
      * Creates an {@link IntrospectionResponse} for an {@link Authentication}.
      * @param authentication Authentication
+     * @param httpRequest HTTP Request
      * @return an {@link IntrospectionResponse}
      */
-    protected IntrospectionResponse createIntrospectionResponse(@NonNull Authentication authentication) {
+    @NonNull
+    public IntrospectionResponse createIntrospectionResponse(@NonNull Authentication authentication, @NonNull HttpRequest<?> httpRequest) {
         IntrospectionResponse introspectionResponse = new IntrospectionResponse(true);
         List<String> processedAttributeNames = populateFields(authentication, introspectionResponse);
         Map<String, Object> extensions = new HashMap<>();
