@@ -59,7 +59,7 @@ public class IntrospectionConfigurationProperties implements IntrospectionConfig
     }
 
     /**
-     * Enables {@link io.micronaut.security.endpoints.LoginController}. Default value {@value #DEFAULT_ENABLED}
+     * Enables {@link io.micronaut.security.endpoints.introspection.IntrospectionController}. Default value {@value #DEFAULT_ENABLED}
      * @param enabled True if it is enabled
      */
     public void setEnabled(boolean enabled) {
@@ -67,7 +67,7 @@ public class IntrospectionConfigurationProperties implements IntrospectionConfig
     }
 
     /**
-     * Path to the {@link io.micronaut.security.endpoints.LoginController}. Default value {@value #DEFAULT_PATH}
+     * Path to the {@link io.micronaut.security.endpoints.introspection.IntrospectionController}. Default value {@value #DEFAULT_PATH}
      * @param path The path
      */
     public void setPath(@NonNull String path) {

@@ -7,16 +7,15 @@ Accept: application/json
 Content-Type: application/x-www-form-urlencoded
 Authorization: Basic dXNlcjpwYXNzd29yZA==
 token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjM1NjhjM2EzLWFlMmMtNDFiMy1hYzU5LTU0ZTkxODVkM2ViOCIsImlhdCI6MTYwMTA0OTU5OCwiZXhwIjoxNjAxMDUzMTk4fQ.Sc5Xh7jI6e_F3FAUo3n3AUCHNSxWH8t-WlM6JxeHZGI&token_type_hint=access_token
----
+----
 
 Moreover, you can access a secured GET endpoint which responds the introspection response for the authenticated user:
-
 
 [source, bash]
 ----
 GET /token_info
 Accept: application/json
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjM1NjhjM2EzLWFlMmMtNDFiMy1hYzU5LTU0ZTkxODVkM2ViOCIsImlhdCI6MTYwMTA0OTU5OCwiZXhwIjoxNjAxMDUzMTk4fQ.Sc5Xh7jI6e_F3FAUo3n3AUCHNSxWH8t-WlM6JxeHZGI
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjM1NjhjM2EzLWFlMmMtNDFiMy1hYzU5LTU0ZTkxODVkM2ViOCIsImlhdCI6MTYwMTA0OTU5OCwiZXhwIjoxNjAxMDUzMTk4fQ.Sc5Xh7jI6e_F3FAUo3n3AUCHNSxWH8t-WlM6JxeHZGI
 ----
 
 responds:
@@ -33,4 +32,6 @@ responds:
  "iat": 1601049598,
  "exp": 1601053198
 }
----
+----
+
+include::{includedir}configurationProperties/io.micronaut.security.endpoints.introspection.IntrospectionConfigurationProperties.adoc[]
