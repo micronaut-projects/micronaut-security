@@ -10,8 +10,9 @@ class JwtCookieConfigurationSpec extends ApplicationContextSpecification {
     @Shared
     JwtCookieConfiguration jwtCookieConfiguration = applicationContext.getBean(JwtCookieConfiguration)
 
+    @Override
     Map<String, Object> getConfiguration() {
-        ['micronaut.security.authentication': 'cookie']
+        super.getConfiguration() + ['micronaut.security.authentication': 'cookie']
     }
 
     @Deprecated

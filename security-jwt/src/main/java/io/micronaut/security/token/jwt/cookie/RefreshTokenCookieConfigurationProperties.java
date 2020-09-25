@@ -18,11 +18,13 @@ package io.micronaut.security.token.jwt.cookie;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
+import io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties;
 
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
@@ -68,7 +70,7 @@ public class RefreshTokenCookieConfigurationProperties implements RefreshTokenCo
      * Default Cookie Path.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_COOKIEPATH = "/oauth/access_token";
+    public static final String DEFAULT_COOKIEPATH = OauthControllerConfigurationProperties.DEFAULT_PATH;
 
     /**
      * The default same-site setting for the JWT cookie.
@@ -84,6 +86,16 @@ public class RefreshTokenCookieConfigurationProperties implements RefreshTokenCo
     private SameSite cookieSameSite = DEFAULT_COOKIESAMESITE;
     private boolean enabled = DEFAULT_ENABLED;
     private String cookieName = DEFAULT_COOKIENAME;
+
+    /**
+     * @param oauthControllerPath The path for the oauth controller
+     */
+    public RefreshTokenCookieConfigurationProperties(
+            @Nullable @Property(name = OauthControllerConfigurationProperties.PREFIX + ".path") String oauthControllerPath) {
+        if (oauthControllerPath != null) {
+            cookiePath = oauthControllerPath;
+        }
+    }
 
     /**
      *
@@ -178,7 +190,7 @@ public class RefreshTokenCookieConfigurationProperties implements RefreshTokenCo
     }
 
     /**
-     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}.
+     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
      * @param cookiePath The path of the cookie.
      */
     public void setCookiePath(@Nullable String cookiePath) {
@@ -186,7 +198,7 @@ public class RefreshTokenCookieConfigurationProperties implements RefreshTokenCo
     }
 
     /**
-     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}.
+     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}).
      * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
      */
     public void setCookieHttpOnly(Boolean cookieHttpOnly) {
@@ -194,7 +206,7 @@ public class RefreshTokenCookieConfigurationProperties implements RefreshTokenCo
     }
 
     /**
-     * Sets whether the cookie is secured. Default value ({@value #DEFAULT_SECURE}.
+     * Sets whether the cookie is secured. Default value ({@value #DEFAULT_SECURE}).
      * @param cookieSecure True if the cookie is secure
      */
     public void setCookieSecure(Boolean cookieSecure) {

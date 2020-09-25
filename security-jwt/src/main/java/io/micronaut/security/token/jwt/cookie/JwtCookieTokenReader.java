@@ -50,6 +50,7 @@ public class JwtCookieTokenReader implements TokenReader {
     /**
      *
      * @param jwtCookieConfiguration Configuration properties for JWT Cookie support
+     * @deprecated Use {@link JwtCookieTokenReader#JwtCookieTokenReader(AccessTokenCookieConfiguration)} instead
      */
     @Deprecated
     public JwtCookieTokenReader(JwtCookieConfiguration jwtCookieConfiguration) {

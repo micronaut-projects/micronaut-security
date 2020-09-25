@@ -75,6 +75,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
      * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
      * @param priorToLoginPersistence Prior To Login Persistence Mechanism
+     * @deprecated Use {@link JwtCookieLoginHandler#JwtCookieLoginHandler(RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)} instead.
      */
     @Deprecated
     public JwtCookieLoginHandler(RedirectConfiguration redirectConfiguration,
@@ -114,7 +115,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
             @NonNull
             @Override
             public String getCookieName() {
-                return "JWT_REFRESH_TOKEN";
+                return RefreshTokenCookieConfigurationProperties.DEFAULT_COOKIENAME;
             }
 
             @Override
