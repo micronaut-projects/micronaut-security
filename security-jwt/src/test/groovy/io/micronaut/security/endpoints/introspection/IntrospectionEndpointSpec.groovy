@@ -5,6 +5,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
@@ -115,8 +116,14 @@ class IntrospectionEndpointSpec extends EmbeddedServerSpecification {
         when:
         HttpRequest request = HttpRequest.GET("/token_info")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .bearerAuth(accessToken)
-        HttpResponse<IntrospectionResponse> rsp = client.exchange(request, IntrospectionResponse)
+        client.exchange(request, IntrospectionResponse)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.status == HttpStatus.UNAUTHORIZED
+
+        when:
+        HttpResponse<IntrospectionResponse> rsp = client.exchange(request.bearerAuth(accessToken), IntrospectionResponse)
 
         then:
         noExceptionThrown()

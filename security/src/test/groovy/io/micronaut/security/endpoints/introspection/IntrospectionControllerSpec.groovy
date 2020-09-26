@@ -27,7 +27,18 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
         'IntrospectionControllerSpec'
     }
 
-    def "request to token_info responds with extensions"() {
+    void "post /token_info is secured"() {
+        when: 'invalid introspection request'
+        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest("2YotnFZFEjr1zCsicMWpAA"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        client.exchange(request, Map)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.status == HttpStatus.UNAUTHORIZED
+    }
+
+    void "request to token_info responds with extensions"() {
         expect:
         applicationContext.containsBean(TokenValidator)
 

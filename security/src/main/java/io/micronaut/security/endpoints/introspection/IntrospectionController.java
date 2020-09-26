@@ -44,7 +44,7 @@ import javax.validation.constraints.NotNull;
  * @since 2.1.0
  */
 @Controller("${" + IntrospectionConfigurationProperties.PREFIX + ".path:/token_info}")
-@Secured(SecurityRule.IS_ANONYMOUS)
+@Secured(SecurityRule.IS_AUTHENTICATED)
 public class IntrospectionController {
     private static final Logger LOG = LoggerFactory.getLogger(IntrospectionController.class);
 
@@ -65,7 +65,6 @@ public class IntrospectionController {
      * @return The HTTP Response containing an introspection response in the body
      */
     @Post
-    @Secured(SecurityRule.IS_AUTHENTICATED)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Single<MutableHttpResponse<?>> tokenInfo(@NonNull @Body @Valid @NotNull IntrospectionRequest introspectionRequest,
                                                     @NonNull HttpRequest<?> request) {
@@ -82,7 +81,6 @@ public class IntrospectionController {
      * @return The HTTP Response containing an introspection response in the body
      */
     @Get
-    @Secured(SecurityRule.IS_AUTHENTICATED)
     public Single<MutableHttpResponse<?>> echo(@NonNull Authentication authentication,
                                                @NonNull HttpRequest<?> request) {
         return Flowable.fromPublisher(processor.introspect(authentication, request))
