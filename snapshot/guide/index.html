@@ -188,6 +188,8 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-keys"><a href="#keys"><strong>12.4</strong><span>Keys Controller</span></a></div>
         
+        <div class="toc-item" style="margin-left:10px" id="toc-item-introspectionendpoint"><a href="#introspectionendpoint"><strong>12.5</strong><span>Introspection Endpoint</span></a></div>
+        
         <div class="toc-item" style="margin-left:0px" id="toc-item-retrievingAuthenticatedUser"><a href="#retrievingAuthenticatedUser"><strong>13</strong><span>Retrieve the authenticated user</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-securityService"><a href="#securityService"><strong>13.1</strong><span>User outside of a controller</span></a></div>
@@ -3611,6 +3613,83 @@ This controller can only be enabled if you are using JWT authentication.
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.keys.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysController.html">KeysController</a>. Default value "/keys".</p></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="introspectionendpoint"><a class="anchor" href="#introspectionendpoint"></a>12.5 Introspection Endpoint</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/introspectionendpoint.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The <a href="https://tools.ietf.org/html/rfc7662#section-5.1">Introspection endpoint</a> exposes an endpoint to inquire the current state of a token.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">POST /token_info
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic dXNlcjpwYXNzd29yZA==
+token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjM1NjhjM2EzLWFlMmMtNDFiMy1hYzU5LTU0ZTkxODVkM2ViOCIsImlhdCI6MTYwMTA0OTU5OCwiZXhwIjoxNjAxMDUzMTk4fQ.Sc5Xh7jI6e_F3FAUo3n3AUCHNSxWH8t-WlM6JxeHZGI&amp;token_type_hint=access_token</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Moreover, you can access a secured GET endpoint which responds the introspection response for the authenticated user:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GET /token_info
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjM1NjhjM2EzLWFlMmMtNDFiMy1hYzU5LTU0ZTkxODVkM2ViOCIsImlhdCI6MTYwMTA0OTU5OCwiZXhwIjoxNjAxMDUzMTk4fQ.Sc5Xh7jI6e_F3FAUo3n3AUCHNSxWH8t-WlM6JxeHZGI</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>responds:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+ "active": false
+ "username": "1234567890",
+ "sub": "1234567890",
+ "name": "John Doe",
+ "admin": true,
+ "jti": "3568c3a3-ae2c-41b3-ac59-54e9185d3eb8",
+ "iat": 1601049598,
+ "exp": 1601053198
+}</code></pre>
+</div>
+</div>
+<a id="io.micronaut.security.endpoints.introspection.IntrospectionConfigurationProperties" href="#io.micronaut.security.endpoints.introspection.IntrospectionConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/endpoints/introspection/IntrospectionConfigurationProperties.html">IntrospectionConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.introspection.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/endpoints/introspection/IntrospectionController.html">IntrospectionController</a>. Default value true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.introspection.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/endpoints/introspection/IntrospectionController.html">IntrospectionController</a>. Default value "/token_info"</p></td>
 </tr>
 </tbody>
 </table>
