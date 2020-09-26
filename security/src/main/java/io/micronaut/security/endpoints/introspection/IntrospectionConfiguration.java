@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.security.endpoints.introspection;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.util.Toggleable;
+
 /**
- * Security login, logout and introspection endpoints.
- *
- * @author Graeme Rocher
- * @since 1.0
+ * Encapsulates the configuration of {@link IntrospectionController}.
+ * @author Sergio del Amo
+ * @since 2.1.0
  */
-package io.micronaut.security.endpoints;
+@DefaultImplementation(IntrospectionConfigurationProperties.class)
+public interface IntrospectionConfiguration extends Toggleable {
+
+    /**
+     * @return path
+     */
+    @NonNull
+    String getPath();
+}
