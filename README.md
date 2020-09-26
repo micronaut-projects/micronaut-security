@@ -23,4 +23,4 @@ See the [Documentation](https://micronaut-projects.github.io/micronaut-security/
 
 ## Build and Run tests Locally
 
-`./gradlew -Dgeb.env=firefox build`
+`./gradlew build`
