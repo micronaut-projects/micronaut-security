@@ -103,8 +103,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                         userDetailsMapper,
                         authorizationResponse.getState()));
     }
-
-
+    
     /**
      * Validates the Authorization response state.
      * @param authorizationResponse The authorization response
