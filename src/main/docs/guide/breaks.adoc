@@ -15,16 +15,6 @@ The Maven Group ID has changed from `io.micronaut` to `io.micronaut.security`.
 
 * You don't need to enable Endpoints. The configuration keys `micronaut.security.endpoints.keys.enabled`, `micronaut.security.endpoints.login.enabled`, `micronaut.security.endpoints.logout.enabled`, `micronaut.security.endpoints.oauth.enabled` are now all `true` by default. However, You will need to provide the required beans for each endpoint.
 
-=== UserDetails deleted in favour of Authentication
-
-`UserDetails` has been removed. Every api which previously used `UserDetails` uses api:security.authentication.Authentication[] instead. `Authentication` provides several static `build` methods to creates instances of `Authentication` for a particular user.
-
-`io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper` has been renamed to  `io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper`
-
-`io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper` has been renamed to  `io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper`.
-
-`io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper` renamed to `io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper`.
-
 === Authentication Provider
 
 * The api:security.authentication.AuthenticationProvider[] API has changed to include the HTTP request as a parameter. Thus, it is now possible to gain access to the request in your api:security.authentication.AuthenticationProvider[]. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.
