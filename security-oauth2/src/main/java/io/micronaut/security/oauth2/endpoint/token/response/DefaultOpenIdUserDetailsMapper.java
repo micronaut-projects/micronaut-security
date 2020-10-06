@@ -75,6 +75,7 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
     @NonNull
     @Override
+    @Deprecated
     public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         Map<String, Object> claims = buildAttributes(providerName, tokenResponse, openIdClaims);
         List<String> roles = getRoles(providerName, tokenResponse, openIdClaims);
