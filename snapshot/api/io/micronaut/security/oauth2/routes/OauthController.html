@@ -184,6 +184,7 @@ public interface <span class="typeNameLabel">OauthController</span></pre>
 <li class="blockList">
 <h4>login</h4>
 <pre>@Executable
+ @SingleResult
 org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;login(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
 <div class="block">Performs an authorization redirect to an OAuth 2.0 provider.</div>
 <dl>
@@ -201,6 +202,7 @@ org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&
 <li class="blockList">
 <h4>callback</h4>
 <pre>@Executable
+ @SingleResult
 org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;&nbsp;callback(io.micronaut.http.HttpRequest&lt;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;request)</pre>
 <div class="block">Receives the authorization callback from the OAuth 2.0 provider
  and responds to the user.</div>
