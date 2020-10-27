@@ -137,7 +137,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      * @return The http response
      */
     @NonNull
-    public Optional<AccessRefreshToken> generate(String refreshToken, @NonNull Map<String, ?> oldClaims) {
+    public Optional<AccessRefreshToken> generate(@Nullable String refreshToken, @NonNull Map<String, ?> oldClaims) {
         Map<String, Object> claims = claimsGenerator.generateClaimsSet(oldClaims, accessTokenExpiration(oldClaims));
 
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
