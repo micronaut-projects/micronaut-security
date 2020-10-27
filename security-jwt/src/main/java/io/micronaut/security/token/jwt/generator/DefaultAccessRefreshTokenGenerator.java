@@ -164,7 +164,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      */
     @NonNull
     @Override
-    public Optional<AccessRefreshToken> generate(String refreshToken, @NonNull UserDetails userDetails) {
+    public Optional<AccessRefreshToken> generate(@Nullable String refreshToken, @NonNull UserDetails userDetails) {
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(userDetails, accessTokenExpiration(userDetails));
         if (!optionalAccessToken.isPresent()) {
             if (LOG.isDebugEnabled()) {
