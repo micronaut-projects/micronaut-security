@@ -21,6 +21,8 @@ import io.micronaut.core.annotation.Introspected;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+
+import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,9 +38,13 @@ import java.util.Map;
 public class ClientCredentialsGrant implements AsMap {
 
     public static final String KEY_GRANT_TYPE = "grant_type";
-    public static final String KEY_SCOPES = "scopes";
+    public static final String KEY_SCOPES = "scope";
 
+    @NonNull
+    @NotBlank
     private String grantType = GrantType.CLIENT_CREDENTIALS.toString();
+
+    @Nullable
     private String scope;
 
     /**
@@ -53,6 +59,14 @@ public class ClientCredentialsGrant implements AsMap {
     @NonNull
     public String getGrantType() {
         return grantType;
+    }
+
+    /**
+     *
+     * @param grantType Grant type
+     */
+    public void setGrantType(@NonNull String grantType) {
+        this.grantType = grantType;
     }
 
     /**
@@ -77,7 +91,9 @@ public class ClientCredentialsGrant implements AsMap {
     public Map<String, String> toMap() {
         Map<String, String> m = new HashMap<>(2);
         m.put(KEY_GRANT_TYPE, getGrantType());
-        m.put(KEY_SCOPES, getScope());
+        if (getScope() != null) {
+            m.put(KEY_SCOPES, getScope());
+        }
         return m;
     }
 }
