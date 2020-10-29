@@ -893,6 +893,8 @@
 <dd>
 <div class="block">Decrypt an encrypted JWT.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#DEFAULT_AUTHENTICATION_METHOD">DEFAULT_AUTHENTICATION_METHOD</a></span> - Static variable in interface io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/config/SecurityConfigurationProperties.html#DEFAULT_AUTHENTICATION_STRATEGY">DEFAULT_AUTHENTICATION_STRATEGY</a></span> - Static variable in class io.micronaut.security.config.<a href="io/micronaut/security/config/SecurityConfigurationProperties.html" title="class in io.micronaut.security.config">SecurityConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default enable value.</div>
@@ -3043,7 +3045,11 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/endpoints/introspection/IntrospectionRequest.html#getToken_type_hint--">getToken_type_hint()</a></span> - Method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionRequest.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html#getTokenEndpoint--">getTokenEndpoint()</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOauthClient</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getTokenEndpoint--"><code>OauthClientConfiguration.getTokenEndpoint()</code></a> instead.</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html#getTokenEndpoint--">getTokenEndpoint()</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdClient</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#getTokenEndpoint--">getTokenEndpoint()</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a></dt>
@@ -3052,6 +3058,8 @@
 <dd>
 <div class="block">token_endpoint.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getTokenEndpoint--">getTokenEndpoint()</a></span> - Method in interface io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html#getTokenEndpoint-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-">getTokenEndpoint(OauthClientConfiguration)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.request.password.<a href="io/micronaut/security/oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OauthPasswordAuthenticationProvider</a></dt>
 <dd>
 <div class="block">Builds the secure endpoint from the client configuration.</div>
