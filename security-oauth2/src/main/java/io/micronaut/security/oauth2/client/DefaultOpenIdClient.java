@@ -15,21 +15,29 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
-import io.micronaut.http.*;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest;
-import io.micronaut.security.oauth2.endpoint.authorization.response.*;
-import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
+import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
+import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.reactivex.Flowable;
@@ -37,12 +45,10 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * The default implementation of {@link OpenIdClient}.
@@ -162,14 +168,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
      * @return The token endpoint
      */
     protected SecureEndpoint getTokenEndpoint() {
-        List<String> authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethodsSupported();
-        List<AuthenticationMethod> authenticationMethods = null;
-        if (authMethodsSupported != null) {
-            authenticationMethods = authMethodsSupported.stream()
-                    .map(String::toUpperCase)
-                    .map(AuthenticationMethod::valueOf)
-                    .collect(Collectors.toList());
-        }
-        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), authenticationMethods);
+        Optional<List<AuthenticationMethod>> authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethods();
+        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), authMethodsSupported.orElse(null));
     }
 }
