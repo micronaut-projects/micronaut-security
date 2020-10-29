@@ -27,7 +27,9 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.security.oauth2.client.condition.OauthClientTokenManuallyConfiguredCondition;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
+import io.micronaut.security.oauth2.client.condition.OpenIdIssuerTokenNotManuallyConfiguredCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
@@ -37,6 +39,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthor
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
+import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +93,11 @@ class OpenIdClientFactory {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                         }
-                        return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                        DefaultOpenIdProviderMetadata openIdProviderMetadata = issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                        if (LOG.isTraceEnabled()) {
+                            LOG.trace("retrieved open id configuration {}", openIdProviderMetadata.toString());
+                        }
+                        return openIdProviderMetadata;
                     } catch (HttpClientResponseException e) {
                         throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
                     } catch (MalformedURLException e) {
@@ -138,6 +145,36 @@ class OpenIdClientFactory {
                 authorizationResponseHandler,
                 beanContext,
                 endSessionEndpoint);
+    }
+
+    /**
+     * Creates an {@link ClientCredentialsClient} from the provided parameters.
+     * @param oauthClientConfiguration The client configuration
+     * @param tokenEndpointClient Token endpoint client
+     * @param openIdProviderMetadata The open id provider metadata
+     * @return The Client Credentials client
+     */
+    @EachBean(OpenIdClientConfiguration.class)
+    @Requires(condition = OpenIdIssuerTokenNotManuallyConfiguredCondition.class)
+    DefaultClientCredentialsOpenIdClient clientCredentialsOpenIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
+                                                                       TokenEndpointClient tokenEndpointClient,
+                                                                       @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
+        Supplier<OpenIdProviderMetadata> metadataSupplier = SupplierUtil.memoized(openIdProviderMetadata::get);
+        return new DefaultClientCredentialsOpenIdClient(oauthClientConfiguration, tokenEndpointClient, metadataSupplier);
+    }
+
+    /**
+     * Creates an {@link ClientCredentialsClient} for an OAuth 2.0 Client.
+     *
+     * @param oauthClientConfiguration The open id provider metadata
+     * @param tokenEndpointClient Token endpoint client
+     * @return The Client Credentials client
+     */
+    @Requires(condition = OauthClientTokenManuallyConfiguredCondition.class)
+    @EachBean(OauthClientConfiguration.class)
+    DefaultClientCredentialsClient clientCredentialsClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
+                                                           TokenEndpointClient tokenEndpointClient) {
+        return new DefaultClientCredentialsClient(oauthClientConfiguration, tokenEndpointClient);
     }
 
     private void overrideFromConfig(DefaultOpenIdProviderMetadata configuration,

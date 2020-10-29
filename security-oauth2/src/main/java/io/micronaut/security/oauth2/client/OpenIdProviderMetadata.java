@@ -17,7 +17,11 @@ package io.micronaut.security.oauth2.client;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
+
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Metadata describing the configuration of OpenID Providers.
@@ -189,6 +193,18 @@ public interface OpenIdProviderMetadata {
      */
     @Nullable
     List<String> getTokenEndpointAuthMethodsSupported();
+
+    @NonNull
+    default Optional<List<AuthenticationMethod>> getTokenEndpointAuthMethods() {
+        List<String> authMethodsSupported = getTokenEndpointAuthMethodsSupported();
+        if (authMethodsSupported == null) {
+            return Optional.empty();
+        }
+        return Optional.of(authMethodsSupported.stream()
+                    .map(String::toUpperCase)
+                    .map(AuthenticationMethod::valueOf)
+                    .collect(Collectors.toList()));
+    }
 
     /**
      * token_endpoint_auth_signing_alg_values_supported
