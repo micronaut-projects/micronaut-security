@@ -28,22 +28,21 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.client.condition.OauthClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
-import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OauthAuthorizationRequest;
-import io.micronaut.security.oauth2.endpoint.authorization.response.*;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -140,16 +139,10 @@ public class DefaultOauthClient implements OauthClient {
 
     /**
      * @return The token endpoint
+     * @deprecated Use {@link OauthClientConfiguration#getTokenEndpoint()} instead.
      */
+    @Deprecated
     protected SecureEndpoint getTokenEndpoint() {
-        String url = clientConfiguration.getToken()
-                .flatMap(EndpointConfiguration::getUrl).orElseThrow(() -> new ConfigurationException("Oauth client requires the token endpoint URL to be set in configuration"));
-
-        List<AuthenticationMethod> authenticationMethods = Collections.singletonList(
-                clientConfiguration.getToken()
-                        .flatMap(SecureEndpointConfiguration::getAuthMethod)
-                        .orElse(AuthenticationMethod.CLIENT_SECRET_POST));
-
-        return new DefaultSecureEndpoint(url, authenticationMethods);
+        return clientConfiguration.getTokenEndpoint();
     }
 }
