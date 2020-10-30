@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.client;
+package io.micronaut.security.oauth2.client.clientcredentials;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Client for Client Credentials for OAuth 2.0 clients with configure the token endpoint information directly.
+ * {@link ClientCredentialsClient} for OAuth 2.0 clients which configures the token endpoint information directly.
  *
  * @author Sergio del Amo
  * @since 2.2.0

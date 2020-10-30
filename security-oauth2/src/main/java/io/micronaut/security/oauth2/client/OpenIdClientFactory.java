@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
@@ -27,9 +28,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import io.micronaut.security.oauth2.client.condition.OauthClientTokenManuallyConfiguredCondition;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
-import io.micronaut.security.oauth2.client.condition.OpenIdIssuerTokenNotManuallyConfiguredCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
@@ -39,12 +38,10 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthor
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Provider;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -145,36 +142,6 @@ class OpenIdClientFactory {
                 authorizationResponseHandler,
                 beanContext,
                 endSessionEndpoint);
-    }
-
-    /**
-     * Creates an {@link ClientCredentialsClient} from the provided parameters.
-     * @param oauthClientConfiguration The client configuration
-     * @param tokenEndpointClient Token endpoint client
-     * @param openIdProviderMetadata The open id provider metadata
-     * @return The Client Credentials client
-     */
-    @EachBean(OpenIdClientConfiguration.class)
-    @Requires(condition = OpenIdIssuerTokenNotManuallyConfiguredCondition.class)
-    DefaultClientCredentialsOpenIdClient clientCredentialsOpenIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
-                                                                       TokenEndpointClient tokenEndpointClient,
-                                                                       @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
-        Supplier<OpenIdProviderMetadata> metadataSupplier = SupplierUtil.memoized(openIdProviderMetadata::get);
-        return new DefaultClientCredentialsOpenIdClient(oauthClientConfiguration, tokenEndpointClient, metadataSupplier);
-    }
-
-    /**
-     * Creates an {@link ClientCredentialsClient} for an OAuth 2.0 Client.
-     *
-     * @param oauthClientConfiguration The open id provider metadata
-     * @param tokenEndpointClient Token endpoint client
-     * @return The Client Credentials client
-     */
-    @Requires(condition = OauthClientTokenManuallyConfiguredCondition.class)
-    @EachBean(OauthClientConfiguration.class)
-    DefaultClientCredentialsClient clientCredentialsClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
-                                                           TokenEndpointClient tokenEndpointClient) {
-        return new DefaultClientCredentialsClient(oauthClientConfiguration, tokenEndpointClient);
     }
 
     private void overrideFromConfig(DefaultOpenIdProviderMetadata configuration,

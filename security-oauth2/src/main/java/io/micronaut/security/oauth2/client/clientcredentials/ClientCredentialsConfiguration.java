@@ -13,33 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.client;
+package io.micronaut.security.oauth2.client.clientcredentials;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import org.reactivestreams.Publisher;
+import io.micronaut.core.util.Toggleable;
+import io.micronaut.http.util.OutgointRequestProcessorMatcher;
 
 /**
+ * Client credentials configuration.
+ *
  * @author Sergio del Amo
  * @since 2.2.0
  */
-public interface ClientCredentialsClient {
+public interface ClientCredentialsConfiguration extends Toggleable, OutgointRequestProcessorMatcher {
 
     /**
      *
-     * @param scope Requested scope values for the access token.
-     * @return Response of an authorization server to a valid client credentials request.
+     * @return Scope to be requested in the client credentials request.
      */
-    @NonNull
-    Publisher<TokenResponse> clientCredentials(@Nullable String scope);
-
-    /**
-     *
-     * @return Response of an authorization server to a valid client credentials request.
-     */
-    @NonNull
-    default Publisher<TokenResponse> clientCredentials() {
-        return clientCredentials(null);
-    }
+    @Nullable
+    String getScope();
 }

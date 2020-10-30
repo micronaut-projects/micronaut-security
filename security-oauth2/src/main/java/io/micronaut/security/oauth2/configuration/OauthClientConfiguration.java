@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.util.Toggleable;
+import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -82,6 +83,13 @@ public interface OauthClientConfiguration extends Toggleable {
      * @return The optional authorization endpoint configuration
      */
     Optional<EndpointConfiguration> getAuthorization();
+
+    /**
+     *
+     * @return The Client Credentials Configuration
+     */
+    @NonNull
+    Optional<ClientCredentialsConfiguration> getClientCredentials();
 
     /**
      * @see <a href="https://tools.ietf.org/html/rfc7662">RFC 7662</a>

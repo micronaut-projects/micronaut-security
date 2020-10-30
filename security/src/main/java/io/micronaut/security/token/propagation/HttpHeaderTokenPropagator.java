@@ -100,4 +100,12 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
             return Optional.empty();
         }
     }
+
+    /**
+     *
+     * @return The HttpHeaderTokenPropagator Configuration
+     */
+    public HttpHeaderTokenPropagatorConfiguration getConfiguration() {
+        return configuration;
+    }
 }

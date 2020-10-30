@@ -1,4 +1,4 @@
-package io.micronaut.security.oauth2.clientcredentials
+package io.micronaut.security.oauth2.client.clientcredentials
 
 import com.nimbusds.jose.Algorithm
 import com.nimbusds.jose.JOSEException
@@ -31,8 +31,8 @@ import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.BasicAuthUtils
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
-import io.micronaut.security.oauth2.client.ClientCredentialsClient
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod
@@ -41,7 +41,9 @@ import io.micronaut.security.oauth2.grants.ClientCredentialsGrant
 import io.micronaut.security.oauth2.grants.GrantType
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
+import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
+import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import io.reactivex.Flowable
 import org.slf4j.Logger
@@ -87,6 +89,7 @@ class ClientCredentialsSpec extends Specification {
     @AutoCleanup
     EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'ClientCredentialsSpecAuthServer',
+            'micronaut.security.token.jwt.generator.access-token.expiration': 5,
             'authserver.config.jwk': jwkJsonString(),
             'micronaut.server.port': authServerPort,
             'sample.client-id': '3ljrgej68ggm7i720o9u12t7lm',
@@ -137,13 +140,14 @@ class ClientCredentialsSpec extends Specification {
             'micronaut.security.oauth2.clients.authservermanual.token.url': "http://localhost:$authServerPort/token".toString(),
             'micronaut.security.oauth2.clients.authservermanual.client-id': '3ljrgej68ggm7i720o9u12t7lm',
             'micronaut.security.oauth2.clients.authservermanual.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
+            'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex': 'resourceclient',
 
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.issuer': "http://foo.bar",
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.auth-method': "client_secret_basic",
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.url': "http://localhost:$authServerPort/token".toString(),
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-id': '3ljrgej68ggm7i720o9u12t7lm',
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
-
+            'micronaut.http.services.resourceclient.url': "http://localhost:$resourceServerPort".toString(),
     ])
 
     void "verify client credentials grant"() {
@@ -302,6 +306,75 @@ class ClientCredentialsSpec extends Specification {
         resourceServerResp.status() == HttpStatus.OK
         resourceServerResp.getBody(String).isPresent()
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
+
+        when: 'test access token is cached. token endpoint in auth server is down.'
+        authServer.applicationContext.getBean(TokenController).down = true
+        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
+
+        then:
+        noExceptionThrown()
+
+        when:
+        accessToken = tokenResponse.accessToken
+        resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
+        resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
+
+        then:
+        noExceptionThrown()
+        resourceServerResp.status() == HttpStatus.OK
+        resourceServerResp.getBody(String).isPresent()
+        resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
+
+        when: 'calling client credentials returns the old access token'
+        authServer.applicationContext.getBean(TokenController).down = false
+        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
+
+        then:
+        tokenResponse.accessToken == accessToken
+
+        when: 'calling client credentials with different scope returns a different access token'
+        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials("email")).blockingFirst()
+
+        then:
+        tokenResponse.accessToken != accessToken
+
+        when: 'wait 6 seconds, the access token should be expired'
+        sleep(6_000)
+        resourceServerClient.exchange(resourceServerRequest, String)
+
+        then:
+        HttpClientResponseException resourceResp = thrown()
+        resourceResp.status == HttpStatus.UNAUTHORIZED
+
+        when: 'calling client credentials returns the new token because the previous token is detected as expired'
+        authServer.applicationContext.getBean(TokenController).down = false
+        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
+
+        then:
+        tokenResponse.accessToken != accessToken
+
+        when: 'moreover, calling client credentials with force true returns a different access token'
+        accessToken = tokenResponse.accessToken
+        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials(true)).blockingFirst()
+
+        then:
+        tokenResponse.accessToken != accessToken
+
+        when:
+        ResourceClient resourceClient = applicationContext.getBean(ResourceClient)
+        String father = resourceClient.father()
+
+        then:
+        noExceptionThrown()
+        "Your father is Rhaegar Targaryen" == father
+    }
+
+    @Requires(property = 'spec.name', value = 'ClientCredentialsSpec')
+    @Client(id="resourceclient")
+    static interface ResourceClient {
+        @Consumes(MediaType.TEXT_PLAIN)
+        @Get("/father")
+        String father();
     }
 
     @Requires(property = 'spec.name', value = 'ClientCredentialsSpecAuthServer')
@@ -337,10 +410,18 @@ class ClientCredentialsSpec extends Specification {
     static class TokenController {
         private final JwtTokenGenerator jwtTokenGenerator
         private final SampleClientConfiguration sampleClientConfiguration
+        private final AccessTokenConfiguration accessTokenConfiguration
+        private final Integer tokenExpiration
+
+        boolean down
         TokenController(JwtTokenGenerator jwtTokenGenerator,
-                        SampleClientConfiguration sampleClientConfiguration) {
+                        SampleClientConfiguration sampleClientConfiguration,
+                        AccessTokenConfiguration accessTokenConfiguration,
+                        @Property(name = 'micronaut.security.token.jwt.generator.access-token.expiration') Integer tokenExpiration) {
             this.jwtTokenGenerator = jwtTokenGenerator
             this.sampleClientConfiguration = sampleClientConfiguration
+            this.accessTokenConfiguration = accessTokenConfiguration
+            this.tokenExpiration = tokenExpiration;
         }
 
         @Secured(SecurityRule.IS_ANONYMOUS)
@@ -350,6 +431,9 @@ class ClientCredentialsSpec extends Specification {
                               @Nullable String client_id,
                               @Nullable String client_secret,
                               @Nullable @Header String authorization) {
+            if (down) {
+                return HttpResponse.serverError()
+            }
             if (grant_type != GrantType.CLIENT_CREDENTIALS.toString()) {
                 return HttpResponse.badRequest([error: 'invalid_grant'])
             }
@@ -360,7 +444,9 @@ class ClientCredentialsSpec extends Specification {
 
             TokenResponse tokenResponse = new TokenResponse()
             tokenResponse.tokenType = 'bearer'
-            tokenResponse.accessToken = jwtTokenGenerator.generateToken([sub: 'john']).get()
+            tokenResponse.expiresIn = tokenExpiration
+            UserDetails userDetails = new UserDetails('john', [])
+            tokenResponse.accessToken = jwtTokenGenerator.generateToken(userDetails, accessTokenConfiguration.getExpiration()).get()
             HttpResponse.ok(tokenResponse)
         }
 
@@ -428,6 +514,17 @@ class ClientCredentialsSpec extends Specification {
             this.clientSecret = clientSecret
         }
     }
+
+    @Requires(property = 'spec.name', value = 'ClientCredentialsSpecAuthServer')
+    @Singleton
+    static class CustomJwtIdGenerator implements JwtIdGenerator {
+
+        @Override
+        String generateJtiClaim() {
+            UUID.randomUUID().toString()
+        }
+    }
+
     @Requires(property = 'spec.name', value = 'ClientCredentialsSpecAuthServer')
     @ConfigurationProperties("authserver.config")
     static class CustomJwkConfiguration {
