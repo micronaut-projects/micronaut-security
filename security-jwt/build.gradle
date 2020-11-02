@@ -4,7 +4,7 @@ plugins {
 
 ext {
     nimbusJoseJwtVersion = '9.1.1'
-    bouncyCastleVersion = '1.66'
+    bouncyCastleVersion = '1.67'
 }
 
 dependencies {
