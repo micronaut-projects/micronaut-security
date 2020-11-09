@@ -68,9 +68,9 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     @NonNull
     public Publisher<TokenResponse> clientCredentials(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
-        if (!scopeToPublisherMap.containsKey(resolvedScope)) {
-            scopeToPublisherMap.put(resolvedScope, new CacheableProcessor<>(TokenResponseExpiration::new));
-        }
+
+        scopeToPublisherMap.putIfAbsent(resolvedScope, new CacheableProcessor<>(TokenResponseExpiration::new));
+
         CacheableProcessor<TokenResponse> publisher = scopeToPublisherMap.get(resolvedScope);
         if (force || isExpired(publisher.getElement())) {
             publisher.clear();
