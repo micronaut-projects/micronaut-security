@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
@@ -42,6 +41,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMap
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Provider;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -90,11 +90,7 @@ class OpenIdClientFactory {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                         }
-                        DefaultOpenIdProviderMetadata openIdProviderMetadata = issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
-                        if (LOG.isTraceEnabled()) {
-                            LOG.trace("retrieved open id configuration {}", openIdProviderMetadata.toString());
-                        }
-                        return openIdProviderMetadata;
+                        return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
                     } catch (HttpClientResponseException e) {
                         throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
                     } catch (MalformedURLException e) {
