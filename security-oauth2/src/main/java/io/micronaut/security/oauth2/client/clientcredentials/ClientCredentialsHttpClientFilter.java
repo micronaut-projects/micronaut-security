@@ -120,17 +120,15 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
      * @return The Client credentials client for the OAuth 2.0 Client.
      */
     protected Optional<ClientCredentialsClient> getClientCredentialsClient(@NonNull OauthClientConfiguration oauthClient) {
-        if (!clientCredentialsClientsByName.containsKey(oauthClient.getName())) {
-            try {
-                ClientCredentialsClient clientCredentialsClient = beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName(oauthClient.getName()));
-                clientCredentialsClientsByName.put(oauthClient.getName(), clientCredentialsClient);
-            } catch (NoSuchBeanException e) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("no client credentials client for OAuth 2.0 client {}", oauthClient.getName());
-                }
+        try {
+            clientCredentialsClientsByName.putIfAbsent(oauthClient.getName(), beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName(oauthClient.getName())));
+            return Optional.of(clientCredentialsClientsByName.get(oauthClient.getName()));
+        } catch (NoSuchBeanException e) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("no client credentials client for OAuth 2.0 client {}", oauthClient.getName());
             }
         }
-        return Optional.ofNullable(clientCredentialsClientsByName.get(oauthClient.getName()));
+        return Optional.empty();
     }
 
     /**
