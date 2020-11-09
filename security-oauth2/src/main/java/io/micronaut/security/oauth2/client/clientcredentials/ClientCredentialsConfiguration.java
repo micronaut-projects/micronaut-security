@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.util.OutgointRequestProcessorMatcher;
@@ -33,4 +34,11 @@ public interface ClientCredentialsConfiguration extends Toggleable, OutgointRequ
      */
     @Nullable
     String getScope();
+
+    /**
+     *
+     * @return Number of seconds for a token obtained via client credentials grant to be considered expired prior to its expiration date
+     */
+    @NonNull
+    Integer getAdvancedExpiration();
 }

@@ -135,18 +135,21 @@ class ClientCredentialsSpec extends Specification {
             'micronaut.security.oauth2.clients.authserveropenid.openid.issuer': "http://localhost:$authServerPort".toString(),
             'micronaut.security.oauth2.clients.authserveropenid.client-id': '3ljrgej68ggm7i720o9u12t7lm',
             'micronaut.security.oauth2.clients.authserveropenid.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
+            'micronaut.security.oauth2.clients.authserveropenid.client-credentials.advanced-expiration': 1,
 
             'micronaut.security.oauth2.clients.authservermanual.token.auth-method': "client_secret_basic",
             'micronaut.security.oauth2.clients.authservermanual.token.url': "http://localhost:$authServerPort/token".toString(),
             'micronaut.security.oauth2.clients.authservermanual.client-id': '3ljrgej68ggm7i720o9u12t7lm',
             'micronaut.security.oauth2.clients.authservermanual.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
             'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex': 'resourceclient',
+            'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration': 1,
 
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.issuer': "http://foo.bar",
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.auth-method': "client_secret_basic",
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.url': "http://localhost:$authServerPort/token".toString(),
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-id': '3ljrgej68ggm7i720o9u12t7lm',
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-credentials.advanced-expiration': 1,
             'micronaut.http.services.resourceclient.url': "http://localhost:$resourceServerPort".toString(),
     ])
 

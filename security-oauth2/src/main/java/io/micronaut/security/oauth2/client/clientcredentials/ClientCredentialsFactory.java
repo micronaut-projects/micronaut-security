@@ -55,7 +55,9 @@ public class ClientCredentialsFactory {
             return null;
         }
         Supplier<OpenIdProviderMetadata> metadataSupplier = SupplierUtil.memoized(openIdProviderMetadata::get);
-        return new DefaultClientCredentialsOpenIdClient(oauthClientConfiguration, tokenEndpointClient, metadataSupplier);
+
+
+        return new DefaultClientCredentialsOpenIdClient(oauthClientConfiguration.getClientCredentials().isPresent() ? oauthClientConfiguration.getClientCredentials().get() : null, oauthClientConfiguration, tokenEndpointClient, metadataSupplier);
     }
 
     /**
@@ -73,6 +75,6 @@ public class ClientCredentialsFactory {
                 !oauthClientConfiguration.getClientCredentials().get().isEnabled()) {
             return null;
         }
-        return new DefaultClientCredentialsClient(oauthClientConfiguration, tokenEndpointClient);
+        return new DefaultClientCredentialsClient(oauthClientConfiguration.getClientCredentials().isPresent() ? oauthClientConfiguration.getClientCredentials().get() : null, oauthClientConfiguration, tokenEndpointClient);
     }
 }

@@ -46,14 +46,18 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
 
     protected final TokenEndpointClient tokenEndpointClient;
     protected final OauthClientConfiguration oauthClientConfiguration;
+    protected final ClientCredentialsConfiguration clientCredentialsConfiguration;
     protected final Map<String, CacheableProcessor<TokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
 
     /**
+     * @param clientCredentialsConfiguration Client Credentials Configuration for this OAuth 2.0. Client
      * @param tokenEndpointClient The token endpoint client
      * @param oauthClientConfiguration The client configuration
      */
-    public AbstractClientCredentialsClient(OauthClientConfiguration oauthClientConfiguration,
+    public AbstractClientCredentialsClient(@Nullable ClientCredentialsConfiguration clientCredentialsConfiguration,
+                                           OauthClientConfiguration oauthClientConfiguration,
                                           TokenEndpointClient tokenEndpointClient) {
+        this.clientCredentialsConfiguration = clientCredentialsConfiguration;
         this.oauthClientConfiguration = oauthClientConfiguration;
         this.tokenEndpointClient = tokenEndpointClient;
     }
@@ -93,7 +97,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         }
         return expirationDate(tokenResponse).map(expTime -> {
             final Date now = new Date();
-            return expTime.before(now);
+            return (expTime.getTime() - (1000 * clientCredentialsConfiguration.getAdvancedExpiration()))  < now.getTime();
         }).orElse(true);
     }
 

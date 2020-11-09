@@ -178,7 +178,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     @Override
     @NonNull
     public Optional<ClientCredentialsConfiguration> getClientCredentials() {
-        return Optional.ofNullable(clientCredentials);
+        return Optional.of(clientCredentials == null ? new ClientCredentialsConfigurationProperties() : clientCredentials);
     }
 
     /**
@@ -258,6 +258,12 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @SuppressWarnings("WeakerAccess")
         public static final boolean DEFAULT_ENABLED = true;
 
+        /**
+         * The default advanced expiration value.
+         */
+        @SuppressWarnings("WeakerAccess")
+        public static final Integer DEFAULT_ADVANCED_EXPIRATION = 30;
+
         private boolean enabled = DEFAULT_ENABLED;
 
         private String serviceIdRegex;
@@ -269,6 +275,22 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private Pattern uriPattern;
 
         private String scope;
+
+        private Integer advancedExpiration = DEFAULT_ADVANCED_EXPIRATION;
+
+        @NonNull
+        @Override
+        public Integer getAdvancedExpiration() {
+            return advancedExpiration;
+        }
+
+        /**
+         *  Number of seconds for a token obtained via client credentials grant to be considered expired prior to its expiration date. Default value {@value #DEFAULT_ADVANCED_EXPIRATION}.
+         * @param advancedExpiration advanced expiration in seconds
+         */
+        public void setAdvancedExpiration(@NonNull Integer advancedExpiration) {
+            this.advancedExpiration = advancedExpiration;
+        }
 
         /**
          * @return a regular expression to match the service.
