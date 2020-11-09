@@ -89,7 +89,9 @@ public interface OauthClientConfiguration extends Toggleable {
      * @return The Client Credentials Configuration
      */
     @NonNull
-    Optional<ClientCredentialsConfiguration> getClientCredentials();
+    default Optional<ClientCredentialsConfiguration> getClientCredentials() {
+        return Optional.empty(); //@deprecated Default implementation will be removed in next mayor version.
+    }
 
     /**
      * @see <a href="https://tools.ietf.org/html/rfc7662">RFC 7662</a>
