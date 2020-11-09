@@ -46,7 +46,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
 
     protected final TokenEndpointClient tokenEndpointClient;
     protected final OauthClientConfiguration oauthClientConfiguration;
-    protected final Map<String, CacheablePublisher<TokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
+    protected final Map<String, CacheableProcessor<TokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
 
     /**
      * @param tokenEndpointClient The token endpoint client
@@ -69,9 +69,9 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     public Publisher<TokenResponse> clientCredentials(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
         if (!scopeToPublisherMap.containsKey(resolvedScope)) {
-            scopeToPublisherMap.put(resolvedScope, new CacheablePublisher<>(TokenResponseExpiration::new));
+            scopeToPublisherMap.put(resolvedScope, new CacheableProcessor<>(TokenResponseExpiration::new));
         }
-        CacheablePublisher<TokenResponse> publisher = scopeToPublisherMap.get(resolvedScope);
+        CacheableProcessor<TokenResponse> publisher = scopeToPublisherMap.get(resolvedScope);
         if (force || isExpired(publisher.getElement())) {
             publisher.clear();
         }

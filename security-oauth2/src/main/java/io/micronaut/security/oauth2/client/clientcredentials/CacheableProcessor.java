@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @param <T> The element to be returned by the publisher
  */
 @Experimental
-public class CacheablePublisher<T> implements Subscriber<T>, Publisher<T>, ElementsRequestedListener {
+public class CacheableProcessor<T> implements Subscriber<T>, Publisher<T>, ElementsRequestedListener {
 
     @Nullable
     private T element;
@@ -56,7 +56,7 @@ public class CacheablePublisher<T> implements Subscriber<T>, Publisher<T>, Eleme
     /**
      * Constructor.
      */
-    public CacheablePublisher() {
+    public CacheableProcessor() {
 
     }
 
@@ -64,7 +64,7 @@ public class CacheablePublisher<T> implements Subscriber<T>, Publisher<T>, Eleme
      *
      * @param transformer A transformation function to be applied when an element is received.
      */
-    public CacheablePublisher(@NonNull Function<T, T> transformer) {
+    public CacheableProcessor(@NonNull Function<T, T> transformer) {
         this.transformer = transformer;
     }
 
