@@ -21,6 +21,9 @@ import io.micronaut.http.MutableHttpResponse;
 import java.net.URI;
 import java.util.Optional;
 
+/**
+ * Keep track of state before login.
+ */
 public interface PriorToLoginPersistence {
 
     void onUnauthorized(HttpRequest<?> request, MutableHttpResponse<?> response);
