@@ -24,6 +24,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 
+/**
+ * Utility class for Basic Auth.
+ */
 public class BasicAuthUtils {
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthUtils.class);
     private static final String PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC + " ";
