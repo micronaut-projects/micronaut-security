@@ -23,7 +23,6 @@ import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.condition.OauthClientTokenManuallyConfiguredCondition;
-import io.micronaut.security.oauth2.client.condition.OpenIdIssuerTokenNotManuallyConfiguredCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;

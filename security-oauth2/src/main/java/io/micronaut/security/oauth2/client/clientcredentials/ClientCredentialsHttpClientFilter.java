@@ -30,7 +30,6 @@ import io.micronaut.http.util.OutgoingHttpRequestProcessor;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.TokenResponseExpiration;
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator;
 import io.micronaut.security.token.propagation.TokenPropagator;
 import io.reactivex.Flowable;

@@ -86,6 +86,9 @@ class ClientCredentialsSpec extends Specification {
     int resourceServerPort = SocketUtils.findAvailableTcpPort()
 
     @Shared
+    int authServerDownPort = SocketUtils.findAvailableTcpPort()
+
+    @Shared
     @AutoCleanup
     EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': 'ClientCredentialsSpecAuthServer',
@@ -94,6 +97,15 @@ class ClientCredentialsSpec extends Specification {
             'micronaut.server.port': authServerPort,
             'sample.client-id': '3ljrgej68ggm7i720o9u12t7lm',
             'sample.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf'
+    ])
+
+    @Shared
+    @AutoCleanup
+    EmbeddedServer authServerDown = ApplicationContext.run(EmbeddedServer, [
+            'spec.name': 'ClientCredentialsSpecAuthServerDown',
+            'micronaut.security.token.jwt.generator.access-token.expiration': 5,
+            'authserver.config.jwk': secondaryJwkJsonString,
+            'micronaut.server.port': authServerDownPort,
     ])
 
     @Shared
@@ -144,7 +156,7 @@ class ClientCredentialsSpec extends Specification {
             'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex': 'resourceclient',
             'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration': 1,
 
-            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.issuer': "http://foo.bar",
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.issuer': "http://localhost:$authServerDownPort".toString(),
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.auth-method': "client_secret_basic",
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.url': "http://localhost:$authServerPort/token".toString(),
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-id': '3ljrgej68ggm7i720o9u12t7lm',
@@ -246,6 +258,7 @@ class ClientCredentialsSpec extends Specification {
 
         then:
         noExceptionThrown()
+        clientCredentialsClient.name == 'authservermanual'
 
         when:
         TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials(null)).blockingFirst()
@@ -269,6 +282,7 @@ class ClientCredentialsSpec extends Specification {
 
         then:
         noExceptionThrown()
+        clientCredentialsClient.name == 'authservermanualtakesprecedenceoveropenid'
 
         when:
         tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials(null)).blockingFirst()
@@ -378,6 +392,45 @@ class ClientCredentialsSpec extends Specification {
         @Consumes(MediaType.TEXT_PLAIN)
         @Get("/father")
         String father();
+    }
+
+    @Requires(property = 'spec.name', value = 'ClientCredentialsSpecAuthServerDown')
+    @Controller("/.well-known")
+    static class OpenIdConfigurationAuthServerDownController {
+        private final String url
+        private final List<AuthenticationMethod> authenticationMethods
+
+        OpenIdConfigurationAuthServerDownController(@Property(name = "micronaut.server.port") Integer port) {
+            this.url = "http://localhost:$port"
+            this.authenticationMethods = [
+                    AuthenticationMethod.CLIENT_SECRET_POST,
+                    AuthenticationMethod.CLIENT_SECRET_BASIC
+            ]
+        }
+
+        @Secured(SecurityRule.IS_ANONYMOUS)
+        @Get("/openid-configuration")
+        Map<String, Object> index() {
+            Map<String, Object> conf = [
+                    "token_endpoint": "${url}/token".toString(),
+                    "token_endpoint_auth_methods_supported": authenticationMethods.collect {it.toString()},
+                    "grant_types_supported": [
+                            "client_credentials"
+                    ]
+            ]
+            conf
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'ClientCredentialsSpecAuthServerDown')
+    @Controller("/token")
+    static class TokenAuthServerDownController {
+        @Secured(SecurityRule.IS_ANONYMOUS)
+        @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+        @Post
+        HttpResponse<?> index() {
+            HttpResponse.serverError()
+        }
     }
 
     @Requires(property = 'spec.name', value = 'ClientCredentialsSpecAuthServer')
@@ -618,5 +671,9 @@ class ClientCredentialsSpec extends Specification {
 
     static String jwkJsonString() {
         '{"p":"94qBOZGhF9GKlSgqijO21jaSRzOc-566PUEdhHWtpZ3HITnkefOB7MWMXceDHtOonc4xKvXB5cYtBP7gMx96MNhtYnRWuVgy81cqV94DVZdg5C4D5irU7DgnXGS4Tgjhs2oIVG7QhhQFt-KhbmvDKIiGJAx7ZMgFqXyokJ6SUCk","kty":"RSA","q":"m1GYyXCuB4-nIG7SV7D9HOhYauKMMyiQGgz0DtNZPqydlbt3i8QTOQubBO2KvT08ttl0b2agXFVBYf9RduXucqDa0WZzs1YUzVh-1_74w_8Zc7gu1wy0mzkl3Yd4IOJ9Fdrr581TJ5ZnUYJdmtkSEwo5oVU4n1FZO-ES-RvDy18","d":"e0tWV2oNFlpuwBhtB4j6-E7NSAV9IVaGG1UMjRdpiZX2GaRX6stOfPSvXwZtlJmUgbKDjnlmUgNP85INmsw7VTH4hBuLt6QB4BAKDEJwk33eqPHyU_iDsc7xYQ2D-59cbW6-1GHJ0g1O5iqrJ_UvrT59jX6OjQxU9Hccgvmg0ZxhZHS_wwmVh6ZFCNNiX8OnVH4S7iCxyRvziK5IX2RzEu9OBgb5MXdjQKmnfhNsoDW_CvQiabR5kh4k7FY1DofaL501ZisPAw4kaGzSHvvj9efWn58COu-KR2FcoT-8k0kc661_3khSGsbDIozE9axPV2NdtnY0efQuzKaoqou44Q","e":"AQAB","use":"sig","kid":"90d044ec76524c018e6705993698d3d1","qi":"rJRGiabf3AwG7lJQSNDYKjC1zGcE7yU5gWxdhuFTKfNBxTezDZ1ISJIrfycIJ2B4c4UjqyErbmpOkzeYCwmZ7temoqNRSU2T9JR9tRPUdivtxqYyFNqdjqGwLHgCeVzSVNLbbYE6vTC8dvUd6O5-SQEN-eEpxnzalYGJXdnO0pw","dp":"4CFlTgXA0XslulXK5qVaV-zDV3qxGdanFE0_965BUuJf6YKsj4reyc44gLTj0OaeFnwaYqZwMKbWHl7UCxXmIhHkQK_L0je8sj3rFfHsHPRag1_yodWIQnW5lduQUP-TtEo-Toyje7LnVo750av64Vlz83Hly-Ob1NENIxygp7k","alg":"RS256","dq":"bq7sUYkiC7NcZylybhlrluEguTKutHpQjq_ycGo-rAI43o5Ut95H0JwroYxiFU-BZ9B5QDYDSylaSaq39CIRFdD5fsYi54cNlfRdmDFUN-Af1C5J-uhMAF3uVPsIKW8dsqhq-qqAerKc-CIN8J6GWdksjoL7sdU34QsZCTq3AcM","n":"li_CzcPSIgwcLjUlEOuPrMJZ2RdZYbjVeutDZUhYsoZZxo0_3DvYVkWCWCsS8UYwQ3xHwhdMxAuLDrZbve1R6grbV-JO3isAj9IQotPWpqmSsHScNf2LDge5Mrn-MoKB_1lU2nX5t-s4g-eHubuTVaXuaeYT3kmlsYJelWrSAPanVV6UCZ1SQpQ8UX3h79jDpO7cb3XzbvVJZ4_pBEjXq0C84ksbp4pvimT3fpY2rd7FNVd_wwgbLbEbh8cRfwXXzUBsSKZh0rlWa2VxRyFmLLPTJKl0h9XWTyVLrG5kwFOCohBy_bjs75EG9u3sZfcp1VHLpvGmBV7Sy00xQBdCNw"}'
+    }
+
+    static String getSecondaryJwkJsonString() {
+        '{"p":"7_Sb8vKE0I9DoN-AzA9BHTkDG8xc7T_3D7kuycLUkiqxyVscF6b8DDz6KNn1GHKOHpQakA2HYCtYcRsQpBIPb9RTpVTyjl3Rhmn6pZQH-IOPeqBsQqpUvwuqB52ha80TA6DPFWJQL9bE7MAaciiyunU-z3xA1TkO7RgIawu2_PU","kty":"RSA","q":"p_ryu_hzAn5vN1Sn6I9GCTiLgtmlXkfFv9oNZMBKF9mga5Fxm1TzNgIKu6PueC4_HzBnG1SbpzYLaJ6eFkgja5QCp9hjQrW9hnMEPELZeLRfUCvRzzTDd9p8UyjYOjmFwnhLR9RfrNepdd-6D8YnD0xtTELQI-P5oB38f5A8Js0","d":"WxfObX7wxpBxaTbIDbV7-fXXVoBVIXMEMIBIMTQFjIwU0an_Vxlq-tT0cLOuJulabAJvekfKlWU7deruyAjiAy6MKU2C7vpZkWaITYA016IVt5GHHhg3rCxMH2FXcooneCxXhrm5dN3Fe66lVIkRe67amSiRe6DCH63w9TnT5B4N7nlBhcMO1BWi8KcbCsz0Rr2ajD_xPo3wS-MW_S2v8oWchgBYK6ELTxFhQrDqjCkR-iCUbqmNtfVfUmY_3oKJRqIrwzydllBKIES876OcXKNd-dGvkHLUo0yStzFNaLbpC1lSRYolnHPlKWs92T03qlRowBf0QCOOpFf9BEnkQQ","e":"AQAB","use":"sig","kid":"05f5ff8b2895430ea0ed52f116c3ec14","qi":"GaLS5pwbEkYCvdDDdb8_vVu_gkpftc7d-n4ODeu3481m5PPW5z1M2zAXWuUqW29wWKZznx_LY35ahS4YZ0pJm2qrgB8V6zJa2TARL4PI67-xoNgKTM7pPO-8E6XrJIMQAiRLrTLLfygaZyoB7Ac9jkXn1O_nhEuRCXhHvttG7yk","dp":"DDT_cf6QbyO6pwZ3wOnNwDTUSae92nv0j6I2FSGKOt1dKgcuiK2ACQdZGpbr9xBs1nVmXImzp1rNJwPfdtlMW74Le0-0_zUaoaHmlGHRff0DYZOjrkiIAygOwFBuk9Nc8kROBKJ5vdVJM1oaflA_t2ibh2akzbQXZExisT9pUbk","alg":"RS256","dq":"Oh0udutoVpeJQHowMNvIXg5K7bUAahKojkwQ0CdaOtAWmMBTrmqATdH9BpebO8a8Hb0wHptx0jJ3VfVyOcExR9mH5auOA5k-fVIzR-nUtNaqFuFiD65wZXmYA2khDVuzM-lMGgiWJQTjYp1JEIX8I2XMdlKzEYegZ82X-kXbGY0","n":"nXPKITNv0cWqIPMuIaJZ0l7NtxQlENOOs7w3iVwBMTDdcVc2bTjBgeBllbN0SG37VkQwe4aAQ7uEDw8g8RAVQUelM4OGqRmUUjXPQKGgSS6RvcYIsZgPzUDmZSa_Sk6ofF3EOiCuBicDmgyXlcwiD5zDsXwdhSIKbXyyKPYmY-Q5QKdy399AgeLbRWBWihxN0V0mxs_2xZrvq_8ViE9I0eHnp3mssPifgJjP_m4lhn6HtSE3rhEt_0tPSRnFs0-sEnNuZ8EKUvvrMHCXDzGuJerQEnxNrfU4etT4CS7J_Fz99sQWZLW3gpvgRSSh8Iu-aRbxL8WEhkdVtfgtpIDuMQ"}'
     }
 }

@@ -54,7 +54,7 @@ class OauthClientTokenManuallyConfiguredConditionSpec extends Specification {
         true     || 'authservermanual'
         true     || 'authservermanualtakesprecedenceoveropenid'
         false    || 'notokennoissuer'
-        description = createDescription(name, OpenIdIssuerTokenNotManuallyConfiguredCondition, expected)
+        description = createDescription(name, OauthClientTokenManuallyConfiguredCondition, expected)
     }
 
     String createDescription(String name, Class clazz, boolean expected) {
