@@ -30,6 +30,7 @@ import io.micronaut.http.util.OutgoingHttpRequestProcessor;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.TokenResponseExpiration;
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator;
 import io.micronaut.security.token.propagation.TokenPropagator;
 import io.reactivex.Flowable;
@@ -41,6 +42,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * An {@link HttpClientFilter} to add an access token to outgoing request thanks to a  Client Credentials request.
@@ -121,8 +123,9 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
      */
     protected Optional<ClientCredentialsClient> getClientCredentialsClient(@NonNull OauthClientConfiguration oauthClient) {
         try {
-            clientCredentialsClientsByName.putIfAbsent(oauthClient.getName(), beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName(oauthClient.getName())));
-            return Optional.of(clientCredentialsClientsByName.get(oauthClient.getName()));
+            Function<String, ClientCredentialsClient> mappingFunction = key ->
+                    beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName(oauthClient.getName()));
+            return Optional.of(clientCredentialsClientsByName.computeIfAbsent(oauthClient.getName(), mappingFunction));
         } catch (NoSuchBeanException e) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("no client credentials client for OAuth 2.0 client {}", oauthClient.getName());

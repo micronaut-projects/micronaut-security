@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Abstract class to create a Client for client credentials grant.
@@ -69,9 +70,9 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     public Publisher<TokenResponse> clientCredentials(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
 
-        scopeToPublisherMap.putIfAbsent(resolvedScope, new CacheableProcessor<>(TokenResponseExpiration::new));
+        Function<String, CacheableProcessor<TokenResponse>> mappingFunction = key -> new CacheableProcessor<>(TokenResponseExpiration::new);
+        CacheableProcessor<TokenResponse> publisher = scopeToPublisherMap.computeIfAbsent(resolvedScope, mappingFunction);
 
-        CacheableProcessor<TokenResponse> publisher = scopeToPublisherMap.get(resolvedScope);
         if (force || isExpired(publisher.getElement())) {
             publisher.clear();
         }
