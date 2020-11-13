@@ -32,14 +32,12 @@ public class DefaultClientCredentialsClient extends AbstractClientCredentialsCli
     private static final Logger LOG = LoggerFactory.getLogger(DefaultClientCredentialsClient.class);
 
     /**
-     * @param clientCredentialsConfiguration Client Credentials Configuration for this OAuth 2.0. Client
      * @param oauthClientConfiguration The client configuration
      * @param tokenEndpointClient      The token endpoint client
      */
-    public DefaultClientCredentialsClient(@Nullable ClientCredentialsConfiguration clientCredentialsConfiguration,
-                                          OauthClientConfiguration oauthClientConfiguration,
+    public DefaultClientCredentialsClient(OauthClientConfiguration oauthClientConfiguration,
                                           TokenEndpointClient tokenEndpointClient) {
-        super(clientCredentialsConfiguration, oauthClientConfiguration, tokenEndpointClient);
+        super(oauthClientConfiguration, tokenEndpointClient);
     }
 
     @Override

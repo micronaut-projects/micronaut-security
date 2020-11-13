@@ -178,7 +178,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     @Override
     @NonNull
     public Optional<ClientCredentialsConfiguration> getClientCredentials() {
-        return Optional.of(clientCredentials == null ? new ClientCredentialsConfigurationProperties() : clientCredentials);
+        return Optional.ofNullable(clientCredentials);
     }
 
     /**
@@ -257,12 +257,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         @SuppressWarnings("WeakerAccess")
         public static final boolean DEFAULT_ENABLED = true;
-
-        /**
-         * The default advanced expiration value.
-         */
-        @SuppressWarnings("WeakerAccess")
-        public static final Integer DEFAULT_ADVANCED_EXPIRATION = 30;
 
         private boolean enabled = DEFAULT_ENABLED;
 

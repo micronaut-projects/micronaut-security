@@ -15,6 +15,7 @@ class ClientCredentialsConfigurationSpec extends Specification {
                 'micronaut.security.oauth2.clients.authservermanual.token.url': "http://foo.bar/token",
                 'micronaut.security.oauth2.clients.authservermanual.client-id': 'XXX',
                 'micronaut.security.oauth2.clients.authservermanual.client-secret': 'YYY',
+                'micronaut.security.oauth2.clients.authservermanual.client-credentials.scope': 'create-file' // you have to specify a property of client-credentials for client credentials configuration to be created.
         ])
 
         expect:

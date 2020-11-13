@@ -43,6 +43,11 @@ public interface OauthClientConfiguration extends Toggleable {
     AuthenticationMethod DEFAULT_AUTHENTICATION_METHOD = AuthenticationMethod.CLIENT_SECRET_POST;
 
     /**
+     * The default advanced expiration value for client credentials grant.
+     */
+    Integer DEFAULT_ADVANCED_EXPIRATION = 30;
+
+    /**
      * @return The provider name
      */
     @NonNull
