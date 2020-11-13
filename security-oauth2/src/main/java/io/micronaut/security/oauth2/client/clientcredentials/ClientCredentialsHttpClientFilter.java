@@ -50,7 +50,7 @@ import java.util.function.Function;
  * @author Sergio del Amo
  * @since 2.2.0
  */
-@Filter("/**")
+@Filter(Filter.MATCH_ALL_PATTERN)
 public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
     private static final Logger LOG = LoggerFactory.getLogger(ClientCredentialsHttpClientFilter.class);
     protected final OutgoingHttpRequestProcessor outgoingHttpRequestProcessor;
