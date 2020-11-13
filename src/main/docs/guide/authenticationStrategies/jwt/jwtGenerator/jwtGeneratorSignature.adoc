@@ -8,7 +8,7 @@ To verify signed JWT tokens, you need to have in your app a bean of type link:{a
 link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorConfiguration.html[RSASignatureGeneratorConfiguration],
 link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureGeneratorConfiguration.html[ECSignatureGeneratorConfiguration],
 link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html[ECSignatureConfiguration], or
-link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html[SecretSignature].
+link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html[SecretSignature]. This bean must be qualified with `@Named` annotation.
 
 You can setup a `SecretSignatureConfiguration` named `generator` easily via configuration properties:
 
