@@ -65,8 +65,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private IntrospectionEndpointConfigurationProperties introspection;
     private RevocationEndpointConfigurationProperties revocation;
     private OpenIdClientConfigurationProperties openid;
-
-    @NonNull
     private ClientCredentialsConfigurationProperties clientCredentials;
 
     /**
