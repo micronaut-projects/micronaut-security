@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -42,14 +43,16 @@ public class DefaultClientCredentialsOpenIdClient extends AbstractClientCredenti
     private final Supplier<SecureEndpoint> tokenEndpoint;
 
     /**
+     * @param name {@link javax.inject.Named} qualifier
      * @param oauthClientConfiguration The client configuration
      * @param tokenEndpointClient      The token endpoint client
      * @param openIdProviderMetadata The provider metadata
      */
-    public DefaultClientCredentialsOpenIdClient(OauthClientConfiguration oauthClientConfiguration,
-                                                TokenEndpointClient tokenEndpointClient,
+    public DefaultClientCredentialsOpenIdClient(@NonNull String name,
+                                                @NonNull OauthClientConfiguration oauthClientConfiguration,
+                                                @NonNull TokenEndpointClient tokenEndpointClient,
                                                 Supplier<OpenIdProviderMetadata> openIdProviderMetadata) {
-        super(oauthClientConfiguration, tokenEndpointClient);
+        super(name, oauthClientConfiguration, tokenEndpointClient);
         this.openIdProviderMetadata = openIdProviderMetadata;
         this.tokenEndpoint = SupplierUtil.memoized(this::getTokenEndpoint);
     }

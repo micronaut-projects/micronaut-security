@@ -46,7 +46,6 @@ public class ClientCredentialsFactory {
      * @return The Client Credentials client
      */
     @EachBean(OpenIdClientConfiguration.class)
-    @Requires(condition = OpenIdIssuerTokenNotManuallyConfiguredCondition.class)
     DefaultClientCredentialsOpenIdClient clientCredentialsOpenIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                                                        TokenEndpointClient tokenEndpointClient,
                                                                        @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
@@ -55,7 +54,7 @@ public class ClientCredentialsFactory {
             return null;
         }
         Supplier<OpenIdProviderMetadata> metadataSupplier = SupplierUtil.memoized(openIdProviderMetadata::get);
-        return new DefaultClientCredentialsOpenIdClient(oauthClientConfiguration, tokenEndpointClient, metadataSupplier);
+        return new DefaultClientCredentialsOpenIdClient(oauthClientConfiguration.getName(), oauthClientConfiguration, tokenEndpointClient, metadataSupplier);
     }
 
     /**
@@ -73,6 +72,6 @@ public class ClientCredentialsFactory {
                 !oauthClientConfiguration.getClientCredentials().get().isEnabled()) {
             return null;
         }
-        return new DefaultClientCredentialsClient(oauthClientConfiguration, tokenEndpointClient);
+        return new DefaultClientCredentialsClient(oauthClientConfiguration.getName(), oauthClientConfiguration, tokenEndpointClient);
     }
 }
