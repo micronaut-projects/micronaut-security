@@ -25,10 +25,6 @@ subprojects { Project subproject ->
 
     apply plugin: "io.micronaut.build.common"
 
-    micronautBuild {
-        enforcedPlatform = true
-    }
-
     if (subproject.parent.name == "examples" || subproject.name == "examples") {
         return
     }
