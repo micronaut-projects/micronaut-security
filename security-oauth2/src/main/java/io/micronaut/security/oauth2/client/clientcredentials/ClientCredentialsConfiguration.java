@@ -19,6 +19,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.util.OutgointRequestProcessorMatcher;
+import io.micronaut.security.oauth2.client.clientcredentials.propagation.HttpHeaderClientCredentialsTokenPropagatorConfiguration;
+
+import java.util.Optional;
 
 /**
  * Client credentials configuration.
@@ -41,4 +44,7 @@ public interface ClientCredentialsConfiguration extends Toggleable, OutgointRequ
      */
     @NonNull
     Integer getAdvancedExpiration();
+
+    @NonNull
+    Optional<HttpHeaderClientCredentialsTokenPropagatorConfiguration> getHeaderPropagation();
 }

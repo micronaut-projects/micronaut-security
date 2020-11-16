@@ -21,6 +21,7 @@ import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
+import io.micronaut.security.oauth2.client.clientcredentials.propagation.HttpHeaderClientCredentialsTokenPropagatorConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
@@ -270,10 +271,27 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
 
         private Integer advancedExpiration = DEFAULT_ADVANCED_EXPIRATION;
 
+        private HttpHeaderClientCredentialsTokenPropagatorConfigurationProperties headerPropagation;
+
         @NonNull
         @Override
         public Integer getAdvancedExpiration() {
             return advancedExpiration;
+        }
+
+        @Override
+        @NonNull
+        public Optional<HttpHeaderClientCredentialsTokenPropagatorConfiguration> getHeaderPropagation() {
+            return Optional.ofNullable(headerPropagation);
+        }
+
+        /**
+         * Sets the Http Header Client Credentials Token Propagator configuration.
+         *
+         * @param headerPropagation client credentials header propagation.
+         */
+        public void setHeaderPropagation(@NonNull HttpHeaderClientCredentialsTokenPropagatorConfigurationProperties headerPropagation) {
+            this.headerPropagation = headerPropagation;
         }
 
         /**
@@ -356,6 +374,70 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+        }
+
+        /**
+         * Client credentials http header token propagation configuration.
+         */
+        @ConfigurationProperties("header-propagation")
+        public static class HttpHeaderClientCredentialsTokenPropagatorConfigurationProperties implements HttpHeaderClientCredentialsTokenPropagatorConfiguration {
+            /**
+             * The default enable value.
+             */
+            @SuppressWarnings("WeakerAccess")
+
+
+            private String prefix = DEFAULT_PREFIX;
+            private String headerName = DEFAULT_HEADER_NAME;
+            private boolean enabled = DEFAULT_ENABLED;
+
+            @Override
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            /**
+             * Enable {@link HttpHeaderClientCredentialsTokenPropagatorConfiguration}. Default value ({@value #DEFAULT_ENABLED}).
+             * @param enabled enabled flag
+             */
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+
+            /**
+             * Value prefix for Http Header. Default value ({@value #DEFAULT_PREFIX}).
+             * @param prefix preffix before the header value
+             */
+            public void setPrefix(String prefix) {
+                this.prefix = prefix;
+            }
+
+            /**
+             *
+             * @return a Prefix before the token in the header value. E.g. Bearer
+             */
+            @Override
+            public String getPrefix() {
+                return this.prefix;
+            }
+
+            /**
+             * Http Header to be used to propagate the token. Default value ({@value #DEFAULT_HEADER_NAME})
+             * @param headerName HTTP header name
+             */
+            public void setHeaderName(String headerName) {
+                this.headerName = headerName;
+            }
+
+            /**
+             *
+             * @return an HTTP Header name. e.g. Authorization
+             */
+            @Override
+            public String getHeaderName() {
+                return this.headerName;
+            }
+
         }
     }
 

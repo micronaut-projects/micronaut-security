@@ -91,21 +91,21 @@ class ClientCredentialsSpec extends Specification {
     @Shared
     @AutoCleanup
     EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'ClientCredentialsSpecAuthServer',
+            'spec.name'                                                     : 'ClientCredentialsSpecAuthServer',
             'micronaut.security.token.jwt.generator.access-token.expiration': 5,
-            'authserver.config.jwk': jwkJsonString(),
-            'micronaut.server.port': authServerPort,
-            'sample.client-id': '3ljrgej68ggm7i720o9u12t7lm',
-            'sample.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf'
+            'authserver.config.jwk'                                         : jwkJsonString(),
+            'micronaut.server.port'                                         : authServerPort,
+            'sample.client-id'                                              : '3ljrgej68ggm7i720o9u12t7lm',
+            'sample.client-secret'                                          : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf'
     ])
 
     @Shared
     @AutoCleanup
     EmbeddedServer authServerDown = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'ClientCredentialsSpecAuthServerDown',
+            'spec.name'                                                     : 'ClientCredentialsSpecAuthServerDown',
             'micronaut.security.token.jwt.generator.access-token.expiration': 5,
-            'authserver.config.jwk': secondaryJwkJsonString,
-            'micronaut.server.port': authServerDownPort,
+            'authserver.config.jwk'                                         : secondaryJwkJsonString,
+            'micronaut.server.port'                                         : authServerDownPort,
     ])
 
     @Shared
@@ -123,10 +123,10 @@ class ClientCredentialsSpec extends Specification {
     @Shared
     @AutoCleanup
     EmbeddedServer resourceServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'ClientCredentialsSpecResourceServer',
+            'spec.name'                                                  : 'ClientCredentialsSpecResourceServer',
             'micronaut.security.token.jwt.signatures.jwks.authserver.url': "http://localhost:${authServerPort}/keys".toString(),
-            'micronaut.security.intercept-url-map' : [[pattern : '/father', ('http-method'): 'GET', 'access' : ['isAuthenticated()']]],
-            'micronaut.server.port': resourceServerPort,
+            'micronaut.security.intercept-url-map'                       : [[pattern: '/father', ('http-method'): 'GET', 'access': ['isAuthenticated()']]],
+            'micronaut.server.port'                                      : resourceServerPort,
     ])
 
     @Shared
@@ -143,29 +143,29 @@ class ClientCredentialsSpec extends Specification {
     @Shared
     @AutoCleanup
     ApplicationContext applicationContext = ApplicationContext.run([
-            'spec.name': 'ClientCredentialsSpec',
-            'micronaut.security.oauth2.clients.authserveropenid.openid.issuer': "http://localhost:$authServerPort".toString(),
-            'micronaut.security.oauth2.clients.authserveropenid.client-id': '3ljrgej68ggm7i720o9u12t7lm',
-            'micronaut.security.oauth2.clients.authserveropenid.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
-            'micronaut.security.oauth2.clients.authserveropenid.client-credentials.advanced-expiration': 1,
+            'spec.name'                                                                                                         : 'ClientCredentialsSpec',
+            'micronaut.security.oauth2.clients.authserveropenid.openid.issuer'                                                  : "http://localhost:$authServerPort".toString(),
+            'micronaut.security.oauth2.clients.authserveropenid.client-id'                                                      : '3ljrgej68ggm7i720o9u12t7lm',
+            'micronaut.security.oauth2.clients.authserveropenid.client-secret'                                                  : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
+            'micronaut.security.oauth2.clients.authserveropenid.client-credentials.advanced-expiration'                         : 1,
 
-            'micronaut.security.oauth2.clients.authservermanual.token.auth-method': "client_secret_basic",
-            'micronaut.security.oauth2.clients.authservermanual.token.url': "http://localhost:$authServerPort/token".toString(),
-            'micronaut.security.oauth2.clients.authservermanual.client-id': '3ljrgej68ggm7i720o9u12t7lm',
-            'micronaut.security.oauth2.clients.authservermanual.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
-            'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex': 'resourceclient',
-            'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration': 1,
+            'micronaut.security.oauth2.clients.authservermanual.token.auth-method'                                              : "client_secret_basic",
+            'micronaut.security.oauth2.clients.authservermanual.token.url'                                                      : "http://localhost:$authServerPort/token".toString(),
+            'micronaut.security.oauth2.clients.authservermanual.client-id'                                                      : '3ljrgej68ggm7i720o9u12t7lm',
+            'micronaut.security.oauth2.clients.authservermanual.client-secret'                                                  : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
+            'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex'                            : 'resourceclient',
+            'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration'                         : 1,
 
-            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.issuer': "http://localhost:$authServerDownPort".toString(),
-            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.auth-method': "client_secret_basic",
-            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.url': "http://localhost:$authServerPort/token".toString(),
-            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-id': '3ljrgej68ggm7i720o9u12t7lm',
-            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-secret': '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.issuer'                         : "http://localhost:$authServerDownPort".toString(),
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.auth-method'                     : "client_secret_basic",
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.url'                             : "http://localhost:$authServerPort/token".toString(),
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-id'                             : '3ljrgej68ggm7i720o9u12t7lm',
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-secret'                         : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-credentials.advanced-expiration': 1,
-            'micronaut.http.services.resourceclient.url': "http://localhost:$resourceServerPort".toString(),
+            'micronaut.http.services.resourceclient.url'                                                                        : "http://localhost:$resourceServerPort".toString(),
     ])
 
-    void "verify client credentials grant"() {
+    void "verify tests is wired correctly"() {
         expect:
         authServerApplicationContext.containsBean(SampleClientConfiguration)
         authServerApplicationContext.containsBean(CustomJwkConfiguration)
@@ -179,53 +179,67 @@ class ClientCredentialsSpec extends Specification {
         !applicationContext.containsBean(MdxAuthRSASignatureConfiguration)
         !resourceServerApplicationContext.containsBean(CustomJwkConfiguration)
         !applicationContext.containsBean(CustomJwkConfiguration)
+    }
 
-        when: 'auth server exposes openid-configuration endpoint'
+    void 'auth server exposes openid-configuration endpoint'() {
+        when:
         HttpResponse<Map> openIdConfigurationRsp = authServerClient.exchange(HttpRequest.GET("/.well-known/openid-configuration"), Map)
 
         then:
         openIdConfigurationRsp.status() == HttpStatus.OK
+    }
 
-        when:
+    void "a bean of type OpenIdClientConfiguration is created for auth server"() {
+        when :
         OpenIdClientConfiguration openIdClientConfiguration = applicationContext.getBean(OpenIdClientConfiguration, Qualifiers.byName('authserveropenid'))
 
         then:
+
         noExceptionThrown()
         openIdClientConfiguration.issuer.isPresent()
+    }
 
-        when: 'auth server exposes key endpoint'
+    void 'auth server exposes key endpoint'() {
+        when:
         HttpRequest request = HttpRequest.GET('/keys')
         HttpResponse<Map> rsp = authServerClient.exchange(request, Map)
 
         then:
         rsp.status() == HttpStatus.OK
 
-        when: 'resource server endpoint is secured'
+    }
+
+    void 'resource server endpoint is secured'() {
+        when:
         HttpRequest<?> resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN)
         resourceServerClient.exchange(resourceServerRequest)
 
         then:
         HttpClientResponseException e = thrown()
         e.status == HttpStatus.UNAUTHORIZED
+    }
 
-        when: 'you can access the resource server endpoint with a token generated by the auth server'
+    void 'you can access the resource server endpoint with a token generated by the auth server'() {
+        when:
         JwtTokenGenerator jwtTokenGenerator = authServerApplicationContext.getBean(JwtTokenGenerator)
-        Optional<String> jwtOptional  =jwtTokenGenerator.generateToken(["sub": "john"])
+        Optional<String> jwtOptional =jwtTokenGenerator.generateToken(["sub": "john"])
 
         then:
         jwtOptional.isPresent()
 
         when:
         String jwt = jwtOptional.get()
-        resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(jwt)
+        HttpRequest<?> resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(jwt)
         HttpResponse<String> resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
 
         then:
         resourceServerResp.status() == HttpStatus.OK
         resourceServerResp.getBody(String).isPresent()
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
+    }
 
-        when: 'an oauth2 client is configured which matches the auth server'
+    void 'A manual token request with client credentials grant can be made, the access token obtained can access the resource server'() {
+        when:
         OauthClientConfiguration oauthClientConfiguration = applicationContext.getBean(OauthClientConfiguration, Qualifiers.byName('authserveropenid'))
         SampleClientConfiguration sampleClientConfiguration = authServerApplicationContext.getBean(SampleClientConfiguration)
 
@@ -236,7 +250,7 @@ class ClientCredentialsSpec extends Specification {
         when:
         HttpRequest<?> tokenRequest = HttpRequest.POST('/token', new ClientCredentialsGrant().toMap())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .basicAuth(oauthClientConfiguration.clientId , oauthClientConfiguration.clientSecret)
+                .basicAuth(oauthClientConfiguration.clientId, oauthClientConfiguration.clientSecret)
         HttpResponse<TokenResponse> httpTokenResponse = authServerClient.exchange(tokenRequest, TokenResponse)
 
         then:
@@ -245,13 +259,16 @@ class ClientCredentialsSpec extends Specification {
 
         when:
         String accessToken = httpTokenResponse.getBody(TokenResponse).get().getAccessToken()
-        resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
-        resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
+        HttpRequest<?> resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
+        HttpResponse<String> resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
 
         then:
         resourceServerResp.status() == HttpStatus.OK
         resourceServerResp.getBody(String).isPresent()
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
+    }
+
+    void 'A bean of type ClientCredentialsClient is created for an OAuth 2.0 client which sets its token endpoint manually'() {
 
         when:
         ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanual"))
@@ -267,74 +284,86 @@ class ClientCredentialsSpec extends Specification {
         noExceptionThrown()
 
         when:
-        accessToken = tokenResponse.accessToken
-        resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
-        resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
+        String accessToken = tokenResponse.accessToken
+        HttpRequest<?> resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
+        HttpResponse<String> resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
 
         then:
         noExceptionThrown()
         resourceServerResp.status() == HttpStatus.OK
         resourceServerResp.getBody(String).isPresent()
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
+    }
+
+    void 'A bean of type ClientCredentialsClient is created for an OAuth 2.0 client which sets both token manually and an open id issuer which providers information about its token endpoint. The manual set token endpoint takes precedence'() {
 
         when:
-        clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanualtakesprecedenceoveropenid"))
+        ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanualtakesprecedenceoveropenid"))
 
         then:
         noExceptionThrown()
+        clientCredentialsClient instanceof DefaultClientCredentialsClient
         clientCredentialsClient.name == 'authservermanualtakesprecedenceoveropenid'
 
         when:
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials(null)).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials(null)).blockingFirst()
 
         then:
         noExceptionThrown()
 
         when:
-        accessToken = tokenResponse.accessToken
-        resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
-        resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
+        String accessToken = tokenResponse.accessToken
+        HttpRequest<?> resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
+        HttpResponse<String> resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
 
         then:
         noExceptionThrown()
         resourceServerResp.status() == HttpStatus.OK
         resourceServerResp.getBody(String).isPresent()
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
+    }
+
+    void 'A bean of type ClientCredentialsClient is created for an OAuth 2.0 client which sets an open id issuer which providers information about its token endpoint'() {
 
         when:
-        clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authserveropenid"))
+        ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authserveropenid"))
 
         then:
         noExceptionThrown()
 
         when:
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
 
         then:
         noExceptionThrown()
 
         when:
-        accessToken = tokenResponse.accessToken
-        resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
-        resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
+        String accessToken = tokenResponse.accessToken
+        HttpRequest<?> resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
+        HttpResponse<String> resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
 
         then:
         noExceptionThrown()
         resourceServerResp.status() == HttpStatus.OK
         resourceServerResp.getBody(String).isPresent()
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
+    }
 
-        when: 'test access token is cached. token endpoint in auth server is down.'
+    void 'test client credentials token caching'() {
+        given:
+        ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanual"))
+
+        when:
         authServer.applicationContext.getBean(TokenController).down = true
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
 
         then:
         noExceptionThrown()
 
         when:
-        accessToken = tokenResponse.accessToken
-        resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
-        resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
+        String accessToken = tokenResponse.accessToken
+        HttpRequest<?> resourceServerRequest = HttpRequest.GET('/father').accept(MediaType.TEXT_PLAIN).bearerAuth(accessToken)
+        HttpResponse<String> resourceServerResp = resourceServerClient.exchange(resourceServerRequest, String)
 
         then:
         noExceptionThrown()
@@ -376,7 +405,9 @@ class ClientCredentialsSpec extends Specification {
 
         then:
         tokenResponse.accessToken != accessToken
+    }
 
+    void "it is possible to add an access token via a client credentials request and an HTTP Client filter"() {
         when:
         ResourceClient resourceClient = applicationContext.getBean(ResourceClient)
         String father = resourceClient.father()

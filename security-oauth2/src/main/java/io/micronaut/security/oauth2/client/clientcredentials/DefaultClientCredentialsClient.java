@@ -33,14 +33,12 @@ public class DefaultClientCredentialsClient extends AbstractClientCredentialsCli
     private static final Logger LOG = LoggerFactory.getLogger(DefaultClientCredentialsClient.class);
 
     /**
-     * @param name {@link javax.inject.Named} qualifier
      * @param oauthClientConfiguration The client configuration
      * @param tokenEndpointClient      The token endpoint client
      */
-    public DefaultClientCredentialsClient(@NonNull String name,
-                                          @NonNull OauthClientConfiguration oauthClientConfiguration,
+    public DefaultClientCredentialsClient(@NonNull OauthClientConfiguration oauthClientConfiguration,
                                           @NonNull TokenEndpointClient tokenEndpointClient) {
-        super(name, oauthClientConfiguration, tokenEndpointClient);
+        super(oauthClientConfiguration, tokenEndpointClient);
     }
 
     @Override

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.client.clientcredentials;
+package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -28,10 +28,10 @@ import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import io.micronaut.http.util.OutgoingHttpRequestProcessor;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsClient;
+import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator;
-import io.micronaut.security.token.propagation.TokenPropagator;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -54,31 +54,25 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
     private static final Logger LOG = LoggerFactory.getLogger(ClientCredentialsHttpClientFilter.class);
     protected final OutgoingHttpRequestProcessor outgoingHttpRequestProcessor;
     protected final Collection<OauthClientConfiguration> oauthClientConfigurationCollection;
-    protected final TokenPropagator tokenPropagator;
     protected final BeanContext beanContext;
     protected final Map<String, ClientCredentialsClient> clientCredentialsClientsByName = new ConcurrentHashMap<>();
+    protected final Map<String, ClientCredentialsTokenPropagator> clientCredentialsTokenPropagatorByName = new ConcurrentHashMap<>();
 
     /**
      * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
      * @param oauthClientConfigurationCollection OAuth 2.0 Clients configuration
-     * @param tokenPropagator The token propagator
      * @param beanContext Bean Context
      */
     public ClientCredentialsHttpClientFilter(OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
                                              Collection<OauthClientConfiguration> oauthClientConfigurationCollection,
-                                             TokenPropagator tokenPropagator,
                                              BeanContext beanContext) {
         this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
         this.oauthClientConfigurationCollection = oauthClientConfigurationCollection;
-        this.tokenPropagator = tokenPropagator;
         this.beanContext = beanContext;
     }
 
     @Override
     public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
-        if (doesRequestContainsHttpHeaderUsedByTokenPropagator(request)) {
-            return chain.proceed(request);
-        }
         Optional<OauthClientConfiguration> oauthClientOptional = findOauthClientToDoAClientCredentialsRequest(request);
         if (!oauthClientOptional.isPresent()) {
             if (LOG.isTraceEnabled()) {
@@ -94,12 +88,19 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
             }
             return chain.proceed(request);
         }
+        Optional<ClientCredentialsTokenPropagator> clientCredentialsClientTokenPropagatorOptional = getClientCredentialsTokenPropagator(oauthClient);
+        if (!clientCredentialsClientTokenPropagatorOptional.isPresent()) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("could not retrieve client credentials token propagator for OAuth 2.0 client {}", oauthClient.getName());
+            }
+            return chain.proceed(request);
+        }
         return Flowable.fromPublisher(clientCredentialsClientOptional.get()
                 .clientCredentials(getScope(oauthClient)))
                 .map(TokenResponse::getAccessToken)
                 .switchMap(accessToken -> {
             if (StringUtils.isNotEmpty(accessToken)) {
-                tokenPropagator.writeToken(request, accessToken);
+                clientCredentialsClientTokenPropagatorOptional.get().writeToken(request, accessToken);
             }
             return chain.proceed(request);
         });
@@ -135,19 +136,20 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
 
     /**
      *
-     * @param request Target request
-     * @return return false if the request contains an HTTP Header with the same name
+     * @param oauthClient OAuth 2.0 Client configuration
+     * @return The Client credentials token propagator for the OAuth 2.0 Client.
      */
-    protected boolean doesRequestContainsHttpHeaderUsedByTokenPropagator(HttpRequest<?> request) {
-        if (tokenPropagator instanceof HttpHeaderTokenPropagator) {
-            String headerName = ((HttpHeaderTokenPropagator) tokenPropagator).getConfiguration().getHeaderName();
-            boolean result = request.getHeaders().contains(headerName);
-            if (result && LOG.isTraceEnabled()) {
-                LOG.trace("the request already contains an HTTP Header {}", headerName);
+    protected Optional<ClientCredentialsTokenPropagator> getClientCredentialsTokenPropagator(@NonNull OauthClientConfiguration oauthClient) {
+        try {
+            Function<String, ClientCredentialsTokenPropagator> mappingFunction = key ->
+                    beanContext.getBean(ClientCredentialsTokenPropagator.class, Qualifiers.byName(oauthClient.getName()));
+            return Optional.of(clientCredentialsTokenPropagatorByName.computeIfAbsent(oauthClient.getName(), mappingFunction));
+        } catch (NoSuchBeanException e) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("no client credentials client token propagator for OAuth 2.0 client {}", oauthClient.getName());
             }
-            return result;
         }
-        return false;
+        return Optional.empty();
     }
 
     /**

@@ -44,20 +44,16 @@ import java.util.function.Function;
 public abstract class AbstractClientCredentialsClient implements ClientCredentialsClient {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractClientCredentialsClient.class);
     private static final String NOSCOPE = "NOSCOPE";
-    protected final String name;
     protected final TokenEndpointClient tokenEndpointClient;
     protected final OauthClientConfiguration oauthClientConfiguration;
     protected final Map<String, CacheableProcessor<TokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
 
     /**
-     * @param name {@link javax.inject.Named} qualifier
      * @param tokenEndpointClient The token endpoint client
      * @param oauthClientConfiguration The client configuration
      */
-    public AbstractClientCredentialsClient(@NonNull String name,
-                                           @NonNull OauthClientConfiguration oauthClientConfiguration,
+    public AbstractClientCredentialsClient(@NonNull OauthClientConfiguration oauthClientConfiguration,
                                            @NonNull TokenEndpointClient tokenEndpointClient) {
-        this.name = name;
         this.oauthClientConfiguration = oauthClientConfiguration;
         this.tokenEndpointClient = tokenEndpointClient;
     }
@@ -67,7 +63,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
      * @return the bean's name;
      */
     public String getName() {
-        return name;
+        return oauthClientConfiguration.getName();
     }
 
     @NonNull
@@ -105,12 +101,16 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         }
         return expirationDate(tokenResponse).map(expTime -> {
             final Date now = new Date();
-            return (expTime.getTime() - (
+            boolean isExpired = (expTime.getTime() - (
                             1000 * oauthClientConfiguration.getClientCredentials()
                                     .map(conf -> conf.getAdvancedExpiration())
                                     .orElse(OauthClientConfiguration.DEFAULT_ADVANCED_EXPIRATION)
                     )
             )  < now.getTime();
+            if (isExpired && LOG.isTraceEnabled()) {
+                LOG.trace("token: {} is expired" + tokenResponse.getAccessToken());
+            }
+            return isExpired;
         }).orElse(true);
     }
 

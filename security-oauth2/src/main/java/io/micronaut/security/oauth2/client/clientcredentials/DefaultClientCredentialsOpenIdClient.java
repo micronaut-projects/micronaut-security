@@ -43,16 +43,14 @@ public class DefaultClientCredentialsOpenIdClient extends AbstractClientCredenti
     private final Supplier<SecureEndpoint> tokenEndpoint;
 
     /**
-     * @param name {@link javax.inject.Named} qualifier
      * @param oauthClientConfiguration The client configuration
      * @param tokenEndpointClient      The token endpoint client
      * @param openIdProviderMetadata The provider metadata
      */
-    public DefaultClientCredentialsOpenIdClient(@NonNull String name,
-                                                @NonNull OauthClientConfiguration oauthClientConfiguration,
+    public DefaultClientCredentialsOpenIdClient(@NonNull OauthClientConfiguration oauthClientConfiguration,
                                                 @NonNull TokenEndpointClient tokenEndpointClient,
                                                 Supplier<OpenIdProviderMetadata> openIdProviderMetadata) {
-        super(name, oauthClientConfiguration, tokenEndpointClient);
+        super(oauthClientConfiguration, tokenEndpointClient);
         this.openIdProviderMetadata = openIdProviderMetadata;
         this.tokenEndpoint = SupplierUtil.memoized(this::getTokenEndpoint);
     }
