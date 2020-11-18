@@ -2630,6 +2630,9 @@ public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>If you are using <code>micronaut.security.authentication: idtoken</code>, <a href="../api/io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html">IdTokenClaimsValidator</a>, a bean of type <a href="../api/io/micronaut/security/token/jwt/validator/GenericJwtClaimsValidator.html">GenericJwtClaimsValidator</a>, is registered in the bean context as well. <code>IdTokenClaimsValidator</code> validates points 2-5 of the <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a> section of the OpenID Connect Spec. You can disable it by setting <code>micronaut.security.token.jwt.claims-validators.openid-idtoken</code> to false.</p>
+</div>
 
 <h2 id="render"><a class="anchor" href="#render"></a>9.3.7 Token Render</h2>
 
