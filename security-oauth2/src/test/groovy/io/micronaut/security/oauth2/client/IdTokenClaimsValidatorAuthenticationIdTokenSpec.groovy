@@ -11,7 +11,7 @@ class IdTokenClaimsValidatorAuthenticationIdTokenSpec extends ApplicationContext
         ]
     }
 
-    void "for idtoken authentication mode a bean of type OpenIdIssuerClaimValidator exists"() {
+    void "for idtoken authentication mode a bean of type IdTokenClaimsValidator exists"() {
         expect:
         applicationContext.containsBean(IdTokenClaimsValidator)
     }

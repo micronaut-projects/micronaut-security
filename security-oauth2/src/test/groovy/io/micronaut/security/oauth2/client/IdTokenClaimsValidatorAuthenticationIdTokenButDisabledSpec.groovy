@@ -12,7 +12,7 @@ class IdTokenClaimsValidatorAuthenticationIdTokenButDisabledSpec extends Applica
         ]
     }
 
-    void "for idtoken authentication mode a bean of type OpenIdIssuerClaimValidator exists but it can be disabled via micronaut.security.token.jwt.claims-validators.openid-idtoken: false"() {
+    void "for idtoken authentication mode a bean of type IdTokenClaimsValidator exists but it can be disabled via micronaut.security.token.jwt.claims-validators.openid-idtoken: false"() {
         expect:
         !applicationContext.containsBean(IdTokenClaimsValidator)
     }
