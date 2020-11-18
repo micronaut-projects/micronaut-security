@@ -20,8 +20,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * {@link ClientCredentialsClient} for OAuth 2.0 clients which configures the token endpoint information directly.
@@ -30,7 +28,6 @@ import org.slf4j.LoggerFactory;
  * @since 2.2.0
  */
 public class DefaultClientCredentialsClient extends AbstractClientCredentialsClient {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultClientCredentialsClient.class);
 
     /**
      * @param oauthClientConfiguration The client configuration

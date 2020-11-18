@@ -16,9 +16,14 @@
 package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.context.annotation.EachBean;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsEnabled;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
 import java.util.Optional;
 
@@ -28,14 +33,19 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 2.2.0
  */
-public class HttpHeaderClientCredentialsTokenPropagator implements ClientCredentialsTokenPropagator {
+@Internal
+@EachBean(OauthClientConfiguration.class)
+@Requires(condition = ClientCredentialsEnabled.class)
+@Requires(condition = ClientCredentialsHeaderPropagatorEnabled.class)
+public class ClientCredentialsHeaderTokenPropagator implements ClientCredentialsTokenPropagator {
+
     public static final String SPACE = " ";
-    protected final HttpHeaderClientCredentialsTokenPropagatorConfiguration configuration;
+    protected final ClientCredentialsHeaderTokenPropagatorConfiguration configuration;
 
     /**
      * @param configuration The token propagator configuration
      */
-    public HttpHeaderClientCredentialsTokenPropagator(HttpHeaderClientCredentialsTokenPropagatorConfiguration configuration) {
+    public ClientCredentialsHeaderTokenPropagator(ClientCredentialsHeaderTokenPropagatorConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -45,7 +55,7 @@ public class HttpHeaderClientCredentialsTokenPropagator implements ClientCredent
      * @param token A token ( e.g. JWT token, basic auth token...)
      */
     @Override
-    public void writeToken(MutableHttpRequest<?> request, String token) {
+    public void writeToken(@NonNull MutableHttpRequest<?> request, @NonNull String token) {
         request.header(configuration.getHeaderName(), headerValue(token));
     }
 
@@ -55,7 +65,7 @@ public class HttpHeaderClientCredentialsTokenPropagator implements ClientCredent
      * @return if the JWT token is found it is returned, empty if not
      */
     @Override
-    public Optional<String> findToken(HttpRequest<?> request) {
+    public Optional<String> findToken(@NonNull HttpRequest<?> request) {
         HttpHeaders headers = request.getHeaders();
         Optional<String> authorizationHeader = headers.findFirst(configuration.getHeaderName());
         return authorizationHeader.flatMap(this::extractTokenFromAuthorization);
@@ -101,7 +111,7 @@ public class HttpHeaderClientCredentialsTokenPropagator implements ClientCredent
      *
      * @return The HttpHeaderTokenPropagator Configuration
      */
-    public HttpHeaderClientCredentialsTokenPropagatorConfiguration getConfiguration() {
+    public ClientCredentialsHeaderTokenPropagatorConfiguration getConfiguration() {
         return configuration;
     }
 }

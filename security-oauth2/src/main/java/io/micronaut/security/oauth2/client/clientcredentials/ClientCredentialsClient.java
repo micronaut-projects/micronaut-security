@@ -32,7 +32,7 @@ public interface ClientCredentialsClient {
      * @return Response of an authorization server to a valid client credentials request.
      */
     @NonNull
-    Publisher<TokenResponse> clientCredentials(@Nullable String scope);
+    Publisher<TokenResponse> requestToken(@Nullable String scope);
 
     /**
      *
@@ -41,15 +41,15 @@ public interface ClientCredentialsClient {
      * @return Response of an authorization server to a valid client credentials request.
      */
     @NonNull
-    Publisher<TokenResponse> clientCredentials(@Nullable String scope, boolean force);
+    Publisher<TokenResponse> requestToken(@Nullable String scope, boolean force);
 
     /**
      *
      * @return Response of an authorization server to a valid client credentials request.
      */
     @NonNull
-    default Publisher<TokenResponse> clientCredentials() {
-        return clientCredentials(null);
+    default Publisher<TokenResponse> requestToken() {
+        return requestToken(null);
     }
 
     /**
@@ -57,7 +57,7 @@ public interface ClientCredentialsClient {
      * @return Response of an authorization server to a valid client credentials request.
      */
     @NonNull
-    default Publisher<TokenResponse> clientCredentials(boolean force) {
-        return clientCredentials(null, force);
+    default Publisher<TokenResponse> requestToken(boolean force) {
+        return requestToken(null, force);
     }
 }

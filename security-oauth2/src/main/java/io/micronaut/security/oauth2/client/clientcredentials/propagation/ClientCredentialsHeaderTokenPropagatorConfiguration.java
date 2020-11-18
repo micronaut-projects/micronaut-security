@@ -25,7 +25,8 @@ import io.micronaut.http.HttpHeaders;
  * @author Sergio del Amo
  * @since 2.2.0
  */
-public interface HttpHeaderClientCredentialsTokenPropagatorConfiguration  extends Toggleable {
+public interface ClientCredentialsHeaderTokenPropagatorConfiguration extends Toggleable {
+
     boolean DEFAULT_ENABLED = true;
     String DEFAULT_PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
     String DEFAULT_HEADER_NAME = HttpHeaders.AUTHORIZATION;

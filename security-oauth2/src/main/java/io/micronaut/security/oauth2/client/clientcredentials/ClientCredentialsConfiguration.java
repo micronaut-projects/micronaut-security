@@ -16,11 +16,11 @@
 package io.micronaut.security.oauth2.client.clientcredentials;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.util.OutgointRequestProcessorMatcher;
-import io.micronaut.security.oauth2.client.clientcredentials.propagation.HttpHeaderClientCredentialsTokenPropagatorConfiguration;
+import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
 
+import java.time.Duration;
 import java.util.Optional;
 
 /**
@@ -35,16 +35,17 @@ public interface ClientCredentialsConfiguration extends Toggleable, OutgointRequ
      *
      * @return Scope to be requested in the client credentials request.
      */
-    @Nullable
-    String getScope();
+    @NonNull
+    Optional<String> getScope();
 
     /**
      *
-     * @return Number of seconds for a token obtained via client credentials grant to be considered expired prior to its expiration date
+     * @return The amount of time for a token obtained via client credentials grant to
+     * be considered expired prior to its expiration date.
      */
     @NonNull
-    Integer getAdvancedExpiration();
+    Duration getAdvancedExpiration();
 
     @NonNull
-    Optional<HttpHeaderClientCredentialsTokenPropagatorConfiguration> getHeaderPropagation();
+    Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> getHeaderPropagation();
 }

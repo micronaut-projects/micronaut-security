@@ -24,8 +24,6 @@ import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +36,7 @@ import java.util.function.Supplier;
  * @since 2.2.0
  */
 public class DefaultClientCredentialsOpenIdClient extends AbstractClientCredentialsClient {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultClientCredentialsOpenIdClient.class);
+
     private final Supplier<OpenIdProviderMetadata> openIdProviderMetadata;
     private final Supplier<SecureEndpoint> tokenEndpoint;
 

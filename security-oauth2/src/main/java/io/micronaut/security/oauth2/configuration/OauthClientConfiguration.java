@@ -28,6 +28,7 @@ import io.micronaut.security.oauth2.grants.GrantType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public interface OauthClientConfiguration extends Toggleable {
     /**
      * The default advanced expiration value for client credentials grant.
      */
-    Integer DEFAULT_ADVANCED_EXPIRATION = 30;
+    Duration DEFAULT_ADVANCED_EXPIRATION = Duration.ofSeconds(30);
 
     /**
      * @return The provider name

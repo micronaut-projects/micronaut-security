@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.client.condition;
+package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.condition.Condition;
@@ -25,19 +24,13 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.naming.Named;
 import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 
 import java.util.Optional;
 
-/**
- * Returns true if the OAuth 2.0. Client is enabled and the token endpoint url is set.
- *
- * @author Sergio del Amo
- * @since 2.2.0
- */
 @Internal
-public class OauthClientTokenManuallyConfiguredCondition implements Condition {
+public class ClientCredentialsHeaderPropagatorEnabled implements Condition {
 
     @Override
     public boolean matches(ConditionContext context) {
@@ -49,35 +42,23 @@ public class OauthClientTokenManuallyConfiguredCondition implements Condition {
                 Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
                 if (optional.isPresent()) {
                     String name = optional.get();
-                    Optional<String> failure = tokenEndpointIsManuallyConfigured(beanContext, name);
-                    if (failure.isPresent()) {
-                        context.fail(failure.get());
+                    OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+                    Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> headerTokenConfiguration = clientConfiguration.getClientCredentials()
+                            .flatMap(ClientCredentialsConfiguration::getHeaderPropagation);
+                    if (headerTokenConfiguration.isPresent()) {
+                        if (headerTokenConfiguration.get().isEnabled()) {
+                            return true;
+                        } else {
+                            context.fail("Client credentials header token handler is disabled");
+                            return false;
+                        }
+                    } else {
+                        context.fail("Client credentials header token handler disabled due to a lack of configuration");
                         return false;
                     }
-                    return true;
                 }
             }
         }
         return true;
-    }
-
-    /**
-     *
-     * @param beanContext Bean Context
-     * @param name The name qualifier
-     * @return Empty if the condition passes or a string containing the failure causing the condition to fail
-     */
-    public static Optional<String> tokenEndpointIsManuallyConfigured(@NonNull BeanContext beanContext, @NonNull String name) {
-        OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-
-        if (clientConfiguration.isEnabled()) {
-            if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
-                return Optional.empty();
-            } else {
-                return Optional.of("condition failed because for OAuth 2.0 client [" + name + "] because no token endpoint is configured");
-            }
-        } else {
-            return Optional.of("condition failed because for OAuth 2.0 client [" + name + "] because the configuration is disabled");
-        }
     }
 }

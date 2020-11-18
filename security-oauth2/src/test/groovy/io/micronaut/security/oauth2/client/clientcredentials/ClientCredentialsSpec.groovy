@@ -147,21 +147,21 @@ class ClientCredentialsSpec extends Specification {
             'micronaut.security.oauth2.clients.authserveropenid.openid.issuer'                                                  : "http://localhost:$authServerPort".toString(),
             'micronaut.security.oauth2.clients.authserveropenid.client-id'                                                      : '3ljrgej68ggm7i720o9u12t7lm',
             'micronaut.security.oauth2.clients.authserveropenid.client-secret'                                                  : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
-            'micronaut.security.oauth2.clients.authserveropenid.client-credentials.advanced-expiration'                         : 1,
+            'micronaut.security.oauth2.clients.authserveropenid.client-credentials.advanced-expiration'                         : '1s',
 
             'micronaut.security.oauth2.clients.authservermanual.token.auth-method'                                              : "client_secret_basic",
             'micronaut.security.oauth2.clients.authservermanual.token.url'                                                      : "http://localhost:$authServerPort/token".toString(),
             'micronaut.security.oauth2.clients.authservermanual.client-id'                                                      : '3ljrgej68ggm7i720o9u12t7lm',
             'micronaut.security.oauth2.clients.authservermanual.client-secret'                                                  : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
             'micronaut.security.oauth2.clients.authservermanual.client-credentials.service-id-regex'                            : 'resourceclient',
-            'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration'                         : 1,
+            'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration'                         : '1s',
 
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.issuer'                         : "http://localhost:$authServerDownPort".toString(),
-            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.auth-method'                     : "client_secret_basic",
-            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.token.url'                             : "http://localhost:$authServerPort/token".toString(),
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.token.auth-method'                     : "client_secret_basic",
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.openid.token.url'                             : "http://localhost:$authServerPort/token".toString(),
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-id'                             : '3ljrgej68ggm7i720o9u12t7lm',
             'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-secret'                         : '1lk7on551mctn5gc78d1742at53l3npo3m375q0hcvr9t3eehgcf',
-            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-credentials.advanced-expiration': 1,
+            'micronaut.security.oauth2.clients.authservermanualtakesprecedenceoveropenid.client-credentials.advanced-expiration': '1s',
             'micronaut.http.services.resourceclient.url'                                                                        : "http://localhost:$resourceServerPort".toString(),
     ])
 
@@ -278,7 +278,7 @@ class ClientCredentialsSpec extends Specification {
         clientCredentialsClient.name == 'authservermanual'
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials(null)).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken(null)).blockingFirst()
 
         then:
         noExceptionThrown()
@@ -302,11 +302,11 @@ class ClientCredentialsSpec extends Specification {
 
         then:
         noExceptionThrown()
-        clientCredentialsClient instanceof DefaultClientCredentialsClient
+        clientCredentialsClient instanceof DefaultClientCredentialsOpenIdClient
         clientCredentialsClient.name == 'authservermanualtakesprecedenceoveropenid'
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials(null)).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken(null)).blockingFirst()
 
         then:
         noExceptionThrown()
@@ -332,7 +332,7 @@ class ClientCredentialsSpec extends Specification {
         noExceptionThrown()
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
         noExceptionThrown()
@@ -355,7 +355,7 @@ class ClientCredentialsSpec extends Specification {
 
         when:
         authServer.applicationContext.getBean(TokenController).down = true
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
         noExceptionThrown()
@@ -373,13 +373,13 @@ class ClientCredentialsSpec extends Specification {
 
         when: 'calling client credentials returns the old access token'
         authServer.applicationContext.getBean(TokenController).down = false
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
+        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
         tokenResponse.accessToken == accessToken
 
         when: 'calling client credentials with different scope returns a different access token'
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials("email")).blockingFirst()
+        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken("email")).blockingFirst()
 
         then:
         tokenResponse.accessToken != accessToken
@@ -394,14 +394,14 @@ class ClientCredentialsSpec extends Specification {
 
         when: 'calling client credentials returns the new token because the previous token is detected as expired'
         authServer.applicationContext.getBean(TokenController).down = false
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials()).blockingFirst()
+        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
         tokenResponse.accessToken != accessToken
 
         when: 'moreover, calling client credentials with force true returns a different access token'
         accessToken = tokenResponse.accessToken
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.clientCredentials(true)).blockingFirst()
+        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken(true)).blockingFirst()
 
         then:
         tokenResponse.accessToken != accessToken

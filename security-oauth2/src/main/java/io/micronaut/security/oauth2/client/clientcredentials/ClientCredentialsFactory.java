@@ -15,21 +15,21 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.exceptions.DisabledBeanException;
 import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
-import io.micronaut.security.oauth2.client.condition.OauthClientTokenManuallyConfiguredCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 
 import javax.inject.Provider;
 import java.util.function.Supplier;
-import io.micronaut.context.exceptions.DisabledBeanException;
 
 /**
  * Factory to create {@link ClientCredentialsClient} beans.
@@ -38,6 +38,7 @@ import io.micronaut.context.exceptions.DisabledBeanException;
  */
 @Factory
 public class ClientCredentialsFactory {
+
     /**
      * Creates an {@link ClientCredentialsClient} from the provided parameters.
      * @param oauthClientConfiguration The client configuration
@@ -45,39 +46,23 @@ public class ClientCredentialsFactory {
      * @param openIdProviderMetadata The open id provider metadata
      * @return The Client Credentials client
      */
-    @EachBean(OpenIdClientConfiguration.class)
-    ClientCredentialsClient clientCredentialsOpenIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
-                                                                       TokenEndpointClient tokenEndpointClient,
-                                                                       @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
-        if (oauthClientConfiguration.getClientCredentials().isPresent() &&
-                !oauthClientConfiguration.getClientCredentials().get().isEnabled()) {
-            throw new DisabledBeanException("cannot create a bean of type ClientCredentialsClient because client-credentials is disabled for client " + oauthClientConfiguration.getName());
-        }
-
-        if (oauthClientConfiguration.getToken().isPresent() && oauthClientConfiguration.getToken().get().getUrl().isPresent()) {
-            return new DefaultClientCredentialsClient(oauthClientConfiguration, tokenEndpointClient);
-        }
-        Supplier<OpenIdProviderMetadata> metadataSupplier = SupplierUtil.memoized(openIdProviderMetadata::get);
-        return new DefaultClientCredentialsOpenIdClient(oauthClientConfiguration,
-                tokenEndpointClient,
-                metadataSupplier);
-    }
-
-    /**
-     * Creates an {@link ClientCredentialsClient} for an OAuth 2.0 Client.
-     *
-     * @param oauthClientConfiguration The open id provider metadata
-     * @param tokenEndpointClient Token endpoint client
-     * @return The Client Credentials client
-     */
-    @Requires(condition = OauthClientTokenManuallyConfiguredCondition.class)
     @EachBean(OauthClientConfiguration.class)
-    DefaultClientCredentialsClient clientCredentialsClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
-                                                           TokenEndpointClient tokenEndpointClient) {
-        if (oauthClientConfiguration.getClientCredentials().isPresent() &&
-                !oauthClientConfiguration.getClientCredentials().get().isEnabled()) {
-            return null;
+    @Requires(condition = ClientCredentialsEnabled.class)
+    ClientCredentialsClient clientCredentialsOpenIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
+                                                          TokenEndpointClient tokenEndpointClient,
+                                                          @Parameter @Nullable Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
+
+        if (openIdProviderMetadata != null) {
+            Supplier<OpenIdProviderMetadata> metadataSupplier = SupplierUtil.memoized(openIdProviderMetadata::get);
+            return new DefaultClientCredentialsOpenIdClient(oauthClientConfiguration,
+                    tokenEndpointClient,
+                    metadataSupplier);
+        } else {
+            if (oauthClientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
+                return new DefaultClientCredentialsClient(oauthClientConfiguration, tokenEndpointClient);
+            } else {
+                throw new DisabledBeanException("Client credentials grant is disabled for OAuth 2.0 client [\"" + oauthClientConfiguration.getName() + "\"] because no token endpoint is configured");
+            }
         }
-        return new DefaultClientCredentialsClient(oauthClientConfiguration, tokenEndpointClient);
     }
 }

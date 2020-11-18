@@ -21,7 +21,7 @@ import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
-import io.micronaut.security.oauth2.client.clientcredentials.propagation.HttpHeaderClientCredentialsTokenPropagatorConfiguration;
+import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
@@ -32,6 +32,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -269,19 +270,19 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
 
         private String scope;
 
-        private Integer advancedExpiration = DEFAULT_ADVANCED_EXPIRATION;
+        private Duration advancedExpiration = DEFAULT_ADVANCED_EXPIRATION;
 
-        private HttpHeaderClientCredentialsTokenPropagatorConfigurationProperties headerPropagation;
+        private HeaderTokenPropagatorConfigurationProperties headerPropagation;
 
         @NonNull
         @Override
-        public Integer getAdvancedExpiration() {
+        public Duration getAdvancedExpiration() {
             return advancedExpiration;
         }
 
         @Override
         @NonNull
-        public Optional<HttpHeaderClientCredentialsTokenPropagatorConfiguration> getHeaderPropagation() {
+        public Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> getHeaderPropagation() {
             return Optional.ofNullable(headerPropagation);
         }
 
@@ -290,15 +291,15 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          *
          * @param headerPropagation client credentials header propagation.
          */
-        public void setHeaderPropagation(@NonNull HttpHeaderClientCredentialsTokenPropagatorConfigurationProperties headerPropagation) {
+        public void setHeaderPropagation(@NonNull HeaderTokenPropagatorConfigurationProperties headerPropagation) {
             this.headerPropagation = headerPropagation;
         }
 
         /**
-         *  Number of seconds for a token obtained via client credentials grant to be considered expired prior to its expiration date. Default value {@value #DEFAULT_ADVANCED_EXPIRATION}.
-         * @param advancedExpiration advanced expiration in seconds
+         * @param advancedExpiration Number of seconds for a token obtained via client credentials grant to be considered expired
+         *                           prior to its expiration date. Default value (30 seconds).
          */
-        public void setAdvancedExpiration(@NonNull Integer advancedExpiration) {
+        public void setAdvancedExpiration(@NonNull Duration advancedExpiration) {
             this.advancedExpiration = advancedExpiration;
         }
 
@@ -310,15 +311,13 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         /**
-         * a regular expression to match the service id. Not set by default.
-         * @param serviceIdRegex serviceId regular expression
+         * @param serviceIdRegex A regular expression to match the service id.
          */
         public void setServiceIdRegex(String serviceIdRegex) {
             this.serviceIdRegex = serviceIdRegex;
         }
 
         /**
-         *
          * @return a regular expression to match the uri.
          */
         public String getUriRegex() {
@@ -326,8 +325,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         }
 
         /**
-         * a regular expression to match the uri.  Not set by default.
-         * @param uriRegex uri regular expression
+         * @param uriRegex A regular expression to match the URI.
          */
         public void setUriRegex(String uriRegex) {
             this.uriRegex = uriRegex;
@@ -349,10 +347,10 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             return uriPattern;
         }
 
-        @Nullable
+        @NonNull
         @Override
-        public String getScope() {
-            return scope;
+        public Optional<String> getScope() {
+            return Optional.ofNullable(scope);
         }
 
         /**
@@ -380,12 +378,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          * Client credentials http header token propagation configuration.
          */
         @ConfigurationProperties("header-propagation")
-        public static class HttpHeaderClientCredentialsTokenPropagatorConfigurationProperties implements HttpHeaderClientCredentialsTokenPropagatorConfiguration {
-            /**
-             * The default enable value.
-             */
-            @SuppressWarnings("WeakerAccess")
-
+        public static class HeaderTokenPropagatorConfigurationProperties implements ClientCredentialsHeaderTokenPropagatorConfiguration {
 
             private String prefix = DEFAULT_PREFIX;
             private String headerName = DEFAULT_HEADER_NAME;
@@ -397,7 +390,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             }
 
             /**
-             * Enable {@link HttpHeaderClientCredentialsTokenPropagatorConfiguration}. Default value ({@value #DEFAULT_ENABLED}).
+             * Enable {@link ClientCredentialsHeaderTokenPropagatorConfiguration}. Default value ({@value #DEFAULT_ENABLED}).
              * @param enabled enabled flag
              */
             public void setEnabled(boolean enabled) {

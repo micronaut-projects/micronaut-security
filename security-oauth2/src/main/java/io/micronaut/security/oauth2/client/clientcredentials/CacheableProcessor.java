@@ -18,6 +18,8 @@ package io.micronaut.security.oauth2.client.clientcredentials;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.core.annotation.Experimental;
+import io.micronaut.core.annotation.Internal;
+import org.reactivestreams.Processor;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -34,7 +36,8 @@ import java.util.stream.Collectors;
  * @param <T> The element to be returned by the publisher
  */
 @Experimental
-public class CacheableProcessor<T> implements Subscriber<T>, Publisher<T>, ElementsRequestedListener {
+@Internal
+class CacheableProcessor<T> implements Processor<T, T> {
 
     @Nullable
     private T element;
@@ -51,20 +54,20 @@ public class CacheableProcessor<T> implements Subscriber<T>, Publisher<T>, Eleme
     private List<ElementSubscription<T>> subscriptions = new ArrayList<>();
 
     @Nullable
-    private Function<T, T> transformer;
+    private final Function<T, T> transformer;
 
     /**
      * Constructor.
      */
-    public CacheableProcessor() {
-
+    CacheableProcessor() {
+        this.transformer = null;
     }
 
     /**
      *
      * @param transformer A transformation function to be applied when an element is received.
      */
-    public CacheableProcessor(@NonNull Function<T, T> transformer) {
+    CacheableProcessor(@NonNull Function<T, T> transformer) {
         this.transformer = transformer;
     }
 
@@ -108,18 +111,13 @@ public class CacheableProcessor<T> implements Subscriber<T>, Publisher<T>, Eleme
         this.complete = true;
     }
 
-    // Publisher
-
     @Override
     public void subscribe(Subscriber<? super T> s) {
-        ElementSubscription<T> subscription = new ElementSubscription<T>(s, this);
+        ElementSubscription<T> subscription = new ElementSubscription<>(s, this);
         this.subscriptions.add(subscription);
         s.onSubscribe(subscription);
     }
 
-    // ElementsRequestedListener
-
-    @Override
     public void onElementsRequested() {
         if (element == null && subscription != null) {
             subscription.request(1);
@@ -152,6 +150,7 @@ public class CacheableProcessor<T> implements Subscriber<T>, Publisher<T>, Eleme
      *
      * @return The subscription to the
      */
+    @Nullable
     public Subscription getSubscription() {
         return subscription;
     }
@@ -160,100 +159,96 @@ public class CacheableProcessor<T> implements Subscriber<T>, Publisher<T>, Eleme
      *
      * @return The element
      */
+    @Nullable
     public T getElement() {
         return this.element;
     }
-}
-
-interface ElementsRequestedListener {
-
-    /**
-     * Signals that the subscribers have requested new elements.
-     */
-    void onElementsRequested();
-}
-
-/**
- *
- * @param <T> The element type
- */
-class ElementSubscription<T> implements Subscription {
-    private final Subscriber<? super T> subscriber;
-    private final ElementsRequestedListener listener;
-    private boolean canceled;
-    private boolean elementsRequested;
-    private boolean complete;
 
     /**
      *
-     * @param subscriber The subscriber
-     * @param listener The Listener
+     * @param <T> The element type
      */
-    public ElementSubscription(Subscriber<? super T> subscriber,
-                               ElementsRequestedListener listener) {
-        this.subscriber = subscriber;
-        this.listener = listener;
-    }
+    private static class ElementSubscription<T> implements Subscription {
+        private final Subscriber<? super T> subscriber;
+        private final CacheableProcessor<T> listener;
+        private boolean canceled;
+        private boolean elementsRequested;
+        private boolean complete;
 
-    /**
-     *
-     * @param elementsRequested true if new elements where requested
-     */
-    public void setElementsRequested(boolean elementsRequested) {
-        this.elementsRequested = elementsRequested;
-    }
+        /**
+         *
+         * @param subscriber The subscriber
+         * @param listener The Listener
+         */
+        public ElementSubscription(Subscriber<? super T> subscriber,
+                                   CacheableProcessor<T> listener) {
+            this.subscriber = subscriber;
+            this.listener = listener;
+        }
 
-    /**
-     *
-     * @return True if elements were requested
-     */
-    public boolean isElementsRequested() {
-        return elementsRequested;
-    }
+        /**
+         *
+         * @param elementsRequested true if new elements where requested
+         */
+        public void setElementsRequested(boolean elementsRequested) {
+            this.elementsRequested = elementsRequested;
+        }
 
-    /**
-     *
-     * @return Whether the subscription is canceled
-     */
-    public boolean isCanceled() {
-        return canceled;
-    }
+        /**
+         *
+         * @return True if elements were requested
+         */
+        public boolean isElementsRequested() {
+            return elementsRequested;
+        }
 
-    /**
-     *
-     * @return Whether the suscription is complete
-     */
-    public boolean isComplete() {
-        return complete;
-    }
+        /**
+         *
+         * @return Whether the subscription is canceled
+         */
+        public boolean isCanceled() {
+            return canceled;
+        }
 
-    /**
-     *
-     * @param complete flags the subscription as complete
-     */
-    public void setComplete(boolean complete) {
-        this.complete = complete;
-    }
+        /**
+         *
+         * @return Whether the subscription is complete
+         */
+        public boolean isComplete() {
+            return complete;
+        }
 
-    /**
-     *
-     * @return The subscriber
-     */
-    public Subscriber<? super T> getSubscriber() {
-        return subscriber;
-    }
+        /**
+         *
+         * @param complete flags the subscription as complete
+         */
+        public void setComplete(boolean complete) {
+            this.complete = complete;
+        }
 
-    // Subscription
-    @Override
-    public void cancel() {
-        this.canceled = true;
-    }
+        /**
+         *
+         * @return The subscriber
+         */
+        public Subscriber<? super T> getSubscriber() {
+            return subscriber;
+        }
 
-    @Override
-    public void request(long n) {
-        if (n > 0) {
-            this.elementsRequested = true;
-            listener.onElementsRequested();
+        @Override
+        public void cancel() {
+            this.canceled = true;
+        }
+
+        @Override
+        public void request(long n) {
+            if (n > 0) {
+                this.elementsRequested = true;
+                listener.onElementsRequested();
+            }
         }
     }
+
 }
+
+
+

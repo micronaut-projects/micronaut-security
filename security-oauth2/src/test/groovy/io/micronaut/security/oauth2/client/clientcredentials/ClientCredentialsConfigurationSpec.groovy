@@ -7,6 +7,8 @@ import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.time.Duration
+
 class ClientCredentialsConfigurationSpec extends Specification {
 
     void "advanced expiration defaults to 30 seconds"() {
@@ -18,10 +20,14 @@ class ClientCredentialsConfigurationSpec extends Specification {
                 'micronaut.security.oauth2.clients.authservermanual.client-credentials.scope': 'create-file' // you have to specify a property of client-credentials for client credentials configuration to be created.
         ])
 
+        when:
+        OauthClientConfiguration configuration = applicationContext.getBean(OauthClientConfiguration, Qualifiers.byName("authservermanual"))
+
+        then:
+        noExceptionThrown()
+
         expect:
-        applicationContext.containsBean(OauthClientConfiguration, Qualifiers.byName("authservermanual"))
-        applicationContext.getBean(OauthClientConfiguration, Qualifiers.byName("authservermanual")).getClientCredentials().isPresent()
-        applicationContext.getBean(OauthClientConfiguration, Qualifiers.byName("authservermanual")).getClientCredentials().get().advancedExpiration == 30
+        configuration.getClientCredentials().get().advancedExpiration == Duration.ofSeconds(30)
 
         cleanup:
         applicationContext.close()
@@ -33,13 +39,17 @@ class ClientCredentialsConfigurationSpec extends Specification {
                 'micronaut.security.oauth2.clients.authservermanual.token.url': "http://foo.bar/token",
                 'micronaut.security.oauth2.clients.authservermanual.client-id': 'XXX',
                 'micronaut.security.oauth2.clients.authservermanual.client-secret': 'YYY',
-                'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration': 0,
+                'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration': '0s',
         ])
 
+        when:
+        OauthClientConfiguration configuration = applicationContext.getBean(OauthClientConfiguration, Qualifiers.byName("authservermanual"))
+
+        then:
+        noExceptionThrown()
+
         expect:
-        applicationContext.containsBean(OauthClientConfiguration, Qualifiers.byName("authservermanual"))
-        applicationContext.getBean(OauthClientConfiguration, Qualifiers.byName("authservermanual")).getClientCredentials().isPresent()
-        applicationContext.getBean(OauthClientConfiguration, Qualifiers.byName("authservermanual")).getClientCredentials().get().advancedExpiration == 0
+        configuration.getClientCredentials().get().advancedExpiration == Duration.ofSeconds(0)
 
         cleanup:
         applicationContext.close()

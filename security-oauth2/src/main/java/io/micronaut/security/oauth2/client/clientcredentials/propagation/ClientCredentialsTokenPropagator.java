@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
@@ -28,6 +29,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 2.2.0
  */
+@DefaultImplementation(DefaultClientCredentialsTokenPropagator.class)
 public interface ClientCredentialsTokenPropagator extends Ordered {
 
     /**
@@ -44,6 +46,5 @@ public interface ClientCredentialsTokenPropagator extends Ordered {
      * @param request The request to look for the token in
      * @return An optional token string
      */
-    @NonNull
     Optional<String> findToken(@NonNull HttpRequest<?> request);
 }

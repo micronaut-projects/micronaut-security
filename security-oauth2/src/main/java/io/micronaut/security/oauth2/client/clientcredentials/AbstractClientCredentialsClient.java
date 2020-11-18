@@ -68,17 +68,17 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
 
     @NonNull
     @Override
-    public Publisher<TokenResponse> clientCredentials(@Nullable String scope) {
-        return clientCredentials(scope, false);
+    public Publisher<TokenResponse> requestToken(@Nullable String scope) {
+        return requestToken(scope, false);
     }
 
     @Override
     @NonNull
-    public Publisher<TokenResponse> clientCredentials(@Nullable String scope, boolean force) {
+    public Publisher<TokenResponse> requestToken(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
 
-        Function<String, CacheableProcessor<TokenResponse>> mappingFunction = key -> new CacheableProcessor<>(TokenResponseExpiration::new);
-        CacheableProcessor<TokenResponse> publisher = scopeToPublisherMap.computeIfAbsent(resolvedScope, mappingFunction);
+        CacheableProcessor<TokenResponse> publisher = scopeToPublisherMap.computeIfAbsent(resolvedScope,
+                key -> new CacheableProcessor<>(TokenResponseExpiration::new));
 
         if (force || isExpired(publisher.getElement())) {
             publisher.clear();
@@ -99,14 +99,14 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         if (tokenResponse == null) {
             return true;
         }
-        return expirationDate(tokenResponse).map(expTime -> {
+        return expirationDate(tokenResponse).map(expDate -> {
             final Date now = new Date();
-            boolean isExpired = (expTime.getTime() - (
-                            1000 * oauthClientConfiguration.getClientCredentials()
-                                    .map(conf -> conf.getAdvancedExpiration())
-                                    .orElse(OauthClientConfiguration.DEFAULT_ADVANCED_EXPIRATION)
-                    )
-            )  < now.getTime();
+            long expTime = expDate.getTime();
+            expTime = expTime - oauthClientConfiguration.getClientCredentials()
+                    .map(ClientCredentialsConfiguration::getAdvancedExpiration)
+                    .orElse(OauthClientConfiguration.DEFAULT_ADVANCED_EXPIRATION)
+                    .toMillis();
+            boolean isExpired = expTime  < now.getTime();
             if (isExpired && LOG.isTraceEnabled()) {
                 LOG.trace("token: {} is expired" + tokenResponse.getAccessToken());
             }
