@@ -2,4 +2,4 @@ A api:security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseVali
 
 By default all implementations of api:io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator[] and api:io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdClaimsValidator[] are used to validate the token.
 
-if you are using `micronaut.security.authentication: idtoken`, then api:io.micronaut.security.oauth2.client.IdTokenClaimsValidator[], a bean of type api:security.token.jwt.validator.GenericJwtClaimsValidator[], is registered in the bean context. `IdTokenClaimsValidator` validates points 2-5 of the https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation[ID Token Validation] section of the OpenID Connect Spec.
+To allow for additional or custom  validations, register an api:io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdClaimsValidator[] bean.
