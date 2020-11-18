@@ -13,30 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.grants;
-
 /**
- * A contract for a grant that requires authentication.
+ * Classes related to the Client Credentials Grant.
  *
- * @author James Kleeh
- * @since 1.2.0
+ * @author Sergio del Amo
+ * @since 2.2.0
  */
-public interface SecureGrant {
-
-    String KEY_CLIENT_ID = "client_id";
-    String KEY_CLIENT_SECRET = "client_secret";
-
-    /**
-     * Sets the client id in the grant.
-     *
-     * @param clientId The client id
-     */
-    void setClientId(String clientId);
-
-    /**
-     * Sets the client secret in the grant.
-     *
-     * @param clientSecret The client secret
-     */
-    void setClientSecret(String clientSecret);
-}
+package io.micronaut.security.oauth2.client.clientcredentials;

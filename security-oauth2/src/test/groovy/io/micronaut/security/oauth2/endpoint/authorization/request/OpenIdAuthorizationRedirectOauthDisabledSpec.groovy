@@ -1,6 +1,5 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request
 
-import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpHeaders

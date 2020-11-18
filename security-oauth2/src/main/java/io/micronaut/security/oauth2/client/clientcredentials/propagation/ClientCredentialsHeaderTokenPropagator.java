@@ -13,33 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.propagation;
+package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsEnabled;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
-import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Propagates a token based off of a header.
+ * Propagates a token obtained via client credentials based off of a header.
  *
- * @author James Kleeh
- * @since 1.4.0
+ * @author Sergio del Amo
+ * @since 2.2.0
  */
-@Requires(property = HttpHeaderTokenPropagatorConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
-@Singleton
-public class HttpHeaderTokenPropagator implements TokenPropagator {
+@Internal
+@EachBean(OauthClientConfiguration.class)
+@Requires(condition = ClientCredentialsEnabled.class)
+@Requires(condition = ClientCredentialsHeaderPropagatorEnabled.class)
+public class ClientCredentialsHeaderTokenPropagator implements ClientCredentialsTokenPropagator {
 
-    protected final HttpHeaderTokenPropagatorConfiguration configuration;
+    public static final String SPACE = " ";
+    protected final ClientCredentialsHeaderTokenPropagatorConfiguration configuration;
 
     /**
      * @param configuration The token propagator configuration
      */
-    public HttpHeaderTokenPropagator(HttpHeaderTokenPropagatorConfiguration configuration) {
+    public ClientCredentialsHeaderTokenPropagator(ClientCredentialsHeaderTokenPropagatorConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -49,7 +55,7 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
      * @param token A token ( e.g. JWT token, basic auth token...)
      */
     @Override
-    public void writeToken(MutableHttpRequest<?> request, String token) {
+    public void writeToken(@NonNull MutableHttpRequest<?> request, @NonNull String token) {
         request.header(configuration.getHeaderName(), headerValue(token));
     }
 
@@ -59,7 +65,7 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
      * @return if the JWT token is found it is returned, empty if not
      */
     @Override
-    public Optional<String> findToken(HttpRequest<?> request) {
+    public Optional<String> findToken(@NonNull HttpRequest<?> request) {
         HttpHeaders headers = request.getHeaders();
         Optional<String> authorizationHeader = headers.findFirst(configuration.getHeaderName());
         return authorizationHeader.flatMap(this::extractTokenFromAuthorization);
@@ -70,14 +76,7 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
      * @return the value which will be written to an HTTP Header
      */
     protected String headerValue(String token) {
-        StringBuilder sb = new StringBuilder();
-        String prefix = configuration.getPrefix();
-        if (prefix != null) {
-            sb.append(prefix);
-            if (!prefix.endsWith(" ")) {
-                sb.append(" ");
-            }
-        }
+        StringBuilder sb = prefix();
         sb.append(token);
         return sb.toString();
     }
@@ -87,25 +86,32 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
      * @return If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'
      */
     protected Optional<String> extractTokenFromAuthorization(String authorization) {
+        StringBuilder sb = prefix();
+        String str = sb.toString();
+        if (authorization.startsWith(str)) {
+            return Optional.of(authorization.substring(str.length()));
+        }
+        return Optional.empty();
+    }
+
+    @NonNull
+    private StringBuilder prefix() {
         StringBuilder sb = new StringBuilder();
         final String prefix = configuration.getPrefix();
         if (prefix != null && !prefix.isEmpty()) {
             sb.append(prefix);
-            sb.append(" ");
+            if (!prefix.endsWith(SPACE)) {
+                sb.append(SPACE);
+            }
         }
-        String str = sb.toString();
-        if (authorization.startsWith(str)) {
-            return Optional.of(authorization.substring(str.length()));
-        } else {
-            return Optional.empty();
-        }
+        return sb;
     }
 
     /**
      *
      * @return The HttpHeaderTokenPropagator Configuration
      */
-    public HttpHeaderTokenPropagatorConfiguration getConfiguration() {
+    public ClientCredentialsHeaderTokenPropagatorConfiguration getConfiguration() {
         return configuration;
     }
 }

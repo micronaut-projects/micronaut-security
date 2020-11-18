@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.util.Toggleable;
+import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -27,6 +28,7 @@ import io.micronaut.security.oauth2.grants.GrantType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +42,11 @@ import java.util.Optional;
 public interface OauthClientConfiguration extends Toggleable {
 
     AuthenticationMethod DEFAULT_AUTHENTICATION_METHOD = AuthenticationMethod.CLIENT_SECRET_POST;
+
+    /**
+     * The default advanced expiration value for client credentials grant.
+     */
+    Duration DEFAULT_ADVANCED_EXPIRATION = Duration.ofSeconds(30);
 
     /**
      * @return The provider name
@@ -82,6 +89,15 @@ public interface OauthClientConfiguration extends Toggleable {
      * @return The optional authorization endpoint configuration
      */
     Optional<EndpointConfiguration> getAuthorization();
+
+    /**
+     *
+     * @return The Client Credentials Configuration
+     */
+    @NonNull
+    default Optional<ClientCredentialsConfiguration> getClientCredentials() {
+        return Optional.empty(); //@deprecated Default implementation will be removed in next mayor version.
+    }
 
     /**
      * @see <a href="https://tools.ietf.org/html/rfc7662">RFC 7662</a>

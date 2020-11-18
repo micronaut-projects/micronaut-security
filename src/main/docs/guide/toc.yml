@@ -87,6 +87,9 @@ oauth:
           id-token-hint: ID Token Hint
         token-validation: Token Validation
       state: State Parameter
+    clientcredentials:
+      title: Client Credentials
+      clientecredentialshttpclient: HTTP Client Filter for Client Credentials
     password: Password
   oauth-endpoints:
     title: Endpoints
