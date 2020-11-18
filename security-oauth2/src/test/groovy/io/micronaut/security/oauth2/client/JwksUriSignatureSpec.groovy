@@ -105,7 +105,6 @@ class JwksUriSignatureSpec extends Specification {
         }
         embeddedServer.applicationContext.containsBean(SignatureConfiguration)
 
-
         when: 'it is possible to get a JWT from the auth server A'
         BlockingHttpClient authServerAClient = authServerA.applicationContext.createBean(HttpClient, authServerA.URL).toBlocking()
         HttpResponse<AccessRefreshToken> accessRefreshTokenHttpResponse = authServerAClient.exchange(loginRequest(), AccessRefreshToken)
@@ -189,26 +188,40 @@ class JwksUriSignatureSpec extends Specification {
     @Requires(property = 'spec.name', value = 'AuthServerAJwksUriSignatureSpec')
     @Replaces(JWTClaimsSetGenerator)
     @Singleton
-    static class AuthServerACustomJWTClaimsSetGenerator extends CustomJWTClaimsSetGenerator {
+    static class AuthServerACustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
+        Integer port
         AuthServerACustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
                                     @Nullable JwtIdGenerator jwtIdGenerator,
                                     @Nullable ClaimsAudienceProvider claimsAudienceProvider,
                                     @Nullable ApplicationConfiguration applicationConfiguration,
                                     @Value('${micronaut.server.port}') Integer port) {
-            super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration, port)
+            super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration)
+            this.port = port
+        }
+
+        @Override
+        protected void populateIss(JWTClaimsSet.Builder builder) {
+            builder.issuer("http://localhost:${port}/oauth2/default")
         }
     }
 
     @Requires(property = 'spec.name', value = 'AuthServerBJwksUriSignatureSpec')
     @Replaces(JWTClaimsSetGenerator)
     @Singleton
-    static class AuthServerBCustomJWTClaimsSetGenerator extends CustomJWTClaimsSetGenerator {
+    static class AuthServerBCustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
+        Integer port
         AuthServerBCustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
                                     @Nullable JwtIdGenerator jwtIdGenerator,
                                     @Nullable ClaimsAudienceProvider claimsAudienceProvider,
                                     @Nullable ApplicationConfiguration applicationConfiguration,
                                     @Value('${micronaut.server.port}') Integer port) {
-            super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration, port)
+            super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration)
+            this.port = port
+        }
+
+        @Override
+        protected void populateIss(JWTClaimsSet.Builder builder) {
+            builder.issuer("http://localhost:${port}/oauth2/default")
         }
     }
 
@@ -364,24 +377,6 @@ class JwksUriSignatureSpec extends Specification {
                 emitter.onComplete()
             }, BackpressureStrategy.ERROR)
         }
-    }
-
-
-    static class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
-        int port
-        CustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                              @Nullable JwtIdGenerator jwtIdGenerator,
-                              @Nullable ClaimsAudienceProvider claimsAudienceProvider,
-                              @Nullable ApplicationConfiguration applicationConfiguration,
-                              int port) {
-            super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration)
-            this.port = port;
-        }
-        @Override
-        protected void populateIss(JWTClaimsSet.Builder builder) {
-            builder.issuer("http://localhost:${port}/oauth2/default")
-        }
-
     }
 
     static class OpenIdConfiguration {
