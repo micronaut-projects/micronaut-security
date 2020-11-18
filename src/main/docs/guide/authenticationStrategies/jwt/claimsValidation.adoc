@@ -11,3 +11,5 @@ Micronaut Security includes some validators by default:
 | JWT `sub` claim is not null.
 | Enabled by default. You can disable it by setting `micronaut.security.token.jwt.claims-validators.subject` to false.
 |===
+
+If you are using `micronaut.security.authentication: idtoken`, api:io.micronaut.security.oauth2.client.IdTokenClaimsValidator[], a bean of type api:security.token.jwt.validator.GenericJwtClaimsValidator[], is registered in the bean context as well. `IdTokenClaimsValidator` validates points 2-5 of the https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation[ID Token Validation] section of the OpenID Connect Spec. You can disable it by setting `micronaut.security.token.jwt.claims-validators.openid-idtoken` to false.
