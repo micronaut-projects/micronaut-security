@@ -1,13 +1,3 @@
-Signed claims prevents an attacker to tamper its contents to introduce malicious data or try a privilege escalation by adding more roles. However, the claims can be decoded just by using Base 64.
-
-If the claims contains sensitive information, you can use a JSON Web Encryption algorithm to prevent them to be decoded.
-
-To enable a JWT encryption in token generation, you need to have in your app a bean of type  link:{api}/io/micronaut/security/token/jwt/encryption/rsa/RSAEncryptionConfiguration.html[RSAEncryptionConfiguration],
-link:{api}/io/micronaut/security/token/jwt/encryption/ec/ECEncryptionConfiguration.html[ECEncryptionConfiguration],
-link:{api}/io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html[SecretEncryptionConfiguration] qualified with name `generator`.
-
-== Example of JWT Signed with Secret and Encrypted with RSA
-
 Setup a link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration] through configuration properties
 
 [source, groovy]
