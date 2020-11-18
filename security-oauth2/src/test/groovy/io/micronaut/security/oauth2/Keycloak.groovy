@@ -1,5 +1,6 @@
 package io.micronaut.security.oauth2
 
+import org.testcontainers.shaded.com.fasterxml.jackson.core.json.JsonReadFeature
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
@@ -40,7 +41,9 @@ class Keycloak {
             keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "))
             keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh create -s clientId=$CLIENT_ID -s redirectUris=[\"http://localhost*\"]".split(" "))
             Container.ExecResult result = keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh get $CLIENT_ID".split(" "))
-            Map map = new ObjectMapper().readValue(result.getStdout(), Map.class)
+            Map map = new ObjectMapper()
+                    .configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true)
+                    .readValue(result.getStdout(), Map.class)
             clientSecret = map.get("secret")
             issuer = "http://localhost:" + keycloak.getMappedPort(8080) + "/auth/realms/master"
         }
