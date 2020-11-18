@@ -8,6 +8,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 import java.time.Duration
 
 class Keycloak {
+    static final String SYS_TESTCONTAINERS = "testcontainers"
     static final String CLIENT_ID = "myclient"
     private static String clientSecret
     private static String issuer
