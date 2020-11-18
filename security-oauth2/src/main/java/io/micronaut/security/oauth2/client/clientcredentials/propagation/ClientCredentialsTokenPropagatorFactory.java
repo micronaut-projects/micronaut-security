@@ -23,6 +23,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.micronaut.context.exceptions.DisabledBeanException;
 
 /**
  * Factory to create {@link ClientCredentialsTokenPropagator} beans.
@@ -44,20 +45,20 @@ public class ClientCredentialsTokenPropagatorFactory {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Cannot create a bean of type {} because no client-credentials configuration exists for OAuth 2.0 client {}", ClientCredentialsTokenPropagator.class.getSimpleName(), oauthClientConfiguration.getName());
             }
-            return null;
+            throw new DisabledBeanException();
         }
         ClientCredentialsConfiguration clientCredentialsConfiguration = oauthClientConfiguration.getClientCredentials().get();
         if (!clientCredentialsConfiguration.isEnabled()) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Cannot create a bean of type {} because client-credentials configuration is disabled for OAuth 2.0 client {}", ClientCredentialsTokenPropagator.class.getSimpleName(), oauthClientConfiguration.getName());
             }
-            return null;
+            throw new DisabledBeanException();
         }
         if (clientCredentialsConfiguration.getServiceIdPattern() == null && clientCredentialsConfiguration.getUriPattern() == null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Cannot create a bean of type {} because no service-id or uri pattern is defined for the client-credentials configuration of OAuth 2.0 client {}", ClientCredentialsTokenPropagator.class.getSimpleName(), oauthClientConfiguration.getName());
             }
-            return null;
+            throw new DisabledBeanException();
         }
         if (clientCredentialsConfiguration.getHeaderPropagation().isPresent()) {
             HttpHeaderClientCredentialsTokenPropagatorConfiguration httpHeaderClientCredentialsTokenPropagatorConfiguration = clientCredentialsConfiguration.getHeaderPropagation().get();
@@ -65,7 +66,7 @@ public class ClientCredentialsTokenPropagatorFactory {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Cannot create a bean of type {} because client-credentials.header-propagation is disabled for OAuth 2.0 client {}", ClientCredentialsTokenPropagator.class.getSimpleName(), oauthClientConfiguration.getName());
                 }
-                return null;
+                throw new DisabledBeanException();
             }
             return new HttpHeaderClientCredentialsTokenPropagator(httpHeaderClientCredentialsTokenPropagatorConfiguration);
         }
