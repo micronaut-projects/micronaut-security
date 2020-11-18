@@ -238,7 +238,11 @@
         
         <div class="toc-item" style="margin-left:30px" id="toc-item-state"><a href="#state"><strong>15.3.1.3</strong><span>State Parameter</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-password"><a href="#password"><strong>15.3.2</strong><span>Password</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-clientcredentials"><a href="#clientcredentials"><strong>15.3.2</strong><span>Client Credentials</span></a></div>
+        
+        <div class="toc-item" style="margin-left:30px" id="toc-item-clientecredentialshttpclient"><a href="#clientecredentialshttpclient"><strong>15.3.2.1</strong><span>HTTP Client Filter for Client Credentials</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-password"><a href="#password"><strong>15.3.3</strong><span>Password</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-oauth-endpoints"><a href="#oauth-endpoints"><strong>15.4</strong><span>Endpoints</span></a></div>
         
@@ -5710,7 +5714,143 @@ If nonce validation fails, the user will not be authenticated.
 </div>
 </div>
 
-<h2 id="password"><a class="anchor" href="#password"></a>15.3.2 Password</h2>
+<h2 id="clientcredentials"><a class="anchor" href="#clientcredentials"></a>15.3.2 Client Credentials</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can obtain a bean of type <a href="../api/io/micronaut/security/oauth2/client/ClientCredentialsClient.html">ClientCredentialsClient</a> to request an access token via a <a href="https://tools.ietf.org/html/rfc6749#section-4.4">Client Credentials Grant</a> for your OAuth 2.0 Clients.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    oauth2:
+      clients:
+        companyauthserver:
+          client-id: 'XXX'
+          client-scret: 'YYY'
+          token:
+            url: "https://foo.bar/token"
+            auth-method': "client_secret_basic",
+        google:
+          client-id: 'ZZZZ'
+          client-secret: 'PPPP'
+          openid:
+            issuer: 'https://accounts.google.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can obtain a bean of type <a href="../api/io/micronaut/security/oauth2/client/ClientCredentialsClient.html">ClientCredentialsClient</a> for any of the OAuth 2.0 clients using a <a href="https://docs.micronaut.io/latest/guide/index.html#qualifiers">Name Qualifier</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public MyClass(@Named("google") ClientCredentialsClient googleClientCredentialclient) {
+    ...
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">...
+beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyauthserver"))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="../api/io/micronaut/security/oauth2/client/ClientCredentialsClient.html">ClientCredentialsClient</a> caches the token response. If the cached access token is expired, they renew it automatically.</p>
+</div>
+
+<h2 id="clientecredentialshttpclient"><a class="anchor" href="#clientecredentialshttpclient"></a>15.3.2.1 HTTP Client Filter for Client Credentials</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials/clientecredentialshttpclient.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Security includes <a href="../api/io/micronaut/security/oauth2/client/ClientCredentialsHttpClientFilter.html">ClientCredentialsHttpClientFilter</a>. A <a href="https://docs.micronaut.io/latest/guide/index.html#clientFilter">HTTP Client Filter</a> which allows you to include automatically an access token at an outgoing request HTTP Header. It obtains the access token via a Client Credentials request.</p>
+</div>
+<div class="paragraph">
+<p>For example, the next configuration adds an access token to the requests' HTTP Headers done via the HTTP Client <code>inventory</code>. It obtains the access token with a Client Credentials request with the OAuth 2.0 client <code>companyauthorserver</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  security:
+    oauth2:
+      clients:
+        companyauthserver:
+          client-id: 'XXX'
+          client-scret: 'YYY'
+          client-credentials:
+            serviceid-regex: 'inventory'
+          token:
+            url: "https://foo.bar/token"
+            auth-method': "client_secret_basic",</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following configuration options are available per OAuth 2.0 client:</p>
+</div>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a>. Default value true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.service-id-regex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A regular expression to match the service id.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.uri-regex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A regular expression to match the URI.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.scope</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scope to be requested in the client credentials request. Defaults to none.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.advanced-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds for a token obtained via client credentials grant to be considered expired</p></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="password"><a class="anchor" href="#password"></a>15.3.3 Password</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/password.adoc"'>

@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":18};
+var methods = {"i0":6,"i1":18,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -135,6 +135,12 @@ extends io.micronaut.core.util.Toggleable</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static java.time.Duration</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#DEFAULT_ADVANCED_EXPIRATION">DEFAULT_ADVANCED_EXPIRATION</a></span></code>
+<div class="block">The default advanced expiration value for client credentials grant.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html" title="enum in io.micronaut.security.oauth2.endpoint">AuthenticationMethod</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#DEFAULT_AUTHENTICATION_METHOD">DEFAULT_AUTHENTICATION_METHOD</a></span></code>&nbsp;</td>
 </tr>
@@ -158,42 +164,46 @@ extends io.micronaut.core.util.Toggleable</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getAuthorization--">getAuthorization</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getClientId--">getClientId</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>default java.util.Optional&lt;<a href="../../../../../io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfiguration.html" title="interface in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfiguration</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getClientCredentials--">getClientCredentials</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getClientSecret--">getClientSecret</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getClientId--">getClientId</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getClientSecret--">getClientSecret</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../io/micronaut/security/oauth2/grants/GrantType.html" title="enum in io.micronaut.security.oauth2.grants">GrantType</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getGrantType--">getGrantType</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfiguration</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getIntrospection--">getIntrospection</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getName--">getName</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../io/micronaut/security/oauth2/configuration/OpenIdClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OpenIdClientConfiguration</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getOpenid--">getOpenid</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfiguration</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getRevocation--">getRevocation</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getScopes--">getScopes</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../io/micronaut/security/oauth2/configuration/endpoints/SecureEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">SecureEndpointConfiguration</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getToken--">getToken</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>default <a href="../../../../../io/micronaut/security/oauth2/endpoint/SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getTokenEndpoint--">getTokenEndpoint</a></span>()</code>&nbsp;</td>
 </tr>
@@ -222,10 +232,20 @@ extends io.micronaut.core.util.Toggleable</pre>
 <a name="DEFAULT_AUTHENTICATION_METHOD">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>DEFAULT_AUTHENTICATION_METHOD</h4>
 <pre>static final&nbsp;<a href="../../../../../io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html" title="enum in io.micronaut.security.oauth2.endpoint">AuthenticationMethod</a> DEFAULT_AUTHENTICATION_METHOD</pre>
+</li>
+</ul>
+<a name="DEFAULT_ADVANCED_EXPIRATION">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>DEFAULT_ADVANCED_EXPIRATION</h4>
+<pre>static final&nbsp;java.time.Duration DEFAULT_ADVANCED_EXPIRATION</pre>
+<div class="block">The default advanced expiration value for client credentials grant.</div>
 </li>
 </ul>
 </li>
@@ -333,6 +353,20 @@ java.util.List&lt;java.lang.String&gt;&nbsp;getScopes()</pre>
 <dd>The optional authorization endpoint configuration</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="https://tools.ietf.org/html/rfc6749#section-3.1">RFC 6749 Section 3.1</a></dd>
+</dl>
+</li>
+</ul>
+<a name="getClientCredentials--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getClientCredentials</h4>
+<pre>@NonNull
+default&nbsp;java.util.Optional&lt;<a href="../../../../../io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfiguration.html" title="interface in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsConfiguration</a>&gt;&nbsp;getClientCredentials()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The Client Credentials Configuration</dd>
 </dl>
 </li>
 </ul>

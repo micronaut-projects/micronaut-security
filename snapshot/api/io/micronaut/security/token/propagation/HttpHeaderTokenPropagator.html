@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -196,10 +196,14 @@ implements <a href="../../../../../io/micronaut/security/token/propagation/Token
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../../io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html" title="interface in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfiguration</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#getConfiguration--">getConfiguration</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#headerValue-java.lang.String-">headerValue</a></span>(java.lang.String&nbsp;token)</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#writeToken-io.micronaut.http.MutableHttpRequest-java.lang.String-">writeToken</a></span>(io.micronaut.http.MutableHttpRequest&lt;?&gt;&nbsp;request,
           java.lang.String&nbsp;token)</code>
@@ -327,7 +331,7 @@ implements <a href="../../../../../io/micronaut/security/token/propagation/Token
 <a name="extractTokenFromAuthorization-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>extractTokenFromAuthorization</h4>
 <pre>protected&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;extractTokenFromAuthorization(java.lang.String&nbsp;authorization)</pre>
@@ -336,6 +340,19 @@ implements <a href="../../../../../io/micronaut/security/token/propagation/Token
 <dd><code>authorization</code> - Authorization header value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>If prefix is 'Bearer' for 'Bearer XXX' it returns 'XXX'</dd>
+</dl>
+</li>
+</ul>
+<a name="getConfiguration--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getConfiguration</h4>
+<pre>public&nbsp;<a href="../../../../../io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html" title="interface in io.micronaut.security.token.propagation">HttpHeaderTokenPropagatorConfiguration</a>&nbsp;getConfiguration()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The HttpHeaderTokenPropagator Configuration</dd>
 </dl>
 </li>
 </ul>
