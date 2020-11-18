@@ -29,6 +29,9 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
 import java.util.Optional;
 
+/**
+ *
+ */
 @Internal
 public class ClientCredentialsHeaderPropagatorEnabled implements Condition {
 

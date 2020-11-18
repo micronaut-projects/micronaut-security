@@ -19,6 +19,7 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
@@ -33,7 +34,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 /**
  * Abstract class to create a Client for client credentials grant.
@@ -41,6 +41,7 @@ import java.util.function.Function;
  * @author Sergio del Amo
  * @since 2.2.0
  */
+@Internal
 public abstract class AbstractClientCredentialsClient implements ClientCredentialsClient {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractClientCredentialsClient.class);
     private static final String NOSCOPE = "NOSCOPE";

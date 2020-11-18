@@ -28,6 +28,13 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
 import java.util.Optional;
 
+/**
+ * Condition to determine if the client credentials grant is enabled
+ * for a given OAuth 2.0 client.
+ *
+ * @author James Kleeh
+ * @since 2.2.0
+ */
 @Internal
 public class ClientCredentialsEnabled implements Condition {
 

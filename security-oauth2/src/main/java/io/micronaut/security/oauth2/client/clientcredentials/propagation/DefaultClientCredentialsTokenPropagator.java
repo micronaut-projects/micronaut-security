@@ -19,6 +19,13 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfigurationProper
 
 import javax.inject.Singleton;
 
+/**
+ * The default token propagator that uses the default header configuration. Will
+ * be used for client credentials grants if no named bean is provided.
+ *
+ * @author James Kleeh
+ * @since 2.2.0
+ */
 @Singleton
 public class DefaultClientCredentialsTokenPropagator extends ClientCredentialsHeaderTokenPropagator {
 

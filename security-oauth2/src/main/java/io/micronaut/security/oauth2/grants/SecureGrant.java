@@ -23,6 +23,9 @@ package io.micronaut.security.oauth2.grants;
  */
 public interface SecureGrant {
 
+    String KEY_CLIENT_ID = "client_id";
+    String KEY_CLIENT_SECRET = "client_secret";
+
     /**
      * Sets the client id in the grant.
      *

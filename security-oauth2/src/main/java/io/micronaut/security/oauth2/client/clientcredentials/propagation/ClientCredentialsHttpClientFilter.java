@@ -63,14 +63,16 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
     protected final Map<String, ClientCredentialsTokenPropagator> clientCredentialsTokenHandlerByName = new ConcurrentHashMap<>();
     private final Function<String, ClientCredentialsClient> clientFunction;
     private final Function<String, ClientCredentialsTokenPropagator> tokenPropagatorFunction;
+
     /**
      * @param outgoingHttpRequestProcessor Utility to decide whether to process the request
      * @param oauthClientConfigurationStream OAuth 2.0 Clients configuration stream
+     * @param defaultTokenPropagator The default token propagator
      * @param beanContext Bean Context
      */
     public ClientCredentialsHttpClientFilter(OutgoingHttpRequestProcessor outgoingHttpRequestProcessor,
                                              Stream<OauthClientConfiguration> oauthClientConfigurationStream,
-                                             ClientCredentialsTokenPropagator defaultTokenHandler,
+                                             ClientCredentialsTokenPropagator defaultTokenPropagator,
                                              BeanContext beanContext) {
         this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
         this.oauthClientConfigurationCollection = oauthClientConfigurationStream
@@ -80,7 +82,7 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
         this.clientFunction = key -> beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName(key));
         this.tokenPropagatorFunction = key ->
                 beanContext.findBean(ClientCredentialsTokenPropagator.class, Qualifiers.byName(key))
-                        .orElse(defaultTokenHandler);
+                        .orElse(defaultTokenPropagator);
     }
 
     @Override
