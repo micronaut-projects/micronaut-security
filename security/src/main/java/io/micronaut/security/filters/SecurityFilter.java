@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Replaces(EndpointsFilter.class)
-@Filter("/**")
+@Filter(Filter.MATCH_ALL_PATTERN)
 public class SecurityFilter extends OncePerRequestHttpServerFilter {
 
     /**

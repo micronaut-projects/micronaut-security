@@ -1,0 +1,15 @@
+Signed claims prevents an attacker to tamper its contents to introduce malicious data or try a privilege escalation by adding more roles. However, the claims can be decoded just by using Base 64.
+
+If the claims contains sensitive information, you can use a JSON Web Encryption algorithm to prevent them to be decoded.
+
+Micronaut's JWT validation supports multiple encryption configurations.
+
+Beans of type link:{api}/io/micronaut/security/token/jwt/encryption/rsa/RSAEncryptionConfiguration.html[RSAEncryptionConfiguration],
+link:{api}/io/micronaut/security/token/jwt/encryption/ec/ECEncryptionConfiguration.html[ECEncryptionConfiguration],
+link:{api}/io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html[SecretEncryptionConfiguration] participate as encryption configurations in the JWT validation.
+
+Those beans need to be https://docs.micronaut.io/latest/guide/index.html#qualifiers[qualified] with `@Named` since the configuration beans are used by factories (link:{api}/io/micronaut/security/token/jwt/encryption/rsa/RSAEncryptionFactory.html[RSAEncryptionFactory],
+link:{api}/io/micronaut/security/token/jwt/encryption/ec/ECEncryptionFactory.html[ECEncryptionFactory]) or other beans (link:{api}/io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionFactory.html[SecretEncryptionFactory])  which use
+https://docs.micronaut.io/latest/guide/index.html#eachBean[@EachBean] to drive configuration.
+
+Use `generator` as the `@Named` qualifier if you want to use encryption configuration in the tokens your app generates.

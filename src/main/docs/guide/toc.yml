@@ -29,14 +29,19 @@ authenticationStrategies:
       title: Reading JWT Token
       bearerToken: Bearer Token Reader
       cookieToken: Cookie Token Reader
+    jwtValidation:
+      title: JWT Signature Validation
+      jwks: Validation with remote JWKS
     jwtGenerator:
       title: JWT Token Generation
-      jwtGeneratorSignature: JWT Signature
-      jwtGeneratorEncryption: Encrypted JWTs
-    jwtValidation:
-      title: JWT Token Validation
-      jwks: Validation with remote JWKS
+      jwtGeneratorSignature: Signed JWT Generation
+      jwtGeneratorSecret: Example of JWT Signed with Secret
+      jwtGeneratorRSA: Example of JWT Signed with RSA
+    jwtEncryption:
+      title: JWT Encryption
+      jwtGeneratorEncryption: Example of JWT Signed with Secret and Encrypted with RSA
     claimsGeneration: Claims Generation
+    claimsValidation: Claims Validation
     render:
       title: Token Render
   ldap:

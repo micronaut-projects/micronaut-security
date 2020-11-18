@@ -22,7 +22,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 import java.security.Principal
 
-@IgnoreIf({ sys['testcontainers'] == false })
 class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
 
     @Override
@@ -32,16 +31,22 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
 
     @Override
     Map<String, Object> getConfiguration() {
-        super.configuration + [
+        Map<String, Object> m = super.configuration + [
                 'micronaut.security.authentication': 'cookie',
-                "micronaut.security.oauth2.clients.keycloak.openid.issuer" : Keycloak.issuer,
-                "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
-                "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret,
                 "micronaut.security.token.jwt.signatures.secret.generator.secret" : 'pleaseChangeThisSecretForANewOne',
                 "micronaut.security.endpoints.logout.get-allowed": true,
         ] as Map<String, Object>
+        if (System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
+            m.putAll([
+                    "micronaut.security.oauth2.clients.keycloak.openid.issuer" : Keycloak.issuer,
+                    "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
+                    "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret
+            ])
+        }
+        m
     }
 
+    @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test a full login"() {
         given:
         browser.baseUrl = "http://localhost:${embeddedServer.port}"
