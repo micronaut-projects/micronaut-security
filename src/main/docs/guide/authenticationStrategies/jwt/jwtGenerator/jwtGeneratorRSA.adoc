@@ -1,0 +1,9 @@
+A programmatic setup of a RSA signature generation may look like
+
+[source, groovy]
+----
+include::{testssecurityjwt}/signandencrypt/MySignatureGeneratorConfigurationFactory.groovy[indent=0, tag=clazz]
+----
+
+<1> Name the SignatureGeneratorConfiguration `generator` to make it participate in JWT token generation.
+<2> Register an additional bean of type RSASignatureGeneratorConfiguration which is injected here
