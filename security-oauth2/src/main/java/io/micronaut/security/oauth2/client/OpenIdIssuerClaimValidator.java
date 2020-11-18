@@ -32,7 +32,8 @@ import java.util.stream.Collectors;
 import javax.inject.Singleton;
 
 /**
- * Validates that the JWT {@code iss} claim matches any of the OAuth 2.0 OpenID client issuer exposed via  {@code .well-known/openid-configuration}.
+ *  > The Issuer Identifier for the OpenID Provider (which is typically obtained during Discovery) MUST exactly match the value of the iss (issuer) Claim.
+ *  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a>
  * @author Sergio del Amo
  * @since 2.2.0
  */
