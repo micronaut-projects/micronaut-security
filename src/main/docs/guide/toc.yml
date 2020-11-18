@@ -41,6 +41,7 @@ authenticationStrategies:
       title: JWT Encryption
       jwtGeneratorEncryption: Example of JWT Signed with Secret and Encrypted with RSA
     claimsGeneration: Claims Generation
+    claimsValidation: Claims Validation
     render:
       title: Token Render
   ldap:
