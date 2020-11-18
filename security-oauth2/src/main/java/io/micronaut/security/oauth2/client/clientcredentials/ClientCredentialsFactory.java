@@ -29,6 +29,7 @@ import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 
 import javax.inject.Provider;
 import java.util.function.Supplier;
+import io.micronaut.context.exceptions.DisabledBeanException;
 
 /**
  * Factory to create {@link ClientCredentialsClient} beans.
@@ -50,7 +51,7 @@ public class ClientCredentialsFactory {
                                                                        @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
         if (oauthClientConfiguration.getClientCredentials().isPresent() &&
                 !oauthClientConfiguration.getClientCredentials().get().isEnabled()) {
-            return null;
+            throw new DisabledBeanException();
         }
 
         if (oauthClientConfiguration.getToken().isPresent() && oauthClientConfiguration.getToken().get().getUrl().isPresent()) {
