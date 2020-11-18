@@ -94,7 +94,9 @@ class JwksUriSignatureSpec extends Specification {
         when:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer,[
                 'micronaut.security.authentication': 'idtoken',
+                'micronaut.security.oauth2.clients.a.client-id': "XXX",
                 'micronaut.security.oauth2.clients.a.openid.issuer' : "http://localhost:${authServerAPort}/oauth2/default",
+                'micronaut.security.oauth2.clients.b.client-id': "YYY",
                 'micronaut.security.oauth2.clients.b.openid.issuer' : "http://localhost:${authServerBPort}/oauth2/default",
                 'spec.name'                                            : 'JwksUriSignatureSpec',
         ] as Map<String, Object>)
@@ -203,6 +205,11 @@ class JwksUriSignatureSpec extends Specification {
         protected void populateIss(JWTClaimsSet.Builder builder) {
             builder.issuer("http://localhost:${port}/oauth2/default")
         }
+
+        @Override
+        protected void populateAud(JWTClaimsSet.Builder builder) {
+            builder.audience("XXX")
+        }
     }
 
     @Requires(property = 'spec.name', value = 'AuthServerBJwksUriSignatureSpec')
@@ -222,6 +229,11 @@ class JwksUriSignatureSpec extends Specification {
         @Override
         protected void populateIss(JWTClaimsSet.Builder builder) {
             builder.issuer("http://localhost:${port}/oauth2/default")
+        }
+
+        @Override
+        protected void populateAud(JWTClaimsSet.Builder builder) {
+            builder.audience("YYY")
         }
     }
 

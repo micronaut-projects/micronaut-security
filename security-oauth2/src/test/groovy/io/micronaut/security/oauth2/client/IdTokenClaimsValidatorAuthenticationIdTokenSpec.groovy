@@ -2,7 +2,7 @@ package io.micronaut.security.oauth2.client
 
 import io.micronaut.security.oauth2.ApplicationContextSpecification
 
-class OpenIdIssuerClaimValidatorAuthenticationIdTokenSpec extends ApplicationContextSpecification {
+class IdTokenClaimsValidatorAuthenticationIdTokenSpec extends ApplicationContextSpecification {
 
     @Override
     Map<String, Object> getConfiguration() {
@@ -13,6 +13,6 @@ class OpenIdIssuerClaimValidatorAuthenticationIdTokenSpec extends ApplicationCon
 
     void "for idtoken authentication mode a bean of type OpenIdIssuerClaimValidator exists"() {
         expect:
-        applicationContext.containsBean(OpenIdIssuerClaimValidator)
+        applicationContext.containsBean(IdTokenClaimsValidator)
     }
 }
