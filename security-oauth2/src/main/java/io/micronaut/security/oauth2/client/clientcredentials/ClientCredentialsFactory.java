@@ -51,7 +51,7 @@ public class ClientCredentialsFactory {
                                                                        @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
         if (oauthClientConfiguration.getClientCredentials().isPresent() &&
                 !oauthClientConfiguration.getClientCredentials().get().isEnabled()) {
-            throw new DisabledBeanException();
+            throw new DisabledBeanException("cannot create a bean of type ClientCredentialsClient because client-credentials is disabled for client " + oauthClientConfiguration.getName());
         }
 
         if (oauthClientConfiguration.getToken().isPresent() && oauthClientConfiguration.getToken().get().getUrl().isPresent()) {

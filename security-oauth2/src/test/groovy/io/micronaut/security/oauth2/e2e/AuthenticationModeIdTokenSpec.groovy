@@ -24,7 +24,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 import java.security.Principal
 
-@IgnoreIf({ sys['testcontainers'] == false })
 class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
 
     @Override
@@ -34,15 +33,20 @@ class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
 
     @Override
     Map<String, Object> getConfiguration() {
-        super.configuration + [
-                'micronaut.security.authentication': 'idtoken',
-                "micronaut.security.oauth2.clients.keycloak.openid.issuer" : Keycloak.issuer,
-                "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
-                "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret,
+        Map m = super.configuration + [
+                'micronaut.security.authentication'              : 'idtoken',
                 "micronaut.security.endpoints.logout.get-allowed": true,
         ] as Map<String, Object>
+        if ((System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null) || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
+            m.putAll([    "micronaut.security.oauth2.clients.keycloak.openid.issuer" : Keycloak.issuer,
+                          "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
+                          "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret,
+            ] as Map<String, Object>)
+        }
+        m
     }
 
+    @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test a full login"() {
         given:
         browser.baseUrl = "http://localhost:${embeddedServer.port}"

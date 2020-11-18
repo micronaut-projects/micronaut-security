@@ -45,20 +45,20 @@ public class ClientCredentialsTokenPropagatorFactory {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Cannot create a bean of type {} because no client-credentials configuration exists for OAuth 2.0 client {}", ClientCredentialsTokenPropagator.class.getSimpleName(), oauthClientConfiguration.getName());
             }
-            throw new DisabledBeanException();
+            throw new DisabledBeanException("Cannot create a bean of type " + ClientCredentialsTokenPropagator.class.getSimpleName() + "  because no client-credentials configuration exists for OAuth 2.0 client " + oauthClientConfiguration.getName());
         }
         ClientCredentialsConfiguration clientCredentialsConfiguration = oauthClientConfiguration.getClientCredentials().get();
         if (!clientCredentialsConfiguration.isEnabled()) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Cannot create a bean of type {} because client-credentials configuration is disabled for OAuth 2.0 client {}", ClientCredentialsTokenPropagator.class.getSimpleName(), oauthClientConfiguration.getName());
             }
-            throw new DisabledBeanException();
+            throw new DisabledBeanException("Cannot create a bean of type " +  ClientCredentialsTokenPropagator.class.getSimpleName() + " because client-credentials configuration is disabled for OAuth 2.0 client " + oauthClientConfiguration.getName());
         }
         if (clientCredentialsConfiguration.getServiceIdPattern() == null && clientCredentialsConfiguration.getUriPattern() == null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Cannot create a bean of type {} because no service-id or uri pattern is defined for the client-credentials configuration of OAuth 2.0 client {}", ClientCredentialsTokenPropagator.class.getSimpleName(), oauthClientConfiguration.getName());
             }
-            throw new DisabledBeanException();
+            throw new DisabledBeanException("Cannot create a bean of type " + ClientCredentialsTokenPropagator.class.getSimpleName() + " because no service-id or uri pattern is defined for the client-credentials configuration of OAuth 2.0 client " + oauthClientConfiguration.getName());
         }
         if (clientCredentialsConfiguration.getHeaderPropagation().isPresent()) {
             HttpHeaderClientCredentialsTokenPropagatorConfiguration httpHeaderClientCredentialsTokenPropagatorConfiguration = clientCredentialsConfiguration.getHeaderPropagation().get();
@@ -66,7 +66,7 @@ public class ClientCredentialsTokenPropagatorFactory {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Cannot create a bean of type {} because client-credentials.header-propagation is disabled for OAuth 2.0 client {}", ClientCredentialsTokenPropagator.class.getSimpleName(), oauthClientConfiguration.getName());
                 }
-                throw new DisabledBeanException();
+                throw new DisabledBeanException("Cannot create a bean of type " + ClientCredentialsTokenPropagator.class.getSimpleName() + " because client-credentials.header-propagation is disabled for OAuth 2.0 client " + oauthClientConfiguration.getName());
             }
             return new HttpHeaderClientCredentialsTokenPropagator(httpHeaderClientCredentialsTokenPropagatorConfiguration);
         }

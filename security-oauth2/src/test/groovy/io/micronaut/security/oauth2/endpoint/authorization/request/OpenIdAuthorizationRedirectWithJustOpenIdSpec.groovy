@@ -17,20 +17,24 @@ import spock.lang.IgnoreIf
 
 import java.nio.charset.StandardCharsets
 
-@IgnoreIf({ sys['testcontainers'] == false })
 class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecification {
 
     @Override
     Map<String, Object> getConfiguration() {
-        Keycloak.init()
-        super.configuration  + [
+        Map<String, Object> m = super.configuration  + [
                 'micronaut.security.authentication': 'cookie',
-                "micronaut.security.oauth2.clients.keycloak.openid.issuer": Keycloak.issuer,
-                "micronaut.security.oauth2.clients.keycloak.client-id": Keycloak.CLIENT_ID,
-                "micronaut.security.oauth2.clients.keycloak.client-secret": Keycloak.clientSecret,
         ]
+        if (System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
+            m.putAll([
+                    "micronaut.security.oauth2.clients.keycloak.openid.issuer": Keycloak.issuer,
+                    "micronaut.security.oauth2.clients.keycloak.client-id": Keycloak.CLIENT_ID,
+                    "micronaut.security.oauth2.clients.keycloak.client-secret": Keycloak.clientSecret,
+            ])
+        }
+        m
     }
 
+    @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test authorization redirect with just openid"() {
         given:
         RxHttpClient client = applicationContext.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
