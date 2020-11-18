@@ -1,10 +1,12 @@
-Micronaut's JWT validation support multiple Signature and Encryption configurations.
+Micronaut security capabilities use signed JWT’s as specified by the
+https://tools.ietf.org/html/rfc7515[JSON Web Signature] specification.
 
-Any beans of type link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html[RSASignatureConfiguration],
-link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html[ECSignatureConfiguration],
-link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration]
-participate as signature configurations in the JWT validation.
+Micronaut's JWT validation supports multiple signature configurations. Thus, you can validate JSON Web tokens signed by different issuers in the same application.
 
-Any beans of type link:{api}/io/micronaut/security/token/jwt/encryption/rsa/RSAEncryptionConfiguration.html[RSAEncryptionConfiguration],
-link:{api}/io/micronaut/security/token/jwt/encryption/ec/ECEncryptionConfiguration.html[ECEncryptionConfiguration],
-link:{api}/io/micronaut/security/token/jwt/encryption/secret/SecretEncryptionConfiguration.html[SecretEncryptionConfiguration] participate as encryption configurations in the JWT validation.
+To verify the signature of JWT tokens, you need beans of type link:{api}/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html[SignatureConfiguration].
+
+The easiest way is to create a bean of type link:{api}/io/micronaut/security/token/jwt/signature/SignatureConfiguration.html[SignatureConfiguration] is to have in your app a bean of type link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html[RSASignatureConfiguration],
+link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html[ECSignatureConfiguration], or
+link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration] which must be https://docs.micronaut.io/latest/guide/index.html#qualifiers[qualified] with `@Named` since the configuration beans are used by factories (link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureFactory.html[RSASignatureFactory],
+link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html[ECSignatureFactory]) or other beans (link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html[SecretSignature])  which use
+https://docs.micronaut.io/latest/guide/index.html#eachBean[@EachBean] to drive configuration.
