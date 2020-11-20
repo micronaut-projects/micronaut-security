@@ -5727,7 +5727,7 @@ If nonce validation fails, the user will not be authenticated.
 
 
 <div class="paragraph">
-<p>You can obtain a bean of type <a href="../api/io/micronaut/security/oauth2/client/ClientCredentialsClient.html">ClientCredentialsClient</a> to request an access token via a <a href="https://tools.ietf.org/html/rfc6749#section-4.4">Client Credentials Grant</a> for your OAuth 2.0 Clients.</p>
+<p>You can obtain a bean of type <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a> to request an access token via a <a href="https://tools.ietf.org/html/rfc6749#section-4.4">Client Credentials Grant</a> for your OAuth 2.0 Clients.</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -5752,7 +5752,7 @@ If nonce validation fails, the user will not be authenticated.
 </div>
 </div>
 <div class="paragraph">
-<p>You can obtain a bean of type <a href="../api/io/micronaut/security/oauth2/client/ClientCredentialsClient.html">ClientCredentialsClient</a> for any of the OAuth 2.0 clients using a <a href="https://docs.micronaut.io/latest/guide/index.html#qualifiers">Name Qualifier</a>.</p>
+<p>You can obtain a bean of type <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a> for any of the OAuth 2.0 clients using a <a href="https://docs.micronaut.io/latest/guide/index.html#qualifiers">Name Qualifier</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5772,7 +5772,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 </div>
 </div>
 <div class="paragraph">
-<p><a href="../api/io/micronaut/security/oauth2/client/ClientCredentialsClient.html">ClientCredentialsClient</a> caches the token response. If the cached access token is expired, they renew it automatically.</p>
+<p><a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a> caches the token response. If the cached access token is expired, they renew it automatically.</p>
 </div>
 
 <h2 id="clientecredentialshttpclient"><a class="anchor" href="#clientecredentialshttpclient"></a>15.3.2.1 HTTP Client Filter for Client Credentials</h2>
