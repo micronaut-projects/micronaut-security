@@ -29,13 +29,17 @@ import io.micronaut.inject.ExecutionHandle;
 import io.micronaut.inject.MethodExecutionHandle;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationMode;
+import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.oauth2.client.OpenIdClient;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import io.micronaut.web.router.DefaultRouteBuilder;
 import jakarta.inject.Singleton;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +65,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
      * @param uriNamingStrategy The URI naming strategy
      * @param conversionService The conversion service
      * @param beanContext The bean context
+     * @param securityConfiguration Security configuration
      * @param oauthConfiguration Oauth configuration
      * @param oauthRouteUrlBuilder The oauth URL builder
      * @param controllerList The list of controllers
@@ -69,6 +74,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                       UriNamingStrategy uriNamingStrategy,
                       ConversionService conversionService,
                       BeanContext beanContext,
+                      SecurityConfiguration securityConfiguration,
                       OauthConfiguration oauthConfiguration,
                       OauthRouteUrlBuilder oauthRouteUrlBuilder,
                       List<OauthController> controllerList) {
@@ -79,9 +85,15 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
         } else {
             AtomicBoolean endSessionRegistered = new AtomicBoolean();
 
-            controllerList.forEach(controller -> {
+            for (OauthController controller : controllerList) {
                 OauthClient client = controller.getClient();
                 String name = client.getName();
+
+                Optional<OauthClientConfiguration> oauthClientConfiguration = beanContext.findBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+                if (shouldSkipRoutes(securityConfiguration, oauthClientConfiguration)) {
+                    debug(LOG, "client {} does not define a client secret and idtoken authentication is enabled. Skipping registration of routes", name);
+                    continue;
+                }
                 boolean isDefaultProvider = oauthConfiguration.getDefaultProvider().filter(provider -> provider.equals(name)).isPresent();
 
                 BeanDefinition<OauthController> bd = beanContext.getBeanDefinition(OauthController.class, Qualifiers.byName(name));
@@ -130,11 +142,17 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                         buildRoute(HttpMethod.GET, logoutUri, (MethodExecutionHandle) executionHandle);
                     });
                 }
-            });
+            }
 
             if (!endSessionRegistered.get() && LOG.isDebugEnabled()) {
                 LOG.debug("Skipped registration of logout route. No openid clients found that support end session");
             }
         }
+    }
+
+    private boolean shouldSkipRoutes(SecurityConfiguration securityConfiguration, Optional<OauthClientConfiguration> oauthClientConfiguration) {
+        return securityConfiguration.getAuthentication() == AuthenticationMode.IDTOKEN
+            && oauthClientConfiguration.isPresent()
+            && oauthClientConfiguration.get().getClientSecret() == null;
     }
 }

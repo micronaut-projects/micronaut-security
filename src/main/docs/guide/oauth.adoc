@@ -4,6 +4,8 @@ The easiest way to get started is by configuring a provider that supports OpenID
 
 Once you create an application client with a provider, you will get a client id and a client secret. The client id and secret combined with the issuer URL is all that is needed to enable the authentication code grant flow with an OpenID provider.
 
+If you only need to validate ID tokens issued by an OpenID provider for a client, for example with `micronaut.security.authentication` set to `idtoken`, configure the client id and OpenID issuer without a client secret. In that case, Micronaut uses OpenID discovery for token validation but does not register the OAuth login, callback, or logout routes for that client.
+
 For example, to configure Google as a provider:
 
 [configuration,subs="verbatim"]
