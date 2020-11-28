@@ -14,8 +14,6 @@ io.micronaut.security.filters
 io.micronaut.security.handlers
 io.micronaut.security.oauth2
 io.micronaut.security.oauth2.client
-io.micronaut.security.oauth2.client.clientcredentials
-io.micronaut.security.oauth2.client.clientcredentials.propagation
 io.micronaut.security.oauth2.client.condition
 io.micronaut.security.oauth2.configuration
 io.micronaut.security.oauth2.configuration.endpoints
