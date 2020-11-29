@@ -105,7 +105,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     }
 
     /**
-     * deprecated use micronaut.security.redirect.login-success.
+     * deprecated use micronaut.security.redirect.login-failure.
      *
      * @param loginFailureTargetUrl The URL
      */
@@ -181,7 +181,7 @@ public class SecuritySessionConfigurationProperties implements SecuritySessionCo
     }
 
     /**
-     *  deprecated. use micronaut.security.redirect.on-rejection instead.
+     *  deprecated. use micronaut.security.redirect.unauthorized and micronaut.security.redirect.forbidden instead
      *
      * @param redirectOnRejection True if a redirect should occur
      */
