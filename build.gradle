@@ -18,7 +18,7 @@ subprojects { Project subproject ->
         maven {
             url "https://oss.jfrog.org/oss-snapshot-local"
             content {
-                includeVersionByRegex('.*', '.*', '.*BUILD-SNAPSHOT')
+                includeVersionByRegex('.*', '.*', '.*SNAPSHOT')
             }
         }
     }
