@@ -36,5 +36,4 @@ jobs:
           title: 'Dependency upgrades'
           body: Upgrades dependencies to their latest versions
           labels: "type: dependency-upgrade"
-          base: ${{ env.githubBranch }}
           branch: dependency-updates
