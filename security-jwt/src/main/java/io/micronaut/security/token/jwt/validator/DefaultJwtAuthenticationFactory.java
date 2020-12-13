@@ -27,7 +27,10 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import java.text.ParseException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNullElse;
 
 /**
  * Extracts the JWT claims and uses the {@link AuthenticationJWTClaimsSetAdapter} to construction an {@link Authentication} object.
@@ -54,8 +57,15 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
                 return Optional.empty();
             }
 
-            return usernameForClaims(claimSet).map(username -> new AuthenticationUserDetailsAdapter(new UserDetails(username, Collections.emptyList(), claimSet.getClaims()), tokenConfiguration.getRolesName(), tokenConfiguration.getNameKey()));
+            List<String> roles = requireNonNullElse(claimSet.getStringListClaim(tokenConfiguration.getRolesName()),
+                    Collections.emptyList());
 
+            return usernameForClaims(claimSet)
+                    .map(username -> new AuthenticationUserDetailsAdapter(new UserDetails(username,
+                            roles,
+                            claimSet.getClaims()),
+                            tokenConfiguration.getRolesName(),
+                            tokenConfiguration.getNameKey()));
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("ParseException creating authentication", e);
