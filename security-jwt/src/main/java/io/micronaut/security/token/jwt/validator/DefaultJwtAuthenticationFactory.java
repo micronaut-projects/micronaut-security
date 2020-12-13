@@ -30,8 +30,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNullElse;
-
 /**
  * Extracts the JWT claims and uses the {@link AuthenticationJWTClaimsSetAdapter} to construction an {@link Authentication} object.
  *
@@ -57,8 +55,7 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
                 return Optional.empty();
             }
 
-            List<String> roles = requireNonNullElse(claimSet.getStringListClaim(tokenConfiguration.getRolesName()),
-                    Collections.emptyList());
+            List<String> roles = getRoles(claimSet);
 
             return usernameForClaims(claimSet)
                     .map(username -> new AuthenticationUserDetailsAdapter(new UserDetails(username,
@@ -75,7 +72,6 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
     }
 
     /**
-     *
      * @param claimSet JWT Claims
      * @return the username defined by {@link TokenConfiguration#getNameKey()} ()} or the sub claim.
      * @throws ParseException might be thrown parsing claims
@@ -86,5 +82,20 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
             return Optional.ofNullable(claimSet.getSubject());
         }
         return Optional.of(username);
+    }
+
+    /**
+     * @param claimSet JWT Claims
+     * @return the roles defined by {@link TokenConfiguration#getRolesName()} ()}.
+     * @throws ParseException might be thrown parsing claims
+     */
+    protected List<String> getRoles(JWTClaimsSet claimSet) throws ParseException {
+        List<String> roles = claimSet.getStringListClaim(tokenConfiguration.getRolesName());
+
+        if (roles == null) {
+            return Collections.emptyList();
+        }
+
+        return roles;
     }
 }
