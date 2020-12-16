@@ -39,8 +39,6 @@ subprojects { Project subproject ->
         annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
         annotationProcessor "io.micronaut:micronaut-graal"
 
-        implementation platform("io.micronaut:micronaut-bom:${micronautVersion}")
-
         api "io.micronaut:micronaut-inject"
         
         testAnnotationProcessor "io.micronaut:micronaut-inject-java"
