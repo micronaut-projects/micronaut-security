@@ -5,7 +5,7 @@ buildscript {
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "io.micronaut.build:micronaut-gradle-plugins:2.0.13"
+        classpath "io.micronaut.build:micronaut-gradle-plugins:2.0.14"
     }
 }
 
@@ -38,8 +38,6 @@ subprojects { Project subproject ->
         annotationProcessor "io.micronaut:micronaut-inject-java"
         annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
         annotationProcessor "io.micronaut:micronaut-graal"
-
-        implementation platform("io.micronaut:micronaut-bom:${micronautVersion}")
 
         api "io.micronaut:micronaut-inject"
         
