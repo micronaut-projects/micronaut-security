@@ -1,4 +1,4 @@
-dependency:micronaut-security-oauth2[]
+dependency:io.micronaut.security:micronaut-security-oauth2[]
 
 To use the `BUILD-SNAPSHOT` version of this library, check the https://docs.micronaut.io/latest/guide/index.html#usingsnapshots[documentation to use snapshots].
 
