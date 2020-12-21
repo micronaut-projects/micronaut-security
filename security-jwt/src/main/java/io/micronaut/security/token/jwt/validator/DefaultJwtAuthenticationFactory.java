@@ -18,15 +18,13 @@ package io.micronaut.security.token.jwt.validator;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.text.ParseException;
-import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -53,9 +51,17 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
             if (claimSet == null) {
                 return Optional.empty();
             }
+            return usernameForClaims(claimSet).map(username -> new Authentication() {
+                @Override
+                public Map<String, Object> getAttributes() {
+                    return claimSet.getClaims();
+                }
 
-            return usernameForClaims(claimSet).map(username -> new AuthenticationUserDetailsAdapter(new UserDetails(username, Collections.emptyList(), claimSet.getClaims()), tokenConfiguration.getRolesName(), tokenConfiguration.getNameKey()));
-
+                @Override
+                public String getName() {
+                    return username;
+                }
+            });
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("ParseException creating authentication", e);
