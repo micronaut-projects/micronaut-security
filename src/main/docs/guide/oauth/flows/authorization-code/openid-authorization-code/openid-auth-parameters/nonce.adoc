@@ -16,7 +16,7 @@ To use (api:security.oauth2.endpoint.nonce.persistence.session.SessionNoncePersi
 
 . Add a dependency to `micronaut-session`
 +
-dependency:micronaut-session[]
+dependency:io.micronaut.security:micronaut-session[]
 +
 . Set the nonce persistence to `session`
 +
