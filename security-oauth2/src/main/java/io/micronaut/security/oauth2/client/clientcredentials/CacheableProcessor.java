@@ -23,8 +23,8 @@ import org.reactivestreams.Processor;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -50,7 +50,7 @@ class CacheableProcessor<T> implements Processor<T, T> {
     private Subscription subscription;
 
     @NonNull
-    private List<ElementSubscription<T>> subscriptions = new ArrayList<>();
+    private Queue<ElementSubscription<T>> subscriptions = new ConcurrentLinkedQueue<>();
 
     @Nullable
     private final Function<T, T> transformer;
@@ -83,7 +83,7 @@ class CacheableProcessor<T> implements Processor<T, T> {
         }
         subscriptions = subscriptions.stream()
                 .filter(elementSubscription -> !elementSubscription.isCanceled() && !elementSubscription.isComplete())
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ConcurrentLinkedQueue::new));
     }
 
     // Subscriber
