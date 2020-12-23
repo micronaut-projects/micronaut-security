@@ -81,7 +81,8 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         CacheableProcessor<TokenResponse> publisher = scopeToPublisherMap.computeIfAbsent(resolvedScope,
                 key -> new CacheableProcessor<>(TokenResponseExpiration::new));
 
-        if (force || isExpired(publisher.getElement())) {
+        TokenResponse element = publisher.getElement();
+        if (force || (element != null && isExpired(element))) {
             publisher.clear();
         }
         if (publisher.getSubscription() == null) {
