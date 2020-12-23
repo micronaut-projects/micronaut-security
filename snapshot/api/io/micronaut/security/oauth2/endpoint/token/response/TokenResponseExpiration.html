@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":42};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -111,8 +111,12 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <hr>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getExpiresInDate--"><code>TokenResponse.getExpiresInDate()</code></a> instead.</span></div>
+</div>
 <br>
-<pre>@Introspected
+<pre>@Deprecated
+ @Introspected
 public class <span class="typeNameLabel">TokenResponseExpiration</span>
 extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a></pre>
 <dl>
@@ -139,7 +143,9 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/toke
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html#TokenResponseExpiration-io.micronaut.security.oauth2.endpoint.token.response.TokenResponse-">TokenResponseExpiration</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a>&nbsp;tokenResponse)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html#TokenResponseExpiration-io.micronaut.security.oauth2.endpoint.token.response.TokenResponse-">TokenResponseExpiration</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a>&nbsp;tokenResponse)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -151,20 +157,16 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/toke
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>java.util.Date</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html#getExpiration--">getExpiration</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html#setExpiresIn-java.lang.Integer-">setExpiresIn</a></span>(java.lang.Integer&nbsp;expiresIn)</code>
-<div class="block">Populates Expiration date with the expires in value.</div>
-</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html#getExpiration--">getExpiration</a></span>()</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -172,7 +174,7 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/toke
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;io.micronaut.security.oauth2.endpoint.token.response.<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a></h3>
-<code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#equals-java.lang.Object-">equals</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getAccessToken--">getAccessToken</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getExpiresIn--">getExpiresIn</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getRefreshToken--">getRefreshToken</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getScope--">getScope</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getTokenType--">getTokenType</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#hashCode--">hashCode</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setAccessToken-java.lang.String-">setAccessToken</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setRefreshToken-java.lang.String-">setRefreshToken</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setScope-java.lang.String-">setScope</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setTokenType-java.lang.String-">setTokenType</a></code></li>
+<code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#equals-java.lang.Object-">equals</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getAccessToken--">getAccessToken</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getExpiresIn--">getExpiresIn</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getExpiresInDate--">getExpiresInDate</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getRefreshToken--">getRefreshToken</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getScope--">getScope</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getTokenType--">getTokenType</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#hashCode--">hashCode</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setAccessToken-java.lang.String-">setAccessToken</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setExpiresIn-java.lang.Integer-">setExpiresIn</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setRefreshToken-java.lang.String-">setRefreshToken</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setScope-java.lang.String-">setScope</a>, <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setTokenType-java.lang.String-">setTokenType</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -202,6 +204,7 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/toke
 <li class="blockList">
 <h4>TokenResponseExpiration</h4>
 <pre>public&nbsp;TokenResponseExpiration(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a>&nbsp;tokenResponse)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tokenResponse</code> - Token Response</dd>
@@ -216,22 +219,6 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/toke
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="setExpiresIn-java.lang.Integer-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setExpiresIn</h4>
-<pre>public&nbsp;void&nbsp;setExpiresIn(java.lang.Integer&nbsp;expiresIn)</pre>
-<div class="block">Populates Expiration date with the expires in value.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setExpiresIn-java.lang.Integer-">setExpiresIn</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>expiresIn</code> - The lifetime in seconds of the access token.</dd>
-</dl>
-</li>
-</ul>
 <a name="getExpiration--">
 <!--   -->
 </a>
@@ -240,6 +227,7 @@ extends <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/toke
 <h4>getExpiration</h4>
 <pre>@Nullable
 public&nbsp;java.util.Date&nbsp;getExpiration()</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Expiration date of the access token. Calculated with the expires in recevied by the authorization server.</dd>
