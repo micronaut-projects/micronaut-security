@@ -132,4 +132,39 @@ public class TokenResponse {
         this.refreshToken = refreshToken;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TokenResponse that = (TokenResponse) o;
+
+        if (!accessToken.equals(that.accessToken)) {
+            return false;
+        }
+        if (!tokenType.equals(that.tokenType)) {
+            return false;
+        }
+        if (expiresIn != null ? !expiresIn.equals(that.expiresIn) : that.expiresIn != null) {
+            return false;
+        }
+        if (refreshToken != null ? !refreshToken.equals(that.refreshToken) : that.refreshToken != null) {
+            return false;
+        }
+        return scope != null ? scope.equals(that.scope) : that.scope == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = accessToken.hashCode();
+        result = 31 * result + tokenType.hashCode();
+        result = 31 * result + (expiresIn != null ? expiresIn.hashCode() : 0);
+        result = 31 * result + (refreshToken != null ? refreshToken.hashCode() : 0);
+        result = 31 * result + (scope != null ? scope.hashCode() : 0);
+        return result;
+    }
 }
