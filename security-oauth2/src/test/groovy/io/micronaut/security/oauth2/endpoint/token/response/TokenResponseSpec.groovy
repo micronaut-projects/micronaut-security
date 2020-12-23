@@ -28,6 +28,7 @@ class TokenResponseSpec extends ApplicationContextSpecification {
         then:
         tokenResponse.accessToken == "MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
         tokenResponse.tokenType == 'bearer'
+    }
 
     void "TokenResponse implements equals and hash code"() {
         given:
