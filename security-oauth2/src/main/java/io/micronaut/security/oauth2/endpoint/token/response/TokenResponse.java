@@ -33,11 +33,19 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TokenResponse {
-
+    @NonNull
     private String accessToken;
+
+    @NonNull
     private String tokenType;
+
+    @Nullable
     private Integer expiresIn;
+
+    @Nullable
     private String refreshToken;
+
+    @Nullable
     private String scope;
 
     /**
