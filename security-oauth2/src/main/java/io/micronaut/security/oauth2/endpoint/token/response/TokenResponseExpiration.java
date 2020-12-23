@@ -17,19 +17,16 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.core.annotation.Introspected;
-
-import java.util.Calendar;
 import java.util.Date;
 
 /**
+ * @deprecated Use {@link TokenResponse#getExpiresInDate()} instead.
  * @author Sergio del Amo
  * @since 2.2.0
  */
+@Deprecated
 @Introspected
 public class TokenResponseExpiration extends TokenResponse {
-
-    @Nullable
-    private Date expiration;
 
     /**
      *
@@ -44,27 +41,11 @@ public class TokenResponseExpiration extends TokenResponse {
     }
 
     /**
-     * Populates Expiration date with the expires in value.
-     *
-     * @param expiresIn The lifetime in seconds of the access token.
-     */
-    @Override
-    public void setExpiresIn(Integer expiresIn) {
-        super.setExpiresIn(expiresIn);
-
-        if (expiresIn != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.SECOND, expiresIn);
-            this.expiration = calendar.getTime();
-        }
-    }
-
-    /**
      *
      * @return Expiration date of the access token. Calculated with the expires in recevied by the authorization server.
      */
     @Nullable
     public Date getExpiration() {
-        return expiration;
+        return getExpiresInDate().orElse(null);
     }
 }
