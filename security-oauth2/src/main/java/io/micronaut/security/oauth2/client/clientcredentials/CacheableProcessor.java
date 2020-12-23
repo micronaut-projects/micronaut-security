@@ -25,7 +25,6 @@ import org.reactivestreams.Subscription;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -52,22 +51,11 @@ class CacheableProcessor<T> implements Processor<T, T> {
     @NonNull
     private Queue<ElementSubscription<T>> subscriptions = new ConcurrentLinkedQueue<>();
 
-    @Nullable
-    private final Function<T, T> transformer;
-
     /**
      * Constructor.
      */
     CacheableProcessor() {
-        this.transformer = null;
-    }
 
-    /**
-     *
-     * @param transformer A transformation function to be applied when an element is received.
-     */
-    CacheableProcessor(@NonNull Function<T, T> transformer) {
-        this.transformer = transformer;
     }
 
     /**
@@ -95,7 +83,7 @@ class CacheableProcessor<T> implements Processor<T, T> {
 
     @Override
     public void onNext(T el) {
-        this.element = transformer != null ? transformer.apply(el) : el;
+        this.element = el;
         flowData();
     }
 
