@@ -22,6 +22,10 @@ import io.micronaut.core.annotation.Introspected;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
+
 /**
  * Represent the response of an authorization server to a valid access token request.
  *
@@ -39,6 +43,9 @@ public class TokenResponse {
     private Integer expiresIn;
     private String refreshToken;
     private String scope;
+
+    @Nullable
+    private Date expiresInDate;
 
     /**
      * Instantiates Access Token Response.
@@ -96,6 +103,20 @@ public class TokenResponse {
      */
     public void setExpiresIn(@Nullable Integer expiresIn) {
         this.expiresIn = expiresIn;
+        if (expiresIn != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.SECOND, expiresIn);
+            this.expiresInDate = calendar.getTime();
+        }
+    }
+
+    /**
+     *
+     * @return Expiration date of the access token. Calculated with the {@link TokenResponse#expiresIn} received by the authorization server.
+     */
+    @NonNull
+    public Optional<Date> getExpiresInDate() {
+        return Optional.ofNullable(expiresInDate);
     }
 
     /**

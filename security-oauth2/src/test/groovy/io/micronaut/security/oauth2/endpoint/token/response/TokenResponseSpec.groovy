@@ -2,6 +2,7 @@ package io.micronaut.security.oauth2.endpoint.token.response
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.json.JsonSlurper
+import groovy.time.TimeCategory
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.security.oauth2.ApplicationContextSpecification
 import spock.lang.Shared
@@ -36,5 +37,37 @@ class TokenResponseSpec extends ApplicationContextSpecification {
         m["expires_in"] == 3600
         m["refresh_token"] == "IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk"
         m["scope"] == "create"
+    }
+
+    void "TokenResponse::getExpiration uses expiresIn"() {
+        when:
+        TokenResponse tokenResponse = new TokenResponse()
+
+        then:
+        !tokenResponse.getExpiresInDate().isPresent()
+
+        when:
+        tokenResponse.expiresIn = 3600
+
+        then:
+        tokenResponse.getExpiresInDate().isPresent()
+
+        when:
+        Date halfAnHour = new Date()
+        use(TimeCategory) {
+            halfAnHour += 30.minutes
+        }
+
+        then:
+        tokenResponse.getExpiresInDate().get().after(halfAnHour)
+
+        when:
+        Date twoHours = new Date()
+        use(TimeCategory) {
+            twoHours += 2.hours
+        }
+
+        then:
+        tokenResponse.getExpiresInDate().get().before(twoHours)
     }
 }

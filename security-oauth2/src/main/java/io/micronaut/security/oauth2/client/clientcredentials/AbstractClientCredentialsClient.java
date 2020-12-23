@@ -24,7 +24,6 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.TokenResponseExpiration;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +78,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         String resolvedScope = scope != null ? scope : NOSCOPE;
 
         CacheableProcessor<TokenResponse> publisher = scopeToPublisherMap.computeIfAbsent(resolvedScope,
-                key -> new CacheableProcessor<>(TokenResponseExpiration::new));
+                key -> new CacheableProcessor<>());
 
         if (force || isExpired(publisher.getElement())) {
             publisher.clear();
@@ -129,11 +128,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
                 LOG.trace("cannot parse access token {} to JWT", tokenResponse.getAccessToken());
             }
         }
-        if (tokenResponse instanceof TokenResponseExpiration) {
-            TokenResponseExpiration tokenResponseExpiration = (TokenResponseExpiration) tokenResponse;
-            return Optional.ofNullable(tokenResponseExpiration.getExpiration());
-        }
-        return Optional.empty();
+        return tokenResponse.getExpiresInDate();
     }
 
     /**
