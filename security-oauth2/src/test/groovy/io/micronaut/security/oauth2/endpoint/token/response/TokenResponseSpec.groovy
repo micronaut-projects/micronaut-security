@@ -19,6 +19,15 @@ class TokenResponseSpec extends ApplicationContextSpecification {
         noExceptionThrown()
     }
 
+    void "There is a constructor in TokenResponse for required fields"() {
+        when:
+        TokenResponse tokenResponse = new TokenResponse("MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3", 'bearer')
+
+        then:
+        tokenResponse.accessToken == "MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+        tokenResponse.tokenType == 'bearer'
+    }
+
     void "TokenResponse uses snake case for its fields"() {
         when:
         TokenResponse tokenResponse = new TokenResponse()

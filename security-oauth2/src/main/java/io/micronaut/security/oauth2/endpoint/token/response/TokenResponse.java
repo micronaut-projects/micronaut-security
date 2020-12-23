@@ -48,6 +48,16 @@ public class TokenResponse {
     }
 
     /**
+     * Instantiates Access Token Response.
+     * @param accessToken Access token issued by the authorization server.
+     * @param tokenType The type of the token issued.
+     */
+    public TokenResponse(@NonNull String accessToken, @NonNull String tokenType) {
+        this.accessToken = accessToken;
+        this.tokenType = tokenType;
+    }
+
+    /**
      *
      * @return The access token issued by the authorization server.
      */
