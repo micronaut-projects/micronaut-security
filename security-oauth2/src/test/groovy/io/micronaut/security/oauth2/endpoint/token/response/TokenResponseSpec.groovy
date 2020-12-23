@@ -19,6 +19,28 @@ class TokenResponseSpec extends ApplicationContextSpecification {
         noExceptionThrown()
     }
 
+    void "TokenResponse implements equals and hash code"() {
+        given:
+        TokenResponse respOne = new TokenResponse()
+        respOne.with {
+            accessToken = "2YotnFZFEjr1zCsicMWpAA"
+            tokenType = "example"
+            expiresIn = 3600
+            refreshToken = "tGzv3JOkF0XG5Qx2TlKWIA"
+        }
+
+        TokenResponse respTwo = new TokenResponse()
+        respTwo.with {
+            accessToken = "2YotnFZFEjr1zCsicMWpAA"
+            tokenType = "example"
+            expiresIn = 3600
+            refreshToken = "tGzv3JOkF0XG5Qx2TlKWIA"
+        }
+
+        expect:
+        respOne == respTwo
+    }
+
     void "TokenResponse uses snake case for its fields"() {
         when:
         TokenResponse tokenResponse = new TokenResponse()
