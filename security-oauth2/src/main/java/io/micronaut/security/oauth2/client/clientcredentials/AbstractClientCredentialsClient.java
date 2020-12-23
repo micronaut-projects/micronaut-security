@@ -95,25 +95,31 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     /**
      *
      * @param tokenResponse Token Response
-     * @return true if a parameter token response is null or if an expiration time cannot parsed. false if the expiration time is after the current date.
+     * @return true if any A) parameter token response is null B) if an expiration time cannot parsed C) (expiration date - {@link ClientCredentialsConfiguration#getAdvancedExpiration()}) before current date.
      */
     protected boolean isExpired(@Nullable TokenResponse tokenResponse) {
         if (tokenResponse == null) {
             return true;
         }
         return expirationDate(tokenResponse).map(expDate -> {
-            final Date now = new Date();
-            long expTime = expDate.getTime();
-            expTime = expTime - oauthClientConfiguration.getClientCredentials()
-                    .map(ClientCredentialsConfiguration::getAdvancedExpiration)
-                    .orElse(OauthClientConfiguration.DEFAULT_ADVANCED_EXPIRATION)
-                    .toMillis();
-            boolean isExpired = expTime  < now.getTime();
+            boolean isExpired = isExpired(expDate);
             if (isExpired && LOG.isTraceEnabled()) {
                 LOG.trace("token: {} is expired" + tokenResponse.getAccessToken());
             }
             return isExpired;
         }).orElse(true);
+    }
+
+    /**
+     *
+     * @param expirationDate Expiration
+     * @return true if the (expiration date - {@link ClientCredentialsConfiguration#getAdvancedExpiration()}) before current date.
+     */
+    protected boolean isExpired(@NonNull Date expirationDate) {
+        return (expirationDate.getTime() - oauthClientConfiguration.getClientCredentials()
+                .map(ClientCredentialsConfiguration::getAdvancedExpiration)
+                .orElse(OauthClientConfiguration.DEFAULT_ADVANCED_EXPIRATION)
+                .toMillis()) < new Date().getTime();
     }
 
     /**
