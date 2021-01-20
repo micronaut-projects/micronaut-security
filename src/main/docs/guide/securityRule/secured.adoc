@@ -18,7 +18,7 @@ Alternatively, you can use https://jcp.org/en/jsr/detail?id=250[JSR_250] annotat
 
 [source, java]
 ----
-include::{testssecurity}/security/securityRule/permitall/ExampleController.java[tag=exampleControllerPlusImports,indent=0]
+include::{testssecurityjava}/security/securityRule/permitall/ExampleController.java[tag=exampleControllerPlusImports,indent=0]
 ----
 
 <1> Users granted role `ROLE_ADMIN` or `ROLE_X` roles can access `withroles` Controller's action.
