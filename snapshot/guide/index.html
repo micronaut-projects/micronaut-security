@@ -5854,7 +5854,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 
 
 <div class="paragraph">
-<p>Micronaut Security includes <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html">ClientCredentialsHttpClientFilter</a>. A <a href="https://docs.micronaut.io/latest/guide/index.html#clientFilter">HTTP Client Filter</a> which allows you to include automatically an access token at an outgoing request HTTP Header. It obtains the access token via a Client Credentials request.</p>
+<p>Micronaut Security includes <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html">ClientCredentialsHttpClientFilter</a>. A <a href="https://docs.micronaut.io/latest/guide/index.html#clientFilter">HTTP Client Filter</a> which allows you to automatically include an access token to an outgoing request HTTP Header. It obtains the access token via a Client Credentials request.</p>
 </div>
 <div class="paragraph">
 <p>For example, the next configuration adds an access token to the requests' HTTP Headers done via the HTTP Client <code>inventory</code>. It obtains the access token with a Client Credentials request with the OAuth 2.0 client <code>companyauthorserver</code>.</p>
@@ -5869,7 +5869,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
           client-id: 'XXX'
           client-scret: 'YYY'
           client-credentials:
-            serviceid-regex: 'inventory'
+            service-id-regex: 'inventory'
           token:
             url: "https://foo.bar/token"
             auth-method': "client_secret_basic",</code></pre>
