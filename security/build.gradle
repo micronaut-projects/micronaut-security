@@ -6,6 +6,7 @@ dependencies {
     api project(":security-annotations")
 
     testImplementation "io.micronaut:micronaut-http-client"
+    testAnnotationProcessor project(":security-annotations")
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-http-server-netty"
 
