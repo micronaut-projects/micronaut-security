@@ -42,6 +42,7 @@ import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.AutoCleanup
+import spock.lang.Issue
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -52,8 +53,8 @@ import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.text.ParseException
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ExecutionException
 
+@Issue("https://github.com/micronaut-projects/micronaut-security/issues/500")
 class ClientCredentialsConcurrentSpec extends Specification {
 
     @Shared
