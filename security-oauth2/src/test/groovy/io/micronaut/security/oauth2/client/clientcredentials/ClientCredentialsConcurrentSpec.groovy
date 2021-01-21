@@ -95,6 +95,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
             'micronaut.security.oauth2.clients.authservermanual.client-credentials.advanced-expiration'                         : '1s',
 
             'micronaut.http.services.resourceclient.url'                                                                        : "http://localhost:$resourceServerPort".toString(),
+            'micronaut.http.client.read-timeout': '20s',
     ])
 
     @Shared
