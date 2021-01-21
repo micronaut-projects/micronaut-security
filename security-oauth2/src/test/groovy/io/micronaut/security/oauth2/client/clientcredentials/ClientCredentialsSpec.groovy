@@ -278,7 +278,7 @@ class ClientCredentialsSpec extends Specification {
         clientCredentialsClient.name == 'authservermanual'
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken(null)).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
         noExceptionThrown()
@@ -306,7 +306,7 @@ class ClientCredentialsSpec extends Specification {
         clientCredentialsClient.name == 'authservermanualtakesprecedenceoveropenid'
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken(null)).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
         noExceptionThrown()
