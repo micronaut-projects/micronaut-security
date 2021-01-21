@@ -22,6 +22,10 @@ import io.micronaut.core.annotation.Introspected;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
+
 /**
  * Represent the response of an authorization server to a valid access token request.
  *
@@ -33,18 +37,39 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TokenResponse {
-
+    @NonNull
     private String accessToken;
+
+    @NonNull
     private String tokenType;
+
+    @Nullable
     private Integer expiresIn;
+
+    @Nullable
     private String refreshToken;
+
+    @Nullable
     private String scope;
+
+    @Nullable
+    private Date expiresInDate;
 
     /**
      * Instantiates Access Token Response.
      */
     public TokenResponse() {
 
+    }
+
+    /**
+     * Instantiates Access Token Response.
+     * @param accessToken Access token issued by the authorization server.
+     * @param tokenType The type of the token issued.
+     */
+    public TokenResponse(@NonNull String accessToken, @NonNull String tokenType) {
+        this.accessToken = accessToken;
+        this.tokenType = tokenType;
     }
 
     /**
@@ -96,6 +121,20 @@ public class TokenResponse {
      */
     public void setExpiresIn(@Nullable Integer expiresIn) {
         this.expiresIn = expiresIn;
+        if (expiresIn != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.SECOND, expiresIn);
+            this.expiresInDate = calendar.getTime();
+        }
+    }
+
+    /**
+     *
+     * @return Expiration date of the access token. Calculated with the {@link TokenResponse#expiresIn} received by the authorization server.
+     */
+    @NonNull
+    public Optional<Date> getExpiresInDate() {
+        return Optional.ofNullable(expiresInDate);
     }
 
     /**
@@ -132,4 +171,39 @@ public class TokenResponse {
         this.refreshToken = refreshToken;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TokenResponse that = (TokenResponse) o;
+
+        if (!accessToken.equals(that.accessToken)) {
+            return false;
+        }
+        if (!tokenType.equals(that.tokenType)) {
+            return false;
+        }
+        if (expiresIn != null ? !expiresIn.equals(that.expiresIn) : that.expiresIn != null) {
+            return false;
+        }
+        if (refreshToken != null ? !refreshToken.equals(that.refreshToken) : that.refreshToken != null) {
+            return false;
+        }
+        return scope != null ? scope.equals(that.scope) : that.scope == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = accessToken.hashCode();
+        result = 31 * result + tokenType.hashCode();
+        result = 31 * result + (expiresIn != null ? expiresIn.hashCode() : 0);
+        result = 31 * result + (refreshToken != null ? refreshToken.hashCode() : 0);
+        result = 31 * result + (scope != null ? scope.hashCode() : 0);
+        return result;
+    }
 }
