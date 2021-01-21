@@ -24,6 +24,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
+import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     private static final String NOSCOPE = "NOSCOPE";
     protected final TokenEndpointClient tokenEndpointClient;
     protected final OauthClientConfiguration oauthClientConfiguration;
-    protected final Map<String, CacheableProcessor<TokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
+    protected final Map<String, Flowable<TokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
 
     /**
      * @param tokenEndpointClient The token endpoint client
@@ -76,19 +77,22 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     @NonNull
     public Publisher<TokenResponse> requestToken(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
+        return scopeToPublisherMap.computeIfAbsent(resolvedScope, k -> cachedTokenResponseForScope(scope))
+                .materialize()
+                .firstOrError()
+                .flatMapPublisher(tokenNotif -> {
+                    if (!force && tokenNotif.isOnNext() && !isExpired(tokenNotif.getValue())) {
+                        return tokenNotif.getValue() != null ? Flowable.just(tokenNotif.getValue()) : Flowable.empty();
+                    } else if (tokenNotif.isOnError()) {
+                        return tokenNotif.getError() != null ? Flowable.error(tokenNotif.getError()) : Flowable.error(Throwable::new);
+                    }
+                    return scopeToPublisherMap.computeIfPresent(resolvedScope, (s, tokenResponseFlowable) -> cachedTokenResponseForScope(scope));
+                });
+    }
 
-        CacheableProcessor<TokenResponse> publisher = scopeToPublisherMap.computeIfAbsent(resolvedScope,
-                key -> new CacheableProcessor<>());
-
-        TokenResponse element = publisher.getElement();
-        if (force || (element != null && isExpired(element))) {
-            publisher.clear();
-        }
-        if (publisher.getSubscription() == null) {
-            ClientCredentialsTokenRequestContext context = createTokenRequestContext(scope);
-            tokenEndpointClient.sendRequest(context).subscribe(publisher);
-        }
-        return publisher;
+    @NonNull
+    private Flowable<TokenResponse> cachedTokenResponseForScope(String scope) {
+        return Flowable.fromPublisher(tokenEndpointClient.sendRequest(createTokenRequestContext(scope))).cache();
     }
 
     /**
