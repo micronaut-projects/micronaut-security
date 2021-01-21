@@ -278,7 +278,7 @@ class ClientCredentialsSpec extends Specification {
         clientCredentialsClient.name == 'authservermanual'
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken(null)).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
         noExceptionThrown()
@@ -306,7 +306,7 @@ class ClientCredentialsSpec extends Specification {
         clientCredentialsClient.name == 'authservermanualtakesprecedenceoveropenid'
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken(null)).blockingFirst()
+        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
         noExceptionThrown()
@@ -354,7 +354,6 @@ class ClientCredentialsSpec extends Specification {
         ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanual"))
 
         when:
-        authServer.applicationContext.getBean(TokenController).down = true
         TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
@@ -372,16 +371,18 @@ class ClientCredentialsSpec extends Specification {
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
 
         when: 'calling client credentials returns the old access token'
-        authServer.applicationContext.getBean(TokenController).down = false
+        authServer.applicationContext.getBean(TokenController).down = true
         tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
         tokenResponse.accessToken == accessToken
 
         when: 'calling client credentials with different scope returns a different access token'
+        authServer.applicationContext.getBean(TokenController).down = false
         tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken("email")).blockingFirst()
 
         then:
+        noExceptionThrown()
         tokenResponse.accessToken != accessToken
 
         when: 'wait 6 seconds, the access token should be expired'
@@ -393,10 +394,10 @@ class ClientCredentialsSpec extends Specification {
         resourceResp.status == HttpStatus.UNAUTHORIZED
 
         when: 'calling client credentials returns the new token because the previous token is detected as expired'
-        authServer.applicationContext.getBean(TokenController).down = false
         tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
 
         then:
+        noExceptionThrown()
         tokenResponse.accessToken != accessToken
 
         when: 'moreover, calling client credentials with force true returns a different access token'
@@ -404,7 +405,11 @@ class ClientCredentialsSpec extends Specification {
         tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken(true)).blockingFirst()
 
         then:
+        noExceptionThrown()
         tokenResponse.accessToken != accessToken
+
+        cleanup:
+        authServer.applicationContext.getBean(TokenController).down =  false
     }
 
     void "it is possible to add an access token via a client credentials request and an HTTP Client filter"() {
