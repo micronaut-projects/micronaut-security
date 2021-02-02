@@ -54,6 +54,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+
+    // If you change the default, edit the javadoc of `setScopes` which is exposed in the docs.
+    private static final List<String> DEFAULT_SCOPES_OPENID = Arrays.asList(OpenIdScope.OPENID.toString(),
+            OpenIdScope.EMAIL.toString(),
+            OpenIdScope.PROFILE.toString());
     private List<String> DEFAULT_SCOPES = new ArrayList<>();
 
     private final String name;
@@ -127,7 +132,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
-     * The scopes to request.
+     * Requested scopes. If not specified for OAuth 2.0 clients using OpenID Connect it defaults to `profile`, `email` and `idtoken`
      *
      * @param scopes The scopes
      */
@@ -213,9 +218,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     public void setOpenid(OpenIdClientConfigurationProperties openid) {
         this.openid = openid;
-        this.DEFAULT_SCOPES = Arrays.asList(OpenIdScope.OPENID.toString(),
-                OpenIdScope.EMAIL.toString(),
-                OpenIdScope.PROFILE.toString());
+        this.DEFAULT_SCOPES = DEFAULT_SCOPES_OPENID;
     }
 
     @Override
