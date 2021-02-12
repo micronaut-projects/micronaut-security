@@ -17,6 +17,8 @@ package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.core.order.OrderUtil;
+import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
@@ -29,6 +31,7 @@ import io.micronaut.management.endpoint.EndpointsFilter;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.config.SecurityConfiguration;
+import io.micronaut.security.rules.ReactiveSecurityRule;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
@@ -39,7 +42,9 @@ import org.slf4j.LoggerFactory;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -76,23 +81,34 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
      */
     private static final Integer ORDER = ServerFilterPhase.SECURITY.order();
 
-    protected final Collection<SecurityRule> securityRules;
+    /** Combined and sorted list of SecurityRule and ReactiveSecurityRule objects. */
+    protected final List<Ordered> orderedSecurityRules;
+
     protected final Collection<AuthenticationFetcher> authenticationFetchers;
 
     protected final SecurityConfiguration securityConfiguration;
 
     /**
-     * @param securityRules          The list of rules that will allow or reject the request
+     * @param securityRules The list of security rules that will allow or reject the request
+     * @param reactiveSecurityRules The list of reactive security rules that will allow or reject the request
      * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
-     * @param securityConfiguration  The security configuration
+     * @param securityConfiguration The security configuration
      */
     @Inject
-    public SecurityFilter(Collection<SecurityRule> securityRules,
-                          Collection<AuthenticationFetcher> authenticationFetchers,
-                          SecurityConfiguration securityConfiguration) {
-        this.securityRules = securityRules;
+    public SecurityFilter(
+            Collection<SecurityRule> securityRules,
+            Collection<ReactiveSecurityRule> reactiveSecurityRules,
+            Collection<AuthenticationFetcher> authenticationFetchers,
+            SecurityConfiguration securityConfiguration) {
+
         this.authenticationFetchers = authenticationFetchers;
         this.securityConfiguration = securityConfiguration;
+        this.orderedSecurityRules =
+                new ArrayList<>(reactiveSecurityRules.size() + securityRules.size());
+
+        this.orderedSecurityRules.addAll(reactiveSecurityRules);
+        this.orderedSecurityRules.addAll(securityRules);
+        OrderUtil.sort(this.orderedSecurityRules);
     }
 
     @Override
@@ -149,32 +165,76 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
         String method = request.getMethod().toString();
         String path = request.getPath();
         Map<String, Object> attributes = authentication != null ? authentication.getAttributes() : null;
-        for (SecurityRule rule : securityRules) {
-            SecurityRuleResult result = rule.check(request, routeMatch, attributes);
-            if (result == SecurityRuleResult.REJECTED) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Unauthorized request {} {}. The rule provider {} rejected the request.", method, path, rule.getClass().getName());
-                }
-                request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
-                return Publishers.just(new AuthorizationException(authentication));
-            }
-            if (result == SecurityRuleResult.ALLOWED) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Authorized request {} {}. The rule provider {} authorized the request.", method, path, rule.getClass().getName());
-                }
-                return chain.proceed(request);
-            }
-        }
 
+        return Flowable.fromIterable(orderedSecurityRules)
+                .concatMap(
+                        ordered -> {
+                            if (ordered instanceof SecurityRule) {
+                                SecurityRuleResult result =
+                                        ((SecurityRule) ordered).check(request, routeMatch, attributes);
+                                if (result == SecurityRuleResult.REJECTED || result == SecurityRuleResult.ALLOWED) {
+                                    logResult(result, method, path, ordered);
+                                    return Publishers.just(result);
+                                }
+                                return Publishers.empty();
+                            } else if (ordered instanceof ReactiveSecurityRule) {
+                                return Flowable.fromPublisher(
+                                        ((ReactiveSecurityRule) ordered).check(request, routeMatch, attributes))
+                                        // Ideally should return just empty but filter the unknowns
+                                        .filter((result) -> result != SecurityRuleResult.UNKNOWN)
+                                        .doAfterNext((result) -> logResult(result, method, path, ordered));
+                            } else {
+                                // Not sure how we got this object in here so log and return an empty
+                                LOG.warn("Unsupported type {}", ordered.getClass());
+                                return Publishers.empty();
+                            }
+                        })
+                .firstElement()
+                .flatMapPublisher(
+                        result -> {
+                            if (result == SecurityRuleResult.REJECTED) {
+                                return Publishers.just(new AuthorizationException(authentication));
+                            } else if (result == SecurityRuleResult.ALLOWED) {
+                                return chain.proceed(request);
+                            } else {
+                                return Publishers.empty();
+                            }
+                        })
+                .switchIfEmpty(
+                        Flowable.defer(
+                                () -> {
+                                    if (LOG.isDebugEnabled()) {
+                                        LOG.debug(
+                                                "Authorized request {} {}. No rule provider authorized or rejected the request.",
+                                                method,
+                                                path);
+                                    }
+                                    // no rule found for the given request
+                                    if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
+                                        return chain.proceed(request);
+                                    } else {
+                                        request.setAttribute(
+                                                REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
+                                        return Publishers.just(new AuthorizationException(authentication));
+                                    }
+                                }));
+    }
+
+    private void logResult(SecurityRuleResult result, String method, String path, Ordered ordered) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Authorized request {} {}. No rule provider authorized or rejected the request.", method, path);
-        }
-        //no rule found for the given request
-        if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
-            return chain.proceed(request);
-        } else {
-            request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
-            return Publishers.just(new AuthorizationException(authentication));
+            if (result == SecurityRuleResult.REJECTED) {
+                LOG.debug(
+                        "Unauthorized request {} {}. The rule provider {} rejected the request.",
+                        method,
+                        path,
+                        ordered.getClass().getName());
+            } else if (result == SecurityRuleResult.ALLOWED) {
+                LOG.debug(
+                        "Authorized request {} {}. The rule provider {} authorized the request.",
+                        method,
+                        path,
+                        ordered.getClass().getName());
+            }
         }
     }
 }

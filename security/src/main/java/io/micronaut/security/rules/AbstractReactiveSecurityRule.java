@@ -20,19 +20,19 @@ import io.micronaut.security.token.RolesFinder;
 import javax.inject.Inject;
 
 /**
- * A base {@link SecurityRule} class to extend from that provides
+ * A base {@link ReactiveSecurityRule} class to extend from that provides
  * helper methods to get the roles from the claims and compare them
  * to the roles allowed by the rule.
  *
- * @author James Kleeh
- * @since 1.0
+ * @author Steven Brown
+ * @since 2.4
  */
-public abstract class AbstractSecurityRule extends AbstractBaseSecurityRule implements SecurityRule {
+public abstract class AbstractReactiveSecurityRule extends AbstractBaseSecurityRule implements ReactiveSecurityRule {
     /**
      * @param rolesFinder Roles Parser
      */
     @Inject
-    public AbstractSecurityRule(RolesFinder rolesFinder) {
+    public AbstractReactiveSecurityRule(RolesFinder rolesFinder) {
         super(rolesFinder);
     }
 }
