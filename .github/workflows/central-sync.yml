@@ -34,7 +34,7 @@ jobs:
         run: |
           echo $GPG_FILE | base64 -d > secring.gpg
           if [ -z ${PUBLISH_IN_2_STEPS+x} ]; then
-            ./gradlew publish closeAndReleaseRepository
+            ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
           else
-            ./gradlew publish && ./gradlew closeAndReleaseRepository
+            ./gradlew publishToSonatype && ./gradlew closeAndReleaseSonatypeStagingRepository
           fi
