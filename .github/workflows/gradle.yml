@@ -44,7 +44,7 @@ jobs:
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-        run: ./gradlew publish docs --no-daemon
+        run: ./gradlew publishToSonatype docs --no-daemon
       - name: Determine docs target repository
         uses: haya14busa/action-cond@v1
         id: docs_target
