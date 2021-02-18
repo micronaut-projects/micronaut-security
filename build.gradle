@@ -1,11 +1,9 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url "https://dl.bintray.com/micronaut/core-releases-local" }
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "io.micronaut.build:micronaut-gradle-plugins:2.0.15"
+        classpath "io.micronaut.build.internal:micronaut-gradle-plugins:3.0.1"
     }
 }
 
@@ -23,15 +21,15 @@ subprojects { Project subproject ->
         }
     }
 
-    apply plugin: "io.micronaut.build.common"
+    apply plugin: "io.micronaut.build.internal.common"
 
     if (subproject.parent.name == "examples" || subproject.name == "examples") {
         return
     }
 
-    apply plugin: "io.micronaut.build.dependency-updates"
+    apply plugin: "io.micronaut.build.internal.dependency-updates"
     if (!subproject.name.startsWith("test-suite")) {
-        apply plugin: "io.micronaut.build.publishing"
+        apply plugin: "io.micronaut.build.internal.publishing"
     }
 
     dependencies {
@@ -55,8 +53,8 @@ subprojects { Project subproject ->
     }        
 }
 
-apply plugin: "io.micronaut.build.docs"
-apply plugin: "io.micronaut.build.dependency-updates"
+apply plugin: "io.micronaut.build.internal.docs"
+apply plugin: "io.micronaut.build.internal.dependency-updates"
 
 dependencyUpdates.resolutionStrategy {
     componentSelection { rules ->
