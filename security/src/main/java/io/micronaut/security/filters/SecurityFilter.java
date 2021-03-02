@@ -36,7 +36,6 @@ import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
 import io.reactivex.Flowable;
-import io.reactivex.Single;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,15 +89,14 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     protected final SecurityConfiguration securityConfiguration;
 
     /**
-     * @param securityRules The list of security rules that will allow or reject the request
+     * @param securityRules          The list of security rules that will allow or reject the request
      * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
-     * @param securityConfiguration The security configuration
+     * @param securityConfiguration  The security configuration
      */
     @Deprecated
-    public SecurityFilter(
-            Collection<SecurityRule> securityRules,
-            Collection<AuthenticationFetcher> authenticationFetchers,
-            SecurityConfiguration securityConfiguration) {
+    public SecurityFilter(Collection<SecurityRule> securityRules,
+                          Collection<AuthenticationFetcher> authenticationFetchers,
+                          SecurityConfiguration securityConfiguration) {
 
         this.authenticationFetchers = authenticationFetchers;
         this.securityConfiguration = securityConfiguration;
@@ -113,11 +111,10 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
      * @param securityConfiguration The security configuration
      */
     @Inject
-    public SecurityFilter(
-            Collection<SecurityRule> securityRules,
-            Collection<ReactiveSecurityRule> reactiveSecurityRules,
-            Collection<AuthenticationFetcher> authenticationFetchers,
-            SecurityConfiguration securityConfiguration) {
+    public SecurityFilter(Collection<SecurityRule> securityRules,
+                          Collection<ReactiveSecurityRule> reactiveSecurityRules,
+                          Collection<AuthenticationFetcher> authenticationFetchers,
+                          SecurityConfiguration securityConfiguration) {
 
         this.authenticationFetchers = authenticationFetchers;
         this.securityConfiguration = securityConfiguration;
@@ -196,8 +193,9 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
                                 }
                                 return Publishers.empty();
                             } else if (ordered instanceof ReactiveSecurityRule) {
-                                return Single.fromPublisher(
+                                return Flowable.fromPublisher(
                                         ((ReactiveSecurityRule) ordered).check(request, routeMatch, attributes))
+                                        .firstElement()
                                         // Ideally should return just empty but filter the unknowns
                                         .filter((result) -> result != SecurityRuleResult.UNKNOWN)
                                         .doAfterSuccess((result) -> logResult(result, method, path, ordered))
