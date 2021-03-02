@@ -36,6 +36,7 @@ import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +88,23 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     protected final Collection<AuthenticationFetcher> authenticationFetchers;
 
     protected final SecurityConfiguration securityConfiguration;
+
+    /**
+     * @param securityRules The list of security rules that will allow or reject the request
+     * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
+     * @param securityConfiguration The security configuration
+     */
+    @Deprecated
+    public SecurityFilter(
+            Collection<SecurityRule> securityRules,
+            Collection<AuthenticationFetcher> authenticationFetchers,
+            SecurityConfiguration securityConfiguration) {
+
+        this.authenticationFetchers = authenticationFetchers;
+        this.securityConfiguration = securityConfiguration;
+        this.orderedSecurityRules = new ArrayList<>(securityRules);
+        OrderUtil.sort(this.orderedSecurityRules);
+    }
 
     /**
      * @param securityRules The list of security rules that will allow or reject the request
@@ -178,11 +196,12 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
                                 }
                                 return Publishers.empty();
                             } else if (ordered instanceof ReactiveSecurityRule) {
-                                return Flowable.fromPublisher(
+                                return Single.fromPublisher(
                                         ((ReactiveSecurityRule) ordered).check(request, routeMatch, attributes))
                                         // Ideally should return just empty but filter the unknowns
                                         .filter((result) -> result != SecurityRuleResult.UNKNOWN)
-                                        .doAfterNext((result) -> logResult(result, method, path, ordered));
+                                        .doAfterSuccess((result) -> logResult(result, method, path, ordered))
+                                        .toFlowable();
                             } else {
                                 // Not sure how we got this object in here so log and return an empty
                                 LOG.warn("Unsupported type {}", ordered.getClass());
@@ -193,6 +212,8 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
                 .flatMapPublisher(
                         result -> {
                             if (result == SecurityRuleResult.REJECTED) {
+                                request.setAttribute(
+                                        REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
                                 return Publishers.just(new AuthorizationException(authentication));
                             } else if (result == SecurityRuleResult.ALLOWED) {
                                 return chain.proceed(request);
