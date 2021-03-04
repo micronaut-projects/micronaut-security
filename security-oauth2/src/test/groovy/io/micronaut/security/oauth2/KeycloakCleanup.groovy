@@ -6,6 +6,6 @@ class KeycloakCleanup extends AbstractGlobalExtension {
 
     @Override
     void stop() {
-        Keycloak.destroy(Keycloak.keycloak)
+        Keycloak.destroy()
     }
 }
