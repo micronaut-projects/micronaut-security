@@ -48,7 +48,7 @@ public class AudienceJwtClaimsValidator implements GenericJwtClaimsValidator {
         @Property(name = AudienceJwtClaimsValidator.AUDIENCE_PROP) String expectedAudience
     ) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Initializing AudienceJwtClaimsValidator with audience: %s", expectedAudience);
+            LOG.debug("Initializing AudienceJwtClaimsValidator with audience: {}", expectedAudience);
         }
         this.expectedAudience = expectedAudience;
     }
@@ -64,7 +64,7 @@ public class AudienceJwtClaimsValidator implements GenericJwtClaimsValidator {
         final boolean result = audience != null && audience.contains(expectedAudience);
 
         if (!result && LOG.isTraceEnabled()) {
-            LOG.trace("Expected JWT audience claim to include '%s', but it did not.", expectedAudience);
+            LOG.trace("Expected JWT audience claim to include '{}', but it did not.", expectedAudience);
         }
 
         return result;

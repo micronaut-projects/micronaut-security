@@ -44,7 +44,7 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
         @Property(name = IssuerJwtClaimsValidator.ISSUER_PROP) String expectedIssuer
     ) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Initializing IssuerJwtClaimsValidator with issuer: %s", expectedIssuer);
+            LOG.debug("Initializing IssuerJwtClaimsValidator with issuer: {}", expectedIssuer);
         }
         this.expectedIssuer = expectedIssuer;
     }
@@ -61,7 +61,7 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
 
         if (issuer == null) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Expected JWT issuer claim of '%s', but the token did not include an issuer.", expectedIssuer);
+                LOG.trace("Expected JWT issuer claim of '{}', but the token did not include an issuer.", expectedIssuer);
             }
 
             return false;
@@ -70,7 +70,7 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
         final boolean result = expectedIssuer.equals(issuer);
 
         if (!result && LOG.isTraceEnabled()) {
-            LOG.trace("Expected JWT issuer claim of '%s', but found '%s' instead.", expectedIssuer, issuer);
+            LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuer);
         }
 
         return result;

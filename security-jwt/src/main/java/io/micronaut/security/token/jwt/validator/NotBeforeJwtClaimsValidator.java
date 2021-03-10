@@ -58,7 +58,7 @@ public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
 
         if (now.before(notBefore)) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Invalidating JWT not-before Claim because current time (%s) is before (%s).", now, notBefore);
+                LOG.trace("Invalidating JWT not-before Claim because current time ({}) is before ({}).", now, notBefore);
             }
 
             return false;
