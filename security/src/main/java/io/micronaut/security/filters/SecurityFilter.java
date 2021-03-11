@@ -112,8 +112,8 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
             .doOnEvent((authentication, throwable) -> {
                 if (authentication != null) {
                     request.setAttribute(AUTHENTICATION, authentication);
-                    Map<String, Object> attributes = authentication.getAttributes();
                     if (LOG.isDebugEnabled()) {
+                        Map<String, Object> attributes = authentication.getAttributes();
                         LOG.debug("Attributes: {}", attributes
                                 .entrySet()
                                 .stream()
