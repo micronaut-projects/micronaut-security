@@ -11,7 +11,6 @@ dependencies {
     api "io.micronaut:micronaut-http"
     api "io.micronaut:micronaut-http-server"
     api project(":security")
-    compileOnly "org.graalvm.nativeimage:svm"
     api "com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"
 
     testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
