@@ -25,8 +25,6 @@ subprojects { Project subproject ->
         if (subproject.parent.name != "examples" && subproject.name != "examples" && !subproject.name.startsWith("test-suite")) {
             annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
         }
-        annotationProcessor "io.micronaut:micronaut-graal"
-
         api "io.micronaut:micronaut-inject"
         
         testAnnotationProcessor "io.micronaut:micronaut-inject-java"
