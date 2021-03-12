@@ -46,19 +46,3 @@ subprojects { Project subproject ->
 apply plugin: "io.micronaut.build.internal.docs"
 apply plugin: "io.micronaut.build.internal.dependency-updates"
 
-dependencyUpdates.resolutionStrategy {
-    componentSelection { rules ->
-        rules.all { ComponentSelection selection ->
-            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview', 'b', 'ea'].any { qualifier ->
-                selection.candidate.version ==~ /(?i).*[.-]$qualifier[.\d-+]*/
-            }
-            if (rejected) {
-                selection.reject('Release candidate')
-            }
-        }
-    }
-}
-
-
-
-
