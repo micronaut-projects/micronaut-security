@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 
 /**
  * Configuration for access tokens.

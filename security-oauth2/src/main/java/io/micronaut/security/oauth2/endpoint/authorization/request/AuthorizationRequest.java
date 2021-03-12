@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.http.MutableHttpResponse;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.util.List;
 import java.util.Optional;
 

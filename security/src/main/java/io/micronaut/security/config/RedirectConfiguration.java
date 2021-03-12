@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.config;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 
 /**
  * @author Sergio del Amo

@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.*;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.security.config.RedirectConfiguration;

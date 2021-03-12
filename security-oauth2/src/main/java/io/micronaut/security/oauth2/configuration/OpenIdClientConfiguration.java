@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.configuration;
 import io.micronaut.core.naming.Named;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.net.URL;
 import java.util.Optional;
 

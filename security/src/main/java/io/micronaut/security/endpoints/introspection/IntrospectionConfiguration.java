@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.util.Toggleable;
 

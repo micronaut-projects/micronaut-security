@@ -23,7 +23,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.security.interfaces.ECPrivateKey;
 
 /**

@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.core.util.Toggleable;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.util.Optional;
 
 /**

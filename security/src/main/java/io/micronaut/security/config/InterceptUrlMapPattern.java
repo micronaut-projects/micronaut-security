@@ -17,7 +17,7 @@ package io.micronaut.security.config;
 
 import io.micronaut.http.HttpMethod;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;

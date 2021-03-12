@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.session;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.ForbiddenRedirectConfiguration;
 import io.micronaut.security.config.RedirectConfiguration;
