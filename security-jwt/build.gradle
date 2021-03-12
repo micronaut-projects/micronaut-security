@@ -22,7 +22,7 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut:micronaut-multitenancy"
     testImplementation "io.micronaut.views:micronaut-views-velocity"
-    testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.2"
+    testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.3"
 }
 
 apply from: "${rootProject.projectDir}/gradle/geb.gradle"
