@@ -9,18 +9,6 @@ buildscript {
 
 subprojects { Project subproject ->
     group "io.micronaut.security"
-
-    repositories {
-        maven { url "https://dl.bintray.com/micronaut/core-releases-local" }
-        jcenter()
-        maven {
-            url "https://oss.jfrog.org/oss-snapshot-local"
-            content {
-                includeVersionByRegex('.*', '.*', '.*SNAPSHOT')
-            }
-        }
-    }
-
     apply plugin: "io.micronaut.build.internal.common"
 
     if (subproject.parent.name == "examples" || subproject.name == "examples") {
