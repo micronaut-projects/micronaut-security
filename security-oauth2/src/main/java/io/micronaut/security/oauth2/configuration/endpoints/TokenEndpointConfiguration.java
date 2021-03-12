@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.configuration.endpoints;
 
 import io.micronaut.http.MediaType;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 
 /**
  * TokenEndpoint Configuration.

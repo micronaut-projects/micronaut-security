@@ -17,8 +17,8 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

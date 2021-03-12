@@ -13,7 +13,7 @@ import io.micronaut.websocket.annotation.ServerWebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import java.util.function.Predicate;
 
 @Requires(property = "spec.name", value = "websockets-on-open-header")

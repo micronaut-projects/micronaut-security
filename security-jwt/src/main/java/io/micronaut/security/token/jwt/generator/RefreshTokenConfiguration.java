@@ -16,7 +16,7 @@
 package io.micronaut.security.token.jwt.generator;
 
 import com.nimbusds.jose.JWSAlgorithm;
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 /**

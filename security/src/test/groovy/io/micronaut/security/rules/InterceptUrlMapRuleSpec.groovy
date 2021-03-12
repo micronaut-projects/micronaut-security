@@ -11,7 +11,7 @@ import spock.lang.Issue
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import edu.umd.cs.findbugs.annotations.NonNull
+import io.micronaut.core.annotation.NonNull
 
 class InterceptUrlMapRuleSpec extends Specification {
 

@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;

@@ -17,8 +17,8 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.KeyType;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * JSON Web Key Set Configuration.

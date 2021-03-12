@@ -24,8 +24,8 @@ import io.micronaut.security.authentication.CookieBasedAuthenticationModeConditi
 import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;

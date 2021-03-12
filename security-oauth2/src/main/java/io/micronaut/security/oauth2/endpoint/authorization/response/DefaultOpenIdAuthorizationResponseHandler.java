@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import com.nimbusds.jwt.JWT;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationFailed;

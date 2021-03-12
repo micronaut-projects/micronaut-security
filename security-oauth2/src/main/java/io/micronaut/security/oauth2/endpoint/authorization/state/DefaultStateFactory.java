@@ -24,7 +24,7 @@ import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.Optional;
 

@@ -28,7 +28,7 @@ import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.text.ParseException;

@@ -8,7 +8,7 @@ import io.micronaut.security.filters.AuthenticationFetcher;
 import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import javax.inject.Singleton;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;

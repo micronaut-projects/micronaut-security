@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.url;
 
 import io.micronaut.http.HttpRequest;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import java.net.URL;
 
 /**

@@ -22,7 +22,7 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import javax.inject.Singleton;
 import java.util.Date;
 

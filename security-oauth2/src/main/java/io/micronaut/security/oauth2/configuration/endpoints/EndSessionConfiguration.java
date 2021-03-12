@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 
 /**
  * OpenID end session configuration.

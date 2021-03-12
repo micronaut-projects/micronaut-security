@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import org.reactivestreams.Publisher;

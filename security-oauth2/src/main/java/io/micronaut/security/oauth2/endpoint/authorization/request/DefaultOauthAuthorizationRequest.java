@@ -24,8 +24,8 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 

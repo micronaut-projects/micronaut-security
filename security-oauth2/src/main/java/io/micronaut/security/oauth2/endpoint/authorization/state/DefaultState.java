@@ -16,8 +16,8 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.core.annotation.Introspected;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.net.URI;
 import java.util.UUID;
 

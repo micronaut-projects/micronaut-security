@@ -20,7 +20,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import javax.inject.Singleton;
 import java.util.UUID;
 

@@ -10,7 +10,7 @@ import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
-import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
