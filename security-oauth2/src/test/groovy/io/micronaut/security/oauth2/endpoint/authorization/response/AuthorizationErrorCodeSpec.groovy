@@ -36,5 +36,7 @@ class AuthorizationErrorCodeSpec extends Specification {
         AuthorizationErrorCode.REGISTRATION_NOT_SUPPORTED || 'registration_not_supported'
         AuthorizationErrorCode.REQUEST_NOT_SUPPORTED      || 'request_not_supported'
         AuthorizationErrorCode.REQUEST_URI_NOT_SUPPORTED  || 'request_uri_not_supported'
+        AuthorizationErrorCode.USER_CANCELLED_AUTHORIZE   || 'user_cancelled_authorize'
+        AuthorizationErrorCode.UNAUTHORIZED_SCOPE_ERROR   || 'unauthorized_scope_error'
     }
 }
