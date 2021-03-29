@@ -18,7 +18,7 @@ dependencies {
     testImplementation 'com.sun.activation:javax.activation:1.2.0' // Java 11
     testImplementation "org.testcontainers:testcontainers:1.15.2"
     testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.31"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.32"
     testImplementation project(":security-jwt")
 }
 
