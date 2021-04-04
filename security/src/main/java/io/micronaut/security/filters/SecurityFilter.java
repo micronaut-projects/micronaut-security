@@ -37,7 +37,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
@@ -112,8 +112,8 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
             .doOnEvent((authentication, throwable) -> {
                 if (authentication != null) {
                     request.setAttribute(AUTHENTICATION, authentication);
-                    Map<String, Object> attributes = authentication.getAttributes();
                     if (LOG.isDebugEnabled()) {
+                        Map<String, Object> attributes = authentication.getAttributes();
                         LOG.debug("Attributes: {}", attributes
                                 .entrySet()
                                 .stream()

@@ -19,7 +19,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.util.List;
 import java.util.Optional;
 

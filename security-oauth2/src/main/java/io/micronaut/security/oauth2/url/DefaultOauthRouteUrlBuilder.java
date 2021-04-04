@@ -22,7 +22,7 @@ import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.web.router.exceptions.RoutingException;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import javax.inject.Singleton;
 import java.net.MalformedURLException;
 import java.net.URI;

@@ -19,8 +19,8 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;

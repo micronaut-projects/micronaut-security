@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.docs.github
 
-import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.security.authentication.AuthenticationResponse;

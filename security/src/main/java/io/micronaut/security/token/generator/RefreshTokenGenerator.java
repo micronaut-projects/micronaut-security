@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.generator;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.authentication.UserDetails;
 
 import java.util.Optional;

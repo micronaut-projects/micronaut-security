@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.configuration.endpoints;
 
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.util.Optional;
 
 /**

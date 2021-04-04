@@ -42,7 +42,11 @@ public enum AuthorizationErrorCode implements ErrorCode {
     UNSUPPORTED_RESPONSE_TYPE("unsupported_response_type", "The authorization server does not support obtaining an authorization code using this method."),
     INVALID_SCOPE("invalid_scope", "The requested scope is invalid, unknown, or malformed."),
     SERVER_ERROR("server_error", "The authorization server encountered an unexpected condition that prevented it from fulfilling the request. (This error code is needed because a 500 Internal Server Error HTTP status code cannot be returned to the client via an HTTP redirect.)"),
-    TEMPORARILY_UNAVAILABLE("temporarily_unavailable", "The authorization server is currently unable to handle the request due to a temporary overloading or maintenance of the server. (This error code is needed because a 503 Service Unavailable HTTP status code cannot be returned to the client via an HTTP redirect.)");
+    TEMPORARILY_UNAVAILABLE("temporarily_unavailable", "The authorization server is currently unable to handle the request due to a temporary overloading or maintenance of the server. (This error code is needed because a 503 Service Unavailable HTTP status code cannot be returned to the client via an HTTP redirect.)"),
+    // Sign in with LinkedIn
+    UNAUTHORIZED_SCOPE_ERROR("unauthorized_scope_error", "Scope is not authorized for your application"),
+    // Sign in with LinkedIn & Apple
+    USER_CANCELLED_AUTHORIZE("user_cancelled_authorize","The user cancelled the authorization");
 
     private String errorCode;
     private String errorCodeDescription;

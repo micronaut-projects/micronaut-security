@@ -21,7 +21,7 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidator;
 
 import javax.inject.Singleton;

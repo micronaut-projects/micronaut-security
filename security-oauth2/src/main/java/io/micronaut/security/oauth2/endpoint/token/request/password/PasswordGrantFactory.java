@@ -29,7 +29,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMap
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * Factory creating {@link AuthenticationProvider} beans that delegate

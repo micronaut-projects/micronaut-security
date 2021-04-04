@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
@@ -25,7 +25,7 @@ import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfigur
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

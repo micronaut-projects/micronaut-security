@@ -15,7 +15,7 @@
  */
 package io.micronaut.configuration.security.ldap.context;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 

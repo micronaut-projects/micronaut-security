@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.docs.openid
 
-import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Requires
 import io.micronaut.security.authentication.AuthenticationResponse;
 
@@ -11,7 +11,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
-import edu.umd.cs.findbugs.annotations.NonNull
+import io.micronaut.core.annotation.NonNull
 import javax.inject.Named
 import javax.inject.Singleton
 

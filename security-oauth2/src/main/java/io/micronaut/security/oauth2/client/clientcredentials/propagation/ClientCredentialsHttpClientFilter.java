@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.exceptions.NoSuchBeanException;
 import io.micronaut.core.util.StringUtils;

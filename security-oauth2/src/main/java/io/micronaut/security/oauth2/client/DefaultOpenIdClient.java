@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
