@@ -21,6 +21,8 @@ import javax.inject.Singleton;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,13 +35,14 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
  * Validate current time is not before the not-before claim of a JWT token.
  *
  * @author Jason Schindler
+ * @author Sergio del Amo
  * @since 2.4.0
  */
 @Singleton
 @Requires(property = NotBeforeJwtClaimsValidator.NOT_BEFORE_PROP, value = StringUtils.TRUE)
 public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
 
-    public static final String NOT_BEFORE_PROP = JwtClaimsValidator.PREFIX + ".not-before";
+    public static final String NOT_BEFORE_PROP = JwtClaimsValidatorConfigurationProperties.PREFIX + ".not-before";
 
     private static final Logger LOG = LoggerFactory.getLogger(NotBeforeJwtClaimsValidator.class);
 
@@ -60,7 +63,6 @@ public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Invalidating JWT not-before Claim because current time ({}) is before ({}).", now, notBefore);
             }
-
             return false;
         }
 
@@ -75,6 +77,17 @@ public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
     @Deprecated
     @Override
     public boolean validate(JwtClaims claims) {
+        return validate(claims, null);
+    }
+
+    /**
+     *
+     * @param claims The JwtClaims
+     * @param request HTTP Request
+     * @return true if the not-before claim denotes a date before now
+     */
+    @Override
+    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 

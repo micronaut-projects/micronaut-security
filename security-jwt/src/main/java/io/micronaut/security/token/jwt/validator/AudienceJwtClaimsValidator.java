@@ -21,10 +21,12 @@ import javax.inject.Singleton;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
@@ -32,25 +34,27 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
  * Validates JWT audience claim contains a configured value.
  *
  * @author Jason Schindler
+ * @author Sergio del Amo
  * @since 2.4.0
  */
 @Singleton
-@Requires(property = AudienceJwtClaimsValidator.AUDIENCE_PROP)
+@Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".audience")
 public class AudienceJwtClaimsValidator implements GenericJwtClaimsValidator {
-
-    public static final String AUDIENCE_PROP = JwtClaimsValidator.PREFIX + ".audience";
 
     private static final Logger LOG = LoggerFactory.getLogger(AudienceJwtClaimsValidator.class);
 
+    @Nullable
     private final String expectedAudience;
 
-    public AudienceJwtClaimsValidator(
-        @Property(name = AudienceJwtClaimsValidator.AUDIENCE_PROP) String expectedAudience
-    ) {
+    /**
+     *
+     * @param jwtClaimsValidatorConfiguration JWT Claims Validator Configuration
+     */
+    public AudienceJwtClaimsValidator(JwtClaimsValidatorConfiguration jwtClaimsValidatorConfiguration) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Initializing AudienceJwtClaimsValidator with audience: {}", expectedAudience);
+            LOG.debug("Initializing AudienceJwtClaimsValidator with audience: {}", jwtClaimsValidatorConfiguration.getAudience());
         }
-        this.expectedAudience = expectedAudience;
+        this.expectedAudience = jwtClaimsValidatorConfiguration.getAudience();
     }
 
     /**
@@ -59,15 +63,30 @@ public class AudienceJwtClaimsValidator implements GenericJwtClaimsValidator {
      * @return True if the JWT audience claim contains the expected value
      */
     protected boolean validate(JWTClaimsSet claimsSet) {
+        if (expectedAudience == null) {
+            return true;
+        }
         final List<String> audience = claimsSet.getAudience();
-
-        final boolean result = audience != null && audience.contains(expectedAudience);
-
-        if (!result && LOG.isTraceEnabled()) {
-            LOG.trace("Expected JWT audience claim to include '{}', but it did not.", expectedAudience);
+        if (audience.isEmpty()) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Expected JWT audience claim {} but audience list is not specified", expectedAudience);
+            }
+            return false;
+        }
+        if (!audience.contains(expectedAudience)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Expected JWT audience claim to include '{}', but audience list ({}) did not.", expectedAudience, String.join(",", audience));
+            }
+            return false;
         }
 
-        return result;
+        return true;
+    }
+
+    @Override
+    public boolean validate(@NonNull JwtClaims claims,
+                            @Nullable HttpRequest<?> request) {
+        return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 
     /**
@@ -80,5 +99,4 @@ public class AudienceJwtClaimsValidator implements GenericJwtClaimsValidator {
     public boolean validate(JwtClaims claims) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
-
 }

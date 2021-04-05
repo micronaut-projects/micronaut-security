@@ -46,7 +46,7 @@ public enum AuthorizationErrorCode implements ErrorCode {
     // Sign in with LinkedIn
     UNAUTHORIZED_SCOPE_ERROR("unauthorized_scope_error", "Scope is not authorized for your application"),
     // Sign in with LinkedIn & Apple
-    USER_CANCELLED_AUTHORIZE("user_cancelled_authorize","The user cancelled the authorization");
+    USER_CANCELLED_AUTHORIZE("user_cancelled_authorize", "The user cancelled the authorization");
 
     private String errorCode;
     private String errorCodeDescription;

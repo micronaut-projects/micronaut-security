@@ -17,10 +17,12 @@ package io.micronaut.security.token.jwt.validator;
 
 import javax.inject.Singleton;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
@@ -28,51 +30,55 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
  * Validates JWT issuer claim matches a configured value.
  *
  * @author Jason Schindler
+ * @author Sergio del Amo
  * @since 2.4.0
  */
 @Singleton
 @Requires(property = IssuerJwtClaimsValidator.ISSUER_PROP)
 public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
 
-    public static final String ISSUER_PROP = JwtClaimsValidator.PREFIX + ".issuer";
+    public static final String ISSUER_PROP = JwtClaimsValidatorConfigurationProperties.PREFIX + ".issuer";
 
     private static final Logger LOG = LoggerFactory.getLogger(IssuerJwtClaimsValidator.class);
 
+    @Nullable
     private final String expectedIssuer;
-
-    public IssuerJwtClaimsValidator(
-        @Property(name = IssuerJwtClaimsValidator.ISSUER_PROP) String expectedIssuer
-    ) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Initializing IssuerJwtClaimsValidator with issuer: {}", expectedIssuer);
-        }
-        this.expectedIssuer = expectedIssuer;
-    }
 
     /**
      *
-     * @param claims JwtClaims
-     * @return True if the JWT issuer claim equals the configured value
+     * @param jwtClaimsValidatorConfiguration JWT Claims Validator Configuration
      */
+    public IssuerJwtClaimsValidator(JwtClaimsValidatorConfiguration jwtClaimsValidatorConfiguration) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Initializing IssuerJwtClaimsValidator with issuer: {}", jwtClaimsValidatorConfiguration.getIssuer());
+        }
+        this.expectedIssuer = jwtClaimsValidatorConfiguration.getIssuer();
+    }
+
     @Deprecated
     @Override
     public boolean validate(JwtClaims claims) {
-        final String issuer = (String) claims.get(JwtClaims.ISSUER);
+        return validate(claims, null);
+    }
 
-        if (issuer == null) {
+    @Override
+    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+        if (expectedIssuer == null) {
+            return true;
+        }
+        Object issuerObject = claims.get(JwtClaims.ISSUER);
+        if (issuerObject == null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Expected JWT issuer claim of '{}', but the token did not include an issuer.", expectedIssuer);
             }
-
             return false;
         }
-
-        final boolean result = expectedIssuer.equals(issuer);
-
-        if (!result && LOG.isTraceEnabled()) {
-            LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuer);
+        if (!expectedIssuer.equals(issuerObject.toString())) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuerObject.toString());
+            }
+            return false;
         }
-
-        return result;
+        return true;
     }
 }
