@@ -31,7 +31,7 @@ import javax.inject.Singleton;
  * @since 1.1.0
  */
 @Singleton
-@Requires(property = JwtClaimsValidator.PREFIX + ".subject-not-null", notEquals = StringUtils.FALSE)
+@Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".subject-not-null", notEquals = StringUtils.FALSE)
 public class SubjectNotNullJwtClaimsValidator implements GenericJwtClaimsValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SubjectNotNullJwtClaimsValidator.class);

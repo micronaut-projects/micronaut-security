@@ -18,7 +18,6 @@ package io.micronaut.security.token.jwt.validator;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 /**
@@ -29,7 +28,11 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
  */
 public interface JwtClaimsValidator {
 
-    String PREFIX = JwtConfigurationProperties.PREFIX + ".claims-validators";
+    /**
+     * Use {@link JwtClaimsValidatorConfigurationProperties#PREFIX} instead.
+     */
+    @Deprecated
+    String PREFIX = JwtClaimsValidatorConfigurationProperties.PREFIX;
 
     /**
      * @deprecated Use {@link JwtClaimsValidator#validate(JwtClaims, HttpRequest)} instead.

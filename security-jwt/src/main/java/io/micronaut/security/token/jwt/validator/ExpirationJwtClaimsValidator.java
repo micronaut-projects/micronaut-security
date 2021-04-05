@@ -33,7 +33,7 @@ import java.util.Date;
  * @since 1.1.0
  */
 @Singleton
-@Requires(property = JwtClaimsValidator.PREFIX + ".expiration", notEquals = StringUtils.FALSE)
+@Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".expiration", notEquals = StringUtils.FALSE)
 public class ExpirationJwtClaimsValidator implements GenericJwtClaimsValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExpirationJwtClaimsValidator.class);
