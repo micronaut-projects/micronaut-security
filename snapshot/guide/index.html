@@ -2603,12 +2603,27 @@ public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enabled</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/client/ExpirationJwtClaimsValidator.html">ExpirationJwtClaimsValidator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidatorSpec.html">AudienceJwtClaimsValidatorSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT <code>aud</code> claim includes an expected value.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enabled when the <code>micronaut.security.token.jwt.claims-validators.audience</code> property is set.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html">ExpirationJwtClaimsValidator</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT is not expired. It uses the <code>exp</code> claim.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enabled by default. You can disable it by setting <code>micronaut.security.token.jwt.claims-validators.expiration</code> to false.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/client/SubjectNotNullJwtClaimsValidator.html">SubjectNotNullJwtClaimsValidator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html">IssuerJwtClaimsValidator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT <code>iss</code> claim is set to an expected value.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enabled when the <code>micronaut.security.token.jwt.claims-validators.issuer</code> property is set.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html">NotBeforeJwtClaimsValidator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the JWT <code>nbf</code> claim is set, the token should only be valid if the current date is not before the provided date.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disabled by default.  Enabled when the <code>micronaut.security.token.jwt.claims-validators.not-before</code> property is set to <code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html">SubjectNotNullJwtClaimsValidator</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT <code>sub</code> claim is not null.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enabled by default. You can disable it by setting <code>micronaut.security.token.jwt.claims-validators.subject</code> to false.</p></td>
 </tr>
