@@ -57,7 +57,7 @@ public class SensitiveEndpointRule implements SecurityRule {
      *
      * @param endpointSensitivityProcessor The endpoint configurations
      */
-    SensitiveEndpointRule(EndpointSensitivityProcessor endpointSensitivityProcessor) {
+    public SensitiveEndpointRule(EndpointSensitivityProcessor endpointSensitivityProcessor) {
         this.endpointMethods = endpointSensitivityProcessor.getEndpointMethods();
     }
 
