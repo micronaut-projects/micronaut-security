@@ -1464,6 +1464,110 @@ and an optional HTTP method.</p>
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>By default, authenticated users are allowed to access sensitive endpoints. To change that behaviour, replace the default implementation <a href="../api/io/micronaut/security/rules/SensitiveEndpointRule.html">SensitiveEndpointRule</a> with your own. For example, you may want to restrict access to users with a specific role:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.context.annotation.Replaces;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.inject.ExecutableMethod;
+import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
+import io.micronaut.security.rules.SecurityRuleResult;
+import io.micronaut.security.rules.SensitiveEndpointRule;
+import io.micronaut.security.token.MapClaims;
+import io.micronaut.security.token.RolesFinder;
+import javax.inject.Singleton;
+import java.util.Collections;
+import java.util.Map;
+
+@Replaces(SensitiveEndpointRule.class)
+@Singleton
+public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
+    private final RolesFinder rolesFinder;
+
+    public SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor,
+                                            RolesFinder rolesFinder) {
+        super(endpointSensitivityProcessor);
+        this.rolesFinder = rolesFinder;
+    }
+
+    @Override
+    @NonNull
+    protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
+                                                             @NonNull Map&lt;String, Object&gt; claims,
+                                                             @NonNull ExecutableMethod&lt;?, ?&gt; method) {
+        return rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), new MapClaims(claims))
+                    ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import javax.inject.Singleton
+import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.http.HttpRequest
+import io.micronaut.inject.ExecutableMethod
+import io.micronaut.management.endpoint.EndpointSensitivityProcessor
+import io.micronaut.security.rules.SecurityRuleResult
+import io.micronaut.security.rules.SensitiveEndpointRule
+import io.micronaut.security.token.MapClaims
+import io.micronaut.security.token.RolesFinder
+
+@Replaces(SensitiveEndpointRule.class)
+@Singleton
+class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
+    private final RolesFinder rolesFinder;
+
+    SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor,
+                                            RolesFinder rolesFinder) {
+        super(endpointSensitivityProcessor)
+        this.rolesFinder = rolesFinder
+    }
+
+    @Override
+    @NonNull
+    protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
+                                                             @NonNull Map&lt;String, Object&gt; claims,
+                                                             @NonNull ExecutableMethod&lt;?, ?&gt; method) {
+        rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], new MapClaims(claims))
+                ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.http.HttpRequest
+import io.micronaut.inject.ExecutableMethod
+import io.micronaut.management.endpoint.EndpointSensitivityProcessor
+import io.micronaut.security.rules.SecurityRuleResult
+import io.micronaut.security.rules.SensitiveEndpointRule
+import io.micronaut.security.token.MapClaims
+import io.micronaut.security.token.RolesFinder
+import javax.inject.Singleton
+
+@Replaces(SensitiveEndpointRule::class)
+@Singleton
+class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSensitivityProcessor,
+                                       private val rolesFinder: RolesFinder) : SensitiveEndpointRule(endpointSensitivityProcessor) {
+    @NonNull
+    override fun checkSensitiveAuthenticated(@NonNull request: HttpRequest&lt;*&gt;,
+                                             @NonNull claims: Map&lt;String, Any&gt;,
+                                             @NonNull method: ExecutableMethod&lt;*, *&gt;): SecurityRuleResult {
+        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), MapClaims(claims))) SecurityRuleResult.ALLOWED else SecurityRuleResult.REJECTED
+    }
+}</code></pre>
+</div>
+</div>
 
 <h1 id="authenticationStrategies"><a class="anchor" href="#authenticationStrategies"></a>9 Authorization Strategies</h1>
 
