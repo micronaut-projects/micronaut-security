@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.token.request;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
@@ -38,6 +39,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  * The default implementation of {@link TokenEndpointClient}.
@@ -51,7 +53,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTokenEndpointClient.class);
 
     private final BeanContext beanContext;
-    private final RxHttpClient defaultTokenClient;
+    private final Supplier<RxHttpClient> defaultTokenClient;
     private final ConcurrentHashMap<String, RxHttpClient> tokenClients = new ConcurrentHashMap<>();
 
     /**
@@ -61,7 +63,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     public DefaultTokenEndpointClient(BeanContext beanContext,
                                       HttpClientConfiguration defaultClientConfiguration) {
         this.beanContext = beanContext;
-        this.defaultTokenClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultClientConfiguration);
+        this.defaultTokenClient = SupplierUtil.memoized(() -> beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
     }
 
     @NonNull
@@ -138,7 +140,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     protected RxHttpClient getClient(String providerName) {
         return tokenClients.computeIfAbsent(providerName, (provider) -> {
             Optional<RxHttpClient> client = beanContext.findBean(RxHttpClient.class, Qualifiers.byName(provider));
-            return client.orElse(defaultTokenClient);
+            return client.orElseGet(defaultTokenClient);
         });
     }
 }
