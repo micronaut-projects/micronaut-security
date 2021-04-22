@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * Configuration to enable or disable beans of type {@link JwtClaimsValidator}.

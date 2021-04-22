@@ -21,7 +21,7 @@ import javax.inject.Singleton;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import org.slf4j.Logger;

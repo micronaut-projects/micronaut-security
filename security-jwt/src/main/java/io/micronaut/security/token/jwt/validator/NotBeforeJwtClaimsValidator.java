@@ -26,7 +26,7 @@ import io.micronaut.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
