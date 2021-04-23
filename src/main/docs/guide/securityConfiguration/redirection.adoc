@@ -5,6 +5,6 @@ You can configure the redirection destinations with:
 include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.adoc[]
 
 
-include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.adoc[]
 
-include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.adoc[]

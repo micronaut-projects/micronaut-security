@@ -6,8 +6,8 @@ If any configured OpenID provider supports end session behavior, a route will be
 
 All of the above is configurable through `micronaut.security.oauth2.openid`:
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties.adoc[]
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.adoc[]
 
 To enable the usage of the `/logout` endpoint, see the section on the <<logout, Logout Endpoint>>.
 
@@ -19,4 +19,4 @@ Before choosing any of the default providers, the endpoint resolver will first l
 
 If for example you are using one of the providers that is supported out of the box and you don't want the end session support, it is possible to disable it per client.
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.adoc[]
