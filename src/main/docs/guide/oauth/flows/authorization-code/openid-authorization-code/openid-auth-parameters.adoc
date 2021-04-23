@@ -2,4 +2,4 @@ The OpenID specification for link:https://openid.net/specs/openid-connect-core-1
 
 Here are the configuration option for authorization request parameters:
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.adoc[]
