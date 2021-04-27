@@ -146,7 +146,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
     }
 
     @Override
-    protected List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
+    public List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
         AccessRefreshToken accessRefreshToken = accessRefreshTokenGenerator.generate(userDetails)
                 .orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
 
@@ -154,7 +154,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
     }
 
     @Override
-    protected List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+    public List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
         AccessRefreshToken accessRefreshToken = accessRefreshTokenGenerator.generate(refreshToken, userDetails)
                 .orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
 
