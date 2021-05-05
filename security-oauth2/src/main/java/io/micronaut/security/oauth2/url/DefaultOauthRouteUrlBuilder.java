@@ -40,6 +40,7 @@ import java.util.Map;
 @Singleton
 public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
 
+    private static final String HTTP = "http";
     private final HttpHostResolver hostResolver;
     private final String loginUriTemplate;
     private final String callbackUriTemplate;
@@ -111,6 +112,9 @@ public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
     @Override
     public URL buildUrl(@Nullable HttpRequest<?> current, String path) {
         try {
+            if (path.startsWith(HTTP)) {
+                return new URL(path);
+            }
             return UriBuilder.of(hostResolver.resolve(current))
                     .path(path)
                     .build()
