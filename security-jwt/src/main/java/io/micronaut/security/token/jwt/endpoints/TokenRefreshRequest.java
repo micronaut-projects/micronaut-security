@@ -56,18 +56,6 @@ public class TokenRefreshRequest {
     }
 
     /**
-     *
-     * @param grantType e.g refresh_token
-     * @param refreshToken e.g. XXXXX
-     * @deprecated Use {@link TokenRefreshRequest#TokenRefreshRequest(String)} instead.
-     */
-    @Deprecated
-    public TokenRefreshRequest(String grantType, String refreshToken) {
-        this.grantType = grantType;
-        this.refreshToken = refreshToken;
-    }
-
-    /**
      * grantType getter.
      * @return e.g refresh_token
      */

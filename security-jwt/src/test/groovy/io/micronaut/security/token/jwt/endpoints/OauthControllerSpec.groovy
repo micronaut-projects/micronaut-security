@@ -177,7 +177,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
     void "grant_type other than refresh_token returns 400 with {\"error\": \"unsupported_grant_type\"...}"() {
         given:
-        HttpRequest request = HttpRequest.POST('/oauth/access_token', new TokenRefreshRequest("foo", "XXX"))
+        HttpRequest request = HttpRequest.POST('/oauth/access_token', [grant_type: 'foo', refresh_token: "XXX"])
 
         when:
         Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
@@ -206,7 +206,14 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
     @Unroll
     void "missing #paramName returns 400 with {\"error\": \"invalid_request\"...}"(String grantType, String refreshToken, String paramName) {
         given:
-        HttpRequest request = HttpRequest.POST('/oauth/access_token', new TokenRefreshRequest(grantType, refreshToken))
+        Map<String, Object> body = new HashMap<>()
+        if (grantType) {
+            body.grant_type = grantType
+        }
+        if (refreshToken)  {
+            body.refresh_token = refreshToken
+        }
+        HttpRequest request = HttpRequest.POST('/oauth/access_token', body)
 
         when:
         Argument<AccessRefreshToken> bodyType =  Argument.of(AccessRefreshToken)
