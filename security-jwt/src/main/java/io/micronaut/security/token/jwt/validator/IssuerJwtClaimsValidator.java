@@ -55,12 +55,6 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
         this.expectedIssuer = jwtClaimsValidatorConfiguration.getIssuer();
     }
 
-    @Deprecated
-    @Override
-    public boolean validate(JwtClaims claims) {
-        return validate(claims, null);
-    }
-
     @Override
     public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
         if (expectedIssuer == null) {

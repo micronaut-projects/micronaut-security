@@ -72,17 +72,6 @@ public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
     /**
      *
      * @param claims The JwtClaims
-     * @return true if the not-before claim denotes a date before now
-     */
-    @Deprecated
-    @Override
-    public boolean validate(JwtClaims claims) {
-        return validate(claims, null);
-    }
-
-    /**
-     *
-     * @param claims The JwtClaims
      * @param request HTTP Request
      * @return true if the not-before claim denotes a date before now
      */

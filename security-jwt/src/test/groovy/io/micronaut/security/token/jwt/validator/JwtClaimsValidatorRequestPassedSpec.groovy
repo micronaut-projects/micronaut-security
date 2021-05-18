@@ -97,11 +97,6 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
     static class HttpRequestClaimsValidator implements GenericJwtClaimsValidator {
 
         @Override
-        boolean validate(JwtClaims claims) {
-            false
-        }
-
-        @Override
         boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
             request != null
         }

@@ -112,7 +112,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         try {
             JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
             OpenIdClaims claims = new JWTOpenIdClaims(claimsSet);
-            if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims))) {
+            if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims, null))) {
                 if (openIdClaimsValidators.stream().allMatch(validator ->
                         validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
                     if (nonceClaimValidator == null) {

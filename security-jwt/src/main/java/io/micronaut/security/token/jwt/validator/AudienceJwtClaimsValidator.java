@@ -88,15 +88,4 @@ public class AudienceJwtClaimsValidator implements GenericJwtClaimsValidator {
                             @Nullable HttpRequest<?> request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
-
-    /**
-     *
-     * @param claims JwtClaims
-     * @return True if the JWT audience claim contains the expected value
-     */
-    @Deprecated
-    @Override
-    public boolean validate(JwtClaims claims) {
-        return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
-    }
 }
