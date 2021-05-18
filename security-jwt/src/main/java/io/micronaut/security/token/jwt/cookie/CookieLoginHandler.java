@@ -108,8 +108,25 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
         this.priorToLoginPersistence = null;
     }
 
+    /**
+     * Return the cookies for the given parameters. This method will generate new cookies based on the current
+     * configuration.
+     *
+     * @param userDetails The Authenticated user's representation
+     * @param request The current request
+     * @return A list of cookies
+     */
     public abstract List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request);
 
+    /**
+     * Return the cookies for the given parameters. This method will generate new cookies based on the current
+     * configuration.
+     *
+     * @param userDetails The Authenticated user's representation
+     * @param refreshToken The access refresh token
+     * @param request The current request
+     * @return A list of cookies
+     */
     public abstract List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request);
 
     @Override
