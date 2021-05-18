@@ -24,10 +24,7 @@ import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
-
 import io.micronaut.core.annotation.NonNull;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,21 +54,12 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
      * @param openIdAdditionalClaimsConfiguration The additional claims configuration
      * @param authenticationModeConfiguration Authentication Mode Configuration
      */
-    @Inject
     public DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration,
                                           AuthenticationModeConfiguration authenticationModeConfiguration) {
         this.openIdAdditionalClaimsConfiguration = openIdAdditionalClaimsConfiguration;
         this.authenticationModeConfiguration = authenticationModeConfiguration;
     }
 
-    /**
-     * @deprecated Use {@link DefaultOpenIdUserDetailsMapper#DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration, AuthenticationModeConfiguration)} instead.
-     * @param openIdAdditionalClaimsConfiguration The additional claims configuration
-     */
-    @Deprecated
-    public DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration) {
-        this(openIdAdditionalClaimsConfiguration, null);
-    }
     @NonNull
     @Override
     public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
