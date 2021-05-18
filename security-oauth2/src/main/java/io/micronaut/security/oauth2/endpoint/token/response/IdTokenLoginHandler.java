@@ -75,7 +75,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
     }
 
     @Override
-    protected List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
+    public List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
         List<Cookie> cookies = new ArrayList<>(1);
         String accessToken = parseIdToken(userDetails).orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
 
@@ -87,7 +87,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
     }
 
     @Override
-    protected List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+    public List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
         throw new OauthErrorResponseException(ObtainingAuthorizationErrorCode.INVALID_REQUEST, "Cannot refresh a provider token through the oauth endpoint. The token must be refreshed directly with the provider", null);
     }
 

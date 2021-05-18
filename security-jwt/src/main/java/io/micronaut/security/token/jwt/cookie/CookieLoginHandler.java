@@ -108,9 +108,9 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
         this.priorToLoginPersistence = null;
     }
 
-    protected abstract List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request);
+    public abstract List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request);
 
-    protected abstract List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request);
+    public abstract List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request);
 
     @Override
     public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
