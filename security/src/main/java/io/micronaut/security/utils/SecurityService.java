@@ -54,15 +54,4 @@ public interface SecurityService {
      * @return true if the current user has the role, false otherwise
      */
     boolean hasRole(String role);
-
-    /**
-     * If the current user has a specific role.
-     *
-     * @param role the authority to check
-     * @param  rolesKey The map key to be used in the authentications attributes. E.g. "roles".
-     * @return true if the current user has the authority, false otherwise
-     * @deprecated use {@link DefaultSecurityService#hasRole(String) instead}
-     */
-    @Deprecated
-    boolean hasRole(String role, String rolesKey);
 }
