@@ -25,5 +25,5 @@ For the full authorization code flow to work there are also some additional requ
 
 See the following guide for a full walk-through with Okta.
 
-- https://guides.micronaut.io/micronaut-oauth2-okta/guide/index.html[Authorization Code grant type flow with Micronaut and Okta].
+- https://guides.micronaut.io/latest/micronaut-oauth2-okta.html[Authorization Code grant type flow with Micronaut and Okta].
 

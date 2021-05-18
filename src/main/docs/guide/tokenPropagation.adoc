@@ -31,5 +31,5 @@ For propagation via an HTTP Header, you can configure:
 
 include::{includedir}configurationProperties/io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties.adoc[]
 
-TIP: Read the https://guides.micronaut.io/micronaut-token-propagation/guide/index.html[Token Propagation tutorial] to learn more.
+TIP: Read the https://guides.micronaut.io/latest/micronaut-token-propagation.html[Token Propagation tutorial] to learn more.
 
