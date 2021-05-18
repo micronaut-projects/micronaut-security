@@ -236,12 +236,12 @@ implements <a href="../../../../../../io/micronaut/security/handlers/Redirecting
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#createSuccessResponse-io.micronaut.http.HttpRequest-">createSuccessResponse</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>protected abstract java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;</code></td>
+<td class="colFirst"><code>abstract java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">getCookies</a></span>(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
           io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>protected abstract java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;</code></td>
+<td class="colFirst"><code>abstract java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.UserDetails-java.lang.String-io.micronaut.http.HttpRequest-">getCookies</a></span>(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
           java.lang.String&nbsp;refreshToken,
           io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>&nbsp;</td>
@@ -420,8 +420,8 @@ public&nbsp;CookieLoginHandler(<a href="../../../../../../io/micronaut/security/
 <ul class="blockList">
 <li class="blockList">
 <h4>getCookies</h4>
-<pre>protected abstract&nbsp;java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;&nbsp;getCookies(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
-                                                                              io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
+<pre>public abstract&nbsp;java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;&nbsp;getCookies(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+                                                                           io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
 </li>
 </ul>
 <a name="getCookies-io.micronaut.security.authentication.UserDetails-java.lang.String-io.micronaut.http.HttpRequest-">
@@ -430,9 +430,9 @@ public&nbsp;CookieLoginHandler(<a href="../../../../../../io/micronaut/security/
 <ul class="blockList">
 <li class="blockList">
 <h4>getCookies</h4>
-<pre>protected abstract&nbsp;java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;&nbsp;getCookies(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
-                                                                              java.lang.String&nbsp;refreshToken,
-                                                                              io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
+<pre>public abstract&nbsp;java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;&nbsp;getCookies(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+                                                                           java.lang.String&nbsp;refreshToken,
+                                                                           io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
 </li>
 </ul>
 <a name="loginSuccess-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">
