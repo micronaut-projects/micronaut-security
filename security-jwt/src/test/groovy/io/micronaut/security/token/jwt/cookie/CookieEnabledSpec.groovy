@@ -10,7 +10,6 @@ class CookieEnabledSpec extends ApplicationContextSpecification {
         super.configuration +
                 [
             'micronaut.security.token.jwt.cookie.enabled': false,
-
         ]
     }
 
@@ -25,7 +24,6 @@ class CookieEnabledSpec extends ApplicationContextSpecification {
 
         where:
         clazz << [
-                JwtCookieConfiguration,
                 AccessTokenCookieConfiguration,
                 RefreshTokenCookieConfiguration,
                 JwtCookieConfigurationProperties,

@@ -31,11 +31,8 @@ import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
-import io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.text.ParseException;
 import java.time.Duration;
@@ -56,16 +53,6 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
 
     private final TokenConfiguration tokenConfiguration;
 
-    @Deprecated
-    public IdTokenLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
-                               RedirectConfiguration redirectConfiguration,
-                               TokenConfiguration tokenConfiguration,
-                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        super(jwtCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
-        this.tokenConfiguration = tokenConfiguration;
-    }
-
-    @Inject
     public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
                                TokenConfiguration tokenConfiguration,

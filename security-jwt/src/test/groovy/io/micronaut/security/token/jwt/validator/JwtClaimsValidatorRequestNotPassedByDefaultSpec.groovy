@@ -43,7 +43,7 @@ class JwtClaimsValidatorRequestNotPassedByDefaultSpec extends EmbeddedServerSpec
                 'micronaut.security.authentication'   : 'bearer',
         ]
     }
-    
+
     @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestNotPassedByDefaultSpec')
     @Singleton
     static class HttpRequestClaimsValidator implements GenericJwtClaimsValidator {
