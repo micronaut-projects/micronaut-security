@@ -23,18 +23,10 @@ import javax.inject.Singleton
 //tag::clazz[]
 class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @Override
-    UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException()
-    }
-
     @Override
     @NonNull
     AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
         new UserDetails("name", [])
     }
-
-
 }
 //end::clazz[]

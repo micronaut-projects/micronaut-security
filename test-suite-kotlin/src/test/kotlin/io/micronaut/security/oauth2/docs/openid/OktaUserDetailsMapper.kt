@@ -16,11 +16,6 @@ import javax.inject.Singleton
 @Named("okta") // <1>
 class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
-        throw UnsupportedOperationException()
-    }
-
     override fun createAuthenticationResponse(providerName: String, // <2>
                                               tokenResponse: OpenIdTokenResponse, // <3>
                                               openIdClaims: OpenIdClaims, // <4>
