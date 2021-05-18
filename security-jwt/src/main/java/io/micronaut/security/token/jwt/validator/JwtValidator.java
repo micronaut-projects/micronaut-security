@@ -62,18 +62,6 @@ public final class JwtValidator {
     /**
      * Validates the supplied token with any configurations and claim validators present.
      *
-     * @deprecated Use {@link JwtValidator#validate(String, HttpRequest)} instead.
-     * @param token The JWT string
-     * @return An optional JWT token if validation succeeds
-     */
-    @Deprecated
-    public Optional<JWT> validate(String token) {
-        return validate(token, null);
-    }
-
-    /**
-     * Validates the supplied token with any configurations and claim validators present.
-     *
      * @param token The JWT string
      * @param request HTTP Request
      * @return An optional JWT token if validation succeeds
@@ -104,17 +92,6 @@ public final class JwtValidator {
     private boolean hasAtLeastTwoDots(String token) {
         return (token.contains(DOT)) &&
                 (token.indexOf(DOT, token.indexOf(DOT) + 1) != -1);
-    }
-
-    /**
-     * Validates the supplied token with any configurations and claim validators present.
-     * @deprecated Use {@link JwtValidator#validate(JWT, HttpRequest)} instead
-     * @param token The JWT token
-     * @return An optional JWT token if validation succeeds
-     */
-    @Deprecated
-    public Optional<JWT> validate(JWT token) {
-        return validate(token, null);
     }
 
     /**
