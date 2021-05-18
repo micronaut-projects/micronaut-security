@@ -11,7 +11,7 @@ class JWTClaimsSetGeneratorSpec extends Specification {
         def tokenConfiguration = Stub(TokenConfiguration) {
             getRolesName() >> 'roles'
         }
-        JWTClaimsSetGenerator generator = new JWTClaimsSetGenerator(tokenConfiguration, null, null)
+        JWTClaimsSetGenerator generator = new JWTClaimsSetGenerator(tokenConfiguration, null, null, null)
 
         when:
         Map<String, Object> claims = generator.generateClaims(new UserDetails('admin', ['ROLE_USER', 'ROLE_ADMIN']), 3600)
