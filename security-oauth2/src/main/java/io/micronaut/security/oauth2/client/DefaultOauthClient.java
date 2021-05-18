@@ -81,7 +81,7 @@ public class DefaultOauthClient implements OauthClient {
         this.redirectHandler = redirectHandler;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
-        this.tokenEndpoint = getTokenEndpoint();
+        this.tokenEndpoint = clientConfiguration.getTokenEndpoint();
     }
 
     @Override
@@ -135,14 +135,5 @@ public class DefaultOauthClient implements OauthClient {
      */
     protected boolean isErrorCallback(ConvertibleMultiValues<String> responseData) {
         return responseData.contains("error");
-    }
-
-    /**
-     * @return The token endpoint
-     * @deprecated Use {@link OauthClientConfiguration#getTokenEndpoint()} instead.
-     */
-    @Deprecated
-    protected SecureEndpoint getTokenEndpoint() {
-        return clientConfiguration.getTokenEndpoint();
     }
 }
