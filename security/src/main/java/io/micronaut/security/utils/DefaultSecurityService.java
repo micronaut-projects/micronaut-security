@@ -17,11 +17,7 @@ package io.micronaut.security.utils;
 
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.DefaultRolesFinder;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.security.token.config.TokenConfiguration;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.security.Principal;
 import java.util.Collections;
@@ -45,19 +41,8 @@ public class DefaultSecurityService implements SecurityService {
 
     /**
      *
-     * @param tokenConfiguration Token Configuration
-     * @deprecated Use {@link DefaultSecurityService( RolesFinder )} instead.
-     */
-    @Deprecated
-    public DefaultSecurityService(TokenConfiguration tokenConfiguration) {
-        this(new DefaultRolesFinder(tokenConfiguration));
-    }
-
-    /**
-     *
      * @param rolesFinder Roles Parser
      */
-    @Inject
     public DefaultSecurityService(RolesFinder rolesFinder) {
         this.rolesFinder = rolesFinder;
     }

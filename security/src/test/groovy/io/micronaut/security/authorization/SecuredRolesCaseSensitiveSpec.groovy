@@ -18,6 +18,7 @@ import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.DefaultAuthentication
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.token.RolesFinder
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.utils.DefaultSecurityService
 import io.micronaut.security.utils.SecurityService
@@ -53,7 +54,7 @@ class SecuredRolesCaseSensitiveSpec extends EmbeddedServerSpecification {
     void "SecurityService::hasRole should be case sensitive"() {
         when:
         Authentication authentication = new DefaultAuthentication("sherlock", ["roles": ["ROLE_DETECTIVE"]])
-        SecurityService securityService = new CustomSecurityService(applicationContext.getBean(TokenConfiguration), authentication)
+        SecurityService securityService = new CustomSecurityService(applicationContext.getBean(RolesFinder), authentication)
 
         then:
         securityService.hasRole('ROLE_DETECTIVE')
@@ -63,7 +64,7 @@ class SecuredRolesCaseSensitiveSpec extends EmbeddedServerSpecification {
 
         when:
         authentication = new DefaultAuthentication("sherlock", ["roles": "ROLE_DETECTIVE"])
-        securityService = new CustomSecurityService(applicationContext.getBean(TokenConfiguration), authentication)
+        securityService = new CustomSecurityService(applicationContext.getBean(RolesFinder), authentication)
 
         then:
         securityService.hasRole('ROLE_DETECTIVE')
@@ -114,8 +115,8 @@ class SecuredRolesCaseSensitiveSpec extends EmbeddedServerSpecification {
 
         Authentication authentication
 
-        CustomSecurityService(TokenConfiguration tokenConfiguration, Authentication authentication) {
-            super(tokenConfiguration)
+        CustomSecurityService(RolesFinder rolesFinder, Authentication authentication) {
+            super(rolesFinder)
             this.authentication = authentication
         }
 
