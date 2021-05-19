@@ -33,8 +33,6 @@ import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -59,29 +57,11 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
 
     /**
      * Constructor.
-     * @param securitySessionConfiguration Security Session Configuration
-     * @param sessionStore The session store
-     * @param tokenConfiguration Token Configuration
-     * @deprecated Use {@link SessionLoginHandler#SessionLoginHandler(RedirectConfiguration, SessionStore, TokenConfiguration, PriorToLoginPersistence)} instead.
-     */
-    @Deprecated
-    public SessionLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,
-                               SessionStore<Session> sessionStore,
-                               TokenConfiguration tokenConfiguration) {
-        this(securitySessionConfiguration.toRedirectConfiguration(),
-                sessionStore,
-                tokenConfiguration,
-                null);
-    }
-
-    /**
-     * Constructor.
      * @param redirectConfiguration Redirect configuration
      * @param sessionStore The session store
      * @param tokenConfiguration Token Configuration
      * @param priorToLoginPersistence The persistence to store the original url
      */
-    @Inject
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
                                TokenConfiguration tokenConfiguration,
