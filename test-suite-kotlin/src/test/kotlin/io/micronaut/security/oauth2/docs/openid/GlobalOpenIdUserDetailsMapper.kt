@@ -17,11 +17,6 @@ import javax.inject.Singleton
 @Replaces(DefaultOpenIdUserDetailsMapper::class)
 class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
 
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
-        throw UnsupportedOperationException()
-    }
-
     override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): AuthenticationResponse {
         return UserDetails("name", emptyList())
     }

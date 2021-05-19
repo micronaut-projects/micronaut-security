@@ -72,21 +72,13 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
     public DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration) {
         this(openIdAdditionalClaimsConfiguration, null);
     }
-
     @NonNull
     @Override
-    @Deprecated
-    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+    public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
         Map<String, Object> claims = buildAttributes(providerName, tokenResponse, openIdClaims);
         List<String> roles = getRoles(providerName, tokenResponse, openIdClaims);
         String username = getUsername(providerName, tokenResponse, openIdClaims);
         return new UserDetails(username, roles, claims);
-    }
-
-    @NonNull
-    @Override
-    public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        return createUserDetails(providerName, tokenResponse, openIdClaims);
     }
 
     /**

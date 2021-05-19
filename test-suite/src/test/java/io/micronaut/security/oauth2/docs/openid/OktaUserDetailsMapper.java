@@ -17,14 +17,7 @@ import java.util.Collections;
 @Singleton
 @Named("okta") // <1>
 public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
-
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @NonNull
-    @Override
-    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException();
-    }
-
+    
     @Override
     @NonNull
     public AuthenticationResponse createAuthenticationResponse(String providerName, // <2>
