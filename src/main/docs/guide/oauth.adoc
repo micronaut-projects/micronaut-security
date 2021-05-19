@@ -23,7 +23,4 @@ For normal OAuth 2.0, different steps are required to allow for the authorizatio
 
 For the full authorization code flow to work there are also some additional requirements. A api:security.handlers.LoginHandler[] must be in the context to determine how to respond after a failed or successful login. A custom implementation can, of course, be provided. However, several <<loginHandler, Login Handlers>> implementations are available out of the box.
 
-See the following guide for a full walk-through with Okta.
-
-- https://guides.micronaut.io/micronaut-oauth2-okta/guide/index.html[Authorization Code grant type flow with Micronaut and Okta].
-
+TIP: Read the following guides to learn more **Secure a Micronaut app with https://guides.micronaut.io/latest/micronaut-oauth2-okta.html[Okta], https://guides.micronaut.io/latest/micronaut-oauth2-cognito.html[Cognito], https://guides.micronaut.io/latest/micronaut-oauth2-oidc-google.html[Google]**.
