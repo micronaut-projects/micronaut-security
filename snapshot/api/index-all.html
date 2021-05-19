@@ -964,6 +964,24 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/clientcredentials/DefaultClientCredentialsOpenIdClient.html#createTokenRequestContext-java.lang.String-">createTokenRequestContext(String)</a></span> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/DefaultClientCredentialsOpenIdClient.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">DefaultClientCredentialsOpenIdClient</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#createUserDetails-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">createUserDetails(String, OpenIdTokenResponse, OpenIdClaims)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdUserDetailsMapper</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#createUserDetails-io.micronaut.security.oauth2.endpoint.token.response.TokenResponse-">createUserDetails(TokenResponse)</a></span> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthUserDetailsMapper</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#createAuthenticationResponse-io.micronaut.security.oauth2.endpoint.token.response.TokenResponse-io.micronaut.security.oauth2.endpoint.authorization.state.State-"><code>instead</code></a>. This
+ method will only be called if the new method is not overridden.</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html#createUserDetails-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">createUserDetails(String, OpenIdTokenResponse, OpenIdClaims)</a></span> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdUserDetailsMapper</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html#createAuthenticationResponse-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-io.micronaut.security.oauth2.endpoint.authorization.state.State-"><code>OpenIdUserDetailsMapper.createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims, State)</code></a> instead.
+ This method will only be called if the new method is not implemented.</span></div>
+</div>
+</dd>
 </dl>
 <a name="I:D">
 <!--   -->
@@ -1467,6 +1485,12 @@
 <dd>
 <div class="block">Default implementation of <a href="io/micronaut/security/utils/SecurityService.html" title="interface in io.micronaut.security.utils"><code>SecurityService</code></a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/utils/DefaultSecurityService.html#DefaultSecurityService-io.micronaut.security.token.config.TokenConfiguration-">DefaultSecurityService(TokenConfiguration)</a></span> - Constructor for class io.micronaut.security.utils.<a href="io/micronaut/security/utils/DefaultSecurityService.html" title="class in io.micronaut.security.utils">DefaultSecurityService</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/utils/DefaultSecurityService.html#DefaultSecurityService-io.micronaut.security.token.RolesFinder-"><code>DefaultSecurityService( RolesFinder )</code></a> instead.</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/utils/DefaultSecurityService.html#DefaultSecurityService-io.micronaut.security.token.RolesFinder-">DefaultSecurityService(RolesFinder)</a></span> - Constructor for class io.micronaut.security.utils.<a href="io/micronaut/security/utils/DefaultSecurityService.html" title="class in io.micronaut.security.utils">DefaultSecurityService</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultState.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state"><span class="typeNameLink">DefaultState</span></a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/state/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.state</a></dt>
@@ -1866,6 +1890,16 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/render/AccessRefreshToken.html#getAccessToken--">getAccessToken()</a></span> - Method in class io.micronaut.security.token.jwt.render.<a href="io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a></dt>
 <dd>
 <div class="block">accessToken getter.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html#getAccessTokenExpiration--">getAccessTokenExpiration()</a></span> - Method in interface io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">JwtGeneratorConfiguration</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html#getExpiration--"><code>AccessTokenConfiguration.getExpiration()</code></a>) instead.</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#getAccessTokenExpiration--">getAccessTokenExpiration()</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">JwtGeneratorConfigurationProperties</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/endpoints/AuthorizationEndpointConfiguration.html#getAcrValues--">getAcrValues()</a></span> - Method in interface io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/AuthorizationEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">AuthorizationEndpointConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -2333,6 +2367,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html#getExp--">getExp()</a></span> - Method in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/IntrospectionResponse.html" title="class in io.micronaut.security.endpoints.introspection">IntrospectionResponse</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html#getExpiration--">getExpiration()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponseExpiration</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html#getExpiration--">getExpiration()</a></span> - Method in interface io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html#getExpiration--">getExpiration()</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">AccessTokenConfigurationProperties</a></dt>
@@ -2974,6 +3012,16 @@
 <dd>
 <div class="block">refreshToken getter.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html#getRefreshTokenExpiration--">getRefreshTokenExpiration()</a></span> - Method in interface io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">JwtGeneratorConfiguration</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">refresh token are no longer a JWT with a exp claim</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#getRefreshTokenExpiration--">getRefreshTokenExpiration()</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">JwtGeneratorConfigurationProperties</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html#getRegion--">getRegion()</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/Address.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">Address</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html#getRegistration--">getRegistration()</a></span> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties</a></dt>
@@ -3235,6 +3283,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/clientcredentials/DefaultClientCredentialsOpenIdClient.html#getTokenEndpoint--">getTokenEndpoint()</a></span> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/DefaultClientCredentialsOpenIdClient.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">DefaultClientCredentialsOpenIdClient</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html#getTokenEndpoint--">getTokenEndpoint()</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOauthClient</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getTokenEndpoint--"><code>OauthClientConfiguration.getTokenEndpoint()</code></a> instead.</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html#getTokenEndpoint--">getTokenEndpoint()</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdClient</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#getTokenEndpoint--">getTokenEndpoint()</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a></dt>
@@ -3490,9 +3544,21 @@
 <dd>
 <div class="block">If the current user has a specific role.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/utils/DefaultSecurityService.html#hasRole-java.lang.String-java.lang.String-">hasRole(String, String)</a></span> - Method in class io.micronaut.security.utils.<a href="io/micronaut/security/utils/DefaultSecurityService.html" title="class in io.micronaut.security.utils">DefaultSecurityService</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">use <a href="io/micronaut/security/utils/DefaultSecurityService.html#hasRole-java.lang.String-"><code>instead</code></a></span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/utils/SecurityService.html#hasRole-java.lang.String-">hasRole(String)</a></span> - Method in interface io.micronaut.security.utils.<a href="io/micronaut/security/utils/SecurityService.html" title="interface in io.micronaut.security.utils">SecurityService</a></dt>
 <dd>
 <div class="block">If the current user has a specific role.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/utils/SecurityService.html#hasRole-java.lang.String-java.lang.String-">hasRole(String, String)</a></span> - Method in interface io.micronaut.security.utils.<a href="io/micronaut/security/utils/SecurityService.html" title="interface in io.micronaut.security.utils">SecurityService</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">use <a href="io/micronaut/security/utils/DefaultSecurityService.html#hasRole-java.lang.String-"><code>instead</code></a></span></div>
+</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html#HeaderTokenPropagatorConfigurationProperties--">HeaderTokenPropagatorConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.HeaderTokenPropagatorConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -4247,6 +4313,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-io.micronaut.runtime.ApplicationConfiguration-">JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.claims.<a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html" title="class in io.micronaut.security.token.jwt.generator.claims">JWTClaimsSetGenerator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-">JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider)</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.claims.<a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html" title="class in io.micronaut.security.token.jwt.generator.claims">JWTClaimsSetGenerator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-io.micronaut.runtime.ApplicationConfiguration-"><code>JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)</code></a> instead.</span></div>
+</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/validator/JWTClaimsSetUtils.html" title="class in io.micronaut.security.token.jwt.validator"><span class="typeNameLink">JWTClaimsSetUtils</span></a> - Class in <a href="io/micronaut/security/token/jwt/validator/package-summary.html">io.micronaut.security.token.jwt.validator</a></dt>
 <dd>
 <div class="block">Utils class to instantiate a JWClaimsSet give a map of claims.</div>
@@ -4343,6 +4415,22 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html#JwtCookieTokenReader-io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration-">JwtCookieTokenReader(AccessTokenCookieConfiguration)</a></span> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieTokenReader</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><span class="typeNameLink">JwtGeneratorConfiguration</span></a> - Interface in <a href="io/micronaut/security/token/jwt/generator/package-summary.html">io.micronaut.security.token.jwt.generator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><code>AccessTokenConfiguration</code></a>) instead.</span></div>
+</div>
+</dd>
+<dt><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator"><span class="typeNameLink">JwtGeneratorConfigurationProperties</span></a> - Class in <a href="io/micronaut/security/token/jwt/generator/package-summary.html">io.micronaut.security.token.jwt.generator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator"><code>AccessTokenConfigurationProperties</code></a> instead.</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#JwtGeneratorConfigurationProperties-io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties-io.micronaut.core.value.PropertyResolver-">JwtGeneratorConfigurationProperties(AccessTokenConfigurationProperties, PropertyResolver)</a></span> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">JwtGeneratorConfigurationProperties</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/claims/JwtIdGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims"><span class="typeNameLink">JwtIdGenerator</span></a> - Interface in <a href="io/micronaut/security/token/jwt/generator/claims/package-summary.html">io.micronaut.security.token.jwt.generator.claims</a></dt>
 <dd>
 <div class="block">Generates the "jti" (JWT ID) claim, which provides a unique identifier for the JWT.</div>
@@ -4883,7 +4971,8 @@
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">OauthUserDetailsMapper</span></a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/token/response/package-summary.html">io.micronaut.security.oauth2.endpoint.token.response</a></dt>
 <dd>
-<div class="block">A contract for mapping an OAuth 2.0 token endpoint response to a <a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a> object.</div>
+<div class="block">A contract for mapping an OAuth 2.0 token endpoint
+ response to a <a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><code>UserDetails</code></a> object.</div>
 </dd>
 <dt><a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html" title="enum in io.micronaut.security.errors"><span class="typeNameLink">ObtainingAuthorizationErrorCode</span></a> - Enum in <a href="io/micronaut/security/errors/package-summary.html">io.micronaut.security.errors</a></dt>
 <dd>
@@ -5007,7 +5096,7 @@
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">OpenIdUserDetailsMapper</span></a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/token/response/package-summary.html">io.micronaut.security.oauth2.endpoint.token.response</a></dt>
 <dd>
 <div class="block">Responsible for converting an OpenID token response to
- a <a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a> representing the authenticated user.</div>
+ a <a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><code>UserDetails</code></a> representing the authenticated user.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#ORDER">ORDER</a></span> - Static variable in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></dt>
 <dd>
@@ -5085,6 +5174,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#parseClaimString-io.micronaut.security.token.jwt.generator.claims.JwtClaims-java.lang.String-">parseClaimString(JwtClaims, String)</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html#parseCredentials-java.lang.String-">parseCredentials(String)</a></span> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html" title="class in io.micronaut.security.authentication">BasicAuthAuthenticationFetcher</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/authentication/BasicAuthUtils.html#parseCredentials-java.lang.String-">parseCredentials(String)</a></span> - Static method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/BasicAuthUtils.html" title="class in io.micronaut.security.authentication">BasicAuthUtils</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html#parseIdToken-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-">parseIdToken(HttpRequest&lt;?&gt;, Authentication)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">OktaEndSessionEndpoint</a></dt>
@@ -5311,6 +5404,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">AccessTokenConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">JwtGeneratorConfigurationProperties</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">RefreshTokenConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html#PREFIX">PREFIX</a></span> - Static variable in class io.micronaut.security.token.jwt.signature.jwks.<a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignatureConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.signature.jwks">JwksSignatureConfigurationProperties</a></dt>
@@ -5442,6 +5539,12 @@
 <dd>
 <div class="block">Triggered when a JWT refresh token is generated.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#RefreshTokenGeneratedEvent-java.lang.Object-">RefreshTokenGeneratedEvent(Object)</a></span> - Constructor for class io.micronaut.security.token.event.<a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#RefreshTokenGeneratedEvent-io.micronaut.security.authentication.UserDetails-java.lang.String-"><code>RefreshTokenGeneratedEvent(UserDetails, String)</code></a> instead</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#RefreshTokenGeneratedEvent-io.micronaut.security.authentication.UserDetails-java.lang.String-">RefreshTokenGeneratedEvent(UserDetails, String)</a></span> - Constructor for class io.micronaut.security.token.event.<a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a></dt>
 <dd>
 <div class="block">Triggered when a refresh token is generated.</div>
@@ -5568,6 +5671,12 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html#RevocationEndpointConfigurationProperties--">RevocationEndpointConfigurationProperties()</a></span> - Constructor for class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/utils/DefaultSecurityService.html#ROLES">ROLES</a></span> - Static variable in class io.micronaut.security.utils.<a href="io/micronaut/security/utils/DefaultSecurityService.html" title="class in io.micronaut.security.utils">DefaultSecurityService</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">This constant is no longer used and it will be removed in the next mayor version</span></div>
+</div>
+</dd>
 <dt><a href="io/micronaut/security/annotation/RolesAllowedAnnotationMapper.html" title="class in io.micronaut.security.annotation"><span class="typeNameLink">RolesAllowedAnnotationMapper</span></a> - Class in <a href="io/micronaut/security/annotation/package-summary.html">io.micronaut.security.annotation</a></dt>
 <dd>
 <div class="block">Allows using the <code>RolesAllowed</code> annotation in Micronaut.</div>
@@ -5832,6 +5941,12 @@
 <dd>
 <div class="block">A <a href="io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers"><code>RedirectingLoginHandler</code></a> implementation for session based authentication.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionLoginHandler.html#SessionLoginHandler-io.micronaut.security.session.SecuritySessionConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-">SessionLoginHandler(SecuritySessionConfiguration, SessionStore&lt;Session&gt;, TokenConfiguration)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/session/SessionLoginHandler.html#SessionLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-"><code>SessionLoginHandler(RedirectConfiguration, SessionStore, TokenConfiguration, PriorToLoginPersistence)</code></a> instead.</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/session/SessionLoginHandler.html#SessionLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">SessionLoginHandler(RedirectConfiguration, SessionStore&lt;Session&gt;, TokenConfiguration, PriorToLoginPersistence)</a></span> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
 <dd>
 <div class="block">Constructor.</div>
@@ -5870,6 +5985,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#setAccessToken-java.lang.String-">setAccessToken(String)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#setAccessTokenExpiration-java.lang.Integer-">setAccessTokenExpiration(Integer)</a></span> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">JwtGeneratorConfigurationProperties</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html#setAcrValues-java.util.List-">setAcrValues(List&lt;String&gt;)</a></span> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></dt>
 <dd>
 <div class="block">Authentication class reference values.</div>
@@ -7078,6 +7197,12 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html#TokenRefreshRequest-java.lang.String-">TokenRefreshRequest(String)</a></span> - Constructor for class io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html#TokenRefreshRequest-java.lang.String-java.lang.String-">TokenRefreshRequest(String, String)</a></span> - Constructor for class io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html#TokenRefreshRequest-java.lang.String-"><code>TokenRefreshRequest(String)</code></a> instead.</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#tokenRenderer">tokenRenderer</a></span> - Variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/render/TokenRenderer.html" title="interface in io.micronaut.security.token.jwt.render"><span class="typeNameLink">TokenRenderer</span></a> - Interface in <a href="io/micronaut/security/token/jwt/render/package-summary.html">io.micronaut.security.token.jwt.render</a></dt>
@@ -7104,6 +7229,16 @@
 <dd>
 <div class="block">Instantiates Access Token Response.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html" title="class in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">TokenResponseExpiration</span></a> - Class in <a href="io/micronaut/security/oauth2/endpoint/token/response/package-summary.html">io.micronaut.security.oauth2.endpoint.token.response</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getExpiresInDate--"><code>TokenResponse.getExpiresInDate()</code></a> instead.</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html#TokenResponseExpiration-io.micronaut.security.oauth2.endpoint.token.response.TokenResponse-">TokenResponseExpiration(TokenResponse)</a></span> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponseExpiration</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="io/micronaut/security/event/TokenValidatedEvent.html" title="class in io.micronaut.security.event"><span class="typeNameLink">TokenValidatedEvent</span></a> - Class in <a href="io/micronaut/security/event/package-summary.html">io.micronaut.security.event</a></dt>
 <dd>
 <div class="block">Triggered when a token is validated.</div>
@@ -7208,7 +7343,7 @@
 </a>
 <h2 class="title">V</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-">validate(JwtClaims, HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">validate(JwtClaims)</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/validation/DefaultStateValidator.html#validate-io.micronaut.http.HttpRequest-io.micronaut.security.oauth2.endpoint.authorization.state.State-">validate(HttpRequest&lt;?&gt;, State)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.validation.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/validation/DefaultStateValidator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.validation">DefaultStateValidator</a></dt>
 <dd>&nbsp;</dd>
@@ -7240,12 +7375,28 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-">validate(JwtClaims, HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">AudienceJwtClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">validate(JwtClaims)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">AudienceJwtClaimsValidator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html#validate-com.nimbusds.jwt.JWTClaimsSet-">validate(JWTClaimsSet)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">ExpirationJwtClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-">validate(JwtClaims, HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">ExpirationJwtClaimsValidator</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">validate(JwtClaims)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">ExpirationJwtClaimsValidator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">validate(JwtClaims)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">IssuerJwtClaimsValidator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-">validate(JwtClaims, HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">IssuerJwtClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">validate(JwtClaims)</a></span> - Method in interface io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-"><code>JwtClaimsValidator.validate(JwtClaims, HttpRequest)</code></a> instead.</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-">validate(JwtClaims, HttpRequest&lt;?&gt;)</a></span> - Method in interface io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html" title="interface in io.micronaut.security.token.jwt.validator">JwtClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/JwtValidator.html#validate-java.lang.String-">validate(String)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtValidator</a></dt>
@@ -7270,12 +7421,18 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html#validate-com.nimbusds.jwt.JWTClaimsSet-">validate(JWTClaimsSet)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">validate(JwtClaims)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-">validate(JwtClaims, HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html#validate-com.nimbusds.jwt.JWTClaimsSet-">validate(JWTClaimsSet)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">SubjectNotNullJwtClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-">validate(JwtClaims, HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">SubjectNotNullJwtClaimsValidator</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">validate(JwtClaims)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">SubjectNotNullJwtClaimsValidator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/validator/RefreshTokenValidator.html#validate-java.lang.String-">validate(String)</a></span> - Method in interface io.micronaut.security.token.validator.<a href="io/micronaut/security/token/validator/RefreshTokenValidator.html" title="interface in io.micronaut.security.token.validator">RefreshTokenValidator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#validateAzp-io.micronaut.security.token.jwt.generator.claims.JwtClaims-java.lang.String-java.util.List-">validateAzp(JwtClaims, String, List&lt;String&gt;)</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
@@ -7288,8 +7445,18 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html#validateIssuerAudienceAndAzp-io.micronaut.security.token.jwt.generator.claims.JwtClaims-java.lang.String-java.util.List-java.lang.String-io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration-">validateIssuerAudienceAndAzp(JwtClaims, String, List&lt;String&gt;, String, OpenIdClientConfiguration)</a></span> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/IdTokenClaimsValidator.html" title="class in io.micronaut.security.oauth2.client">IdTokenClaimsValidator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-">validateToken(String, HttpRequest&lt;?&gt;)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtTokenValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtTokenValidator</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#validateToken-java.lang.String-">validateToken(String)</a></span> - Method in class io.micronaut.security.token.jwt.validator.<a href="io/micronaut/security/token/jwt/validator/JwtTokenValidator.html" title="class in io.micronaut.security.token.jwt.validator">JwtTokenValidator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-"><code>TokenValidator.validateToken(String, io.micronaut.http.HttpRequest)</code></a> instead.</span></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-">validateToken(String)</a></span> - Method in interface io.micronaut.security.token.validator.<a href="io/micronaut/security/token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-"><code>TokenValidator.validateToken(String, HttpRequest)</code></a> instead.</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-">validateToken(String, HttpRequest&lt;?&gt;)</a></span> - Method in interface io.micronaut.security.token.validator.<a href="io/micronaut/security/token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a></dt>
 <dd>
 <div class="block">Validates the provided token and returns the authentication state.</div>

@@ -139,6 +139,15 @@ implements <a href="../../../../../../../io/micronaut/security/token/jwt/generat
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-">JWTClaimsSetGenerator</a></span>(<a href="../../../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
+                     <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JwtIdGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtIdGenerator</a>&nbsp;jwtIdGenerator,
+                     <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsAudienceProvider</a>&nbsp;claimsAudienceProvider)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-io.micronaut.runtime.ApplicationConfiguration-"><code>JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)</code></a> instead.</span></div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-io.micronaut.runtime.ApplicationConfiguration-">JWTClaimsSetGenerator</a></span>(<a href="../../../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
                      <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JwtIdGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtIdGenerator</a>&nbsp;jwtIdGenerator,
                      <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsAudienceProvider</a>&nbsp;claimsAudienceProvider,
@@ -247,22 +256,44 @@ implements <a href="../../../../../../../io/micronaut/security/token/jwt/generat
 <a name="JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-io.micronaut.runtime.ApplicationConfiguration-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>JWTClaimsSetGenerator</h4>
-<pre>public&nbsp;JWTClaimsSetGenerator(<a href="../../../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
-                             @Nullable
-                             <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JwtIdGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtIdGenerator</a>&nbsp;jwtIdGenerator,
-                             @Nullable
-                             <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsAudienceProvider</a>&nbsp;claimsAudienceProvider,
-                             @Nullable
-                             io.micronaut.runtime.ApplicationConfiguration&nbsp;applicationConfiguration)</pre>
+<pre>@Inject
+public&nbsp;JWTClaimsSetGenerator(<a href="../../../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
+                                     @Nullable
+                                     <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JwtIdGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtIdGenerator</a>&nbsp;jwtIdGenerator,
+                                     @Nullable
+                                     <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsAudienceProvider</a>&nbsp;claimsAudienceProvider,
+                                     @Nullable
+                                     io.micronaut.runtime.ApplicationConfiguration&nbsp;applicationConfiguration)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tokenConfiguration</code> - Token Configuration</dd>
 <dd><code>jwtIdGenerator</code> - Generator which creates unique JWT ID</dd>
 <dd><code>claimsAudienceProvider</code> - Provider which identifies the recipients that the JWT is intended for.</dd>
 <dd><code>applicationConfiguration</code> - The application configuration</dd>
+</dl>
+</li>
+</ul>
+<a name="JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>JWTClaimsSetGenerator</h4>
+<pre>@Deprecated
+public&nbsp;JWTClaimsSetGenerator(<a href="../../../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a>&nbsp;tokenConfiguration,
+                                         @Nullable
+                                         <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JwtIdGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">JwtIdGenerator</a>&nbsp;jwtIdGenerator,
+                                         @Nullable
+                                         <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsAudienceProvider</a>&nbsp;claimsAudienceProvider)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-io.micronaut.runtime.ApplicationConfiguration-"><code>JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)</code></a> instead.</span></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>tokenConfiguration</code> - Token Configuration</dd>
+<dd><code>jwtIdGenerator</code> - Generator which creates unique JWT ID</dd>
+<dd><code>claimsAudienceProvider</code> - Provider which identifies the recipients that the JWT is intented for.</dd>
 </dl>
 </li>
 </ul>

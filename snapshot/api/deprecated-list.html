@@ -93,6 +93,11 @@
 <td class="colOne"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration</a></td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">io.micronaut.security.token.jwt.generator.JwtGeneratorConfiguration</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator"><code>AccessTokenConfiguration</code></a>) instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfiguration.html" title="interface in io.micronaut.security.session">io.micronaut.security.session.SecuritySessionConfiguration</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfiguration.html" title="interface in io.micronaut.security.config"><code>RedirectConfiguration</code></a> instead.</span></div>
 </td>
@@ -113,8 +118,18 @@
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator">io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.generator"><code>AccessTokenConfigurationProperties</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">io.micronaut.security.session.SecuritySessionConfigurationProperties</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config"><code>RedirectConfigurationProperties</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponseExpiration.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">io.micronaut.security.oauth2.endpoint.token.response.TokenResponseExpiration</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html#getExpiresInDate--"><code>TokenResponse.getExpiresInDate()</code></a> instead.</span></div>
 </td>
 </tr>
 </tbody>
@@ -144,6 +159,11 @@
 <tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#PREFIX">io.micronaut.security.token.jwt.validator.JwtClaimsValidator.PREFIX</a></td>
 </tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/utils/DefaultSecurityService.html#ROLES">io.micronaut.security.utils.DefaultSecurityService.ROLES</a>
+<div class="block"><span class="deprecationComment">This constant is no longer used and it will be removed in the next mayor version</span></div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -160,66 +180,102 @@
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html#createUserDetails-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper.createUserDetails(String, OpenIdTokenResponse, OpenIdClaims)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html#createAuthenticationResponse-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-io.micronaut.security.oauth2.endpoint.authorization.state.State-"><code>OpenIdUserDetailsMapper.createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims, State)</code></a> instead.
+ This method will only be called if the new method is not implemented.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#createUserDetails-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper.createUserDetails(String, OpenIdTokenResponse, OpenIdClaims)</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#createUserDetails-io.micronaut.security.oauth2.endpoint.token.response.TokenResponse-">io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper.createUserDetails(TokenResponse)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#createAuthenticationResponse-io.micronaut.security.oauth2.endpoint.token.response.TokenResponse-io.micronaut.security.oauth2.endpoint.authorization.state.State-"><code>instead</code></a>. This
+ method will only be called if the new method is not overridden.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html#getAccessTokenExpiration--">io.micronaut.security.token.jwt.generator.JwtGeneratorConfiguration.getAccessTokenExpiration()</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html#getExpiration--"><code>AccessTokenConfiguration.getExpiration()</code></a>) instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#getAccessTokenExpiration--">io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties.getAccessTokenExpiration()</a></td>
+</tr>
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfiguration.html#getForbiddenTargetUrl--">io.micronaut.security.session.SecuritySessionConfiguration.getForbiddenTargetUrl()</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfiguration.html#getForbidden--"><code>RedirectConfiguration.getForbidden()</code></a> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#getForbiddenTargetUrl--">io.micronaut.security.session.SecuritySessionConfigurationProperties.getForbiddenTargetUrl()</a></td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html#getLoginFailureTargetUrl--">io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration.getLoginFailureTargetUrl()</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfiguration.html#getLoginFailure--"><code>RedirectConfiguration.getLoginFailure()</code></a> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getLoginFailureTargetUrl--">io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties.getLoginFailureTargetUrl()</a></td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfiguration.html#getLoginFailureTargetUrl--">io.micronaut.security.session.SecuritySessionConfiguration.getLoginFailureTargetUrl()</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfiguration.html#getLoginFailure--"><code>RedirectConfiguration.getLoginFailure()</code></a> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#getLoginFailureTargetUrl--">io.micronaut.security.session.SecuritySessionConfigurationProperties.getLoginFailureTargetUrl()</a></td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html#getLoginSuccessTargetUrl--">io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration.getLoginSuccessTargetUrl()</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfiguration.html#getLoginSuccess--"><code>RedirectConfiguration.getLoginSuccess()</code></a> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getLoginSuccessTargetUrl--">io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties.getLoginSuccessTargetUrl()</a></td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfiguration.html#getLoginSuccessTargetUrl--">io.micronaut.security.session.SecuritySessionConfiguration.getLoginSuccessTargetUrl()</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfiguration.html#getLoginSuccess--"><code>RedirectConfiguration.getLoginSuccess()</code></a> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#getLoginSuccessTargetUrl--">io.micronaut.security.session.SecuritySessionConfigurationProperties.getLoginSuccessTargetUrl()</a></td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfiguration.html#getLogoutTargetUrl--">io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration.getLogoutTargetUrl()</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfiguration.html#getLogout--"><code>RedirectConfiguration.getLogout()</code></a> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getLogoutTargetUrl--">io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties.getLogoutTargetUrl()</a></td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfiguration.html#getLogoutTargetUrl--">io.micronaut.security.session.SecuritySessionConfiguration.getLogoutTargetUrl()</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/config/RedirectConfiguration.html#getLogout--"><code>RedirectConfiguration.getLogout()</code></a> instead.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#getLogoutTargetUrl--">io.micronaut.security.session.SecuritySessionConfigurationProperties.getLogoutTargetUrl()</a></td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultState.html#getOriginalUri--">io.micronaut.security.oauth2.endpoint.authorization.state.DefaultState.getOriginalUri()</a></td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/State.html#getOriginalUri--">io.micronaut.security.oauth2.endpoint.authorization.state.State.getOriginalUri()</a></td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfiguration.html#getRefreshTokenExpiration--">io.micronaut.security.token.jwt.generator.JwtGeneratorConfiguration.getRefreshTokenExpiration()</a>
+<div class="block"><span class="deprecationComment">refresh token are no longer a JWT with a exp claim</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#getRefreshTokenExpiration--">io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties.getRefreshTokenExpiration()</a></td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html#getTokenEndpoint--">io.micronaut.security.oauth2.client.DefaultOauthClient.getTokenEndpoint()</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html#getTokenEndpoint--"><code>OauthClientConfiguration.getTokenEndpoint()</code></a> instead.</span></div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfiguration.html#getUnauthorizedTargetUrl--">io.micronaut.security.session.SecuritySessionConfiguration.getUnauthorizedTargetUrl()</a>
@@ -230,12 +286,28 @@
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#getUnauthorizedTargetUrl--">io.micronaut.security.session.SecuritySessionConfigurationProperties.getUnauthorizedTargetUrl()</a></td>
 </tr>
 <tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/utils/DefaultSecurityService.html#hasRole-java.lang.String-java.lang.String-">io.micronaut.security.utils.DefaultSecurityService.hasRole(String, String)</a>
+<div class="block"><span class="deprecationComment">use <a href="io/micronaut/security/utils/DefaultSecurityService.html#hasRole-java.lang.String-"><code>instead</code></a></span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/utils/SecurityService.html#hasRole-java.lang.String-java.lang.String-">io.micronaut.security.utils.SecurityService.hasRole(String, String)</a>
+<div class="block"><span class="deprecationComment">use <a href="io/micronaut/security/utils/DefaultSecurityService.html#hasRole-java.lang.String-"><code>instead</code></a></span></div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfiguration.html#isRedirectOnRejection--">io.micronaut.security.session.SecuritySessionConfiguration.isRedirectOnRejection()</a>
 <div class="block"><span class="deprecationComment">Use <code>Toggleable.isEnabled()</code> or <code>Toggleable.isEnabled()</code> instead.</span></div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#isRedirectOnRejection--">io.micronaut.security.session.SecuritySessionConfigurationProperties.isRedirectOnRejection()</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html#parseCredentials-java.lang.String-">io.micronaut.security.authentication.BasicAuthAuthenticationFetcher.parseCredentials(String)</a></td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/generator/JwtGeneratorConfigurationProperties.html#setAccessTokenExpiration-java.lang.Integer-">io.micronaut.security.token.jwt.generator.JwtGeneratorConfigurationProperties.setAccessTokenExpiration(Integer)</a></td>
 </tr>
 <tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html#setEnabled-boolean-">io.micronaut.security.session.SecuritySessionConfigurationProperties.setEnabled(boolean)</a></td>
@@ -275,8 +347,38 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/SubjectNotNullJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">io.micronaut.security.token.jwt.validator.SubjectNotNullJwtClaimsValidator.validate(JwtClaims)</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">io.micronaut.security.token.jwt.validator.NotBeforeJwtClaimsValidator.validate(JwtClaims)</a></td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">io.micronaut.security.token.jwt.validator.JwtClaimsValidator.validate(JwtClaims)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-io.micronaut.http.HttpRequest-"><code>JwtClaimsValidator.validate(JwtClaims, HttpRequest)</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/IssuerJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">io.micronaut.security.token.jwt.validator.IssuerJwtClaimsValidator.validate(JwtClaims)</a></td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">io.micronaut.security.token.jwt.validator.AudienceJwtClaimsValidator.validate(JwtClaims)</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/ExpirationJwtClaimsValidator.html#validate-io.micronaut.security.token.jwt.generator.claims.JwtClaims-">io.micronaut.security.token.jwt.validator.ExpirationJwtClaimsValidator.validate(JwtClaims)</a></td>
+</tr>
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtValidator.html#validate-java.lang.String-">io.micronaut.security.token.jwt.validator.JwtValidator.validate(String)</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/validator/JwtValidator.html#validate-java.lang.String-io.micronaut.http.HttpRequest-"><code>JwtValidator.validate(String, HttpRequest)</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-">io.micronaut.security.token.validator.TokenValidator.validateToken(String)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-"><code>TokenValidator.validateToken(String, HttpRequest)</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#validateToken-java.lang.String-">io.micronaut.security.token.jwt.validator.JwtTokenValidator.validateToken(String)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-"><code>TokenValidator.validateToken(String, io.micronaut.http.HttpRequest)</code></a> instead.</span></div>
 </td>
 </tr>
 </tbody>
@@ -310,7 +412,17 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/utils/DefaultSecurityService.html#DefaultSecurityService-io.micronaut.security.token.config.TokenConfiguration-">io.micronaut.security.utils.DefaultSecurityService(TokenConfiguration)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/utils/DefaultSecurityService.html#DefaultSecurityService-io.micronaut.security.token.RolesFinder-"><code>DefaultSecurityService( RolesFinder )</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#IdTokenLoginHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-io.micronaut.security.config.RedirectConfiguration-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-">io.micronaut.security.oauth2.endpoint.token.response.IdTokenLoginHandler(JwtCookieConfiguration, RedirectConfiguration, TokenConfiguration, PriorToLoginPersistence)</a></td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-">io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#JWTClaimsSetGenerator-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator-io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider-io.micronaut.runtime.ApplicationConfiguration-"><code>JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)</code></a> instead.</span></div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#JwtCookieClearerLogoutHandler-io.micronaut.security.token.jwt.cookie.JwtCookieConfiguration-">io.micronaut.security.token.jwt.cookie.JwtCookieClearerLogoutHandler(JwtCookieConfiguration)</a>
@@ -338,8 +450,23 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#RefreshTokenGeneratedEvent-java.lang.Object-">io.micronaut.security.token.event.RefreshTokenGeneratedEvent(Object)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#RefreshTokenGeneratedEvent-io.micronaut.security.authentication.UserDetails-java.lang.String-"><code>RefreshTokenGeneratedEvent(UserDetails, String)</code></a> instead</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/session/SessionLoginHandler.html#SessionLoginHandler-io.micronaut.security.session.SecuritySessionConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-">io.micronaut.security.session.SessionLoginHandler(SecuritySessionConfiguration, SessionStore&lt;Session&gt;, TokenConfiguration)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/session/SessionLoginHandler.html#SessionLoginHandler-io.micronaut.security.config.RedirectConfiguration-io.micronaut.session.SessionStore-io.micronaut.security.token.config.TokenConfiguration-io.micronaut.security.errors.PriorToLoginPersistence-"><code>SessionLoginHandler(RedirectConfiguration, SessionStore, TokenConfiguration, PriorToLoginPersistence)</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/session/SessionLogoutHandler.html#SessionLogoutHandler-io.micronaut.security.session.SecuritySessionConfiguration-">io.micronaut.security.session.SessionLogoutHandler(SecuritySessionConfiguration)</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/session/SessionLogoutHandler.html#SessionLogoutHandler-io.micronaut.security.config.RedirectConfiguration-"><code>SessionLogoutHandler(RedirectConfiguration)</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html#TokenRefreshRequest-java.lang.String-java.lang.String-">io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest(String, String)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/endpoints/TokenRefreshRequest.html#TokenRefreshRequest-java.lang.String-"><code>TokenRefreshRequest(String)</code></a> instead.</span></div>
 </td>
 </tr>
 </tbody>
