@@ -29,11 +29,6 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     }
 
     @Override
-    Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
-        Publishers.just(new UnsupportedOperationException())
-    }
-
-    @Override
     Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { // <3>
         apiClient.getUser("token ${tokenResponse.accessToken}")
             .map({ user ->

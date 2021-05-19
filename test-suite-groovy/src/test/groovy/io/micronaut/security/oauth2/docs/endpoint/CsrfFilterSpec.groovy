@@ -57,11 +57,6 @@ class CsrfFilterSpec extends EmbeddedServerSpecification {
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
 
         @Override
-        Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
-            Publishers.just(new UnsupportedOperationException())
-        }
-
-        @Override
         Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
             Flowable.create({ emitter ->
                 emitter.onNext(new UserDetails("twitterUser", Collections.emptyList()))

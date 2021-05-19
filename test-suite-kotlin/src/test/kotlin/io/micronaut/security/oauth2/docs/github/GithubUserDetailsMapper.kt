@@ -18,10 +18,6 @@ import javax.inject.Singleton
 internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) // <2>
     : OauthUserDetailsMapper {
 
-    override fun createUserDetails(tokenResponse: TokenResponse?): Publisher<UserDetails> {
-        return Publishers.just(UnsupportedOperationException())
-    }
-
     override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher<AuthenticationResponse> { // <3>
         return apiClient.getUser("token " + tokenResponse.accessToken)
                 .map { user ->

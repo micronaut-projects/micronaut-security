@@ -101,11 +101,6 @@ class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecifi
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
 
         @Override
-        Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
-            return Publishers.just(new UnsupportedOperationException())
-        }
-
-        @Override
         Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
             Flowable.create({ emitter ->
                 emitter.onNext(new UserDetails("twitterUser", Collections.emptyList()))
