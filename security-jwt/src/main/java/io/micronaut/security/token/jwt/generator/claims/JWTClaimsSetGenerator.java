@@ -22,9 +22,7 @@ import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import io.micronaut.core.annotation.Nullable;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -54,7 +52,6 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param claimsAudienceProvider   Provider which identifies the recipients that the JWT is intended for.
      * @param applicationConfiguration The application configuration
      */
-    @Inject
     public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
                                  @Nullable JwtIdGenerator jwtIdGenerator,
                                  @Nullable ClaimsAudienceProvider claimsAudienceProvider,
@@ -63,19 +60,6 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         this.jwtIdGenerator = jwtIdGenerator;
         this.claimsAudienceProvider = claimsAudienceProvider;
         this.appName = applicationConfiguration != null ? applicationConfiguration.getName().orElse(Environment.MICRONAUT) : Environment.MICRONAUT;
-    }
-
-    /**
-     * @param tokenConfiguration     Token Configuration
-     * @param jwtIdGenerator         Generator which creates unique JWT ID
-     * @param claimsAudienceProvider Provider which identifies the recipients that the JWT is intented for.
-     * @deprecated Use {@link JWTClaimsSetGenerator#JWTClaimsSetGenerator(TokenConfiguration, JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)} instead.
-     */
-    @Deprecated
-    public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                 @Nullable JwtIdGenerator jwtIdGenerator,
-                                 @Nullable ClaimsAudienceProvider claimsAudienceProvider) {
-        this(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, null);
     }
 
     /**
