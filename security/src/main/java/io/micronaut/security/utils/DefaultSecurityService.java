@@ -35,12 +35,7 @@ import java.util.Optional;
  */
 @Singleton
 public class DefaultSecurityService implements SecurityService {
-    /**
-     * @deprecated This constant is no longer used and it will be removed in the next mayor version
-     */
-    @Deprecated
-    public static final String ROLES = "roles";
-
+    
     private final RolesFinder rolesFinder;
 
     /**
