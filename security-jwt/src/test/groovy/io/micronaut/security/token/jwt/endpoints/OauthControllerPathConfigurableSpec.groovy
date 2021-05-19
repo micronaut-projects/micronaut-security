@@ -31,7 +31,7 @@ class OauthControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 
     void "OauthController is not accessible at /oauth/access_token but at /newtoken"() {
         given:
-        TokenRefreshRequest creds = new TokenRefreshRequest('foo', 'XXXXXXXXXX')
+        Map<String, Object> creds = [grant_type: 'foo', refresh_token: 'XXXXXXXXXX']
 
         expect:
         applicationContext.getBean(OauthController.class)
