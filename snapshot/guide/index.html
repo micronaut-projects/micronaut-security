@@ -427,7 +427,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>DelegatingAuthenticationProvider</code> and it&#8217;s related interfaces has been removed. If you provided implementations for <code>UserFetcher</code>, <code>UserState</code>, <code>PasswordEncoder</code>, and <code>AuthoritiesFetcher</code>, integrate them into your own implementation of <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. This API was removed because it only served a niche use case and increased the surface of this library&#8217;s API. None of the classes mentioned were directly used in this library and thus belong in the realm of user&#8217;s applications. Check <a href="https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html">LDAP and Database authentication providers tutorial</a> to learn how to write a <code>DelegatingAuthenticationProvider</code>.</p>
+<p>The <code>DelegatingAuthenticationProvider</code> and it&#8217;s related interfaces has been removed. If you provided implementations for <code>UserFetcher</code>, <code>UserState</code>, <code>PasswordEncoder</code>, and <code>AuthoritiesFetcher</code>, integrate them into your own implementation of <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. This API was removed because it only served a niche use case and increased the surface of this library&#8217;s API. None of the classes mentioned were directly used in this library and thus belong in the realm of user&#8217;s applications. Check <a href="https://guides.micronaut.io/latest/micronaut-database-authentication-provider.html">LDAP and Database authentication providers tutorial</a> to learn how to write a <code>DelegatingAuthenticationProvider</code>.</p>
 </li>
 </ul>
 </div>
@@ -1673,7 +1673,7 @@ which attempts to validate them.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="https://guides.micronaut.io/micronaut-security-basicauth/guide/index.html">Basic Authentication Micronaut Guide</a> to learn more.
+Read the <a href="https://guides.micronaut.io/latest/micronaut-security-basicauth.html">Basic Authentication Micronaut Guide</a> to learn more.
 </td>
 </tr>
 </table>
@@ -1790,7 +1790,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="https://guides.micronaut.io/micronaut-security-session/guide/index.html">Session-Based Authentication Micronaut Guide</a> to learn more.
+Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.html">Session-Based Authentication Micronaut Guide</a> to learn more.
 </td>
 </tr>
 </table>
@@ -2087,7 +2087,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0MjI5OTU5MjIsInN1YiI6Imppb
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Check out the <a href="https://guides.micronaut.io/micronaut-security-jwt/guide/index.html">Micronaut JWT Authentication guide</a> for a tutorial on Micronaut&#8217;s JWT support.
+Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt.html">Micronaut JWT authentication</a> for a tutorial on Micronaut&#8217;s JWT support.
 </td>
 </tr>
 </table>
@@ -2198,7 +2198,7 @@ Check out the <a href="https://guides.micronaut.io/micronaut-security-jwt/guide/
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="https://guides.micronaut.io/micronaut-security-jwt-cookie/guide/index.html">Micronaut JWT Authentication with Cookies</a> to learn more.
+Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cookie.html">Micronaut JWT Authentication with Cookies</a> to learn more.
 </td>
 </tr>
 </table>
@@ -2826,7 +2826,7 @@ Pragma: no-cache
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html#securityLdap">LDAP and Database authentication providers</a> to see an example.
+Read the <a href="https://guides.micronaut.io/latest/micronaut-database-authentication-provider.html">LDAP and Database authentication providers</a> to see an example.
 </td>
 </tr>
 </table>
@@ -3456,7 +3456,7 @@ will propagate the security token seamlessly.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Read the <a href="https://guides.micronaut.io/micronaut-token-propagation/guide/index.html">Token Propagation tutorial</a> to learn more.
+Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation.html">Token Propagation tutorial</a> to learn more.
 </td>
 </tr>
 </table>
@@ -4782,6 +4782,18 @@ internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>The user information is converted to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.io/latest/micronaut-oauth2-github.html">Github</a> and <a href="https://guides.micronaut.io/latest/micronaut-oauth2-linkedin.html">LinkedIn</a></strong> guides for examples.
+</td>
 </tr>
 </table>
 </div>
