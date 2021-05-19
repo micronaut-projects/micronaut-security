@@ -100,21 +100,4 @@ public class DefaultSecurityService implements SecurityService {
                 .map(authentication -> rolesFinder.hasAnyRequiredRoles(Collections.singletonList(role), authentication))
                 .orElse(false);
     }
-
-    /**
-     * If the current user has a specific role.
-     *
-     * @param role the authority to check
-     * @param  rolesKey The map key to be used in the authentications attributes. E.g. "roles".
-     * @return true if the current user has the authority, false otherwise
-     * @deprecated use {@link DefaultSecurityService#hasRole(String) instead}
-     */
-    @Deprecated
-    @Override
-    public boolean hasRole(String role, String rolesKey) {
-        if (role == null || rolesKey == null) {
-            return false;
-        }
-        return hasRole(role);
-    }
 }
