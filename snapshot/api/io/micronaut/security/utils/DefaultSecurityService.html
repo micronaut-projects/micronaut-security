@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":42,"i3":10,"i4":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -159,7 +159,7 @@ implements <a href="../../../../io/micronaut/security/utils/SecurityService.html
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -178,20 +178,11 @@ implements <a href="../../../../io/micronaut/security/utils/SecurityService.html
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/utils/DefaultSecurityService.html#hasRole-java.lang.String-java.lang.String-">hasRole</a></span>(java.lang.String&nbsp;role,
-       java.lang.String&nbsp;rolesKey)</code>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
-<div class="block"><span class="deprecationComment">use <a href="../../../../io/micronaut/security/utils/DefaultSecurityService.html#hasRole-java.lang.String-"><code>instead</code></a></span></div>
-</div>
-</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/utils/DefaultSecurityService.html#isAuthenticated--">isAuthenticated</a></span>()</code>
 <div class="block">Check if a user is authenticated.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/utils/DefaultSecurityService.html#username--">username</a></span>()</code>
 <div class="block">Get the username of the current user.</div>
@@ -307,7 +298,7 @@ public&nbsp;DefaultSecurityService(<a href="../../../../io/micronaut/security/to
 <a name="hasRole-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>hasRole</h4>
 <pre>public&nbsp;boolean&nbsp;hasRole(java.lang.String&nbsp;role)</pre>
@@ -319,28 +310,6 @@ public&nbsp;DefaultSecurityService(<a href="../../../../io/micronaut/security/to
 <dd><code>role</code> - the role to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the current user has the role, false otherwise</dd>
-</dl>
-</li>
-</ul>
-<a name="hasRole-java.lang.String-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>hasRole</h4>
-<pre>@Deprecated
-public&nbsp;boolean&nbsp;hasRole(java.lang.String&nbsp;role,
-                                   java.lang.String&nbsp;rolesKey)</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use <a href="../../../../io/micronaut/security/utils/DefaultSecurityService.html#hasRole-java.lang.String-"><code>instead</code></a></span></div>
-<div class="block">If the current user has a specific role.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../io/micronaut/security/utils/SecurityService.html#hasRole-java.lang.String-java.lang.String-">hasRole</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/utils/SecurityService.html" title="interface in io.micronaut.security.utils">SecurityService</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>role</code> - the authority to check</dd>
-<dd><code>rolesKey</code> - The map key to be used in the authentications attributes. E.g. "roles".</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if the current user has the authority, false otherwise</dd>
 </dl>
 </li>
 </ul>
