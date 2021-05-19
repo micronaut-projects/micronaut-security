@@ -83,7 +83,6 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
         }
 
         @Override
-        @Deprecated
         Publisher<Authentication> validateToken(String token, HttpRequest<?> request) {
             return validator.validate(token, request)
                     .flatMap(jwtAuthenticationFactory::createAuthentication)

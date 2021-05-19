@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
@@ -69,14 +71,12 @@ public class JwtTokenValidator implements TokenValidator {
     }
 
     /***
-     * @deprecated Use {@link JwtTokenValidator#validateToken(String, io.micronaut.http.HttpRequest)} instead.
      * @param token The token string.
      * @return Publishes {@link Authentication} based on the JWT or empty if the validation fails.
      */
     @Override
-    @Deprecated
-    public Publisher<Authentication> validateToken(String token) {
-        return validator.validate(token)
+    public Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
+        return validator.validate(token, request)
                 .flatMap(jwtAuthenticationFactory::createAuthentication)
                 .map(Flowable::just)
                 .orElse(Flowable.empty());

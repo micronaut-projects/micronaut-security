@@ -43,27 +43,7 @@ class JwtClaimsValidatorRequestNotPassedByDefaultSpec extends EmbeddedServerSpec
                 'micronaut.security.authentication'   : 'bearer',
         ]
     }
-
-    def "by default JwtClaimsValidator which expects request is not invoked"() {
-        when:
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')
-        HttpResponse rsp = client.exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
-
-        then:
-        rsp.status() == HttpStatus.OK
-        rsp.body().accessToken
-
-        when:
-        final String accessToken =  rsp.body().accessToken
-        HttpRequest request = HttpRequest.GET("/echo/user")
-                .accept(MediaType.TEXT_PLAIN)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
-        client.exchange(request)
-
-        then: // no 401 is thrown because GenericJwtClaimsValidator::validate is invoked claims, null and the HttpRequestClaimsValidator returns true
-        noExceptionThrown()
-    }
-
+    
     @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestNotPassedByDefaultSpec')
     @Singleton
     static class HttpRequestClaimsValidator implements GenericJwtClaimsValidator {

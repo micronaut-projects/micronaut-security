@@ -123,11 +123,6 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
     static class CustomTokenValidator implements TokenValidator {
 
         @Override
-        Publisher<Authentication> validateToken(String token) {
-            validateToken(token, null)
-        }
-
-        @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
             UserDetails ud = new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'])
             Authentication authentication = new AuthenticationUserDetailsAdapter(ud, TokenConfiguration.DEFAULT_ROLES_NAME, TokenConfiguration.DEFAULT_NAME_KEY)
