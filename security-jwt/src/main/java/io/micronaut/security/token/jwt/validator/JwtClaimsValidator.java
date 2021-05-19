@@ -35,14 +35,9 @@ public interface JwtClaimsValidator {
     String PREFIX = JwtClaimsValidatorConfigurationProperties.PREFIX;
 
     /**
-     * @deprecated Use {@link JwtClaimsValidator#validate(JwtClaims, HttpRequest)} instead.
      * @param claims JWT Claims
+     * @param request HTTP request
      * @return whether the JWT claims pass validation.
      */
-    @Deprecated
-    boolean validate(JwtClaims claims);
-
-    default boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
-        return validate(claims);
-    }
+    boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request);
 }

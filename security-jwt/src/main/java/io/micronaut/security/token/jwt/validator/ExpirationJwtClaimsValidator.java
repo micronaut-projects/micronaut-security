@@ -17,7 +17,9 @@ package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,9 +59,8 @@ public class ExpirationJwtClaimsValidator implements GenericJwtClaimsValidator {
         return true;
     }
 
-    @Deprecated
     @Override
-    public boolean validate(JwtClaims claims) {
+    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 }

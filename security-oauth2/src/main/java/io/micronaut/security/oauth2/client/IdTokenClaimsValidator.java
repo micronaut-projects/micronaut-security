@@ -17,7 +17,9 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -64,7 +66,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     @Override
-    public boolean validate(JwtClaims claims) {
+    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
         Optional<String> claimIssuerOptional = parseIssuerClaim(claims);
         if (!claimIssuerOptional.isPresent()) {
             return false;
