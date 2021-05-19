@@ -964,17 +964,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/client/clientcredentials/DefaultClientCredentialsOpenIdClient.html#createTokenRequestContext-java.lang.String-">createTokenRequestContext(String)</a></span> - Method in class io.micronaut.security.oauth2.client.clientcredentials.<a href="io/micronaut/security/oauth2/client/clientcredentials/DefaultClientCredentialsOpenIdClient.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">DefaultClientCredentialsOpenIdClient</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html#createUserDetails-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">createUserDetails(String, OpenIdTokenResponse, OpenIdClaims)</a></span> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdUserDetailsMapper</a></dt>
-<dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html#createUserDetails-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-">createUserDetails(String, OpenIdTokenResponse, OpenIdClaims)</a></span> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdUserDetailsMapper</a></dt>
-<dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html#createAuthenticationResponse-java.lang.String-io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse-io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims-io.micronaut.security.oauth2.endpoint.authorization.state.State-"><code>OpenIdUserDetailsMapper.createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims, State)</code></a> instead.
- This method will only be called if the new method is not implemented.</span></div>
-</div>
-</dd>
 </dl>
 <a name="I:D">
 <!--   -->
@@ -5060,7 +5049,7 @@
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response"><span class="typeNameLink">OpenIdUserDetailsMapper</span></a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/token/response/package-summary.html">io.micronaut.security.oauth2.endpoint.token.response</a></dt>
 <dd>
 <div class="block">Responsible for converting an OpenID token response to
- a <a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication"><code>UserDetails</code></a> representing the authenticated user.</div>
+ a <a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a> representing the authenticated user.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#ORDER">ORDER</a></span> - Static variable in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></dt>
 <dd>
