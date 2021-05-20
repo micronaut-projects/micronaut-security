@@ -159,7 +159,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         return JwtValidator.builder()
                 .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
                 .build()
-                .validate(openIdTokenResponse.getIdToken());
+                .validate(openIdTokenResponse.getIdToken(), null);
     }
 
     /**
