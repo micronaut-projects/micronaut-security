@@ -18,12 +18,9 @@ package io.micronaut.security.token.jwt.cookie;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
-import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import java.time.Duration;
@@ -38,7 +35,7 @@ import java.util.Optional;
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Requires(property = JwtCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(JwtCookieConfigurationProperties.PREFIX)
-public class JwtCookieConfigurationProperties implements JwtCookieConfiguration {
+public class JwtCookieConfigurationProperties implements AccessTokenCookieConfiguration {
 
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".cookie";
 
@@ -78,9 +75,6 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
     @SuppressWarnings("WeakerAccess")
     public static final SameSite DEFAULT_COOKIESAMESITE = null;
 
-    private final RedirectConfigurationProperties redirectConfiguration;
-    private final PropertyResolver propertyResolver;
-
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
@@ -92,79 +86,11 @@ public class JwtCookieConfigurationProperties implements JwtCookieConfiguration 
 
     /**
      *
-     * @param redirectConfiguration Redirect Configuration
-     * @param propertyResolver Property Resolver
-     */
-    public JwtCookieConfigurationProperties(RedirectConfigurationProperties redirectConfiguration,
-                                            PropertyResolver propertyResolver) {
-        this.redirectConfiguration = redirectConfiguration;
-        this.propertyResolver = propertyResolver;
-    }
-
-    /**
-     *
      * @return a boolean flag indicating whether the JwtCookieTokenReader should be enabled or not
      */
     @Override
     public boolean isEnabled() {
         return enabled;
-    }
-
-    @Override
-    @Deprecated
-    public String getLogoutTargetUrl() {
-        return redirectConfiguration.getLogout();
-    }
-
-    @Override
-    @Deprecated
-    public String getLoginSuccessTargetUrl() {
-        return redirectConfiguration.getLoginSuccess();
-    }
-
-    @Override
-    @Deprecated
-    public String getLoginFailureTargetUrl() {
-        return redirectConfiguration.getLoginFailure();
-    }
-
-    /**
-     * Deprecated. user micronaut.security.redirect.logout instead
-     * @param logoutTargetUrl The URL
-     */
-    @Deprecated
-    public void setLogoutTargetUrl(String logoutTargetUrl) {
-        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".logout")) {
-            if (StringUtils.isNotEmpty(logoutTargetUrl)) {
-                redirectConfiguration.setLogout(logoutTargetUrl);
-            }
-        }
-    }
-
-    /**
-     * Deprecated. user micronaut.security.redirect.login-success instead
-     * @param loginSuccessTargetUrl The URL
-     */
-    @Deprecated
-    public void setLoginSuccessTargetUrl(String loginSuccessTargetUrl) {
-        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-success")) {
-            if (StringUtils.isNotEmpty(loginSuccessTargetUrl)) {
-                redirectConfiguration.setLoginSuccess(loginSuccessTargetUrl);
-            }
-        }
-    }
-
-    /**
-     * Deprecated. user micronaut.security.redirect.login-failure instead
-     * @param loginFailureTargetUrl The URL
-     */
-    @Deprecated
-    public void setLoginFailureTargetUrl(String loginFailureTargetUrl) {
-        if (!propertyResolver.containsProperty(RedirectConfigurationProperties.PREFIX + ".login-failure")) {
-            if (StringUtils.isNotEmpty(loginFailureTargetUrl)) {
-                redirectConfiguration.setLoginFailure(loginFailureTargetUrl);
-            }
-        }
     }
 
     /**

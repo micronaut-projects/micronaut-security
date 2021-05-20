@@ -24,8 +24,6 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.handlers.LogoutHandler;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,50 +38,20 @@ import java.util.Optional;
 @Singleton
 public class JwtCookieClearerLogoutHandler implements LogoutHandler {
 
-    @Deprecated
-    protected final JwtCookieConfiguration jwtCookieConfiguration;
     protected final String logout;
     protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
     protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
-
-    /**
-     * @param jwtCookieConfiguration JWT Cookie Configuration
-     * @deprecated Use {@link JwtCookieClearerLogoutHandler#JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, RedirectConfiguration)} instead.
-     */
-    @Deprecated
-    public JwtCookieClearerLogoutHandler(JwtCookieConfiguration jwtCookieConfiguration) {
-        this.jwtCookieConfiguration = jwtCookieConfiguration;
-        this.accessTokenCookieConfiguration = jwtCookieConfiguration;
-        this.refreshTokenCookieConfiguration = null;
-        this.logout = jwtCookieConfiguration.getLogoutTargetUrl();
-    }
-
-    /**
-     * @param jwtCookieConfiguration JWT Cookie Configuration
-     * @param redirectConfiguration Redirect configuration
-     * @deprecated Use {@link JwtCookieClearerLogoutHandler#JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, RedirectConfiguration)} instead.
-     */
-    @Deprecated
-    public JwtCookieClearerLogoutHandler(JwtCookieConfiguration jwtCookieConfiguration,
-                                         RedirectConfiguration redirectConfiguration) {
-        this.jwtCookieConfiguration = jwtCookieConfiguration;
-        this.accessTokenCookieConfiguration = jwtCookieConfiguration;
-        this.refreshTokenCookieConfiguration = null;
-        this.logout = redirectConfiguration.getLogout();
-    }
 
     /**
      * @param accessTokenCookieConfiguration JWT Cookie Configuration
      * @param refreshTokenCookieConfiguration Refresh token cookie configuration
      * @param redirectConfiguration Redirect configuration
      */
-    @Inject
     public JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                          RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
                                          RedirectConfiguration redirectConfiguration) {
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
-        this.jwtCookieConfiguration = null;
         this.logout = redirectConfiguration.getLogout();
     }
 
