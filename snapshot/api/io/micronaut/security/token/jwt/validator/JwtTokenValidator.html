@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":42};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -192,16 +192,17 @@ implements <a href="../../../../../../io/micronaut/security/token/validator/Toke
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>org.reactivestreams.Publisher&lt;<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-">validateToken</a></span>(java.lang.String&nbsp;token,
-             io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>
-<div class="block">Validates the provided token and returns the authentication state.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/validator/JwtTokenValidator.html#validateToken-java.lang.String-">validateToken</a></span>(java.lang.String&nbsp;token)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-"><code>TokenValidator.validateToken(String, io.micronaut.http.HttpRequest)</code></a> instead.</span></div>
+</div>
 </td>
 </tr>
 </table>
@@ -211,6 +212,13 @@ implements <a href="../../../../../../io/micronaut/security/token/validator/Toke
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
 <code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.io.micronaut.security.token.validator.TokenValidator">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;io.micronaut.security.token.validator.<a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a></h3>
+<code><a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-">validateToken</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.io.micronaut.core.order.Ordered">
@@ -303,23 +311,22 @@ public&nbsp;JwtTokenValidator(java.util.Collection&lt;<a href="../../../../../..
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="validateToken-java.lang.String-io.micronaut.http.HttpRequest-">
+<a name="validateToken-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>validateToken</h4>
-<pre>public&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;&nbsp;validateToken(java.lang.String&nbsp;token,
-                                                                   @Nullable
-                                                                   io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-">TokenValidator</a></code></span></div>
+<pre>@Deprecated
+public&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;&nbsp;validateToken(java.lang.String&nbsp;token)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-"><code>TokenValidator.validateToken(String, io.micronaut.http.HttpRequest)</code></a> instead.</span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-">TokenValidator</a></code></span></div>
 <div class="block">Validates the provided token and returns the authentication state.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-io.micronaut.http.HttpRequest-">validateToken</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a></code></dd>
+<dd><code><a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html#validateToken-java.lang.String-">validateToken</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>token</code> - The token string.</dd>
-<dd><code>request</code> - The current request (or null)</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Publishes <a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> based on the JWT or empty if the validation fails.</dd>
 </dl>
