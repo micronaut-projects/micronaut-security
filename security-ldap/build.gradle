@@ -1,7 +1,7 @@
 dependencies {
     api project(":security")
 
-    testImplementation "com.unboundid:unboundid-ldapsdk:5.1.4"
+    testImplementation "com.unboundid:unboundid-ldapsdk:6.0.0"
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
