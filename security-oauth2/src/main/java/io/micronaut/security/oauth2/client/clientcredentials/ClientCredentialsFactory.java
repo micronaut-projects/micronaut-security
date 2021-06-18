@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
+import io.micronaut.context.BeanProvider;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
@@ -27,8 +28,6 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
-
-import javax.inject.Provider;
 import java.util.function.Supplier;
 
 /**
@@ -50,7 +49,7 @@ public class ClientCredentialsFactory {
     @Requires(condition = ClientCredentialsEnabled.class)
     ClientCredentialsClient clientCredentialsOpenIdClient(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                                           TokenEndpointClient tokenEndpointClient,
-                                                          @Parameter @Nullable Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
+                                                          @Parameter @Nullable BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata) {
 
         if (openIdProviderMetadata != null) {
             Supplier<OpenIdProviderMetadata> metadataSupplier = SupplierUtil.memoized(openIdProviderMetadata::get);
