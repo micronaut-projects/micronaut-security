@@ -37,7 +37,6 @@ import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfig
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import spock.lang.Retry
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
@@ -49,7 +48,6 @@ import java.security.interfaces.RSAPublicKey
 
 class NotAvailableRemoteJwksSpec extends Specification {
 
-    @Retry
     void "start an app, validation fails if remote jwks down. If the jwks endpoint goes live validation works"() {
         given:
         int authServerPort = SocketUtils.findAvailableTcpPort()
@@ -58,9 +56,8 @@ class NotAvailableRemoteJwksSpec extends Specification {
             [
                     'spec.name': 'NotAvailableRemoteJwksSpec',
                     'micronaut.security.token.jwt.signatures.jwks.foo.url': "http://localhost:${authServerPort}/keys",
-                    'micronaut.http.client.read-timeout': '1s',
+                    'micronaut.http.client.read-timeout': '5s',
             ]
-
 
         Map<String, Object> authServerConfiguration =
             [
@@ -97,7 +94,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
         JWTParser.parse(jwt) instanceof SignedJWT
 
         when: 'Stop auth server, start server which uses the remote JWKS (Json Web Key Set) exposed by the auth server'
-        authEmbeddedServer.stop()
+        authEmbeddedServer.close()
         authServerClient.close()
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
