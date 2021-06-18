@@ -16,7 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.async.SupplierUtil;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 
