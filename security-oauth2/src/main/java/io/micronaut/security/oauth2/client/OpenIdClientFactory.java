@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
@@ -42,7 +43,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.micronaut.core.annotation.Nullable;
-import javax.inject.Provider;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -119,7 +119,7 @@ class OpenIdClientFactory {
     @Requires(condition = OpenIdClientCondition.class)
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
-                                     @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
+                                     @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
                                      @Parameter @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                      AuthorizationRedirectHandler redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,

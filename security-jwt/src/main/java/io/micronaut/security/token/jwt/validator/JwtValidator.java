@@ -177,6 +177,11 @@ public final class JwtValidator {
                 return Optional.empty();
             }
         }
+
+        if (LOG.isDebugEnabled() && encryptions.isEmpty()) {
+            LOG.debug("JWT is encrypted and no encryption configurations -> not verified");
+        }
+
         return Optional.empty();
     }
 
@@ -206,6 +211,11 @@ public final class JwtValidator {
                 }
             }
         }
+
+        if (LOG.isDebugEnabled() && signatures.isEmpty()) {
+            LOG.debug("JWT is signed and no signature configurations -> not verified");
+        }
+
         return Optional.empty();
     }
 

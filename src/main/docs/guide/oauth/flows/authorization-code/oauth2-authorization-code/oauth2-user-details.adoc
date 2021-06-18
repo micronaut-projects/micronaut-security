@@ -22,3 +22,5 @@ snippet::io.micronaut.security.oauth2.docs.github.GithubUserDetailsMapper[tags="
 <2> How the request is made to retrieve the user information is totally up to you, however in this example we're using a declarative client.
 <3> The token endpoint response is passed to the method.
 <4> The user information is converted to a api:security.authentication.UserDetails[].
+
+TIP: Read the **secure a Micronaut app with https://guides.micronaut.io/latest/micronaut-oauth2-github.html[Github] and https://guides.micronaut.io/latest/micronaut-oauth2-linkedin.html[LinkedIn]** guides for examples.

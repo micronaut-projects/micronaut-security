@@ -61,6 +61,9 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
         this.tokenConfiguration = tokenConfiguration;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
         List<Cookie> cookies = new ArrayList<>(1);
@@ -73,6 +76,9 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
         return cookies;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
         throw new OauthErrorResponseException(ObtainingAuthorizationErrorCode.INVALID_REQUEST, "Cannot refresh a provider token through the oauth endpoint. The token must be refreshed directly with the provider", null);
