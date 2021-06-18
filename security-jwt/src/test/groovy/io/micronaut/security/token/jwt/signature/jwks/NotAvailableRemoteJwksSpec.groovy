@@ -1,6 +1,5 @@
 package io.micronaut.security.token.jwt.signature.jwks
 
-
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
@@ -40,8 +39,8 @@ import org.reactivestreams.Publisher
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey

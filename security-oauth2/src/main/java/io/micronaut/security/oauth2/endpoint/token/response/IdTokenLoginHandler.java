@@ -33,7 +33,7 @@ import io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.text.ParseException;
 import java.time.Duration;
 import java.util.*;

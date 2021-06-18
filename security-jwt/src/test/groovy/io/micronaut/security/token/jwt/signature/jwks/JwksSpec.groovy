@@ -41,8 +41,8 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey

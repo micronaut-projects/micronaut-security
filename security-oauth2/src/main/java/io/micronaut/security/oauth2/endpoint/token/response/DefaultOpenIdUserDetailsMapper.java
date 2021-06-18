@@ -25,7 +25,7 @@ import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfigur
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.core.annotation.NonNull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

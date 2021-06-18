@@ -11,7 +11,7 @@ import io.micronaut.security.authentication.UserDetails
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 @Singleton
 @Requires(property = 'spec.name', value = 'jwt')

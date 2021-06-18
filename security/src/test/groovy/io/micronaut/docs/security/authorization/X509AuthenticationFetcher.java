@@ -9,7 +9,7 @@ import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
 import io.micronaut.core.annotation.NonNull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collections;

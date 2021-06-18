@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.scheduling.TaskExecutors;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import java.util.concurrent.ExecutorService;
 
 /**

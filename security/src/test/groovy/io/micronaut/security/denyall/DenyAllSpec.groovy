@@ -27,7 +27,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 import javax.annotation.security.DenyAll
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class DenyAllSpec extends EmbeddedServerSpecification {
 

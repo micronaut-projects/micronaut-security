@@ -11,7 +11,7 @@ import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator;
 import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator;
 
 import io.micronaut.core.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Requires(property = "spec.name", value = "jwtclaimsoverride")
 //tag::clazz[]

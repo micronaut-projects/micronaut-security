@@ -4,7 +4,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.reader.TokenReader;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 @Requires(property = "spec.name", value = "websockets")

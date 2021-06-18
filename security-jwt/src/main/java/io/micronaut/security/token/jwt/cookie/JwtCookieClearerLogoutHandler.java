@@ -24,7 +24,7 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.handlers.LogoutHandler;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;

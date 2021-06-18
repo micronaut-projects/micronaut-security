@@ -24,8 +24,8 @@ import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.IgnoreIf
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import java.nio.charset.StandardCharsets
 
 class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecification {

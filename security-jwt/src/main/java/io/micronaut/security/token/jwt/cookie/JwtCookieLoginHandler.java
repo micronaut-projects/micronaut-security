@@ -29,7 +29,7 @@ import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;

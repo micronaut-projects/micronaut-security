@@ -27,7 +27,7 @@ import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**

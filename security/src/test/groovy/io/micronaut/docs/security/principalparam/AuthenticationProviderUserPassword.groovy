@@ -12,7 +12,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 // Although this is a Groovy file this is written as close to Java as possible to embedded in the docs
 

@@ -22,7 +22,7 @@ import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.bind.binders.TypedRequestArgumentBinder;
 import io.micronaut.security.filters.SecurityFilter;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**

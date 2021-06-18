@@ -8,8 +8,8 @@ import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoi
 import io.micronaut.web.router.RouteBuilder
 import spock.lang.Unroll
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 
 class OauthRouteBuilderSpec extends OpenIdMockEmbeddedServerSpecification {
 

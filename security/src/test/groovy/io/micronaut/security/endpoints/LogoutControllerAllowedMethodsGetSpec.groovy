@@ -18,7 +18,7 @@ import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Ignore
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class LogoutControllerAllowedMethodsGetSpec extends EmbeddedServerSpecification {
 

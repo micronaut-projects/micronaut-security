@@ -12,7 +12,7 @@ import io.micronaut.testutils.ApplicationContextSpecification
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class OauthControllerEnabledSpec extends ApplicationContextSpecification {
 

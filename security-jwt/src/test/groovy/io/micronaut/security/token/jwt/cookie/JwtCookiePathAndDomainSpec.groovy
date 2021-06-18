@@ -21,7 +21,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 import java.security.Principal
 
 class JwtCookiePathAndDomainSpec extends EmbeddedServerSpecification {

@@ -15,8 +15,8 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import io.micronaut.security.oauth2.docs.EmbeddedServerSpecification
 
 class CsrfFilterSpec extends EmbeddedServerSpecification {

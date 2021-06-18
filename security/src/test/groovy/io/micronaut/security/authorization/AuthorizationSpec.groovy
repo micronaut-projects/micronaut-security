@@ -27,7 +27,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 import java.security.Principal
 
 class AuthorizationSpec extends EmbeddedServerSpecification {

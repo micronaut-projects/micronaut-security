@@ -6,7 +6,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import java.security.interfaces.RSAPublicKey;
 
 @Requires(property = "spec.name", value = "rsajwtbooks")

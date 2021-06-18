@@ -22,7 +22,7 @@ import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
     @Override

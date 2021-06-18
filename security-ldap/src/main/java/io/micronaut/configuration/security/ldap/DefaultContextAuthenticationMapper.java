@@ -19,7 +19,7 @@ import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Set;
 
 /**

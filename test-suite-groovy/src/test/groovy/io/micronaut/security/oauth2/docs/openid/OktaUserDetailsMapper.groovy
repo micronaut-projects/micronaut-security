@@ -12,8 +12,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
 import io.micronaut.core.annotation.NonNull
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 
 @Singleton
 @Named("okta") // <1>

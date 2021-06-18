@@ -23,7 +23,7 @@ import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.web.router.exceptions.RoutingException;
 
 import io.micronaut.core.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;

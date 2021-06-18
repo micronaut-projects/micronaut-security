@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.Scheduler;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import java.io.Closeable;

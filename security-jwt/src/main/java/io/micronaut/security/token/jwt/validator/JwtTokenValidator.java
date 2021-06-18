@@ -24,8 +24,8 @@ import io.micronaut.security.token.validator.TokenValidator;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.Collection;
 
 /**

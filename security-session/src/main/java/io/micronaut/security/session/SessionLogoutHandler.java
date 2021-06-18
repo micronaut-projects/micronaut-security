@@ -25,7 +25,7 @@ import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;

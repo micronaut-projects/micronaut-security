@@ -53,8 +53,8 @@ import org.slf4j.LoggerFactory
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey

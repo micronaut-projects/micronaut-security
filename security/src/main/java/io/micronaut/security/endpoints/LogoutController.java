@@ -34,7 +34,7 @@ import io.micronaut.security.event.LogoutEvent;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.rules.SecurityRule;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  *

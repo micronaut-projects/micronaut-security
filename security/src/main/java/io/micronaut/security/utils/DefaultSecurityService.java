@@ -18,7 +18,7 @@ package io.micronaut.security.utils;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Optional;
