@@ -1,38 +1,31 @@
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
-import org.openqa.selenium.htmlunit.HtmlUnitDriver
+import org.testcontainers.containers.BrowserWebDriverContainer
 
-driver = {
-    new HtmlUnitDriver(true)
+Closure dockerFirefoxClosure = {
+    def container = new BrowserWebDriverContainer()
+            .withCapabilities(new FirefoxOptions())
+    container.start()
+    container.webDriver
 }
-
+Closure firefoxHeadlessClosure = {
+    FirefoxOptions o = new FirefoxOptions()
+    o.addArguments('-headless')
+    new FirefoxDriver(o)
+}
+Closure firefoxClosure = {
+    new FirefoxDriver()
+}
+driver = System.getenv('geb.env') == 'firefox' ? firefoxClosure :
+        (System.getenv('geb.env') == 'firefoxHeadless' ?  firefoxHeadlessClosure : dockerFirefoxClosure)
 environments {
-
-    chrome {
-        driver = { new ChromeDriver() }
+    dockerFirefox {
+        driver = dockerFirefoxClosure
     }
-
-    chromeHeadless {
-        driver = {
-            ChromeOptions o = new ChromeOptions()
-            o.addArguments('headless')
-            new ChromeDriver(o)
-        }
-    }
-
     firefoxHeadless {
-        driver = {
-            FirefoxOptions o = new FirefoxOptions()
-            o.addArguments('-headless')
-            new FirefoxDriver(o)
-        }
+        driver = firefoxHeadlessClosure
     }
-
     firefox {
-        driver = { new FirefoxDriver() }
+        driver = firefoxClosure
     }
-
-    htmlunit { driver = { new HtmlUnitDriver(true) } }
 }

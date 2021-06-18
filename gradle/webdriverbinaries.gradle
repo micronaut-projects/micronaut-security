@@ -1,8 +1,5 @@
 if (System.getProperty('geb.env')) {
     webdriverBinaries {
-        if (project.hasProperty("chromedriverVersion")) {
-            chromedriver "${chromedriverVersion}"
-        }
         if (project.hasProperty("geckodriverVersion")) {
             geckodriver "${geckodriverVersion}"
         }

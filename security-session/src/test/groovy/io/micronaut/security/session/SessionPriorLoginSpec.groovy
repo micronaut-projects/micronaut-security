@@ -39,9 +39,6 @@ class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
     }
 
     void "test prior login behavior"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         go '/secured'
 

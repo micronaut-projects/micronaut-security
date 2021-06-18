@@ -46,9 +46,6 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
     }
 
     void "test refreshing the token"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         to HomePage
 

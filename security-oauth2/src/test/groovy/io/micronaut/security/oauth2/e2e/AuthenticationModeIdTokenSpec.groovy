@@ -48,9 +48,6 @@ class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test a full login"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         expect:
         applicationContext.containsBean(JwksSignature)
         applicationContext.containsBean(TokenValidator)

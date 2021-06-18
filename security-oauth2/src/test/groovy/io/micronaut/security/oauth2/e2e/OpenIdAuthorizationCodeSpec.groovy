@@ -1,17 +1,22 @@
 package io.micronaut.security.oauth2.e2e
 
-import io.micronaut.core.annotation.Nullable
+import io.micronaut.context.BeanProvider
+import io.micronaut.context.annotation.Primary
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.server.util.DefaultHttpHostResolver
 import io.micronaut.http.server.util.HttpHostResolver
 import io.micronaut.http.uri.UriBuilder
+import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.GebEmbeddedServerSpecification
 import io.micronaut.security.oauth2.Keycloak
+import io.micronaut.security.oauth2.TestContainersHostResolver
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint
@@ -48,21 +53,18 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test a full login"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
-        go "/oauth/login/keycloak"
+        browser.go "/oauth/login/keycloak"
 
         then:
-        at LoginPage
+        browser.at LoginPage
 
         when:
         LoginPage loginPage = browser.page LoginPage
         loginPage.login("user", "password")
 
         then:
-        at HomePage
+        browser.at HomePage
 
         when:
         HomePage homePage = browser.page HomePage
@@ -72,10 +74,10 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
         homePage.message.matches("Hello .*")
 
         when:
-        via OAuthLogoutPage
+        browser.via OAuthLogoutPage
 
         then:
-        at HomePage
+        browser.at HomePage
 
         when:
         homePage = browser.page HomePage
@@ -122,5 +124,17 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
                             .build()
                             .toString()
         }
+    }
+
+    @Primary
+    @Singleton
+    @Requires(property = 'spec.name', value = 'OpenIdAuthorizationCodeSpec')
+    static class CustomHttpHostResolver extends TestContainersHostResolver {
+
+        CustomHttpHostResolver(DefaultHttpHostResolver defaultHttpHostResolver,
+                               @Nullable BeanProvider<EmbeddedServer> embeddedServer) {
+            super(defaultHttpHostResolver, embeddedServer)
+        }
+
     }
 }

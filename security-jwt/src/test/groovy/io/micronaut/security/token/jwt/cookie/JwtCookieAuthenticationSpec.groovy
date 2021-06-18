@@ -117,9 +117,6 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
     }
 
     def "verify jwt cookie authentication works"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         to HomePage
 

@@ -51,9 +51,6 @@ micronaut:
     RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
 
     def "verify session based authentication works"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         to HomePage
 
