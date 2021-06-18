@@ -18,7 +18,6 @@ package io.micronaut.security.config;
 import io.micronaut.http.HttpMethod;
 
 import io.micronaut.core.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +27,6 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Immutable
 public class InterceptUrlMapPattern {
 
     private final String pattern;
