@@ -265,7 +265,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         Map<String, UserDetails> tokens = [:]
 
         @Override
-        void persistToken(RefreshTokenGeneratedEvent event) {
+        void onApplicationEvent(RefreshTokenGeneratedEvent event) {
             tokens.put(event.getRefreshToken(), event.getUserDetails())
         }
 
