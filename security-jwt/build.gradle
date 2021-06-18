@@ -3,7 +3,7 @@ plugins {
 }
 
 ext {
-    nimbusJoseJwtVersion = '9.9.3'
+    nimbusJoseJwtVersion = '9.10'
     bouncyCastleVersion = '1.69'
 }
 
