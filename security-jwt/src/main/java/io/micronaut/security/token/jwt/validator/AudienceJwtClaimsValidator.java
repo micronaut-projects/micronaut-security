@@ -17,7 +17,7 @@ package io.micronaut.security.token.jwt.validator;
 
 import java.util.List;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 

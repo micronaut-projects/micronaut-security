@@ -10,8 +10,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
 import java.lang.UnsupportedOperationException
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 
 @Named("github") // <1>
 @Singleton

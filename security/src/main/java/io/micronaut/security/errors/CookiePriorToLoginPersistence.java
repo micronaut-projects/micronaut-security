@@ -25,7 +25,7 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.config.TokenCookieConfiguration;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Optional;

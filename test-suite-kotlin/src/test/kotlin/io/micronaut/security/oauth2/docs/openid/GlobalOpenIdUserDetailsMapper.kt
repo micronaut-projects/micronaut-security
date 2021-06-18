@@ -11,7 +11,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 import java.lang.UnsupportedOperationException
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 @Singleton
 @Replaces(DefaultOpenIdUserDetailsMapper::class)

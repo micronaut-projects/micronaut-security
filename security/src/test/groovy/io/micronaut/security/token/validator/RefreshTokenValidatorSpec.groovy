@@ -7,7 +7,7 @@ import spock.lang.Shared
 import spock.lang.Subject
 import spock.lang.Unroll
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class RefreshTokenValidatorSpec extends ApplicationContextSpecification {
 

@@ -25,7 +25,7 @@ import io.micronaut.session.http.HttpSessionFilter;
 import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**

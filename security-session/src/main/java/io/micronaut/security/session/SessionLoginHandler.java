@@ -33,7 +33,7 @@ import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;

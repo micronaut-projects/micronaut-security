@@ -13,7 +13,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
 import io.micronaut.core.annotation.NonNull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Collections;
 
 @Singleton

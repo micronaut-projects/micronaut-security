@@ -7,7 +7,7 @@ import io.micronaut.security.authentication.*;
 import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 //end::clazz[]
 

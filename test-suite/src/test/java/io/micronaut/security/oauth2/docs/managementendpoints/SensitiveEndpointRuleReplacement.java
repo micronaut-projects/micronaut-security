@@ -11,7 +11,7 @@ import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.security.rules.SensitiveEndpointRule;
 import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.Map;
 //end::imports[]

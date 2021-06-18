@@ -21,7 +21,7 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 
 import io.micronaut.core.annotation.NonNull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.UUID;
 
 /**

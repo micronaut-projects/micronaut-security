@@ -21,7 +21,7 @@ import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Specification
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class LogoutControllerAllowedMethodsSpec extends Specification {
 

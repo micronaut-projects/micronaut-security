@@ -1,7 +1,7 @@
 package io.micronaut.security.oauth2.docs.managementendpoints
 
 //tag::imports[]
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.NonNull

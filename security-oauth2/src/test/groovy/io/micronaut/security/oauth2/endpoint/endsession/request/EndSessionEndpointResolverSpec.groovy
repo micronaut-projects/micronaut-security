@@ -15,8 +15,8 @@ import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder
 import spock.lang.Shared
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 
 class EndSessionEndpointResolverSpec extends ApplicationContextSpecification {
 

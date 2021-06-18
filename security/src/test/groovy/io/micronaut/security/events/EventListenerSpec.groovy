@@ -28,7 +28,7 @@ import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.util.concurrent.PollingConditions
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class EventListenerSpec extends EmbeddedServerSpecification {
 

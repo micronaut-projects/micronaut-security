@@ -47,8 +47,8 @@ import spock.lang.Issue
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import javax.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey

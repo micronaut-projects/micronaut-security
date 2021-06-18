@@ -14,7 +14,7 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.handlers.LoginHandler
 import spock.lang.Unroll
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class LoginControllerValidationSpec extends EmbeddedServerSpecification {
 

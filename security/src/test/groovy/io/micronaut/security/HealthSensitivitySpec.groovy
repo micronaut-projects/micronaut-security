@@ -24,7 +24,7 @@ import org.reactivestreams.Publisher
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class HealthSensitivitySpec extends Specification {
 

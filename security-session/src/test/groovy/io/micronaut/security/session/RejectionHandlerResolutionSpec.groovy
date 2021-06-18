@@ -12,7 +12,7 @@ import io.micronaut.security.ApplicationContextSpecification
 import io.micronaut.security.authentication.AuthorizationException
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class RejectionHandlerResolutionSpec extends ApplicationContextSpecification {
 

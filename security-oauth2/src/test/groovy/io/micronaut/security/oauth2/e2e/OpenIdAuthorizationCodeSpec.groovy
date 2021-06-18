@@ -18,8 +18,8 @@ import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoi
 import io.micronaut.security.rules.SecurityRule
 import spock.lang.IgnoreIf
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import java.security.Principal
 
 class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {

@@ -7,7 +7,7 @@ import io.micronaut.security.token.Claims
 import io.micronaut.security.token.DefaultRolesFinder
 import io.micronaut.security.token.RolesFinder
 import io.micronaut.core.annotation.NonNull
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 @CompileStatic
 @Requires(property = "spec.name", value = "customclaimsrolesparser")

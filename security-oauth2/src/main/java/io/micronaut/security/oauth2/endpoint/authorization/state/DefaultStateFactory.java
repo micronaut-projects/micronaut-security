@@ -25,7 +25,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Authorization
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 
 import io.micronaut.core.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**

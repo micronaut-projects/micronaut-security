@@ -24,7 +24,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Responsible for validating the nonce claim.

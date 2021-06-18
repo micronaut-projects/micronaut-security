@@ -12,7 +12,7 @@ import io.micronaut.web.router.RouteMatch
 import io.micronaut.web.router.Router
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
 

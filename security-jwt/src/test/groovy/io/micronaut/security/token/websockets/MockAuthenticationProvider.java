@@ -10,7 +10,7 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 
 @Requires(property = "spec.name", value = "websockets-on-open-header")

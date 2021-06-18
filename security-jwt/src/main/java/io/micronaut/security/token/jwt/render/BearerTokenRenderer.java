@@ -19,7 +19,7 @@ import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.security.authentication.UserDetails;
 
 import io.micronaut.core.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  *

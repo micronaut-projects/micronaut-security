@@ -11,7 +11,7 @@ import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.testutils.EmbeddedServerSpecification
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class OauthControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 

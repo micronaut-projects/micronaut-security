@@ -26,7 +26,7 @@ import io.micronaut.security.token.reader.TokenResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URL;
 import java.util.Optional;
 import java.util.function.Supplier;

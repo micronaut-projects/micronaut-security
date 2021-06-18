@@ -21,7 +21,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.reader.TokenReader;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**

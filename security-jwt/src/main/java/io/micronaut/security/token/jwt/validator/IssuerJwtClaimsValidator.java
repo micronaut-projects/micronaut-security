@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.NonNull;

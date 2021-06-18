@@ -20,7 +20,7 @@ import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
 import javax.annotation.security.RolesAllowed
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class RolesAllowedSpec extends EmbeddedServerSpecification {
 

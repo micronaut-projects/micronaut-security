@@ -9,7 +9,7 @@ import io.micronaut.security.authentication.*
 import io.micronaut.security.oauth2.docs.EmbeddedServerSpecification
 import io.reactivex.Maybe
 import org.reactivestreams.Publisher
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class LoggersSpec extends EmbeddedServerSpecification {
 

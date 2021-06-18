@@ -21,7 +21,7 @@ import io.micronaut.core.annotation.TypeHint;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.DefaultAuthentication;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * A module to extend Jackson for security related classes.

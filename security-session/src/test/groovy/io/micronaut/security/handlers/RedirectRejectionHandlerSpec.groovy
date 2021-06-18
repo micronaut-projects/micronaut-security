@@ -20,7 +20,7 @@ import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 import spock.lang.Shared
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class RedirectRejectionHandlerSpec extends EmbeddedServerSpecification {
 

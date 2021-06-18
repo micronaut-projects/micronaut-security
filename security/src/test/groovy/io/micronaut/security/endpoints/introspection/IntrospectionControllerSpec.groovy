@@ -19,7 +19,7 @@ import io.micronaut.security.token.validator.TokenValidator
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class IntrospectionControllerSpec extends EmbeddedServerSpecification {
     @Override

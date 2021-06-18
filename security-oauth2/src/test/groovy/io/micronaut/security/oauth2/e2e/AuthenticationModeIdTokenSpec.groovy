@@ -20,8 +20,8 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
 import io.micronaut.security.token.validator.TokenValidator
 import spock.lang.IgnoreIf
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import java.security.Principal
 
 class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
