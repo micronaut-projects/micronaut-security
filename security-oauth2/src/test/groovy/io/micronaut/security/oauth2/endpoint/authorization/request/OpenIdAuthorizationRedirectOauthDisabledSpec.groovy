@@ -10,8 +10,8 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.EmbeddedServerSpecification
-import io.micronaut.security.oauth2.Keycloak
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient

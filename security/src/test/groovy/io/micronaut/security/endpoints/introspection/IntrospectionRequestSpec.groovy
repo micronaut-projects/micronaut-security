@@ -9,7 +9,7 @@ import io.micronaut.http.annotation.Consumes
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Produces
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.endpoints.introspection.IntrospectionRequest
 import io.micronaut.security.rules.SecurityRule

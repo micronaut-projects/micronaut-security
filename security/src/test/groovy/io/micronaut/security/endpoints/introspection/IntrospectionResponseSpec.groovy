@@ -5,7 +5,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import spock.lang.Ignore
@@ -165,6 +165,7 @@ class IntrospectionResponseSpec extends EmbeddedServerSpecification {
     }
 
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/4179")
+    @PendingFeature
     void "test anyGetter with ObjectMapper registered in application context"() {
         given:
         ObjectMapper objectMapper = applicationContext.getBean(ObjectMapper)

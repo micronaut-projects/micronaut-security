@@ -22,7 +22,7 @@ public class EchoServerWebSocket {
     public static final String JOINED = "joined!";
     public static final String DISCONNECTED = "Disconnected!";
 
-    private WebSocketBroadcaster broadcaster;
+    private final WebSocketBroadcaster broadcaster;
 
     public EchoServerWebSocket(WebSocketBroadcaster broadcaster) {
         this.broadcaster = broadcaster;

@@ -3,6 +3,7 @@ package io.micronaut.security.oauth2
 import io.micronaut.context.ApplicationContext
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 

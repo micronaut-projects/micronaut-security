@@ -1,7 +1,3 @@
-plugins {
-    id "com.github.erdi.webdriver-binaries" version "2.4"
-}
-
 ext {
     nimbusJoseJwtVersion = '9.10'
     bouncyCastleVersion = '1.69'
@@ -19,13 +15,11 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-http-server-netty"
+    testImplementation project(":test-suite-utils")
     testImplementation "io.micronaut.multitenancy:micronaut-multitenancy"
     testImplementation "io.micronaut.views:micronaut-views-velocity"
     testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.3"
 }
-
-apply from: "${rootProject.projectDir}/gradle/geb.gradle"
-apply from: "${rootProject.projectDir}/gradle/webdriverbinaries.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
 test {

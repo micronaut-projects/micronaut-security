@@ -1,6 +1,6 @@
 package io.micronaut.security.token.writer
 
-import io.micronaut.security.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator
 
 class HttpHeaderTokenPropagatorEnabledSpec extends ApplicationContextSpecification {

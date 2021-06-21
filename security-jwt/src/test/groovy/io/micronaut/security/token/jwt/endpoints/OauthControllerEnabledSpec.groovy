@@ -8,7 +8,7 @@ import io.micronaut.security.token.generator.RefreshTokenGenerator
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.RefreshTokenValidator
-import io.micronaut.testutils.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
 
