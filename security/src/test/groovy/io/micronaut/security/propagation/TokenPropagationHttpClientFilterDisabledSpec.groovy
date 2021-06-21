@@ -1,7 +1,7 @@
 package io.micronaut.security.propagation
 
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.security.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
 
 class TokenPropagationHttpClientFilterDisabledSpec extends ApplicationContextSpecification {

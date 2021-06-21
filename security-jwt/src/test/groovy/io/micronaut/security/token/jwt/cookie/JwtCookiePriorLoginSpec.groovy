@@ -1,6 +1,6 @@
 package io.micronaut.security.token.jwt.cookie
 
-import io.micronaut.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 
 class JwtCookiePriorLoginSpec extends GebEmbeddedServerSpecification {
 

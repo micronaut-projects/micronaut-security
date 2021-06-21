@@ -2,7 +2,7 @@ package io.micronaut.docs.websockets
 
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import spock.lang.Issue
 import spock.lang.PendingFeature
 import spock.util.concurrent.PollingConditions

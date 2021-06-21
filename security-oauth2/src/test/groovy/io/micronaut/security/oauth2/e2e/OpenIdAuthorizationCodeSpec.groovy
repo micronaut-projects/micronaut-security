@@ -1,25 +1,25 @@
 package io.micronaut.security.oauth2.e2e
 
-import io.micronaut.context.BeanProvider
-import io.micronaut.context.annotation.Primary
+import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
-import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.http.server.util.DefaultHttpHostResolver
 import io.micronaut.http.server.util.HttpHostResolver
-import io.micronaut.http.uri.UriBuilder
-import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.oauth2.GebEmbeddedServerSpecification
-import io.micronaut.security.oauth2.Keycloak
-import io.micronaut.security.oauth2.TestContainersHostResolver
+import io.micronaut.security.oauth2.DefaultProviderResolver
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
+import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration
-import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint
+import io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator
+import io.micronaut.security.oauth2.keycloak.KeycloakAuthorizationRedirectHandler
+import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
+import io.micronaut.security.oauth2.keycloak.KeycloakEndSessionEndpoint
+import io.micronaut.security.oauth2.keycloak.KeycloakProviderResolver
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.Keycloak
+import io.micronaut.security.oauth2.endpoint.authorization.request.DefaultAuthorizationRedirectHandler
 import io.micronaut.security.rules.SecurityRule
 import spock.lang.IgnoreIf
 
@@ -59,6 +59,9 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
         then:
         browser.at LoginPage
 
+        and:
+        !browser.driver.pageSource.contains("Invalid parameter: redirect_uri")
+
         when:
         LoginPage loginPage = browser.page LoginPage
         loginPage.login("user", "password")
@@ -90,7 +93,6 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Controller
     static class HomeController {
-
         @Get(produces = MediaType.TEXT_HTML)
         String index(@Nullable Principal principal) {
             "<html><head><title>Home</title></head><body>Hello ${principal ? principal.name : 'anonymous'}</body></html>"
@@ -100,41 +102,32 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
     @Singleton
     @Named("keycloak")
     @Requires(property = 'spec.name', value = 'OpenIdAuthorizationCodeSpec')
-    static class KeycloakEndSessionEndpoint implements EndSessionEndpoint {
-
-        public static final String PARAM_REDIRECT_URI = "redirect_uri"
-        private final OpenIdProviderMetadata openIdProviderMetadata
-        private final EndSessionConfiguration endSessionConfiguration
-        private final HttpHostResolver httpHostResolver
-
-        KeycloakEndSessionEndpoint(@Named("keycloak") OpenIdProviderMetadata openIdProviderMetadata,
-                                          EndSessionConfiguration endSessionConfiguration,
-                                          HttpHostResolver httpHostResolver) {
-            this.openIdProviderMetadata = openIdProviderMetadata
-            this.endSessionConfiguration = endSessionConfiguration
-            this.httpHostResolver = httpHostResolver
-        }
-
-        @Nullable
-        @Override
-        String getUrl(HttpRequest originating, Authentication authentication) {
-            (openIdProviderMetadata.getEndSessionEndpoint() == null) ? null :
-                    UriBuilder.of(URI.create(openIdProviderMetadata.getEndSessionEndpoint()))
-                            .queryParam(PARAM_REDIRECT_URI, httpHostResolver.resolve(originating) + endSessionConfiguration.getRedirectUri())
-                            .build()
-                            .toString()
+    static class CustomEndSessionEndpoint extends KeycloakEndSessionEndpoint {
+        CustomEndSessionEndpoint(@Named("keycloak") OpenIdProviderMetadata openIdProviderMetadata,
+                                 EndSessionConfiguration endSessionConfiguration,
+                                 HttpHostResolver httpHostResolver) {
+            super(openIdProviderMetadata, endSessionConfiguration, httpHostResolver)
         }
     }
 
-    @Primary
     @Singleton
+    @Replaces(DefaultAuthorizationRedirectHandler.class)
     @Requires(property = 'spec.name', value = 'OpenIdAuthorizationCodeSpec')
-    static class CustomHttpHostResolver extends TestContainersHostResolver {
+    static class CustomDefaultAuthorizationRedirectHandler extends KeycloakAuthorizationRedirectHandler {
+    }
 
-        CustomHttpHostResolver(DefaultHttpHostResolver defaultHttpHostResolver,
-                               @Nullable BeanProvider<EmbeddedServer> embeddedServer) {
-            super(defaultHttpHostResolver, embeddedServer)
+    @Singleton
+    @Replaces(IssuerClaimValidator.class)
+    @Requires(property = 'spec.name', value = 'OpenIdAuthorizationCodeSpec')
+    static class CustomIssuerClaimValidator extends KeycloakIssuerClaimValidator {
+    }
+
+    @Singleton
+    @Replaces(DefaultProviderResolver.class)
+    @Requires(property = 'spec.name', value = 'OpenIdAuthorizationCodeSpec')
+    static class CustomDefaultProviderResolver extends KeycloakProviderResolver {
+        CustomDefaultProviderResolver(List<OpenIdClientConfiguration> openIdClientConfigurations) {
+            super(openIdClientConfigurations)
         }
-
     }
 }

@@ -3,7 +3,7 @@ package io.micronaut.security.token.jwt.endpoints
 import com.nimbusds.jose.jwk.JWK
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
-import io.micronaut.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import javax.inject.Singleton
 
 class KeysControllersWithNoJWKSpec extends EmbeddedServerSpecification {

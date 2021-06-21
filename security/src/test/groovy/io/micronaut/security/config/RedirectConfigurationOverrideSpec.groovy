@@ -1,6 +1,6 @@
 package io.micronaut.security.config
 
-import io.micronaut.security.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Shared
 import spock.lang.Subject
 

@@ -1,7 +1,7 @@
 package io.micronaut.security.token.jwt.bearer
 
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import spock.lang.Unroll
 
 class BearerEnabledSpec extends EmbeddedServerSpecification {

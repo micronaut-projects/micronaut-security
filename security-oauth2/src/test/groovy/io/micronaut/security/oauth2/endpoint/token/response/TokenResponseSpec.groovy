@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.json.JsonSlurper
 import groovy.time.TimeCategory
 import io.micronaut.core.beans.BeanIntrospection
-import io.micronaut.security.oauth2.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Shared
 
 class TokenResponseSpec extends ApplicationContextSpecification {

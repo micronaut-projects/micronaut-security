@@ -1,7 +1,7 @@
 package io.micronaut.security.oauth2.url
 
 import io.micronaut.http.HttpRequest
-import io.micronaut.security.oauth2.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class OauthRouteUrlBuilderSpec extends ApplicationContextSpecification {
 

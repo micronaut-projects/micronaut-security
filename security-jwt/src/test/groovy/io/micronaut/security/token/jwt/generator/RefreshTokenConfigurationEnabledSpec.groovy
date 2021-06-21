@@ -1,7 +1,7 @@
 package io.micronaut.security.token.jwt.generator
 
 import com.nimbusds.jose.JWSAlgorithm
-import io.micronaut.testutils.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class RefreshTokenConfigurationEnabledSpec extends ApplicationContextSpecification {
 

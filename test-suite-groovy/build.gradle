@@ -3,5 +3,6 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation project(":security-jwt")
     testImplementation project(":security-oauth2")
+    testImplementation project(":test-suite-utils")
 }
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

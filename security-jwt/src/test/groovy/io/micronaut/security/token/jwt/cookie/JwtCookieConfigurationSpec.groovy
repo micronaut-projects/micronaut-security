@@ -1,6 +1,6 @@
 package io.micronaut.security.token.jwt.cookie
 
-import io.micronaut.testutils.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Shared
 import spock.lang.Subject
 

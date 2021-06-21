@@ -6,7 +6,7 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.*
-import io.micronaut.security.oauth2.docs.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.reactivex.Maybe
 import org.reactivestreams.Publisher
 
@@ -17,6 +17,11 @@ class LoggersSpec extends EmbeddedServerSpecification {
     @Override
     String getSpecName() {
         'LoggersSpec'
+    }
+
+    @Override
+    String getOpenIdClientName() {
+        'github'
     }
 
     @Override

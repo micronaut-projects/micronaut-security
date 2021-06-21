@@ -1,5 +1,21 @@
-package io.micronaut.security.oauth2
+/*
+ * Copyright 2017-2021 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.micronaut.security.testutils
 
+import org.testcontainers.Testcontainers
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
@@ -39,19 +55,32 @@ class Keycloak {
                     .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*").withStartupTimeout(Duration.ofMinutes(2)))
             keycloak.start()
             keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "))
-            keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh create -s clientId=$CLIENT_ID -s redirectUris=[\"http://localhost*\"]".split(" "))
+            keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh create -s clientId=$CLIENT_ID -s redirectUris=[\"http://${getRedirectUriHost()}*\"]".split(" "))
             Container.ExecResult result = keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh get $CLIENT_ID".split(" "))
             Map map = new ObjectMapper()
                     .readValue(result.getStdout(), Map.class)
             clientSecret = map.get("secret")
-            issuer = "http://localhost:" + keycloak.getMappedPort(8080) + "/auth/realms/master"
+            int port = keycloak.getMappedPort(8080)
+            Testcontainers.exposeHostPorts(port)
+            issuer = "http://" + getHost() + ":" + port  + "/auth/realms/master"
         }
+    }
+
+    static String getRedirectUriHost() {
+        TestContainersUtils.host
+    }
+
+    static String getHost() {
+        //isUsingTestContainers() ? "host.testcontainers.internal" : "localhost"
+        'localhost'
     }
 
     static void destroy() {
         if (keycloak != null) {
             keycloak.stop()
-            keycloak = null
         }
+        keycloak = null
+        clientSecret = null
+        issuer = null
     }
 }
