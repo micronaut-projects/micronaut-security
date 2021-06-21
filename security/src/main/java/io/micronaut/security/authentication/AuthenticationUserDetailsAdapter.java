@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import java.util.Map;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Introspected
 public class AuthenticationUserDetailsAdapter implements Authentication {
 
     private final UserDetails userDetails;
