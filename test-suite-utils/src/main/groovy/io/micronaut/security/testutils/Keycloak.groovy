@@ -71,7 +71,6 @@ class Keycloak {
     }
 
     static String getHost() {
-        //isUsingTestContainers() ? "host.testcontainers.internal" : "localhost"
         'localhost'
     }
 
