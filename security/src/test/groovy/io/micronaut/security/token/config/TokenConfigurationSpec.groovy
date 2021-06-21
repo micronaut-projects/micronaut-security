@@ -1,6 +1,6 @@
 package io.micronaut.security.token.config
 
-import io.micronaut.security.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class TokenConfigurationSpec extends ApplicationContextSpecification {
 

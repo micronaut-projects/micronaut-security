@@ -28,7 +28,7 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.validator.TokenValidator
-import io.micronaut.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher

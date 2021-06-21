@@ -2,7 +2,7 @@ package io.micronaut.security.token.generator
 
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.context.annotation.Requires
-import io.micronaut.security.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.authentication.UserDetails
 import spock.lang.Shared
 import spock.lang.Subject

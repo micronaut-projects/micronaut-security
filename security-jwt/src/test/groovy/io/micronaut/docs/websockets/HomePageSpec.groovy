@@ -2,7 +2,9 @@ package io.micronaut.docs.websockets
 
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
+import spock.lang.Issue
+import spock.lang.PendingFeature
 import spock.util.concurrent.PollingConditions
 
 import java.time.LocalDateTime
@@ -43,13 +45,13 @@ class HomePageSpec extends GebEmbeddedServerSpecification {
         tokenGenerator.generateToken(claims)
     }
 
+    @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5618")
+    @PendingFeature
     def "check websocket connects"() {
-        given:
-        browser.baseUrl = embeddedServer.URL.toString()
-
         expect:
         embeddedServer.applicationContext.containsBean(MockAuthenticationProvider)
         embeddedServer.applicationContext.containsBean(ParamTokenReader)
+        embeddedServer.applicationContext.registerSingleton(new WebsocketsHtmlProvider(baseUrl))
 
         when:
         TokenGenerator tokenGenerator = embeddedServer.applicationContext.getBean(JwtTokenGenerator)

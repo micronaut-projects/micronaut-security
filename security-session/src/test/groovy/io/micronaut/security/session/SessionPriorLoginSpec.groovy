@@ -15,7 +15,7 @@ import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
@@ -39,9 +39,6 @@ class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
     }
 
     void "test prior login behavior"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         go '/secured'
 

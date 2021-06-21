@@ -6,7 +6,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest

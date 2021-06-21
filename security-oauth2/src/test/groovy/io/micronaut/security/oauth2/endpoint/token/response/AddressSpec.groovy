@@ -1,7 +1,7 @@
 package io.micronaut.security.oauth2.endpoint.token.response
 
 import io.micronaut.core.beans.BeanIntrospection
-import io.micronaut.security.oauth2.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class AddressSpec extends ApplicationContextSpecification {
 

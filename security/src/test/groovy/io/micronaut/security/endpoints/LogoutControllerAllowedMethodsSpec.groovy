@@ -10,7 +10,7 @@ import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse

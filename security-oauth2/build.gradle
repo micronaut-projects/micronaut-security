@@ -1,6 +1,5 @@
 plugins {
     id "org.jetbrains.kotlin.jvm" version "1.5.10"
-    id "com.github.erdi.webdriver-binaries" version "2.4"
 }
 
 dependencies {
@@ -20,8 +19,7 @@ dependencies {
     testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10"
     testImplementation project(":security-jwt")
+    testImplementation project(":test-suite-utils")
 }
 
-apply from: "${rootProject.projectDir}/gradle/geb.gradle"
-apply from: "${rootProject.projectDir}/gradle/webdriverbinaries.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

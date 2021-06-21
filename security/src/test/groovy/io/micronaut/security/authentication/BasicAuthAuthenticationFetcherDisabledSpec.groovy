@@ -1,6 +1,6 @@
 package io.micronaut.security.authentication
 
-import io.micronaut.security.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class BasicAuthAuthenticationFetcherDisabledSpec extends ApplicationContextSpecification {
 

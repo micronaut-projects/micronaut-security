@@ -4,7 +4,7 @@ package io.micronaut.security.corspreflightrequest
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 
 class CorsPreflightRequestSpec extends EmbeddedServerSpecification {
 

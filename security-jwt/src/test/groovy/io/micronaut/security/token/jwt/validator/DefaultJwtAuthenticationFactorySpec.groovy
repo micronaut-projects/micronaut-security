@@ -11,7 +11,7 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.testutils.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Shared
 import spock.lang.Subject
 
