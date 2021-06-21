@@ -7,14 +7,12 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.server.util.HttpHostResolver
-import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.oauth2.DefaultProviderResolver
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration
 import io.micronaut.security.oauth2.endpoint.authorization.request.DefaultAuthorizationRedirectHandler
-import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint
 import io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakAuthorizationRedirectHandler
 import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
@@ -56,9 +54,6 @@ class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test a full login"() {
         expect:
-        applicationContext.registerSingleton(EndSessionEndpoint, new KeycloakEndSessionEndpoint(applicationContext.getBean(OpenIdProviderMetadata, Qualifiers.byName("keycloak")),
-                applicationContext.getBean(EndSessionConfiguration),
-                applicationContext.getBean(HttpHostResolver)), Qualifiers.byName("keycloak"))
         applicationContext.containsBean(JwksSignature)
         applicationContext.containsBean(TokenValidator)
 
