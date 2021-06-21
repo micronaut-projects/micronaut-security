@@ -15,6 +15,9 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
@@ -64,11 +67,15 @@ class OpenIdClientFactory {
 
     private final BeanContext beanContext;
 
+    private final ObjectMapper objectMapper;
+
     /**
      * @param beanContext The bean context
+     * @param objectMapper
      */
-    OpenIdClientFactory(BeanContext beanContext) {
+    OpenIdClientFactory(BeanContext beanContext, ObjectMapper objectMapper) {
         this.beanContext = beanContext;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -90,11 +97,15 @@ class OpenIdClientFactory {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                         }
-                        return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                        //TODO this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                        String json = issuerClient.toBlocking().retrieve(configurationUrl.toString(), String.class);
+                        return objectMapper.readValue(json, DefaultOpenIdProviderMetadata.class);
                     } catch (HttpClientResponseException e) {
                         throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
                     } catch (MalformedURLException e) {
                         throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
+                    } catch (JsonProcessingException e) {
+                        throw new BeanInstantiationException("JSON Processing Exception parsing issuer URL returned JSON " + issuer.toString(), e);
                     }
                 }).orElse(new DefaultOpenIdProviderMetadata());
 
