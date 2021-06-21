@@ -3,14 +3,14 @@ plugins {
 }
 
 dependencies {
-    api "io.micronaut:micronaut-http-server-netty"
-    api "io.micronaut:micronaut-http-client"
+    implementation "io.micronaut:micronaut-http-server-netty"
+    implementation "io.micronaut:micronaut-http-client"
     api "org.gebish:geb-spock:$gebVersion"
-    api(platform("org.testcontainers:testcontainers-bom:$testcontainersVersion"))
-    api "org.testcontainers:selenium"
-    api "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
-    api "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
-    api "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+    implementation(platform("org.testcontainers:testcontainers-bom:$testcontainersVersion"))
+    implementation "org.testcontainers:selenium"
+    implementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
+    implementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
+    implementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
     runtimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
 }
 
