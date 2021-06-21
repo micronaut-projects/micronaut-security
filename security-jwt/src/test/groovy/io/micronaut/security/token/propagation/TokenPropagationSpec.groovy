@@ -29,6 +29,8 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import org.reactivestreams.Publisher
+import spock.lang.Issue
+import spock.lang.PendingFeature
 import spock.lang.Specification
 
 import jakarta.inject.Singleton
@@ -38,6 +40,8 @@ class TokenPropagationSpec extends Specification {
 
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
+    @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5625")
+    @PendingFeature
     void "test token propagation"() {
         Map<String, Object> inventoryConfig = [
                 'micronaut.application.name': 'inventory',
