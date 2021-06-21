@@ -165,6 +165,7 @@ class IntrospectionResponseSpec extends EmbeddedServerSpecification {
     }
 
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/4179")
+    @PendingFeature
     void "test anyGetter with ObjectMapper registered in application context"() {
         given:
         ObjectMapper objectMapper = applicationContext.getBean(ObjectMapper)
