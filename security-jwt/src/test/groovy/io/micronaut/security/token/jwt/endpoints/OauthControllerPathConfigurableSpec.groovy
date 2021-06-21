@@ -8,7 +8,7 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import io.micronaut.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton

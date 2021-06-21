@@ -1,6 +1,6 @@
 package io.micronaut.security.token.jwt.cookie
 
-import io.micronaut.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 
 class JwtCookiePriorLoginSpec extends GebEmbeddedServerSpecification {
 
@@ -20,9 +20,6 @@ class JwtCookiePriorLoginSpec extends GebEmbeddedServerSpecification {
     }
 
     void "test prior login behavior"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         go '/secured'
 

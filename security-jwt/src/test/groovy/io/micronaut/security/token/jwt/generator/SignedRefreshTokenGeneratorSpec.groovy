@@ -2,7 +2,7 @@ package io.micronaut.security.token.jwt.generator
 
 import com.nimbusds.jose.JWSObject
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.testutils.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Shared
 import spock.lang.Subject
 

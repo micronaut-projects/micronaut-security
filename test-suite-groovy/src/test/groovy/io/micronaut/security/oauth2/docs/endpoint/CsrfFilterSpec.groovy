@@ -1,12 +1,12 @@
-package io.microanut.security.oauth2.docs.endpoint
-
+package io.micronaut.security.oauth2.docs.endpoint
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.async.publisher.Publishers
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
@@ -14,10 +14,9 @@ import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-
 import jakarta.inject.Named
 import jakarta.inject.Singleton
-import io.micronaut.security.oauth2.docs.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 
 class CsrfFilterSpec extends EmbeddedServerSpecification {
 
@@ -57,7 +56,7 @@ class CsrfFilterSpec extends EmbeddedServerSpecification {
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
 
         @Override
-        Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
+        Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) {
             Flowable.create({ emitter ->
                 emitter.onNext(new UserDetails("twitterUser", Collections.emptyList()))
                 emitter.onComplete()

@@ -6,7 +6,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.management.endpoint.annotation.Endpoint
 import io.micronaut.management.endpoint.annotation.Read
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 
 import java.security.Principal
 

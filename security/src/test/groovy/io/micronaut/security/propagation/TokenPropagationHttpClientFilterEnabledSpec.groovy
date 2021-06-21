@@ -1,6 +1,6 @@
 package io.micronaut.security.propagation
 
-import io.micronaut.security.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
 
 class TokenPropagationHttpClientFilterEnabledSpec extends ApplicationContextSpecification {

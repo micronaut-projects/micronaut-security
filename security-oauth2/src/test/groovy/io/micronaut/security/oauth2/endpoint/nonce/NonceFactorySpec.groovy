@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.endpoint.nonce
 
-import io.micronaut.security.oauth2.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class NonceFactorySpec extends ApplicationContextSpecification {
 

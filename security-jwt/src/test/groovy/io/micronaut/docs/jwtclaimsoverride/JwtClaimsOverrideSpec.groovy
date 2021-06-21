@@ -13,7 +13,7 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.validator.TokenValidator
-import io.micronaut.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.reactivex.Flowable
 
 class JwtClaimsOverrideSpec extends EmbeddedServerSpecification {

@@ -12,10 +12,6 @@ subprojects { Project subproject ->
     group "io.micronaut.security"
     apply plugin: "io.micronaut.build.internal.common"
 
-    if (subproject.parent.name == "examples" || subproject.name == "examples") {
-        return
-    }
-
     apply plugin: "io.micronaut.build.internal.dependency-updates"
     if (!subproject.name.startsWith("test-suite")) {
         apply plugin: "io.micronaut.build.internal.publishing"

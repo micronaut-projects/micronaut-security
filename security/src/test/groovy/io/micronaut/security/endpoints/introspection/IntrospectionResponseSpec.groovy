@@ -5,12 +5,10 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
-import spock.lang.Ignore
 import spock.lang.Issue
-import spock.lang.PendingFeature
 import spock.lang.Shared
 
 import javax.validation.Validator

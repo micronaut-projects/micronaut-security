@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation
 
-import io.micronaut.security.oauth2.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
