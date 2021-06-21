@@ -29,6 +29,7 @@ import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.oauth2.client.OpenIdClient;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import io.micronaut.web.router.DefaultRouteBuilder;
@@ -37,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -77,9 +79,17 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
         } else {
             AtomicBoolean endSessionRegistered = new AtomicBoolean();
 
-            controllerList.forEach((controller) -> {
+            for (OauthController controller : controllerList) {
                 OauthClient client = controller.getClient();
                 String name = client.getName();
+
+                Optional<OauthClientConfiguration> oauthClientConfiguration = beanContext.findBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+                if (oauthClientConfiguration.isPresent() && oauthClientConfiguration.get().getClientSecret() == null) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("client {} does not define a client secret. Skipping registration of routes", name);
+                    }
+                    continue;
+                }
                 boolean isDefaultProvider = oauthConfiguration.getDefaultProvider().filter(provider -> provider.equals(name)).isPresent();
 
                 BeanDefinition<OauthController> bd = beanContext.getBeanDefinition(OauthController.class, Qualifiers.byName(name));
@@ -133,7 +143,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                         });
                     }
                 }
-            });
+            }
 
             if (!endSessionRegistered.get() && LOG.isDebugEnabled()) {
                 LOG.debug("Skipped registration of logout route. No openid clients found that support end session");

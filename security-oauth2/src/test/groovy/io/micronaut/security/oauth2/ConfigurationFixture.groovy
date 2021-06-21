@@ -28,13 +28,24 @@ trait ConfigurationFixture {
     }
 
     Map<String, Object> getOauth2ClientConfiguration() {
-        Map m = [
-                ("micronaut.security.oauth2.clients.${openIdClientName}.client-id".toString()): 'XXXX',
-                ("micronaut.security.oauth2.clients.${openIdClientName}.client-secret".toString()): 'YYYY',
-        ]
+        Map<String, Object> m = [:]
+        if (clientId) {
+           m["micronaut.security.oauth2.clients.${openIdClientName}.client-id".toString()] = clientId
+        }
+        if (clientSecret) {
+            m["micronaut.security.oauth2.clients.${openIdClientName}.client-secret".toString()] = 'YYYY'
+        }
         if (issuer != null) {
             m[("micronaut.security.oauth2.clients.${openIdClientName}.openid.issuer".toString())] = issuer
         }
         m
+    }
+
+    String getClientId() {
+        'XXXX'
+    }
+
+    String getClientSecret() {
+        'YYYY'
     }
 }
