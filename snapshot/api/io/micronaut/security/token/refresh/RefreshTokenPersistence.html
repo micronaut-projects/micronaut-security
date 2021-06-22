@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var methods = {"i0":6,"i1":18,"i2":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -97,9 +97,14 @@ var activeTableTab = "activeTableTab";
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Superinterfaces:</dt>
+<dd>io.micronaut.context.event.ApplicationEventListener&lt;<a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&gt;, java.util.EventListener</dd>
+</dl>
 <hr>
 <br>
-<pre>public interface <span class="typeNameLabel">RefreshTokenPersistence</span></pre>
+<pre>public interface <span class="typeNameLabel">RefreshTokenPersistence</span>
+extends io.micronaut.context.event.ApplicationEventListener&lt;<a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&gt;</pre>
 <div class="block">Responsible for persisting refresh tokens and retrieving
  user details by a refresh token.</div>
 <dl>
@@ -121,7 +126,7 @@ var activeTableTab = "activeTableTab";
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -131,12 +136,23 @@ var activeTableTab = "activeTableTab";
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html#getUserDetails-java.lang.String-">getUserDetails</a></span>(java.lang.String&nbsp;refreshToken)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>default void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html#onApplicationEvent-io.micronaut.security.token.event.RefreshTokenGeneratedEvent-">onApplicationEvent</a></span>(<a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&nbsp;event)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/refresh/RefreshTokenPersistence.html#persistToken-io.micronaut.security.token.event.RefreshTokenGeneratedEvent-">persistToken</a></span>(<a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&nbsp;event)</code>
 <div class="block">Persist the refresh token.</div>
 </td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.io.micronaut.context.event.ApplicationEventListener">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;io.micronaut.context.event.ApplicationEventListener</h3>
+<code>supports</code></li>
+</ul>
 </li>
 </ul>
 </li>
@@ -157,12 +173,24 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>persistToken</h4>
-<pre>@EventListener
-void&nbsp;persistToken(<a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&nbsp;event)</pre>
+<pre>void&nbsp;persistToken(<a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&nbsp;event)</pre>
 <div class="block">Persist the refresh token.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>event</code> - The refresh token generated event</dd>
+</dl>
+</li>
+</ul>
+<a name="onApplicationEvent-io.micronaut.security.token.event.RefreshTokenGeneratedEvent-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onApplicationEvent</h4>
+<pre>default&nbsp;void&nbsp;onApplicationEvent(<a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&nbsp;event)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>onApplicationEvent</code>&nbsp;in interface&nbsp;<code>io.micronaut.context.event.ApplicationEventListener&lt;<a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
