@@ -16,7 +16,6 @@
 package io.micronaut.security.oauth2.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanProvider;
@@ -71,7 +70,7 @@ class OpenIdClientFactory {
 
     /**
      * @param beanContext The bean context
-     * @param objectMapper
+     * @param objectMapper Object Mapper
      */
     OpenIdClientFactory(BeanContext beanContext, ObjectMapper objectMapper) {
         this.beanContext = beanContext;
