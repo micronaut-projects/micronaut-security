@@ -57,13 +57,13 @@ class OauthControllerEnabledSpec extends ApplicationContextSpecification {
     static class CustomRefreshTokenPersistence implements RefreshTokenPersistence {
 
         @Override
-        void persistToken(RefreshTokenGeneratedEvent event) {
-
+        Publisher<UserDetails> getUserDetails(String refreshToken) {
+            return null
         }
 
         @Override
-        Publisher<UserDetails> getUserDetails(String refreshToken) {
-            return null
+        void persistToken(RefreshTokenGeneratedEvent event) {
+
         }
     }
 }

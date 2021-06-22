@@ -18,7 +18,7 @@ import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import org.reactivestreams.Publisher
-import jakarta.inject.Singleton;
+import jakarta.inject.Singleton
 
 class IntrospectionEndpointSpec extends EmbeddedServerSpecification {
 
