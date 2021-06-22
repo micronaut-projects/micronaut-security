@@ -62,7 +62,7 @@ class OauthControllerEnabledSpec extends ApplicationContextSpecification {
         }
 
         @Override
-        void onApplicationEvent(RefreshTokenGeneratedEvent event) {
+        void persistToken(RefreshTokenGeneratedEvent event) {
 
         }
     }

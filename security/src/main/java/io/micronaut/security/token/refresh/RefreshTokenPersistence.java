@@ -30,6 +30,17 @@ import org.reactivestreams.Publisher;
 public interface RefreshTokenPersistence extends ApplicationEventListener<RefreshTokenGeneratedEvent> {
 
     /**
+     * Persist the refresh token.
+     *
+     * @param event The refresh token generated event
+     */
+    void persistToken(RefreshTokenGeneratedEvent event);
+
+    default void onApplicationEvent(RefreshTokenGeneratedEvent event) {
+        persistToken(event);
+    }
+
+    /**
      * @param refreshToken The refresh token
      * @return The user details associated with the refresh token
      */

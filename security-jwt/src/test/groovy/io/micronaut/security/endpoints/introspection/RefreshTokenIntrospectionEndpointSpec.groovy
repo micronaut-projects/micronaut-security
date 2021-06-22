@@ -75,7 +75,7 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
         Map<String, UserDetails> tokens = [:]
 
         @Override
-        void onApplicationEvent(RefreshTokenGeneratedEvent event) {
+        void persistToken(RefreshTokenGeneratedEvent event) {
             tokens.put(event.getRefreshToken(), event.getUserDetails())
         }
 
