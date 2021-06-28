@@ -1,5 +1,5 @@
 ext {
-    nimbusJoseJwtVersion = '9.10'
+    nimbusJoseJwtVersion = '9.10.1'
     bouncyCastleVersion = '1.69'
 }
 
