@@ -10,7 +10,7 @@ dependencies {
     testImplementation project(":security-jwt")
     testImplementation project(":security-oauth2")
     testImplementation project(":test-suite-utils")
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.20"
 }
 
 compileTestKotlin {
