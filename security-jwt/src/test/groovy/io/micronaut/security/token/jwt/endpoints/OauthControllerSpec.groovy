@@ -35,8 +35,8 @@ import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.TokenValidator
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
 import jakarta.inject.Singleton
@@ -124,8 +124,8 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
         when:
         TokenValidator tokenValidator = applicationContext.getBean(JwtTokenValidator.class)
-        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(refreshRsp.body().accessToken, null)).blockingFirst().getAttributes()
-        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(originalAccessToken, null)).blockingFirst().getAttributes()
+        Map<String, Object> newAccessTokenClaims = Flux.from(tokenValidator.validateToken(refreshRsp.body().accessToken, null)).blockFirst().getAttributes()
+        Map<String, Object> originalAccessTokenClaims = Flux.from(tokenValidator.validateToken(originalAccessToken, null)).blockFirst().getAttributes()
         List<String> expectedClaims = [JwtClaims.SUBJECT,
                                        JwtClaims.ISSUED_AT,
                                        JwtClaims.EXPIRATION_TIME,
@@ -281,15 +281,15 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
+            Flux.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', []))
-                    emitter.onComplete()
+                    emitter.next(new UserDetails('user', []))
+                    emitter.complete()
                 } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
                 }
 
-            }, BackpressureStrategy.ERROR)
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 

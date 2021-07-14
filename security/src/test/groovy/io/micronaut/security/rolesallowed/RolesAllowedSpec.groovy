@@ -15,8 +15,8 @@ import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
 import javax.annotation.security.RolesAllowed
@@ -78,15 +78,15 @@ class RolesAllowedSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
+            Flux.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', ['ROLE_USER']))
-                    emitter.onComplete()
+                    emitter.next(new UserDetails('user', ['ROLE_USER']))
+                    emitter.complete()
                 } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
                 }
 
-            }, BackpressureStrategy.ERROR)
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 

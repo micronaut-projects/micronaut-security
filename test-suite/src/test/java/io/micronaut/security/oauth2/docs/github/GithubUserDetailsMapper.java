@@ -12,6 +12,8 @@ import org.reactivestreams.Publisher;
 
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +29,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 
     @Override
     public Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { // <3>
-        return apiClient.getUser("token " + tokenResponse.getAccessToken())
+        return Flux.from(apiClient.getUser("token " + tokenResponse.getAccessToken()))
                 .map(user -> {
                     List<String> roles = Collections.singletonList("ROLE_GITHUB");
                     return new UserDetails(user.getLogin(), roles); // <4>

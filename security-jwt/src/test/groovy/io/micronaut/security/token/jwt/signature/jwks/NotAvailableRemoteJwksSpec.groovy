@@ -33,8 +33,8 @@ import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
@@ -191,10 +191,10 @@ class NotAvailableRemoteJwksSpec extends Specification {
     static class MockAuthenticationProvider implements AuthenticationProvider {
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            Flux.create({emitter ->
+                emitter.next(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 

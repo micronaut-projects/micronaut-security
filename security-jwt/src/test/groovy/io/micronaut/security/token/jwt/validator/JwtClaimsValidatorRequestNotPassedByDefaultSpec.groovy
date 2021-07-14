@@ -23,8 +23,8 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton
@@ -72,15 +72,15 @@ class JwtClaimsValidatorRequestNotPassedByDefaultSpec extends EmbeddedServerSpec
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({ emitter ->
+            Flux.create({ emitter ->
                 if (authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password') {
-                    emitter.onNext(new UserDetails('user', []))
-                    emitter.onComplete()
+                    emitter.next(new UserDetails('user', []))
+                    emitter.complete()
                 } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
                 }
 
-            }, BackpressureStrategy.ERROR)
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 }

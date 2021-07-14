@@ -22,8 +22,6 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.http.client.BlockingHttpClient
-import io.micronaut.http.client.HttpClient
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.AuthenticationException
@@ -33,11 +31,11 @@ import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton
+import reactor.core.publisher.Flux
+import reactor.core.publisher.FluxSink
 
 class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
 
@@ -80,17 +78,18 @@ class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
         @Override
         Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest,
                                                        AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
+            Flux.create({ emitter ->
                 if ( authenticationRequest.identity == 'user2' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', [], [customRoles: ['ROLE_USER']]))
+                    emitter.next(new UserDetails('user', [], [customRoles: ['ROLE_USER']]))
+                    emitter.complete()
                 } else if ( authenticationRequest.identity == 'user3' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', [], [otherCustomRoles: ['ROLE_USER']]))
-                    emitter.onComplete()
+                    emitter.next(new UserDetails('user', [], [otherCustomRoles: ['ROLE_USER']]))
+                    emitter.complete()
                 } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
                 }
 
-            }, BackpressureStrategy.ERROR)
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 

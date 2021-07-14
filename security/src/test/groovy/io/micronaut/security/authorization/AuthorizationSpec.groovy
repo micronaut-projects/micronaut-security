@@ -2,6 +2,7 @@ package io.micronaut.security.authorization
 
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -22,12 +23,12 @@ import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.PrincipalArgumentBinder
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.Single
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import org.reactivestreams.Publisher
-
 import jakarta.inject.Singleton
+import reactor.core.publisher.Mono
 import java.security.Principal
 
 class AuthorizationSpec extends EmbeddedServerSpecification {
@@ -304,13 +305,15 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
     static class PrincipalArgumentBinderController {
 
         @Get("/singleprincipal")
-        Single<String> singlehello(Principal principal) {
-            Single.just("You are ${principal.getName()}") as Single<String>
+        @SingleResult
+        Publisher<String> singlehello(Principal principal) {
+            Mono.just("You are ${principal.getName()}".toString())
         }
 
         @Get("/singleauthentication")
-        Single<String> singleauthentication(Authentication authentication) {
-            Single.just("You are ${authentication.getName()}") as Single<String>
+        @SingleResult
+        Publisher<String> singleauthentication(Authentication authentication) {
+            Mono.just("You are ${authentication.getName()}".toString())
         }
     }
 
@@ -340,7 +343,7 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({ emitter ->
+            Flux.create({ emitter ->
                 String username = authenticationRequest.getIdentity().toString()
                 AuthenticationFailed authenticationFailed = null
                 if (username == "disabled") {
@@ -363,12 +366,12 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
                 }
 
                 if (authenticationFailed) {
-                    emitter.onError(new AuthenticationException(authenticationFailed))
+                    emitter.error(new AuthenticationException(authenticationFailed))
                 } else {
-                    emitter.onNext(new UserDetails(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"]));
-                    emitter.onComplete()
+                    emitter.next(new UserDetails(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"]));
+                    emitter.complete()
                 }
-            }, BackpressureStrategy.ERROR)
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 

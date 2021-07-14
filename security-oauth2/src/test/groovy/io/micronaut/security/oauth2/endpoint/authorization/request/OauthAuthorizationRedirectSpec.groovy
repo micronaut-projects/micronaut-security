@@ -6,7 +6,7 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.testutils.EmbeddedServerSpecification
@@ -16,8 +16,8 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Named
@@ -44,7 +44,7 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
     void "test authorization redirect with just oauth"() {
         given:
-        RxHttpClient client = applicationContext.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
+        HttpClient client = applicationContext.createBean(HttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
 
         expect:
         applicationContext.findBean(OauthClient, Qualifiers.byName("twitter")).isPresent()
@@ -78,10 +78,10 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
-            Flowable.create({ emitter ->
-                emitter.onNext(new UserDetails("twitterUser", Collections.emptyList()))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            Flux.create({ emitter ->
+                emitter.next(new UserDetails("twitterUser", Collections.emptyList()))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 }

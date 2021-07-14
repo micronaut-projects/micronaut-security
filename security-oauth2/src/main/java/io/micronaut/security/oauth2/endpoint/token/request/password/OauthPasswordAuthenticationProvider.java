@@ -27,7 +27,7 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 
 import java.util.Collections;
@@ -66,9 +66,9 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
-        return Flowable.fromPublisher(
+        return Flux.from(
                 tokenEndpointClient.sendRequest(context))
-                .switchMap(response -> Flowable.fromPublisher(userDetailsMapper.createAuthenticationResponse(response, null))
+                .switchMap(response -> Flux.from(userDetailsMapper.createAuthenticationResponse(response, null))
                         .map(AuthenticationResponse.class::cast));
     }
 

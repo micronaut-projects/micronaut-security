@@ -18,6 +18,7 @@ package io.micronaut.security.token.jwt.endpoints;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
@@ -29,7 +30,8 @@ import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.validation.Validated;
-import io.reactivex.Single;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -79,7 +81,8 @@ public class OauthController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public Single<MutableHttpResponse<?>> index(HttpRequest<?> request,
+    @SingleResult
+    public Publisher<MutableHttpResponse<?>> index(HttpRequest<?> request,
                                                @Nullable @Body TokenRefreshRequest tokenRefreshRequest,
                                                @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
         String refreshToken = resolveRefreshToken(tokenRefreshRequest, cookieRefreshToken);
@@ -92,21 +95,23 @@ public class OauthController {
      * @return A response or a failure indicated by the HTTP status
      */
     @Get
-    public Single<MutableHttpResponse<?>> index(HttpRequest<?> request,
-                                                @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
+    @SingleResult
+    public Publisher<MutableHttpResponse<?>> index(HttpRequest<?> request,
+                                                   @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
         if (!oauthControllerConfigurationProperties.isGetAllowed()) {
-            return Single.just(HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED));
+            return Mono.just(HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED));
         }
         String refreshToken = resolveRefreshToken(null, cookieRefreshToken);
         return createResponse(request, refreshToken);
     }
 
-    private Single<MutableHttpResponse<?>> createResponse(HttpRequest<?> request, String refreshToken) {
+    @SingleResult
+    private Publisher<MutableHttpResponse<?>> createResponse(HttpRequest<?> request, String refreshToken) {
         Optional<String> validRefreshToken = refreshTokenValidator.validate(refreshToken);
         if (!validRefreshToken.isPresent()) {
             throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT, "Refresh token is invalid", null);
         }
-        return Single.fromPublisher(refreshTokenPersistence.getUserDetails(validRefreshToken.get()))
+        return Mono.from(refreshTokenPersistence.getUserDetails(validRefreshToken.get()))
                 .map(userDetails -> loginHandler.loginRefresh(userDetails, refreshToken, request));
     }
 

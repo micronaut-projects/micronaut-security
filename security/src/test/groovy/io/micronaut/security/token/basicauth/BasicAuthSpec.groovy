@@ -12,10 +12,9 @@ import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.BasicAuthAuthenticationFetcher
 import io.micronaut.security.authentication.UserDetails
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
-
 import jakarta.inject.Singleton
 
 class BasicAuthSpec extends EmbeddedServerSpecification {
@@ -97,16 +96,16 @@ class BasicAuthSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
+            Flux.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', []))
-                    emitter.onComplete()
+                    emitter.next(new UserDetails('user', []))
+                    emitter.complete()
                 } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
                 }
 
 
-            }, BackpressureStrategy.ERROR)
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 

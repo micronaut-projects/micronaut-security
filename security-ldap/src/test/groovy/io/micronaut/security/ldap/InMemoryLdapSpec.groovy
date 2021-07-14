@@ -13,9 +13,7 @@ import io.micronaut.http.ssl.SslConfiguration
 import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.reactivex.Flowable
-import io.reactivex.annotations.NonNull
-import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 import spock.lang.Specification
 
 import javax.net.ssl.TrustManagerFactory
@@ -77,14 +75,11 @@ abstract class InMemoryLdapSpec extends Specification {
     }
 
     AuthenticationResponse authenticate(LdapAuthenticationProvider authenticationProvider, String username, String password = "password") {
-        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest(username, password)))
-                .onErrorResumeNext(new io.reactivex.functions.Function<Throwable, Publisher<? extends AuthenticationResponse>>() {
-                    @Override
-                    Publisher<? extends AuthenticationResponse> apply(@NonNull Throwable throwable) throws Exception {
-                        return Flowable.just(((AuthenticationException) throwable).getResponse())
-                    }
+        Flux.from(authenticationProvider.authenticate(null, createAuthenticationRequest(username, password)))
+                .onErrorResume(t -> {
+                        return Flux.just(((AuthenticationException) t).getResponse())
                 })
-                .blockingFirst()
+                .blockFirst()
     }
 
 }

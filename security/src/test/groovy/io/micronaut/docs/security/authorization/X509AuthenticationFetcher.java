@@ -5,11 +5,11 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
-
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
+
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
@@ -23,12 +23,12 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
-        return Maybe.<Authentication>create(emitter -> {
+        return Mono.<Authentication>create(emitter -> {
             Optional<Certificate> optionalCertificate = request.getCertificate();
             if (optionalCertificate.isPresent()) {
                 Certificate certificate = optionalCertificate.get();
                 if (certificate instanceof X509Certificate) {
-                    emitter.onSuccess(new Authentication() {
+                    emitter.success(new Authentication() {
                         X509Certificate x509Certificate = ((X509Certificate) certificate);
                         @Override
                         public String getName() {
@@ -44,8 +44,8 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
                     return;
                 }
             }
-            emitter.onComplete();
-        }).toFlowable();
+            emitter.success();
+        });
     }
 }
 //end::clazz[]

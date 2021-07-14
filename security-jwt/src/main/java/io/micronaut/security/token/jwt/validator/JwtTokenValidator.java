@@ -21,11 +21,12 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
-import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.util.Collection;
 
 /**
@@ -78,7 +79,7 @@ public class JwtTokenValidator implements TokenValidator {
     public Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
         return validator.validate(token, request)
                 .flatMap(jwtAuthenticationFactory::createAuthentication)
-                .map(Flowable::just)
-                .orElse(Flowable.empty());
+                .map(Flux::just)
+                .orElse(Flux.empty());
     }
 }
