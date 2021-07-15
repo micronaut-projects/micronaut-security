@@ -19,6 +19,7 @@ import io.micronaut.core.annotation.NonNull;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Represents the state of an authentication.
@@ -40,4 +41,18 @@ public interface Authentication extends Principal, Serializable {
      */
     @NonNull
     Map<String, Object> getAttributes();
+
+    /**
+     * Retrieves an explicitly typed attribute value.
+     *
+     * @param name the name of the attribute
+     * @param clazz the expected class of the attribute
+     * @param <T> the expected type of the attribute
+     * @return the typed attribute or null if it doesn't exist or the type is not correct
+     */
+    default <T> Optional<T> getAttribute(String name, @NonNull Class<T> clazz) {
+        return Optional.ofNullable(getAttributes().get(name))
+            .filter(clazz::isInstance)
+            .map(clazz::cast);
+    }
 }
