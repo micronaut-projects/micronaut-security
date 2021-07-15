@@ -29,7 +29,6 @@ import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.Authenticator;
 import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;

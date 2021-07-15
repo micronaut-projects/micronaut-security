@@ -16,7 +16,6 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
@@ -32,10 +31,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
-import java.util.function.IntFunction;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * An Authenticator operates on several {@link AuthenticationProvider} instances returning the first
