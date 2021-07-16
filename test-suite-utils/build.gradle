@@ -11,7 +11,7 @@ dependencies {
     implementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
     implementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
     implementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
-    testImplementation "io.projectreactor:reactor-core:$reactorVersion"
+    testImplementation "io.projectreactor:reactor-core"
     runtimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
 }
 

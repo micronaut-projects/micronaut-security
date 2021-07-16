@@ -9,7 +9,7 @@ dependencies {
     api project(":security")
     api "com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"
 
-    implementation "io.projectreactor:reactor-core:$reactorVersion"
+    implementation "io.projectreactor:reactor-core"
 
     testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
     testImplementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
