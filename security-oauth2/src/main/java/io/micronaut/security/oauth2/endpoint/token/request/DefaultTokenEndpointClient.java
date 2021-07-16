@@ -22,7 +22,7 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
-import io.micronaut.http.client.RxHttpClient;
+import io.micronaut.http.client.HttpClient;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -53,8 +53,8 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTokenEndpointClient.class);
 
     private final BeanContext beanContext;
-    private final Supplier<RxHttpClient> defaultTokenClient;
-    private final ConcurrentHashMap<String, RxHttpClient> tokenClients = new ConcurrentHashMap<>();
+    private final Supplier<HttpClient> defaultTokenClient;
+    private final ConcurrentHashMap<String, HttpClient> tokenClients = new ConcurrentHashMap<>();
 
     /**
      * @param beanContext The bean context
@@ -63,7 +63,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     public DefaultTokenEndpointClient(BeanContext beanContext,
                                       HttpClientConfiguration defaultClientConfiguration) {
         this.beanContext = beanContext;
-        this.defaultTokenClient = SupplierUtil.memoized(() -> beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
+        this.defaultTokenClient = SupplierUtil.memoized(() -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
     }
 
     @NonNull
@@ -137,9 +137,9 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      * @param providerName The provider name
      * @return An HTTP client to use to send the request
      */
-    protected RxHttpClient getClient(String providerName) {
+    protected HttpClient getClient(String providerName) {
         return tokenClients.computeIfAbsent(providerName, (provider) -> {
-            Optional<RxHttpClient> client = beanContext.findBean(RxHttpClient.class, Qualifiers.byName(provider));
+            Optional<HttpClient> client = beanContext.findBean(HttpClient.class, Qualifiers.byName(provider));
             return client.orElseGet(defaultTokenClient);
         });
     }

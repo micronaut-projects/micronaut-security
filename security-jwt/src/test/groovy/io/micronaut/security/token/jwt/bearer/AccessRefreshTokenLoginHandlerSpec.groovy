@@ -16,8 +16,8 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
 
@@ -75,7 +75,7 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
 
-            return Flowable.create({ emitter ->
+            return Flux.create({ emitter ->
                 String username = authenticationRequest.getIdentity().toString()
                 AuthenticationFailed authenticationFailed = null
                 switch (username) {
@@ -99,16 +99,16 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
                         break
                 }
                 if (authenticationFailed) {
-                    emitter.onError(new AuthenticationException(authenticationFailed))
+                    emitter.error(new AuthenticationException(authenticationFailed))
                 } else {
                     if (authenticationRequest.getSecret().toString() == "invalid") {
-                        emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)))
+                        emitter.error(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)))
                     } else {
-                        emitter.onNext(new UserDetails(username, (username == "admin") ? ["ROLE_ADMIN"] : ["foo", "bar"]))
-                        emitter.onComplete()
+                        emitter.next(new UserDetails(username, (username == "admin") ? ["ROLE_ADMIN"] : ["foo", "bar"]))
+                        emitter.complete()
                     }
                 }
-            }, BackpressureStrategy.ERROR)
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 }

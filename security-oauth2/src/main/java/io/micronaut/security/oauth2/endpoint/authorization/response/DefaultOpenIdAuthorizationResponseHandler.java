@@ -36,8 +36,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,9 +93,9 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
         try {
             validateState(authorizationResponse, clientConfiguration);
         } catch (InvalidStateException e) {
-            return Flowable.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
+            return Flux.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
         }
-        return Flowable.fromPublisher(sendRequest(authorizationResponse, clientConfiguration, tokenEndpoint))
+        return Flux.from(sendRequest(authorizationResponse, clientConfiguration, tokenEndpoint))
                 .switchMap(response -> createAuthenticationResponse(authorizationResponse.getNonce(),
                         clientConfiguration,
                         openIdProviderMetadata,
@@ -148,13 +148,13 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
      * @param state State
      * @return An authentication response publisher
      */
-    private Flowable<AuthenticationResponse> createAuthenticationResponse(String nonce,
+    private Flux<AuthenticationResponse> createAuthenticationResponse(String nonce,
                                                                             OauthClientConfiguration clientConfiguration,
                                                                             OpenIdProviderMetadata openIdProviderMetadata,
                                                                             OpenIdTokenResponse openIdTokenResponse,
                                                                             @Nullable OpenIdUserDetailsMapper userDetailsMapper,
                                                                             @Nullable State state) {
-        return Flowable.create(emitter -> {
+        return Flux.create(emitter -> {
             try {
                 Optional<AuthenticationResponse> authenticationResponse = validateOpenIdTokenResponse(nonce,
                         clientConfiguration,
@@ -163,19 +163,19 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                         userDetailsMapper,
                         state);
                 if (authenticationResponse.isPresent()) {
-                    emitter.onNext(authenticationResponse.get());
-                    emitter.onComplete();
+                    emitter.next(authenticationResponse.get());
+                    emitter.complete();
                 } else {
                     if (LOG.isTraceEnabled()) {
                         LOG.trace("Token validation failed. Failing authentication");
                     }
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
+                    emitter.error(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
                 }
             } catch (ParseException e) {
                 //Should never happen as validation succeeded
-                emitter.onError(e);
+                emitter.error(e);
             }
-        }, BackpressureStrategy.ERROR);
+        }, FluxSink.OverflowStrategy.ERROR);
     }
 
     /**

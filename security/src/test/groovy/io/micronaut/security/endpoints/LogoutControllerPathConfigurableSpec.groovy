@@ -13,8 +13,8 @@ import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.handlers.LogoutHandler
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton
@@ -65,10 +65,10 @@ class LogoutControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create( {emitter ->
-                emitter.onNext(new UserDetails("user", []))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            Flux.create( {emitter ->
+                emitter.next(new UserDetails("user", []))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 }

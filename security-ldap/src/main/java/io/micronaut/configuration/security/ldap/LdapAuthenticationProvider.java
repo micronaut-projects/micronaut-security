@@ -28,14 +28,13 @@ import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationFailureReason;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.Scheduler;
-
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import jakarta.inject.Named;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -82,12 +81,12 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
         this.contextBuilder = contextBuilder;
         this.contextAuthenticationMapper = contextAuthenticationMapper;
         this.ldapGroupProcessor = ldapGroupProcessor;
-        this.scheduler = Schedulers.from(executorService);
+        this.scheduler = Schedulers.fromExecutorService(executorService);
     }
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        Flowable<AuthenticationResponse> responseFlowable = Flowable.create(emitter -> {
+        Flux<AuthenticationResponse> reactiveSequence = Flux.create(emitter -> {
             String username = authenticationRequest.getIdentity().toString();
             String password = authenticationRequest.getSecret().toString();
 
@@ -108,7 +107,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e.getMessage());
                 }
-                emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN)));
+                emitter.error(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN)));
                 return;
             }
 
@@ -162,10 +161,10 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
 
                     AuthenticationResponse response = contextAuthenticationMapper.map(result.getAttributes(), username, groups);
                     if (response.isAuthenticated()) {
-                        emitter.onNext(response);
-                        emitter.onComplete();
+                        emitter.next(response);
+                        emitter.complete();
                     } else {
-                        emitter.onError(new AuthenticationException(response));
+                        emitter.error(new AuthenticationException(response));
                     }
 
                     if (LOG.isDebugEnabled()) {
@@ -175,23 +174,23 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("User not found [{}]", username);
                     }
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND)));
+                    emitter.error(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND)));
                 }
             } catch (NamingException e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Failed to authenticate with user [{}].  {}", username, e);
                 }
                 if (e instanceof javax.naming.AuthenticationException) {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)));
+                    emitter.error(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)));
                 } else {
-                    emitter.onError(e);
+                    emitter.error(e);
                 }
             } finally {
                 contextBuilder.close(managerContext);
             }
-        }, BackpressureStrategy.ERROR);
-        responseFlowable = responseFlowable.subscribeOn(scheduler);
-        return responseFlowable;
+        }, FluxSink.OverflowStrategy.ERROR);
+        reactiveSequence = reactiveSequence.subscribeOn(scheduler);
+        return reactiveSequence;
     }
 
     @Override

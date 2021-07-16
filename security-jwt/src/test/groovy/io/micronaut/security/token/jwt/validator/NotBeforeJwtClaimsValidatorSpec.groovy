@@ -6,7 +6,7 @@ import io.micronaut.core.annotation.NonNull
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims
-import io.reactivex.Flowable
+import reactor.core.publisher.Flux
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -104,7 +104,7 @@ class NotBeforeJwtClaimsValidatorSpec extends Specification {
     @Nullable
     private static Authentication authenticate(@NonNull ApplicationContext context, @NonNull String jwt) {
         JwtTokenValidator jwtValidator = context.getBean(JwtTokenValidator.class)
-        Flowable.fromPublisher(jwtValidator.validateToken(jwt, null)).blockingFirst(null)
+        Flux.from(jwtValidator.validateToken(jwt, null)).blockFirst()
     }
 
     @NonNull

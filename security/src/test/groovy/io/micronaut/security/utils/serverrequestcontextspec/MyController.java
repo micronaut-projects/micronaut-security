@@ -1,15 +1,16 @@
 package io.micronaut.security.utils.serverrequestcontextspec;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Requires(property = "spec.name", value = "ServerRequestContextReactiveSpec")
 @Secured(SecurityRule.IS_ANONYMOUS)
@@ -17,45 +18,49 @@ import reactor.core.publisher.Flux;
 class MyController {
 
     @Get
-    Flowable<Message> index() {
-        return Flowable.just("foo")
-                .flatMapSingle(name -> {
+    @SingleResult
+    Publisher<Message> index() {
+        return Mono.just("foo")
+                .flatMap(name -> {
                     if (ServerRequestContext.currentRequest().isPresent()) {
-                        return Single.just(new Message("Sergio"));
+                        return Mono.just(new Message("Sergio"));
                     }
-                    return Single.just(new Message("Anonymous"));
+                    return Mono.just(new Message("Anonymous"));
                 });
     }
 
     @Get("/simple")
-    Flowable<Message> simple() {
+    @SingleResult
+    Publisher<Message> simple() {
         if (ServerRequestContext.currentRequest().isPresent()) {
-            return Flowable.just(new Message("Sergio"));
+            return Flux.just(new Message("Sergio"));
         }
-        return Flowable.just(new Message("Anonymous"));
+        return Flux.just(new Message("Anonymous"));
     }
 
     @Get("/flowable-subscribeon")
-    Flowable<Message> flowableSubscribeOn() {
-        return Flowable.just("foo")
-                .flatMapSingle(name -> {
+    @SingleResult
+    Publisher<Message> flowableSubscribeOn() {
+        return Mono.just("foo")
+                .flatMap(name -> {
                     if (ServerRequestContext.currentRequest().isPresent()) {
-                        return Single.just(new Message("Sergio"));
+                        return Mono.just(new Message("Sergio"));
                     }
-                    return Single.just(new Message("Anonymous"));
-                }).subscribeOn(Schedulers.io());
+                    return Mono.just(new Message("Anonymous"));
+                }).subscribeOn(Schedulers.boundedElastic());
     }
 
 
     @Get("/flowable-callable")
-    Flowable<Message> flowableCallable() {
-        return Flowable.fromCallable(() -> "foo")
-                .subscribeOn(Schedulers.io())
-                .flatMapSingle(name -> {
+    @SingleResult
+    Publisher<Message> flowableCallable() {
+        return Mono.fromCallable(() -> "foo")
+                .subscribeOn(Schedulers.boundedElastic())
+                .flatMap(name -> {
                     if (ServerRequestContext.currentRequest().isPresent()) {
-                        return Single.just(new Message("Sergio"));
+                        return Mono.just(new Message("Sergio"));
                     }
-                    return Single.just(new Message("Anonymous"));
+                    return Mono.just(new Message("Anonymous"));
                 });
     }
 

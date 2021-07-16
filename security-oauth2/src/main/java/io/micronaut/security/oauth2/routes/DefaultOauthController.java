@@ -28,7 +28,7 @@ import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.oauth2.client.OauthClient;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +82,7 @@ public class DefaultOauthController implements OauthController {
             LOG.trace("Received callback from oauth provider [{}]", oauthClient.getName());
         }
         Publisher<AuthenticationResponse> authenticationResponse = oauthClient.onCallback(request);
-        return Flowable.fromPublisher(authenticationResponse).map(response -> {
+        return Flux.from(authenticationResponse).map(response -> {
 
             if (response.isAuthenticated() && response.getUserDetails().isPresent()) {
                 UserDetails userDetails = response.getUserDetails().get();

@@ -22,12 +22,12 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.security.token.validator.TokenValidator;
-import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -88,19 +88,19 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     public Publisher<IntrospectionResponse> introspect(@NonNull IntrospectionRequest introspectionRequest,
                                                        @NonNull HttpRequest<?> httpRequest) {
         String token = introspectionRequest.getToken();
-        return Flowable.fromIterable(tokenValidators)
+        return Flux.fromIterable(tokenValidators)
                 .flatMap(tokenValidator -> tokenValidator.validateToken(token, httpRequest))
-                .firstElement()
+                .next()
                 .map(authentication -> createIntrospectionResponse(authentication, httpRequest))
                 .defaultIfEmpty(new IntrospectionResponse(refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent()))
-                .toFlowable();
+                .flux();
     }
 
     @NonNull
     @Override
     public Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
                                                        @NonNull HttpRequest<?> httpRequest) {
-        return Flowable.just(createIntrospectionResponse(authentication, httpRequest));
+        return Flux.just(createIntrospectionResponse(authentication, httpRequest));
     }
 
     /**

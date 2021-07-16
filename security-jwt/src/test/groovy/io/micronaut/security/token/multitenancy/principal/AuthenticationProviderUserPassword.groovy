@@ -3,8 +3,8 @@ package io.micronaut.security.token.multitenancy.principal
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.*
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton
@@ -16,19 +16,19 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
     @Override
     Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
 
-        Flowable.create({ emitter ->
+        Flux.create({ emitter ->
             if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "elementary") {
-                emitter.onNext(new UserDetails('sherlock', []))
-                emitter.onComplete()
+                emitter.next(new UserDetails('sherlock', []))
+                emitter.complete()
             } else if ( authenticationRequest.getIdentity() == "watson" && authenticationRequest.getSecret() == "elementary") {
-                emitter.onNext(new UserDetails('watson', []))
-                emitter.onComplete()
+                emitter.next(new UserDetails('watson', []))
+                emitter.complete()
             } else {
-                emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                emitter.error(new AuthenticationException(new AuthenticationFailed()))
             }
 
 
-        }, BackpressureStrategy.ERROR)
+        }, FluxSink.OverflowStrategy.ERROR)
     }
 }
 

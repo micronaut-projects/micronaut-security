@@ -8,8 +8,8 @@ import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton
@@ -20,17 +20,17 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
     Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        Flowable.create( {emitter ->
+        Flux.create( {emitter ->
             if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                emitter.onNext(new UserDetails((String) authenticationRequest.identity, []))
+                emitter.next(new UserDetails((String) authenticationRequest.identity, []))
             } else if ( authenticationRequest.identity == 'admin' && authenticationRequest.secret == 'password' ) {
-                emitter.onNext(new UserDetails((String) authenticationRequest.identity, ['ROLE_ADMIN']))
-                emitter.onComplete()
+                emitter.next(new UserDetails((String) authenticationRequest.identity, ['ROLE_ADMIN']))
+                emitter.complete()
             } else {
-                emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                emitter.error(new AuthenticationException(new AuthenticationFailed()))
             }
 
-        }, BackpressureStrategy.ERROR)
+        }, FluxSink.OverflowStrategy.ERROR)
 
     }
 }

@@ -6,8 +6,8 @@ import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 import jakarta.inject.Singleton
 
@@ -17,9 +17,9 @@ class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        Flowable.create({emitter ->
-            emitter.onNext(new UserDetails("sherlock", Collections.emptyList()))
-            emitter.onComplete()
-        }, BackpressureStrategy.ERROR)
+        Flux.create({emitter ->
+            emitter.next(new UserDetails("sherlock", Collections.emptyList()))
+            emitter.complete()
+        }, FluxSink.OverflowStrategy.ERROR)
     }
 }

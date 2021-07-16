@@ -5,6 +5,8 @@ dependencies {
     api "io.micronaut:micronaut-validation"
     api project(":security-annotations")
 
+    implementation "io.projectreactor:reactor-core:$reactorVersion"
+
     testImplementation "io.micronaut:micronaut-http-client"
     testAnnotationProcessor project(":security-annotations")
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"

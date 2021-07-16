@@ -1,12 +1,12 @@
 package io.micronaut.docs.websockets
 
-
 import io.micronaut.context.ApplicationContext
 import io.micronaut.http.HttpRequest
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.websocket.RxWebSocketClient
+import io.micronaut.websocket.WebSocketClient
+import reactor.core.publisher.Flux
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -29,7 +29,7 @@ class EchoClientWebSocketSpec extends Specification {
 
     @Shared
     @AutoCleanup
-    RxWebSocketClient wsClient = embeddedServer.applicationContext.createBean(RxWebSocketClient, embeddedServer.URL)
+    WebSocketClient wsClient = embeddedServer.applicationContext.createBean(WebSocketClient, embeddedServer.URL)
 
     Optional<String> generateJwt(TokenGenerator tokenGenerator) {
         LocalDateTime time = LocalDateTime.now()
@@ -60,7 +60,7 @@ class EchoClientWebSocketSpec extends Specification {
         String token = accessToken.get()
         HttpRequest request = HttpRequest.GET("/echo").bearerAuth(token)
 
-        EchoClientWebSocket echoClientWebSocket = wsClient.connect(EchoClientWebSocket, request).blockingFirst()
+        EchoClientWebSocket echoClientWebSocket = Flux.from(wsClient.connect(EchoClientWebSocket, request)).blockFirst()
 
         then:
         new PollingConditions().eventually {

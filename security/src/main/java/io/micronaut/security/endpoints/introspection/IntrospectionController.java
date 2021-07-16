@@ -18,6 +18,7 @@ package io.micronaut.security.endpoints.introspection;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -30,10 +31,10 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -66,11 +67,12 @@ public class IntrospectionController {
      */
     @Post
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Single<MutableHttpResponse<?>> tokenInfo(@NonNull @Body @Valid @NotNull IntrospectionRequest introspectionRequest,
-                                                    @NonNull HttpRequest<?> request) {
-        return Flowable.fromPublisher(processor.introspect(introspectionRequest, request))
+    @SingleResult
+    public Publisher<MutableHttpResponse<?>> tokenInfo(@NonNull @Body @Valid @NotNull IntrospectionRequest introspectionRequest,
+                                                       @NonNull HttpRequest<?> request) {
+        return Flux.from(processor.introspect(introspectionRequest, request))
                 .map(this::introspectionResponseAsJsonString)
-                .first(introspectionResponseAsJsonString(new IntrospectionResponse(false)))
+                .defaultIfEmpty(introspectionResponseAsJsonString(new IntrospectionResponse(false)))
                 .map(HttpResponse::ok);
     }
 
@@ -81,11 +83,12 @@ public class IntrospectionController {
      * @return The HTTP Response containing an introspection response in the body
      */
     @Get
-    public Single<MutableHttpResponse<?>> echo(@NonNull Authentication authentication,
+    @SingleResult
+    public Publisher<MutableHttpResponse<?>> echo(@NonNull Authentication authentication,
                                                @NonNull HttpRequest<?> request) {
-        return Flowable.fromPublisher(processor.introspect(authentication, request))
+        return Flux.from(processor.introspect(authentication, request))
                 .map(this::introspectionResponseAsJsonString)
-                .first(introspectionResponseAsJsonString(new IntrospectionResponse(false)))
+                .defaultIfEmpty(introspectionResponseAsJsonString(new IntrospectionResponse(false)))
                 .map(HttpResponse::ok);
     }
 

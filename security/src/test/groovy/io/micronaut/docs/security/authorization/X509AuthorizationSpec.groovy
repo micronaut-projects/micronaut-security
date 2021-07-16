@@ -4,7 +4,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
@@ -27,7 +27,7 @@ class X509AuthorizationSpec extends Specification {
                 'micronaut.ssl.trust-store.password': '123456'])
 
         when:
-        RxHttpClient client = server.applicationContext.createBean(RxHttpClient, server.getURL());
+        HttpClient client = server.applicationContext.createBean(HttpClient, server.getURL());
 
         then:
         client.toBlocking().retrieve("/x509") == "O=Test CA,ST=Some-State,C=US"
@@ -39,7 +39,7 @@ class X509AuthorizationSpec extends Specification {
     static class MyController {
         @Get
         String username(Authentication authentication) {
-            return authentication.getName();
+            authentication.name
         }
     }
 

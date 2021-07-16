@@ -16,7 +16,7 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.AuthenticationException
@@ -31,8 +31,8 @@ import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -61,7 +61,7 @@ class JwksSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    RxHttpClient booksClient
+    HttpClient booksClient
 
     @AutoCleanup
     @Shared
@@ -69,7 +69,7 @@ class JwksSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    RxHttpClient gatewayClient
+    HttpClient gatewayClient
 
     def "setup gateway server"() {
         given:
@@ -98,7 +98,7 @@ class JwksSpec extends Specification {
         noExceptionThrown()
 
         when:
-        gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(RxHttpClient, gatewayEmbeddedServer.getURL())
+        gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(HttpClient, gatewayEmbeddedServer.getURL())
 
         then:
         noExceptionThrown()
@@ -113,7 +113,7 @@ class JwksSpec extends Specification {
 
         booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig, Environment.TEST)
 
-        booksClient = booksEmbeddedServer.applicationContext.createBean(RxHttpClient, booksEmbeddedServer.getURL())
+        booksClient = booksEmbeddedServer.applicationContext.createBean(HttpClient, booksEmbeddedServer.getURL())
 
         when:
         for (Class beanClazz : [SignatureConfiguration,
@@ -175,15 +175,15 @@ class JwksSpec extends Specification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
+            Flux.create({emitter ->
                 if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', []))
-                    emitter.onComplete()
+                    emitter.next(new UserDetails('user', []))
+                    emitter.complete()
                 } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
                 }
 
-            }, BackpressureStrategy.ERROR)
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 

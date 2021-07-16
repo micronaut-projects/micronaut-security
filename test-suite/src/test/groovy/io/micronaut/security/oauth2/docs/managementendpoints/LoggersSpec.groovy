@@ -7,10 +7,10 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.*
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.reactivex.Maybe
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton
+import reactor.core.publisher.Mono
 
 class LoggersSpec extends EmbeddedServerSpecification {
 
@@ -86,15 +86,15 @@ class LoggersSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Maybe.<AuthenticationResponse>create(emitter -> {
+            return Mono.<AuthenticationResponse>create(emitter -> {
                 if (authenticationRequest.identity == "user" && authenticationRequest.secret == "password") {
-                    emitter.onSuccess(new UserDetails("user", []))
+                    emitter.success(new UserDetails("user", []))
                 } else if (authenticationRequest.identity == "system" && authenticationRequest.secret == "password") {
-                    emitter.onSuccess(new UserDetails("admin", ['ROLE_SYSTEM']))
+                    emitter.success(new UserDetails("admin", ['ROLE_SYSTEM']))
                 } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
+                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
                 }
-            }).toFlowable()
+            })
         }
     }
 }
