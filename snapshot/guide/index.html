@@ -1255,23 +1255,24 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.*;
-import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
+
 import java.util.ArrayList;
 @Singleton
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
     public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
-        return Maybe.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
+        return Mono.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
             if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
-                emitter.onSuccess(new UserDetails("user", new ArrayList&lt;&gt;()));
+                emitter.success(new UserDetails("user", new ArrayList&lt;&gt;()));
             } else {
-                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
+                emitter.error(new AuthenticationException(new AuthenticationFailed()));
             }
-        }).toFlowable();
+        });
     }
 }</code></pre>
 </div>
@@ -2769,10 +2770,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
-        return Flowable.create(emitter -&gt; {
-            emitter.onNext(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
-                emitter.onComplete();
-        }, BackpressureStrategy.ERROR);
+        return Flux.create(emitter -&gt; {
+            emitter.next(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
+                emitter.complete();
+        }, FluxSink.OverflowStrategy.ERROR);
     }
 }</code></pre>
 </div>
@@ -3277,11 +3278,11 @@ public class MyContextBuilder implements ContextBuilder {
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
-
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
+
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
@@ -3292,12 +3293,12 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 
     @Override
     public Publisher&lt;Authentication&gt; fetchAuthentication(HttpRequest&lt;?&gt; request) {
-        return Maybe.&lt;Authentication&gt;create(emitter -&gt; {
+        return Mono.&lt;Authentication&gt;create(emitter -&gt; {
             Optional&lt;Certificate&gt; optionalCertificate = request.getCertificate();
             if (optionalCertificate.isPresent()) {
                 Certificate certificate = optionalCertificate.get();
                 if (certificate instanceof X509Certificate) {
-                    emitter.onSuccess(new Authentication() {
+                    emitter.success(new Authentication() {
                         X509Certificate x509Certificate = ((X509Certificate) certificate);
                         @Override
                         public String getName() {
@@ -3313,8 +3314,8 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
                     return;
                 }
             }
-            emitter.onComplete();
-        }).toFlowable();
+            emitter.success();
+        });
     }
 }</code></pre>
 </div>
@@ -4708,14 +4709,15 @@ class GithubUser {
 <pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.http.client.annotation.Client;
-import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
 public interface GithubApiClient {
 
     @Get("/user")
-    Flowable&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization);
+    Publisher&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization);
 }</code></pre>
 </div>
 </div>
@@ -4724,14 +4726,15 @@ public interface GithubApiClient {
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
-import io.reactivex.Flowable
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
 interface GithubApiClient {
 
     @Get("/user")
-    Flowable&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization)
+    Publisher&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization)
 }</code></pre>
 </div>
 </div>
@@ -4740,14 +4743,15 @@ interface GithubApiClient {
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
-import io.reactivex.Flowable
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
 interface GithubApiClient {
 
     @Get("/user")
-    fun getUser(@Header("Authorization") authorization: String): Flowable&lt;GithubUser&gt;
+    fun getUser(@Header("Authorization") authorization: String): Publisher&lt;GithubUser&gt;
 }</code></pre>
 </div>
 </div>
@@ -4767,6 +4771,8 @@ import org.reactivestreams.Publisher;
 
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -4782,7 +4788,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 
     @Override
     public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
-        return apiClient.getUser("token " + tokenResponse.getAccessToken())
+        return Flux.from(apiClient.getUser("token " + tokenResponse.getAccessToken()))
                 .map(user -&gt; {
                     List&lt;String&gt; roles = Collections.singletonList("ROLE_GITHUB");
                     return new UserDetails(user.getLogin(), roles); <b class="conum">(4)</b>
@@ -4824,17 +4830,15 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.core.async.publisher.Publishers
-import io.micronaut.security.authentication.AuthenticationResponse
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
-import java.lang.UnsupportedOperationException
-
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import reactor.core.publisher.Flux
 
 @Named("github") <b class="conum">(1)</b>
 @Singleton
@@ -4842,7 +4846,7 @@ internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <
     : OauthUserDetailsMapper {
 
     override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher&lt;AuthenticationResponse&gt; { <b class="conum">(3)</b>
-        return apiClient.getUser("token " + tokenResponse.accessToken)
+        return Flux.from(apiClient.getUser("token " + tokenResponse.accessToken))
                 .map { user -&gt;
                     UserDetails(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
                 }
@@ -6036,7 +6040,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 
 
 <div class="paragraph">
-<p>Micronaut Security includes <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html">ClientCredentialsHttpClientFilter</a>. A <a href="https://docs.micronaut.io/latest/guide/index.html#clientFilter">HTTP Client Filter</a> which allows you to automatically include an access token to an outgoing request HTTP Header. It obtains the access token via a Client Credentials request.</p>
+<p>Micronaut Security includes <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html">ClientCredentialsHttpClientFilter</a>. This <a href="https://docs.micronaut.io/latest/guide/index.html#clientFilter">HTTP Client Filter</a> allows you to automatically include an access token to an outgoing request HTTP Header. It obtains the access token via a Client Credentials request.</p>
 </div>
 <div class="paragraph">
 <p>For example, the next configuration adds an access token to the requests' HTTP Headers done via the HTTP Client <code>inventory</code>. It obtains the access token with a Client Credentials request with the OAuth 2.0 client <code>companyauthorserver</code>.</p>
