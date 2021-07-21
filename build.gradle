@@ -12,11 +12,6 @@ subprojects { Project subproject ->
     group "io.micronaut.security"
     apply plugin: "io.micronaut.build.internal.common"
 
-    // TODO: Remove this when using a non-snapshot version of core
-    repositories {
-        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
-    }
-
     apply plugin: "io.micronaut.build.internal.dependency-updates"
     if (!subproject.name.startsWith("test-suite")) {
         apply plugin: "io.micronaut.build.internal.publishing"
