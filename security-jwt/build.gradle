@@ -20,10 +20,8 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation "io.micronaut.multitenancy:micronaut-multitenancy"
 
-    //TODO remove this once views has been upgraded to reactor
-    testImplementation "io.reactivex.rxjava2:rxjava:2.2.21"
-
-    testImplementation "io.micronaut.views:micronaut-views-velocity"
+    //micronautViewsVersion should not be necessary for micronaut > 3.0.0-M4
+    testImplementation "io.micronaut.views:micronaut-views-velocity:$micronautViewsVersion"
     testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.3"
 }
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
