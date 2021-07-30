@@ -34,7 +34,6 @@ public class CookieNoncePersistenceConfiguration implements CookieConfiguration 
 
     public static final String PREFIX = DefaultNonceConfiguration.PREFIX + ".cookie";
 
-    private static final boolean DEFAULT_SECURE = true;
     private static final boolean DEFAULT_HTTPONLY = true;
     private static final String DEFAULT_COOKIENAME = "OPENID_NONCE";
     private static final String DEFAULT_COOKIEPATH = "/";
@@ -43,7 +42,7 @@ public class CookieNoncePersistenceConfiguration implements CookieConfiguration 
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
-    private Boolean cookieSecure = DEFAULT_SECURE;
+    private Boolean cookieSecure;
     private Duration cookieMaxAge = DEFAULT_MAX_AGE;
     private String cookieName = DEFAULT_COOKIENAME;
 
