@@ -21,13 +21,6 @@ interface ConfigurationFixture {
         if (specName) {
             m['spec.name'] = specName
         }
-        if (TestContainersUtils.isGebUsingTestContainers()) {
-            m['micronaut.security.oauth2.openid.nonce.cookie.cookie-secure'] = false
-            m['micronaut.security.oauth2.state.cookie.cookie-secure'] = false
-            m['micronaut.security.token.jwt.cookie.cookie-secure'] = false
-            m['micronaut.security.token.refresh.cookie.cookie-secure'] = false
-
-        }
         m += loginModeCookie
         m += oauth2ClientConfiguration
         m
