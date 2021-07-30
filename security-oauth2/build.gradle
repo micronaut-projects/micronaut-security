@@ -12,7 +12,7 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation 'com.sun.activation:javax.activation:1.2.0' // Java 11
-    testImplementation "org.testcontainers:testcontainers:1.15.3"
+    testImplementation "org.testcontainers:testcontainers:1.16.0"
     testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
     testImplementation project(":security-jwt")
     testImplementation project(":test-suite-utils")
