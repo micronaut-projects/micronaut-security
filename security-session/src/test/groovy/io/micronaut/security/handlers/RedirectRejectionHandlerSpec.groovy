@@ -8,19 +8,13 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-import spock.lang.Shared
-
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
+import spock.lang.Shared
 
 class RedirectRejectionHandlerSpec extends EmbeddedServerSpecification {
 
@@ -111,14 +105,9 @@ class RedirectRejectionHandlerSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "RedirectRejectionHandlerSpec")
     @Singleton
-    static class CustomAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.<AuthenticationResponse>create({emitter ->
-                emitter.next(new UserDetails("sherlock", Collections.emptyList()))
-                emitter.complete()
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('sherlock')])
         }
     }
 

@@ -1,6 +1,5 @@
 package io.micronaut.security.rolesallowed
 
-
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
@@ -8,19 +7,12 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
+import jakarta.inject.Singleton
 
 import javax.annotation.security.RolesAllowed
-import jakarta.inject.Singleton
 
 class RolesAllowedSpec extends EmbeddedServerSpecification {
 
@@ -74,19 +66,9 @@ class RolesAllowedSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(env = Environment.TEST)
     @Requires(property = 'spec.name', value = 'RolesAllowedSpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.next(new UserDetails('user', ['ROLE_USER']))
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user', ['ROLE_USER'])])
         }
     }
 

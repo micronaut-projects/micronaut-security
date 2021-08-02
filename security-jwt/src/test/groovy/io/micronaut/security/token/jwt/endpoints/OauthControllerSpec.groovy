@@ -17,14 +17,12 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims
@@ -34,12 +32,11 @@ import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.TokenValidator
-import io.micronaut.security.testutils.EmbeddedServerSpecification
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-import spock.lang.Unroll
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
+import spock.lang.Unroll
+
 import java.security.Principal
 
 class OauthControllerSpec extends EmbeddedServerSpecification {
@@ -277,19 +274,9 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'OauthControllerSpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.next(new UserDetails('user', []))
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 

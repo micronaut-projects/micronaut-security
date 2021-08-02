@@ -10,11 +10,11 @@ import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
-import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpMethod
@@ -30,12 +30,10 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.ApplicationConfiguration
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.endpoints.KeysController
@@ -45,17 +43,14 @@ import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
-import jakarta.inject.Named
-import jakarta.inject.Singleton
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -373,24 +368,17 @@ class JwksUriSignatureSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'AuthServerAJwksUriSignatureSpec')
     @Singleton
-    static class AuthServerAAuthenticationProvider implements AuthenticationProvider {
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({ emitter ->
-                emitter.next(new UserDetails(authenticationRequest.identity as String, []))
-                emitter.complete()
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class AuthServerAAuthenticationProvider extends MockAuthenticationProvider {
+        AuthServerAAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('sherlock')])
         }
     }
+
     @Requires(property = 'spec.name', value = 'AuthServerBJwksUriSignatureSpec')
     @Singleton
-    static class AuthServerBAuthenticationProvider implements AuthenticationProvider {
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create( {emitter ->
-                emitter.next(new UserDetails(authenticationRequest.identity as String, []))
-                emitter.complete()
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class AuthServerBAuthenticationProvider extends MockAuthenticationProvider {
+        AuthServerBAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('sherlock')])
         }
     }
 
@@ -417,7 +405,7 @@ class JwksUriSignatureSpec extends Specification {
         }
     }
 
-    private HttpRequest loginRequest() {
+    private static HttpRequest<?> loginRequest() {
         HttpRequest.create(HttpMethod.POST, '/login')
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(new UsernamePasswordCredentials('sherlock', 'elementary'))

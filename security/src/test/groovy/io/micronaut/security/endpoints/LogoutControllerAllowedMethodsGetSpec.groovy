@@ -1,23 +1,14 @@
 package io.micronaut.security.endpoints
 
-import io.micronaut.context.ApplicationContext
+
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
-import io.micronaut.http.client.HttpClient
-import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.handlers.LogoutHandler
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-import spock.lang.Ignore
-
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
 
 class LogoutControllerAllowedMethodsGetSpec extends EmbeddedServerSpecification {
@@ -58,11 +49,9 @@ class LogoutControllerAllowedMethodsGetSpec extends EmbeddedServerSpecification 
 
     @Requires(property = 'spec.name', value = 'LogoutControllerAllowedMethodsGetSpec')
     @Singleton
-    static class CustomAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flux.just(new UserDetails("user", []))
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 }

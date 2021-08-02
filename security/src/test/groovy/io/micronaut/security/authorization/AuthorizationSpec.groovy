@@ -1,7 +1,7 @@
 package io.micronaut.security.authorization
 
-import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -11,24 +11,19 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.management.endpoint.annotation.Endpoint
 import io.micronaut.management.endpoint.annotation.Read
-import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.FailedAuthenticationScenario
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationFailureReason
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.PrincipalArgumentBinder
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
-import org.reactivestreams.Publisher
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
+
 import java.security.Principal
 
 class AuthorizationSpec extends EmbeddedServerSpecification {
@@ -339,39 +334,18 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'AuthorizationSpec')
     @Singleton
-    static class TestingAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({ emitter ->
-                String username = authenticationRequest.getIdentity().toString()
-                AuthenticationFailed authenticationFailed = null
-                if (username == "disabled") {
-                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED)
-
-                } else if (username == "accountExpired") {
-                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED)
-
-                } else if (username == "passwordExpired") {
-                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED)
-
-                } else if (username == "accountLocked") {
-                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED)
-
-                } else if (username == "invalidPassword") {
-                    authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
-
-                } else if (username == "notFound") {
-
-                }
-
-                if (authenticationFailed) {
-                    emitter.error(new AuthenticationException(authenticationFailed))
-                } else {
-                    emitter.next(new UserDetails(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"]));
-                    emitter.complete()
-                }
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class TestingAuthenticationProvider extends MockAuthenticationProvider {
+        TestingAuthenticationProvider() {
+            super([
+                    new SuccessAuthenticationScenario("valid","password"),
+                    new SuccessAuthenticationScenario("admin",["ROLE_ADMIN"])
+            ], [
+                    new FailedAuthenticationScenario("disabled", AuthenticationFailureReason.USER_DISABLED),
+                    new FailedAuthenticationScenario("accountExpired", AuthenticationFailureReason.ACCOUNT_EXPIRED),
+                    new FailedAuthenticationScenario("passwordExpired", AuthenticationFailureReason.PASSWORD_EXPIRED),
+                    new FailedAuthenticationScenario("accountLocked", AuthenticationFailureReason.ACCOUNT_LOCKED),
+                    new FailedAuthenticationScenario("invalidPassword", AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+            ])
         }
     }
 

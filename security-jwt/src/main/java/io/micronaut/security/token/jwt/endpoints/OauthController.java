@@ -20,8 +20,17 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.*;
-import io.micronaut.http.annotation.*;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Consumes;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.CookieValue;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode;
 import io.micronaut.security.errors.OauthErrorResponseException;
@@ -83,8 +92,8 @@ public class OauthController {
     @Post
     @SingleResult
     public Publisher<MutableHttpResponse<?>> index(HttpRequest<?> request,
-                                               @Nullable @Body TokenRefreshRequest tokenRefreshRequest,
-                                               @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
+                                                   @Nullable @Body TokenRefreshRequest tokenRefreshRequest,
+                                                   @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
         String refreshToken = resolveRefreshToken(tokenRefreshRequest, cookieRefreshToken);
         return createResponse(request, refreshToken);
     }

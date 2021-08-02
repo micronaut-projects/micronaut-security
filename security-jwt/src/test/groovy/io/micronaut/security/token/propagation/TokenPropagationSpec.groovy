@@ -17,24 +17,19 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
+import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import spock.lang.Ignore
 import spock.lang.Issue
 import spock.lang.Specification
 
-import jakarta.inject.Singleton
 import java.time.Duration
 
 class TokenPropagationSpec extends Specification {
@@ -170,21 +165,9 @@ class TokenPropagationSpec extends Specification {
 
     @Requires(property = "spec.name", value = "tokenpropagation.gateway")
     @Singleton
-    static class SampleAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flux.create({ emitter ->
-                if (authenticationRequest.getIdentity() != null && authenticationRequest.getSecret() != null &&
-                        Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString()) &&
-                        authenticationRequest.getSecret().equals("elementary")) {
-                    emitter.next(new UserDetails(authenticationRequest.getIdentity().toString(), new ArrayList<>()))
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class SampleAuthenticationProvider extends MockAuthenticationProvider {
+        SampleAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('sherlock'), new SuccessAuthenticationScenario('watson')])
         }
     }
 

@@ -16,6 +16,7 @@ dependencies {
     testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
     testImplementation project(":security-jwt")
     testImplementation project(":test-suite-utils")
+    testImplementation project(":test-suite-utils-security")
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

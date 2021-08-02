@@ -1,22 +1,15 @@
 package io.micronaut.security.rules.ipPatterns
 
-
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
 
 class IpAuthorizationRejectedSpec extends EmbeddedServerSpecification {
@@ -55,15 +48,10 @@ class IpAuthorizationRejectedSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'IpAuthorizationRejectedSpec')
     @Singleton
-    static class CustomAuthenticationProvider implements AuthenticationProvider {
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
 
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flux.create({emitter ->
-                emitter.next(new UserDetails(authenticationRequest.identity as String, []))
-                emitter.complete()
-            }, FluxSink.OverflowStrategy.ERROR)
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
-
 }

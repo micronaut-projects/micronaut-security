@@ -13,8 +13,8 @@ import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
@@ -23,24 +23,19 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
-import jakarta.inject.Named
-import jakarta.inject.Singleton
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -188,14 +183,9 @@ class NotAvailableRemoteJwksSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'AuthServerNotAvailableRemoteJwksSpec')
     @Singleton
-    static class MockAuthenticationProvider implements AuthenticationProvider {
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({emitter ->
-                emitter.next(new UserDetails(authenticationRequest.identity as String, []))
-                emitter.complete()
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('sherlock')])
         }
     }
-
 }
