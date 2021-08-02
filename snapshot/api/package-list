@@ -43,6 +43,7 @@ io.micronaut.security.oauth2.routes
 io.micronaut.security.oauth2.url
 io.micronaut.security.rules
 io.micronaut.security.session
+io.micronaut.security.testutils.authprovider
 io.micronaut.security.token
 io.micronaut.security.token.config
 io.micronaut.security.token.event
