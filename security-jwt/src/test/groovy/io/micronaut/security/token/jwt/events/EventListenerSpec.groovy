@@ -3,20 +3,12 @@ package io.micronaut.security.token.jwt.events
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.http.HttpRequest
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.event.AccessTokenGeneratedEvent
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
-import io.micronaut.security.testutils.EmbeddedServerSpecification
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-
 import jakarta.inject.Singleton
 
 class EventListenerSpec extends EmbeddedServerSpecification {
@@ -68,19 +60,9 @@ class EventListenerSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
-    static class CustomAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.next(new UserDetails('user', []))
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 

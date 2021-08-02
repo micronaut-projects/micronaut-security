@@ -9,18 +9,10 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.management.endpoint.health.HealthLevelOfDetail
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
-import reactor.core.publisher.FluxSink
+import jakarta.inject.Singleton
 import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
 import spock.lang.Specification
 import spock.lang.Unroll
-import jakarta.inject.Singleton
 
 class HealthSensitivitySpec extends Specification {
 
@@ -202,19 +194,9 @@ class HealthSensitivitySpec extends Specification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'healthsensitivity')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.next(new UserDetails('user', []))
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 }

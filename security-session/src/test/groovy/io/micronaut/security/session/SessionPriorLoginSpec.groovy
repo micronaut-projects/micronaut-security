@@ -2,24 +2,15 @@ package io.micronaut.security.session
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.docs.security.session.LoginPage
-import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
-import io.micronaut.security.testutils.Keycloak
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
 
 class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
@@ -55,19 +46,10 @@ class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = "spec.name", value = "SessionPriorLoginSpec")
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider  { // <2>
-        @Override
-        public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flux.create({ emitter ->
-                if ( authenticationRequest.getIdentity().equals("sherlock") &&
-                        authenticationRequest.getSecret().equals("password") ) {
-                    UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>())
-                    emitter.next(userDetails)
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()));
-                }
-            }, FluxSink.OverflowStrategy.ERROR);
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider  { // <2>
+
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('sherlock')])
         }
     }
 

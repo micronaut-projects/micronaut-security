@@ -10,20 +10,14 @@ import io.micronaut.http.MutableHttpRequest
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
+import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import spock.lang.Specification
-
-import jakarta.inject.Singleton
 
 class RefreshCookieAuthenticationSpec extends Specification {
 
@@ -115,19 +109,9 @@ class RefreshCookieAuthenticationSpec extends Specification {
 
     @Requires(property = "spec.name", value = "RefreshCookieAuthenticationSpec")
     @Singleton
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({ emitter ->
-                if ( authenticationRequest.getIdentity().equals("sherlock") &&
-                        authenticationRequest.getSecret().equals("password") ) {
-                    emitter.next(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider  {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario( "sherlock")])
         }
     }
 

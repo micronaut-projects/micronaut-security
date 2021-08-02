@@ -8,25 +8,17 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.DefaultAuthentication
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.token.RolesFinder
-import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.utils.DefaultSecurityService
 import io.micronaut.security.utils.SecurityService
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-
 import jakarta.inject.Singleton
+
 import java.security.Principal
 
 class SecuredRolesCaseSensitiveSpec extends EmbeddedServerSpecification {
@@ -94,19 +86,9 @@ class SecuredRolesCaseSensitiveSpec extends EmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'SecuredRolesCaseSensitiveSpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({ emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.next(new UserDetails('user', ['ROLE_USER']))
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user', ['ROLE_USER'])])
         }
     }
 

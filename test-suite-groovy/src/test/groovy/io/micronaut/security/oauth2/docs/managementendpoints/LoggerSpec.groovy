@@ -5,11 +5,10 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.authentication.*
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import org.reactivestreams.Publisher
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
-import reactor.core.publisher.Mono
 
 class LoggersSpec extends EmbeddedServerSpecification {
 
@@ -76,19 +75,9 @@ class LoggersSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'LoggersSpec')
     @Singleton
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Mono.<AuthenticationResponse>create(emitter -> {
-                if (authenticationRequest.identity == "user" && authenticationRequest.secret == "password") {
-                    emitter.success(new UserDetails("user", []))
-                } else if (authenticationRequest.identity == "system" && authenticationRequest.secret == "password") {
-                    emitter.success(new UserDetails("admin", ['ROLE_SYSTEM']))
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-            })
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user'), new SuccessAuthenticationScenario('system', ['ROLE_SYSTEM'])])
         }
     }
 }

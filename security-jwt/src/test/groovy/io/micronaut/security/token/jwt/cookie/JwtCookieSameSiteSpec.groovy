@@ -4,17 +4,9 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
 
 class JwtCookieSameSiteSpec extends EmbeddedServerSpecification {
@@ -55,19 +47,9 @@ class JwtCookieSameSiteSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "JwtCookieSameSiteSpec")
     @Singleton
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({ emitter ->
-                if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "password") {
-                    emitter.next(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider  {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario( "sherlock")])
         }
     }
 }

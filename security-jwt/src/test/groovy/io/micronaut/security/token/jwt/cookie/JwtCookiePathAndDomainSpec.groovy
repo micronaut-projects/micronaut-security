@@ -1,7 +1,7 @@
 package io.micronaut.security.token.jwt.cookie
 
-import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -10,18 +10,11 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
+
 import java.security.Principal
 
 class JwtCookiePathAndDomainSpec extends EmbeddedServerSpecification {
@@ -131,21 +124,9 @@ class JwtCookiePathAndDomainSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "JwtCookiePathAndDomainSpec")
     @Singleton
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-
-            Flux.create({ emitter ->
-                if ( authenticationRequest.getIdentity() == "sherlock" && authenticationRequest.getSecret() == "password") {
-                    emitter.next(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
-                    emitter.complete()
-                } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario("sherlock")])
         }
     }
-
 }

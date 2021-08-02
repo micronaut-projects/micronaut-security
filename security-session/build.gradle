@@ -11,6 +11,7 @@ dependencies {
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation project(":test-suite-utils")
+    testImplementation project(":test-suite-utils-security")
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

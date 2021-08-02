@@ -10,18 +10,11 @@ import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.handlers.LogoutHandler
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-import spock.lang.Specification
-
 import jakarta.inject.Singleton
+import spock.lang.Specification
 
 class LogoutControllerAllowedMethodsSpec extends Specification {
 
@@ -111,14 +104,9 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'LogoutControllerAllowedMethodsSpec')
     @Singleton
-    static class CustomAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flux.create({emitter ->
-                emitter.next(new UserDetails("user", []))
-                emitter.complete()
-            }, FluxSink.OverflowStrategy.ERROR)
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 }

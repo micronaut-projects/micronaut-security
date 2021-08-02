@@ -52,7 +52,7 @@ class SecurityViewModelProcessorSpec extends Specification {
         embeddedServer.applicationContext.containsBean(BooksController)
 
         and:
-        embeddedServer.applicationContext.containsBean(MockAuthenticationProvider)
+        embeddedServer.applicationContext.containsBean(CustomAuthenticationProvider)
 
         and:
         embeddedServer.applicationContext.containsBean(SecurityViewModelProcessor)
@@ -99,7 +99,7 @@ class SecurityViewModelProcessorSpec extends Specification {
         embeddedServer.applicationContext.containsBean(BooksController)
 
         and:
-        embeddedServer.applicationContext.containsBean(MockAuthenticationProvider)
+        embeddedServer.applicationContext.containsBean(CustomAuthenticationProvider)
 
         and:
         embeddedServer.applicationContext.containsBean(SecurityViewModelProcessor)

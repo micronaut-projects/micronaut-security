@@ -8,10 +8,9 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.server.exceptions.ExceptionHandler
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.authentication.AuthorizationException
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
-
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import jakarta.inject.Singleton
 
 class RejectionHandlerResolutionSpec extends ApplicationContextSpecification {

@@ -5,18 +5,17 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
-
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
+import reactor.core.publisher.FluxSink
 
 @Requires(property = 'spec.name', value = 'SecurityViewModelProcessorSpec')
 @Singleton
-class MockAuthenticationProvider implements AuthenticationProvider {
+class CustomAuthenticationProvider  implements AuthenticationProvider {
     @Override
     Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        Flux.create({emitter ->
+        Flux.create({ emitter ->
             UserDetailsEmail userDetailsEmail = new UserDetailsEmail(authenticationRequest.identity as String, [], 'john@email.com')
             emitter.next(userDetailsEmail)
             emitter.complete()
