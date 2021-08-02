@@ -1,6 +1,5 @@
 package io.micronaut.security.token.jwt.customclaimsrolesparser
 
-import edu.umd.cs.findbugs.annotations.Nullable
 import groovy.transform.CompileStatic
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
@@ -8,8 +7,9 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.DefaultRolesFinder
 import io.micronaut.security.token.RolesFinder
-import edu.umd.cs.findbugs.annotations.NonNull
-import javax.inject.Singleton
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.core.annotation.Nullable
+import jakarta.inject.Singleton
 
 @CompileStatic
 @Requires(property = "spec.name", value = "customclaimsrolesparser")

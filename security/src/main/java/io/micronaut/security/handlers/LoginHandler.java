@@ -17,8 +17,8 @@ package io.micronaut.security.handlers;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.Authentication;
 
 /**
  * Defines how to respond to a successful or failed login attempt.

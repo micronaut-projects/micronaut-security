@@ -25,13 +25,13 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.validation.Stat
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 /**
  * Default implementation of {@link OauthAuthorizationResponseHandler}.
@@ -63,7 +63,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
     public Publisher<AuthenticationResponse> handle(
             AuthorizationResponse authorizationResponse,
             OauthClientConfiguration clientConfiguration,
-            OauthAuthenticationMapper authenticationMapper,
+            OauthAuthenticationMapper userDetailsMapper,
             SecureEndpoint tokenEndpoint) {
 
         State state;
@@ -75,7 +75,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             try {
                 stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
             } catch (InvalidStateException e) {
-                return Flowable.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
+                return Flux.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
             }
 
         } else {
@@ -87,13 +87,13 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
 
         OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration);
 
-        return Flowable.fromPublisher(
+        return Flux.from(
                 tokenEndpointClient.sendRequest(context))
                 .switchMap(response -> {
                     if (LOG.isTraceEnabled()) {
                         LOG.trace("Token endpoint returned a success response. Creating a user details");
                     }
-                    return Flowable.fromPublisher(authenticationMapper.createAuthenticationResponse(response, state))
+                    return Flux.from(userDetailsMapper.createAuthenticationResponse(response, state))
                             .map(AuthenticationResponse.class::cast);
                 });
     }

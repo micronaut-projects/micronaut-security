@@ -22,13 +22,13 @@ import io.micronaut.security.event.TokenValidatedEvent;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.reader.TokenResolver;
 import io.micronaut.security.token.validator.TokenValidator;
-import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
@@ -73,32 +73,23 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
         Optional<String> token = tokenResolver.resolveToken(request);
 
         if (!token.isPresent()) {
-            return Flowable.empty();
+            return Flux.empty();
         }
 
-        Iterator<TokenValidator> tokenValidatorIterator = tokenValidators.iterator();
-        String tokenString = token.get();
-        return attemptTokenValidation(request, tokenValidatorIterator, tokenString);
+        String tokenValue = token.get();
+
+        return Flux.fromIterable(tokenValidators)
+                .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+                .next()
+                .map(authentication -> {
+                    request.setAttribute(TOKEN, tokenValue);
+                    eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
+                    return authentication;
+                });
     }
 
     @Override
     public int getOrder() {
         return ORDER;
-    }
-
-    private Flowable<Authentication> attemptTokenValidation(HttpRequest<?> request, Iterator<TokenValidator> tokenValidatorIterator, String tokenString) {
-        if (tokenValidatorIterator.hasNext()) {
-            TokenValidator tokenValidator = tokenValidatorIterator.next();
-            return Flowable.just(tokenString).switchMap(tokenValue ->
-                Flowable.fromPublisher(tokenValidator.validateToken(tokenValue, request)).map(authentication -> {
-                    request.setAttribute(TOKEN, tokenValue);
-                    eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
-                    return authentication;
-                })
-            ).switchIfEmpty(attemptTokenValidation(
-                    request, tokenValidatorIterator, tokenString
-            ));
-        }
-        return Flowable.empty();
     }
 }

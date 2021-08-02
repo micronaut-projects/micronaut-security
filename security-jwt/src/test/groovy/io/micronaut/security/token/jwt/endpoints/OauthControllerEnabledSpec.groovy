@@ -4,14 +4,15 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
+import io.micronaut.security.token.generator.RefreshTokenGenerator
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.RefreshTokenValidator
-import io.micronaut.testutils.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class OauthControllerEnabledSpec extends ApplicationContextSpecification {
 
@@ -56,13 +57,13 @@ class OauthControllerEnabledSpec extends ApplicationContextSpecification {
     static class CustomRefreshTokenPersistence implements RefreshTokenPersistence {
 
         @Override
-        void persistToken(RefreshTokenGeneratedEvent event) {
-
+        Publisher<Authentication> getAuthentication(String refreshToken) {
+            return null
         }
 
         @Override
-        Publisher<Authentication> getAuthentication(String refreshToken) {
-            return null
+        void persistToken(RefreshTokenGeneratedEvent event) {
+
         }
     }
 }

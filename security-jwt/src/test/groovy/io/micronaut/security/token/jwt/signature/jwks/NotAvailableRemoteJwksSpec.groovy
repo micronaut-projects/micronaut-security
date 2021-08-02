@@ -1,6 +1,5 @@
 package io.micronaut.security.token.jwt.signature.jwks
 
-
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
@@ -14,8 +13,8 @@ import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
@@ -24,32 +23,25 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.token.config.TokenConfiguration
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
-import spock.lang.Retry
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
-import javax.inject.Named
-import javax.inject.Singleton
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
 class NotAvailableRemoteJwksSpec extends Specification {
 
-    @Retry
     void "start an app, validation fails if remote jwks down. If the jwks endpoint goes live validation works"() {
         given:
         int authServerPort = SocketUtils.findAvailableTcpPort()
@@ -58,9 +50,8 @@ class NotAvailableRemoteJwksSpec extends Specification {
             [
                     'spec.name': 'NotAvailableRemoteJwksSpec',
                     'micronaut.security.token.jwt.signatures.jwks.foo.url': "http://localhost:${authServerPort}/keys",
-                    'micronaut.http.client.read-timeout': '1s',
+                    'micronaut.http.client.read-timeout': '5s',
             ]
-
 
         Map<String, Object> authServerConfiguration =
             [
@@ -97,7 +88,7 @@ class NotAvailableRemoteJwksSpec extends Specification {
         JWTParser.parse(jwt) instanceof SignedJWT
 
         when: 'Stop auth server, start server which uses the remote JWKS (Json Web Key Set) exposed by the auth server'
-        authEmbeddedServer.stop()
+        authEmbeddedServer.close()
         authServerClient.close()
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
@@ -192,14 +183,9 @@ class NotAvailableRemoteJwksSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'AuthServerNotAvailableRemoteJwksSpec')
     @Singleton
-    static class MockAuthenticationProvider implements AuthenticationProvider {
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('sherlock')])
         }
     }
-
 }

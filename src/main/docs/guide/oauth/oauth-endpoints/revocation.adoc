@@ -2,4 +2,4 @@ It is possible to configure the revocation endpoint URL for OAuth 2.0 and OpenID
 
 See the following configuration table:
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.adoc[]

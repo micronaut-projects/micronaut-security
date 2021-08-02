@@ -1,26 +1,18 @@
 package io.micronaut.security.utils
 
-import edu.umd.cs.findbugs.annotations.Nullable
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.token.config.TokenConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
-
-import javax.inject.Singleton
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import jakarta.inject.Singleton
 
 class SecurityServiceSpec extends EmbeddedServerSpecification {
 
@@ -102,18 +94,9 @@ class SecurityServiceSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(env = Environment.TEST)
     @Requires(property = 'spec.name', value = 'SecurityServiceSpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(AuthenticationResponse.build('user', ['ROLE_USER'], new TokenConfiguration() {}))
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user', ['ROLE_USER'])])
         }
     }
 

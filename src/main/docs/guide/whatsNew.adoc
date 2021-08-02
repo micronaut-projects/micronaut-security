@@ -1,10 +1,20 @@
-Micronaut Security {version} includes the following new features and improvements.
+Micronaut Security includes the following new features and improvements.
 
-== Annotation Processing
+== What's New in Micronaut Security 3
+
+Micronaut Security 3:
+
+- Uses Micronaut 3.
+- Replaces `javax.inject` with `jakarta.inject` annotations.
+- Deletes deprecated methods. You can obtain more information in the <<breaks, Breaks section>>.
+
+== What's New in Micronaut Security 2
+
+=== Annotation Processing
 
 * The ann:security.annotation.Secured[] annotation has been moved to a separate module in order to reduce the number of classes in the annotation processor scope. If you currently have `micronaut-security` in the classpath of your compiler, the entry can be changed to `micronaut-security-annotations`.
 
-== Improvements
+=== Improvements
 
 * A new constructor for api:security.authentication.AuthenticationFailed[] that takes a string message has been added to allow for custom error messages.
 

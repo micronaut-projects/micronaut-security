@@ -17,6 +17,7 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -28,17 +29,16 @@ import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.Authenticator;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
 import io.micronaut.validation.Validated;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 import javax.validation.Valid;
 
@@ -81,18 +81,19 @@ public class LoginController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public Single<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
-        Flowable<AuthenticationResponse> authenticationResponseFlowable = Flowable.fromPublisher(authenticator.authenticate(request, usernamePasswordCredentials));
+    @SingleResult
+    public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
 
-        return authenticationResponseFlowable.map(authenticationResponse -> {
-            if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
-                Authentication authentication = authenticationResponse.getAuthentication().get();
-                eventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
-                return loginHandler.loginSuccess(authentication, request);
-            } else {
-                eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
-                return loginHandler.loginFailed(authenticationResponse, request);
-            }
-        }).first(HttpResponse.status(HttpStatus.UNAUTHORIZED));
+        return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
+                .map(authenticationResponse -> {
+                    if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
+                        Authentication authentication = authenticationResponse.getAuthentication().get();
+                        eventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
+                        return loginHandler.loginSuccess(authentication, request);
+                    } else {
+                        eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
+                        return loginHandler.loginFailed(authenticationResponse, request);
+                    }
+                }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
     }
 }

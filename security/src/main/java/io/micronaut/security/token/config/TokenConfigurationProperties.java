@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.config;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
@@ -70,7 +70,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     }
 
     /**
-     * Name of the roles property. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME}.
+     * {@link io.micronaut.security.authentication.Authentication} attributes map key for the user's roles. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_NAME}.
      * @param rolesName The roles name
      */
     public void setRolesName(@NonNull String rolesName) {
@@ -90,7 +90,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     }
 
     /**
-     * Key which will be used in the {@link io.micronaut.security.authentication.Authentication#getAttributes()} for the User`s name. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_NAME_KEY}.
+     * {@link io.micronaut.security.authentication.Authentication} attributes map key for the user's name. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_NAME_KEY}.
      * @param nameKey key for name
      */
     public void setNameKey(@NonNull String nameKey) {

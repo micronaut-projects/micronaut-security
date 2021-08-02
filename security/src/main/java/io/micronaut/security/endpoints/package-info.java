@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Security login and logout endpoints.
+ * Security login, logout and introspection endpoints.
  *
  * @author Graeme Rocher
  * @since 1.0

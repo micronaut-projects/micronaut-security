@@ -24,4 +24,4 @@ Host: micronaut.example`
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0MjI5OTU5MjIsInN1YiI6ImppbWkiLCJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sImlhdCI6MTQyMjk5MjMyMn0.rA7A2Gwt14LaYMpxNRtrCdO24RGrfHtZXY9fIjV8x8o
 ----
 
-TIP: Check out the https://guides.micronaut.io/micronaut-security-jwt/guide/index.html[Micronaut JWT Authentication guide] for a tutorial on Micronaut's JWT support.
+TIP: Check out the https://guides.micronaut.io/latest/micronaut-security-jwt.html[Micronaut JWT authentication] for a tutorial on Micronaut's JWT support.

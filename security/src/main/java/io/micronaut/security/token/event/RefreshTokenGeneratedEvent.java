@@ -32,21 +32,7 @@ public class RefreshTokenGeneratedEvent extends ApplicationEvent {
     /**
      * Triggered when a refresh token is generated.
      *
-     * @param source A String with the JWT refresh token generated.
-     * @throws IllegalArgumentException if source is null.
-     * @deprecated Use {@link #RefreshTokenGeneratedEvent(Authentication, String)} instead
-     */
-    @Deprecated
-    public RefreshTokenGeneratedEvent(Object source) {
-        super(source);
-        this.authentication = null;
-        this.refreshToken = source.toString();
-    }
-
-    /**
-     * Triggered when a refresh token is generated.
-     *
-     * @param authentication Authentication
+     * @param authentication The user details
      * @param refreshToken The refresh token
      * @throws IllegalArgumentException if source is null.
      */
@@ -57,7 +43,7 @@ public class RefreshTokenGeneratedEvent extends ApplicationEvent {
     }
 
     /**
-     * @return The Authentication
+     * @return The user details
      */
     public Authentication getAuthentication() {
         return authentication;

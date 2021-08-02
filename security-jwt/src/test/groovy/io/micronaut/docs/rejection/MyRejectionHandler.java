@@ -8,7 +8,7 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 //end::clazz[]
 

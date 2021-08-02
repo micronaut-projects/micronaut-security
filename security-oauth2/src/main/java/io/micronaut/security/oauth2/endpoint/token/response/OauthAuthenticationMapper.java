@@ -15,14 +15,13 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import org.reactivestreams.Publisher;
 
 /**
- * A contract for mapping an OAuth 2.0 token endpoint
- * response to a {@link io.micronaut.security.authentication.Authentication} object.
+ * A contract for mapping an OAuth 2.0 token endpoint response to a {@link AuthenticationResponse} object.
  *
  * @author James Kleeh
  * @since 1.2.0
@@ -46,6 +45,7 @@ public interface OauthAuthenticationMapper {
      * refresh token returned by the provider.
      */
     String REFRESH_TOKEN_KEY = "refreshToken";
+
 
     /**
      * Convert the token response and state into an authentication response.

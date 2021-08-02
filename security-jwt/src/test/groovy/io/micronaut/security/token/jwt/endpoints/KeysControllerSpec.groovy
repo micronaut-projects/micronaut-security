@@ -12,12 +12,12 @@ import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class KeysControllerSpec extends Specification {
 
@@ -29,7 +29,7 @@ class KeysControllerSpec extends Specification {
                 'micronaut.security.endpoints.keys.path': path,
 
         ], Environment.TEST)
-        RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
         when:
         HttpResponse<Map> response = client.toBlocking().exchange(HttpRequest.GET(path),  Map)

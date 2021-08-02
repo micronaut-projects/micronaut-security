@@ -1,19 +1,21 @@
 package io.micronaut.security.oauth2.docs.github
 
-import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Requires
-import io.micronaut.security.authentication.Authentication
+import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.security.authentication.AuthenticationResponse;
 
 //tag::clazz[]
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.token.config.TokenConfiguration
 import org.reactivestreams.Publisher
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
+import reactor.core.publisher.Flux
 
 @Named("github") // <1>
 //end::clazz[]
@@ -22,19 +24,20 @@ import javax.inject.Singleton
 @Singleton
 class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 
-    private final TokenConfiguration tokenConfiguration
     private final GithubApiClient apiClient
+    private final TokenConfiguration tokenConfiguration
 
-    GithubAuthenticationMapper(TokenConfiguration tokenConfiguration, GithubApiClient apiClient) { // <2>
-        this.tokenConfiguration = tokenConfiguration
+    GithubAuthenticationMapper(GithubApiClient apiClient,
+                            TokenConfiguration tokenConfiguration) { // <2>
         this.apiClient = apiClient
+        this.tokenConfiguration = tokenConfiguration
     }
 
     @Override
     Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { // <3>
-        apiClient.getUser("token ${tokenResponse.accessToken}")
+        Flux.from(apiClient.getUser("token ${tokenResponse.accessToken}"))
             .map({ user ->
-                AuthenticationResponse.build(user.login, ['ROLE_GITHUB'], tokenConfiguration) // <4>
+                AuthenticationResponse.build(user.login, ["ROLE_GITHUB"], tokenConfiguration) // <4>
             })
     }
 }

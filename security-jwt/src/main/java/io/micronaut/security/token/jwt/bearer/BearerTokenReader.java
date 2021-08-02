@@ -21,7 +21,7 @@ import io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader;
 import io.micronaut.security.token.reader.HttpHeaderTokenReader;
 import io.micronaut.security.token.reader.TokenReader;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Reads JWT token from {@link io.micronaut.http.HttpHeaders#AUTHORIZATION} header. e.g. Bearer XXXXX.

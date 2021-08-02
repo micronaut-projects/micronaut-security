@@ -17,10 +17,10 @@ package io.micronaut.security.token.jwt.render;
 
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.security.authentication.Authentication;
-import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.security.token.RolesFinder;
 
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.RolesFinder;
+import jakarta.inject.Singleton;
 
 /**
  *
@@ -30,9 +30,10 @@ import javax.inject.Singleton;
 
 @Singleton
 public class BearerTokenRenderer implements TokenRenderer {
-    private final RolesFinder rolesFinder;
 
-    private final String BEARER_TOKEN_TYPE = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
+    private static final String BEARER_TOKEN_TYPE = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
+
+    private final RolesFinder rolesFinder;
 
     /**
      * @param rolesFinder Roles Finder

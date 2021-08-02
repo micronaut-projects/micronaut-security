@@ -15,15 +15,18 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
@@ -41,8 +44,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthentication
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
-import javax.inject.Provider;
+import io.micronaut.core.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -64,11 +66,15 @@ class OpenIdClientFactory {
 
     private final BeanContext beanContext;
 
+    private final ObjectMapper objectMapper;
+
     /**
      * @param beanContext The bean context
+     * @param objectMapper Object Mapper
      */
-    OpenIdClientFactory(BeanContext beanContext) {
+    OpenIdClientFactory(BeanContext beanContext, ObjectMapper objectMapper) {
         this.beanContext = beanContext;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -90,11 +96,15 @@ class OpenIdClientFactory {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                         }
-                        return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                        //TODO this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                        String json = issuerClient.toBlocking().retrieve(configurationUrl.toString(), String.class);
+                        return objectMapper.readValue(json, DefaultOpenIdProviderMetadata.class);
                     } catch (HttpClientResponseException e) {
                         throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
                     } catch (MalformedURLException e) {
                         throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
+                    } catch (JsonProcessingException e) {
+                        throw new BeanInstantiationException("JSON Processing Exception parsing issuer URL returned JSON " + issuer.toString(), e);
                     }
                 }).orElse(new DefaultOpenIdProviderMetadata());
 
@@ -108,7 +118,7 @@ class OpenIdClientFactory {
      * @param openIdClientConfiguration The openid client configuration
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The open id provider metadata
-     * @param openIdAuthenticationMapper The user details mapper
+     * @param authenticationMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param endSessionEndpointResolver The end session resolver
@@ -119,8 +129,8 @@ class OpenIdClientFactory {
     @Requires(condition = OpenIdClientCondition.class)
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
-                                     @Parameter Provider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
-                                     @Parameter @Nullable OpenIdAuthenticationMapper openIdAuthenticationMapper,
+                                     @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
+                                     @Parameter @Nullable OpenIdAuthenticationMapper authenticationMapper,
                                      AuthorizationRedirectHandler redirectUrlBuilder,
                                      OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                      EndSessionEndpointResolver endSessionEndpointResolver,
@@ -133,7 +143,7 @@ class OpenIdClientFactory {
 
         return new DefaultOpenIdClient(clientConfiguration,
                 metadataSupplier,
-                openIdAuthenticationMapper,
+                authenticationMapper,
                 redirectUrlBuilder,
                 authorizationResponseHandler,
                 beanContext,

@@ -8,7 +8,8 @@ class JWTClaimsSetGeneratorSpec extends Specification {
 
     def "generateClaims includes sub and exp claims"() {
         given:
-        JWTClaimsSetGenerator generator = new JWTClaimsSetGenerator(null, null, null)
+        JWTClaimsSetGenerator generator = new JWTClaimsSetGenerator(null, null, null, null)
+
         when:
         Map<String, Object> claims = generator.generateClaims(Authentication.build('admin', ['ROLE_USER', 'ROLE_ADMIN'], new TokenConfiguration() {}), 3600)
         List<String> expectedClaimsNames = [JwtClaims.SUBJECT,

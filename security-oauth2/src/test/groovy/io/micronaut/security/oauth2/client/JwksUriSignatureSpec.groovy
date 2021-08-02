@@ -7,12 +7,15 @@ import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
+import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
+import io.micronaut.core.annotation.Nullable
+import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
@@ -24,30 +27,30 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
+import io.micronaut.runtime.ApplicationConfiguration
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.endpoints.KeysController
+import io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider
+import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator
+import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.Single
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
-import javax.inject.Named
-import javax.inject.Singleton
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -87,7 +90,9 @@ class JwksUriSignatureSpec extends Specification {
         when:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer,[
                 'micronaut.security.authentication': 'idtoken',
+                'micronaut.security.oauth2.clients.a.client-id': "XXX",
                 'micronaut.security.oauth2.clients.a.openid.issuer' : "http://localhost:${authServerAPort}/oauth2/default",
+                'micronaut.security.oauth2.clients.b.client-id': "YYY",
                 'micronaut.security.oauth2.clients.b.openid.issuer' : "http://localhost:${authServerBPort}/oauth2/default",
                 'spec.name'                                            : 'JwksUriSignatureSpec',
         ] as Map<String, Object>)
@@ -97,7 +102,6 @@ class JwksUriSignatureSpec extends Specification {
             assert embeddedServer.isRunning()
         }
         embeddedServer.applicationContext.containsBean(SignatureConfiguration)
-
 
         when: 'it is possible to get a JWT from the auth server A'
         BlockingHttpClient authServerAClient = authServerA.applicationContext.createBean(HttpClient, authServerA.URL).toBlocking()
@@ -179,6 +183,55 @@ class JwksUriSignatureSpec extends Specification {
         }
     }
 
+    @Requires(property = 'spec.name', value = 'AuthServerAJwksUriSignatureSpec')
+    @Replaces(JWTClaimsSetGenerator)
+    @Singleton
+    static class AuthServerACustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
+        Integer port
+        AuthServerACustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
+                                    @Nullable JwtIdGenerator jwtIdGenerator,
+                                    @Nullable ClaimsAudienceProvider claimsAudienceProvider,
+                                    @Nullable ApplicationConfiguration applicationConfiguration,
+                                    @Value('${micronaut.server.port}') Integer port) {
+            super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration)
+            this.port = port
+        }
+
+        @Override
+        protected void populateIss(JWTClaimsSet.Builder builder) {
+            builder.issuer("http://localhost:${port}/oauth2/default")
+        }
+
+        @Override
+        protected void populateAud(JWTClaimsSet.Builder builder) {
+            builder.audience("XXX")
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'AuthServerBJwksUriSignatureSpec')
+    @Replaces(JWTClaimsSetGenerator)
+    @Singleton
+    static class AuthServerBCustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
+        Integer port
+        AuthServerBCustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
+                                    @Nullable JwtIdGenerator jwtIdGenerator,
+                                    @Nullable ClaimsAudienceProvider claimsAudienceProvider,
+                                    @Nullable ApplicationConfiguration applicationConfiguration,
+                                    @Value('${micronaut.server.port}') Integer port) {
+            super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration)
+            this.port = port
+        }
+
+        @Override
+        protected void populateIss(JWTClaimsSet.Builder builder) {
+            builder.issuer("http://localhost:${port}/oauth2/default")
+        }
+
+        @Override
+        protected void populateAud(JWTClaimsSet.Builder builder) {
+            builder.audience("YYY")
+        }
+    }
 
     @Requires(property = 'spec.name', value = 'AuthServerAJwksUriSignatureSpec')
     @Controller("/oauth2/default/.well-known/openid-configuration")
@@ -286,7 +339,8 @@ class JwksUriSignatureSpec extends Specification {
 
         @Override
         @Get
-        Single<String> keys() {
+        @SingleResult
+        Publisher<String> keys() {
             invocations++
             return super.keys()
         }
@@ -305,7 +359,8 @@ class JwksUriSignatureSpec extends Specification {
 
         @Override
         @Get
-        Single<String> keys() {
+        @SingleResult
+        Publisher<String> keys() {
             invocations++
             return super.keys()
         }
@@ -313,32 +368,23 @@ class JwksUriSignatureSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'AuthServerAJwksUriSignatureSpec')
     @Singleton
-    static class AuthServerAAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({ emitter ->
-                emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class AuthServerAAuthenticationProvider extends MockAuthenticationProvider {
+        AuthServerAAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('sherlock')])
         }
     }
+
     @Requires(property = 'spec.name', value = 'AuthServerBJwksUriSignatureSpec')
     @Singleton
-    static class AuthServerBAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create( {emitter ->
-                emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, new TokenConfiguration() {}))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class AuthServerBAuthenticationProvider extends MockAuthenticationProvider {
+        AuthServerBAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('sherlock')])
         }
     }
 
     static class OpenIdConfiguration {
         static String configuration(Integer port) {
-            '{"issuer":"https://dev-133320.okta.com/oauth2/default","authorization_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/authorize","token_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/token","userinfo_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/userinfo","registration_endpoint":"https://dev-133320.okta.com/oauth2/v1/clients","jwks_uri":"http://localhost:' + port + '/keys","response_types_supported":["code","id_token","code id_token","code token","id_token token","code id_token token"],"response_modes_supported":["query","fragment","form_post","okta_post_message"],"grant_types_supported":["authorization_code","implicit","refresh_token","password"],"subject_types_supported":["public"],"id_token_signing_alg_values_supported":["RS256"],"scopes_supported":["openid","profile","email","address","phone","offline_access"],"token_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post","client_secret_jwt","private_key_jwt","none"],"claims_supported":["iss","ver","sub","aud","iat","exp","jti","auth_time","amr","idp","nonce","name","nickname","preferred_username","given_name","middle_name","family_name","email","email_verified","profile","zoneinfo","locale","address","phone_number","picture","website","gender","birthdate","updated_at","at_hash","c_hash"],"code_challenge_methods_supported":["S256"],"introspection_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/introspect","introspection_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post","client_secret_jwt","private_key_jwt","none"],"revocation_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/revoke","revocation_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post","client_secret_jwt","private_key_jwt","none"],"end_session_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/logout","request_parameter_supported":true,"request_object_signing_alg_values_supported":["HS256","HS384","HS512","RS256","RS384","RS512","ES256","ES384","ES512"]}'
+            '{"issuer":"http://localhost:' + port + '/oauth2/default","authorization_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/authorize","token_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/token","userinfo_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/userinfo","registration_endpoint":"https://dev-133320.okta.com/oauth2/v1/clients","jwks_uri":"http://localhost:' + port + '/keys","response_types_supported":["code","id_token","code id_token","code token","id_token token","code id_token token"],"response_modes_supported":["query","fragment","form_post","okta_post_message"],"grant_types_supported":["authorization_code","implicit","refresh_token","password"],"subject_types_supported":["public"],"id_token_signing_alg_values_supported":["RS256"],"scopes_supported":["openid","profile","email","address","phone","offline_access"],"token_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post","client_secret_jwt","private_key_jwt","none"],"claims_supported":["iss","ver","sub","aud","iat","exp","jti","auth_time","amr","idp","nonce","name","nickname","preferred_username","given_name","middle_name","family_name","email","email_verified","profile","zoneinfo","locale","address","phone_number","picture","website","gender","birthdate","updated_at","at_hash","c_hash"],"code_challenge_methods_supported":["S256"],"introspection_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/introspect","introspection_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post","client_secret_jwt","private_key_jwt","none"],"revocation_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/revoke","revocation_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post","client_secret_jwt","private_key_jwt","none"],"end_session_endpoint":"https://dev-133320.okta.com/oauth2/default/v1/logout","request_parameter_supported":true,"request_object_signing_alg_values_supported":["HS256","HS384","HS512","RS256","RS384","RS512","ES256","ES384","ES512"]}'
         }
     }
 
@@ -359,7 +405,7 @@ class JwksUriSignatureSpec extends Specification {
         }
     }
 
-    private HttpRequest loginRequest() {
+    private static HttpRequest<?> loginRequest() {
         HttpRequest.create(HttpMethod.POST, '/login')
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(new UsernamePasswordCredentials('sherlock', 'elementary'))

@@ -2,9 +2,9 @@ package io.micronaut.docs.security.securityRule
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import io.micronaut.testutils.YamlAsciidocTagCleaner
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
@@ -43,7 +43,7 @@ micronaut:
 
     @Shared
     @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
     void "test accessing a resource from a whitelisted IP is successful"() {
         when:

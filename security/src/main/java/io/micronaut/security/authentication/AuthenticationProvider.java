@@ -17,7 +17,8 @@ package io.micronaut.security.authentication;
 
 import io.micronaut.http.HttpRequest;
 import org.reactivestreams.Publisher;
-import edu.umd.cs.findbugs.annotations.Nullable;
+
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * Defines an authentication provider.
@@ -29,12 +30,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public interface AuthenticationProvider {
 
     /**
-     * Authenticates a user with the given request.
-     * To eases the creation of successful {@link AuthenticationResponse} use:
-     * - {@link AuthenticationResponse#build(String, io.micronaut.security.token.config.TokenConfiguration)}
-     * - {@link AuthenticationResponse#build(String, java.util.Collection, io.micronaut.security.token.config.TokenConfiguration)}
-     * - {@link AuthenticationResponse#build(String, java.util.Collection, java.util.Map, io.micronaut.security.token.config.TokenConfiguration)}
-     * - {@link AuthenticationResponse#build(String, java.util.Map, io.micronaut.security.token.config.TokenConfiguration)}
+     * Authenticates a user with the given request. If a successful authentication is
+     * returned, the object must be an instance of {@link Authentication}.
      *
      * Publishers <b>MUST emit cold observables</b>! This method will be called for
      * all authenticators for each authentication request and it is assumed no work

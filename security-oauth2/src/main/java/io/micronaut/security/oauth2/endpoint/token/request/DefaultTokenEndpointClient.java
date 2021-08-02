@@ -16,12 +16,13 @@
 package io.micronaut.security.oauth2.endpoint.token.request;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
-import io.micronaut.http.client.RxHttpClient;
+import io.micronaut.http.client.HttpClient;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
@@ -32,12 +33,13 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  * The default implementation of {@link TokenEndpointClient}.
@@ -51,8 +53,8 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTokenEndpointClient.class);
 
     private final BeanContext beanContext;
-    private final RxHttpClient defaultTokenClient;
-    private final ConcurrentHashMap<String, RxHttpClient> tokenClients = new ConcurrentHashMap<>();
+    private final Supplier<HttpClient> defaultTokenClient;
+    private final ConcurrentHashMap<String, HttpClient> tokenClients = new ConcurrentHashMap<>();
 
     /**
      * @param beanContext The bean context
@@ -61,7 +63,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
     public DefaultTokenEndpointClient(BeanContext beanContext,
                                       HttpClientConfiguration defaultClientConfiguration) {
         this.beanContext = beanContext;
-        this.defaultTokenClient = beanContext.createBean(RxHttpClient.class, LoadBalancer.empty(), defaultClientConfiguration);
+        this.defaultTokenClient = SupplierUtil.memoized(() -> beanContext.createBean(HttpClient.class, LoadBalancer.empty(), defaultClientConfiguration));
     }
 
     @NonNull
@@ -135,10 +137,10 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      * @param providerName The provider name
      * @return An HTTP client to use to send the request
      */
-    protected RxHttpClient getClient(String providerName) {
+    protected HttpClient getClient(String providerName) {
         return tokenClients.computeIfAbsent(providerName, (provider) -> {
-            Optional<RxHttpClient> client = beanContext.findBean(RxHttpClient.class, Qualifiers.byName(provider));
-            return client.orElse(defaultTokenClient);
+            Optional<HttpClient> client = beanContext.findBean(HttpClient.class, Qualifiers.byName(provider));
+            return client.orElseGet(defaultTokenClient);
         });
     }
 }

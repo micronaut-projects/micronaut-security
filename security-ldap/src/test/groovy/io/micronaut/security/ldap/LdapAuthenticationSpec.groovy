@@ -1,16 +1,16 @@
 package io.micronaut.security.ldap
 
+import com.unboundid.ldap.listener.InMemoryDirectoryServer
 import io.micronaut.configuration.security.ldap.LdapAuthenticationProvider
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.reactivex.Flowable
-import io.reactivex.subscribers.TestSubscriber
 import org.reactivestreams.Publisher
+import reactor.test.StepVerifier
 
 class LdapAuthenticationSpec extends InMemoryLdapSpec {
-    
+
     void "test authentication and role retrieval with uniquemember"() {
         given:
         def s = createServer("basic.ldif")
@@ -158,9 +158,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
     void "test authenticating with a username that doesn't exist"() {
         given:
-        def s = createServer("basic.ldif")
+        InMemoryDirectoryServer s = createServer("basic.ldif")
         s.startListening()
-        def ctx = ApplicationContext.run([
+        ApplicationContext ctx = ApplicationContext.run([
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -168,19 +168,13 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
                 'micronaut.security.ldap.default.search.base': "dc=example,dc=com",
                 'micronaut.security.ldap.default.groups.enabled': true,
                 'micronaut.security.ldap.default.groups.base': "dc=example,dc=com",
-        ], "test")
-
-        when:
+        ])
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        Publisher<AuthenticationResponse> response = authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password"))
-        TestSubscriber subscriber = Flowable.fromPublisher(response).test().assertError(AuthenticationException)
-        List<Throwable> throwableList =subscriber.errors()
 
-        then:
-        throwableList
-        throwableList.any {
-            it instanceof AuthenticationException && it.message == "User Not Found"
-        }
+        expect:
+        StepVerifier.create(authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password")))
+                .expectErrorMessage("User Not Found")
+                .verify()
 
         cleanup:
         ctx.close()
@@ -189,9 +183,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
     void "test authenticating with an invalid password"() {
         given:
-        def s = createServer("basic.ldif")
+        InMemoryDirectoryServer s = createServer("basic.ldif")
         s.startListening()
-        def ctx = ApplicationContext.run([
+        ApplicationContext ctx = ApplicationContext.run([
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -199,19 +193,13 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
                 'micronaut.security.ldap.default.search.base': "dc=example,dc=com",
                 'micronaut.security.ldap.default.groups.enabled': true,
                 'micronaut.security.ldap.default.groups.base': "dc=example,dc=com",
-        ], "test")
-
-        when:
+        ])
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        Publisher<AuthenticationResponse> response = authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc"))
-        TestSubscriber subscriber = Flowable.fromPublisher(response).test().assertError(AuthenticationException)
-        List<Throwable> throwableList =subscriber.errors()
 
-        then:
-        throwableList
-        throwableList.any {
-            it instanceof AuthenticationException && it.message == "Credentials Do Not Match"
-        }
+        expect:
+        StepVerifier.create(authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc")))
+                .expectErrorMessage("Credentials Do Not Match")
+                .verify()
 
         cleanup:
         ctx.close()

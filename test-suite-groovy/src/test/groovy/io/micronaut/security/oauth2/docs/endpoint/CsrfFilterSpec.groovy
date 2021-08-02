@@ -1,22 +1,22 @@
 package io.micronaut.security.oauth2.docs.endpoint
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.token.config.TokenConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
-
-import javax.inject.Named
-import javax.inject.Singleton
-import io.micronaut.security.oauth2.docs.EmbeddedServerSpecification
+import jakarta.inject.Named
+import jakarta.inject.Singleton
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 
 class CsrfFilterSpec extends EmbeddedServerSpecification {
 
@@ -39,7 +39,7 @@ class CsrfFilterSpec extends EmbeddedServerSpecification {
 
     void "test csrf filter"() {
         given:
-        RxHttpClient client = applicationContext.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
+        HttpClient client = applicationContext.createBean(HttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
 
         when:
         client.toBlocking().exchange("/oauth/login/twitter")
@@ -49,18 +49,22 @@ class CsrfFilterSpec extends EmbeddedServerSpecification {
         ex.status == HttpStatus.FORBIDDEN
     }
 
-
     @Singleton
     @Named("twitter")
     @Requires(property = "spec.name", value = "CsrfFilterSpec")
     static class TwitterAuthenticationMapper implements OauthAuthenticationMapper {
 
+        private final TokenConfiguration tokenConfiguration
+        TwitterAuthenticationMapper(TokenConfiguration tokenConfiguration) {
+            this.tokenConfiguration = tokenConfiguration
+        }
+
         @Override
-        Publisher<Authentication> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
-            Flowable.create({ emitter ->
-                emitter.onNext(Authentication.build("twitterUser", new TokenConfiguration() {}))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+        Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) {
+            Flux.create({ emitter ->
+                emitter.next(AuthenticationResponse.build("twitterUser", tokenConfiguration))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 }

@@ -1,13 +1,17 @@
 package io.micronaut.security.token.views
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.views.model.security.SecurityViewModelProcessor
 import spock.lang.Specification
+import jakarta.inject.Singleton
 
 class SecurityViewModelProcessorSpec extends Specification {
 
@@ -52,7 +56,7 @@ class SecurityViewModelProcessorSpec extends Specification {
         embeddedServer.applicationContext.containsBean(BooksController)
 
         and:
-        embeddedServer.applicationContext.containsBean(MockAuthenticationProvider)
+        embeddedServer.applicationContext.containsBean(CustomAuthenticationProvider)
 
         and:
         embeddedServer.applicationContext.containsBean(SecurityViewModelProcessor)
@@ -99,7 +103,7 @@ class SecurityViewModelProcessorSpec extends Specification {
         embeddedServer.applicationContext.containsBean(BooksController)
 
         and:
-        embeddedServer.applicationContext.containsBean(MockAuthenticationProvider)
+        embeddedServer.applicationContext.containsBean(CustomAuthenticationProvider)
 
         and:
         embeddedServer.applicationContext.containsBean(SecurityViewModelProcessor)
@@ -125,5 +129,13 @@ class SecurityViewModelProcessorSpec extends Specification {
 
         and:
         embeddedServer.close()
+    }
+
+    @Requires(property = 'spec.name', value = 'SecurityViewModelProcessorSpec')
+    @Singleton
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('john', [], [email: 'john@email.com'])])
+        }
     }
 }

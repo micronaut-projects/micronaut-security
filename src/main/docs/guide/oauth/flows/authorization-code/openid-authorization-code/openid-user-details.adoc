@@ -2,7 +2,7 @@ Because the OpenID standard returns a JWT token in the token response, it is pos
 
 A default implementation of api:security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper[] has been provided for you to map the JWT token to a api:security.authentication.Authentication[]. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.adoc[]
 
 IMPORTANT: Enabling all of the above with cookie JWT storage has been known to cause issues with Keycloak due to their tokens being very large and causing the resulting cookie to be larger than what browsers allow.
 

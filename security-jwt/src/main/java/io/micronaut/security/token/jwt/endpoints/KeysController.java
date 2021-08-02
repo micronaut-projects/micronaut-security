@@ -16,19 +16,21 @@
 package io.micronaut.security.token.jwt.endpoints;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import net.minidev.json.JSONObject;
-
-import java.util.ArrayList;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import java.util.Collection;
 
 /**
@@ -42,8 +44,8 @@ import java.util.Collection;
 @Controller("${" + KeysControllerConfigurationProperties.PREFIX + ".path:/keys}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class KeysController {
-
-    private static final JSONObject EMPTY_KEYS = new JSONObject().appendField("keys", new ArrayList<>());
+    private static final Logger LOG = LoggerFactory.getLogger(KeysController.class);
+    private static final String EMPTY_KEYS = "{\"keys\": []}";
 
     private final Collection<JwkProvider> jwkProviders;
     private final ObjectMapper objectMapper;
@@ -63,16 +65,26 @@ public class KeysController {
      * @return a JSON Web Key Set (JWKS) payload.
      */
     @Get
-    public Single<String> keys() {
+    @SingleResult
+    public Publisher<String> keys() {
         if (jwkProviders.isEmpty()) {
-            return Single.just(objectMapper)
-                    .map(om -> om.writeValueAsString(EMPTY_KEYS));
+            return Mono.just(EMPTY_KEYS);
         }
-        return Flowable.fromIterable(jwkProviders)
+        return Flux.fromIterable(jwkProviders)
                 .flatMapIterable(JwkProvider::retrieveJsonWebKeys)
-                .toList()
+                .collectList()
                 .map(JWKSet::new)
                 .map(JWKSet::toJSONObject)
-                .map(objectMapper::writeValueAsString);
+                .map(m -> {
+                    try {
+                        return objectMapper.writeValueAsString(m);
+                    } catch (JsonProcessingException e) {
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("JSON Processing exception getting JSON representation of the JSON Web Key sets");
+                        }
+                        return EMPTY_KEYS;
+                    }
+                });
+
     }
 }

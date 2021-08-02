@@ -20,12 +20,11 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
+import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.handlers.LogoutHandler;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -39,46 +38,47 @@ import java.util.Optional;
 @Singleton
 public class JwtCookieClearerLogoutHandler implements LogoutHandler {
 
-    protected final JwtCookieConfiguration jwtCookieConfiguration;
     protected final String logout;
+    protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
+    protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
 
     /**
-     * @param jwtCookieConfiguration JWT Cookie Configuration
-     * @deprecated Use {@link JwtCookieClearerLogoutHandler#JwtCookieClearerLogoutHandler(JwtCookieConfiguration, RedirectConfiguration)} instead.
-     */
-    @Deprecated
-    public JwtCookieClearerLogoutHandler(JwtCookieConfiguration jwtCookieConfiguration) {
-            this.jwtCookieConfiguration = jwtCookieConfiguration;
-            this.logout = jwtCookieConfiguration.getLogoutTargetUrl();
-    }
-
-    /**
-     * @param jwtCookieConfiguration JWT Cookie Configuration
+     * @param accessTokenCookieConfiguration JWT Cookie Configuration
+     * @param refreshTokenCookieConfiguration Refresh token cookie configuration
      * @param redirectConfiguration Redirect configuration
      */
-    @Inject
-    public JwtCookieClearerLogoutHandler(JwtCookieConfiguration jwtCookieConfiguration,
+    public JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                                         RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
                                          RedirectConfiguration redirectConfiguration) {
-        this.jwtCookieConfiguration = jwtCookieConfiguration;
+        this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
+        this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
         this.logout = redirectConfiguration.getLogout();
     }
 
     @Override
     public MutableHttpResponse<?> logout(HttpRequest<?> request) {
-        Optional<Cookie> maybeCookie = request.getCookies().findCookie(jwtCookieConfiguration.getCookieName());
         try {
             URI location = new URI(logout);
-            if (maybeCookie.isPresent()) {
-                Cookie requestCookie = maybeCookie.get();
-                String domain = jwtCookieConfiguration.getCookieDomain().orElse(null);
-                String path = jwtCookieConfiguration.getCookiePath().orElse(null);
-                Cookie responseCookie = Cookie.of(requestCookie.getName(), "");
-                responseCookie.maxAge(0).domain(domain).path(path);
-                return HttpResponse.seeOther(location).cookie(responseCookie);
+            MutableHttpResponse<?> response = HttpResponse.seeOther(location);
+            clearCookie(accessTokenCookieConfiguration, request, response);
+            if (refreshTokenCookieConfiguration != null) {
+                clearCookie(refreshTokenCookieConfiguration, request, response);
             }
-            return HttpResponse.seeOther(location);
+            return response;
         } catch (URISyntaxException var5) {
             return HttpResponse.serverError();
+        }
+    }
+
+    private void clearCookie(CookieConfiguration cookieConfiguration, HttpRequest<?> request, MutableHttpResponse<?> response) {
+        Optional<Cookie> cookie = request.getCookies().findCookie(cookieConfiguration.getCookieName());
+        if (cookie.isPresent()) {
+            Cookie requestCookie = cookie.get();
+            String domain = cookieConfiguration.getCookieDomain().orElse(null);
+            String path = cookieConfiguration.getCookiePath().orElse(null);
+            Cookie responseCookie = Cookie.of(requestCookie.getName(), "");
+            responseCookie.maxAge(0).domain(domain).path(path);
+            response.cookie(responseCookie);
         }
     }
 }

@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.errors;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -25,7 +25,7 @@ import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.config.RedirectConfigurationProperties;
 import io.micronaut.security.config.TokenCookieConfiguration;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Optional;

@@ -15,15 +15,15 @@
  */
 package io.micronaut.security.session;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.filters.SecurityFilter;
@@ -32,9 +32,7 @@ import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -53,38 +51,25 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     protected final String loginFailure;
     protected final RedirectConfiguration redirectConfiguration;
     protected final SessionStore<Session> sessionStore;
+    private final TokenConfiguration tokenConfiguration;
     private final PriorToLoginPersistence priorToLoginPersistence;
-
-    /**
-     * Constructor.
-     * @param securitySessionConfiguration Security Session Configuration
-     * @param sessionStore The session store
-     * @param tokenConfiguration Token Configuration
-     * @deprecated Use {@link SessionLoginHandler#SessionLoginHandler(RedirectConfiguration, SessionStore, PriorToLoginPersistence)} instead.
-     */
-    @Deprecated
-    public SessionLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,
-                               SessionStore<Session> sessionStore,
-                               TokenConfiguration tokenConfiguration) {
-        this(securitySessionConfiguration.toRedirectConfiguration(),
-                sessionStore,
-        null);
-    }
 
     /**
      * Constructor.
      * @param redirectConfiguration Redirect configuration
      * @param sessionStore The session store
+     * @param tokenConfiguration Token Configuration
      * @param priorToLoginPersistence The persistence to store the original url
      */
-    @Inject
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
+                               TokenConfiguration tokenConfiguration,
                                @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         this.loginFailure = redirectConfiguration.getLoginFailure();
         this.loginSuccess = redirectConfiguration.getLoginSuccess();
         this.redirectConfiguration = redirectConfiguration;
         this.sessionStore = sessionStore;
+        this.tokenConfiguration = tokenConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
     }
 

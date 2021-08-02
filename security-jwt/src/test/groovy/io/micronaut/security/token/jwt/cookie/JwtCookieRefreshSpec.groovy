@@ -8,12 +8,16 @@ import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.endpoints.OauthController
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import io.micronaut.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.web.router.RouteMatch
 import io.micronaut.web.router.Router
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
+import reactor.core.publisher.Mono
+
+import java.util.concurrent.ConcurrentHashMap
+import java.util.function.BiFunction
 
 class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
 
@@ -47,9 +51,6 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
     }
 
     void "test refreshing the token"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         to HomePage
 
@@ -98,22 +99,23 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
     @Singleton
     static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
 
+        private final ConcurrentHashMap<String, Authentication> tokens = new ConcurrentHashMap<>()
+
         private final TokenConfiguration tokenConfiguration
+
         InMemoryRefreshTokenPersistence(TokenConfiguration tokenConfiguration) {
             this.tokenConfiguration = tokenConfiguration
         }
 
-        Map<String, Authentication> tokens = [:]
-
         @Override
         void persistToken(RefreshTokenGeneratedEvent event) {
-            tokens.put(event.getRefreshToken(), event.getAuthentication())
+            tokens.computeIfAbsent(event.getRefreshToken(), (provider)  -> event.getAuthentication())
         }
 
         @Override
         Publisher<Authentication> getAuthentication(String refreshToken) {
-            Authentication authentication = tokens.get(refreshToken)
-            Publishers.just(Authentication.build(authentication.name + "-refreshed", authentication.attributes, tokenConfiguration))
+            return Mono.just(tokens.computeIfPresent(refreshToken,
+                    (s, auth) -> Authentication.build(auth.getName() + "-refreshed", auth.getAttributes(), tokenConfiguration)))
         }
     }
 }

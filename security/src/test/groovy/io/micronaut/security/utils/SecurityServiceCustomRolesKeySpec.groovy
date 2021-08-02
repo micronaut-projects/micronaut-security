@@ -15,27 +15,19 @@
  */
 package io.micronaut.security.utils
 
-import edu.umd.cs.findbugs.annotations.Nullable
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.token.config.TokenConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
-
-import javax.inject.Singleton
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import jakarta.inject.Singleton
 
 class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
 
@@ -73,23 +65,11 @@ class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'SecurityServiceCustomRolesKeySpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
 
-        @Override
-        Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest,
-                                                       AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                if ( authenticationRequest.identity == 'user2' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(AuthenticationResponse.build('user', [], [customRoles: 'ROLE_USER'], new TokenConfiguration() {}))
-
-                } else if ( authenticationRequest.identity == 'user3' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(AuthenticationResponse.build('user', [], [otherCustomRoles: 'ROLE_USER'], new TokenConfiguration() {}))
-
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user2', [], [customRoles: ['ROLE_USER']]),
+                   new SuccessAuthenticationScenario('user3', [], [otherCustomRoles: ['ROLE_USER']])])
         }
     }
 

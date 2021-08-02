@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.config;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 /**

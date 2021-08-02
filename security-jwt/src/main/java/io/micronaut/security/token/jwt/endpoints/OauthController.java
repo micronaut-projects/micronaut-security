@@ -15,12 +15,22 @@
  */
 package io.micronaut.security.token.jwt.endpoints;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.*;
-import io.micronaut.http.annotation.*;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Consumes;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.CookieValue;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.errors.IssuingAnAccessTokenErrorCode;
 import io.micronaut.security.errors.OauthErrorResponseException;
@@ -29,7 +39,8 @@ import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.validation.Validated;
-import io.reactivex.Single;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -79,9 +90,10 @@ public class OauthController {
      */
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public Single<MutableHttpResponse<?>> index(HttpRequest<?> request,
-                                               @Nullable @Body TokenRefreshRequest tokenRefreshRequest,
-                                               @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
+    @SingleResult
+    public Publisher<MutableHttpResponse<?>> index(HttpRequest<?> request,
+                                                   @Nullable @Body TokenRefreshRequest tokenRefreshRequest,
+                                                   @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
         String refreshToken = resolveRefreshToken(tokenRefreshRequest, cookieRefreshToken);
         return createResponse(request, refreshToken);
     }
@@ -92,22 +104,24 @@ public class OauthController {
      * @return A response or a failure indicated by the HTTP status
      */
     @Get
-    public Single<MutableHttpResponse<?>> index(HttpRequest<?> request,
-                                                @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
+    @SingleResult
+    public Publisher<MutableHttpResponse<?>> index(HttpRequest<?> request,
+                                                   @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
         if (!oauthControllerConfigurationProperties.isGetAllowed()) {
-            return Single.just(HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED));
+            return Mono.just(HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED));
         }
         String refreshToken = resolveRefreshToken(null, cookieRefreshToken);
         return createResponse(request, refreshToken);
     }
 
-    private Single<MutableHttpResponse<?>> createResponse(HttpRequest<?> request, String refreshToken) {
+    @SingleResult
+    private Publisher<MutableHttpResponse<?>> createResponse(HttpRequest<?> request, String refreshToken) {
         Optional<String> validRefreshToken = refreshTokenValidator.validate(refreshToken);
         if (!validRefreshToken.isPresent()) {
             throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT, "Refresh token is invalid", null);
         }
-        return Single.fromPublisher(refreshTokenPersistence.getAuthentication(validRefreshToken.get()))
-                .map(authentication -> loginHandler.loginRefresh(authentication, refreshToken, request));
+        return Mono.from(refreshTokenPersistence.getAuthentication(validRefreshToken.get()))
+                .map(userDetails -> loginHandler.loginRefresh(userDetails, refreshToken, request));
     }
 
     @NonNull

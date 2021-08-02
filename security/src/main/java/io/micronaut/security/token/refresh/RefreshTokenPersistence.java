@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.refresh;
 
-import io.micronaut.runtime.event.annotation.EventListener;
+import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
 import org.reactivestreams.Publisher;
@@ -27,15 +27,18 @@ import org.reactivestreams.Publisher;
  * @author James Kleeh
  * @since 2.0.0
  */
-public interface RefreshTokenPersistence {
+public interface RefreshTokenPersistence extends ApplicationEventListener<RefreshTokenGeneratedEvent> {
 
     /**
      * Persist the refresh token.
      *
      * @param event The refresh token generated event
      */
-    @EventListener
     void persistToken(RefreshTokenGeneratedEvent event);
+
+    default void onApplicationEvent(RefreshTokenGeneratedEvent event) {
+        persistToken(event);
+    }
 
     /**
      * @param refreshToken The refresh token

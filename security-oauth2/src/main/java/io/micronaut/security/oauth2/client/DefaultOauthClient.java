@@ -28,22 +28,21 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.client.condition.OauthClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
-import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OauthAuthorizationRequest;
-import io.micronaut.security.oauth2.endpoint.authorization.response.*;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,7 +58,7 @@ public class DefaultOauthClient implements OauthClient {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthClient.class);
 
     private final OauthClientConfiguration clientConfiguration;
-    private final OauthAuthenticationMapper oauthAuthenticationMapper;
+    private final OauthAuthenticationMapper userDetailsMapper;
     private final AuthorizationRedirectHandler redirectHandler;
     private final OauthAuthorizationResponseHandler authorizationResponseHandler;
     private final BeanContext beanContext;
@@ -67,22 +66,22 @@ public class DefaultOauthClient implements OauthClient {
 
     /**
      * @param clientConfiguration The client configuration
-     * @param oauthAuthenticationMapper The authentication mapper
+     * @param userDetailsMapper The user details mapper
      * @param redirectHandler The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
      */
-    public DefaultOauthClient(@Parameter OauthAuthenticationMapper oauthAuthenticationMapper,
+    public DefaultOauthClient(@Parameter OauthAuthenticationMapper userDetailsMapper,
                               @Parameter OauthClientConfiguration clientConfiguration,
                               AuthorizationRedirectHandler redirectHandler,
                               OauthAuthorizationResponseHandler authorizationResponseHandler,
                               BeanContext beanContext) {
         this.clientConfiguration = clientConfiguration;
-        this.oauthAuthenticationMapper = oauthAuthenticationMapper;
+        this.userDetailsMapper = userDetailsMapper;
         this.redirectHandler = redirectHandler;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
-        this.tokenEndpoint = getTokenEndpoint();
+        this.tokenEndpoint = clientConfiguration.getTokenEndpoint();
     }
 
     @Override
@@ -100,7 +99,7 @@ public class DefaultOauthClient implements OauthClient {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), authorizationEndpoint);
         }
-        return Flowable.just(redirectHandler.redirect(authorizationRequest, authorizationEndpoint));
+        return Flux.just(redirectHandler.redirect(authorizationRequest, authorizationEndpoint));
     }
 
     @Override
@@ -117,7 +116,7 @@ public class DefaultOauthClient implements OauthClient {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Received an authorization error response from provider [{}]. Error: [{}]", getName(), errorResponse.getError());
             }
-            return Flowable.error(new AuthorizationErrorResponseException(errorResponse));
+            return Flux.error(new AuthorizationErrorResponseException(errorResponse));
         } else {
             AuthorizationResponse authorizationResponse = beanContext.createBean(OauthAuthorizationResponse.class, request);
             if (LOG.isTraceEnabled()) {
@@ -125,7 +124,7 @@ public class DefaultOauthClient implements OauthClient {
             }
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
-                    oauthAuthenticationMapper,
+                    userDetailsMapper,
                     tokenEndpoint);
         }
     }
@@ -136,20 +135,5 @@ public class DefaultOauthClient implements OauthClient {
      */
     protected boolean isErrorCallback(ConvertibleMultiValues<String> responseData) {
         return responseData.contains("error");
-    }
-
-    /**
-     * @return The token endpoint
-     */
-    protected SecureEndpoint getTokenEndpoint() {
-        String url = clientConfiguration.getToken()
-                .flatMap(EndpointConfiguration::getUrl).orElseThrow(() -> new ConfigurationException("Oauth client requires the token endpoint URL to be set in configuration"));
-
-        List<AuthenticationMethod> authenticationMethods = Collections.singletonList(
-                clientConfiguration.getToken()
-                        .flatMap(SecureEndpointConfiguration::getAuthMethod)
-                        .orElse(AuthenticationMethod.CLIENT_SECRET_POST));
-
-        return new DefaultSecureEndpoint(url, authenticationMethods);
     }
 }

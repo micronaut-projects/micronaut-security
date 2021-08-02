@@ -16,24 +16,20 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.token.config.TokenConfiguration
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.AutoCleanup
@@ -41,8 +37,6 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import javax.inject.Named
-import javax.inject.Singleton
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -61,7 +55,7 @@ class JwksSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    RxHttpClient booksClient
+    HttpClient booksClient
 
     @AutoCleanup
     @Shared
@@ -69,7 +63,7 @@ class JwksSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    RxHttpClient gatewayClient
+    HttpClient gatewayClient
 
     def "setup gateway server"() {
         given:
@@ -98,7 +92,7 @@ class JwksSpec extends Specification {
         noExceptionThrown()
 
         when:
-        gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(RxHttpClient, gatewayEmbeddedServer.getURL())
+        gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(HttpClient, gatewayEmbeddedServer.getURL())
 
         then:
         noExceptionThrown()
@@ -113,7 +107,7 @@ class JwksSpec extends Specification {
 
         booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig, Environment.TEST)
 
-        booksClient = booksEmbeddedServer.applicationContext.createBean(RxHttpClient, booksEmbeddedServer.getURL())
+        booksClient = booksEmbeddedServer.applicationContext.createBean(HttpClient, booksEmbeddedServer.getURL())
 
         when:
         for (Class beanClazz : [SignatureConfiguration,
@@ -145,7 +139,6 @@ class JwksSpec extends Specification {
         HttpResponse rsp = gatewayClient.toBlocking().exchange(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
 
         then:
-        noExceptionThrown()
         rsp.status() == HttpStatus.OK
         rsp.body().accessToken
         !rsp.body().refreshToken
@@ -154,7 +147,6 @@ class JwksSpec extends Specification {
         String username = booksClient.toBlocking().retrieve(HttpRequest.GET('/').bearerAuth(rsp.body().accessToken), String)
 
         then:
-        noExceptionThrown()
         username == 'user'
     }
 
@@ -173,18 +165,9 @@ class JwksSpec extends Specification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'jwks.gateway')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(AuthenticationResponse.build('user', new TokenConfiguration() {}))
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario( 'user')])
         }
     }
 

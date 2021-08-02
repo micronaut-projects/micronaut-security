@@ -5,11 +5,10 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.oauth2.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
@@ -17,12 +16,12 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationM
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
 import io.micronaut.security.token.config.TokenConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import java.nio.charset.StandardCharsets
 
 class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
@@ -45,7 +44,7 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
     void "test authorization redirect with just oauth"() {
         given:
-        RxHttpClient client = applicationContext.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
+        HttpClient client = applicationContext.createBean(HttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
 
         expect:
         applicationContext.findBean(OauthClient, Qualifiers.byName("twitter")).isPresent()
@@ -64,23 +63,31 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
         location.contains("client_id=myclient")
 
         when:
-        String parsedLocation = StateUtils.stateParser(location)
+        Map<String, String> queryValues = StateUtils.queryValuesAsMap(location)
+        String state = StateUtils.decodeState(queryValues)
 
         then:
-        parsedLocation.contains('"nonce":"')
-        parsedLocation.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/twitter"')
+        state.contains('"nonce":"')
+        state.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/twitter"')
     }
 
     @Singleton
     @Named("twitter")
     @Requires(property = "spec.name", value = "OauthAuthorizationRedirectSpec")
     static class TwitterAuthenticationMapper implements OauthAuthenticationMapper {
+
+        private final TokenConfiguration tokenConfiguration
+
+        TwitterAuthenticationMapper(TokenConfiguration tokenConfiguration) {
+            this.tokenConfiguration = tokenConfiguration
+        }
+
         @Override
         Publisher<Authentication> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
-            Flowable.create({ emitter ->
-                emitter.onNext(AuthenticationResponse.build('twitterUser', new TokenConfiguration() {}))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            Flux.create({ emitter ->
+                emitter.next(Authentication.build("twitterUser", tokenConfiguration))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 }

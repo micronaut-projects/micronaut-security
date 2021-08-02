@@ -15,34 +15,40 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
-import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
-import io.micronaut.http.*;
+import io.micronaut.core.util.SupplierUtil;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest;
-import io.micronaut.security.oauth2.endpoint.authorization.response.*;
-import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
+import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
+import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * The default implementation of {@link OpenIdClient}.
@@ -56,7 +62,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     private final OauthClientConfiguration clientConfiguration;
     private final Supplier<OpenIdProviderMetadata> openIdProviderMetadata;
-    private final OpenIdAuthenticationMapper openIdAuthenticationMapper;
+    private final OpenIdAuthenticationMapper userDetailsMapper;
     private final AuthorizationRedirectHandler redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
     private final Supplier<SecureEndpoint> tokenEndpoint;
@@ -66,7 +72,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     /**
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
-     * @param openIdAuthenticationMapper The user details mapper
+     * @param userDetailsMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
@@ -74,14 +80,14 @@ public class DefaultOpenIdClient implements OpenIdClient {
      */
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
-                               @Nullable OpenIdAuthenticationMapper openIdAuthenticationMapper,
+                               @Nullable OpenIdAuthenticationMapper userDetailsMapper,
                                AuthorizationRedirectHandler redirectUrlBuilder,
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                BeanContext beanContext,
                                @Nullable EndSessionEndpoint endSessionEndpoint) {
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
-        this.openIdAuthenticationMapper = openIdAuthenticationMapper;
+        this.userDetailsMapper = userDetailsMapper;
         this.redirectUrlBuilder = redirectUrlBuilder;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
@@ -119,7 +125,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), endpoint);
         }
-        return Flowable.just(redirectUrlBuilder.redirect(authorizationRequest, endpoint));
+        return Flux.just(redirectUrlBuilder.redirect(authorizationRequest, endpoint));
     }
 
     @Override
@@ -145,7 +151,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
                     openIdProviderMetadata.get(),
-                    openIdAuthenticationMapper,
+                    userDetailsMapper,
                     tokenEndpoint.get());
         }
     }
@@ -162,14 +168,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
      * @return The token endpoint
      */
     protected SecureEndpoint getTokenEndpoint() {
-        List<String> authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethodsSupported();
-        List<AuthenticationMethod> authenticationMethods = null;
-        if (authMethodsSupported != null) {
-            authenticationMethods = authMethodsSupported.stream()
-                    .map(String::toUpperCase)
-                    .map(AuthenticationMethod::valueOf)
-                    .collect(Collectors.toList());
-        }
-        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), authenticationMethods);
+        Optional<List<AuthenticationMethod>> authMethodsSupported = openIdProviderMetadata.get().getTokenEndpointAuthMethods();
+        return new DefaultSecureEndpoint(openIdProviderMetadata.get().getTokenEndpoint(), authMethodsSupported.orElse(null));
     }
 }

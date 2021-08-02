@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.authentication;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.config.TokenConfiguration;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -90,8 +89,8 @@ public interface AuthenticationResponse extends Serializable {
      */
     @NonNull
     static AuthenticationResponse build(@NonNull String username,
-                                @NonNull Collection<String> roles,
-                                @NonNull TokenConfiguration tokenConfiguration) {
+                                        @NonNull Collection<String> roles,
+                                        @NonNull TokenConfiguration tokenConfiguration) {
         return AuthenticationResponse.build(username, roles, Collections.emptyMap(), tokenConfiguration);
     }
 
@@ -105,9 +104,9 @@ public interface AuthenticationResponse extends Serializable {
      */
     @NonNull
     static AuthenticationResponse build(@NonNull String username,
-                                @NonNull Collection<String> roles,
-                                @NonNull Map<String, Object> attributes,
-                                @NonNull TokenConfiguration tokenConfiguration) {
+                                        @NonNull Collection<String> roles,
+                                        @NonNull Map<String, Object> attributes,
+                                        @NonNull TokenConfiguration tokenConfiguration) {
         return (AuthenticationResponse) () -> Optional.of(Authentication.build(username, roles, attributes, tokenConfiguration));
     }
 }

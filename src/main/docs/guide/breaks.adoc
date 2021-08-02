@@ -1,5 +1,50 @@
-
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
+
+== 3.0.0
+
+=== What's New
+
+- `UserDetails` has been removed. `Authentication` should be used instead. Moreover, several static methods to `AuthenticationResponse` and `Authentication` to ease the instances of those interfaces.
+API replaces the use of `UserDetails` with `Authentication`.
+- `RefreshTokenPersistence` extends `ApplicationEventListener<RefreshTokenGeneratedEvent>`.
+
+The following properties' default value has been removed in Micronaut Security 3.0.0:
+
+- `micronaut.security.oauth2.openid.nonce.cookie.cookie-secure`
+- `micronaut.security.oauth2.state.cookie.cookie-secure`
+- `micronaut.security.token.jwt.cookie.cookie-secure`
+- `micronaut.security.token.refresh.cookie.cookie-secure``
+
+NOTE: If the `cookie-secure` setting is not set, cookies will be secure if the request is determined to be HTTPS.
+
+=== 3.0.0 Deprecations removal
+
+Micronaut security:
+
+- Deletes deprecated methods `JwtValidator::validate(String)` and `JwtValidator::validate(JWT)`
+- Deletes deprecated class `SecuritySessionConfiguration`
+- Deletes deprecated constructor `JwtCookieClearerLogoutHandler(JwtCookieConfiguration)`
+- Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration redirectConfiguration, PriorToLoginPersistence priorToLoginPersistence)`
+- Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration,String, String)`
+- Deletes deprecated constructor `DefaultOpenIdAuthenticationMapper`
+- Deletes deprecated constructors `JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator accessRefreshTokenGenerator)`, `JwtCookieLoginHandler(RedirectConfiguration,JwtCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator accessRefreshTokenGenerator,PriorToLoginPersistence priorToLoginPersistence)`
+- Deletes deprecated constructor `IdTokenLoginHandler(JwtCookieConfiguration,RedirectConfiguration,TokenConfiguration,PriorToLoginPersistence)`
+- Deletes deprecated constructor `JwtCookieTokenReader(JwtCookieConfiguration)`
+- Deletes deprecated method `DefaultOauthClient::getTokenEndpoint`
+- Deletes `DefaultSecurityService#ROLES`
+- Deletes deprecated method `OauthUserDetailsMapper::createUserDetails(TokenResponse)`
+- Deletes `TokenValidator::validateToken(String)`
+- Deletes deprecated constructor `SessionLoginHandler(SecuritySessionConfiguration,SessionStore<Session>,TokenConfiguration)`
+- Deletes deprecated constructor `TokenRefreshRequest(String)`
+- Deletes deprecated method `SecurityService::hasRole`
+- Deletes deprecated class `TokenResponseExpiration`
+- Deletes deprecated constructor `DefaultSecurityService(TokenConfiguration)`.
+- Deletes deprecated method `OpenIdAuthenticationMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)`
+- Deletes deprecated method `BasicAuthAuthenticationFetcher::parseCredentials`
+- Deletes deprecated classes `JwtGeneratorConfiguration` and JwtGeneratorConfigurationProperties`
+- Deletes deprecated method `JwtClaimsValidator:validate(JwtClaims)`
+- Deletes deprecated constructor `JWTClaimsSetGenerator(TokenConfiguration,JwtIdGenerator, ClaimsAudienceProvider)`
+- Deletes deprecated constructor `RefreshTokenGeneratedEvent(Object)`
 
 == 2.0.0
 
@@ -15,16 +60,6 @@ The Maven Group ID has changed from `io.micronaut` to `io.micronaut.security`.
 
 * You don't need to enable Endpoints. The configuration keys `micronaut.security.endpoints.keys.enabled`, `micronaut.security.endpoints.login.enabled`, `micronaut.security.endpoints.logout.enabled`, `micronaut.security.endpoints.oauth.enabled` are now all `true` by default. However, You will need to provide the required beans for each endpoint.
 
-=== UserDetails deleted in favour of Authentication
-
-`UserDetails` has been removed. Every api which previously used `UserDetails` uses api:security.authentication.Authentication[] instead. `Authentication` provides several static `build` methods to creates instances of `Authentication` for a particular user.
-
-`io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper` has been renamed to  `io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper`
-
-`io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper` has been renamed to  `io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper`.
-
-`io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper` renamed to `io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper`.
-
 === Authentication Provider
 
 * The api:security.authentication.AuthenticationProvider[] API has changed to include the HTTP request as a parameter. Thus, it is now possible to gain access to the request in your api:security.authentication.AuthenticationProvider[]. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.
@@ -35,7 +70,11 @@ The Maven Group ID has changed from `io.micronaut` to `io.micronaut.security`.
 
 === Delegating Authentication Provider
 
-* The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications. Check https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html[LDAP and Database authentication providers tutorial] to learn how to write a `DelegatingAuthenticationProvider`.
+* The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications. Check https://guides.micronaut.io/latest/micronaut-database-authentication-provider.html[LDAP and Database authentication providers tutorial] to learn how to write a `DelegatingAuthenticationProvider`.
+
+=== LdapAuthenticationProvider
+
+The constructor for api:configuration.security.ldap.LdapAuthenticationProvider[] has been changed to accept an executor to schedule the LDAP lookup operation on. By default it is now scheduled on the IO thread pool.
 
 === LoginHandler
 
@@ -46,7 +85,7 @@ The Maven Group ID has changed from `io.micronaut` to `io.micronaut.security`.
 ** `micronaut.security.authentication: bearer` to enable api:security.token.jwt.bearer.AccessRefreshTokenLoginHandler[]
 ** `micronaut.security.authentication: cookie` to enable api:security.token.jwt.cookie.JwtCookieLoginHandler[]
 ** `micronaut.security.authentication: session` to enable api:security.session.SessionLoginHandler[]
-** `micronaut.security.authentication: idtoken` to enable api:oauth2.endpoint.token.response.IdTokenLoginHandler[]
+** `micronaut.security.authentication: idtoken` to enable api:security.oauth2.endpoint.token.response.IdTokenLoginHandler[]
 
 ==== Migration Example A
 

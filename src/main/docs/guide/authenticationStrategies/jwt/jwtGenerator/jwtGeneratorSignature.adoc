@@ -1,41 +1,10 @@
-Micronaut security capabilities use signed JWT’s as specified by the
-https://tools.ietf.org/html/rfc7515[JSON Web Signature] specification.
-
-To enable a JWT signature in token generation, you need to have in your app a bean of type link:{api}/io/micronaut/security/token/jwt/signature/SignatureGeneratorConfiguration.html[SignatureGeneratorConfiguration]
-qualified with name `generator`.
-
-To verify signed JWT tokens, you need to have in your app a bean of type link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureConfiguration.html[RSASignatureConfiguration],
+To generate a signed JWT you need to have in your app a bean of type
 link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorConfiguration.html[RSASignatureGeneratorConfiguration],
 link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureGeneratorConfiguration.html[ECSignatureGeneratorConfiguration],
-link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureConfiguration.html[ECSignatureConfiguration], or
-link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html[SecretSignature].
+, or
+link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration] which must be ** https://docs.micronaut.io/latest/guide/index.html#qualifiers[qualified] with `@Named` `generator`**  since the configuration beans are used by factories (
+link:{api}/io/micronaut/security/token/jwt/signature/rsa/RSASignatureGeneratorFactory.html[RSASignatureGeneratorFactory],
+link:{api}/io/micronaut/security/token/jwt/signature/ec/ECSignatureGeneratorConfiguration.html[ECSignatureGeneratorFactory]) or other beans (link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignature.html[SecretSignature])  which use
+https://docs.micronaut.io/latest/guide/index.html#eachBean[@EachBean] to drive configuration.
 
-You can setup a `SecretSignatureConfiguration` named `generator` easily via configuration properties:
-
-[source, yaml]
-----
-include::{testssecurityjwt}/signandencrypt/SignSecretEncryptRSASpec.groovy[indent=0, tag=yamlconfig]
-----
-
-<1> **Change this for your own secret and keep it safe**.
-<2> Json Web Token Signature name. In this example, HMAC using SHA-256 hash algorithm.
-
-You can supply the secret with Base64 encoding.
-
-[source, yaml]
-----
-include::{testssecurityjwt}/base64/JwtBase64Spec.groovy[indent=0, tag=yamlconfig]
-----
-
-<1> Secret Base64 encoded
-<2> Signal that the secret is Base64 encoded
-
-A programmatic setup of a RSA signature generation may look like
-
-[source, groovy]
-----
-include::{testssecurityjwt}/signandencrypt/MySignatureGeneratorConfigurationFactory.groovy[indent=0, tag=clazz]
-----
-
-<1> Name the SignatureGeneratorConfiguration `generator` to make it participate in JWT token generation.
-<2> Register an additional bean of type RSASignatureGeneratorConfiguration which is injected here
+IMPORTANT: Remember to qualify with `@Named` `generator` your signature configuration beans which you wish to use to sign your JSON web tokens.

@@ -5,24 +5,16 @@ import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationFailureReason
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UsernamePasswordCredentials
-import io.micronaut.security.token.config.TokenConfiguration
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.FailedAuthenticationScenario
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.testutils.EmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
+import jakarta.inject.Singleton
 import spock.lang.Unroll
-
-import javax.inject.Singleton
 
 class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
 
@@ -71,46 +63,17 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'AccessRefreshTokenLoginHandlerSpec')
-    static class TestingAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-
-            return Flowable.create({ emitter ->
-                String username = authenticationRequest.getIdentity().toString()
-                AuthenticationFailed authenticationFailed = null
-                switch (username) {
-                    case "disabled":
-                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.USER_DISABLED)
-                        break
-                    case "accountExpired":
-                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_EXPIRED)
-                        break
-                    case "passwordExpired":
-                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.PASSWORD_EXPIRED)
-                        break
-                    case "accountLocked":
-                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.ACCOUNT_LOCKED)
-                        break
-                    case "invalidPassword":
-                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)
-                        break
-                    case "notFound":
-                        authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND)
-                        break
-                }
-                if (authenticationFailed) {
-                    emitter.onError(new AuthenticationException(authenticationFailed))
-                } else {
-                    if (authenticationRequest.getSecret().toString() == "invalid") {
-                        emitter.onError(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)))
-                    } else {
-                        emitter.onNext(AuthenticationResponse.build(username, (username == "admin") ?  ["ROLE_ADMIN"] : ["foo", "bar"], new TokenConfiguration() {}))
-                    }
-                }
-                emitter.onComplete()
-
-            }, BackpressureStrategy.ERROR)
+    static class TestingAuthenticationProvider extends MockAuthenticationProvider {
+        TestingAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('admin',  ["ROLE_ADMIN"])], [
+                new FailedAuthenticationScenario("disabled", AuthenticationFailureReason.USER_DISABLED),
+                new FailedAuthenticationScenario("accountExpired", AuthenticationFailureReason.ACCOUNT_EXPIRED),
+                new FailedAuthenticationScenario("passwordExpired", AuthenticationFailureReason.PASSWORD_EXPIRED),
+                new FailedAuthenticationScenario("accountLocked", AuthenticationFailureReason.ACCOUNT_LOCKED),
+                new FailedAuthenticationScenario("invalidPassword", AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+                new FailedAuthenticationScenario("valid", AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH),
+                new FailedAuthenticationScenario("notFound", AuthenticationFailureReason.USER_NOT_FOUND),
+            ])
         }
     }
 }

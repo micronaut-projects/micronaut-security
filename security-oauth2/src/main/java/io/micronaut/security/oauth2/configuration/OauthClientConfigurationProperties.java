@@ -20,6 +20,8 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.http.MediaType;
+import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
+import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.grants.GrantType;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
@@ -27,13 +29,15 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Stores configuration of each configured OAuth 2.0 client.
@@ -50,6 +54,11 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+
+    // If you change the default, edit the javadoc of `setScopes` which is exposed in the docs.
+    private static final List<String> DEFAULT_SCOPES_OPENID = Arrays.asList(OpenIdScope.OPENID.toString(),
+            OpenIdScope.EMAIL.toString(),
+            OpenIdScope.PROFILE.toString());
     private List<String> DEFAULT_SCOPES = new ArrayList<>();
 
     private final String name;
@@ -63,6 +72,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private IntrospectionEndpointConfigurationProperties introspection;
     private RevocationEndpointConfigurationProperties revocation;
     private OpenIdClientConfigurationProperties openid;
+    private ClientCredentialsConfigurationProperties clientCredentials;
 
     /**
      * @param name The provider name
@@ -122,7 +132,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     /**
-     * The scopes to request.
+     * Requested scopes. If not specified for OAuth 2.0 clients using OpenID Connect it defaults to `profile`, `email` and `idtoken`
      *
      * @param scopes The scopes
      */
@@ -170,6 +180,21 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         return Optional.ofNullable(authorization);
     }
 
+    @Override
+    @NonNull
+    public Optional<ClientCredentialsConfiguration> getClientCredentials() {
+        return Optional.ofNullable(clientCredentials);
+    }
+
+    /**
+     * Sets the Client Credentials configuration.
+     *
+     * @param clientCredentials client credentials configuration
+     */
+    public void setClientCredentials(@NonNull ClientCredentialsConfigurationProperties clientCredentials) {
+        this.clientCredentials = clientCredentials;
+    }
+
     /**
      * The OAuth 2.0 authorization endpoint configuration.
      *
@@ -193,9 +218,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     public void setOpenid(OpenIdClientConfigurationProperties openid) {
         this.openid = openid;
-        this.DEFAULT_SCOPES = Arrays.asList(OpenIdScope.OPENID.toString(),
-                OpenIdScope.EMAIL.toString(),
-                OpenIdScope.PROFILE.toString());
+        this.DEFAULT_SCOPES = DEFAULT_SCOPES_OPENID;
     }
 
     @Override
@@ -224,6 +247,194 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     public void setRevocation(RevocationEndpointConfigurationProperties revocation) {
         this.revocation = revocation;
+    }
+
+    /**
+     * Client credentials configuration.
+     */
+    @ConfigurationProperties("client-credentials")
+    public static class ClientCredentialsConfigurationProperties implements ClientCredentialsConfiguration {
+
+        /**
+         * The default enable value.
+         */
+        @SuppressWarnings("WeakerAccess")
+        public static final boolean DEFAULT_ENABLED = true;
+
+        private boolean enabled = DEFAULT_ENABLED;
+
+        private String serviceIdRegex;
+
+        private String uriRegex;
+
+        private Pattern serviceIdPattern;
+
+        private Pattern uriPattern;
+
+        private String scope;
+
+        private Duration advancedExpiration = DEFAULT_ADVANCED_EXPIRATION;
+
+        private HeaderTokenPropagatorConfigurationProperties headerPropagation;
+
+        @NonNull
+        @Override
+        public Duration getAdvancedExpiration() {
+            return advancedExpiration;
+        }
+
+        @Override
+        @NonNull
+        public Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> getHeaderPropagation() {
+            return Optional.ofNullable(headerPropagation);
+        }
+
+        /**
+         * Sets the Http Header Client Credentials Token Propagator configuration.
+         *
+         * @param headerPropagation client credentials header propagation.
+         */
+        public void setHeaderPropagation(@NonNull HeaderTokenPropagatorConfigurationProperties headerPropagation) {
+            this.headerPropagation = headerPropagation;
+        }
+
+        /**
+         * @param advancedExpiration Number of seconds for a token obtained via client credentials grant to be considered expired
+         *                           prior to its expiration date. Default value (30 seconds).
+         */
+        public void setAdvancedExpiration(@NonNull Duration advancedExpiration) {
+            this.advancedExpiration = advancedExpiration;
+        }
+
+        /**
+         * @return a regular expression to match the service.
+         */
+        public String getServiceIdRegex() {
+            return this.serviceIdRegex;
+        }
+
+        /**
+         * @param serviceIdRegex A regular expression to match the service id.
+         */
+        public void setServiceIdRegex(String serviceIdRegex) {
+            this.serviceIdRegex = serviceIdRegex;
+        }
+
+        /**
+         * @return a regular expression to match the uri.
+         */
+        public String getUriRegex() {
+            return this.uriRegex;
+        }
+
+        /**
+         * @param uriRegex A regular expression to match the URI.
+         */
+        public void setUriRegex(String uriRegex) {
+            this.uriRegex = uriRegex;
+        }
+
+        @Override
+        public Pattern getServiceIdPattern() {
+            if (this.serviceIdPattern == null && this.serviceIdRegex != null) {
+                serviceIdPattern = Pattern.compile(this.serviceIdRegex);
+            }
+            return serviceIdPattern;
+        }
+
+        @Override
+        public Pattern getUriPattern() {
+            if (this.uriPattern == null && this.uriRegex != null) {
+                uriPattern = Pattern.compile(this.uriRegex);
+            }
+            return uriPattern;
+        }
+
+        @NonNull
+        @Override
+        public Optional<String> getScope() {
+            return Optional.ofNullable(scope);
+        }
+
+        /**
+         * Scope to be requested in the client credentials request. Defaults to none.
+         * @param scope Scope to be requested in the client credentials request
+         */
+        public void setScope(String scope) {
+            this.scope = scope;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        /**
+         * Enables {@link io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsClient}. Default value {@value #DEFAULT_ENABLED}
+         * @param enabled enabled flag
+         */
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        /**
+         * Client credentials http header token propagation configuration.
+         */
+        @ConfigurationProperties("header-propagation")
+        public static class HeaderTokenPropagatorConfigurationProperties implements ClientCredentialsHeaderTokenPropagatorConfiguration {
+
+            private String prefix = DEFAULT_PREFIX;
+            private String headerName = DEFAULT_HEADER_NAME;
+            private boolean enabled = DEFAULT_ENABLED;
+
+            @Override
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            /**
+             * Enable {@link ClientCredentialsHeaderTokenPropagatorConfiguration}. Default value ({@value #DEFAULT_ENABLED}).
+             * @param enabled enabled flag
+             */
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+
+            /**
+             * Value prefix for Http Header. Default value ({@value #DEFAULT_PREFIX}).
+             * @param prefix preffix before the header value
+             */
+            public void setPrefix(String prefix) {
+                this.prefix = prefix;
+            }
+
+            /**
+             *
+             * @return a Prefix before the token in the header value. E.g. Bearer
+             */
+            @Override
+            public String getPrefix() {
+                return this.prefix;
+            }
+
+            /**
+             * Http Header to be used to propagate the token. Default value ({@value #DEFAULT_HEADER_NAME})
+             * @param headerName HTTP header name
+             */
+            public void setHeaderName(String headerName) {
+                this.headerName = headerName;
+            }
+
+            /**
+             *
+             * @return an HTTP Header name. e.g. Authorization
+             */
+            @Override
+            public String getHeaderName() {
+                return this.headerName;
+            }
+
+        }
     }
 
     /**

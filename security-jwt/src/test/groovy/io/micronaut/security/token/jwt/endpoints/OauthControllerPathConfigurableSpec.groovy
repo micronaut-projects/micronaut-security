@@ -8,10 +8,10 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import io.micronaut.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class OauthControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 
@@ -31,7 +31,7 @@ class OauthControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 
     void "OauthController is not accessible at /oauth/access_token but at /newtoken"() {
         given:
-        TokenRefreshRequest creds = new TokenRefreshRequest('foo', 'XXXXXXXXXX')
+        Map<String, Object> creds = [grant_type: 'foo', refresh_token: 'XXXXXXXXXX']
 
         expect:
         applicationContext.getBean(OauthController.class)

@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.authentication;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.config.TokenConfiguration;
-
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;

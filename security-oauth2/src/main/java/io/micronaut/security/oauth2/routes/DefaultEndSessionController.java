@@ -25,7 +25,7 @@ import io.micronaut.security.oauth2.client.OpenIdClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**

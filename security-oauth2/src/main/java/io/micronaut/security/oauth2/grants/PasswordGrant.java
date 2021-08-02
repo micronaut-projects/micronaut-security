@@ -22,8 +22,8 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -39,8 +39,6 @@ import java.util.Map;
 public class PasswordGrant implements SecureGrant, AsMap {
 
     private static final String KEY_GRANT_TYPE = "grant_type";
-    private static final String KEY_CLIENT_ID = "client_id";
-    private static final String KEY_CLIENT_SECRET = "client_secret";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_SCOPE = "scope";

@@ -19,9 +19,11 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
-import java.util.HashMap;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.util.StringUtils;
+
+import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 /**
@@ -33,13 +35,23 @@ import java.util.Map;
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ClientCredentialsGrant implements AsMap {
+public class ClientCredentialsGrant implements SecureGrant, AsMap {
 
     public static final String KEY_GRANT_TYPE = "grant_type";
-    public static final String KEY_SCOPES = "scopes";
+    public static final String KEY_SCOPES = "scope";
 
+    @NonNull
+    @NotBlank
     private String grantType = GrantType.CLIENT_CREDENTIALS.toString();
+
+    @Nullable
     private String scope;
+
+    @Nullable
+    private String clientId;
+
+    @Nullable
+    private String clientSecret;
 
     /**
      * Default Constructor.
@@ -53,6 +65,14 @@ public class ClientCredentialsGrant implements AsMap {
     @NonNull
     public String getGrantType() {
         return grantType;
+    }
+
+    /**
+     *
+     * @param grantType Grant type
+     */
+    public void setGrantType(@NonNull String grantType) {
+        this.grantType = grantType;
     }
 
     /**
@@ -71,13 +91,55 @@ public class ClientCredentialsGrant implements AsMap {
     }
 
     /**
+     *
+     * @return The application's Client identifier.
+     */
+    @NonNull
+    public String getClientId() {
+        return clientId;
+    }
+
+    /**
+     *
+     * @param clientId Application's Client identifier.
+     */
+    public void setClientId(@NonNull String clientId) {
+        this.clientId = clientId;
+    }
+
+    /**
+     *
+     * @param clientSecret Application's Client clientSecret.
+     */
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
+    /**
+     *
+     * @return The application's Client clientSecret.
+     */
+    public String getClientSecret() {
+        return this.clientSecret;
+    }
+
+    /**
      * @return this object as a Map
      */
     @Override
     public Map<String, String> toMap() {
-        Map<String, String> m = new HashMap<>(2);
+        Map<String, String> m = new SecureGrantMap(2);
         m.put(KEY_GRANT_TYPE, getGrantType());
-        m.put(KEY_SCOPES, getScope());
+        if (StringUtils.isNotEmpty(scope)) {
+            m.put(KEY_SCOPES, scope);
+        }
+        if (clientId != null) {
+            m.put(KEY_CLIENT_ID, clientId);
+        }
+        if (clientSecret != null) {
+            m.put(KEY_CLIENT_SECRET, clientSecret);
+        }
         return m;
     }
+
 }

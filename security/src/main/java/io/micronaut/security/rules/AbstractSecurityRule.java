@@ -20,7 +20,7 @@ import io.micronaut.security.token.RolesFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,18 +80,16 @@ public abstract class AbstractSecurityRule implements SecurityRule {
      *  appears in the required roles list. {@link SecurityRuleResult#ALLOWED} otherwise.
      */
     protected SecurityRuleResult compareRoles(List<String> requiredRoles, List<String> grantedRoles) {
-        requiredRoles = new ArrayList<>(requiredRoles);
-        requiredRoles.retainAll(grantedRoles);
-        if (requiredRoles.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("None of the given roles [{}] matched the required roles [{}]. Rejecting the request", grantedRoles, requiredRoles);
-            }
-            return SecurityRuleResult.REJECTED;
-        } else {
+        if (rolesFinder.hasAnyRequiredRoles(requiredRoles, grantedRoles)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("The given roles [{}] matched one or more of the required roles [{}]. Allowing the request", grantedRoles, requiredRoles);
             }
             return SecurityRuleResult.ALLOWED;
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("None of the given roles [{}] matched the required roles [{}]. Rejecting the request", grantedRoles, requiredRoles);
+            }
+            return SecurityRuleResult.REJECTED;
         }
     }
 }

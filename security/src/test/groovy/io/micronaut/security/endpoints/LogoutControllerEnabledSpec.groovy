@@ -1,8 +1,7 @@
 package io.micronaut.security.endpoints
 
-
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.security.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Unroll
 
 class LogoutControllerEnabledSpec extends ApplicationContextSpecification {

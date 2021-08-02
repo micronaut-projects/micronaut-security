@@ -7,21 +7,14 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.handlers.LogoutHandler
-import io.micronaut.security.token.config.TokenConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
+import jakarta.inject.Singleton
 import spock.lang.Specification
-
-import javax.inject.Singleton
 
 class LogoutControllerAllowedMethodsSpec extends Specification {
 
@@ -40,7 +33,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
     void "LogoutController does not accept GET requests by default"() {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration, Environment.TEST)
-        RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
         when:
         client.toBlocking().exchange(HttpRequest.GET("/logout").basicAuth("user", "password"))
@@ -61,7 +54,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
         m.put('micronaut.security.endpoints.logout.get-allowed', true)
 
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m, Environment.TEST)
-        RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
         when:
         client.toBlocking().exchange(HttpRequest.GET("/logout").basicAuth("user", "password"))
@@ -81,7 +74,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
         m.put('micronaut.security.endpoints.logout.get-allowed', true)
 
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m, Environment.TEST)
-        RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
         when:
         client.toBlocking().exchange(HttpRequest.POST('/logout', ""))
@@ -111,14 +104,9 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'LogoutControllerAllowedMethodsSpec')
     @Singleton
-    static class CustomAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                emitter.onNext(AuthenticationResponse.build("user", new TokenConfiguration() {}))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 }

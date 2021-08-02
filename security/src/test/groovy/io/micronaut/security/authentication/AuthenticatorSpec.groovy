@@ -5,12 +5,11 @@ import io.micronaut.security.config.AuthenticationStrategy
 import io.micronaut.security.config.SecurityConfiguration
 import io.micronaut.security.config.SecurityConfigurationProperties
 import io.micronaut.security.token.config.TokenConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.Flux
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Mono
 import spock.lang.Shared
 import spock.lang.Specification
-
-import static io.reactivex.Flowable.create
 
 class AuthenticatorSpec extends Specification {
 
@@ -31,77 +30,74 @@ class AuthenticatorSpec extends Specification {
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        Flowable<AuthenticationResponse> rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds))
-        rsp.blockingFirst()
-
+        Optional<AuthenticationResponse> rsp = Mono.from(authenticator.authenticate(null, creds)).blockOptional()
+        
         then:
-        thrown(NoSuchElementException)
+        !rsp.isPresent()
     }
 
     void "if any authentication provider throws exception, continue with authentication"() {
         given:
         def authProviderExceptionRaiser = Stub(AuthenticationProvider) {
-            authenticate(_, _) >> { Flowable.error( new Exception('Authentication provider raised exception') ) }
+            authenticate(_, _) >> { Flux.error( new Exception('Authentication provider raised exception') ) }
         }
         def authProviderOK = Stub(AuthenticationProvider) {
-            authenticate(_, _) >> create({emitter ->
-                emitter.onNext(AuthenticationResponse.build("admin", new TokenConfiguration() {}))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            authenticate(_, _) >> Flux.create({emitter ->
+                emitter.next(AuthenticationResponse.build("admin", new TokenConfiguration() {}))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR);
         }
         Authenticator authenticator = new Authenticator([authProviderExceptionRaiser, authProviderOK], new SecurityConfigurationProperties())
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        Flowable<AuthenticationResponse> rsp = authenticator.authenticate(null, creds)
+        Flux<AuthenticationResponse> rsp = Flux.from(authenticator.authenticate(null, creds))
 
         then:
-        rsp.blockingFirst() instanceof AuthenticationResponse
-        rsp.blockingFirst().isAuthenticated()
+        rsp.blockFirst() instanceof AuthenticationResponse
+        rsp.blockFirst().isAuthenticated()
     }
 
     void "if no authentication provider can authentication, the last error is sent back"() {
         given:
         def authProviderFailed = Stub(AuthenticationProvider) {
-            authenticate(_, _) >> create({ emitter ->
-                emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            authenticate(_, _) >> Flux.create({ emitter ->
+                emitter.error(new AuthenticationException(new AuthenticationFailed()))
+            }, FluxSink.OverflowStrategy.ERROR)
         }
         Authenticator authenticator = new Authenticator([authProviderFailed], new SecurityConfigurationProperties())
 
         when:
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials('admin', 'admin')
-        Flowable<AuthenticationResponse> rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds))
+        Flux<AuthenticationResponse> rsp = Flux.from(authenticator.authenticate(null, creds))
 
         then:
-        rsp.blockingFirst() instanceof AuthenticationFailed
+        rsp.blockFirst() instanceof AuthenticationFailed
     }
 
     void "test authentication strategy all with error and empty"() {
         given:
         def providers = [
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> create({ emitter ->
-                        emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
-                        emitter.onComplete()
-                    }, BackpressureStrategy.ERROR)
+                    authenticate(_, _) >> Flux.create({ emitter ->
+                        emitter.error(new AuthenticationException(new AuthenticationFailed("failed")))
+                    }, FluxSink.OverflowStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> Flowable.empty()
+                    authenticate(_, _) >> Flux.empty()
                 },
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> create({ emitter ->
-                        emitter.onNext(AuthenticationResponse.build("a", new TokenConfiguration() {}))
-                        emitter.onComplete()
-                    }, BackpressureStrategy.ERROR)
+                    authenticate(_, _) >> Flux.create({ emitter ->
+                        emitter.next(AuthenticationResponse.build("a", new TokenConfiguration() {}))
+                        emitter.complete()
+                    }, FluxSink.OverflowStrategy.ERROR)
                 },
         ]
         Authenticator authenticator = new Authenticator(providers, ALL)
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds)).blockingFirst()
+        AuthenticationResponse rsp = Flux.from(authenticator.authenticate(null, creds)).blockFirst()
 
         then: //The last error is returned
         rsp instanceof AuthenticationFailed
@@ -112,23 +108,22 @@ class AuthenticatorSpec extends Specification {
         given:
         def providers = [
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >>  create({ emitter ->
-                        emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
-                        emitter.onComplete()
-                    }, BackpressureStrategy.ERROR)
+                    authenticate(_, _) >>  Flux.create({ emitter ->
+                        emitter.error(new AuthenticationException(new AuthenticationFailed("failed")))
+                    }, FluxSink.OverflowStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >>  create({ emitter ->
-                        emitter.onNext(AuthenticationResponse.build("a", new TokenConfiguration() {}))
-                        emitter.onComplete()
-                    }, BackpressureStrategy.ERROR)
+                    authenticate(_, _) >>  Flux.create({ emitter ->
+                        emitter.next(AuthenticationResponse.build("a", new TokenConfiguration() {}))
+                        emitter.complete()
+                    }, FluxSink.OverflowStrategy.ERROR)
                 },
         ]
         Authenticator authenticator = new Authenticator(providers, ALL)
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds)).blockingFirst()
+        AuthenticationResponse rsp = Flux.from(authenticator.authenticate(null, creds)).blockFirst()
 
         then: //The last error is returned
         rsp instanceof AuthenticationFailed
@@ -139,23 +134,22 @@ class AuthenticatorSpec extends Specification {
         given:
         def providers = [
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> create({ emitter ->
-                        emitter.onNext(AuthenticationResponse.build("a", new TokenConfiguration() {}))
-                        emitter.onComplete()
-                    }, BackpressureStrategy.ERROR)
+                    authenticate(_, _) >> Flux.create({ emitter ->
+                        emitter.next(AuthenticationResponse.build("a", new TokenConfiguration() {}))
+                        emitter.complete()
+                    }, FluxSink.OverflowStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> create({ emitter ->
-                        emitter.onError(new AuthenticationException(new AuthenticationFailed("failed")))
-                        emitter.onComplete()
-                    }, BackpressureStrategy.ERROR)
+                    authenticate(_, _) >> Flux.create({ emitter ->
+                        emitter.error(new AuthenticationException(new AuthenticationFailed("failed")))
+                    }, FluxSink.OverflowStrategy.ERROR)
                 },
         ]
         Authenticator authenticator = new Authenticator(providers, ALL)
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds)).blockingFirst()
+        AuthenticationResponse rsp = Flux.from(authenticator.authenticate(null, creds)).blockFirst()
 
         then: //The last error is returned
         rsp instanceof AuthenticationFailed
@@ -166,23 +160,23 @@ class AuthenticatorSpec extends Specification {
         given:
         def providers = [
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> create({ emitter ->
-                        emitter.onNext(AuthenticationResponse.build("a", new TokenConfiguration() {}))
-                        emitter.onComplete()
-                    }, BackpressureStrategy.ERROR)
+                    authenticate(_, _) >> Flux.create({ emitter ->
+                        emitter.next(AuthenticationResponse.build("a", new TokenConfiguration() {}))
+                        emitter.complete()
+                    }, FluxSink.OverflowStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
-                    authenticate(_, _) >> create({ emitter ->
-                        emitter.onNext(AuthenticationResponse.build("b", new TokenConfiguration() {}))
-                        emitter.onComplete()
-                    }, BackpressureStrategy.ERROR)
+                    authenticate(_, _) >> Flux.create({ emitter ->
+                        emitter.next(AuthenticationResponse.build("b", new TokenConfiguration() {}))
+                        emitter.complete()
+                    }, FluxSink.OverflowStrategy.ERROR)
                 },
         ]
         Authenticator authenticator = new Authenticator(providers, ALL)
 
         when:
         def creds = new UsernamePasswordCredentials('admin', 'admin')
-        AuthenticationResponse rsp = Flowable.fromPublisher(authenticator.authenticate(null, creds)).blockingFirst()
+        AuthenticationResponse rsp = Flux.from(authenticator.authenticate(null, creds)).blockFirst()
 
         then: //The last error is returned
         rsp.authentication

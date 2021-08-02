@@ -15,12 +15,11 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Responsible for converting an OpenID token response to

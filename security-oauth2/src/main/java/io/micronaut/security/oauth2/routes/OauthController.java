@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.annotation.Executable;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.annotation.Secured;
@@ -48,6 +49,7 @@ public interface OauthController {
      * @return A redirecting http response
      */
     @Executable
+    @SingleResult
     Publisher<MutableHttpResponse<?>> login(HttpRequest<?> request);
 
     /**
@@ -58,6 +60,7 @@ public interface OauthController {
      * @return A response
      */
     @Executable
+    @SingleResult
     Publisher<MutableHttpResponse<?>> callback(HttpRequest<Map<String, Object>> request);
 
 }

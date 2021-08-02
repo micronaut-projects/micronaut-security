@@ -1,6 +1,7 @@
 package io.micronaut.security.oauth2
 
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Shared
 import spock.lang.Subject
 

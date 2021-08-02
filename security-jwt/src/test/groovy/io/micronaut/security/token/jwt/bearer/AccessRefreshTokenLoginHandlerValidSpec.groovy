@@ -3,19 +3,12 @@ package io.micronaut.security.token.jwt.bearer
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
-import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UsernamePasswordCredentials
-import io.micronaut.security.token.config.TokenConfiguration
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
-import io.micronaut.testutils.EmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
-
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class AccessRefreshTokenLoginHandlerValidSpec extends EmbeddedServerSpecification {
     @Override
@@ -54,14 +47,9 @@ class AccessRefreshTokenLoginHandlerValidSpec extends EmbeddedServerSpecificatio
 
     @Singleton
     @Requires(property = 'spec.name', value = 'AccessRefreshTokenLoginHandlerValidSpec')
-    static class TestingAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                emitter.onNext(AuthenticationResponse.build(authenticationRequest.identity as String, ["foo", "bar"], new TokenConfiguration() {}))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class TestingAuthenticationProvider extends MockAuthenticationProvider {
+        TestingAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('valid', ["foo", "bar"])])
         }
     }
 }

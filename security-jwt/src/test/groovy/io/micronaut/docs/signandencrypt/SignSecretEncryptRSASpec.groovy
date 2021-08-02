@@ -12,8 +12,8 @@ import io.micronaut.security.token.jwt.encryption.rsa.RSAEncryption
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.secret.SecretSignature
-import io.micronaut.testutils.EmbeddedServerSpecification
-import io.micronaut.testutils.YamlAsciidocTagCleaner
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 
 class SignSecretEncryptRSASpec extends EmbeddedServerSpecification implements AuthorizationUtils, YamlAsciidocTagCleaner {

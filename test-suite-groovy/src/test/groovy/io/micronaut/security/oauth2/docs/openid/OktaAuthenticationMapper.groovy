@@ -1,21 +1,20 @@
 package io.micronaut.security.oauth2.docs.openid
 
-import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Requires
-import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationResponse;
 
 //tag::clazz[]
+
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 
-import edu.umd.cs.findbugs.annotations.NonNull
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.security.token.config.TokenConfiguration
-
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 
 @Singleton
 @Named("okta") // <1>
@@ -36,7 +35,7 @@ class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
                                                         OpenIdTokenResponse tokenResponse, // <3>
                                                         OpenIdClaims openIdClaims, // <4>
                                                         @Nullable State state) { // <5>
-                AuthenticationResponse.build('name', tokenConfiguration) // <6>
+        AuthenticationResponse.build("name", tokenConfiguration) // <6>
     }
 }
 //end::clazz[]

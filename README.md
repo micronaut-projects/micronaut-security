@@ -1,7 +1,7 @@
 # Micronaut Security
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.micronaut/micronaut-security.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.micronaut%22%20AND%20a:%22micronaut-security%22)
-![Snapshot](https://img.shields.io/badge/dynamic/xml?color=yellow&label=Snapshot&query=%2F%2Fmetadata%2Fversioning%2Flatest&url=https%3A%2F%2Foss.jfrog.org%2Fartifactory%2Foss-snapshot-local%2Fio%2Fmicronaut%2Fmicronaut-security%2Fmaven-metadata.xml)
+[![Maven Central](https://img.shields.io/maven-central/v/io.micronaut.security/micronaut-security.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.micronaut.security%22%20AND%20a:%22micronaut-security%22)
+![Snapshot](https://img.shields.io/badge/dynamic/xml?color=yellow&label=Snapshot&query=%2F%2Fmetadata%2Fversioning%2Flatest&url=https%3A%2F%2Foss.jfrog.org%2Fartifactory%2Foss-snapshot-local%2Fio%2Fmicronaut%2Fsecurity%2Fmicronaut-security%2Fmaven-metadata.xml)
 [![Build Status](https://github.com/micronaut-projects/micronaut-security/workflows/Java%20CI/badge.svg)](https://github.com/micronaut-projects/micronaut-security/actions)
 
 The official Micronaut security solution.

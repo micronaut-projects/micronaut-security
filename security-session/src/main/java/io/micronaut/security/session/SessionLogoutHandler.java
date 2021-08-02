@@ -25,9 +25,7 @@ import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -45,20 +43,8 @@ public class SessionLogoutHandler implements LogoutHandler {
 
     /**
      * Constructor.
-     *
-     * @param securitySessionConfiguration Security Session Configuration session store
-     * @deprecated Use {@link SessionLogoutHandler(RedirectConfiguration)} instead.
-     */
-    @Deprecated
-    public SessionLogoutHandler(SecuritySessionConfiguration securitySessionConfiguration) {
-        this.logout = securitySessionConfiguration.getLogoutTargetUrl();
-    }
-
-    /**
-     * Constructor.
      * @param redirectConfiguration Redirect Configuration
      */
-    @Inject
     public SessionLogoutHandler(RedirectConfiguration redirectConfiguration) {
         this.logout = redirectConfiguration.getLogout();
     }

@@ -18,9 +18,9 @@ package io.micronaut.security.utils;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -31,13 +31,12 @@ import java.util.Optional;
  */
 @Singleton
 public class DefaultSecurityService implements SecurityService {
-
-    public static final String ROLES = "roles";
+    
     private final RolesFinder rolesFinder;
 
     /**
-     * Constructor.
-     * @param rolesFinder Roles Finder
+     *
+     * @param rolesFinder Roles Parser
      */
     public DefaultSecurityService(RolesFinder rolesFinder) {
         this.rolesFinder = rolesFinder;
@@ -82,13 +81,8 @@ public class DefaultSecurityService implements SecurityService {
      */
     @Override
     public boolean hasRole(String role) {
-        if (role == null) {
-            return false;
-        }
-        return getAuthentication().map(authentication -> {
-            return rolesFinder.resolveRoles(authentication.getAttributes()).contains(role);
-        }).orElse(false);
-
+        return getAuthentication()
+                .map(authentication -> rolesFinder.hasAnyRequiredRoles(Collections.singletonList(role), authentication))
+                .orElse(false);
     }
-
 }

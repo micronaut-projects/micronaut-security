@@ -2,13 +2,12 @@ package io.micronaut.docs.security.token.propagation
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfiguration
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
-import io.micronaut.security.token.propagation.TokenPropagator
-import io.micronaut.testutils.YamlAsciidocTagCleaner
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -87,7 +86,7 @@ micronaut:
 
     @Shared
     @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
     void "test valid propagation configuration"() {
         when:

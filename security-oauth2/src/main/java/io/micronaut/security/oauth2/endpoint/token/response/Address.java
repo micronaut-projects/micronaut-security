@@ -15,7 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.annotation.Introspected;
 import java.util.Map;
 
 /**
@@ -25,6 +26,7 @@ import java.util.Map;
  * @author Sergio del Amo
  * @version 1.1.0
  */
+@Introspected
 public class Address {
 
     public static final String COUNTRY = "country";

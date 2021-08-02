@@ -1,19 +1,13 @@
 package io.micronaut.security.rules
 
-import edu.umd.cs.findbugs.annotations.Nullable
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
-import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.config.InterceptUrlMapPattern
-import io.micronaut.security.token.Claims
 import io.micronaut.security.token.DefaultRolesFinder
-import io.micronaut.security.token.RolesFinder
 import io.micronaut.security.token.config.TokenConfiguration
 import spock.lang.Issue
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import edu.umd.cs.findbugs.annotations.NonNull
 
 class InterceptUrlMapRuleSpec extends Specification {
 

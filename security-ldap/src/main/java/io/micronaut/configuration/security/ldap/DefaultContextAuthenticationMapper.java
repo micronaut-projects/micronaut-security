@@ -17,9 +17,10 @@ package io.micronaut.configuration.security.ldap;
 
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.security.authentication.Authentication;
 
-import javax.inject.Singleton;
+import io.micronaut.security.token.config.TokenConfiguration;
+import jakarta.inject.Singleton;
 import java.util.Set;
 
 /**

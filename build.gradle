@@ -1,35 +1,27 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url "https://dl.bintray.com/micronaut/core-releases-local" }
-        maven { url "https://repo.grails.org/grails/core" }
+        mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
-        classpath "io.micronaut.build:micronaut-gradle-plugins:2.0.0.RC10"
+        classpath "io.micronaut.build.internal:micronaut-gradle-plugins:4.0.0"
     }
 }
 
 subprojects { Project subproject ->
     group "io.micronaut.security"
+    apply plugin: "io.micronaut.build.internal.common"
 
-    apply plugin: "io.micronaut.build.common"
-
-    micronautBuild {
-        enforcedPlatform = true
-    }
-
-    if (subproject.parent.name == "examples" || subproject.name == "examples") {
-        return
-    }
-
-    apply plugin: "io.micronaut.build.dependency-updates"
+    apply plugin: "io.micronaut.build.internal.dependency-updates"
     if (!subproject.name.startsWith("test-suite")) {
-        apply plugin: "io.micronaut.build.publishing"
+        apply plugin: "io.micronaut.build.internal.publishing"
     }
 
     dependencies {
         annotationProcessor "io.micronaut:micronaut-inject-java"
-        annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
+        if (subproject.parent.name != "examples" && subproject.name != "examples" && !subproject.name.startsWith("test-suite")) {
+            annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
+        }
         annotationProcessor "io.micronaut:micronaut-graal"
 
         api "io.micronaut:micronaut-inject"
@@ -40,24 +32,14 @@ subprojects { Project subproject ->
         }
         testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"        
     }
+
+    project.tasks.withType(Test) {
+        reports {
+          junitXml.enabled = true
+        }        
+    }        
 }
 
-apply plugin: "io.micronaut.build.docs"
-apply plugin: "io.micronaut.build.dependency-updates"
-
-dependencyUpdates.resolutionStrategy {
-    componentSelection { rules ->
-        rules.all { ComponentSelection selection ->
-            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview', 'b', 'ea'].any { qualifier ->
-                selection.candidate.version ==~ /(?i).*[.-]$qualifier[.\d-+]*/
-            }
-            if (rejected) {
-                selection.reject('Release candidate')
-            }
-        }
-    }
-}
-
-
-
+apply plugin: "io.micronaut.build.internal.docs"
+apply plugin: "io.micronaut.build.internal.dependency-updates"
 

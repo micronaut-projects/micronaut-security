@@ -22,12 +22,13 @@ import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.text.ParseException;
+import java.util.Map;
 import java.util.Optional;
 
 /**
- * Extracts the JWT claims and builds an {@link Authentication} object.
+ * Extracts the JWT claims and uses the {@link AuthenticationJWTClaimsSetAdapter} to construction an {@link Authentication} object.
  *
  * @author Sergio del Amo
  * @since 1.1.0
@@ -36,6 +37,7 @@ import java.util.Optional;
 public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultJwtAuthenticationFactory.class);
+
     private final TokenConfiguration tokenConfiguration;
 
     public DefaultJwtAuthenticationFactory(TokenConfiguration tokenConfiguration) {
@@ -49,9 +51,17 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
             if (claimSet == null) {
                 return Optional.empty();
             }
+            return usernameForClaims(claimSet).map(username -> new Authentication() {
+                @Override
+                public Map<String, Object> getAttributes() {
+                    return claimSet.getClaims();
+                }
 
-            return usernameForClaims(claimSet).map(username -> Authentication.build(username, claimSet.getClaims(), tokenConfiguration));
-
+                @Override
+                public String getName() {
+                    return username;
+                }
+            });
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("ParseException creating authentication", e);
@@ -63,7 +73,7 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
     /**
      *
      * @param claimSet JWT Claims
-     * @return the username defined by {@link TokenConfiguration#getNameKey()} or the sub claim.
+     * @return the username defined by {@link TokenConfiguration#getNameKey()} ()} or the sub claim.
      * @throws ParseException might be thrown parsing claims
      */
     protected Optional<String> usernameForClaims(JWTClaimsSet claimSet) throws ParseException {

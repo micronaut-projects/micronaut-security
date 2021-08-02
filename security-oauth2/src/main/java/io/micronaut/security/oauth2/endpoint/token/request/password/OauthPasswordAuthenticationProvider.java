@@ -27,7 +27,7 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 
 import java.util.Collections;
@@ -45,19 +45,19 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
     private final OauthClientConfiguration clientConfiguration;
-    private final OauthAuthenticationMapper oauthAuthenticationMapper;
+    private final OauthAuthenticationMapper userDetailsMapper;
 
     /**
      * @param tokenEndpointClient The token endpoint client
      * @param clientConfiguration The client configuration
-     * @param oauthAuthenticationMapper  The user details mapper
+     * @param userDetailsMapper  The user details mapper
      */
     public OauthPasswordAuthenticationProvider(TokenEndpointClient tokenEndpointClient,
                                                OauthClientConfiguration clientConfiguration,
-                                               OauthAuthenticationMapper oauthAuthenticationMapper) {
+                                               OauthAuthenticationMapper userDetailsMapper) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.clientConfiguration = clientConfiguration;
-        this.oauthAuthenticationMapper = oauthAuthenticationMapper;
+        this.userDetailsMapper = userDetailsMapper;
         this.secureEndpoint = getTokenEndpoint(clientConfiguration);
     }
 
@@ -66,9 +66,9 @@ public class OauthPasswordAuthenticationProvider implements AuthenticationProvid
 
         OauthPasswordTokenRequestContext context = new OauthPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
-        return Flowable.fromPublisher(
+        return Flux.from(
                 tokenEndpointClient.sendRequest(context))
-                .switchMap(response -> Flowable.fromPublisher(oauthAuthenticationMapper.createAuthenticationResponse(response, null))
+                .switchMap(response -> Flux.from(userDetailsMapper.createAuthenticationResponse(response, null))
                         .map(AuthenticationResponse.class::cast));
     }
 

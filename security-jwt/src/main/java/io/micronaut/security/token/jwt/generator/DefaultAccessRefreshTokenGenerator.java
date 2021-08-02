@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.security.authentication.Authentication;
@@ -32,7 +32,7 @@ import io.micronaut.security.token.validator.RefreshTokenValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -137,7 +137,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      * @return The http response
      */
     @NonNull
-    public Optional<AccessRefreshToken> generate(@NonNull String refreshToken, @NonNull Map<String, ?> oldClaims) {
+    public Optional<AccessRefreshToken> generate(@Nullable String refreshToken, @NonNull Map<String, ?> oldClaims) {
         Map<String, Object> claims = claimsGenerator.generateClaimsSet(oldClaims, accessTokenExpiration(oldClaims));
 
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
@@ -164,7 +164,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      */
     @NonNull
     @Override
-    public Optional<AccessRefreshToken> generate(@NonNull String refreshToken, @NonNull Authentication authentication) {
+    public Optional<AccessRefreshToken> generate(@Nullable String refreshToken, @NonNull Authentication authentication) {
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(authentication, accessTokenExpiration(authentication));
         if (!optionalAccessToken.isPresent()) {
             if (LOG.isDebugEnabled()) {

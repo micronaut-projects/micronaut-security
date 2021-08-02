@@ -1,6 +1,5 @@
 package io.micronaut.security.events
 
-
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.http.HttpRequest
@@ -8,13 +7,11 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.event.LoginFailedEvent
 import io.micronaut.security.event.LoginSuccessfulEvent
@@ -22,13 +19,9 @@ import io.micronaut.security.event.LogoutEvent
 import io.micronaut.security.event.TokenValidatedEvent
 import io.micronaut.security.handlers.LoginHandler
 import io.micronaut.security.handlers.LogoutHandler
-import io.micronaut.security.token.config.TokenConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import jakarta.inject.Singleton
 import spock.util.concurrent.PollingConditions
-
-import javax.inject.Singleton
 
 class EventListenerSpec extends EmbeddedServerSpecification {
 
@@ -148,18 +141,9 @@ class EventListenerSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
-    static class CustomAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(AuthenticationResponse.build("user", new TokenConfiguration() {}))
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 

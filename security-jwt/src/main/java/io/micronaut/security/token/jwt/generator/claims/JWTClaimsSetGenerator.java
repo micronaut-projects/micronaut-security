@@ -22,10 +22,8 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.umd.cs.findbugs.annotations.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.Nullable;
+import jakarta.inject.Singleton;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -43,35 +41,25 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(JWTClaimsSetGenerator.class);
 
+    private final TokenConfiguration tokenConfiguration;
     private final JwtIdGenerator jwtIdGenerator;
     private final ClaimsAudienceProvider claimsAudienceProvider;
     private final String appName;
 
     /**
+     * @param tokenConfiguration       Token Configuration
      * @param jwtIdGenerator           Generator which creates unique JWT ID
      * @param claimsAudienceProvider   Provider which identifies the recipients that the JWT is intended for.
      * @param applicationConfiguration The application configuration
      */
-    @Inject
-    public JWTClaimsSetGenerator(@Nullable JwtIdGenerator jwtIdGenerator,
+    public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
+                                 @Nullable JwtIdGenerator jwtIdGenerator,
                                  @Nullable ClaimsAudienceProvider claimsAudienceProvider,
                                  @Nullable ApplicationConfiguration applicationConfiguration) {
+        this.tokenConfiguration = tokenConfiguration;
         this.jwtIdGenerator = jwtIdGenerator;
         this.claimsAudienceProvider = claimsAudienceProvider;
         this.appName = applicationConfiguration != null ? applicationConfiguration.getName().orElse(Environment.MICRONAUT) : Environment.MICRONAUT;
-    }
-
-    /**
-     * @param tokenConfiguration     Token Configuration
-     * @param jwtIdGenerator         Generator which creates unique JWT ID
-     * @param claimsAudienceProvider Provider which identifies the recipients that the JWT is intented for.
-     * @deprecated Use {@link JWTClaimsSetGenerator#JWTClaimsSetGenerator(JwtIdGenerator, ClaimsAudienceProvider, ApplicationConfiguration)} instead.
-     */
-    @Deprecated
-    public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                 @Nullable JwtIdGenerator jwtIdGenerator,
-                                 @Nullable ClaimsAudienceProvider claimsAudienceProvider) {
-        this(jwtIdGenerator, claimsAudienceProvider, null);
     }
 
     /**

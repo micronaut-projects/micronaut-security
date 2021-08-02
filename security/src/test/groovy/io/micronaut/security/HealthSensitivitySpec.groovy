@@ -5,26 +5,14 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.management.endpoint.health.HealthLevelOfDetail
-import io.micronaut.management.health.indicator.HealthResult
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.token.config.TokenConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.annotations.NonNull
-import io.reactivex.functions.Function
-import org.reactivestreams.Publisher
+import jakarta.inject.Singleton
+import reactor.core.publisher.Flux
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import javax.inject.Singleton
 
 class HealthSensitivitySpec extends Specification {
 
@@ -43,11 +31,11 @@ class HealthSensitivitySpec extends Specification {
 
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m)
         URL server = embeddedServer.getURL()
-        RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, server)
 
         when:
         HttpRequest httpRequest = HttpRequest.GET("/health")
-        rxClient.exchange(httpRequest, Map).blockingFirst()
+        client.toBlocking().exchange(httpRequest, Map)
 
         then:
         def e = thrown(HttpClientResponseException)
@@ -55,7 +43,7 @@ class HealthSensitivitySpec extends Specification {
 
         cleanup:
         embeddedServer.close()
-        rxClient.close()
+        client.close()
 
         where:
         security << [null, true, false]
@@ -77,23 +65,19 @@ class HealthSensitivitySpec extends Specification {
 
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m)
         URL server = embeddedServer.getURL()
-        RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, server)
 
         when:
         HttpRequest httpRequest = HttpRequest.GET("/health")
         if (authenticated) {
             httpRequest = httpRequest.basicAuth("user", "password")
         }
-        def response = rxClient.exchange(httpRequest, Map)
-        .onErrorResumeNext(new Function<Throwable, Publisher<? extends HttpResponse<HealthResult>>>() {
-            @Override
-            Publisher<? extends HttpResponse<HealthResult>> apply(@NonNull Throwable throwable) throws Exception {
-
-                def response = ((HttpClientResponseException) throwable).response
-                response.getBody(Map)
-                return Flowable.just(response)
-            }
-        }).blockingFirst()
+        HttpResponse<?> response = Flux.from(client.exchange(httpRequest, Map))
+                .onErrorResume(t -> {
+                    HttpResponse<?> httpResponse = ((HttpClientResponseException) t).response
+                    httpResponse.getBody(Map)
+                    return Flux.just(httpResponse)
+        }).blockFirst()
         Map result = response.getBody(Map).get()
 
         then:
@@ -109,7 +93,7 @@ class HealthSensitivitySpec extends Specification {
 
         cleanup:
         embeddedServer.close()
-        rxClient.close()
+        client.close()
 
         where:
         sensitive | security | authenticated | expected
@@ -129,11 +113,11 @@ class HealthSensitivitySpec extends Specification {
             'endpoints.health.sensitive'           : false,
             'endpoints.health.detailsVisible'      : 'AUTHENTICATED'])
         URL server = embeddedServer.getURL()
-        RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, server)
 
         when:
         HttpRequest httpRequest = HttpRequest.GET("/health")
-        HttpResponse response = rxClient.exchange(httpRequest, Map).blockingFirst()
+        HttpResponse response = client.toBlocking().exchange(httpRequest, Map)
         Map result = response.body()
 
         then: // The details are not included because the user is not authenticated
@@ -144,7 +128,7 @@ class HealthSensitivitySpec extends Specification {
 
         when:
         httpRequest = HttpRequest.GET("/health").basicAuth("user", "password")
-        response = rxClient.exchange(httpRequest, Map).blockingFirst()
+        response = client.toBlocking().exchange(httpRequest, Map)
         result = response.body()
 
         then: // The details are included because the user is authenticated
@@ -154,7 +138,7 @@ class HealthSensitivitySpec extends Specification {
 
         cleanup:
         embeddedServer.close()
-        rxClient.close()
+        client.close()
     }
 
     void "test details visible ANONYMOUS"() {
@@ -165,11 +149,11 @@ class HealthSensitivitySpec extends Specification {
                 'endpoints.health.sensitive'           : false,
                 'endpoints.health.detailsVisible'      : 'ANONYMOUS'])
         URL server = embeddedServer.getURL()
-        RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, server)
 
         when:
         HttpRequest httpRequest = HttpRequest.GET("/health")
-        HttpResponse response = rxClient.exchange(httpRequest, Map).blockingFirst()
+        HttpResponse response = client.toBlocking().exchange(httpRequest, Map)
         Map result = response.body()
 
         then: // The details are included because detailsVisible is ANONYMOUS
@@ -179,7 +163,7 @@ class HealthSensitivitySpec extends Specification {
 
         cleanup:
         embeddedServer.close()
-        rxClient.close()
+        client.close()
     }
 
 
@@ -191,11 +175,11 @@ class HealthSensitivitySpec extends Specification {
                 'endpoints.health.sensitive'           : false,
                 'endpoints.health.detailsVisible'      : 'NEVER'])
         URL server = embeddedServer.getURL()
-        RxHttpClient rxClient = embeddedServer.applicationContext.createBean(RxHttpClient, server)
+        HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, server)
 
         when:
         HttpRequest httpRequest = HttpRequest.GET("/health").basicAuth("user", "password")
-        HttpResponse response = rxClient.exchange(httpRequest, Map).blockingFirst()
+        HttpResponse response = client.toBlocking().exchange(httpRequest, Map)
         Map result = response.body()
 
         then: // The details are not included because detailsVisible is NEVER
@@ -205,24 +189,14 @@ class HealthSensitivitySpec extends Specification {
 
         cleanup:
         embeddedServer.close()
-        rxClient.close()
+        client.close()
     }
 
     @Singleton
     @Requires(property = 'spec.name', value = 'healthsensitivity')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(AuthenticationResponse.build("user", new TokenConfiguration() {}))
-
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 }

@@ -21,7 +21,7 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**
@@ -99,5 +99,13 @@ public class HttpHeaderTokenPropagator implements TokenPropagator {
         } else {
             return Optional.empty();
         }
+    }
+
+    /**
+     *
+     * @return The HttpHeaderTokenPropagator Configuration
+     */
+    public HttpHeaderTokenPropagatorConfiguration getConfiguration() {
+        return configuration;
     }
 }

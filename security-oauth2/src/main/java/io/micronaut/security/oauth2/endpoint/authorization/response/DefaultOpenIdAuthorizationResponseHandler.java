@@ -16,29 +16,33 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import com.nimbusds.jwt.JWT;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext;
-import io.micronaut.security.oauth2.endpoint.token.response.*;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
-import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.text.ParseException;
 import java.util.Optional;
 
@@ -62,7 +66,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
 
     /**
      * @param tokenResponseValidator The token response validator
-     * @param authenticationMapper The user details mapper
+     * @param authenticationMapper Authentication Mapper
      * @param tokenEndpointClient The token endpoint client
      * @param oauthRouteUrlBuilder The oauth route url builder
      * @param stateValidator The state validator
@@ -84,62 +88,125 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             OpenIdAuthorizationResponse authorizationResponse,
             OauthClientConfiguration clientConfiguration,
             OpenIdProviderMetadata openIdProviderMetadata,
-            @Nullable OpenIdAuthenticationMapper authenticationMapper,
+            @Nullable OpenIdAuthenticationMapper userDetailsMapper,
             SecureEndpoint tokenEndpoint) {
-
-        State state;
+        try {
+            validateState(authorizationResponse, clientConfiguration);
+        } catch (InvalidStateException e) {
+            return Flux.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
+        }
+        return Flux.from(sendRequest(authorizationResponse, clientConfiguration, tokenEndpoint))
+                .switchMap(response -> createAuthenticationResponse(authorizationResponse.getNonce(),
+                        clientConfiguration,
+                        openIdProviderMetadata,
+                        response,
+                        userDetailsMapper,
+                        authorizationResponse.getState()));
+    }
+    
+    /**
+     * Validates the Authorization response state.
+     * @param authorizationResponse The authorization response
+     * @param clientConfiguration The client configuration
+     * @throws InvalidStateException if the state did not pass validation
+     */
+    private void validateState(OpenIdAuthorizationResponse authorizationResponse, OauthClientConfiguration clientConfiguration) throws InvalidStateException {
         if (stateValidator != null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Validating state found in the authorization response from provider [{}]", clientConfiguration.getName());
             }
-            state = authorizationResponse.getState();
-            try {
-                stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
-            } catch (InvalidStateException e) {
-                return Flowable.just(new AuthenticationFailed("State validation failed: " + e.getMessage()));
-            }
-
+            State state = authorizationResponse.getState();
+            stateValidator.validate(authorizationResponse.getCallbackRequest(), state);
         } else {
-            state = null;
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Skipping state validation, no state validator found");
             }
         }
-
-        String nonce = authorizationResponse.getNonce();
-
-        OpenIdCodeTokenRequestContext requestContext = new OpenIdCodeTokenRequestContext(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration);
-
-        return Flowable.fromPublisher(
-                tokenEndpointClient.sendRequest(requestContext))
-                .switchMap(response -> {
-                    if (LOG.isTraceEnabled()) {
-                        LOG.trace("Token endpoint returned a success response. Validating the JWT");
-                    }
-                    return Flowable.create(emitter -> {
-                        Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, nonce);
-                        if (jwt.isPresent()) {
-                            try {
-                                if (LOG.isTraceEnabled()) {
-                                    LOG.trace("Token validation succeeded. Creating an authentication");
-                                }
-                                OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                                OpenIdAuthenticationMapper openIdAuthenticationMapper = authenticationMapper != null ? authenticationMapper : defaultAuthenticationMapper;
-                                emitter.onNext(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, state));
-                                emitter.onComplete();
-                            } catch (ParseException e) {
-                                //Should never happen as validation succeeded
-                                emitter.onError(e);
-                            }
-                        } else {
-                            if (LOG.isTraceEnabled()) {
-                                LOG.trace("Token validation failed. Failing authentication");
-                            }
-                            emitter.onError(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
-                            emitter.onComplete();
-                        }
-                    }, BackpressureStrategy.ERROR);
-                });
     }
 
+    /**
+     *
+     * @param authorizationResponse The authorization response
+     * @param clientConfiguration The client configuration
+     * @param tokenEndpoint The token endpoint
+     * @return The open id token response from the Authorization server
+     */
+    private Publisher<OpenIdTokenResponse> sendRequest(OpenIdAuthorizationResponse authorizationResponse,
+                                               OauthClientConfiguration clientConfiguration,
+                                               SecureEndpoint tokenEndpoint) {
+        OpenIdCodeTokenRequestContext requestContext = new OpenIdCodeTokenRequestContext(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration);
+        return tokenEndpointClient.sendRequest(requestContext);
+    }
+
+    /**
+     *
+     * @param nonce Nonce
+     * @param clientConfiguration The client configuration
+     * @param openIdProviderMetadata The provider metadata
+     * @param openIdTokenResponse OpenID token response
+     * @param userDetailsMapper The user details mapper
+     * @param state State
+     * @return An authentication response publisher
+     */
+    private Flux<AuthenticationResponse> createAuthenticationResponse(String nonce,
+                                                                            OauthClientConfiguration clientConfiguration,
+                                                                            OpenIdProviderMetadata openIdProviderMetadata,
+                                                                            OpenIdTokenResponse openIdTokenResponse,
+                                                                            @Nullable OpenIdAuthenticationMapper userDetailsMapper,
+                                                                            @Nullable State state) {
+        return Flux.create(emitter -> {
+            try {
+                Optional<AuthenticationResponse> authenticationResponse = validateOpenIdTokenResponse(nonce,
+                        clientConfiguration,
+                        openIdProviderMetadata,
+                        openIdTokenResponse,
+                        userDetailsMapper,
+                        state);
+                if (authenticationResponse.isPresent()) {
+                    emitter.next(authenticationResponse.get());
+                    emitter.complete();
+                } else {
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Token validation failed. Failing authentication");
+                    }
+                    emitter.error(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
+                }
+            } catch (ParseException e) {
+                //Should never happen as validation succeeded
+                emitter.error(e);
+            }
+        }, FluxSink.OverflowStrategy.ERROR);
+    }
+
+    /**
+     *
+     * @param nonce Nonce
+     * @param clientConfiguration The client configuration
+     * @param openIdProviderMetadata The provider metadata
+     * @param openIdTokenResponse OpenID token response
+     * @param userDetailsMapper The user details mapper
+     * @param state State
+     * @return An Authentication response if the open id token could  be validated
+     * @throws ParseException If the payload of the JWT doesn't represent a valid JSON object and a JWT claims set.
+     */
+    private Optional<AuthenticationResponse> validateOpenIdTokenResponse(String nonce,
+                                                                           OauthClientConfiguration clientConfiguration,
+                                                                           OpenIdProviderMetadata openIdProviderMetadata,
+                                                                           OpenIdTokenResponse openIdTokenResponse,
+                                                                           @Nullable OpenIdAuthenticationMapper userDetailsMapper,
+                                                                           @Nullable State state) throws ParseException {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Token endpoint returned a success response. Validating the JWT");
+        }
+        Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, openIdTokenResponse, nonce);
+        if (jwt.isPresent()) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Token validation succeeded. Creating a user details");
+            }
+            OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
+            OpenIdAuthenticationMapper openIdAuthenticationMapper = userDetailsMapper != null ? userDetailsMapper : defaultAuthenticationMapper;
+            return Optional.of(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), openIdTokenResponse, claims, state));
+        }
+        return Optional.empty();
+    }
 }

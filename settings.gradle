@@ -18,4 +18,6 @@ include "security-oauth2"
 
 include "test-suite-groovy"
 include "test-suite"
+include "test-suite-utils"
+include "test-suite-utils-security"
 include "test-suite-kotlin"

@@ -15,18 +15,18 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.authentication.AuthenticationMode;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.AuthenticationModeConfiguration;
+import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
-
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +68,8 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
     @Override
     public AuthenticationResponse createAuthenticationResponse(String providerName,
                                                                OpenIdTokenResponse tokenResponse,
-                                                               OpenIdClaims openIdClaims, @Nullable State state) {
+                                                               OpenIdClaims openIdClaims,
+                                                               @Nullable State state) {
         Map<String, Object> claims = buildAttributes(providerName, tokenResponse, openIdClaims);
         List<String> roles = getRoles(providerName, tokenResponse, openIdClaims);
         String username = getUsername(providerName, tokenResponse, openIdClaims);
@@ -102,7 +103,7 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
      * @param providerName The OpenID provider name
      * @param tokenResponse The token response
      * @param openIdClaims The OpenID claims
-     * @return The roles to set in the {@link io.micronaut.security.authentication.Authentication}
+     * @return The roles to set in the {@link Authentication}
      */
     protected List<String> getRoles(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         return Collections.emptyList();
@@ -112,7 +113,7 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
      * @param providerName The OpenID provider name
      * @param tokenResponse The token response
      * @param openIdClaims The OpenID claims
-     * @return The username to set in the {@link io.micronaut.security.authentication.Authentication}
+     * @return The username to set in the {@link Authentication}
      */
     protected String getUsername(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         return openIdClaims.getSubject();

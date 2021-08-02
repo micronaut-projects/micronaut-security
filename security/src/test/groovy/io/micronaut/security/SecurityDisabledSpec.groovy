@@ -26,7 +26,6 @@ import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfiguration
 import io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
-import io.micronaut.security.token.propagation.TokenPropagator
 import io.micronaut.security.utils.DefaultSecurityService
 import spock.lang.AutoCleanup
 import spock.lang.Shared

@@ -1,0 +1,9 @@
+plugins {
+    id 'groovy'
+}
+
+dependencies {
+    implementation project(":security")
+    implementation "io.projectreactor:reactor-core"
+}
+
