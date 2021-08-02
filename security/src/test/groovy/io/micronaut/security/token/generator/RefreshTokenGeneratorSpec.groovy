@@ -46,7 +46,7 @@ class RefreshTokenGeneratorSpec extends ApplicationContextSpecification {
         null                        | 'xxx'
         Authentication.build('user', tokenConfiguration) | null
         Authentication.build('user', tokenConfiguration) | ''
-        description = authentication == null ? 'userDetails can be null' : (token == null ? 'token can be null' : (token == '' ? 'token can be blank': ''))
+        description = authentication == null ? 'authentication can be null' : (token == null ? 'token can be null' : (token == '' ? 'token can be blank': ''))
     }
 
     @Requires(property = 'spec.name', value = 'RefreshTokenGeneratorSpec')

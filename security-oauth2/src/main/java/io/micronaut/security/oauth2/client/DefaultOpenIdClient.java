@@ -62,7 +62,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     private final OauthClientConfiguration clientConfiguration;
     private final Supplier<OpenIdProviderMetadata> openIdProviderMetadata;
-    private final OpenIdAuthenticationMapper userDetailsMapper;
+    private final OpenIdAuthenticationMapper authenticationMapper;
     private final AuthorizationRedirectHandler redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
     private final Supplier<SecureEndpoint> tokenEndpoint;
@@ -72,7 +72,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
     /**
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
-     * @param userDetailsMapper The user details mapper
+     * @param authenticationMapper The user details mapper
      * @param redirectUrlBuilder The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
@@ -80,14 +80,14 @@ public class DefaultOpenIdClient implements OpenIdClient {
      */
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
-                               @Nullable OpenIdAuthenticationMapper userDetailsMapper,
+                               @Nullable OpenIdAuthenticationMapper authenticationMapper,
                                AuthorizationRedirectHandler redirectUrlBuilder,
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                BeanContext beanContext,
                                @Nullable EndSessionEndpoint endSessionEndpoint) {
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
-        this.userDetailsMapper = userDetailsMapper;
+        this.authenticationMapper = authenticationMapper;
         this.redirectUrlBuilder = redirectUrlBuilder;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
@@ -151,7 +151,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
                     openIdProviderMetadata.get(),
-                    userDetailsMapper,
+                    authenticationMapper,
                     tokenEndpoint.get());
         }
     }

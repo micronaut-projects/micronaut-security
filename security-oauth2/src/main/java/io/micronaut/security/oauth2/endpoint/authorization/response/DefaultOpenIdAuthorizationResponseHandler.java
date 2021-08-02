@@ -88,7 +88,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             OpenIdAuthorizationResponse authorizationResponse,
             OauthClientConfiguration clientConfiguration,
             OpenIdProviderMetadata openIdProviderMetadata,
-            @Nullable OpenIdAuthenticationMapper userDetailsMapper,
+            @Nullable OpenIdAuthenticationMapper authenticationMapper,
             SecureEndpoint tokenEndpoint) {
         try {
             validateState(authorizationResponse, clientConfiguration);
@@ -100,7 +100,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                         clientConfiguration,
                         openIdProviderMetadata,
                         response,
-                        userDetailsMapper,
+                        authenticationMapper,
                         authorizationResponse.getState()));
     }
     
@@ -144,7 +144,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
      * @param openIdTokenResponse OpenID token response
-     * @param userDetailsMapper The user details mapper
+     * @param authenticationMapper The user details mapper
      * @param state State
      * @return An authentication response publisher
      */
@@ -152,7 +152,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                                                                             OauthClientConfiguration clientConfiguration,
                                                                             OpenIdProviderMetadata openIdProviderMetadata,
                                                                             OpenIdTokenResponse openIdTokenResponse,
-                                                                            @Nullable OpenIdAuthenticationMapper userDetailsMapper,
+                                                                            @Nullable OpenIdAuthenticationMapper authenticationMapper,
                                                                             @Nullable State state) {
         return Flux.create(emitter -> {
             try {
@@ -160,7 +160,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                         clientConfiguration,
                         openIdProviderMetadata,
                         openIdTokenResponse,
-                        userDetailsMapper,
+                        authenticationMapper,
                         state);
                 if (authenticationResponse.isPresent()) {
                     emitter.next(authenticationResponse.get());
@@ -184,7 +184,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
      * @param openIdTokenResponse OpenID token response
-     * @param userDetailsMapper The user details mapper
+     * @param authenticationMapper The user details mapper
      * @param state State
      * @return An Authentication response if the open id token could  be validated
      * @throws ParseException If the payload of the JWT doesn't represent a valid JSON object and a JWT claims set.
@@ -193,7 +193,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                                                                            OauthClientConfiguration clientConfiguration,
                                                                            OpenIdProviderMetadata openIdProviderMetadata,
                                                                            OpenIdTokenResponse openIdTokenResponse,
-                                                                           @Nullable OpenIdAuthenticationMapper userDetailsMapper,
+                                                                           @Nullable OpenIdAuthenticationMapper authenticationMapper,
                                                                            @Nullable State state) throws ParseException {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Token endpoint returned a success response. Validating the JWT");
@@ -204,7 +204,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                 LOG.trace("Token validation succeeded. Creating a user details");
             }
             OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-            OpenIdAuthenticationMapper openIdAuthenticationMapper = userDetailsMapper != null ? userDetailsMapper : defaultAuthenticationMapper;
+            OpenIdAuthenticationMapper openIdAuthenticationMapper = authenticationMapper != null ? authenticationMapper : defaultAuthenticationMapper;
             return Optional.of(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), openIdTokenResponse, claims, state));
         }
         return Optional.empty();

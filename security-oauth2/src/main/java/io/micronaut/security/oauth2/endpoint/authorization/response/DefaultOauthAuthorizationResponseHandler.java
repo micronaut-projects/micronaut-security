@@ -63,7 +63,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
     public Publisher<AuthenticationResponse> handle(
             AuthorizationResponse authorizationResponse,
             OauthClientConfiguration clientConfiguration,
-            OauthAuthenticationMapper userDetailsMapper,
+            OauthAuthenticationMapper authenticationMapper,
             SecureEndpoint tokenEndpoint) {
 
         State state;
@@ -93,7 +93,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
                     if (LOG.isTraceEnabled()) {
                         LOG.trace("Token endpoint returned a success response. Creating a user details");
                     }
-                    return Flux.from(userDetailsMapper.createAuthenticationResponse(response, state))
+                    return Flux.from(authenticationMapper.createAuthenticationResponse(response, state))
                             .map(AuthenticationResponse.class::cast);
                 });
     }

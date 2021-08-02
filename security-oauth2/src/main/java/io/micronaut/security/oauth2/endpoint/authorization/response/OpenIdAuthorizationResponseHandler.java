@@ -42,13 +42,13 @@ public interface OpenIdAuthorizationResponseHandler {
      * @param authorizationResponse The authorization response
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
-     * @param userDetailsMapper The user details mapper
+     * @param authenticationMapper The user details mapper
      * @param tokenEndpoint The token endpoint
      * @return An authentication response publisher
      */
     Publisher<AuthenticationResponse> handle(OpenIdAuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,
                                              OpenIdProviderMetadata openIdProviderMetadata,
-                                             @Nullable OpenIdAuthenticationMapper userDetailsMapper,
+                                             @Nullable OpenIdAuthenticationMapper authenticationMapper,
                                              SecureEndpoint tokenEndpoint);
 }
