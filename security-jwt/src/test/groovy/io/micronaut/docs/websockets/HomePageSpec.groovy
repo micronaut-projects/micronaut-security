@@ -46,7 +46,6 @@ class HomePageSpec extends GebEmbeddedServerSpecification {
     }
 
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5618")
-    @PendingFeature
     def "check websocket connects"() {
         expect:
         embeddedServer.applicationContext.containsBean(MockAuthenticationProvider)

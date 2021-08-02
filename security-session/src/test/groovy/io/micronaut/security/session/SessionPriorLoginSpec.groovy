@@ -16,10 +16,10 @@ import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import io.micronaut.security.testutils.Keycloak
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
-
 import jakarta.inject.Singleton
 
 class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
@@ -58,18 +58,16 @@ class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
     static class AuthenticationProviderUserPassword implements AuthenticationProvider  { // <2>
         @Override
         public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flowable.create({ emitter ->
+            return Flux.create({ emitter ->
                 if ( authenticationRequest.getIdentity().equals("sherlock") &&
                         authenticationRequest.getSecret().equals("password") ) {
-                    UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>());
-                    emitter.onNext(userDetails);
-                    emitter.onComplete();
+                    UserDetails userDetails = new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>())
+                    emitter.next(userDetails)
+                    emitter.complete()
                 } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()));
+                    emitter.error(new AuthenticationException(new AuthenticationFailed()));
                 }
-
-
-            }, BackpressureStrategy.ERROR);
+            }, FluxSink.OverflowStrategy.ERROR);
         }
     }
 

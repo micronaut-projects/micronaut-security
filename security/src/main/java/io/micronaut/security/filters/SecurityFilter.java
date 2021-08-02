@@ -32,13 +32,14 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
-import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.micronaut.core.annotation.Nullable;
-import jakarta.inject.Inject;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -86,7 +87,6 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
      * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
      * @param securityConfiguration  The security configuration
      */
-    @Inject
     public SecurityFilter(Collection<SecurityRule> securityRules,
                           Collection<AuthenticationFetcher> authenticationFetchers,
                           SecurityConfiguration securityConfiguration) {
@@ -102,34 +102,33 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
 
     @Override
     protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
-        String method = request.getMethod().toString();
-        String path = request.getPath();
         RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+        return Flux.fromIterable(authenticationFetchers)
+                .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
+                .next()
+                .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain, routeMatch)))
+                .switchIfEmpty(Flux.<MutableHttpResponse<?>>defer(() -> createResponse(null, request, chain, routeMatch))
+                        .next());
+    }
 
-        return Flowable.fromIterable(authenticationFetchers)
-            .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
-            .firstElement()
-            .doOnEvent((authentication, throwable) -> {
-                if (authentication != null) {
-                    request.setAttribute(AUTHENTICATION, authentication);
-                    if (LOG.isDebugEnabled()) {
-                        Map<String, Object> attributes = authentication.getAttributes();
-                        LOG.debug("Attributes: {}", attributes
-                                .entrySet()
-                                .stream()
-                                .map((entry) -> entry.getKey() + "=>" + entry.getValue().toString())
-                                .collect(Collectors.joining(", ")));
-                    }
-                } else {
-                    request.setAttribute(AUTHENTICATION, null);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("No Authentication fetched for request. {} {}.", method, path);
-                    }
-                }
-            })
-            .toFlowable()
-            .flatMap(authentication -> checkRules(request, chain, routeMatch, authentication))
-            .switchIfEmpty(Flowable.defer(() -> checkRules(request, chain, routeMatch, null)));
+    private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,
+                                                             HttpRequest<?> request,
+                                                             ServerFilterChain chain,
+                                                             RouteMatch<?> routeMatch) {
+        request.setAttribute(AUTHENTICATION, authentication);
+        logAuthenticationAttributes(authentication);
+        return checkRules(request, chain, routeMatch, authentication);
+    }
+
+    private void logAuthenticationAttributes(@Nullable Authentication authentication) {
+        if (authentication != null && LOG.isDebugEnabled()) {
+            Map<String, Object> attributes = authentication.getAttributes();
+            LOG.debug("Attributes: {}", attributes
+                    .entrySet()
+                    .stream()
+                    .map((entry) -> entry.getKey() + "=>" + entry.getValue().toString())
+                    .collect(Collectors.joining(", ")));
+        }
     }
 
     /**

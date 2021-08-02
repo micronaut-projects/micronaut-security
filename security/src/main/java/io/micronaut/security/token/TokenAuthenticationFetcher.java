@@ -22,11 +22,12 @@ import io.micronaut.security.event.TokenValidatedEvent;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.reader.TokenResolver;
 import io.micronaut.security.token.validator.TokenValidator;
-import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.util.Collection;
 import java.util.Optional;
 
@@ -72,19 +73,19 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
         Optional<String> token = tokenResolver.resolveToken(request);
 
         if (!token.isPresent()) {
-            return Flowable.empty();
+            return Flux.empty();
         }
 
         String tokenValue = token.get();
 
-        return Flowable.fromIterable(tokenValidators)
+        return Flux.fromIterable(tokenValidators)
                 .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
-                .firstElement()
+                .next()
                 .map(authentication -> {
                     request.setAttribute(TOKEN, tokenValue);
                     eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
                     return authentication;
-                }).toFlowable();
+                });
     }
 
     @Override

@@ -2,7 +2,7 @@ package io.micronaut.docs.security.token.propagation
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfiguration
@@ -86,7 +86,7 @@ micronaut:
 
     @Shared
     @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
     void "test valid propagation configuration"() {
         when:

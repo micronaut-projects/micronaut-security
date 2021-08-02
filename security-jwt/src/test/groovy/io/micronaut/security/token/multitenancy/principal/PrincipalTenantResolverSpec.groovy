@@ -7,7 +7,7 @@ import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
@@ -36,7 +36,7 @@ class PrincipalTenantResolverSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    RxHttpClient gormClient
+    HttpClient gormClient
 
     @AutoCleanup
     @Shared
@@ -44,7 +44,7 @@ class PrincipalTenantResolverSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    RxHttpClient gatewayClient
+    HttpClient gatewayClient
 
     def setupSpec() {
         gormPort = SocketUtils.findAvailableTcpPort()
@@ -63,7 +63,7 @@ class PrincipalTenantResolverSpec extends Specification {
 
         gormEmbeddedServer = ApplicationContext.run(EmbeddedServer, gormConfig, Environment.TEST)
 
-        gormClient = gormEmbeddedServer.applicationContext.createBean(RxHttpClient, gormEmbeddedServer.getURL())
+        gormClient = gormEmbeddedServer.applicationContext.createBean(HttpClient, gormEmbeddedServer.getURL())
 
         when:
         for (Class beanClazz : [BookService, BooksController, Bootstrap]) {
@@ -108,7 +108,7 @@ class PrincipalTenantResolverSpec extends Specification {
         noExceptionThrown()
 
         when:
-        gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(RxHttpClient, gatewayEmbeddedServer.getURL())
+        gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(HttpClient, gatewayEmbeddedServer.getURL())
 
         then:
         noExceptionThrown()

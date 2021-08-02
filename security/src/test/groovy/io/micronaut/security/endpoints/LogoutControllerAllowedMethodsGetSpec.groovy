@@ -6,7 +6,7 @@ import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.authentication.AuthenticationProvider
@@ -14,7 +14,7 @@ import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.handlers.LogoutHandler
-import io.reactivex.Flowable
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 import spock.lang.Ignore
 
@@ -62,7 +62,7 @@ class LogoutControllerAllowedMethodsGetSpec extends EmbeddedServerSpecification 
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flowable.just(new UserDetails("user", []))
+            return Flux.just(new UserDetails("user", []))
         }
     }
 }

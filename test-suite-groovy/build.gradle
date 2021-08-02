@@ -4,5 +4,6 @@ dependencies {
     testImplementation project(":security-jwt")
     testImplementation project(":security-oauth2")
     testImplementation project(":test-suite-utils")
+    testImplementation "io.projectreactor:reactor-core"
 }
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

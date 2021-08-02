@@ -22,10 +22,11 @@ import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.token.TokenAuthenticationFetcher;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
-import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
+
 import java.util.Optional;
 
 /**
@@ -45,15 +46,15 @@ public class SessionAuthenticationFetcher implements AuthenticationFetcher {
 
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
-        return Maybe.<Authentication>create(emitter -> {
+        return Mono.<Authentication>create(emitter -> {
             Optional<Session> opt = request.getAttributes().get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class);
             if (opt.isPresent()) {
                 Session session = opt.get();
                 Optional<Authentication> authentication = session.get(SecurityFilter.AUTHENTICATION, Authentication.class);
-                authentication.ifPresent(emitter::onSuccess);
+                authentication.ifPresent(emitter::success);
             }
-            emitter.onComplete();
-        }).toFlowable();
+            emitter.success();
+        });
     }
 
     @Override

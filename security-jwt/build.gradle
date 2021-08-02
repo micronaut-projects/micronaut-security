@@ -1,5 +1,5 @@
 ext {
-    nimbusJoseJwtVersion = '9.10'
+    nimbusJoseJwtVersion = '9.11.1'
     bouncyCastleVersion = '1.69'
 }
 
@@ -9,6 +9,8 @@ dependencies {
     api project(":security")
     api "com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"
 
+    implementation "io.projectreactor:reactor-core"
+
     testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
     testImplementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
 
@@ -17,6 +19,7 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation project(":test-suite-utils")
     testImplementation "io.micronaut.multitenancy:micronaut-multitenancy"
+
     testImplementation "io.micronaut.views:micronaut-views-velocity"
     testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.3"
 }

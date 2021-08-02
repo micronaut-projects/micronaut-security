@@ -17,8 +17,8 @@ import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.validator.TokenValidator
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
 
@@ -96,9 +96,9 @@ class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
             UserDetails ud = new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'])
             Authentication authentication = new AuthenticationUserDetailsAdapter(ud, TokenConfiguration.DEFAULT_ROLES_NAME, TokenConfiguration.DEFAULT_NAME_KEY)
             if (token == "2YotnFZFEjr1zCsicMWpAA") {
-                return Flowable.just(authentication)
+                return Flux.just(authentication)
             }
-            return Flowable.empty()
+            return Flux.empty()
         }
     }
 
@@ -108,10 +108,10 @@ class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flowable.create(emitter -> {
-                emitter.onNext(new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io']))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            return Flux.create(emitter -> {
+                emitter.next(new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io']))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 }

@@ -13,8 +13,8 @@ import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton
@@ -59,10 +59,10 @@ class IpAuthorizationRejectedSpec extends EmbeddedServerSpecification {
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flowable.create({emitter ->
-                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            return Flux.create({emitter ->
+                emitter.next(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 

@@ -10,8 +10,8 @@ import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton
@@ -57,10 +57,10 @@ class AccessRefreshTokenLoginHandlerValidSpec extends EmbeddedServerSpecificatio
 
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                emitter.onNext(new UserDetails(authenticationRequest.identity as String, ["foo", "bar"]))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            Flux.create({emitter ->
+                emitter.next(new UserDetails(authenticationRequest.identity as String, ["foo", "bar"]))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 }

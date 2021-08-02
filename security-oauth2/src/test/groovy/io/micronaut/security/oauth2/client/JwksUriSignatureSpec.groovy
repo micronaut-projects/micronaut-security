@@ -15,6 +15,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
+import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
@@ -44,9 +45,9 @@ import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.Single
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -343,7 +344,8 @@ class JwksUriSignatureSpec extends Specification {
 
         @Override
         @Get
-        Single<String> keys() {
+        @SingleResult
+        Publisher<String> keys() {
             invocations++
             return super.keys()
         }
@@ -362,7 +364,8 @@ class JwksUriSignatureSpec extends Specification {
 
         @Override
         @Get
-        Single<String> keys() {
+        @SingleResult
+        Publisher<String> keys() {
             invocations++
             return super.keys()
         }
@@ -373,10 +376,10 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerAAuthenticationProvider implements AuthenticationProvider {
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({ emitter ->
-                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            Flux.create({ emitter ->
+                emitter.next(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
     @Requires(property = 'spec.name', value = 'AuthServerBJwksUriSignatureSpec')
@@ -384,10 +387,10 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerBAuthenticationProvider implements AuthenticationProvider {
         @Override
         Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create( {emitter ->
-                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            Flux.create( {emitter ->
+                emitter.next(new UserDetails(authenticationRequest.identity as String, []))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 

@@ -38,7 +38,7 @@ jobs:
       - name: Setup GraalVM CE
         uses: DeLaGuardo/setup-graalvm@4.0
         with:
-          graalvm: 21.1.0
+          graalvm: 21.2.0
           java: ${{ matrix.java }}
       - name: Install Native Image
         run: gu install native-image
@@ -52,3 +52,9 @@ jobs:
           fi
         env:
            TESTCONTAINERS_RYUK_DISABLED: true
+      - name: Publish Test Report
+        if: always()
+        uses: mikepenz/action-junit-report@v2
+        with:
+          check_name: GraalVM CE CI / Test Report (${{ matrix.java }})
+          report_paths: '**/build/test-results/test/TEST-*.xml'

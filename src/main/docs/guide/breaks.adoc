@@ -1,4 +1,3 @@
-
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
 == 3.0.0
@@ -7,12 +6,43 @@ This section will document breaking changes that may happen during milestone or 
 
 - `RefreshTokenPersistence` extends `ApplicationEventListener<RefreshTokenGeneratedEvent>`.
 
-The following properties' default value has been changed to false in Micronaut Security 3.0.0:
+The following properties' default value has been removed in Micronaut Security 3.0.0:
 
 - `micronaut.security.oauth2.openid.nonce.cookie.cookie-secure`
 - `micronaut.security.oauth2.state.cookie.cookie-secure`
 - `micronaut.security.token.jwt.cookie.cookie-secure`
 - `micronaut.security.token.refresh.cookie.cookie-secure``
+
+NOTE: If the `cookie-secure` setting is not set, cookies will be secure if the request is determined to be HTTPS.
+
+=== 3.0.0 Deprecations removal
+
+Micronaut security:
+
+- Deletes deprecated methods `JwtValidator::validate(String)` and `JwtValidator::validate(JWT)`
+- Deletes deprecated class `SecuritySessionConfiguration`
+- Deletes deprecated constructor `JwtCookieClearerLogoutHandler(JwtCookieConfiguration)`
+- Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration redirectConfiguration, PriorToLoginPersistence priorToLoginPersistence)`
+- Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration,String, String)`
+- Deletes deprecated constructor `DefaultOpenIdUserDetailsMapper`
+- Deletes deprecated constructors `JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator accessRefreshTokenGenerator)`, `JwtCookieLoginHandler(RedirectConfiguration,JwtCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator accessRefreshTokenGenerator,PriorToLoginPersistence priorToLoginPersistence)`
+- Deletes deprecated constructor `IdTokenLoginHandler(JwtCookieConfiguration,RedirectConfiguration,TokenConfiguration,PriorToLoginPersistence)`
+- Deletes deprecated constructor `JwtCookieTokenReader(JwtCookieConfiguration)`
+- Deletes deprecated method `DefaultOauthClient::getTokenEndpoint`
+- Deletes `DefaultSecurityService#ROLES`
+- Deletes deprecated method `OauthUserDetailsMapper::createUserDetails(TokenResponse)`
+- Deletes `TokenValidator::validateToken(String)`
+- Deletes deprecated constructor `SessionLoginHandler(SecuritySessionConfiguration,SessionStore<Session>,TokenConfiguration)`
+- Deletes deprecated constructor `TokenRefreshRequest(String)`
+- Deletes deprecated method `SecurityService::hasRole`
+- Deletes deprecated class `TokenResponseExpiration`
+- Deletes deprecated constructor `DefaultSecurityService(TokenConfiguration)`.
+- Deletes deprecated method `OpenIdUserDetailsMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)`
+- Deletes deprecated method `BasicAuthAuthenticationFetcher::parseCredentials`
+- Deletes deprecated classes `JwtGeneratorConfiguration` and JwtGeneratorConfigurationProperties`
+- Deletes deprecated method `JwtClaimsValidator:validate(JwtClaims)`
+- Deletes deprecated constructor `JWTClaimsSetGenerator(TokenConfiguration,JwtIdGenerator, ClaimsAudienceProvider)`
+- Deletes deprecated constructor `RefreshTokenGeneratedEvent(Object)`
 
 == 2.0.0
 

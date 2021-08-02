@@ -13,11 +13,13 @@ import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.DefaultHttpClientConfiguration
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
+import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.jwt.AuthorizationUtils
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
+import io.micronaut.security.token.jwt.signature.rsa.RSASignature
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureFactory
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
@@ -46,13 +48,13 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
     EmbeddedServer booksEmbeddedServer
 
     @Shared
-    RxHttpClient booksClient
+    HttpClient booksClient
 
     @Shared
     EmbeddedServer gatewayEmbeddedServer
 
     @Shared
-    RxHttpClient gatewayClient
+    HttpClient gatewayClient
 
     def setupSpec() {
         try {
@@ -89,10 +91,11 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
 
         booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig, Environment.TEST)
         booksPort = booksEmbeddedServer.getPort()
-        BooksRsaSignatureConfiguration bean = booksEmbeddedServer.applicationContext.createBean(BooksRsaSignatureConfiguration, rsaJwk)
-        booksEmbeddedServer.applicationContext.registerSingleton(bean)
+        BooksRsaSignatureConfiguration booksRsaSignatureConfiguration = new BooksRsaSignatureConfiguration(rsaJwk)
+        booksEmbeddedServer.applicationContext.registerSingleton(RSASignatureConfiguration, booksRsaSignatureConfiguration, Qualifiers.byName("validation"))
+        booksEmbeddedServer.applicationContext.registerSingleton(SignatureConfiguration, new RSASignature(booksRsaSignatureConfiguration), Qualifiers.byName("validation"))
 
-        booksClient = booksEmbeddedServer.applicationContext.createBean(RxHttpClient, booksEmbeddedServer.getURL())
+        booksClient = booksEmbeddedServer.applicationContext.createBean(HttpClient, booksEmbeddedServer.getURL())
 
         when:
         booksEmbeddedServer.applicationContext.getBean(SignatureGeneratorConfiguration)
@@ -106,7 +109,7 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
                 BooksController,
                 RSASignatureConfiguration,
                 RSASignatureFactory,
-                SignatureConfiguration
+                SignatureConfiguration,
         ]) {
             booksEmbeddedServer.applicationContext.getBean(beanClazz)
         }
@@ -149,7 +152,7 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         when:
         def configuration = new DefaultHttpClientConfiguration()
         configuration.setReadTimeout(Duration.ofSeconds(30))
-        gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(RxHttpClient, gatewayEmbeddedServer.getURL(), configuration)
+        gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(HttpClient, gatewayEmbeddedServer.getURL(), configuration)
 
         then:
         noExceptionThrown()

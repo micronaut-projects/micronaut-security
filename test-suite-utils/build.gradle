@@ -6,11 +6,11 @@ dependencies {
     implementation "io.micronaut:micronaut-http-server-netty"
     implementation "io.micronaut:micronaut-http-client"
     api "org.gebish:geb-spock:$gebVersion"
-    implementation(platform("org.testcontainers:testcontainers-bom:$testcontainersVersion"))
     implementation "org.testcontainers:selenium"
     implementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
     implementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
     implementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+    testImplementation "io.projectreactor:reactor-core"
     runtimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
 }
 
