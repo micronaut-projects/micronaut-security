@@ -2,9 +2,11 @@ package io.micronaut.security.endpoints.introspection
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
+import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.MediaType
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.MockAuthenticationProvider
 import io.micronaut.security.SuccessAuthenticationScenario
@@ -25,7 +27,7 @@ class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
         'IntrospectionAuthorizerSpec'
     }
 
-    private HttpRequest introspectionEndpointRequestWithBasicAuth(String token) {
+    private static HttpRequest introspectionEndpointRequestWithBasicAuth(String token) {
         HttpRequest.POST("/token_info", new IntrospectionRequest(token))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .basicAuth("user", "password")
