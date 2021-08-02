@@ -46,8 +46,7 @@ class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = "spec.name", value = "SessionPriorLoginSpec")
-    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider  { // <2>
-
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
         AuthenticationProviderUserPassword() {
             super([new SuccessAuthenticationScenario('sherlock')])
         }
