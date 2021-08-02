@@ -320,11 +320,34 @@ Micronaut Security 2.x requires Micronaut 2.x.
 
 
 <div class="paragraph">
-<p>Micronaut Security 2.5.1-SNAPSHOT includes the following new features and improvements.</p>
+<p>Micronaut Security includes the following new features and improvements.</p>
 </div>
 <div class="sect1">
-<h2 id="_annotation_processing">Annotation Processing</h2>
+<h2 id="_what_s_new_in_micronaut_security_3">What&#8217;s New in Micronaut Security 3</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Micronaut Security 3:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Uses Micronaut 3.</p>
+</li>
+<li>
+<p>Replaces <code>javax.inject</code> with <code>jakarta.inject</code> annotations.</p>
+</li>
+<li>
+<p>Deletes deprecated methods. You can obtain more information in the <a href="#breaks">Breaks section</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_s_new_in_micronaut_security_2">What&#8217;s New in Micronaut Security 2</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_annotation_processing">Annotation Processing</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -333,10 +356,8 @@ Micronaut Security 2.x requires Micronaut 2.x.
 </ul>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_improvements">Improvements</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_improvements">Improvements</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -361,6 +382,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <p>The TokenValidator API now has access to the current request.</p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 </div>
@@ -390,7 +412,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 </ul>
 </div>
 <div class="paragraph">
-<p>The following properties' default value has been changed to false in Micronaut Security 3.0.0:</p>
+<p>The following properties' default value has been removed in Micronaut Security 3.0.0:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -405,6 +427,100 @@ Micronaut Security 2.x requires Micronaut 2.x.
 </li>
 <li>
 <p><code>micronaut.security.token.refresh.cookie.cookie-secure`</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the <code>cookie-secure</code> setting is not set, cookies will be secure if the request is determined to be HTTPS.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_0_0_deprecations_removal">3.0.0 Deprecations removal</h3>
+<div class="paragraph">
+<p>Micronaut security:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Deletes deprecated methods <code>JwtValidator::validate(String)</code> and <code>JwtValidator::validate(JWT)</code></p>
+</li>
+<li>
+<p>Deletes deprecated class <code>SecuritySessionConfiguration</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>JwtCookieClearerLogoutHandler(JwtCookieConfiguration)</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration redirectConfiguration, PriorToLoginPersistence priorToLoginPersistence)</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>CookieLoginHandler(JwtCookieConfiguration,String, String)</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>DefaultOpenIdUserDetailsMapper</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructors <code>JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator accessRefreshTokenGenerator)</code>, <code>JwtCookieLoginHandler(RedirectConfiguration,JwtCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator accessRefreshTokenGenerator,PriorToLoginPersistence priorToLoginPersistence)</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>IdTokenLoginHandler(JwtCookieConfiguration,RedirectConfiguration,TokenConfiguration,PriorToLoginPersistence)</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>JwtCookieTokenReader(JwtCookieConfiguration)</code></p>
+</li>
+<li>
+<p>Deletes deprecated method <code>DefaultOauthClient::getTokenEndpoint</code></p>
+</li>
+<li>
+<p>Deletes <code>DefaultSecurityService#ROLES</code></p>
+</li>
+<li>
+<p>Deletes deprecated method <code>OauthUserDetailsMapper::createUserDetails(TokenResponse)</code></p>
+</li>
+<li>
+<p>Deletes <code>TokenValidator::validateToken(String)</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>SessionLoginHandler(SecuritySessionConfiguration,SessionStore&lt;Session&gt;,TokenConfiguration)</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>TokenRefreshRequest(String)</code></p>
+</li>
+<li>
+<p>Deletes deprecated method <code>SecurityService::hasRole</code></p>
+</li>
+<li>
+<p>Deletes deprecated class <code>TokenResponseExpiration</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>DefaultSecurityService(TokenConfiguration)</code>.</p>
+</li>
+<li>
+<p>Deletes deprecated method <code>OpenIdUserDetailsMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)</code></p>
+</li>
+<li>
+<p>Deletes deprecated method <code>BasicAuthAuthenticationFetcher::parseCredentials</code></p>
+</li>
+<li>
+<p>Deletes deprecated classes <code>JwtGeneratorConfiguration</code> and JwtGeneratorConfigurationProperties`</p>
+</li>
+<li>
+<p>Deletes deprecated method <code>JwtClaimsValidator:validate(JwtClaims)</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>JWTClaimsSetGenerator(TokenConfiguration,JwtIdGenerator, ClaimsAudienceProvider)</code></p>
+</li>
+<li>
+<p>Deletes deprecated constructor <code>RefreshTokenGeneratedEvent(Object)</code></p>
 </li>
 </ul>
 </div>
@@ -1170,23 +1286,24 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.*;
-import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
+
 import java.util.ArrayList;
 @Singleton
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
     public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
-        return Maybe.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
+        return Mono.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
             if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
-                emitter.onSuccess(new UserDetails("user", new ArrayList&lt;&gt;()));
+                emitter.success(new UserDetails("user", new ArrayList&lt;&gt;()));
             } else {
-                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
+                emitter.error(new AuthenticationException(new AuthenticationFailed()));
             }
-        }).toFlowable();
+        });
     }
 }</code></pre>
 </div>
@@ -2684,10 +2801,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
-        return Flowable.create(emitter -&gt; {
-            emitter.onNext(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
-                emitter.onComplete();
-        }, BackpressureStrategy.ERROR);
+        return Flux.create(emitter -&gt; {
+            emitter.next(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
+                emitter.complete();
+        }, FluxSink.OverflowStrategy.ERROR);
     }
 }</code></pre>
 </div>
@@ -2902,6 +3019,11 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">LdapConfiguration$ContextConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.server</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the server URL.</p></td>
@@ -2926,11 +3048,6 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">LdapConfiguration$ContextConfiguration</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context configuration.</p></td>
-</tr>
 </tbody>
 </table>
 <a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.SearchConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.SearchConfiguration">&#128279;</a>
@@ -2949,6 +3066,11 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">LdapConfiguration$SearchConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.subtree</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
@@ -2969,11 +3091,6 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the attributes to return. Default all</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">LdapConfiguration$SearchConfiguration</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search configuration.</p></td>
-</tr>
 </tbody>
 </table>
 <a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.GroupConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.GroupConfiguration">&#128279;</a>
@@ -2992,6 +3109,11 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">LdapConfiguration$GroupConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
@@ -3016,11 +3138,6 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.attribute</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group attribute name. Default "cn"</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">LdapConfiguration$GroupConfiguration</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group configuration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -3192,11 +3309,11 @@ public class MyContextBuilder implements ContextBuilder {
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
-
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
+
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
@@ -3207,12 +3324,12 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 
     @Override
     public Publisher&lt;Authentication&gt; fetchAuthentication(HttpRequest&lt;?&gt; request) {
-        return Maybe.&lt;Authentication&gt;create(emitter -&gt; {
+        return Mono.&lt;Authentication&gt;create(emitter -&gt; {
             Optional&lt;Certificate&gt; optionalCertificate = request.getCertificate();
             if (optionalCertificate.isPresent()) {
                 Certificate certificate = optionalCertificate.get();
                 if (certificate instanceof X509Certificate) {
-                    emitter.onSuccess(new Authentication() {
+                    emitter.success(new Authentication() {
                         X509Certificate x509Certificate = ((X509Certificate) certificate);
                         @Override
                         public String getName() {
@@ -3228,8 +3345,8 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
                     return;
                 }
             }
-            emitter.onComplete();
-        }).toFlowable();
+            emitter.success();
+        });
     }
 }</code></pre>
 </div>
@@ -4623,14 +4740,15 @@ class GithubUser {
 <pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.http.client.annotation.Client;
-import io.reactivex.Flowable;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
 public interface GithubApiClient {
 
     @Get("/user")
-    Flowable&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization);
+    Publisher&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization);
 }</code></pre>
 </div>
 </div>
@@ -4639,14 +4757,15 @@ public interface GithubApiClient {
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
-import io.reactivex.Flowable
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
 interface GithubApiClient {
 
     @Get("/user")
-    Flowable&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization)
+    Publisher&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization)
 }</code></pre>
 </div>
 </div>
@@ -4655,14 +4774,15 @@ interface GithubApiClient {
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
-import io.reactivex.Flowable
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
 interface GithubApiClient {
 
     @Get("/user")
-    fun getUser(@Header("Authorization") authorization: String): Flowable&lt;GithubUser&gt;
+    fun getUser(@Header("Authorization") authorization: String): Publisher&lt;GithubUser&gt;
 }</code></pre>
 </div>
 </div>
@@ -4682,6 +4802,8 @@ import org.reactivestreams.Publisher;
 
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -4697,7 +4819,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 
     @Override
     public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
-        return apiClient.getUser("token " + tokenResponse.getAccessToken())
+        return Flux.from(apiClient.getUser("token " + tokenResponse.getAccessToken()))
                 .map(user -&gt; {
                     List&lt;String&gt; roles = Collections.singletonList("ROLE_GITHUB");
                     return new UserDetails(user.getLogin(), roles); <b class="conum">(4)</b>
@@ -4739,17 +4861,15 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.core.async.publisher.Publishers
-import io.micronaut.security.authentication.AuthenticationResponse
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
-import java.lang.UnsupportedOperationException
-
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import reactor.core.publisher.Flux
 
 @Named("github") <b class="conum">(1)</b>
 @Singleton
@@ -4757,7 +4877,7 @@ internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <
     : OauthUserDetailsMapper {
 
     override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher&lt;AuthenticationResponse&gt; { <b class="conum">(3)</b>
-        return apiClient.getUser("token " + tokenResponse.accessToken)
+        return Flux.from(apiClient.getUser("token " + tokenResponse.accessToken))
                 .map { user -&gt;
                     UserDetails(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
                 }
@@ -5909,7 +6029,7 @@ If nonce validation fails, the user will not be authenticated.
           client-secret: 'YYY'
           token:
             url: "https://foo.bar/token"
-            auth-method': "client_secret_basic",
+            auth-method: "client_secret_basic",
         google:
           client-id: 'ZZZZ'
           client-secret: 'PPPP'
@@ -5951,10 +6071,10 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 
 
 <div class="paragraph">
-<p>Micronaut Security includes <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html">ClientCredentialsHttpClientFilter</a>. A <a href="https://docs.micronaut.io/latest/guide/index.html#clientFilter">HTTP Client Filter</a> which allows you to automatically include an access token to an outgoing request HTTP Header. It obtains the access token via a Client Credentials request.</p>
+<p>Micronaut Security includes <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html">ClientCredentialsHttpClientFilter</a>. This <a href="https://docs.micronaut.io/latest/guide/index.html#clientFilter">HTTP Client Filter</a> allows you to automatically include an access token to an outgoing request HTTP Header. It obtains the access token via a Client Credentials request.</p>
 </div>
 <div class="paragraph">
-<p>For example, the next configuration adds an access token to the requests' HTTP Headers done via the HTTP Client <code>inventory</code>. It obtains the access token with a Client Credentials request with the OAuth 2.0 client <code>companyauthorserver</code>.</p>
+<p>For example, the next configuration adds an access token to the requests' HTTP Headers done via the HTTP Client <code>inventory</code>. It obtains the access token with a Client Credentials request with the OAuth 2.0 client <code>companyauthserver</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
