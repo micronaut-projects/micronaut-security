@@ -18,13 +18,7 @@ class InterceptUrlMapRuleSpec extends Specification {
     @Unroll
     void "test query arguments are ignored by matching logic"() {
         given:
-        SecurityRule rule = new InterceptUrlMapRule(new RolesFinder() {
-            @Override
-            @NonNull
-            List<String> findInClaims(@NonNull Claims claims) {
-                claims.get("roles")
-            }
-        }) {
+        SecurityRule rule = new InterceptUrlMapRule(new DefaultRolesFinder(new TokenConfiguration() {})) {
             @Override
             protected List<InterceptUrlMapPattern> getPatternList() {
                 [new InterceptUrlMapPattern("/foo", ["ROLE_ADMIN"], HttpMethod.GET)]

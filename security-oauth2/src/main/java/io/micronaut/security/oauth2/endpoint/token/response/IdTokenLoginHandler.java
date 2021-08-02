@@ -21,7 +21,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.errors.OauthErrorResponseException;
@@ -65,13 +65,13 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
      * {@inheritDoc}
      */
     @Override
-    public List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
+    public List<Cookie> getCookies(Authentication authentication, HttpRequest<?> request) {
         List<Cookie> cookies = new ArrayList<>(1);
-        String accessToken = parseIdToken(userDetails).orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
+        String accessToken = parseIdToken(authentication).orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
 
         Cookie jwtCookie = Cookie.of(accessTokenCookieConfiguration.getCookieName(), accessToken);
         jwtCookie.configure(accessTokenCookieConfiguration, request.isSecure());
-        jwtCookie.maxAge(cookieExpiration(userDetails, request));
+        jwtCookie.maxAge(cookieExpiration(authentication, request));
         cookies.add(jwtCookie);
         return cookies;
     }
@@ -80,26 +80,26 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
      * {@inheritDoc}
      */
     @Override
-    public List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+    public List<Cookie> getCookies(Authentication authentication, String refreshToken, HttpRequest<?> request) {
         throw new OauthErrorResponseException(ObtainingAuthorizationErrorCode.INVALID_REQUEST, "Cannot refresh a provider token through the oauth endpoint. The token must be refreshed directly with the provider", null);
     }
 
     /**
-     * @param userDetails User Details
+     * @param authentication User Details
      * @return parse the idtoken from the user details attributes
      */
-    protected Optional<String> parseIdToken(UserDetails userDetails) {
-        Map<String, Object> attributes = userDetails.getAttributes(tokenConfiguration.getRolesName(), tokenConfiguration.getNameKey());
-        if (!attributes.containsKey(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY)) {
+    protected Optional<String> parseIdToken(Authentication authentication) {
+        Map<String, Object> attributes = authentication.getAttributes();
+        if (!attributes.containsKey(OpenIdAuthenticationMapper.OPENID_TOKEN_KEY)) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("{} should be present in user details attributes to use {}:{}", OpenIdUserDetailsMapper.OPENID_TOKEN_KEY, SecurityConfigurationProperties.PREFIX + ".authentication", AuthenticationMode.IDTOKEN.toString());
+                LOG.warn("{} should be present in user details attributes to use {}:{}", OpenIdAuthenticationMapper.OPENID_TOKEN_KEY, SecurityConfigurationProperties.PREFIX + ".authentication", AuthenticationMode.IDTOKEN.toString());
             }
             return Optional.empty();
         }
-        Object idTokenObjet = attributes.get(OpenIdUserDetailsMapper.OPENID_TOKEN_KEY);
+        Object idTokenObjet = attributes.get(OpenIdAuthenticationMapper.OPENID_TOKEN_KEY);
         if (!(idTokenObjet instanceof String)) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("{} present in user details attributes should be of type String to use {}:{}", OpenIdUserDetailsMapper.OPENID_TOKEN_KEY, SecurityConfigurationProperties.PREFIX + ".authentication", AuthenticationMode.IDTOKEN.toString());
+                LOG.warn("{} present in user details attributes should be of type String to use {}:{}", OpenIdAuthenticationMapper.OPENID_TOKEN_KEY, SecurityConfigurationProperties.PREFIX + ".authentication", AuthenticationMode.IDTOKEN.toString());
             }
             return Optional.empty();
         }
@@ -107,12 +107,12 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
     }
 
     /**
-     * @param userDetails User Details
+     * @param authentication User Details
      * @param request The current request
      * @return the expiration of the providers JWT
      */
-    protected Duration cookieExpiration(UserDetails userDetails, HttpRequest<?> request) {
-        Optional<String> idTokenOptional = parseIdToken(userDetails);
+    protected Duration cookieExpiration(Authentication authentication, HttpRequest<?> request) {
+        Optional<String> idTokenOptional = parseIdToken(authentication);
         if (!idTokenOptional.isPresent()) {
             return Duration.ofSeconds(0);
         }

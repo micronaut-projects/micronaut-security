@@ -18,9 +18,10 @@ package io.micronaut.security.token;
 import java.util.ArrayList;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
-
 import java.util.List;
+import java.util.Map;
 
 /**
  * Retrieves roles from token claims.
@@ -71,4 +72,23 @@ public interface RolesFinder {
         l.retainAll(grantedRoles);
         return !l.isEmpty();
     }
+
+
+    /**
+     * Retrieves the list of roles from the User Attributes.
+     *
+     * @param authentication User's authentication representation
+     * @return The granted roles.
+     */
+    @NonNull
+    List<String> resolveRoles(@NonNull Authentication authentication);
+
+    /**
+     * Retrieves the list of roles from the User Attributes.
+     *
+     * @param attributes User's attributes
+     * @return The granted roles.
+     */
+    @NonNull
+    List<String> resolveRoles(@Nullable Map<String, Object> attributes);
 }

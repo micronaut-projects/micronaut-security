@@ -120,7 +120,7 @@ public class OauthController {
         if (!validRefreshToken.isPresent()) {
             throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_GRANT, "Refresh token is invalid", null);
         }
-        return Mono.from(refreshTokenPersistence.getUserDetails(validRefreshToken.get()))
+        return Mono.from(refreshTokenPersistence.getAuthentication(validRefreshToken.get()))
                 .map(userDetails -> loginHandler.loginRefresh(userDetails, refreshToken, request));
     }
 

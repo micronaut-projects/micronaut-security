@@ -60,9 +60,8 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
             Flux<AuthenticationResponse> authenticationResponse = Flux.from(authenticator.authenticate(request, credentials.get()));
 
             return authenticationResponse.switchMap(response -> {
-                if (response.isAuthenticated()) {
-                    UserDetails userDetails = response.getUserDetails().get();
-                    return Flux.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName(), configuration.getNameKey()));
+                if (response.isAuthenticated() && response.getAuthentication().isPresent()) {
+                    return Flux.just(response.getAuthentication().get());
                 } else {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Could not authenticate {}", credentials.get().getUsername());

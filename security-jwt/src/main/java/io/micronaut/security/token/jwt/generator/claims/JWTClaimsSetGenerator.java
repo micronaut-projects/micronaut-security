@@ -18,7 +18,7 @@ package io.micronaut.security.token.jwt.generator.claims;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.env.Environment;
 import io.micronaut.runtime.ApplicationConfiguration;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,12 +63,12 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
     }
 
     /**
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @param expiration  expiration time in seconds
      * @return The authentication claims
      */
     @Override
-    public Map<String, Object> generateClaims(UserDetails userDetails, @Nullable Integer expiration) {
+    public Map<String, Object> generateClaims(Authentication authentication, @Nullable Integer expiration) {
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
         populateIat(builder);
         populateExp(builder, expiration);
@@ -76,7 +76,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         populateIss(builder);
         populateAud(builder);
         populateNbf(builder);
-        populateWithUserDetails(builder, userDetails);
+        populateWithAuthentication(builder, authentication);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Generated claim set: {}", builder.build().toJSONObject().toString());
         }
@@ -99,11 +99,11 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * Populates sub claim.
      *
      * @param builder     The Claims Builder
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @see <a href="https://tools.ietf.org/html/rfc7519#section-4.1.2">sub (Subject) Claim</a>
      */
-    protected void populateSub(JWTClaimsSet.Builder builder, UserDetails userDetails) {
-        builder.subject(userDetails.getUsername()); // sub
+    protected void populateSub(JWTClaimsSet.Builder builder, Authentication authentication) {
+        builder.subject(authentication.getName()); // sub
     }
 
     /**
@@ -168,11 +168,10 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * Populates Claims with UserDetails object.
      *
      * @param builder     the Claims Builder
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      */
-    protected void populateWithUserDetails(JWTClaimsSet.Builder builder, UserDetails userDetails) {
-        userDetails.getAttributes(tokenConfiguration.getRolesName(), JwtClaims.SUBJECT)
-                .forEach(builder::claim);
+    protected void populateWithAuthentication(JWTClaimsSet.Builder builder, Authentication authentication) {
+        authentication.getAttributes().forEach(builder::claim);
     }
 
     /**

@@ -21,7 +21,9 @@ import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.security.token.config.TokenConfigurationProperties;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
@@ -35,6 +37,7 @@ import java.util.Optional;
  */
 public class MockAuthenticationProvider implements AuthenticationProvider  {
 
+    private TokenConfiguration tokenConfiguration;
     private final List<SuccessAuthenticationScenario> successAuthenticationScenarioList;
     private final List<FailedAuthenticationScenario> failedAuthenticationScenarios;
 
@@ -43,6 +46,7 @@ public class MockAuthenticationProvider implements AuthenticationProvider  {
      * @param successAuthenticationScenarioList Successful scenarios
      */
     public MockAuthenticationProvider(List<SuccessAuthenticationScenario> successAuthenticationScenarioList) {
+        this.tokenConfiguration = new TokenConfigurationProperties();
         this.successAuthenticationScenarioList = successAuthenticationScenarioList;
         this.failedAuthenticationScenarios = Collections.emptyList();
     }
@@ -54,6 +58,32 @@ public class MockAuthenticationProvider implements AuthenticationProvider  {
      */
     public MockAuthenticationProvider(List<SuccessAuthenticationScenario> successAuthenticationScenarioList,
                                       List<FailedAuthenticationScenario> failedAuthenticationScenarioList) {
+        this.tokenConfiguration = new TokenConfigurationProperties();
+        this.successAuthenticationScenarioList = successAuthenticationScenarioList;
+        this.failedAuthenticationScenarios = failedAuthenticationScenarioList;
+    }
+
+    /**
+     *
+     * @param tokenConfiguration TokenConfiguration
+     * @param successAuthenticationScenarioList Successful scenarios
+     */
+    public MockAuthenticationProvider(TokenConfiguration tokenConfiguration, List<SuccessAuthenticationScenario> successAuthenticationScenarioList) {
+        this.tokenConfiguration = tokenConfiguration;
+        this.successAuthenticationScenarioList = successAuthenticationScenarioList;
+        this.failedAuthenticationScenarios = Collections.emptyList();
+    }
+
+    /**
+     *
+     * @param tokenConfiguration TokenConfiguration
+     * @param successAuthenticationScenarioList Successful scenarios
+     * @param failedAuthenticationScenarioList Failure scenarios
+     */
+    public MockAuthenticationProvider(TokenConfiguration tokenConfiguration,
+                                      List<SuccessAuthenticationScenario> successAuthenticationScenarioList,
+                                      List<FailedAuthenticationScenario> failedAuthenticationScenarioList) {
+        this.tokenConfiguration = tokenConfiguration;
         this.successAuthenticationScenarioList = successAuthenticationScenarioList;
         this.failedAuthenticationScenarios = failedAuthenticationScenarioList;
     }
@@ -72,7 +102,7 @@ public class MockAuthenticationProvider implements AuthenticationProvider  {
                     .findFirst();
             if (successAuth.isPresent()) {
                 SuccessAuthenticationScenario scenario = successAuth.get();
-                emitter.next(new UserDetails(scenario.getUsername(), scenario.getRoles(), scenario.getAttributes()));
+                emitter.next(AuthenticationResponse.build(scenario.getUsername(), scenario.getRoles(), scenario.getAttributes(), tokenConfiguration));
                 emitter.complete();
             } else {
                 Optional<FailedAuthenticationScenario> failedAuthenticationScenario = failedAuthenticationScenarios.stream()
@@ -84,6 +114,6 @@ public class MockAuthenticationProvider implements AuthenticationProvider  {
                     emitter.error(new AuthenticationException(new AuthenticationFailed()));
                 }
             }
-            }, FluxSink.OverflowStrategy.ERROR);
+        }, FluxSink.OverflowStrategy.ERROR);
     }
 }

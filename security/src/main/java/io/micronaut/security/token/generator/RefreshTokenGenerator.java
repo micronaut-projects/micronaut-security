@@ -16,7 +16,7 @@
 package io.micronaut.security.token.generator;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 
 import java.util.Optional;
 
@@ -31,18 +31,18 @@ import java.util.Optional;
 public interface RefreshTokenGenerator {
 
     /**
-     * @param userDetails The user details
+     * @param authentication The user details
      * @return The internal value that will persisted.
      */
     @NonNull
-    String createKey(@NonNull UserDetails userDetails);
+    String createKey(@NonNull Authentication authentication);
 
     /**
-     * @param userDetails The user details
+     * @param authentication The user details
      * @param token The internal value
      * @return The refresh token
      */
     @NonNull
-    Optional<String> generate(@NonNull UserDetails userDetails, @NonNull String token);
+    Optional<String> generate(@NonNull Authentication authentication, @NonNull String token);
 
 }

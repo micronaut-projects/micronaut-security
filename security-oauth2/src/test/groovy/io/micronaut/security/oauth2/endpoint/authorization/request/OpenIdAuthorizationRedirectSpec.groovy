@@ -8,7 +8,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.oauth2.StateUtils
@@ -18,6 +18,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
+import io.micronaut.security.token.config.TokenConfiguration
 import reactor.core.publisher.FluxSink
 import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
@@ -115,11 +116,16 @@ class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
     @Requires(property = "spec.name", value = "OpenIdAuthorizationRedirectSpec")
     @Requires(property = "micronaut.security.oauth2.clients.twitter")
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
+        private final TokenConfiguration tokenConfiguration
+
+        TwitterUserDetailsMapper(TokenConfiguration tokenConfiguration) {
+            this.tokenConfiguration = tokenConfiguration
+        }
 
         @Override
-        Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
+        Publisher<Authentication> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
             Flux.create({ emitter ->
-                emitter.next(new UserDetails("twitterUser", Collections.emptyList()))
+                emitter.next(Authentication.build("twitterUser", tokenConfiguration))
                 emitter.complete()
             }, FluxSink.OverflowStrategy.ERROR)
         }

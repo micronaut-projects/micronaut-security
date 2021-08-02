@@ -32,7 +32,7 @@ import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import reactor.core.publisher.FluxSink;
@@ -57,25 +57,25 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
     private final SecureEndpoint secureEndpoint;
     private final OauthClientConfiguration clientConfiguration;
     private final OpenIdProviderMetadata openIdProviderMetadata;
-    private final OpenIdUserDetailsMapper openIdUserDetailsMapper;
+    private final OpenIdAuthenticationMapper openIdAuthenticationMapper;
     private final OpenIdTokenResponseValidator tokenResponseValidator;
 
     /**
      * @param clientConfiguration The client configuration
      * @param openIdProviderMetadata The provider metadata
      * @param tokenEndpointClient The token endpoint client
-     * @param openIdUserDetailsMapper The user details mapper
+     * @param openIdAuthenticationMapper The user details mapper
      * @param tokenResponseValidator The token response validator
      */
     public OpenIdPasswordAuthenticationProvider(OauthClientConfiguration clientConfiguration,
                                                 OpenIdProviderMetadata openIdProviderMetadata,
                                                 TokenEndpointClient tokenEndpointClient,
-                                                OpenIdUserDetailsMapper openIdUserDetailsMapper,
+                                                OpenIdAuthenticationMapper openIdAuthenticationMapper,
                                                 OpenIdTokenResponseValidator tokenResponseValidator) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.clientConfiguration = clientConfiguration;
         this.openIdProviderMetadata = openIdProviderMetadata;
-        this.openIdUserDetailsMapper = openIdUserDetailsMapper;
+        this.openIdAuthenticationMapper = openIdAuthenticationMapper;
         this.tokenResponseValidator = tokenResponseValidator;
 
         Optional<TokenEndpointConfiguration> tokenEndpointConfiguration = clientConfiguration.getOpenid().flatMap(OpenIdClientConfiguration::getToken);
@@ -98,7 +98,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
                         if (jwt.isPresent()) {
                             try {
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                                emitter.next(openIdUserDetailsMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null));
+                                emitter.next(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null));
                                 emitter.complete();
                             } catch (ParseException e) {
                                 //Should never happen as validation succeeded

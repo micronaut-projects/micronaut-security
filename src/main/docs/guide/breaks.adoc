@@ -24,7 +24,7 @@ Micronaut security:
 - Deletes deprecated constructor `JwtCookieClearerLogoutHandler(JwtCookieConfiguration)`
 - Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration redirectConfiguration, PriorToLoginPersistence priorToLoginPersistence)`
 - Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration,String, String)`
-- Deletes deprecated constructor `DefaultOpenIdUserDetailsMapper`
+- Deletes deprecated constructor `DefaultOpenIdAuthenticationMapper`
 - Deletes deprecated constructors `JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator accessRefreshTokenGenerator)`, `JwtCookieLoginHandler(RedirectConfiguration,JwtCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator accessRefreshTokenGenerator,PriorToLoginPersistence priorToLoginPersistence)`
 - Deletes deprecated constructor `IdTokenLoginHandler(JwtCookieConfiguration,RedirectConfiguration,TokenConfiguration,PriorToLoginPersistence)`
 - Deletes deprecated constructor `JwtCookieTokenReader(JwtCookieConfiguration)`
@@ -37,7 +37,7 @@ Micronaut security:
 - Deletes deprecated method `SecurityService::hasRole`
 - Deletes deprecated class `TokenResponseExpiration`
 - Deletes deprecated constructor `DefaultSecurityService(TokenConfiguration)`.
-- Deletes deprecated method `OpenIdUserDetailsMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)`
+- Deletes deprecated method `OpenIdAuthenticationMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)`
 - Deletes deprecated method `BasicAuthAuthenticationFetcher::parseCredentials`
 - Deletes deprecated classes `JwtGeneratorConfiguration` and JwtGeneratorConfigurationProperties`
 - Deletes deprecated method `JwtClaimsValidator:validate(JwtClaims)`

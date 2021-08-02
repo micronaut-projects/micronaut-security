@@ -16,7 +16,7 @@
 package io.micronaut.security.token.refresh;
 
 import io.micronaut.context.event.ApplicationEventListener;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
 import org.reactivestreams.Publisher;
 
@@ -44,6 +44,6 @@ public interface RefreshTokenPersistence extends ApplicationEventListener<Refres
      * @param refreshToken The refresh token
      * @return The user details associated with the refresh token
      */
-    Publisher<UserDetails> getUserDetails(String refreshToken);
+    Publisher<Authentication> getAuthentication(String refreshToken);
 
 }

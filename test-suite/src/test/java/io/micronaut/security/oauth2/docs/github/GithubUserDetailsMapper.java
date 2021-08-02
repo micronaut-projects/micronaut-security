@@ -4,10 +4,11 @@ package io.micronaut.security.oauth2.docs.github;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
+import io.micronaut.security.token.config.TokenConfiguration;
 import org.reactivestreams.Publisher;
 
 import jakarta.inject.Named;
@@ -22,9 +23,12 @@ import java.util.List;
 class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 
     private final GithubApiClient apiClient;
+    private final TokenConfiguration tokenConfiguration;
 
-    GithubUserDetailsMapper(GithubApiClient apiClient) {
+    GithubUserDetailsMapper(GithubApiClient apiClient,
+                            TokenConfiguration tokenConfiguration) {
         this.apiClient = apiClient;
+        this.tokenConfiguration = tokenConfiguration;
     } // <2>
 
     @Override
@@ -32,7 +36,7 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
         return Flux.from(apiClient.getUser("token " + tokenResponse.getAccessToken()))
                 .map(user -> {
                     List<String> roles = Collections.singletonList("ROLE_GITHUB");
-                    return new UserDetails(user.getLogin(), roles); // <4>
+                    return AuthenticationResponse.build(user.getLogin(), roles, tokenConfiguration); // <4>
                 });
     }
 }

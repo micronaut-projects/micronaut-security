@@ -11,8 +11,6 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.MockAuthenticationProvider
 import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.validator.TokenValidator
@@ -61,8 +59,9 @@ class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
         m = response.body()
 
         then:
-        m.keySet().sort() == ['active', 'username', 'roles', 'email'].sort()
+        m.keySet().sort() == ['active', 'sub', 'username', 'roles', 'email'].sort()
         m['active'] == true
+        m['sub'] == 'user'
         m['username'] == 'user'
         m['roles'] == ['ROLE_ADMIN', 'ROLE_USER']
         m['email'] == 'john@micronaut.io'
@@ -88,10 +87,13 @@ class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
     @Singleton
     static class CustomTokenValidator implements TokenValidator {
 
+        private final TokenConfiguration tokenConfiguration
+        CustomTokenValidator(TokenConfiguration tokenConfiguration) {
+            this.tokenConfiguration = tokenConfiguration
+        }
         @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
-            UserDetails ud = new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'])
-            Authentication authentication = new AuthenticationUserDetailsAdapter(ud, TokenConfiguration.DEFAULT_ROLES_NAME, TokenConfiguration.DEFAULT_NAME_KEY)
+            Authentication authentication = Authentication.build('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'], tokenConfiguration)
             if (token == "2YotnFZFEjr1zCsicMWpAA") {
                 return Flux.just(authentication)
             }

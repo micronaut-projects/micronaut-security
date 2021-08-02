@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.render;
 
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 
 import io.micronaut.core.annotation.Nullable;
 
@@ -37,11 +37,11 @@ public interface TokenRenderer {
 
     /**
      *
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @param expiresIn In milliseconds
      * @param accessToken  JWT token
      * @param refreshToken JWT token
      * @return instance of {@link AccessRefreshToken}
      */
-    AccessRefreshToken render(UserDetails userDetails, Integer expiresIn, String accessToken, @Nullable String refreshToken);
+    AccessRefreshToken render(Authentication authentication, Integer expiresIn, String accessToken, @Nullable String refreshToken);
 }

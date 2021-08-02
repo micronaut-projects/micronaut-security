@@ -39,7 +39,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.Authorizatio
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -62,7 +62,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     private final OauthClientConfiguration clientConfiguration;
     private final Supplier<OpenIdProviderMetadata> openIdProviderMetadata;
-    private final OpenIdUserDetailsMapper userDetailsMapper;
+    private final OpenIdAuthenticationMapper userDetailsMapper;
     private final AuthorizationRedirectHandler redirectUrlBuilder;
     private final OpenIdAuthorizationResponseHandler authorizationResponseHandler;
     private final Supplier<SecureEndpoint> tokenEndpoint;
@@ -80,7 +80,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
      */
     public DefaultOpenIdClient(OauthClientConfiguration clientConfiguration,
                                Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
-                               @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                               @Nullable OpenIdAuthenticationMapper userDetailsMapper,
                                AuthorizationRedirectHandler redirectUrlBuilder,
                                OpenIdAuthorizationResponseHandler authorizationResponseHandler,
                                BeanContext beanContext,

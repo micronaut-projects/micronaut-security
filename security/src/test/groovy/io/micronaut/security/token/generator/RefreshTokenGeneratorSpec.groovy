@@ -3,7 +3,8 @@ package io.micronaut.security.token.generator
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.context.annotation.Requires
 import io.micronaut.security.testutils.ApplicationContextSpecification
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.token.config.TokenConfiguration
 import spock.lang.Shared
 import spock.lang.Subject
 import spock.lang.Unroll
@@ -21,6 +22,9 @@ class RefreshTokenGeneratorSpec extends ApplicationContextSpecification {
     @Shared
     RefreshTokenGenerator refreshTokenGenerator = applicationContext.getBean(RefreshTokenGenerator)
 
+    @Shared
+    TokenConfiguration tokenConfiguration = applicationContext.getBean(TokenConfiguration)
+
     void "for RefreshTokenGenerator::createKey user details can be null"() {
         when:
         refreshTokenGenerator.createKey(null)
@@ -30,31 +34,31 @@ class RefreshTokenGeneratorSpec extends ApplicationContextSpecification {
     }
 
     @Unroll("For RefreshTokenGenerator::generate #description")
-    void "RefreshTokenGenerator::generate does not validate parameters"(UserDetails userDetails, String token, String description) {
+    void "RefreshTokenGenerator::generate does not validate parameters"(Authentication authentication, String token, String description) {
         when:
-        refreshTokenGenerator.generate(userDetails, token)
+        refreshTokenGenerator.generate(authentication, token)
 
         then:
         noExceptionThrown()
 
         where:
-        userDetails                 | token
+        authentication                 | token
         null                        | 'xxx'
-        new UserDetails("user", []) | null
-        new UserDetails("user", []) | ''
-        description = userDetails == null ? 'userDetails can be null' : (token == null ? 'token can be null' : (token == '' ? 'token can be blank': ''))
+        Authentication.build('user', tokenConfiguration) | null
+        Authentication.build('user', tokenConfiguration) | ''
+        description = authentication == null ? 'userDetails can be null' : (token == null ? 'token can be null' : (token == '' ? 'token can be blank': ''))
     }
 
     @Requires(property = 'spec.name', value = 'RefreshTokenGeneratorSpec')
     @Singleton
     static class CustomRefreshTokenGenerator implements RefreshTokenGenerator {
         @Override
-        String createKey(@NonNull UserDetails userDetails) {
+        String createKey(@NonNull Authentication authentication) {
             return 'foo'
         }
 
         @Override
-        Optional<String> generate(@NonNull UserDetails userDetails, @NonNull String token) {
+        Optional<String> generate(@NonNull Authentication authentication, @NonNull String token) {
             return Optional.of('faa')
         }
     }

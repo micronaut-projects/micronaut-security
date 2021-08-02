@@ -1,16 +1,16 @@
 package io.micronaut.security.ldap
 
+import com.unboundid.ldap.listener.InMemoryDirectoryServer
 import io.micronaut.configuration.security.ldap.LdapAuthenticationProvider
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import org.reactivestreams.Publisher
 import reactor.test.StepVerifier
-import spock.lang.Retry
 
-@Retry
 class LdapAuthenticationSpec extends InMemoryLdapSpec {
-    
+
     void "test authentication and role retrieval with uniquemember"() {
         given:
         def s = createServer("basic.ldif")
@@ -31,18 +31,20 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         then:
         response.authenticated
-        ((UserDetails) response).username == "riemann"
-        ((UserDetails) response).roles.size() == 1
-        ((UserDetails) response).roles.contains("Mathematicians")
+        response.authentication.isPresent()
+        response.authentication.get().name == "riemann"
+        response.authentication.get().attributes.roles.size() == 1
+        response.authentication.get().attributes.roles.contains("Mathematicians")
 
         when:
         response = authenticate(authenticationProvider,"newton")
 
         then:
         response.authenticated
-        ((UserDetails) response).username == "newton"
-        ((UserDetails) response).roles.size() == 1
-        ((UserDetails) response).roles.contains("Scientists")
+        response.authentication.isPresent()
+        response.authentication.get().name == "newton"
+        response.authentication.get().attributes.roles.size() == 1
+        response.authentication.get().attributes.roles.contains("Scientists")
 
 
         when:
@@ -50,10 +52,11 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         then:
         response.authenticated
-        ((UserDetails) response).username == "gauss"
-        ((UserDetails) response).roles.size() == 2
-        ((UserDetails) response).roles.contains("Scientists")
-        ((UserDetails) response).roles.contains("Mathematicians")
+        response.authentication.isPresent()
+        response.authentication.get().name == "gauss"
+        response.authentication.get().attributes.roles.size() == 2
+        response.authentication.get().attributes.roles.contains("Scientists")
+        response.authentication.get().attributes.roles.contains("Mathematicians")
 
         cleanup:
         ctx.close()
@@ -78,8 +81,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         then:
         response.authenticated
-        ((UserDetails) response).username == "riemann"
-        ((UserDetails) response).roles.empty
+        response.authentication.isPresent()
+        response.authentication.get().name == "riemann"
+        !response.authentication.get().attributes.roles
 
         cleanup:
         ctx.close()
@@ -103,8 +107,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         then:
         response.authenticated
-        ((UserDetails) response).username == "riemann"
-        ((UserDetails) response).roles.empty
+        response.authentication.isPresent()
+        response.authentication.get().name == "riemann"
+        !response.authentication.get().attributes.roles
 
         cleanup:
         ctx.close()
@@ -132,19 +137,19 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         then:
         response.authenticated
-        ((UserDetails) response).username == "euclid"
-        ((UserDetails) response).roles.size() == 1
-        ((UserDetails) response).roles.contains("users")
+        response.authentication.get().name == "euclid"
+        response.authentication.get().attributes.roles.size() == 1
+        response.authentication.get().attributes.roles.contains("users")
 
         when:
         response = authenticate(authenticationProvider,"gauss")
 
         then:
         response.authenticated
-        ((UserDetails) response).username == "gauss"
-        ((UserDetails) response).roles.size() == 2
-        ((UserDetails) response).roles.contains("users")
-        ((UserDetails) response).roles.contains("admins")
+        response.authentication.get().name == "gauss"
+        response.authentication.get().attributes.roles.size() == 2
+        response.authentication.get().attributes.roles.contains("users")
+        response.authentication.get().attributes.roles.contains("admins")
 
         cleanup:
         ctx.close()
@@ -153,9 +158,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
     void "test authenticating with a username that doesn't exist"() {
         given:
-        def s = createServer("basic.ldif")
+        InMemoryDirectoryServer s = createServer("basic.ldif")
         s.startListening()
-        def ctx = ApplicationContext.run([
+        ApplicationContext ctx = ApplicationContext.run([
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -163,7 +168,7 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
                 'micronaut.security.ldap.default.search.base': "dc=example,dc=com",
                 'micronaut.security.ldap.default.groups.enabled': true,
                 'micronaut.security.ldap.default.groups.base': "dc=example,dc=com",
-        ], "test")
+        ])
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
 
         expect:
@@ -178,9 +183,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
     void "test authenticating with an invalid password"() {
         given:
-        def s = createServer("basic.ldif")
+        InMemoryDirectoryServer s = createServer("basic.ldif")
         s.startListening()
-        def ctx = ApplicationContext.run([
+        ApplicationContext ctx = ApplicationContext.run([
                 'micronaut.security.ldap.default.enabled': true,
                 'micronaut.security.ldap.default.context.server': "ldap://localhost:${s.listenPort}",
                 'micronaut.security.ldap.default.context.managerDn': "cn=admin,dc=example,dc=com",
@@ -188,7 +193,7 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
                 'micronaut.security.ldap.default.search.base': "dc=example,dc=com",
                 'micronaut.security.ldap.default.groups.enabled': true,
                 'micronaut.security.ldap.default.groups.base': "dc=example,dc=com",
-        ], "test")
+        ])
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
 
         expect:
@@ -231,10 +236,11 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         then:
         response.authenticated
-        ((UserDetails) response).username == "gauss"
-        ((UserDetails) response).roles.size() == 2
-        ((UserDetails) response).roles.contains("users")
-        ((UserDetails) response).roles.contains("admins")
+        response.authentication.get().name == "gauss"
+        response.authentication.get().attributes.roles
+        response.authentication.get().attributes.roles.size() == 2
+        response.authentication.get().attributes.roles.contains("users")
+        response.authentication.get().attributes.roles.contains("admins")
 
         when:
         authenticationProvider = ctx.getBean(LdapAuthenticationProvider, Qualifiers.byName('basic'))
@@ -242,10 +248,11 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
 
         then:
         response.authenticated
-        ((UserDetails) response).username == "gauss"
-        ((UserDetails) response).roles.size() == 2
-        ((UserDetails) response).roles.contains("Scientists")
-        ((UserDetails) response).roles.contains("Mathematicians")
+        response.authentication.get().name == "gauss"
+        response.authentication.get().attributes.roles
+        response.authentication.get().attributes.roles.size() == 2
+        response.authentication.get().attributes.roles.contains("Scientists")
+        response.authentication.get().attributes.roles.contains("Mathematicians")
 
         cleanup:
         ctx.close()

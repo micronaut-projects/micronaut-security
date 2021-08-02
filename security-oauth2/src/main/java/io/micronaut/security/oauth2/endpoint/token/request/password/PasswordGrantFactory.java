@@ -23,9 +23,9 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 
@@ -53,10 +53,10 @@ class PasswordGrantFactory {
      *
      * @param clientConfiguration The client configuration
      * @param userDetailsMapper The OAuth 2.0 user details mapper
-     * @param openIdUserDetailsMapper The client specific OpenID user details mapper
+     * @param openIdAuthenticationMapper The client specific OpenID user details mapper
      * @param openIdProviderMetadata The OpenID provider metadata
      * @param tokenEndpointClient The token endpoint client
-     * @param defaultOpenIdUserDetailsMapper The default OpenID user details mapper
+     * @param defaultOpenIdAuthenticationMapper The default OpenID user details mapper
      * @param tokenResponseValidator The OpenID token response validator
      * @return The authentication provider
      */
@@ -65,19 +65,19 @@ class PasswordGrantFactory {
     AuthenticationProvider passwordGrantProvider(
             @Parameter OauthClientConfiguration clientConfiguration,
             @Parameter @Nullable OauthUserDetailsMapper userDetailsMapper,
-            @Parameter @Nullable OpenIdUserDetailsMapper openIdUserDetailsMapper,
+            @Parameter @Nullable OpenIdAuthenticationMapper openIdAuthenticationMapper,
             @Parameter @Nullable OpenIdProviderMetadata openIdProviderMetadata,
             TokenEndpointClient tokenEndpointClient,
-            @Nullable DefaultOpenIdUserDetailsMapper defaultOpenIdUserDetailsMapper,
+            @Nullable DefaultOpenIdAuthenticationMapper defaultOpenIdAuthenticationMapper,
             @Nullable OpenIdTokenResponseValidator tokenResponseValidator) {
 
         if (clientConfiguration.getToken().isPresent()) {
             return new OauthPasswordAuthenticationProvider(tokenEndpointClient, clientConfiguration, userDetailsMapper);
         } else {
-            if (openIdUserDetailsMapper == null) {
-                openIdUserDetailsMapper = defaultOpenIdUserDetailsMapper;
+            if (openIdAuthenticationMapper == null) {
+                openIdAuthenticationMapper = defaultOpenIdAuthenticationMapper;
             }
-            return new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdUserDetailsMapper, tokenResponseValidator);
+            return new OpenIdPasswordAuthenticationProvider(clientConfiguration, openIdProviderMetadata, tokenEndpointClient, openIdAuthenticationMapper, tokenResponseValidator);
         }
     }
 }

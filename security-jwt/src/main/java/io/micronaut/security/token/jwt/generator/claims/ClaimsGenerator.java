@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.generator.claims;
 
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 
 import java.util.Map;
 
@@ -28,11 +28,11 @@ public interface ClaimsGenerator {
 
     /**
      *
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @param expiration JWT token expiration time in seconds
      * @return The Claims
      */
-    Map<String, Object> generateClaims(UserDetails userDetails, Integer expiration);
+    Map<String, Object> generateClaims(Authentication authentication, Integer expiration);
 
     /**
      * Generate a claims set based on claims.

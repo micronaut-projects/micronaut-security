@@ -2,10 +2,11 @@ package io.micronaut.security.oauth2.docs.github
 
 //tag::clazz[]
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
+import io.micronaut.security.token.config.TokenConfiguration
 import org.reactivestreams.Publisher
 import jakarta.inject.Named
 import jakarta.inject.Singleton
@@ -13,13 +14,13 @@ import reactor.core.publisher.Flux
 
 @Named("github") // <1>
 @Singleton
-internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) // <2>
+internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient, private val tokenConfiguration: TokenConfiguration) // <2>
     : OauthUserDetailsMapper {
 
     override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher<AuthenticationResponse> { // <3>
         return Flux.from(apiClient.getUser("token " + tokenResponse.accessToken))
                 .map { user ->
-                    UserDetails(user.login, listOf("ROLE_GITHUB")) // <4>
+                    AuthenticationResponse.build(user.login, listOf("ROLE_GITHUB"), tokenConfiguration) // <4>
                 }
     }
 }

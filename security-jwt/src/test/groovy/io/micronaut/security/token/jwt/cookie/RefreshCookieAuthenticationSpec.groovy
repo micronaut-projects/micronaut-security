@@ -10,7 +10,7 @@ import io.micronaut.http.MutableHttpRequest
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
@@ -119,15 +119,15 @@ class RefreshCookieAuthenticationSpec extends Specification {
     @Singleton
     static class TestRefreshTokenPersistence implements RefreshTokenPersistence {
 
-        Map<String, UserDetails> tokens = [:]
+        Map<String, Authentication> tokens = [:]
 
         @Override
         void persistToken(RefreshTokenGeneratedEvent event) {
-            tokens.put(event.getRefreshToken(), event.getUserDetails())
+            tokens.put(event.getRefreshToken(), event.getAuthentication())
         }
 
         @Override
-        Publisher<UserDetails> getUserDetails(String refreshToken) {
+        Publisher<Authentication> getAuthentication(String refreshToken) {
             Publishers.just(tokens.get(refreshToken))
         }
     }

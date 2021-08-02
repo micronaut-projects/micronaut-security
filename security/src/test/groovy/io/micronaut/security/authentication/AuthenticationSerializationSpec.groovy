@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.core.serialize.JdkSerializer
 import io.micronaut.jackson.serialize.JacksonObjectSerializer
 import io.micronaut.security.authentication.jackson.SecurityJacksonModule
+import io.micronaut.security.token.config.TokenConfiguration
 import spock.lang.Specification
 
 class AuthenticationSerializationSpec extends Specification {
@@ -12,8 +13,8 @@ class AuthenticationSerializationSpec extends Specification {
         JdkSerializer serializer = new JdkSerializer()
 
         when:
-        UserDetails userDetails = new UserDetails("john", ["X", "Y"], [attr1: 1, attr2: 2])
-        byte[] data = serializer.serialize(new AuthenticationUserDetailsAdapter(userDetails, "roles", "username")).get()
+        Authentication authentication = Authentication.build("john", ["X", "Y"], [attr1: 1, attr2: 2], new TokenConfiguration() {})
+        byte[] data = serializer.serialize(authentication).get()
         Authentication deserialized = serializer.deserialize(data, Authentication).get()
 
         then:
@@ -39,8 +40,8 @@ class AuthenticationSerializationSpec extends Specification {
         JacksonObjectSerializer serializer = new JacksonObjectSerializer(objectMapper)
 
         when:
-        UserDetails userDetails = new UserDetails("john", ["X", "Y"], [attr1: 1, attr2: 2])
-        byte[] data = serializer.serialize(new AuthenticationUserDetailsAdapter(userDetails, "roles", "username")).get()
+        Authentication authentication = Authentication.build("john", ["X", "Y"], [attr1: 1, attr2: 2], new TokenConfiguration() {})
+        byte[] data = serializer.serialize(authentication).get()
         Authentication deserialized = serializer.deserialize(data, Authentication).get()
 
         then:

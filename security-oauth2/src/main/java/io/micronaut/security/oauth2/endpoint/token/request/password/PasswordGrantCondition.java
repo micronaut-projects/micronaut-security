@@ -26,9 +26,9 @@ import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.grants.GrantType;
 
@@ -69,9 +69,9 @@ public class PasswordGrantCondition implements Condition {
                                 boolean hasTokenResponseValidator = beanContext.containsBean(OpenIdTokenResponseValidator.class);
                                 if (hasOpenIdProviderMetadata && hasTokenResponseValidator) {
 
-                                    boolean hasUserDetailsMapper = beanContext.containsBean(OpenIdUserDetailsMapper.class, Qualifiers.byName(name));
+                                    boolean hasUserDetailsMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(name));
                                     if (!hasUserDetailsMapper) {
-                                        hasUserDetailsMapper = beanContext.containsBean(DefaultOpenIdUserDetailsMapper.class);
+                                        hasUserDetailsMapper = beanContext.containsBean(DefaultOpenIdAuthenticationMapper.class);
                                     }
                                     if (hasUserDetailsMapper) {
                                         return true;

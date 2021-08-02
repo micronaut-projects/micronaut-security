@@ -9,7 +9,7 @@ import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.handlers.LoginHandler
 import spock.lang.Unroll
@@ -63,12 +63,12 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
     static class CustomLoginHandler implements LoginHandler {
 
         @Override
-        MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+        MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {
             HttpResponse.ok()
         }
 
         @Override
-        MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        MutableHttpResponse<?> loginRefresh(Authentication authentication, String refreshToken, HttpRequest<?> request) {
             throw new UnsupportedOperationException()
         }
 

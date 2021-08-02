@@ -28,8 +28,8 @@ import io.micronaut.core.annotation.NonNull;
  * @author James Kleeh
  * @since 1.2.0
  */
-@DefaultImplementation(DefaultOpenIdUserDetailsMapper.class)
-public interface OpenIdUserDetailsMapper {
+@DefaultImplementation(DefaultOpenIdAuthenticationMapper.class)
+public interface OpenIdAuthenticationMapper {
 
     String OPENID_TOKEN_KEY = "openIdToken";
 

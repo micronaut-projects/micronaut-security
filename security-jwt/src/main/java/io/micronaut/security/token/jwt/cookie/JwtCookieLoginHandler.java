@@ -20,7 +20,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.errors.OauthErrorResponseException;
@@ -69,16 +69,16 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
     }
 
     @Override
-    public List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request) {
-        AccessRefreshToken accessRefreshToken = accessRefreshTokenGenerator.generate(userDetails)
+    public List<Cookie> getCookies(Authentication authentication, HttpRequest<?> request) {
+        AccessRefreshToken accessRefreshToken = accessRefreshTokenGenerator.generate(authentication)
                 .orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
 
         return getCookies(accessRefreshToken, request);
     }
 
     @Override
-    public List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
-        AccessRefreshToken accessRefreshToken = accessRefreshTokenGenerator.generate(refreshToken, userDetails)
+    public List<Cookie> getCookies(Authentication authentication, String refreshToken, HttpRequest<?> request) {
+        AccessRefreshToken accessRefreshToken = accessRefreshTokenGenerator.generate(refreshToken, authentication)
                 .orElseThrow(() -> new OauthErrorResponseException(ObtainingAuthorizationErrorCode.SERVER_ERROR, "Cannot obtain an access token", null));
 
         return getCookies(accessRefreshToken, request);

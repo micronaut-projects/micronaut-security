@@ -28,7 +28,7 @@ public class LoginSuccessfulEvent extends ApplicationEvent {
     /**
      * Event triggered when a successful login takes place.
      *
-     * @param source the {@link io.micronaut.security.authentication.UserDetails} of the person logging in.
+     * @param source the {@link io.micronaut.security.authentication.Authentication} of the person logging in.
      * @throws IllegalArgumentException if source is null.
      */
     public LoginSuccessfulEvent(Object source) {

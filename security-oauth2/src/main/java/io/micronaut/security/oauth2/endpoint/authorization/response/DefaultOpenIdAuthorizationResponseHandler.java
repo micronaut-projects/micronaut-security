@@ -29,11 +29,11 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import reactor.core.publisher.FluxSink;
@@ -59,25 +59,25 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdAuthorizationResponseHandler.class);
 
     private final OpenIdTokenResponseValidator tokenResponseValidator;
-    private final OpenIdUserDetailsMapper defaultUserDetailsMapper;
+    private final OpenIdAuthenticationMapper defaultAuthenticationMapper;
     private final TokenEndpointClient tokenEndpointClient;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
     private final @Nullable StateValidator stateValidator;
 
     /**
      * @param tokenResponseValidator The token response validator
-     * @param userDetailsMapper The user details mapper
+     * @param authenticationMapper Authentication Mapper
      * @param tokenEndpointClient The token endpoint client
      * @param oauthRouteUrlBuilder The oauth route url builder
      * @param stateValidator The state validator
      */
     public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
-                                                     DefaultOpenIdUserDetailsMapper userDetailsMapper,
+                                                     DefaultOpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,
                                                      OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                                      @Nullable StateValidator stateValidator) {
         this.tokenResponseValidator = tokenResponseValidator;
-        this.defaultUserDetailsMapper = userDetailsMapper;
+        this.defaultAuthenticationMapper = authenticationMapper;
         this.tokenEndpointClient = tokenEndpointClient;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateValidator = stateValidator;
@@ -88,7 +88,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
             OpenIdAuthorizationResponse authorizationResponse,
             OauthClientConfiguration clientConfiguration,
             OpenIdProviderMetadata openIdProviderMetadata,
-            @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+            @Nullable OpenIdAuthenticationMapper userDetailsMapper,
             SecureEndpoint tokenEndpoint) {
         try {
             validateState(authorizationResponse, clientConfiguration);
@@ -152,7 +152,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                                                                             OauthClientConfiguration clientConfiguration,
                                                                             OpenIdProviderMetadata openIdProviderMetadata,
                                                                             OpenIdTokenResponse openIdTokenResponse,
-                                                                            @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                                                                            @Nullable OpenIdAuthenticationMapper userDetailsMapper,
                                                                             @Nullable State state) {
         return Flux.create(emitter -> {
             try {
@@ -193,7 +193,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                                                                            OauthClientConfiguration clientConfiguration,
                                                                            OpenIdProviderMetadata openIdProviderMetadata,
                                                                            OpenIdTokenResponse openIdTokenResponse,
-                                                                           @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                                                                           @Nullable OpenIdAuthenticationMapper userDetailsMapper,
                                                                            @Nullable State state) throws ParseException {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Token endpoint returned a success response. Validating the JWT");
@@ -204,7 +204,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
                 LOG.trace("Token validation succeeded. Creating a user details");
             }
             OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-            OpenIdUserDetailsMapper openIdUserDetailsMapper = userDetailsMapper != null ? userDetailsMapper : defaultUserDetailsMapper;
+            OpenIdAuthenticationMapper openIdUserDetailsMapper = userDetailsMapper != null ? userDetailsMapper : defaultAuthenticationMapper;
             return Optional.of(openIdUserDetailsMapper.createAuthenticationResponse(clientConfiguration.getName(), openIdTokenResponse, claims, state));
         }
         return Optional.empty();

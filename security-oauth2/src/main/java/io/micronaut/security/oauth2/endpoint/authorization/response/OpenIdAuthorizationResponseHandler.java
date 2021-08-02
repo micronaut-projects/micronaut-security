@@ -19,7 +19,7 @@ import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import org.reactivestreams.Publisher;
 
@@ -49,6 +49,6 @@ public interface OpenIdAuthorizationResponseHandler {
     Publisher<AuthenticationResponse> handle(OpenIdAuthorizationResponse authorizationResponse,
                                              OauthClientConfiguration clientConfiguration,
                                              OpenIdProviderMetadata openIdProviderMetadata,
-                                             @Nullable OpenIdUserDetailsMapper userDetailsMapper,
+                                             @Nullable OpenIdAuthenticationMapper userDetailsMapper,
                                              SecureEndpoint tokenEndpoint);
 }

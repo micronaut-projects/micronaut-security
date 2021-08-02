@@ -17,8 +17,9 @@ package io.micronaut.configuration.security.ldap;
 
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 
+import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Singleton;
 import java.util.Set;
 
@@ -32,8 +33,14 @@ import java.util.Set;
 @Singleton
 public class DefaultContextAuthenticationMapper implements ContextAuthenticationMapper {
 
+    private final TokenConfiguration tokenConfiguration;
+
+    public DefaultContextAuthenticationMapper(TokenConfiguration tokenConfiguration) {
+        this.tokenConfiguration = tokenConfiguration;
+    }
+
     @Override
     public AuthenticationResponse map(ConvertibleValues<Object> attributes, String username, Set<String> groups) {
-        return new UserDetails(username, groups);
+        return AuthenticationResponse.build(username, groups, tokenConfiguration);
     }
 }
