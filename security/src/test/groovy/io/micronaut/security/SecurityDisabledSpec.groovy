@@ -4,7 +4,12 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.authentication.*
+import io.micronaut.security.authentication.AuthenticationArgumentBinder
+import io.micronaut.security.authentication.AuthenticationExceptionHandler
+import io.micronaut.security.authentication.BasicAuthAuthenticationConfiguration
+import io.micronaut.security.authentication.BasicAuthAuthenticationFetcher
+import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler
+import io.micronaut.security.authentication.PrincipalArgumentBinder
 import io.micronaut.security.config.InterceptUrlMapConverter
 import io.micronaut.security.config.SecurityConfigurationProperties
 import io.micronaut.security.endpoints.LoginController
@@ -27,8 +32,6 @@ import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import java.net.Authenticator
 
 class SecurityDisabledSpec extends Specification {
 
