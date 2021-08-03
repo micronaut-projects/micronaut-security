@@ -11,7 +11,7 @@ dependencies {
     testImplementation project(":security-oauth2")
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.20"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21"
     testImplementation "io.projectreactor:reactor-core"
 }
 
