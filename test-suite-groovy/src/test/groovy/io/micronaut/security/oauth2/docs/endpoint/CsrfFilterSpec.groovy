@@ -10,7 +10,6 @@ import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
-import io.micronaut.security.token.config.TokenConfiguration
 import reactor.core.publisher.FluxSink
 import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
@@ -54,15 +53,10 @@ class CsrfFilterSpec extends EmbeddedServerSpecification {
     @Requires(property = "spec.name", value = "CsrfFilterSpec")
     static class TwitterAuthenticationMapper implements OauthAuthenticationMapper {
 
-        private final TokenConfiguration tokenConfiguration
-        TwitterAuthenticationMapper(TokenConfiguration tokenConfiguration) {
-            this.tokenConfiguration = tokenConfiguration
-        }
-
         @Override
         Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) {
             Flux.create({ emitter ->
-                emitter.next(AuthenticationResponse.build("twitterUser", tokenConfiguration))
+                emitter.next(AuthenticationResponse.success("twitterUser"))
                 emitter.complete()
             }, FluxSink.OverflowStrategy.ERROR)
         }

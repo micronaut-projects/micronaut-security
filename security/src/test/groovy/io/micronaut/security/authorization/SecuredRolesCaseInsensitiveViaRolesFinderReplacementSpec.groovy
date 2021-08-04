@@ -43,12 +43,13 @@ class SecuredRolesCaseInsensitiveViaRolesFinderReplacementSpec extends EmbeddedS
     @Singleton
     @Replaces(DefaultRolesFinder)
     static class RolesFinderReplacement extends DefaultRolesFinder {
+
         RolesFinderReplacement(TokenConfiguration tokenConfiguration) {
             super(tokenConfiguration)
         }
 
         @Override
-        boolean hasAnyRequiredRoles(@NonNull List<String> requiredRoles, @NonNull List<String> grantedRoles) {
+        boolean hasAnyRequiredRoles(@NonNull List<String> requiredRoles, @NonNull Collection<String> grantedRoles) {
             for (String role : requiredRoles) {
                 if (grantedRoles.stream().anyMatch(grantedRole -> grantedRole.equalsIgnoreCase(role))) {
                     return true;

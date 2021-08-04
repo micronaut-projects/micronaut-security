@@ -2,6 +2,7 @@ package io.micronaut.security.rules
 
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.token.DefaultRolesFinder
 import io.micronaut.security.token.config.TokenConfiguration
@@ -22,7 +23,7 @@ class InterceptUrlMapRuleSpec extends Specification {
         }
 
         expect:
-        rule.check(HttpRequest.GET(uri), null, [roles: ["ROLE_ADMIN"]]) == expectedResult
+        rule.check(HttpRequest.GET(uri), null, Authentication.build("john", ["ROLE_ADMIN"])) == expectedResult
 
         where:
         uri             || expectedResult

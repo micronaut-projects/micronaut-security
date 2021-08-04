@@ -11,24 +11,16 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Singleton;
-import java.util.Collections;
 
 @Singleton
 @Replaces(DefaultOpenIdAuthenticationMapper.class)
 public class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
 
-    private final TokenConfiguration tokenConfiguration;
-
-    public GlobalOpenIdAuthenticationMapper(TokenConfiguration tokenConfiguration) {
-        this.tokenConfiguration = tokenConfiguration;
-    }
-
     @Override
     @NonNull
     public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        return AuthenticationResponse.build("name", tokenConfiguration);
+        return AuthenticationResponse.success("name");
     }
 }
 //end::clazz[]

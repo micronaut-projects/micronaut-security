@@ -171,7 +171,11 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param authentication Authenticated user's representation.
      */
     protected void populateWithAuthentication(JWTClaimsSet.Builder builder, Authentication authentication) {
+        populateSub(builder, authentication);
         authentication.getAttributes().forEach(builder::claim);
+        String rolesKey = tokenConfiguration.getRolesName();
+        builder.claim("rolesKey", rolesKey);
+        builder.claim(rolesKey, authentication.getRoles());
     }
 
     /**

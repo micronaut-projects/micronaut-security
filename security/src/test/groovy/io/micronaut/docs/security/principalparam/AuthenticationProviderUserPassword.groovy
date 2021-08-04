@@ -7,8 +7,6 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.token.config.TokenConfiguration
 import reactor.core.publisher.FluxSink
 import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
@@ -20,19 +18,13 @@ import jakarta.inject.Singleton
 @Requires(property = "spec.name", value = "principalparam")
 //tag::clazz[]
 @Singleton
-public class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-    private final TokenConfiguration tokenConfiguration;
-
-    public AuthenticationProviderUserPassword(TokenConfiguration tokenConfiguration) {
-        this.tokenConfiguration = tokenConfiguration;
-    }
+class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flux.create({emitter ->
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
-                emitter.next(AuthenticationResponse.build("user", tokenConfiguration))
+                emitter.next(AuthenticationResponse.success("user"))
                 emitter.complete()
             } else {
                 emitter.error(new AuthenticationException(new AuthenticationFailed()))

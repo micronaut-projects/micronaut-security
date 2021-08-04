@@ -8,16 +8,15 @@ import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthent
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
-import io.micronaut.security.token.config.TokenConfiguration
 
 import jakarta.inject.Singleton
 
 @Singleton
 @Replaces(DefaultOpenIdAuthenticationMapper::class)
-class GlobalOpenIdAuthenticationMapper(private val tokenConfiguration: TokenConfiguration) : OpenIdAuthenticationMapper {
+class GlobalOpenIdAuthenticationMapper : OpenIdAuthenticationMapper {
 
     override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): AuthenticationResponse {
-        return AuthenticationResponse.build("name", tokenConfiguration)
+        return AuthenticationResponse.success("name")
     }
 }
 //end::clazz[]

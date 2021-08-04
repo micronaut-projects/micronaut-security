@@ -1,5 +1,7 @@
 package io.micronaut.security.oauth2.docs.managementendpoints
 
+import io.micronaut.security.authentication.Authentication
+
 //tag::imports[]
 import jakarta.inject.Singleton
 import io.micronaut.context.annotation.Replaces
@@ -22,7 +24,7 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     private final RolesFinder rolesFinder;
 
     SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor,
-                                            RolesFinder rolesFinder) {
+                                     RolesFinder rolesFinder) {
         super(endpointSensitivityProcessor)
         this.rolesFinder = rolesFinder
     }
@@ -30,9 +32,9 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     @Override
     @NonNull
     protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
-                                                             @NonNull Map<String, Object> claims,
+                                                             @NonNull Authentication authentication,
                                                              @NonNull ExecutableMethod<?, ?> method) {
-        rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], new MapClaims(claims))
+        rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication.getRoles())
                 ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.utils
+package io.micronaut.security.token.jwt.roles
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
@@ -22,11 +22,15 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.security.MockAuthenticationProvider
-import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.utils.SecurityService
 import jakarta.inject.Singleton
 
 class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
@@ -39,25 +43,20 @@ class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
+            'micronaut.security.authentication': 'bearer',
             'micronaut.security.token.roles-name' : 'customRoles',
         ]
     }
 
     void "verify SecurityService.isCurrentUserInRole() with custom roleKey"() {
         when:
-        Boolean hasRole = client.retrieve(rolesRequest('ROLE_USER', "user2", "password"), Boolean)
+        Boolean hasRole = rolesRequest('ROLE_USER', "user2", "password")
 
         then:
         hasRole
 
         when:
-        hasRole = client.retrieve(rolesRequest('ROLE_ADMIN', "user2", "password"), Boolean)
-
-        then:
-        !hasRole
-
-        when:
-        hasRole = client.retrieve(rolesRequest('ROLE_USER', "user3", "password"), Boolean)
+        hasRole = rolesRequest('ROLE_ADMIN', "user2", "password")
 
         then:
         !hasRole
@@ -68,8 +67,7 @@ class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
     static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
 
         AuthenticationProviderUserPassword() {
-            super([new SuccessAuthenticationScenario('user2', [], [customRoles: ['ROLE_USER']]),
-                   new SuccessAuthenticationScenario('user3', [], [otherCustomRoles: ['ROLE_USER']])])
+            super([new SuccessAuthenticationScenario('user2', ['ROLE_USER'])])
         }
     }
 
@@ -86,13 +84,18 @@ class SecurityServiceCustomRolesKeySpec extends EmbeddedServerSpecification {
         @Produces(MediaType.TEXT_PLAIN)
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Get("/roles{?role}")
-        Boolean roles(@Nullable String role) {
+        Boolean roles(@Nullable String role, Authentication authentication) {
+            assert authentication.getAttributes().containsKey("customRoles")
+            assert !authentication.getAttributes().containsKey("roles")
             securityService.hasRole(role)
         }
     }
 
-    private HttpRequest rolesRequest(String role, String username, String password) {
-        HttpRequest.GET("/securityservicecustomroleskey/roles?role=" + role)
-                .basicAuth(username, password)
+    private Boolean rolesRequest(String role, String username, String password) {
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials(username, password)
+        BearerAccessRefreshToken loginRsp = client.retrieve(HttpRequest.POST('/login', creds), BearerAccessRefreshToken)
+
+        client.retrieve(HttpRequest.GET("/securityservicecustomroleskey/roles?role=" + role)
+                .bearerAuth(loginRsp.accessToken), Boolean)
     }
 }

@@ -116,16 +116,10 @@ class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
     @Requires(property = "spec.name", value = "OpenIdAuthorizationRedirectSpec")
     @Requires(property = "micronaut.security.oauth2.clients.twitter")
     static class TwitterAuthenticationMapper implements OauthAuthenticationMapper {
-        private final TokenConfiguration tokenConfiguration
-
-        TwitterAuthenticationMapper(TokenConfiguration tokenConfiguration) {
-            this.tokenConfiguration = tokenConfiguration
-        }
-
         @Override
         Publisher<Authentication> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
             Flux.create({ emitter ->
-                emitter.next(Authentication.build("twitterUser", tokenConfiguration))
+                emitter.next(Authentication.build("twitterUser"))
                 emitter.complete()
             }, FluxSink.OverflowStrategy.ERROR)
         }

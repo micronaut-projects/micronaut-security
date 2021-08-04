@@ -1,4 +1,4 @@
-package io.micronaut.security.token.jwt.customclaimsrolesparser
+package io.micronaut.security.token.jwt.roles
 
 import groovy.transform.CompileStatic
 import io.micronaut.context.annotation.Replaces
@@ -22,8 +22,6 @@ class CustomRolesParser implements RolesFinder {
 
     @Override
     List<String> findInClaims(@NonNull Claims claims) {
-
-
         if (claims[REALM_ACCESS_KEY]) {
             if (claims[REALM_ACCESS_KEY] && claims[REALM_ACCESS_KEY] instanceof Map) {
                 Map realAccessMap = (Map) claims[REALM_ACCESS_KEY]
@@ -32,11 +30,13 @@ class CustomRolesParser implements RolesFinder {
         }
     }
 
+    @NonNull
     @Override
     List<String> resolveRoles(@NonNull Authentication authentication) {
         resolveRoles(authentication.attributes)
     }
 
+    @NonNull
     @Override
     List<String> resolveRoles(@Nullable Map<String, Object> attributes) {
         List<String> roles = []

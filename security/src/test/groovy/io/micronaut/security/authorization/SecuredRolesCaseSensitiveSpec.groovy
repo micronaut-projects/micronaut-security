@@ -12,7 +12,7 @@ import io.micronaut.security.MockAuthenticationProvider
 import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.DefaultAuthentication
+import io.micronaut.security.authentication.ClientAuthentication
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.token.RolesFinder
 import io.micronaut.security.utils.DefaultSecurityService
@@ -45,7 +45,7 @@ class SecuredRolesCaseSensitiveSpec extends EmbeddedServerSpecification {
 
     void "SecurityService::hasRole should be case sensitive"() {
         when:
-        Authentication authentication = new DefaultAuthentication("sherlock", ["roles": ["ROLE_DETECTIVE"]])
+        Authentication authentication = new ClientAuthentication("sherlock", ["roles": ["ROLE_DETECTIVE"], "rolesKey": "roles"])
         SecurityService securityService = new CustomSecurityService(applicationContext.getBean(RolesFinder), authentication)
 
         then:
@@ -55,7 +55,7 @@ class SecuredRolesCaseSensitiveSpec extends EmbeddedServerSpecification {
         !securityService.hasRole('role_detective')
 
         when:
-        authentication = new DefaultAuthentication("sherlock", ["roles": "ROLE_DETECTIVE"])
+        authentication = new ClientAuthentication("sherlock", ["roles": "ROLE_DETECTIVE", "rolesKey": "roles"])
         securityService = new CustomSecurityService(applicationContext.getBean(RolesFinder), authentication)
 
         then:

@@ -7,6 +7,7 @@ import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.security.rules.SensitiveEndpointRule;
 import io.micronaut.security.token.MapClaims;
@@ -32,9 +33,9 @@ public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     @Override
     @NonNull
     protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
-                                                             @NonNull Map<String, Object> claims,
+                                                             @NonNull Authentication authentication,
                                                              @NonNull ExecutableMethod<?, ?> method) {
-        return rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), new MapClaims(claims))
+        return rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), authentication.getRoles())
                     ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED;
     }
 }

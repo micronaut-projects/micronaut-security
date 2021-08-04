@@ -20,6 +20,8 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +50,7 @@ public interface RolesFinder {
      * @return true if any of the Authentication's roles is in the required roles list.
      */
     default boolean hasAnyRequiredRoles(@NonNull List<String> requiredRoles, @NonNull Authentication authentication) {
-        return hasAnyRequiredRoles(requiredRoles, new MapClaims(authentication.getAttributes()));
+        return hasAnyRequiredRoles(requiredRoles, authentication.getRoles());
     }
 
     /**
@@ -67,7 +69,7 @@ public interface RolesFinder {
      * @param grantedRoles The list of roles granted to the user
      * @return true if any of the granted roles is in the required roles list.
      */
-    default boolean hasAnyRequiredRoles(@NonNull List<String> requiredRoles, @NonNull List<String> grantedRoles) {
+    default boolean hasAnyRequiredRoles(@NonNull List<String> requiredRoles, @NonNull Collection<String> grantedRoles) {
         List<String> l = new ArrayList<>(requiredRoles);
         l.retainAll(grantedRoles);
         return !l.isEmpty();

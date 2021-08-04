@@ -17,13 +17,11 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.AuthenticationModeConfiguration;
 import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
@@ -48,20 +46,16 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
 
     private final OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration;
     private final AuthenticationModeConfiguration authenticationModeConfiguration;
-    private final TokenConfiguration tokenConfiguration;
 
     /**
      * Default constructor.
      *  @param openIdAdditionalClaimsConfiguration The additional claims configuration
      * @param authenticationModeConfiguration Authentication Mode Configuration
-     * @param tokenConfiguration Token Configuration
      */
     public DefaultOpenIdAuthenticationMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration,
-                                             AuthenticationModeConfiguration authenticationModeConfiguration,
-                                             TokenConfiguration tokenConfiguration) {
+                                             AuthenticationModeConfiguration authenticationModeConfiguration) {
         this.openIdAdditionalClaimsConfiguration = openIdAdditionalClaimsConfiguration;
         this.authenticationModeConfiguration = authenticationModeConfiguration;
-        this.tokenConfiguration = tokenConfiguration;
     }
 
     @NonNull
@@ -73,7 +67,7 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
         Map<String, Object> claims = buildAttributes(providerName, tokenResponse, openIdClaims);
         List<String> roles = getRoles(providerName, tokenResponse, openIdClaims);
         String username = getUsername(providerName, tokenResponse, openIdClaims);
-        return AuthenticationResponse.build(username, roles, claims, tokenConfiguration);
+        return AuthenticationResponse.success(username, roles, claims);
     }
 
     /**
@@ -103,7 +97,7 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
      * @param providerName The OpenID provider name
      * @param tokenResponse The token response
      * @param openIdClaims The OpenID claims
-     * @return The roles to set in the {@link Authentication}
+     * @return The roles to set in the {@link io.micronaut.security.authentication.Authentication}
      */
     protected List<String> getRoles(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         return Collections.emptyList();
@@ -113,7 +107,7 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
      * @param providerName The OpenID provider name
      * @param tokenResponse The token response
      * @param openIdClaims The OpenID claims
-     * @return The username to set in the {@link Authentication}
+     * @return The username to set in the {{@link io.micronaut.security.authentication.Authentication}
      */
     protected String getUsername(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         return openIdClaims.getSubject();

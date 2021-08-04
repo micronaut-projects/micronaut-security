@@ -13,7 +13,6 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 
 import io.micronaut.core.annotation.NonNull
-import io.micronaut.security.token.config.TokenConfiguration
 import jakarta.inject.Singleton
 
 @Singleton
@@ -23,16 +22,10 @@ import jakarta.inject.Singleton
 //tag::clazz[]
 class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
 
-    private final TokenConfiguration tokenConfiguration
-
-    GlobalOpenIdAuthenticationMapper(TokenConfiguration tokenConfiguration) {
-        this.tokenConfiguration = tokenConfiguration
-    }
-
     @Override
     @NonNull
     AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        AuthenticationResponse.build("name", tokenConfiguration)
+        AuthenticationResponse.success("name")
     }
 }
 //end::clazz[]

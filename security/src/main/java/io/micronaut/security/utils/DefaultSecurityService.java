@@ -31,7 +31,7 @@ import java.util.Optional;
  */
 @Singleton
 public class DefaultSecurityService implements SecurityService {
-    
+
     private final RolesFinder rolesFinder;
 
     /**
@@ -82,7 +82,7 @@ public class DefaultSecurityService implements SecurityService {
     @Override
     public boolean hasRole(String role) {
         return getAuthentication()
-                .map(authentication -> rolesFinder.hasAnyRequiredRoles(Collections.singletonList(role), authentication))
+                .map(authentication -> rolesFinder.hasAnyRequiredRoles(Collections.singletonList(role), authentication.getRoles()))
                 .orElse(false);
     }
 }
