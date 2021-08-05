@@ -59,7 +59,7 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
             Map<String, Object> attributes = claimSet.getClaims();
             return usernameForClaims(claimSet).map(username ->
                     Authentication.build(username,
-                            rolesFinder.findInClaims(new JwtClaimsSetAdapter(claimSet)),
+                            rolesFinder.resolveRoles(attributes),
                             attributes));
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
