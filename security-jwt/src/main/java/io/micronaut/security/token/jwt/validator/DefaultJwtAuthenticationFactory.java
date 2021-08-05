@@ -20,7 +20,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

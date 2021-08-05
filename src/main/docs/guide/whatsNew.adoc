@@ -6,3 +6,4 @@ Micronaut Security includes the following new features and improvements.
 - Consolidated authentication state into a single interface
 - The api:security.rules.SecurityRule[] API is now reactive
 - A `getRoles` method was added to api:security.authentication.Authentication[]
+- New static methods on api:security.authentication.Authentication[] and api:security.authentication.AuthenticationResponse[] have been added to help create authentication related objects

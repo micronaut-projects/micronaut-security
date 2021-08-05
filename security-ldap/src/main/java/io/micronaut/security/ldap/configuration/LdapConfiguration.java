@@ -449,7 +449,7 @@ public class LdapConfiguration implements Toggleable {
         }
 
         /**
-         * The argument to pass to the search filter
+         * The argument to pass to the search filter.
          *
          * @return The name of an attribute in the user
          */
@@ -461,7 +461,7 @@ public class LdapConfiguration implements Toggleable {
          * Sets the name of the user attribute to bind to the
          * group search filter. Defaults to the user's DN.
          *
-         * @param filterArgument The attribute
+         * @param filterAttribute The attribute
          */
         public void setFilterAttribute(String filterAttribute) {
             this.filterAttribute = filterAttribute;
