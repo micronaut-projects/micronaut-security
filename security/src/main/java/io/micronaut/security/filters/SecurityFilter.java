@@ -17,12 +17,13 @@ package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
+import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.management.endpoint.EndpointsFilter;
@@ -53,7 +54,9 @@ import java.util.stream.Collectors;
  */
 @Replaces(EndpointsFilter.class)
 @Filter(Filter.MATCH_ALL_PATTERN)
-public class SecurityFilter extends OncePerRequestHttpServerFilter {
+public class SecurityFilter implements HttpServerFilter {
+
+    public static final String KEY = "io.micronaut.security.filters." + SecurityFilter.class.getSimpleName();
 
     /**
      * The attribute used to store the authentication object in the request.
@@ -101,7 +104,8 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     }
 
     @Override
-    protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
+    public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
+        request.getAttributes().put(KEY, true);
         RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
         return Flux.fromIterable(authenticationFetchers)
                 .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
