@@ -40,6 +40,7 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import java.io.Closeable;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -143,8 +144,15 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
 
                     LdapConfiguration.GroupConfiguration groupSettings = configuration.getGroups();
                     if (groupSettings.isEnabled()) {
-                        groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () ->
-                                ldapSearchService.search(managerContext, groupSettings.getSearchSettings(new Object[]{result.getDn()})));
+                        groups = ldapGroupProcessor.process(groupSettings.getAttribute(), result, () -> {
+                                    Object[] params = new Object[]{
+                                            groupSettings.getFilterAttribute()
+                                                    .map(attr -> result.getAttributes().getValue(attr))
+                                                    .orElse(result.getDn())
+                                    };
+                                    return ldapSearchService.search(managerContext, groupSettings.getSearchSettings(params));
+                                });
+
 
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Group search returned [{}] for user [{}]", groups, username);

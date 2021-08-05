@@ -26,6 +26,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Configuration for LDAP authentication.
@@ -358,6 +359,7 @@ public class LdapConfiguration implements Toggleable {
         private boolean subtree = DEFAULT_SUBTREE;
         private String base = "";
         private String filter = DEFAULT_FILTER;
+        private String filterAttribute;
         private String attribute = DEFAULT_ATTR;
 
         /**
@@ -444,6 +446,25 @@ public class LdapConfiguration implements Toggleable {
          */
         public SearchSettings getSearchSettings(Object[] arguments) {
             return new GroupPropertiesSearchSettings(this, arguments);
+        }
+
+        /**
+         * The argument to pass to the search filter
+         *
+         * @return The name of an attribute in the user
+         */
+        public Optional<String> getFilterAttribute() {
+            return Optional.ofNullable(filterAttribute);
+        }
+
+        /**
+         * Sets the name of the user attribute to bind to the
+         * group search filter. Defaults to the user's DN.
+         *
+         * @param filterArgument The attribute
+         */
+        public void setFilterAttribute(String filterAttribute) {
+            this.filterAttribute = filterAttribute;
         }
     }
 }
