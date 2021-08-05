@@ -16,7 +16,6 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.security.token.config.TokenConfiguration;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,41 +56,35 @@ public interface AuthenticationResponse extends Serializable {
     /**
      *
      * @param username User's name
-     * @param tokenConfiguration Token configuration
      * @return A successful {@link AuthenticationResponse}
      */
     @NonNull
-    static AuthenticationResponse build(@NonNull String username,
-                                        @NonNull TokenConfiguration tokenConfiguration) {
-        return AuthenticationResponse.build(username, Collections.emptyList(), Collections.emptyMap(), tokenConfiguration);
-    }
-
-    /**
-     *
-     * @param username User's name
-     * @param attributes User's attributes
-     * @param tokenConfiguration Token configuration
-     * @return A successful {@link AuthenticationResponse}
-     */
-    @NonNull
-    static AuthenticationResponse build(@NonNull String username,
-                                        @NonNull Map<String, Object> attributes,
-                                        @NonNull TokenConfiguration tokenConfiguration) {
-        return (AuthenticationResponse) () -> Optional.of(Authentication.build(username, attributes, tokenConfiguration));
+    static AuthenticationResponse success(@NonNull String username) {
+        return AuthenticationResponse.success(username, Collections.emptyList(), Collections.emptyMap());
     }
 
     /**
      *
      * @param username User's name
      * @param roles Users's roles
-     * @param tokenConfiguration Token configuration
      * @return A successful {@link AuthenticationResponse}
      */
     @NonNull
-    static AuthenticationResponse build(@NonNull String username,
-                                        @NonNull Collection<String> roles,
-                                        @NonNull TokenConfiguration tokenConfiguration) {
-        return AuthenticationResponse.build(username, roles, Collections.emptyMap(), tokenConfiguration);
+    static AuthenticationResponse success(@NonNull String username,
+                                          @NonNull Collection<String> roles) {
+        return AuthenticationResponse.success(username, roles, Collections.emptyMap());
+    }
+
+    /**
+     *
+     * @param username User's name
+     * @param attributes User's attributes
+     * @return A successful {@link AuthenticationResponse}
+     */
+    @NonNull
+    static AuthenticationResponse success(@NonNull String username,
+                                          @NonNull Map<String, Object> attributes) {
+        return () -> Optional.of(Authentication.build(username, Collections.emptyList(), attributes));
     }
 
     /**
@@ -99,14 +92,42 @@ public interface AuthenticationResponse extends Serializable {
      * @param username User's name
      * @param roles Users's roles
      * @param attributes User's attributes
-     * @param tokenConfiguration Token configuration
      * @return A successful {@link AuthenticationResponse}
      */
     @NonNull
-    static AuthenticationResponse build(@NonNull String username,
-                                        @NonNull Collection<String> roles,
-                                        @NonNull Map<String, Object> attributes,
-                                        @NonNull TokenConfiguration tokenConfiguration) {
-        return (AuthenticationResponse) () -> Optional.of(Authentication.build(username, roles, attributes, tokenConfiguration));
+    static AuthenticationResponse success(@NonNull String username,
+                                          @NonNull Collection<String> roles,
+                                          @NonNull Map<String, Object> attributes) {
+        return () -> Optional.of(Authentication.build(username, roles, attributes));
+    }
+
+    @NonNull
+    static AuthenticationResponse failure(@NonNull String message) {
+        return new AuthenticationFailed(message);
+    }
+
+    @NonNull
+    static AuthenticationResponse failure(@NonNull AuthenticationFailureReason reason) {
+        return new AuthenticationFailed(reason);
+    }
+
+    @NonNull
+    static AuthenticationResponse failure() {
+        return new AuthenticationFailed();
+    }
+
+    @NonNull
+    static AuthenticationException exception(@NonNull String message) {
+        return new AuthenticationException(new AuthenticationFailed(message));
+    }
+
+    @NonNull
+    static AuthenticationException exception(@NonNull AuthenticationFailureReason reason) {
+        return new AuthenticationException(new AuthenticationFailed(reason));
+    }
+
+    @NonNull
+    static AuthenticationException exception() {
+        return new AuthenticationException(new AuthenticationFailed());
     }
 }

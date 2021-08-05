@@ -1,16 +1,12 @@
 package io.micronaut.security.oauth2.docs.github
 
-import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.async.publisher.Publishers
-import io.micronaut.security.authentication.AuthenticationResponse;
-
 //tag::clazz[]
-import io.micronaut.security.authentication.Authentication
+import io.micronaut.core.annotation.Nullable
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
-import io.micronaut.security.token.config.TokenConfiguration
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Named
@@ -25,19 +21,16 @@ import reactor.core.publisher.Flux
 class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 
     private final GithubApiClient apiClient
-    private final TokenConfiguration tokenConfiguration
 
-    GithubAuthenticationMapper(GithubApiClient apiClient,
-                            TokenConfiguration tokenConfiguration) { // <2>
+    GithubAuthenticationMapper(GithubApiClient apiClient) { // <2>
         this.apiClient = apiClient
-        this.tokenConfiguration = tokenConfiguration
     }
 
     @Override
     Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { // <3>
         Flux.from(apiClient.getUser("token ${tokenResponse.accessToken}"))
             .map({ user ->
-                AuthenticationResponse.build(user.login, ["ROLE_GITHUB"], tokenConfiguration) // <4>
+                AuthenticationResponse.success(user.login, ["ROLE_GITHUB"]) // <4>
             })
     }
 }

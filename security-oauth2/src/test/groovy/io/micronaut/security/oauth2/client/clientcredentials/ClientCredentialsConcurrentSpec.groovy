@@ -126,7 +126,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
         then:
         noExceptionThrown()
         authServer.applicationContext.getBean(TokenController).numberOfRequests == 1
-        
+
         cleanup:
         authServer.applicationContext.getBean(TokenController).numberOfRequests = 0
     }
@@ -158,23 +158,20 @@ class ClientCredentialsConcurrentSpec extends Specification {
     @Requires(property = 'spec.name', value = 'ClientCredentialsConcurrentSpecAuthServer')
     @Controller("/token")
     static class TokenController {
-        private final TokenConfiguration tokenConfiguration
         private final JwtTokenGenerator jwtTokenGenerator
         private final SampleClientConfiguration sampleClientConfiguration
         private final AccessTokenConfiguration accessTokenConfiguration
         private final Integer tokenExpiration
         int numberOfRequests = 0
         boolean down
-        TokenController(TokenConfiguration tokenConfiguration,
-                        JwtTokenGenerator jwtTokenGenerator,
+        TokenController(JwtTokenGenerator jwtTokenGenerator,
                         SampleClientConfiguration sampleClientConfiguration,
                         AccessTokenConfiguration accessTokenConfiguration,
                         @Property(name = 'micronaut.security.token.jwt.generator.access-token.expiration') Integer tokenExpiration) {
-            this.tokenConfiguration = tokenConfiguration
             this.jwtTokenGenerator = jwtTokenGenerator
             this.sampleClientConfiguration = sampleClientConfiguration
             this.accessTokenConfiguration = accessTokenConfiguration
-            this.tokenExpiration = tokenExpiration;
+            this.tokenExpiration = tokenExpiration
         }
 
         @Secured(SecurityRule.IS_ANONYMOUS)
@@ -199,7 +196,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
             TokenResponse tokenResponse = new TokenResponse()
             tokenResponse.tokenType = 'bearer'
             tokenResponse.expiresIn = tokenExpiration
-            Authentication authentication = Authentication.build('john', tokenConfiguration)
+            Authentication authentication = Authentication.build('john')
             tokenResponse.accessToken = jwtTokenGenerator.generateToken(authentication, accessTokenConfiguration.getExpiration()).get()
             HttpResponse.ok(tokenResponse)
         }

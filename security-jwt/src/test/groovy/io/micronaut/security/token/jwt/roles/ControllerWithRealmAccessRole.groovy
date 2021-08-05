@@ -1,4 +1,4 @@
-package io.micronaut.security.token.jwt.customclaimsrolesparser
+package io.micronaut.security.token.jwt.roles
 
 import groovy.transform.CompileStatic
 import io.micronaut.context.annotation.Requires

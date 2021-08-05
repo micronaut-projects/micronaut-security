@@ -1,4 +1,4 @@
-package io.micronaut.security.token.jwt.customclaimsrolesparser
+package io.micronaut.security.token.jwt.roles
 
 import groovy.transform.CompileStatic
 import io.micronaut.context.annotation.Replaces
@@ -20,25 +20,16 @@ class CustomRolesParser implements RolesFinder {
     private static final String REALM_ACCESS_KEY = "realm_access"
     private static final String ROLES_KEY = "roles"
 
-    @Override
-    List<String> findInClaims(@NonNull Claims claims) {
-
-
-        if (claims[REALM_ACCESS_KEY]) {
-            if (claims[REALM_ACCESS_KEY] && claims[REALM_ACCESS_KEY] instanceof Map) {
-                Map realAccessMap = (Map) claims[REALM_ACCESS_KEY]
-                resolveRoles(realAccessMap)
-            }
-        }
-    }
-
-    @Override
-    List<String> resolveRoles(@NonNull Authentication authentication) {
-        resolveRoles(authentication.attributes)
-    }
-
+    @NonNull
     @Override
     List<String> resolveRoles(@Nullable Map<String, Object> attributes) {
+        if (attributes[REALM_ACCESS_KEY]) {
+            if (attributes[REALM_ACCESS_KEY] && attributes[REALM_ACCESS_KEY] instanceof Map) {
+                Map realAccessMap = (Map) attributes[REALM_ACCESS_KEY]
+                return resolveRoles(realAccessMap)
+            }
+        }
+
         List<String> roles = []
         if ( attributes[ROLES_KEY]) {
             Object realAccess = attributes[ROLES_KEY]

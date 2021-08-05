@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.micronaut.core.annotation.TypeHint;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.authentication.DefaultAuthentication;
+import io.micronaut.security.authentication.ClientAuthentication;
 
 import jakarta.inject.Singleton;
 
@@ -41,7 +41,7 @@ public class SecurityJacksonModule extends SimpleModule {
     public SecurityJacksonModule() {
         super("micronaut.security");
         SimpleAbstractTypeResolver resolver = new SimpleAbstractTypeResolver();
-        resolver.addMapping(Authentication.class, DefaultAuthentication.class);
+        resolver.addMapping(Authentication.class, ClientAuthentication.class);
         this._abstractTypes = resolver;
     }
 }

@@ -3,7 +3,6 @@ package io.micronaut.security.token.jwt.generator
 import com.nimbusds.jose.JWSObject
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.testutils.ApplicationContextSpecification
-import io.micronaut.security.token.config.TokenConfiguration
 import spock.lang.Shared
 import spock.lang.Subject
 
@@ -21,7 +20,7 @@ class SignedRefreshTokenGeneratorSpec extends ApplicationContextSpecification {
 
     void "get payload, signit and verify it"() {
         given:
-        Authentication user = Authentication.build("sherlock", new TokenConfiguration() {})
+        Authentication user = Authentication.build("sherlock")
 
         when: 'can generate a payload'
         String payload = jwsRefreshTokenGenerator.createKey(user)

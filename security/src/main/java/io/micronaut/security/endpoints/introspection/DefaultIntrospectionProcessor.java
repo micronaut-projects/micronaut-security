@@ -110,7 +110,8 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      * @return an {@link IntrospectionResponse}
      */
     @NonNull
-    public IntrospectionResponse createIntrospectionResponse(@NonNull Authentication authentication, @NonNull HttpRequest<?> httpRequest) {
+    public IntrospectionResponse createIntrospectionResponse(@NonNull Authentication authentication,
+                                                             @NonNull HttpRequest<?> httpRequest) {
         IntrospectionResponse introspectionResponse = new IntrospectionResponse(true);
         List<String> processedAttributeNames = populateFields(authentication, introspectionResponse);
         Map<String, Object> extensions = new HashMap<>();
@@ -119,6 +120,9 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
                 continue;
             }
             extensions.put(k, authentication.getAttributes().get(k));
+        }
+        if (!extensions.containsKey(tokenConfiguration.getRolesName())) {
+            extensions.put(tokenConfiguration.getRolesName(), authentication.getRoles());
         }
         introspectionResponse.setExtensions(extensions);
         if (introspectionResponse.getUsername() == null) {
@@ -207,6 +211,8 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
                                @NonNull IntrospectionResponse introspectionResponse) {
         if (authentication.getAttributes().containsKey(SUBJECT)) {
             introspectionResponse.setSub(authentication.getAttributes().get(SUBJECT).toString());
+        } else {
+            introspectionResponse.setSub(authentication.getName());
         }
     }
 

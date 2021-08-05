@@ -11,13 +11,13 @@ import io.micronaut.security.MockAuthenticationProvider
 import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.validator.TokenValidator
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 
 class IntrospectionControllerSpec extends EmbeddedServerSpecification {
+
     @Override
     String getSpecName() {
         'IntrospectionControllerSpec'
@@ -119,15 +119,9 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
     @Singleton
     static class CustomTokenValidator implements TokenValidator {
 
-        private final TokenConfiguration tokenConfiguration
-
-        CustomTokenValidator(TokenConfiguration tokenConfiguration) {
-            this.tokenConfiguration = tokenConfiguration
-        }
-
         @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
-            Authentication authentication = Authentication.build('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'], tokenConfiguration)
+            Authentication authentication = Authentication.build('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'])
             if (token == "2YotnFZFEjr1zCsicMWpAA") {
                 return Flux.just(authentication)
             }

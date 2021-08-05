@@ -1,5 +1,6 @@
 package io.micronaut.security.oauth2
 
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Shared
@@ -29,6 +30,7 @@ class DefaultProviderResolverSpec extends ApplicationContextSpecification {
     void "provider it is resolve from iss claim"() {
         expect:
         providerResolver.resolveProvider(new Authentication() {
+            @NonNull
             @Override
             Map<String, Object> getAttributes() {
                 ['iss': 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_CZbcc3m1G']

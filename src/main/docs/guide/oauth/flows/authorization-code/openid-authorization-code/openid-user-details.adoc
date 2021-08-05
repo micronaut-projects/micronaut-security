@@ -21,4 +21,4 @@ snippet::io.micronaut.security.oauth2.docs.openid.OktaAuthenticationMapper[tags=
 <3> The full token response is available
 <4> The JWT claims are available
 <5> The state object used during OAuth authentication
-<6> An instance of api:security.authentication.Authentication[] is returned
+<6> An instance of api:security.authentication.AuthenticationResponse[] is returned

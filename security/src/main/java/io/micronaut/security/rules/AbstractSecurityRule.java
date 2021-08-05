@@ -15,15 +15,15 @@
  */
 package io.micronaut.security.rules;
 
-import io.micronaut.security.token.MapClaims;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A base {@link SecurityRule} class to extend from that provides
@@ -52,17 +52,15 @@ public abstract class AbstractSecurityRule implements SecurityRule {
      * claims contain one or more roles, {@link SecurityRule#IS_AUTHENTICATED} is
      * appended to the list.
      *
-     * @param claims The claims of the token, null if not authenticated
+     * @param authentication The authentication, or null if none found
      * @return The granted roles
      */
-    protected List<String> getRoles(Map<String, Object> claims) {
+    protected List<String> getRoles(Authentication authentication) {
         List<String> roles = new ArrayList<>();
-        if (claims == null) {
+        if (authentication == null) {
             roles.add(SecurityRule.IS_ANONYMOUS);
         } else {
-            if (!claims.isEmpty()) {
-                roles.addAll(rolesFinder.findInClaims(new MapClaims(claims)));
-            }
+            roles.addAll(authentication.getRoles());
             roles.add(SecurityRule.IS_ANONYMOUS);
             roles.add(SecurityRule.IS_AUTHENTICATED);
         }
@@ -79,7 +77,7 @@ public abstract class AbstractSecurityRule implements SecurityRule {
      * @return {@link SecurityRuleResult#REJECTED} if none of the granted roles
      *  appears in the required roles list. {@link SecurityRuleResult#ALLOWED} otherwise.
      */
-    protected SecurityRuleResult compareRoles(List<String> requiredRoles, List<String> grantedRoles) {
+    protected SecurityRuleResult compareRoles(List<String> requiredRoles, Collection<String> grantedRoles) {
         if (rolesFinder.hasAnyRequiredRoles(requiredRoles, grantedRoles)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("The given roles [{}] matched one or more of the required roles [{}]. Allowing the request", grantedRoles, requiredRoles);

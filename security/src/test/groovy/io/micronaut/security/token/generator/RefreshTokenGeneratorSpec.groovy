@@ -42,10 +42,10 @@ class RefreshTokenGeneratorSpec extends ApplicationContextSpecification {
         noExceptionThrown()
 
         where:
-        authentication                 | token
-        null                        | 'xxx'
-        Authentication.build('user', tokenConfiguration) | null
-        Authentication.build('user', tokenConfiguration) | ''
+        authentication               | token
+        null                         | 'xxx'
+        Authentication.build('user') | null
+        Authentication.build('user') | ''
         description = authentication == null ? 'authentication can be null' : (token == null ? 'token can be null' : (token == '' ? 'token can be blank': ''))
     }
 

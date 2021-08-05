@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 public class JWTClaimsSetGenerator implements ClaimsGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(JWTClaimsSetGenerator.class);
+    private static final String ROLES_KEY = "rolesKey";
 
     private final TokenConfiguration tokenConfiguration;
     private final JwtIdGenerator jwtIdGenerator;
@@ -171,7 +172,13 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param authentication Authenticated user's representation.
      */
     protected void populateWithAuthentication(JWTClaimsSet.Builder builder, Authentication authentication) {
+        populateSub(builder, authentication);
         authentication.getAttributes().forEach(builder::claim);
+        String rolesKey = tokenConfiguration.getRolesName();
+        if (!rolesKey.equalsIgnoreCase(TokenConfiguration.DEFAULT_ROLES_NAME)) {
+            builder.claim(ROLES_KEY, rolesKey);
+        }
+        builder.claim(rolesKey, authentication.getRoles());
     }
 
     /**

@@ -147,9 +147,8 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
         boolean forbidden = authentication != null;
         String method = request.getMethod().toString();
         String path = request.getPath();
-        Map<String, Object> attributes = authentication != null ? authentication.getAttributes() : null;
         for (SecurityRule rule : securityRules) {
-            SecurityRuleResult result = rule.check(request, routeMatch, attributes);
+            SecurityRuleResult result = rule.check(request, routeMatch, authentication);
             if (result == SecurityRuleResult.REJECTED) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Unauthorized request {} {}. The rule provider {} rejected the request.", method, path, rule.getClass().getName());

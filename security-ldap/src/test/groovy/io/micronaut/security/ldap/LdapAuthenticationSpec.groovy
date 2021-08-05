@@ -33,8 +33,8 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         response.authenticated
         response.authentication.isPresent()
         response.authentication.get().name == "riemann"
-        response.authentication.get().attributes.roles.size() == 1
-        response.authentication.get().attributes.roles.contains("Mathematicians")
+        response.authentication.get().roles.size() == 1
+        response.authentication.get().roles.contains("Mathematicians")
 
         when:
         response = authenticate(authenticationProvider,"newton")
@@ -43,8 +43,8 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         response.authenticated
         response.authentication.isPresent()
         response.authentication.get().name == "newton"
-        response.authentication.get().attributes.roles.size() == 1
-        response.authentication.get().attributes.roles.contains("Scientists")
+        response.authentication.get().roles.size() == 1
+        response.authentication.get().roles.contains("Scientists")
 
 
         when:
@@ -54,9 +54,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         response.authenticated
         response.authentication.isPresent()
         response.authentication.get().name == "gauss"
-        response.authentication.get().attributes.roles.size() == 2
-        response.authentication.get().attributes.roles.contains("Scientists")
-        response.authentication.get().attributes.roles.contains("Mathematicians")
+        response.authentication.get().roles.size() == 2
+        response.authentication.get().roles.contains("Scientists")
+        response.authentication.get().roles.contains("Mathematicians")
 
         cleanup:
         ctx.close()
@@ -83,7 +83,7 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         response.authenticated
         response.authentication.isPresent()
         response.authentication.get().name == "riemann"
-        !response.authentication.get().attributes.roles
+        !response.authentication.get().roles
 
         cleanup:
         ctx.close()
@@ -109,7 +109,7 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         response.authenticated
         response.authentication.isPresent()
         response.authentication.get().name == "riemann"
-        !response.authentication.get().attributes.roles
+        !response.authentication.get().roles
 
         cleanup:
         ctx.close()
@@ -138,8 +138,8 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         then:
         response.authenticated
         response.authentication.get().name == "euclid"
-        response.authentication.get().attributes.roles.size() == 1
-        response.authentication.get().attributes.roles.contains("users")
+        response.authentication.get().roles.size() == 1
+        response.authentication.get().roles.contains("users")
 
         when:
         response = authenticate(authenticationProvider,"gauss")
@@ -147,9 +147,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         then:
         response.authenticated
         response.authentication.get().name == "gauss"
-        response.authentication.get().attributes.roles.size() == 2
-        response.authentication.get().attributes.roles.contains("users")
-        response.authentication.get().attributes.roles.contains("admins")
+        response.authentication.get().roles.size() == 2
+        response.authentication.get().roles.contains("users")
+        response.authentication.get().roles.contains("admins")
 
         cleanup:
         ctx.close()
@@ -237,10 +237,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         then:
         response.authenticated
         response.authentication.get().name == "gauss"
-        response.authentication.get().attributes.roles
-        response.authentication.get().attributes.roles.size() == 2
-        response.authentication.get().attributes.roles.contains("users")
-        response.authentication.get().attributes.roles.contains("admins")
+        response.authentication.get().roles.size() == 2
+        response.authentication.get().roles.contains("users")
+        response.authentication.get().roles.contains("admins")
 
         when:
         authenticationProvider = ctx.getBean(LdapAuthenticationProvider, Qualifiers.byName('basic'))
@@ -249,10 +248,9 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
         then:
         response.authenticated
         response.authentication.get().name == "gauss"
-        response.authentication.get().attributes.roles
-        response.authentication.get().attributes.roles.size() == 2
-        response.authentication.get().attributes.roles.contains("Scientists")
-        response.authentication.get().attributes.roles.contains("Mathematicians")
+        response.authentication.get().roles.size() == 2
+        response.authentication.get().roles.contains("Scientists")
+        response.authentication.get().roles.contains("Mathematicians")
 
         cleanup:
         ctx.close()

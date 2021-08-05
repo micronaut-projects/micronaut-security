@@ -28,7 +28,6 @@ import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.authentication.AuthenticationMode;
-import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
 import org.slf4j.Logger;
@@ -51,14 +50,10 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdTokenLoginHandler.class);
 
-    private final TokenConfiguration tokenConfiguration;
-
     public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
-                               TokenConfiguration tokenConfiguration,
                                @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         super(accessTokenCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
-        this.tokenConfiguration = tokenConfiguration;
     }
 
     /**

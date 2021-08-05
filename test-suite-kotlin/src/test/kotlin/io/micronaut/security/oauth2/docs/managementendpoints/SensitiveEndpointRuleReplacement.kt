@@ -7,6 +7,7 @@ import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
 import io.micronaut.security.token.MapClaims
@@ -22,9 +23,9 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
                                        private val rolesFinder: RolesFinder) : SensitiveEndpointRule(endpointSensitivityProcessor) {
     @NonNull
     override fun checkSensitiveAuthenticated(@NonNull request: HttpRequest<*>,
-                                             @NonNull claims: Map<String, Any>,
+                                             @NonNull authentication: Authentication,
                                              @NonNull method: ExecutableMethod<*, *>): SecurityRuleResult {
-        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), MapClaims(claims))) SecurityRuleResult.ALLOWED else SecurityRuleResult.REJECTED
+        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication.roles)) SecurityRuleResult.ALLOWED else SecurityRuleResult.REJECTED
     }
 }
 //end::clazz[]

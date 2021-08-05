@@ -19,6 +19,7 @@ import io.micronaut.core.util.AntPathMatcher;
 import io.micronaut.core.util.PathMatcher;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.RouteMatch;
@@ -28,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Inject;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -71,11 +71,11 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
      *
      * @param request The current request
      * @param routeMatch The matched route
-     * @param claims The claims from the token. Null if not authenticated
+     * @param authentication The user authentication. Null if not authenticated
      * @return The result
      */
     @Override
-    public SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
+    public SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
         final String path = request.getUri().getPath();
         final HttpMethod httpMethod = request.getMethod();
 
@@ -107,7 +107,7 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
         }
 
         return matchedPattern
-                .map(pattern -> compareRoles(pattern.getAccess(), getRoles(claims)))
+                .map(pattern -> compareRoles(pattern.getAccess(), getRoles(authentication)))
                 .orElse(SecurityRuleResult.UNKNOWN);
     }
 }
