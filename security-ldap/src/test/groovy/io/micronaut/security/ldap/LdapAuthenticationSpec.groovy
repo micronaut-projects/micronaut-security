@@ -1,6 +1,6 @@
 package io.micronaut.security.ldap
 
-import io.micronaut.configuration.security.ldap.LdapAuthenticationProvider
+
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.AuthenticationResponse
