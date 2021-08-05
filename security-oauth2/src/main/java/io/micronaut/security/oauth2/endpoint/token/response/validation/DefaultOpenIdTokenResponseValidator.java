@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -112,7 +112,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         try {
             JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
             OpenIdClaims claims = new JWTOpenIdClaims(claimsSet);
-            if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims))) {
+            if (genericJwtClaimsValidators.stream().allMatch(validator -> validator.validate(claims, null))) {
                 if (openIdClaimsValidators.stream().allMatch(validator ->
                         validator.validate(claims, clientConfiguration, openIdProviderMetadata))) {
                     if (nonceClaimValidator == null) {
@@ -159,7 +159,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         return JwtValidator.builder()
                 .withSignatures(jwksSignatureForOpenIdProviderMetadata(openIdProviderMetadata))
                 .build()
-                .validate(openIdTokenResponse.getIdToken());
+                .validate(openIdTokenResponse.getIdToken(), null);
     }
 
     /**

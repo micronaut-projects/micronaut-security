@@ -38,7 +38,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.Authorizatio
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +81,7 @@ public class DefaultOauthClient implements OauthClient {
         this.redirectHandler = redirectHandler;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
-        this.tokenEndpoint = getTokenEndpoint();
+        this.tokenEndpoint = clientConfiguration.getTokenEndpoint();
     }
 
     @Override
@@ -99,7 +99,7 @@ public class DefaultOauthClient implements OauthClient {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), authorizationEndpoint);
         }
-        return Flowable.just(redirectHandler.redirect(authorizationRequest, authorizationEndpoint));
+        return Flux.just(redirectHandler.redirect(authorizationRequest, authorizationEndpoint));
     }
 
     @Override
@@ -116,7 +116,7 @@ public class DefaultOauthClient implements OauthClient {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Received an authorization error response from provider [{}]. Error: [{}]", getName(), errorResponse.getError());
             }
-            return Flowable.error(new AuthorizationErrorResponseException(errorResponse));
+            return Flux.error(new AuthorizationErrorResponseException(errorResponse));
         } else {
             AuthorizationResponse authorizationResponse = beanContext.createBean(OauthAuthorizationResponse.class, request);
             if (LOG.isTraceEnabled()) {
@@ -135,14 +135,5 @@ public class DefaultOauthClient implements OauthClient {
      */
     protected boolean isErrorCallback(ConvertibleMultiValues<String> responseData) {
         return responseData.contains("error");
-    }
-
-    /**
-     * @return The token endpoint
-     * @deprecated Use {@link OauthClientConfiguration#getTokenEndpoint()} instead.
-     */
-    @Deprecated
-    protected SecureEndpoint getTokenEndpoint() {
-        return clientConfiguration.getTokenEndpoint();
     }
 }

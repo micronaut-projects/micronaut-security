@@ -9,20 +9,22 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.rules.ReactiveSecurityRule
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.rules.SecurityRuleResult
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.web.router.RouteMatch
-import io.reactivex.Flowable
-import io.reactivex.schedulers.Schedulers
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import org.jetbrains.annotations.Nullable
 import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 
-import javax.inject.Singleton
-import java.util.concurrent.TimeUnit
+import java.time.Duration
+import java.util.concurrent.ExecutorService
 
 import static io.micronaut.security.rules.SecurityRuleResult.ALLOWED
 import static io.micronaut.security.rules.SecurityRuleResult.REJECTED
@@ -114,15 +116,20 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(property = "spec.name", value = 'SecurityFilterSpec')
     @Requires(property = "disable.all.rules", notEquals = StringUtils.TRUE)
-    static class Rule1 implements ReactiveSecurityRule {
+    static class Rule1 implements SecurityRule {
         static SecurityRuleResult result = UNKNOWN
         static int delayMs = 0
+        private final ExecutorService executorService
+
+        Rule1(@Named(TaskExecutors.IO) ExecutorService executorService) {
+            this.executorService = executorService
+        }
 
         @Override
         Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
-            return Flowable.timer(delayMs, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .flatMap((l) -> Flowable.just(result))
+            return Mono.just(result)
+                    .delayElement(Duration.ofMillis(delayMs))
+                    .subscribeOn(Schedulers.fromExecutor(executorService))
         }
 
         @Override
@@ -138,8 +145,8 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
         static SecurityRuleResult result = UNKNOWN
 
         @Override
-        SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
-            return result
+        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
+            return Mono.just(result)
         }
 
         @Override
@@ -151,12 +158,12 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
     @Singleton
     @Requires(property = "spec.name", value = 'SecurityFilterSpec')
     @Requires(property = "disable.all.rules", notEquals = StringUtils.TRUE)
-    static class Rule3 implements ReactiveSecurityRule {
+    static class Rule3 implements SecurityRule {
         static SecurityRuleResult result = UNKNOWN
 
         @Override
         Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
-            return Flowable.just(result)
+            return Mono.just(result)
         }
 
         @Override

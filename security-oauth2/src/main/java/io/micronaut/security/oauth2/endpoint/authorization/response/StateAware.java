@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
 /**

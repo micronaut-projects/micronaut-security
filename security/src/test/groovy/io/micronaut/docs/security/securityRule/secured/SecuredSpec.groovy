@@ -4,7 +4,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.AutoCleanup
@@ -24,7 +24,7 @@ class SecuredSpec extends Specification {
 
     @Shared
     @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
     void "verify you can access an endpoint annotated with @Secured('isAnonymous()') without authentication"() {
         when:

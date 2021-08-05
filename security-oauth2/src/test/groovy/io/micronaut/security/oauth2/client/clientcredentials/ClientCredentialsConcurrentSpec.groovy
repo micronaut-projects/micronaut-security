@@ -5,8 +5,8 @@ import com.nimbusds.jose.JOSEException
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.RSAKey
-import edu.umd.cs.findbugs.annotations.NonNull
-import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Property
@@ -47,8 +47,8 @@ import spock.lang.Issue
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import javax.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey

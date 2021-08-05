@@ -1,20 +1,14 @@
 package io.micronaut.docs.security.session
 
-import geb.spock.GebSpec
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
-import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.cookie.Cookie
-import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.testutils.YamlAsciidocTagCleaner
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
-import spock.lang.AutoCleanup
-import spock.lang.Shared
 
-class SessionAuthenticationSpec extends GebSpec implements YamlAsciidocTagCleaner {
+class SessionAuthenticationSpec extends GebEmbeddedServerSpecification implements YamlAsciidocTagCleaner {
 
     String yamlConfig = '''\
 //tag::yamlconfig[]
@@ -25,8 +19,7 @@ micronaut:
       login-failure: /login/authFailed
 '''//end::yamlconfig[]
 
-    @Shared
-    Map<String, Object> configMap = ['micronaut': [
+    static Map<String, Object> configMap = ['micronaut': [
             'security': [
                     'authentication': 'session',
                     'redirect': [
@@ -36,24 +29,15 @@ micronaut:
         ]
     ]
 
-    @Shared
-    @AutoCleanup
-    ApplicationContext context = ApplicationContext.run([
-                    'spec.name': 'securitysession',
-                    'micronaut.http.client.followRedirects': false,
-            ] << flatten(configMap), Environment.TEST)
-
-    @Shared
-    EmbeddedServer embeddedServer = context.getBean(EmbeddedServer).start()
-
-    @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL())
+    @Override
+    Map<String, Object> getConfiguration() {
+        [
+                'spec.name': 'securitysession',
+                'micronaut.http.client.followRedirects': false,
+        ] + flatten(configMap)
+    }
 
     def "verify session based authentication works"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         to HomePage
 
@@ -109,9 +93,9 @@ micronaut:
 
     def "verify session based authentication works without a real browser"() {
         given:
-        context.getBean(HomeController.class)
-        context.getBean(LoginAuthController.class)
-        context.getBean(AuthenticationProviderUserPassword.class)
+        applicationContext.getBean(HomeController.class)
+        applicationContext.getBean(LoginAuthController.class)
+        applicationContext.getBean(AuthenticationProviderUserPassword.class)
 
         when:
         Map m = new Yaml().load(cleanYamlAsciidocTag(yamlConfig))
@@ -121,7 +105,7 @@ micronaut:
 
         when:
         HttpRequest request = HttpRequest.GET('/')
-        HttpResponse<String> rsp = client.toBlocking().exchange(request, String)
+        HttpResponse<String> rsp = client.exchange(request, String)
 
         then:
         rsp.status().code == 200
@@ -132,7 +116,7 @@ micronaut:
         HttpRequest loginRequest = HttpRequest.POST('/login', new LoginForm(username: 'foo', password: 'foo'))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 
-        HttpResponse<String> loginRsp = client.toBlocking().exchange(loginRequest, String)
+        HttpResponse<String> loginRsp = client.exchange(loginRequest, String)
 
         then:
         loginRsp.status().code == 303
@@ -144,7 +128,7 @@ micronaut:
         loginRequest = HttpRequest.POST('/login', new LoginForm(username: 'sherlock', password: 'password'))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 
-        loginRsp = client.toBlocking().exchange(loginRequest, String)
+        loginRsp = client.exchange(loginRequest, String)
 
         then:
         loginRsp.status().code == 303
@@ -161,7 +145,7 @@ micronaut:
 
         String sessionId = cookie.split(";")[0].split("=")[1]
         request = HttpRequest.GET('/').cookie(Cookie.of('SESSION', sessionId))
-        rsp = client.toBlocking().exchange(request, String)
+        rsp = client.exchange(request, String)
 
         then:
         rsp.status().code == 200

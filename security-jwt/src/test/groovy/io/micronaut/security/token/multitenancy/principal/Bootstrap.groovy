@@ -4,8 +4,8 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.context.event.StartupEvent
 
-import javax.inject.Inject
-import javax.inject.Singleton
+import jakarta.inject.Inject
+import jakarta.inject.Singleton;
 
 @Requires(property = 'spec.name', value = 'multitenancy.principal.gorm')
 @Singleton

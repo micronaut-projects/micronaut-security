@@ -1,6 +1,6 @@
 package io.micronaut.security.endpoints.introspection
 
-import io.micronaut.security.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.endpoints.introspection.IntrospectionConfiguration
 import io.micronaut.security.endpoints.introspection.IntrospectionController
 import io.micronaut.security.endpoints.introspection.IntrospectionProcessor

@@ -16,10 +16,9 @@
 package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jwt.JWTClaimsSet;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
-import io.reactivex.annotations.Nullable;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 

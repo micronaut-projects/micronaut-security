@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.endpoints;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.util.StringUtils;
@@ -34,7 +34,7 @@ import io.micronaut.security.event.LogoutEvent;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.rules.SecurityRule;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  *

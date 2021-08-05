@@ -7,3 +7,7 @@ include::{testssecurity}/security/securityRule/builtinendpoints/BuiltInEndpoints
 
 <1> `/beans` endpoint is secured
 <2> `/info` endpoint is open for unauthenticated access.
+
+By default, authenticated users are allowed to access sensitive endpoints. To change that behaviour, replace the default implementation api:security.rules.SensitiveEndpointRule[] with your own. For example, you may want to restrict access to users with a specific role:
+
+snippet::io.micronaut.security.oauth2.docs.managementendpoints.SensitiveEndpointRuleReplacement[tags="imports,clazz"]

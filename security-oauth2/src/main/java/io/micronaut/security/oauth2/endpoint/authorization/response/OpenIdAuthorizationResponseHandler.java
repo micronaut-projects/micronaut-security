@@ -23,7 +23,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMap
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import org.reactivestreams.Publisher;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * Responsible for handling the authorization callback response

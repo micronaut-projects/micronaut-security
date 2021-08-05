@@ -8,11 +8,11 @@ import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 // Although this is a Groovy file this is written as close to Java as possible to embedded in the docs
 
@@ -23,16 +23,16 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        return Flowable.create({emitter ->
+        return Flux.create({emitter ->
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
-                emitter.onNext(new UserDetails("user", new ArrayList<>()));
-                emitter.onComplete();
+                emitter.next(new UserDetails("user", new ArrayList<>()))
+                emitter.complete()
             } else {
-                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
+                emitter.error(new AuthenticationException(new AuthenticationFailed()))
             }
 
 
-        }, BackpressureStrategy.ERROR)
+        }, FluxSink.OverflowStrategy.ERROR)
 
     }
 }

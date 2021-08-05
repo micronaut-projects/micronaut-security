@@ -22,11 +22,14 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.RouteMatch;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
-import javax.inject.Inject;
+import io.micronaut.core.annotation.Nullable;
+import jakarta.inject.Inject;
+import reactor.core.publisher.Mono;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -75,7 +78,7 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
      * @return The result
      */
     @Override
-    public SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
         final String path = request.getUri().getPath();
         final HttpMethod httpMethod = request.getMethod();
 
@@ -106,8 +109,8 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
             }
         }
 
-        return matchedPattern
+        return Mono.from(matchedPattern
                 .map(pattern -> compareRoles(pattern.getAccess(), getRoles(claims)))
-                .orElse(SecurityRuleResult.UNKNOWN);
+                .orElse(Mono.just(SecurityRuleResult.UNKNOWN)));
     }
 }

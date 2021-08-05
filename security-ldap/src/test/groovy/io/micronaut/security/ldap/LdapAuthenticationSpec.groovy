@@ -3,12 +3,9 @@ package io.micronaut.security.ldap
 import io.micronaut.configuration.security.ldap.LdapAuthenticationProvider
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
-import io.reactivex.Flowable
-import io.reactivex.subscribers.TestSubscriber
-import org.reactivestreams.Publisher
+import reactor.test.StepVerifier
 import spock.lang.Retry
 
 @Retry
@@ -167,19 +164,12 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
                 'micronaut.security.ldap.default.groups.enabled': true,
                 'micronaut.security.ldap.default.groups.base': "dc=example,dc=com",
         ], "test")
-
-        when:
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        TestSubscriber subscriber = new TestSubscriber<>()
-        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password"))).blockingSubscribe(subscriber)
-        subscriber.assertError(AuthenticationException)
-        List<Throwable> throwableList = subscriber.errors()
 
-        then:
-        throwableList
-        throwableList.any {
-            it instanceof AuthenticationException && it.message == "User Not Found"
-        }
+        expect:
+        StepVerifier.create(authenticationProvider.authenticate(null, createAuthenticationRequest("abc", "password")))
+                .expectErrorMessage("User Not Found")
+                .verify()
 
         cleanup:
         ctx.close()
@@ -199,19 +189,12 @@ class LdapAuthenticationSpec extends InMemoryLdapSpec {
                 'micronaut.security.ldap.default.groups.enabled': true,
                 'micronaut.security.ldap.default.groups.base': "dc=example,dc=com",
         ], "test")
-
-        when:
         LdapAuthenticationProvider authenticationProvider = ctx.getBean(LdapAuthenticationProvider)
-        TestSubscriber subscriber = new TestSubscriber<>()
-        Flowable.fromPublisher(authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc"))).blockingSubscribe(subscriber)
-        subscriber.assertError(AuthenticationException)
-        List<Throwable> throwableList = subscriber.errors()
 
-        then:
-        throwableList
-        throwableList.any {
-            it instanceof AuthenticationException && it.message == "Credentials Do Not Match"
-        }
+        expect:
+        StepVerifier.create(authenticationProvider.authenticate(null, createAuthenticationRequest("euclid", "abc")))
+                .expectErrorMessage("Credentials Do Not Match")
+                .verify()
 
         cleanup:
         ctx.close()

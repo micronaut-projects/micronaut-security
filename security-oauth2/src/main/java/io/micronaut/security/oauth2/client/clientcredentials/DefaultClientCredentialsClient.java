@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;

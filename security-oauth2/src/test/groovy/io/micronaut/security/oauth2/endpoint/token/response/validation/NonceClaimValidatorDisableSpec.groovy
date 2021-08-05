@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation
 
-import io.micronaut.security.oauth2.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class NonceClaimValidatorDisableSpec extends ApplicationContextSpecification {
 

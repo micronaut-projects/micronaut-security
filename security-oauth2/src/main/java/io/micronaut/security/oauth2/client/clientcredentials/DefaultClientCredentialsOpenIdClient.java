@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import io.micronaut.core.async.SupplierUtil;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;

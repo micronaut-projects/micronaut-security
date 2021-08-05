@@ -24,7 +24,7 @@ import com.nimbusds.jose.crypto.ECDHDecrypter;
 import com.nimbusds.jose.crypto.ECDHEncrypter;
 import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 

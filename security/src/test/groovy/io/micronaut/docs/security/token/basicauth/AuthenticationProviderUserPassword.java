@@ -3,11 +3,17 @@ package io.micronaut.docs.security.token.basicauth;
 //tag::clazz[]
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.*;
-import io.reactivex.Maybe;
+import io.micronaut.security.authentication.AuthenticationException;
+import io.micronaut.security.authentication.AuthenticationFailed;
+import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.UserDetails;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
+import reactor.core.publisher.Mono;
+
 import java.util.ArrayList;
 //end::clazz[]
 
@@ -18,13 +24,13 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        return Maybe.<AuthenticationResponse>create(emitter -> {
+        return Mono.<AuthenticationResponse>create(emitter -> {
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
-                emitter.onSuccess(new UserDetails("user", new ArrayList<>()));
+                emitter.success(new UserDetails("user", new ArrayList<>()));
             } else {
-                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
+                emitter.error(new AuthenticationException(new AuthenticationFailed()));
             }
-        }).toFlowable();
+        });
     }
 }
 //end::clazz[]

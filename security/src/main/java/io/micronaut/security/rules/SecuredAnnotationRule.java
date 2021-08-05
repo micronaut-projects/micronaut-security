@@ -20,9 +20,12 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
-import edu.umd.cs.findbugs.annotations.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -61,7 +64,7 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
      * @return The result
      */
     @Override
-    public SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             MethodBasedRouteMatch methodRoute = ((MethodBasedRouteMatch) routeMatch);
             if (methodRoute.hasAnnotation(Secured.class)) {
@@ -69,13 +72,13 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
                 if (optionalValue.isPresent()) {
                     List<String> values = Arrays.asList(optionalValue.get());
                     if (values.contains(SecurityRule.DENY_ALL)) {
-                        return SecurityRuleResult.REJECTED;
+                        return Mono.just(SecurityRuleResult.REJECTED);
                     }
                     return compareRoles(values, getRoles(claims));
                 }
             }
         }
-        return SecurityRuleResult.UNKNOWN;
+        return Mono.just(SecurityRuleResult.UNKNOWN);
     }
 
     @Override

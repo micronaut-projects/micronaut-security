@@ -24,8 +24,8 @@ import io.micronaut.http.uri.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

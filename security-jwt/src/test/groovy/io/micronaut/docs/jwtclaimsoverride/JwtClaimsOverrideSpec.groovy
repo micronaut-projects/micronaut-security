@@ -13,8 +13,8 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.validator.TokenValidator
-import io.micronaut.testutils.EmbeddedServerSpecification
-import io.reactivex.Flowable
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import reactor.core.publisher.Flux
 
 class JwtClaimsOverrideSpec extends EmbeddedServerSpecification {
 
@@ -45,7 +45,7 @@ class JwtClaimsOverrideSpec extends EmbeddedServerSpecification {
 
         when:
         String accessToken = rsp.body.get().accessToken
-        Authentication authentication = Flowable.fromPublisher(tokenValidator.validateToken(accessToken, null)).blockingFirst()
+        Authentication authentication = Flux.from(tokenValidator.validateToken(accessToken, null)).blockFirst()
         println authentication.getAttributes()
 
         then:

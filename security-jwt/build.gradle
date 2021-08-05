@@ -1,18 +1,15 @@
-plugins {
-    id "com.github.erdi.webdriver-binaries" version "2.4"
-}
-
 ext {
-    nimbusJoseJwtVersion = '9.4.2'
-    bouncyCastleVersion = '1.68'
+    nimbusJoseJwtVersion = '9.11.3'
+    bouncyCastleVersion = '1.69'
 }
 
 dependencies {
     api "io.micronaut:micronaut-http"
     api "io.micronaut:micronaut-http-server"
     api project(":security")
-    compileOnly "org.graalvm.nativeimage:svm"
     api "com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"
+
+    implementation "io.projectreactor:reactor-core"
 
     testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
     testImplementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
@@ -20,13 +17,13 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation "io.micronaut:micronaut-multitenancy"
-    testImplementation "io.micronaut.views:micronaut-views-velocity"
-    testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.2"
-}
+    testImplementation project(":test-suite-utils")
+    testImplementation project(":test-suite-utils-security")
+    testImplementation "io.micronaut.multitenancy:micronaut-multitenancy"
 
-apply from: "${rootProject.projectDir}/gradle/geb.gradle"
-apply from: "${rootProject.projectDir}/gradle/webdriverbinaries.gradle"
+    testImplementation "io.micronaut.views:micronaut-views-velocity"
+    testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.3"
+}
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
 test {

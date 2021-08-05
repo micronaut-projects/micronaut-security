@@ -1,17 +1,16 @@
 package io.micronaut.security.token.jwt.cookie
 
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.testutils.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Unroll
 
 class CookieEnabledSpec extends ApplicationContextSpecification {
     @Override
     Map<String, Object> getConfiguration() {
-        super.configuration +
-                [
+        Map<String, Object> conf = super.configuration + [
             'micronaut.security.token.jwt.cookie.enabled': false,
-
         ]
+        conf
     }
 
     @Unroll("if micronaut.security.token.jwt.cookie.enabled=false bean [#description] is not loaded")
@@ -25,9 +24,7 @@ class CookieEnabledSpec extends ApplicationContextSpecification {
 
         where:
         clazz << [
-                JwtCookieConfiguration,
                 AccessTokenCookieConfiguration,
-                RefreshTokenCookieConfiguration,
                 JwtCookieConfigurationProperties,
                 JwtCookieTokenReader,
         ]

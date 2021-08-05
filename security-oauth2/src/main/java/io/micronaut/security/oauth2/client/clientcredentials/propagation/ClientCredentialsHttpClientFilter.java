@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.exceptions.NoSuchBeanException;
 import io.micronaut.core.util.StringUtils;
@@ -32,7 +32,7 @@ import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsCl
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +104,7 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
         }
         ClientCredentialsTokenPropagator tokenHandler = getTokenHandler(oauthClient);
 
-        return Flowable.fromPublisher(clientCredentialsClientOptional.get()
+        return Flux.from(clientCredentialsClientOptional.get()
                 .requestToken(getScope(oauthClient)))
                 .map(TokenResponse::getAccessToken)
                 .switchMap(accessToken -> {

@@ -1,28 +1,25 @@
 package io.micronaut.security.endpoints.introspection
 
-import edu.umd.cs.findbugs.annotations.Nullable
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.AuthenticationUserDetailsAdapter
 import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.validator.TokenValidator
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 import spock.lang.Unroll
-
-import javax.inject.Singleton
 
 class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
     @Override
@@ -30,7 +27,7 @@ class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
         'IntrospectionAuthorizerSpec'
     }
 
-    private HttpRequest introspectionEndpointRequestWithBasicAuth(String token) {
+    private static HttpRequest introspectionEndpointRequestWithBasicAuth(String token) {
         HttpRequest.POST("/token_info", new IntrospectionRequest(token))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .basicAuth("user", "password")
@@ -90,31 +87,23 @@ class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
     @Requires(property = 'spec.name', value = 'IntrospectionAuthorizerSpec')
     @Singleton
     static class CustomTokenValidator implements TokenValidator {
-        @Override
-        Publisher<Authentication> validateToken(String token) {
-            validateToken(token, null)
-        }
 
+        @Override
         Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
             UserDetails ud = new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'])
             Authentication authentication = new AuthenticationUserDetailsAdapter(ud, TokenConfiguration.DEFAULT_ROLES_NAME, TokenConfiguration.DEFAULT_NAME_KEY)
             if (token == "2YotnFZFEjr1zCsicMWpAA") {
-                return Flowable.just(authentication)
+                return Flux.just(authentication)
             }
-            return Flowable.empty()
+            return Flux.empty()
         }
     }
 
     @Requires(property = 'spec.name', value = 'IntrospectionAuthorizerSpec')
     @Singleton
-    static class MockAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flowable.create(emitter -> {
-                emitter.onNext(new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io']))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'])])
         }
     }
 }

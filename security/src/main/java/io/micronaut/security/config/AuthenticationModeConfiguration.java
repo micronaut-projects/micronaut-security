@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.config;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationMode;
 
 /**

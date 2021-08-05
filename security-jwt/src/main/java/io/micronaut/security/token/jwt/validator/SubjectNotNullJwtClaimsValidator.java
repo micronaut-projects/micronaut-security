@@ -17,12 +17,15 @@ package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Validate JWT subject claim is not null.
@@ -31,7 +34,7 @@ import javax.inject.Singleton;
  * @since 1.1.0
  */
 @Singleton
-@Requires(property = JwtClaimsValidator.PREFIX + ".subject-not-null", notEquals = StringUtils.FALSE)
+@Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".subject-not-null", notEquals = StringUtils.FALSE)
 public class SubjectNotNullJwtClaimsValidator implements GenericJwtClaimsValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SubjectNotNullJwtClaimsValidator.class);
@@ -52,9 +55,8 @@ public class SubjectNotNullJwtClaimsValidator implements GenericJwtClaimsValidat
         return hasSubject;
     }
 
-    @Deprecated
     @Override
-    public boolean validate(JwtClaims claims) {
+    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));        
     }
 }

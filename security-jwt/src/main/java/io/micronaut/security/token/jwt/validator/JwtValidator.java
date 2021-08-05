@@ -17,8 +17,8 @@ package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jwt.*;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
@@ -62,18 +62,6 @@ public final class JwtValidator {
     /**
      * Validates the supplied token with any configurations and claim validators present.
      *
-     * @deprecated Use {@link JwtValidator#validate(String, HttpRequest)} instead.
-     * @param token The JWT string
-     * @return An optional JWT token if validation succeeds
-     */
-    @Deprecated
-    public Optional<JWT> validate(String token) {
-        return validate(token, null);
-    }
-
-    /**
-     * Validates the supplied token with any configurations and claim validators present.
-     *
      * @param token The JWT string
      * @param request HTTP Request
      * @return An optional JWT token if validation succeeds
@@ -104,17 +92,6 @@ public final class JwtValidator {
     private boolean hasAtLeastTwoDots(String token) {
         return (token.contains(DOT)) &&
                 (token.indexOf(DOT, token.indexOf(DOT) + 1) != -1);
-    }
-
-    /**
-     * Validates the supplied token with any configurations and claim validators present.
-     * @deprecated Use {@link JwtValidator#validate(JWT, HttpRequest)} instead
-     * @param token The JWT token
-     * @return An optional JWT token if validation succeeds
-     */
-    @Deprecated
-    public Optional<JWT> validate(JWT token) {
-        return validate(token, null);
     }
 
     /**
@@ -200,6 +177,11 @@ public final class JwtValidator {
                 return Optional.empty();
             }
         }
+
+        if (LOG.isDebugEnabled() && encryptions.isEmpty()) {
+            LOG.debug("JWT is encrypted and no encryption configurations -> not verified");
+        }
+
         return Optional.empty();
     }
 
@@ -229,6 +211,11 @@ public final class JwtValidator {
                 }
             }
         }
+
+        if (LOG.isDebugEnabled() && signatures.isEmpty()) {
+            LOG.debug("JWT is signed and no signature configurations -> not verified");
+        }
+
         return Optional.empty();
     }
 

@@ -8,11 +8,11 @@ import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Collections;
 
 @Requires(property = "spec.name", value = "jwtclaimsoverride")
@@ -22,10 +22,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        return Flowable.create(emitter -> {
-            emitter.onNext(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
-                emitter.onComplete();
-        }, BackpressureStrategy.ERROR);
+        return Flux.create(emitter -> {
+            emitter.next(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
+                emitter.complete();
+        }, FluxSink.OverflowStrategy.ERROR);
     }
 }
 //end::clazz[]

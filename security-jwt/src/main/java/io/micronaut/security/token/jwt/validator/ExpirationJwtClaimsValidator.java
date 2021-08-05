@@ -17,13 +17,15 @@ package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Singleton;
 import java.util.Date;
 
 /**
@@ -33,7 +35,7 @@ import java.util.Date;
  * @since 1.1.0
  */
 @Singleton
-@Requires(property = JwtClaimsValidator.PREFIX + ".expiration", notEquals = StringUtils.FALSE)
+@Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".expiration", notEquals = StringUtils.FALSE)
 public class ExpirationJwtClaimsValidator implements GenericJwtClaimsValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExpirationJwtClaimsValidator.class);
@@ -57,9 +59,8 @@ public class ExpirationJwtClaimsValidator implements GenericJwtClaimsValidator {
         return true;
     }
 
-    @Deprecated
     @Override
-    public boolean validate(JwtClaims claims) {
+    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 }

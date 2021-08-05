@@ -17,23 +17,26 @@ package io.micronaut.security.oauth2.client.clientcredentials;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.Signal;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Abstract class to create a Client for client credentials grant.
@@ -47,7 +50,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     private static final String NOSCOPE = "NOSCOPE";
     protected final TokenEndpointClient tokenEndpointClient;
     protected final OauthClientConfiguration oauthClientConfiguration;
-    protected final Map<String, Flowable<TokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
+    protected final Map<String, Publisher<TokenResponse>> scopeToPublisherMap = new ConcurrentHashMap<>();
 
     /**
      * @param tokenEndpointClient The token endpoint client
@@ -77,22 +80,23 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
     @NonNull
     public Publisher<TokenResponse> requestToken(@Nullable String scope, boolean force) {
         String resolvedScope = scope != null ? scope : NOSCOPE;
-        return scopeToPublisherMap.computeIfAbsent(resolvedScope, k -> cachedTokenResponseForScope(scope))
+        return Flux.from(scopeToPublisherMap.computeIfAbsent(resolvedScope, k -> cachedTokenResponseForScope(scope)))
                 .materialize()
-                .firstOrError()
-                .flatMapPublisher(tokenNotif -> {
-                    if (!force && tokenNotif.isOnNext() && !isExpired(tokenNotif.getValue())) {
-                        return tokenNotif.getValue() != null ? Flowable.just(tokenNotif.getValue()) : Flowable.empty();
+                .next()
+                .flatMap((Function<Signal<TokenResponse>, Mono<TokenResponse>>) tokenNotif -> {
+                    if (!force && tokenNotif.isOnNext() && !isExpired(tokenNotif.get())) {
+                        TokenResponse tokenResponse = tokenNotif.get();
+                        return tokenResponse != null ? Mono.just(tokenResponse) : Mono.empty();
                     } else if (tokenNotif.isOnError()) {
-                        return tokenNotif.getError() != null ? Flowable.error(tokenNotif.getError()) : Flowable.error(Throwable::new);
+                        return tokenNotif.getThrowable() != null ? Mono.error(tokenNotif.getThrowable()) : Mono.error(Throwable::new);
                     }
-                    return scopeToPublisherMap.computeIfPresent(resolvedScope, (s, tokenResponseFlowable) -> cachedTokenResponseForScope(scope));
+                    return Mono.from(scopeToPublisherMap.computeIfPresent(resolvedScope, (s, tokenResponse) -> cachedTokenResponseForScope(scope)));
                 });
     }
 
     @NonNull
-    private Flowable<TokenResponse> cachedTokenResponseForScope(String scope) {
-        return Flowable.fromPublisher(tokenEndpointClient.sendRequest(createTokenRequestContext(scope))).cache();
+    private Publisher<TokenResponse> cachedTokenResponseForScope(String scope) {
+        return Flux.from(tokenEndpointClient.sendRequest(createTokenRequestContext(scope))).cache();
     }
 
     /**

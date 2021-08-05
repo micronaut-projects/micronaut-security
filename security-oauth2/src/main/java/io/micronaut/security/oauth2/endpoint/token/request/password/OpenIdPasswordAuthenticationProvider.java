@@ -35,8 +35,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 
 import java.text.ParseException;
@@ -90,24 +90,24 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
 
         OpenIdPasswordTokenRequestContext requestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 
-        return Flowable.fromPublisher(
+        return Flux.from(
                 tokenEndpointClient.sendRequest(requestContext))
                 .switchMap(response -> {
-                    return Flowable.create(emitter -> {
+                    return Flux.create(emitter -> {
                         Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
                         if (jwt.isPresent()) {
                             try {
                                 OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                                emitter.onNext(openIdUserDetailsMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null));
-                                emitter.onComplete();
+                                emitter.next(openIdUserDetailsMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null));
+                                emitter.complete();
                             } catch (ParseException e) {
                                 //Should never happen as validation succeeded
-                                emitter.onError(e);
+                                emitter.error(e);
                             }
                         } else {
-                            emitter.onError(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
+                            emitter.error(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
                         }
-                    }, BackpressureStrategy.ERROR);
+                    }, FluxSink.OverflowStrategy.ERROR);
                 });
     }
 

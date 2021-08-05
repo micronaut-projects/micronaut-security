@@ -15,11 +15,11 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
-import io.micronaut.core.async.SupplierUtil;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
+import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -40,7 +40,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthor
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +125,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), endpoint);
         }
-        return Flowable.just(redirectUrlBuilder.redirect(authorizationRequest, endpoint));
+        return Flux.just(redirectUrlBuilder.redirect(authorizationRequest, endpoint));
     }
 
     @Override

@@ -22,7 +22,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**

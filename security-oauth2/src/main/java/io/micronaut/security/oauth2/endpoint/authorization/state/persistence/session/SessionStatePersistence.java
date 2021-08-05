@@ -24,7 +24,7 @@ import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**

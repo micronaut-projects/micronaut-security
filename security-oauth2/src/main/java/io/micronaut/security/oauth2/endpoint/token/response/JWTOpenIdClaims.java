@@ -18,8 +18,8 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.core.util.functional.ThrowingFunction;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;

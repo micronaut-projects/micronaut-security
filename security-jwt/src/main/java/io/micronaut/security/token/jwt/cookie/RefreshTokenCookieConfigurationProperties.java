@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
@@ -49,12 +49,6 @@ public class RefreshTokenCookieConfigurationProperties implements RefreshTokenCo
     public static final boolean DEFAULT_ENABLED = true;
 
     /**
-     * The default secure value.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_SECURE = true;
-
-    /**
      * The default http only value.
      */
     @SuppressWarnings("WeakerAccess")
@@ -81,7 +75,7 @@ public class RefreshTokenCookieConfigurationProperties implements RefreshTokenCo
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
-    private Boolean cookieSecure = DEFAULT_SECURE;
+    private Boolean cookieSecure;
     private Duration cookieMaxAge;
     private SameSite cookieSameSite = DEFAULT_COOKIESAMESITE;
     private boolean enabled = DEFAULT_ENABLED;

@@ -19,8 +19,8 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
@@ -34,7 +34,6 @@ public class CookieNoncePersistenceConfiguration implements CookieConfiguration 
 
     public static final String PREFIX = DefaultNonceConfiguration.PREFIX + ".cookie";
 
-    private static final boolean DEFAULT_SECURE = true;
     private static final boolean DEFAULT_HTTPONLY = true;
     private static final String DEFAULT_COOKIENAME = "OPENID_NONCE";
     private static final String DEFAULT_COOKIEPATH = "/";
@@ -43,7 +42,7 @@ public class CookieNoncePersistenceConfiguration implements CookieConfiguration 
     private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
-    private Boolean cookieSecure = DEFAULT_SECURE;
+    private Boolean cookieSecure;
     private Duration cookieMaxAge = DEFAULT_MAX_AGE;
     private String cookieName = DEFAULT_COOKIENAME;
 

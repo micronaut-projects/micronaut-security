@@ -7,6 +7,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties
 import io.micronaut.security.token.DefaultRolesFinder
 import io.micronaut.security.token.RolesFinder
 import io.micronaut.security.token.config.TokenConfiguration
+import reactor.core.publisher.Mono
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -41,7 +42,7 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
         ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration)
 
         expect:
-        provider.check(request, null, null) == securityRuleResult
+        Mono.from(provider.check(request, null, null)).block() == securityRuleResult
 
         where:
         securityRuleResult          | interceptUrlMap                                                                               | description
@@ -56,7 +57,7 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
         ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, Mock(SecurityConfigurationProperties))
 
         expect:
-        expected == provider.compareRoles(requiredRoles, grantedRoles)
+        expected == Mono.from(provider.compareRoles(requiredRoles, grantedRoles)).block()
 
         where:
         requiredRoles                | grantedRoles                                     | expected

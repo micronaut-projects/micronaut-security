@@ -15,19 +15,21 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
-import io.micronaut.security.token.jwt.validator.JwtClaimsValidator;
+import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,18 +37,19 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * For {@value io.micronaut.security.authentication.AuthenticationMode#IDTOKEN} authentication mode  performs the following verification as described in the OpenID Connect Spec.
+ * For {@value io.micronaut.security.authentication.AuthenticationMode#IDTOKEN} authentication mode performs the following verification as described in the OpenID Connect Spec.
  *
  * - The Issuer Identifier for the OpenID Provider (which is typically obtained during Discovery) MUST exactly match the value of the iss (issuer) Claim.
  * - The Client MUST validate that the aud (audience) Claim contains its client_id value registered at the Issuer identified by the iss (issuer) Claim as an audience. The aud (audience) Claim MAY contain an array with more than one element.
  * - If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is present.
  * - If an azp (authorized party) Claim is present, the Client SHOULD verify that its client_id is the Claim Value.
  *  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a>
+ *
  * @author Sergio del Amo
  * @since 2.2.0
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
-@Requires(property = JwtClaimsValidator.PREFIX + ".openid-idtoken", notEquals = StringUtils.FALSE)
+@Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".openid-idtoken", notEquals = StringUtils.FALSE)
 @Singleton
 public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
     protected static final Logger LOG = LoggerFactory.getLogger(IdTokenClaimsValidator.class);
@@ -63,7 +66,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     @Override
-    public boolean validate(JwtClaims claims) {
+    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
         Optional<String> claimIssuerOptional = parseIssuerClaim(claims);
         if (!claimIssuerOptional.isPresent()) {
             return false;

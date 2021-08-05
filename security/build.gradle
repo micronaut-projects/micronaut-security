@@ -5,12 +5,13 @@ dependencies {
     api "io.micronaut:micronaut-validation"
     api project(":security-annotations")
 
+    implementation "io.projectreactor:reactor-core"
+
     testImplementation "io.micronaut:micronaut-http-client"
     testAnnotationProcessor project(":security-annotations")
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-http-server-netty"
-
-    testImplementation "io.projectreactor:reactor-core"
+    testImplementation project(":test-suite-utils")
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 
 /**
  * An OAuth 2.0 provider endpoint.

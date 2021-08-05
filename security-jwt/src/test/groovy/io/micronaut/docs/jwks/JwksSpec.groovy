@@ -7,7 +7,7 @@ import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
-import io.micronaut.testutils.YamlAsciidocTagCleaner
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
 import spock.lang.Shared

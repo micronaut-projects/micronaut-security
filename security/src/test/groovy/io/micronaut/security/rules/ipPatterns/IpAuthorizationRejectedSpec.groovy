@@ -1,23 +1,16 @@
 package io.micronaut.security.rules.ipPatterns
 
-
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.rules.SecurityRule
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
-
-import javax.inject.Singleton
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import jakarta.inject.Singleton
 
 class IpAuthorizationRejectedSpec extends EmbeddedServerSpecification {
     @Override
@@ -55,15 +48,10 @@ class IpAuthorizationRejectedSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'IpAuthorizationRejectedSpec')
     @Singleton
-    static class CustomAuthenticationProvider implements AuthenticationProvider {
+    static class CustomAuthenticationProvider extends MockAuthenticationProvider {
 
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flowable.create({emitter ->
-                emitter.onNext(new UserDetails(authenticationRequest.identity as String, []))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+        CustomAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
-
 }

@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.context.annotation.DefaultImplementation;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * Responsible for serialization and de-serialization of the state.

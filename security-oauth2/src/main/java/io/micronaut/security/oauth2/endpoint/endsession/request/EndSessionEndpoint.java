@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * Represents the end session endpoint of an OpenID provider.

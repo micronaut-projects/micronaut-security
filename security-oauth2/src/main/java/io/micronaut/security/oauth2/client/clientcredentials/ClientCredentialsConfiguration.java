@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.http.util.OutgointRequestProcessorMatcher;
 import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;

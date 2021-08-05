@@ -13,7 +13,7 @@ import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
-import io.micronaut.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 
 class SignRSANotEncrypSpec extends EmbeddedServerSpecification implements AuthorizationUtils {
 

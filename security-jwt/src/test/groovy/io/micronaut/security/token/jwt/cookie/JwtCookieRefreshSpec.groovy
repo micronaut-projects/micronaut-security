@@ -7,12 +7,12 @@ import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.endpoints.OauthController
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import io.micronaut.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.web.router.RouteMatch
 import io.micronaut.web.router.Router
 import org.reactivestreams.Publisher
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
 
@@ -46,9 +46,6 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
     }
 
     void "test refreshing the token"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         to HomePage
 

@@ -15,15 +15,18 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
-import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.util.Collection;
 
 /**
@@ -69,16 +72,14 @@ public class JwtTokenValidator implements TokenValidator {
     }
 
     /***
-     * @deprecated Use {@link JwtTokenValidator#validateToken(String, io.micronaut.http.HttpRequest)} instead.
      * @param token The token string.
      * @return Publishes {@link Authentication} based on the JWT or empty if the validation fails.
      */
     @Override
-    @Deprecated
-    public Publisher<Authentication> validateToken(String token) {
-        return validator.validate(token)
+    public Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
+        return validator.validate(token, request)
                 .flatMap(jwtAuthenticationFactory::createAuthentication)
-                .map(Flowable::just)
-                .orElse(Flowable.empty());
+                .map(Flux::just)
+                .orElse(Flux.empty());
     }
 }

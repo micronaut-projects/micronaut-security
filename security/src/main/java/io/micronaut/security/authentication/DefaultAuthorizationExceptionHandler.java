@@ -15,16 +15,20 @@
  */
 package io.micronaut.security.authentication;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.http.*;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 

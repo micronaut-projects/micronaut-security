@@ -2,9 +2,8 @@ package io.micronaut.security.utils.serverrequestcontextspec
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
-import io.reactivex.Flowable
 import spock.lang.AutoCleanup
 import spock.lang.Ignore
 import spock.lang.Shared
@@ -18,8 +17,10 @@ class ServerRequestContextReactiveSpec extends Specification {
             'spec.name': 'ServerRequestContextReactiveSpec',
             ])
 
-    @Shared @AutoCleanup RxHttpClient httpClient =
-            embeddedServer.getApplicationContext().createBean(RxHttpClient.class, embeddedServer.URL)
+    @Shared
+    @AutoCleanup
+    HttpClient httpClient =
+            embeddedServer.getApplicationContext().createBean(HttpClient.class, embeddedServer.URL)
 
     def "verifies ServerRequestContext.currentRequest() does not return null for reactive flows"() {
         expect:
@@ -27,26 +28,14 @@ class ServerRequestContextReactiveSpec extends Specification {
 
         when:
 
-        Flowable<Message> messages = httpClient.retrieve(HttpRequest.GET("/test/request-context/simple"), Message)
-
-        then:
-        messages
-
-        when:
-        Message message = messages.blockingFirst()
+        Message message = httpClient.toBlocking().retrieve(HttpRequest.GET("/test/request-context/simple"), Message)
 
         then:
         message
         message.message == 'Sergio'
 
         when:
-        messages = httpClient.retrieve(HttpRequest.GET("/test/request-context"), Message)
-
-        then:
-        messages
-
-        when:
-        message = messages.blockingFirst()
+        message = httpClient.toBlocking().retrieve(HttpRequest.GET("/test/request-context"), Message)
 
         then:
         message
@@ -55,13 +44,7 @@ class ServerRequestContextReactiveSpec extends Specification {
 
     def "verify flowable with subscribe on"() {
         when:
-        def messages = httpClient.retrieve(HttpRequest.GET("/test/request-context/flowable-subscribeon"), Message)
-
-        then:
-        messages
-
-        when:
-        def message = messages.blockingFirst()
+        Message message = httpClient.toBlocking().retrieve(HttpRequest.GET("/test/request-context/flowable-subscribeon"), Message)
 
         then:
         message
@@ -70,13 +53,7 @@ class ServerRequestContextReactiveSpec extends Specification {
 
     def "verify flowable callable"() {
         when:
-        def messages = httpClient.retrieve(HttpRequest.GET("/test/request-context/flowable-callable"), Message)
-
-        then:
-        messages
-
-        when:
-        def message = messages.blockingFirst()
+        Message message = httpClient.toBlocking().retrieve(HttpRequest.GET("/test/request-context/flowable-callable"), Message)
 
         then:
         message
@@ -85,13 +62,7 @@ class ServerRequestContextReactiveSpec extends Specification {
 
     def "verify flux"() {
         when:
-        def messages = httpClient.retrieve(HttpRequest.GET("/test/request-context/flux"), Message)
-
-        then:
-        messages
-
-        when:
-        def message = messages.blockingFirst()
+        Message message = httpClient.toBlocking().retrieve(HttpRequest.GET("/test/request-context/flux"), Message)
 
         then:
         message
@@ -101,13 +72,7 @@ class ServerRequestContextReactiveSpec extends Specification {
     @Ignore
     def "verify flux subscribe on"() {
         when:
-        def messages = httpClient.retrieve(HttpRequest.GET("/test/request-context/flux-subscribeon"), Message)
-
-        then:
-        messages
-
-        when:
-        def message = messages.blockingFirst()
+        Message message = httpClient.toBlocking().retrieve(HttpRequest.GET("/test/request-context/flux-subscribeon"), Message)
 
         then:
         message

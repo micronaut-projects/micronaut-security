@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
@@ -24,11 +24,8 @@ import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -57,36 +54,19 @@ public class DefaultOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
      * @param openIdAdditionalClaimsConfiguration The additional claims configuration
      * @param authenticationModeConfiguration Authentication Mode Configuration
      */
-    @Inject
     public DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration,
                                           AuthenticationModeConfiguration authenticationModeConfiguration) {
         this.openIdAdditionalClaimsConfiguration = openIdAdditionalClaimsConfiguration;
         this.authenticationModeConfiguration = authenticationModeConfiguration;
     }
 
-    /**
-     * @deprecated Use {@link DefaultOpenIdUserDetailsMapper#DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration, AuthenticationModeConfiguration)} instead.
-     * @param openIdAdditionalClaimsConfiguration The additional claims configuration
-     */
-    @Deprecated
-    public DefaultOpenIdUserDetailsMapper(OpenIdAdditionalClaimsConfiguration openIdAdditionalClaimsConfiguration) {
-        this(openIdAdditionalClaimsConfiguration, null);
-    }
-
     @NonNull
     @Override
-    @Deprecated
-    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+    public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
         Map<String, Object> claims = buildAttributes(providerName, tokenResponse, openIdClaims);
         List<String> roles = getRoles(providerName, tokenResponse, openIdClaims);
         String username = getUsername(providerName, tokenResponse, openIdClaims);
         return new UserDetails(username, roles, claims);
-    }
-
-    @NonNull
-    @Override
-    public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        return createUserDetails(providerName, tokenResponse, openIdClaims);
     }
 
     /**

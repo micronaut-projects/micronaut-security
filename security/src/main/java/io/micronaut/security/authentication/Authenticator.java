@@ -15,16 +15,19 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
-import io.reactivex.BackpressureStrategy;
 import io.micronaut.security.config.AuthenticationStrategy;
 import io.micronaut.security.config.SecurityConfiguration;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.CompositeException;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
+import reactor.core.Exceptions;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Mono;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -65,76 +68,78 @@ public class Authenticator {
      */
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> request, AuthenticationRequest<?, ?> authenticationRequest) {
         if (this.authenticationProviders == null) {
-            return Flowable.empty();
+            return Flux.empty();
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug(authenticationProviders.stream().map(AuthenticationProvider::getClass).map(Class::getName).collect(Collectors.joining()));
         }
-
+        Flux<AuthenticationResponse>[] emptyArr = new Flux[0];
         if (securityConfiguration != null && securityConfiguration.getAuthenticationProviderStrategy() == AuthenticationStrategy.ALL) {
-            return Flowable.mergeDelayError(
+
+            return Flux.mergeDelayError(1,
                     authenticationProviders.stream()
                             .map(provider -> {
-                                return Flowable.fromPublisher(provider.authenticate(request, authenticationRequest))
+                                return Flux.from(provider.authenticate(request, authenticationRequest))
                                         .switchMap(response -> {
                                             if (response.isAuthenticated()) {
-                                                return Flowable.just(response);
+                                                return Flux.just(response);
                                             } else {
-                                                return Flowable.error(() -> new AuthenticationException(response));
+                                                return Flux.error(() -> new AuthenticationException(response));
                                             }
                                         })
-                                        .switchIfEmpty(Flowable.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected")));
+                                        .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected")));
                             })
-                            .collect(Collectors.toList()))
-                    .lastOrError()
-                    .onErrorReturn((t) -> {
-                        if (t instanceof CompositeException) {
-                            List<Throwable> exceptions = ((CompositeException) t).getExceptions();
-                            return new AuthenticationFailed(exceptions.get(exceptions.size() - 1).getMessage());
-                        } else {
-                            return new AuthenticationFailed(t.getMessage());
-                        }
-                    })
-                    .toFlowable();
+                            .collect(Collectors.toList())
+                    .toArray(emptyArr))
+                    .last()
+                    .onErrorResume(t -> Mono.just(authenticationResponseForThrowable(t)))
+                    .flux();
         } else {
             AtomicReference<Throwable> lastError = new AtomicReference<>();
-
-            Flowable<AuthenticationResponse> authentication = Flowable.mergeDelayError(authenticationProviders.stream()
+            Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  authenticationProviders.stream()
                     .map(auth -> auth.authenticate(request, authenticationRequest))
-                    .map(Flowable::fromPublisher)
-                    .map(flow ->
-                        flow.switchMap(response -> {
-                            if (response.isAuthenticated()) {
-                                return Flowable.just(response);
-                            } else {
-                                return Flowable.error(new AuthenticationException(response));
-                            }
-                        }).onErrorResumeNext(t -> {
-                            lastError.set(t);
-                            return Flowable.empty();
-                        })
-                    )
-                    .collect(Collectors.toList()));
+                    .map(Flux::from)
+                    .map(sequence -> sequence.switchMap(response -> {
+                        if (response.isAuthenticated()) {
+                            return Flux.just(response);
+                        } else {
+                            return Flux.error(new AuthenticationException(response));
+                        }
+                    }).onErrorResume(t -> {
+                        lastError.set(t);
+                        return Flux.empty();
+                    })).collect(Collectors.toList())
+                    .toArray(emptyArr));
 
-            return authentication.take(1).switchIfEmpty(Flowable.create((emitter) -> {
+            return authentication.take(1)
+                    .switchIfEmpty(Flux.create((emitter) -> {
                 Throwable error = lastError.get();
                 if (error != null) {
                     if (error instanceof AuthenticationException) {
                         AuthenticationResponse response = ((AuthenticationException) error).getResponse();
                         if (response != null) {
-                            emitter.onNext(response);
-                            emitter.onComplete();
+                            emitter.next(response);
+                            emitter.complete();
                         } else {
-                            emitter.onError(error);
+                            emitter.error(error);
                         }
                     } else {
-                        emitter.onError(error);
+                        emitter.error(error);
                     }
                 } else {
-                    emitter.onComplete();
+                    emitter.complete();
                 }
-            }, BackpressureStrategy.ERROR));
+            }, FluxSink.OverflowStrategy.ERROR));
         }
+    }
+
+    @NonNull
+    private AuthenticationResponse authenticationResponseForThrowable(Throwable t) {
+        if (Exceptions.isMultiple(t)) {
+            List<Throwable> exceptions = Exceptions.unwrapMultiple(t);
+            return new AuthenticationFailed(exceptions.get(exceptions.size() - 1).getMessage());
+        }
+        return new AuthenticationFailed(t.getMessage());
     }
 
 }

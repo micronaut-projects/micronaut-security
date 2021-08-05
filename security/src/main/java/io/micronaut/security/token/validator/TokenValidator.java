@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.validator;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
@@ -31,17 +31,6 @@ public interface TokenValidator extends Ordered {
 
     /**
      * Validates the provided token and returns the authentication state.
-     * @deprecated Use {@link TokenValidator#validateToken(String, HttpRequest)} instead.
-     * @param token The token string
-     * @return An authentication publisher. If the publisher emits an error, no further validators will
-     * be attempted and the validation will fail. If the publisher is empty, further validators will be
-     * attempted. If the publisher emits an authentication, that authentication will be used.
-     */
-    @Deprecated
-    Publisher<Authentication> validateToken(String token);
-  
-    /**
-     * Validates the provided token and returns the authentication state.
      *
      * @param token The token string
      * @param request The current request (or null)
@@ -49,8 +38,6 @@ public interface TokenValidator extends Ordered {
      * be attempted and the validation will fail. If the publisher is empty, further validators will be
      * attempted. If the publisher emits an authentication, that authentication will be used.
      */
-    default Publisher<Authentication> validateToken(String token,
-                                                    @Nullable HttpRequest<?> request) {
-        return validateToken(token);
-    }
+    Publisher<Authentication> validateToken(String token,
+                                            @Nullable HttpRequest<?> request);
 }

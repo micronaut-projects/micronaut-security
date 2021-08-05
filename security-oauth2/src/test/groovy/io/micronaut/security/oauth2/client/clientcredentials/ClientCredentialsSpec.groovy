@@ -5,8 +5,8 @@ import com.nimbusds.jose.JOSEException
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.RSAKey
-import edu.umd.cs.findbugs.annotations.NonNull
-import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Property
@@ -45,7 +45,7 @@ import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import io.reactivex.Flowable
+import reactor.core.publisher.Flux
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.AutoCleanup
@@ -53,8 +53,8 @@ import spock.lang.Narrative
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import javax.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -278,7 +278,7 @@ class ClientCredentialsSpec extends Specification {
         clientCredentialsClient.name == 'authservermanual'
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
+        TokenResponse tokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
 
         then:
         noExceptionThrown()
@@ -306,7 +306,7 @@ class ClientCredentialsSpec extends Specification {
         clientCredentialsClient.name == 'authservermanualtakesprecedenceoveropenid'
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
+        TokenResponse tokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
 
         then:
         noExceptionThrown()
@@ -332,7 +332,7 @@ class ClientCredentialsSpec extends Specification {
         noExceptionThrown()
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
+        TokenResponse tokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
 
         then:
         noExceptionThrown()
@@ -354,7 +354,7 @@ class ClientCredentialsSpec extends Specification {
         ClientCredentialsClient clientCredentialsClient = applicationContext.getBean(ClientCredentialsClient, Qualifiers.byName("authservermanual"))
 
         when:
-        TokenResponse tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
+        TokenResponse tokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
 
         then:
         noExceptionThrown()
@@ -372,14 +372,14 @@ class ClientCredentialsSpec extends Specification {
 
         when: 'calling client credentials returns the old access token'
         authServer.applicationContext.getBean(TokenController).down = true
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
+        tokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
 
         then:
         tokenResponse.accessToken == accessToken
 
         when: 'calling client credentials with different scope returns a different access token'
         authServer.applicationContext.getBean(TokenController).down = false
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken("email")).blockingFirst()
+        tokenResponse = Flux.from(clientCredentialsClient.requestToken("email")).blockFirst()
 
         then:
         noExceptionThrown()
@@ -394,7 +394,7 @@ class ClientCredentialsSpec extends Specification {
         resourceResp.status == HttpStatus.UNAUTHORIZED
 
         when: 'calling client credentials returns the new token because the previous token is detected as expired'
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken()).blockingFirst()
+        tokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
 
         then:
         noExceptionThrown()
@@ -402,7 +402,7 @@ class ClientCredentialsSpec extends Specification {
 
         when: 'moreover, calling client credentials with force true returns a different access token'
         accessToken = tokenResponse.accessToken
-        tokenResponse = Flowable.fromPublisher(clientCredentialsClient.requestToken(true)).blockingFirst()
+        tokenResponse = Flux.from(clientCredentialsClient.requestToken(true)).blockFirst()
 
         then:
         noExceptionThrown()

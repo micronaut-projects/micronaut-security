@@ -7,11 +7,12 @@ import io.micronaut.security.token.Claims
 import io.micronaut.security.token.DefaultRolesFinder
 import io.micronaut.security.token.RolesFinder
 import io.micronaut.security.token.config.TokenConfiguration
+import reactor.core.publisher.Mono
 import spock.lang.Issue
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import edu.umd.cs.findbugs.annotations.NonNull
+import io.micronaut.core.annotation.NonNull
 
 class InterceptUrlMapRuleSpec extends Specification {
 
@@ -32,7 +33,7 @@ class InterceptUrlMapRuleSpec extends Specification {
         }
 
         expect:
-        rule.check(HttpRequest.GET(uri), null, [roles: ["ROLE_ADMIN"]]) == expectedResult
+        Mono.from(rule.check(HttpRequest.GET(uri), null, [roles: ["ROLE_ADMIN"]])).block() == expectedResult
 
         where:
         uri             || expectedResult
@@ -64,7 +65,7 @@ class InterceptUrlMapRuleSpec extends Specification {
         }
 
         expect:
-        rule.check(request, null, null) == expectedResult
+        Mono.from(rule.check(request, null, null)).block() == expectedResult
 
         where:
         request                                       || expectedResult

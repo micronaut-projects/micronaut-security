@@ -1,10 +1,10 @@
 The decision to allow access to a particular endpoint to anonymous or authenticated users is determined by a collection of
 Security Rules. Micronaut ships with several built-in security rules. If they don't fulfil your needs,
-you can implement your own link:{api}/io/micronaut/security/rules/SecurityRule.html[SecurityRule] or link:{api}/io/micronaut/security/rules/ReactiveSecurityRule.tml[ReactiveSecurityRule]. You should use the Reactive variant and subscribe on another thread pool if you need to do any blocking work in order to not block the netty event loop.
+you can implement your own api:security.rules.SecurityRule[].
 
 Security rules implement the ordered interface and they are executed in order. All of the existing rules have a static variable `ORDER` that stores the order of that rule. You can use those variables to place your own rule before or after any of the existing rules.
 
-Security rules return a api:security.rules.SecurityRuleResult[] while Reactive security rules return a publisher of api:security.rules.SecurityRuleResult[]. See the following table for a description of each result.
+Security rules return a publisher that should emit a single api:security.rules.SecurityRuleResult[]. See the following table for a description of each result.
 
 |===
 |Result |Description
@@ -20,5 +20,7 @@ Security rules return a api:security.rules.SecurityRuleResult[] while Reactive s
 |===
 
 IMPORTANT: If all security rules return `UNKNOWN`, the request will be rejected!
+
+WARNING: Do not execute any blocking operations in the rule implementation without offloading those operations to another thread pool.
 
 

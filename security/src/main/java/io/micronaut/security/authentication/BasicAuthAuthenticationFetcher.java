@@ -15,19 +15,18 @@
  */
 package io.micronaut.security.authentication;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.config.TokenConfiguration;
-import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
 
-import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
@@ -55,36 +54,25 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
 
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
-        Optional<UsernamePasswordCredentials> credentials = request.getHeaders().getAuthorization().flatMap(this::parseCredentials);
+        Optional<UsernamePasswordCredentials> credentials = request.getHeaders().getAuthorization().flatMap(BasicAuthUtils::parseCredentials);
 
         if (credentials.isPresent()) {
-            Flowable<AuthenticationResponse> authenticationResponse = Flowable.fromPublisher(authenticator.authenticate(request, credentials.get()));
+            Flux<AuthenticationResponse> authenticationResponse = Flux.from(authenticator.authenticate(request, credentials.get()));
 
             return authenticationResponse.switchMap(response -> {
                 if (response.isAuthenticated()) {
                     UserDetails userDetails = response.getUserDetails().get();
-                    return Flowable.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName(), configuration.getNameKey()));
+                    return Flux.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName(), configuration.getNameKey()));
                 } else {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Could not authenticate {}", credentials.get().getUsername());
                     }
-                    return Flowable.empty();
+                    return Publishers.empty();
                 }
             });
 
         } else {
             return Publishers.empty();
         }
-    }
-
-    /**
-     *
-     * @param authorization Authorization HTTP Header value
-     * @return Extracted Credentials as a {@link UsernamePasswordCredentials} or an empty optional if not possible.
-     */
-    @Deprecated
-    @NonNull
-    public Optional<UsernamePasswordCredentials> parseCredentials(@NonNull String authorization) {
-        return BasicAuthUtils.parseCredentials(authorization);
     }
 }

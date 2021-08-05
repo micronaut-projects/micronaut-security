@@ -4,11 +4,11 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.security.oauth2.EmbeddedServerSpecification
-import io.micronaut.security.oauth2.Keycloak
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
@@ -37,7 +37,7 @@ class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecif
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test authorization redirect with just openid"() {
         given:
-        RxHttpClient client = applicationContext.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
+        HttpClient client = applicationContext.createBean(HttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
 
         expect:
         applicationContext.findBean(OpenIdClient, Qualifiers.byName("keycloak")).isPresent()

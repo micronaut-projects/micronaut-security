@@ -19,7 +19,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 import io.micronaut.security.oauth2.url.AbsoluteUrlBuilder;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.net.URL;
 
 /**

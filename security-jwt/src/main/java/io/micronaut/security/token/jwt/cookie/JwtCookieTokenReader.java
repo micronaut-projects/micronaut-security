@@ -21,9 +21,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.reader.TokenReader;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Optional;
 
 /**
@@ -43,28 +41,13 @@ public class JwtCookieTokenReader implements TokenReader {
      */
     public static final Integer ORDER = 0;
 
-    @Deprecated
-    protected final JwtCookieConfiguration jwtCookieConfiguration;
     protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
-
-    /**
-     *
-     * @param jwtCookieConfiguration Configuration properties for JWT Cookie support
-     * @deprecated Use {@link JwtCookieTokenReader#JwtCookieTokenReader(AccessTokenCookieConfiguration)} instead
-     */
-    @Deprecated
-    public JwtCookieTokenReader(JwtCookieConfiguration jwtCookieConfiguration) {
-        this.jwtCookieConfiguration = jwtCookieConfiguration;
-        this.accessTokenCookieConfiguration = jwtCookieConfiguration;
-    }
 
     /**
      *
      * @param accessTokenCookieConfiguration Configuration properties for JWT Cookie support
      */
-    @Inject
     public JwtCookieTokenReader(AccessTokenCookieConfiguration accessTokenCookieConfiguration) {
-        this.jwtCookieConfiguration = null;
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
     }
 

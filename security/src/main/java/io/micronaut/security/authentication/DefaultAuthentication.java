@@ -19,8 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import javax.annotation.concurrent.Immutable;
+import io.micronaut.core.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,6 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.0.1
  */
-@Immutable
 @Introspected
 public class DefaultAuthentication implements Authentication {
 

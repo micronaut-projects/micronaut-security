@@ -1,13 +1,22 @@
-The claims of a JSON Web Token are validated using every bean of type api:security.token.jwt.validator.GenericJwtClaimsValidator[]. 
+The claims of a JSON Web Token are validated using every bean of type api:security.token.jwt.validator.GenericJwtClaimsValidator[].
 
-Micronaut Security includes some validators by default: 
+Micronaut Security includes some validators by default:
 
 |===
 | Bean | Description | Enabled
-| api:io.micronaut.security.oauth2.client.ExpirationJwtClaimsValidator[]  
-|  JWT is not expired. It uses the `exp` claim.
+| api:io.micronaut.security.token.jwt.validator.AudienceJwtClaimsValidatorSpec[]
+| JWT `aud` claim includes an expected value.
+| Enabled when the `micronaut.security.token.jwt.claims-validators.audience` property is set.
+| api:io.micronaut.security.token.jwt.validator.ExpirationJwtClaimsValidator[]
+| JWT is not expired. It uses the `exp` claim.
 | Enabled by default. You can disable it by setting `micronaut.security.token.jwt.claims-validators.expiration` to false.
-| api:io.micronaut.security.oauth2.client.SubjectNotNullJwtClaimsValidator[]
+| api:io.micronaut.security.token.jwt.validator.IssuerJwtClaimsValidator[]
+| JWT `iss` claim is set to an expected value.
+| Enabled when the `micronaut.security.token.jwt.claims-validators.issuer` property is set.
+| api:io.micronaut.security.token.jwt.validator.NotBeforeJwtClaimsValidator[]
+| If the JWT `nbf` claim is set, the token should only be valid if the current date is not before the provided date.
+| Disabled by default.  Enabled when the `micronaut.security.token.jwt.claims-validators.not-before` property is set to `true`
+| api:io.micronaut.security.token.jwt.validator.SubjectNotNullJwtClaimsValidator[]
 | JWT `sub` claim is not null.
 | Enabled by default. You can disable it by setting `micronaut.security.token.jwt.claims-validators.subject` to false.
 |===

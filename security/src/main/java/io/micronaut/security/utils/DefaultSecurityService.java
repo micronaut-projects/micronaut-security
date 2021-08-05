@@ -17,12 +17,8 @@ package io.micronaut.security.utils;
 
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.DefaultRolesFinder;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.security.token.config.TokenConfiguration;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Optional;
@@ -35,29 +31,13 @@ import java.util.Optional;
  */
 @Singleton
 public class DefaultSecurityService implements SecurityService {
-    /**
-     * @deprecated This constant is no longer used and it will be removed in the next mayor version
-     */
-    @Deprecated
-    public static final String ROLES = "roles";
-
+    
     private final RolesFinder rolesFinder;
-
-    /**
-     *
-     * @param tokenConfiguration Token Configuration
-     * @deprecated Use {@link DefaultSecurityService( RolesFinder )} instead.
-     */
-    @Deprecated
-    public DefaultSecurityService(TokenConfiguration tokenConfiguration) {
-        this(new DefaultRolesFinder(tokenConfiguration));
-    }
 
     /**
      *
      * @param rolesFinder Roles Parser
      */
-    @Inject
     public DefaultSecurityService(RolesFinder rolesFinder) {
         this.rolesFinder = rolesFinder;
     }
@@ -104,22 +84,5 @@ public class DefaultSecurityService implements SecurityService {
         return getAuthentication()
                 .map(authentication -> rolesFinder.hasAnyRequiredRoles(Collections.singletonList(role), authentication))
                 .orElse(false);
-    }
-
-    /**
-     * If the current user has a specific role.
-     *
-     * @param role the authority to check
-     * @param  rolesKey The map key to be used in the authentications attributes. E.g. "roles".
-     * @return true if the current user has the authority, false otherwise
-     * @deprecated use {@link DefaultSecurityService#hasRole(String) instead}
-     */
-    @Deprecated
-    @Override
-    public boolean hasRole(String role, String rolesKey) {
-        if (role == null || rolesKey == null) {
-            return false;
-        }
-        return hasRole(role);
     }
 }

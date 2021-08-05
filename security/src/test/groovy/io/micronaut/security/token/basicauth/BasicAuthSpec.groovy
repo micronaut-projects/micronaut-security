@@ -4,20 +4,11 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.EmbeddedServerSpecification
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.authentication.BasicAuthAuthenticationFetcher
-import io.micronaut.security.authentication.UserDetails
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
-
-import javax.inject.Singleton
-
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import jakarta.inject.Singleton
 class BasicAuthSpec extends EmbeddedServerSpecification {
 
     @Override
@@ -93,21 +84,9 @@ class BasicAuthSpec extends EmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'BasicAuthSpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', []))
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-
-            }, BackpressureStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user', 'password')])
         }
     }
-
 }

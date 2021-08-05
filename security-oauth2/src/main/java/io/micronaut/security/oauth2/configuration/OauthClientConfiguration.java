@@ -25,8 +25,8 @@ import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.grants.GrantType;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 
 import java.time.Duration;
 import java.util.Collections;

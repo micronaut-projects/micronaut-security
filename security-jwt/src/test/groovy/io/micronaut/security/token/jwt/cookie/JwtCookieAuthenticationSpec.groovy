@@ -1,8 +1,8 @@
 package io.micronaut.security.token.jwt.cookie
 
-import edu.umd.cs.findbugs.annotations.Nullable
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -12,24 +12,16 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.endpoints.LogoutController
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.token.jwt.bearer.BearerTokenReader
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.testutils.GebEmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
+import jakarta.inject.Singleton
 
-import javax.inject.Singleton
 import java.security.Principal
 
 class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
@@ -117,9 +109,6 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
     }
 
     def "verify jwt cookie authentication works"() {
-        given:
-        browser.baseUrl = "http://localhost:${embeddedServer.port}"
-
         when:
         to HomePage
 
@@ -176,19 +165,9 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "JwtCookieAuthenticationSpec")
     @Singleton
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider  {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                if ( authenticationRequest.getIdentity().equals("sherlock") &&
-                        authenticationRequest.getSecret().equals("password") ) {
-                    emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()))
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-            }, BackpressureStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('sherlock')])
         }
     }
 

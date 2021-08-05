@@ -20,7 +20,7 @@ import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestC
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 
 /**
  * Responsible for sending requests to a token endpoint.

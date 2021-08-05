@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -28,8 +28,6 @@ import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RefreshRedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
-
-import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -44,8 +42,6 @@ import java.util.Optional;
  */
 public abstract class CookieLoginHandler implements RedirectingLoginHandler {
 
-    @Deprecated
-    protected final JwtCookieConfiguration jwtCookieConfiguration;
     protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
     protected final PriorToLoginPersistence priorToLoginPersistence;
     protected final String loginFailure;
@@ -57,7 +53,6 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
      * @param redirectConfiguration Redirect configuration
      * @param priorToLoginPersistence The prior to login persistence strategy
      */
-    @Inject
     public CookieLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                               RedirectConfiguration redirectConfiguration,
                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
@@ -67,50 +62,28 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
         this.refresh = refreshConfig.isEnabled() ? refreshConfig.getUrl() : null;
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
-        this.jwtCookieConfiguration = null;
     }
 
     /**
-     * @param redirectConfiguration Redirect configuration
-     * @param jwtCookieConfiguration JWT Cookie Configuration
-     * @param priorToLoginPersistence The prior to login persistence strategy
-     * @deprecated Use {@link CookieLoginHandler#CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)} instead.
-     */
-    @Deprecated
-    public CookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
-                              RedirectConfiguration redirectConfiguration,
-                              @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this.loginFailure = redirectConfiguration.getLoginFailure();
-        this.loginSuccess = redirectConfiguration.getLoginSuccess();
-        RefreshRedirectConfiguration refreshConfig = redirectConfiguration.getRefresh();
-        this.refresh = refreshConfig.isEnabled() ? refreshConfig.getUrl() : null;
-        this.jwtCookieConfiguration = jwtCookieConfiguration;
-        this.accessTokenCookieConfiguration = jwtCookieConfiguration;
-        this.priorToLoginPersistence = priorToLoginPersistence;
-    }
-
-    /**
+     * Return the cookies for the given parameters. This method will generate new cookies based on the current
+     * configuration.
      *
-     * @param jwtCookieConfiguration JWT Cookie Configuration
-     * @param loginSuccess Url to redirect to after a successful Login
-     * @param loginFailure Url to redirect to after an unsuccessful login
-     * @deprecated Use {@link CookieLoginHandler#CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)} instead.
+     * @param userDetails The Authenticated user's representation
+     * @param request The current request
+     * @return A list of cookies
      */
-    @Deprecated
-    public CookieLoginHandler(JwtCookieConfiguration jwtCookieConfiguration,
-                              String loginSuccess,
-                              String loginFailure) {
-        this.loginFailure = loginFailure;
-        this.loginSuccess = loginSuccess;
-        this.refresh = "/";
-        this.jwtCookieConfiguration = jwtCookieConfiguration;
-        this.accessTokenCookieConfiguration = jwtCookieConfiguration;
-        this.priorToLoginPersistence = null;
-    }
+    public abstract List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request);
 
-    protected abstract List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request);
-
-    protected abstract List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request);
+    /**
+     * Return the cookies for the given parameters. This method will generate new cookies based on the current
+     * configuration.
+     *
+     * @param userDetails The Authenticated user's representation
+     * @param refreshToken The access refresh token
+     * @param request The current request
+     * @return A list of cookies
+     */
+    public abstract List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request);
 
     @Override
     public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {

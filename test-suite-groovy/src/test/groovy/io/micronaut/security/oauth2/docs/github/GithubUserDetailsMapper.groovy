@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.docs.github
 
-import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -12,8 +12,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapp
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 
 @Named("github") // <1>
 //end::clazz[]
@@ -26,11 +26,6 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 
     GithubUserDetailsMapper(GithubApiClient apiClient) { // <2>
         this.apiClient = apiClient
-    }
-
-    @Override
-    Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
-        Publishers.just(new UnsupportedOperationException())
     }
 
     @Override

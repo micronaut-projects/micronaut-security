@@ -19,7 +19,9 @@ import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.web.router.RouteMatch;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
+import org.reactivestreams.Publisher;
+
 import java.util.Map;
 
 /**
@@ -46,7 +48,8 @@ public interface SecurityRule extends Ordered {
     String DENY_ALL = "denyAll()";
 
     /**
-     * Returns a security result based on any conditions.
+     * Returns a publisher that is required to emit a single security result
+     * based on any conditions.
      * @see SecurityRuleResult
      *
      * @param request The current request
@@ -54,5 +57,5 @@ public interface SecurityRule extends Ordered {
      * @param claims The claims from the token. Null if not authenticated
      * @return The result
      */
-    SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable  Map<String, Object> claims);
+    Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims);
 }

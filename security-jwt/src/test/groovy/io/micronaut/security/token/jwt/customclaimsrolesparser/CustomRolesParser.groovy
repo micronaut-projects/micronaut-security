@@ -6,8 +6,8 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.security.token.Claims
 import io.micronaut.security.token.DefaultRolesFinder
 import io.micronaut.security.token.RolesFinder
-import edu.umd.cs.findbugs.annotations.NonNull
-import javax.inject.Singleton
+import io.micronaut.core.annotation.NonNull
+import jakarta.inject.Singleton
 
 @CompileStatic
 @Requires(property = "spec.name", value = "customclaimsrolesparser")

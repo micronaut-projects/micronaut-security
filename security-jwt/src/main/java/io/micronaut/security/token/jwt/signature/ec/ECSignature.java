@@ -25,7 +25,7 @@ import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 import java.security.interfaces.ECPublicKey;
 
 /**

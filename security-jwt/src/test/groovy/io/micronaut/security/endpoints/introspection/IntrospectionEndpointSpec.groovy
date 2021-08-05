@@ -6,19 +6,12 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
-import io.micronaut.testutils.EmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 class IntrospectionEndpointSpec extends EmbeddedServerSpecification {
 
@@ -156,19 +149,9 @@ class IntrospectionEndpointSpec extends EmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'IntrospectionEndpointSpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({ emitter ->
-                if (authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password') {
-                    emitter.onNext(new UserDetails('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io']))
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, BackpressureStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new  SuccessAuthenticationScenario('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'])])
         }
     }
 }

@@ -2,8 +2,7 @@ package io.micronaut.security.token.multitenancy.principal
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.multitenancy.tenantresolver.TenantResolver
-
-import javax.inject.Singleton
+import jakarta.inject.Singleton;
 import java.util.concurrent.ConcurrentHashMap
 
 @Requires(property = 'spec.name', value = 'multitenancy.principal.gorm')

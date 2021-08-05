@@ -2,4 +2,4 @@ It is possible to configure the user info endpoint URL for OpenID providers, how
 
 See the following configuration table:
 
-include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.adoc[]

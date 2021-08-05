@@ -1,6 +1,6 @@
 package io.micronaut.security.token.jwt.generator
 
-import io.micronaut.testutils.ApplicationContextSpecification
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class RefreshTokenConfigurationSpec extends ApplicationContextSpecification {
 

@@ -17,8 +17,8 @@ package io.micronaut.security.token;
 
 import io.micronaut.security.token.config.TokenConfiguration;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import javax.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 

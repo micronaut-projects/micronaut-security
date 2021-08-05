@@ -1,28 +1,21 @@
 package io.micronaut.security.authorization
 
-import edu.umd.cs.findbugs.annotations.NonNull
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.security.EmbeddedServerSpecification
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.token.DefaultRolesFinder
 import io.micronaut.security.token.config.TokenConfiguration
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import org.reactivestreams.Publisher
+import jakarta.inject.Singleton
 
-import javax.inject.Singleton
 import java.security.Principal
 
 class SecuredRolesCaseInsensitiveViaRolesFinderReplacementSpec extends EmbeddedServerSpecification {
@@ -86,19 +79,9 @@ class SecuredRolesCaseInsensitiveViaRolesFinderReplacementSpec extends EmbeddedS
 
     @Singleton
     @Requires(property = 'spec.name', value = 'SecuredRolesCaseInsensitiveViaRolesFinderReplacementSpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({ emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', ['ROLE_USER']))
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, BackpressureStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user', ['ROLE_USER'])])
         }
     }
 }

@@ -6,11 +6,11 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.EmbeddedServerSpecification
-import io.micronaut.security.oauth2.Keycloak
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
@@ -18,13 +18,13 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
 import spock.lang.IgnoreIf
 
-import javax.inject.Named
-import javax.inject.Singleton
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import java.nio.charset.StandardCharsets
 
 class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
@@ -56,7 +56,7 @@ class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test authorization redirect for openid and normal oauth"() {
         given:
-        RxHttpClient client = applicationContext.createBean(RxHttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
+        HttpClient client = applicationContext.createBean(HttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
 
         expect:
         applicationContext.findBean(OpenIdClient, Qualifiers.byName("keycloak")).isPresent()
@@ -117,16 +117,11 @@ class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
     static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
 
         @Override
-        Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
-            return Publishers.just(new UnsupportedOperationException())
-        }
-
-        @Override
         Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
-            Flowable.create({ emitter ->
-                emitter.onNext(new UserDetails("twitterUser", Collections.emptyList()))
-                emitter.onComplete()
-            }, BackpressureStrategy.ERROR)
+            Flux.create({ emitter ->
+                emitter.next(new UserDetails("twitterUser", Collections.emptyList()))
+                emitter.complete()
+            }, FluxSink.OverflowStrategy.ERROR)
         }
     }
 }

@@ -1,5 +1,52 @@
-
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
+
+== 3.0.0
+
+=== Cookie Secure Configuration
+
+The following properties' default value has been removed in Micronaut Security 3.0.0:
+
+- `micronaut.security.oauth2.openid.nonce.cookie.cookie-secure`
+- `micronaut.security.oauth2.state.cookie.cookie-secure`
+- `micronaut.security.token.jwt.cookie.cookie-secure`
+- `micronaut.security.token.refresh.cookie.cookie-secure``
+
+NOTE: If the `cookie-secure` setting is not set, cookies will be secure if the request is determined to be HTTPS.
+
+=== SecurityRule Changes
+
+The api:security.rules.SecurityRule[] API has changed. The last argument to the method was a map that represented the user attributes. Instead that argument was replaced with a reference to the api:security.authentication.Authentication[]. This has the benefit of rules now having access to the username of the logged in user as well as access to the convenience method `getRoles()`.
+
+In addition, the return type of the method has changed to return a `Publisher`. This was necessary because the security rules execute as part of the security filter which may be on a non blocking thread. Because the method now returns a `Publisher`, blocking operations can be offloaded to another thread pool using the reactive streams implementation of your choice.
+
+=== Deprecations Removal
+
+Micronaut security:
+
+- Deletes deprecated methods `JwtValidator::validate(String)` and `JwtValidator::validate(JWT)`
+- Deletes deprecated class `SecuritySessionConfiguration`
+- Deletes deprecated constructor `JwtCookieClearerLogoutHandler(JwtCookieConfiguration)`
+- Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration redirectConfiguration, PriorToLoginPersistence priorToLoginPersistence)`
+- Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration,String, String)`
+- Deletes deprecated constructor `DefaultOpenIdUserDetailsMapper`
+- Deletes deprecated constructors `JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator accessRefreshTokenGenerator)`, `JwtCookieLoginHandler(RedirectConfiguration,JwtCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator accessRefreshTokenGenerator,PriorToLoginPersistence priorToLoginPersistence)`
+- Deletes deprecated constructor `IdTokenLoginHandler(JwtCookieConfiguration,RedirectConfiguration,TokenConfiguration,PriorToLoginPersistence)`
+- Deletes deprecated constructor `JwtCookieTokenReader(JwtCookieConfiguration)`
+- Deletes deprecated method `DefaultOauthClient::getTokenEndpoint`
+- Deletes `DefaultSecurityService#ROLES`
+- Deletes deprecated method `OauthUserDetailsMapper::createUserDetails(TokenResponse)`
+- Deletes `TokenValidator::validateToken(String)`
+- Deletes deprecated constructor `SessionLoginHandler(SecuritySessionConfiguration,SessionStore<Session>,TokenConfiguration)`
+- Deletes deprecated constructor `TokenRefreshRequest(String)`
+- Deletes deprecated method `SecurityService::hasRole`
+- Deletes deprecated class `TokenResponseExpiration`
+- Deletes deprecated constructor `DefaultSecurityService(TokenConfiguration)`.
+- Deletes deprecated method `OpenIdUserDetailsMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)`
+- Deletes deprecated method `BasicAuthAuthenticationFetcher::parseCredentials`
+- Deletes deprecated classes `JwtGeneratorConfiguration` and JwtGeneratorConfigurationProperties`
+- Deletes deprecated method `JwtClaimsValidator:validate(JwtClaims)`
+- Deletes deprecated constructor `JWTClaimsSetGenerator(TokenConfiguration,JwtIdGenerator, ClaimsAudienceProvider)`
+- Deletes deprecated constructor `RefreshTokenGeneratedEvent(Object)`
 
 == 2.0.0
 
@@ -25,7 +72,7 @@ The Maven Group ID has changed from `io.micronaut` to `io.micronaut.security`.
 
 === Delegating Authentication Provider
 
-* The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications. Check https://guides.micronaut.io/micronaut-database-authentication-provider-groovy/guide/index.html[LDAP and Database authentication providers tutorial] to learn how to write a `DelegatingAuthenticationProvider`.
+* The `DelegatingAuthenticationProvider` and it's related interfaces has been removed. If you provided implementations for `UserFetcher`, `UserState`, `PasswordEncoder`, and `AuthoritiesFetcher`, integrate them into your own implementation of api:security.authentication.AuthenticationProvider[]. This API was removed because it only served a niche use case and increased the surface of this library's API. None of the classes mentioned were directly used in this library and thus belong in the realm of user's applications. Check https://guides.micronaut.io/latest/micronaut-database-authentication-provider.html[LDAP and Database authentication providers tutorial] to learn how to write a `DelegatingAuthenticationProvider`.
 
 === LdapAuthenticationProvider
 

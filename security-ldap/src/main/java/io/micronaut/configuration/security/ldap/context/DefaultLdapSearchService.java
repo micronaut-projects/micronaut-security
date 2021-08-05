@@ -15,7 +15,7 @@
  */
 package io.micronaut.configuration.security.ldap.context;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;

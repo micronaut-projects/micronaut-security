@@ -20,7 +20,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * Generates a state parameter.

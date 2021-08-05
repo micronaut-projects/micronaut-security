@@ -17,14 +17,12 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims
@@ -34,12 +32,11 @@ import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.TokenValidator
-import io.micronaut.testutils.EmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 import spock.lang.Unroll
-import javax.inject.Singleton
+
 import java.security.Principal
 
 class OauthControllerSpec extends EmbeddedServerSpecification {
@@ -124,8 +121,8 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
         when:
         TokenValidator tokenValidator = applicationContext.getBean(JwtTokenValidator.class)
-        Map<String, Object> newAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(refreshRsp.body().accessToken, null)).blockingFirst().getAttributes()
-        Map<String, Object> originalAccessTokenClaims = Flowable.fromPublisher(tokenValidator.validateToken(originalAccessToken, null)).blockingFirst().getAttributes()
+        Map<String, Object> newAccessTokenClaims = Flux.from(tokenValidator.validateToken(refreshRsp.body().accessToken, null)).blockFirst().getAttributes()
+        Map<String, Object> originalAccessTokenClaims = Flux.from(tokenValidator.validateToken(originalAccessToken, null)).blockFirst().getAttributes()
         List<String> expectedClaims = [JwtClaims.SUBJECT,
                                        JwtClaims.ISSUED_AT,
                                        JwtClaims.EXPIRATION_TIME,
@@ -177,7 +174,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
     void "grant_type other than refresh_token returns 400 with {\"error\": \"unsupported_grant_type\"...}"() {
         given:
-        HttpRequest request = HttpRequest.POST('/oauth/access_token', new TokenRefreshRequest("foo", "XXX"))
+        HttpRequest request = HttpRequest.POST('/oauth/access_token', [grant_type: 'foo', refresh_token: "XXX"])
 
         when:
         Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
@@ -206,7 +203,14 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
     @Unroll
     void "missing #paramName returns 400 with {\"error\": \"invalid_request\"...}"(String grantType, String refreshToken, String paramName) {
         given:
-        HttpRequest request = HttpRequest.POST('/oauth/access_token', new TokenRefreshRequest(grantType, refreshToken))
+        Map<String, Object> body = new HashMap<>()
+        if (grantType) {
+            body.grant_type = grantType
+        }
+        if (refreshToken)  {
+            body.refresh_token = refreshToken
+        }
+        HttpRequest request = HttpRequest.POST('/oauth/access_token', body)
 
         when:
         Argument<AccessRefreshToken> bodyType =  Argument.of(AccessRefreshToken)
@@ -270,19 +274,9 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'OauthControllerSpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({emitter ->
-                if ( authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password' ) {
-                    emitter.onNext(new UserDetails('user', []))
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, BackpressureStrategy.ERROR)
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 

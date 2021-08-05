@@ -2,6 +2,7 @@ package io.micronaut.security.token.propagation
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -12,32 +13,31 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.DefaultHttpClientConfiguration
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.Maybe
+import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import spock.lang.Ignore
+import spock.lang.Issue
 import spock.lang.Specification
 
-import javax.inject.Singleton
 import java.time.Duration
 
 class TokenPropagationSpec extends Specification {
 
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
+    @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5625")
+    @Ignore // Flaky due to above issue
     void "test token propagation"() {
         Map<String, Object> inventoryConfig = [
                 'micronaut.application.name': 'inventory',
@@ -71,7 +71,7 @@ class TokenPropagationSpec extends Specification {
 
         def configuration = new DefaultHttpClientConfiguration()
         configuration.setReadTimeout(Duration.ofSeconds(30))
-        RxHttpClient gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(RxHttpClient, gatewayEmbeddedServer.getURL(), configuration)
+        HttpClient gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(HttpClient, gatewayEmbeddedServer.getURL(), configuration)
 
         when: 'attempt to login'
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials('sherlock', 'elementary')
@@ -143,16 +143,16 @@ class TokenPropagationSpec extends Specification {
         }
 
         @Get("/gateway")
-        Flowable<Book> findAll() {
-            return booksClient.fetchBooks()
-                    .flatMapMaybe({ b ->
-                        inventoryClient.inventory(b.getIsbn())
+        Publisher<Book> findAll() {
+            return Flux.from(booksClient.fetchBooks())
+                    .flatMap({ b ->
+                        Mono.from(inventoryClient.inventory(b.getIsbn()))
                                 .filter({ stock -> stock > 0 })
                                 .map({ stock ->
                                     b.setStock(stock);
                                 return b;
                             })
-                    });
+                    })
         }
     }
 
@@ -160,26 +160,14 @@ class TokenPropagationSpec extends Specification {
     @Client("books")
     static interface BooksClient {
         @Get("/api/books")
-        Flowable<Book> fetchBooks();
+        Publisher<Book> fetchBooks();
     }
 
     @Requires(property = "spec.name", value = "tokenpropagation.gateway")
     @Singleton
-    static class SampleAuthenticationProvider implements AuthenticationProvider {
-
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            return Flowable.create({ emitter ->
-                if (authenticationRequest.getIdentity() != null && authenticationRequest.getSecret() != null &&
-                        Arrays.asList("sherlock", "watson").contains(authenticationRequest.getIdentity().toString()) &&
-                        authenticationRequest.getSecret().equals("elementary")) {
-                    emitter.onNext(new UserDetails(authenticationRequest.getIdentity().toString(), new ArrayList<>()))
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, BackpressureStrategy.ERROR)
+    static class SampleAuthenticationProvider extends MockAuthenticationProvider {
+        SampleAuthenticationProvider() {
+            super([new SuccessAuthenticationScenario('sherlock'), new SuccessAuthenticationScenario('watson')])
         }
     }
 
@@ -189,7 +177,8 @@ class TokenPropagationSpec extends Specification {
 
         @Consumes(MediaType.TEXT_PLAIN)
         @Get("/api/inventory/{isbn}")
-        Maybe<Integer> inventory(String isbn);
+        @SingleResult
+        Publisher<Integer> inventory(String isbn);
     }
 
     static class Book {

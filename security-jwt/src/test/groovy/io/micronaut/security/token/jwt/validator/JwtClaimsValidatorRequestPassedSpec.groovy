@@ -1,10 +1,9 @@
 package io.micronaut.security.token.jwt.validator
 
-import edu.umd.cs.findbugs.annotations.NonNull
-import edu.umd.cs.findbugs.annotations.Nullable
-import groovy.transform.InheritConstructors
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -15,25 +14,19 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.authentication.AuthenticationException
-import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
-import io.micronaut.security.authentication.AuthenticationRequest
-import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
+import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.security.token.validator.TokenValidator
-import io.micronaut.testutils.EmbeddedServerSpecification
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
-import javax.inject.Singleton
 import java.security.Principal
 
 class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
@@ -83,23 +76,17 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
         }
 
         @Override
-        @Deprecated
         Publisher<Authentication> validateToken(String token, HttpRequest<?> request) {
             return validator.validate(token, request)
                     .flatMap(jwtAuthenticationFactory::createAuthentication)
-                    .map(Flowable::just)
-                    .orElse(Flowable.empty());
+                    .map(Flux::just)
+                    .orElse(Flux.empty())
         }
     }
 
     @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestPassedSpec')
     @Singleton
     static class HttpRequestClaimsValidator implements GenericJwtClaimsValidator {
-
-        @Override
-        boolean validate(JwtClaims claims) {
-            false
-        }
 
         @Override
         boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
@@ -121,19 +108,10 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestPassedSpec')
-    static class AuthenticationProviderUserPassword implements AuthenticationProvider {
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
 
-        @Override
-        Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-            Flowable.create({ emitter ->
-                if (authenticationRequest.identity == 'user' && authenticationRequest.secret == 'password') {
-                    emitter.onNext(new UserDetails('user', []))
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(new AuthenticationException(new AuthenticationFailed()))
-                }
-
-            }, BackpressureStrategy.ERROR)
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user')])
         }
     }
 }

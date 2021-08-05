@@ -1,7 +1,7 @@
 package io.micronaut.security.oauth2.docs.github;
 
 //tag::clazz[]
-import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.UserDetails;
@@ -10,8 +10,10 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapp
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+import reactor.core.publisher.Flux;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -26,13 +28,8 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
     } // <2>
 
     @Override
-    public Publisher<UserDetails> createUserDetails(TokenResponse tokenResponse) {
-        return Publishers.just(new UnsupportedOperationException());
-    }
-
-    @Override
     public Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { // <3>
-        return apiClient.getUser("token " + tokenResponse.getAccessToken())
+        return Flux.from(apiClient.getUser("token " + tokenResponse.getAccessToken()))
                 .map(user -> {
                     List<String> roles = Collections.singletonList("ROLE_GITHUB");
                     return new UserDetails(user.getLogin(), roles); // <4>
