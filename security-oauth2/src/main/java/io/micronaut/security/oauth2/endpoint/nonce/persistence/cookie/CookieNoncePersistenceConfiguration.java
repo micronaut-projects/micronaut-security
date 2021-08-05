@@ -109,7 +109,7 @@ public class CookieNoncePersistenceConfiguration implements CookieConfiguration 
     }
 
     /**
-     * Sets whether the cookie is secured. Default value ({@value #DEFAULT_SECURE}).
+     * Sets whether the cookie is secured. Defaults to the secure status of the request.
      *
      * @param cookieSecure True if the cookie is secure
      */

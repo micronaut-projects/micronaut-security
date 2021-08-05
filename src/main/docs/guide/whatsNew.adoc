@@ -2,30 +2,8 @@ Micronaut Security includes the following new features and improvements.
 
 == What's New in Micronaut Security 3
 
-Micronaut Security 3:
+- Improvements to many APIs
+- Consolidated authentication state into a single interface
+- The api:security.rules.SecurityRule[] API is now reactive
+- A `getRoles` method was added to api:security.authentication.Authentication[]
 
-- Uses Micronaut 3.
-- Replaces `javax.inject` with `jakarta.inject` annotations.
-- Deletes deprecated methods. You can obtain more information in the <<breaks, Breaks section>>.
-
-== What's New in Micronaut Security 2
-
-=== Annotation Processing
-
-* The ann:security.annotation.Secured[] annotation has been moved to a separate module in order to reduce the number of classes in the annotation processor scope. If you currently have `micronaut-security` in the classpath of your compiler, the entry can be changed to `micronaut-security-annotations`.
-
-=== Improvements
-
-* A new constructor for api:security.authentication.AuthenticationFailed[] that takes a string message has been added to allow for custom error messages.
-
-* It is now possible to require all api:security.authentication.AuthenticationProvider[]s to return a successful authentication response. Set `micronaut.security.authentication-provider-strategy: ALL` to enable this functionality.
-
-* The token propagation implementation will now no longer override an existing token.
-
-* It is now possible to allow for requests that would normally result in a 404 to return with 404 instead of almost always returning a 401 or 403. The current behavior is still the default because it prevents attackers from discovering what endpoints are available in your application. To enable the alternative behavior, set `micronaut.security.reject-not-found: false` in your configuration.
-
-* It is now supported out of the box to redirect back to the prior URL after a successful login. If a user requests a URL that returns an unauthenticated response, after logging in successfully, the user can then be returned to the URL that previously returned unauthorized. This setting can be enabled with `micronaut.security.redirect.prior-to-login: true` in your configuration. It is disabled by default.
-
-* Support for using tokens directly from OpenID providers has been added. By default the information from the OpenID JWT token is used to create a new token that uses Micronaut's JWT settings. This allows for a common format across providers as well as standardized expiration. Some users may want to use the token coming from the provider directly. That is now supported with the configuration option and value `micronaut.security.authentication: idtoken`. Note that this authentication mode requires each application to implement any necessary refresh token functionality. The refresh token functionality in this library is specific to the tokens created by this library.
-
-* The TokenValidator API now has access to the current request.
