@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.configuration.security.ldap.configuration;
+package io.micronaut.security.ldap.configuration;
 
-import io.micronaut.configuration.security.ldap.context.SearchSettings;
+import io.micronaut.security.ldap.context.SearchSettings;
 
 /**
  * Implementation of {@link SearchSettings} that derives values from an

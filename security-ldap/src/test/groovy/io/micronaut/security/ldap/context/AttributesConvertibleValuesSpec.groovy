@@ -1,4 +1,4 @@
-package io.micronaut.configuration.security.ldap.context
+package io.micronaut.security.ldap.context
 
 import spock.lang.Specification
 

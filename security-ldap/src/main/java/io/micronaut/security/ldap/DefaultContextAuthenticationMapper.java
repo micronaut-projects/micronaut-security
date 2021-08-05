@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.configuration.security.ldap;
+package io.micronaut.security.ldap;
 
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.UserDetails;
 
+import jakarta.inject.Singleton;
 import java.util.Set;
 
 /**
- * Responsible for mapping the result of LDAP authentication to an {@link AuthenticationResponse}.
+ * The default implementation to create an {@link AuthenticationResponse} from a successful
+ * ldap authentication result.
  *
  * @author James Kleeh
  * @since 1.0
  */
-public interface ContextAuthenticationMapper {
+@Singleton
+public class DefaultContextAuthenticationMapper implements ContextAuthenticationMapper {
 
-    /**
-     * @param attributes The attributes in the context
-     * @param username The username used to authenticate
-     * @param groups The roles associated with the user
-     * @return An {@link AuthenticationResponse}
-     */
-    AuthenticationResponse map(ConvertibleValues<Object> attributes, String username, Set<String> groups);
+    @Override
+    public AuthenticationResponse map(ConvertibleValues<Object> attributes, String username, Set<String> groups) {
+        return new UserDetails(username, groups);
+    }
 }

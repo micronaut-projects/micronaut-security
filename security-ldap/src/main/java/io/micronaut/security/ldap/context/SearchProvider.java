@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.security.ldap.context;
+
+import javax.naming.NamingException;
+import java.util.List;
+
 /**
- * LDAP authentication support.
+ * Generic functional interface that returns a list of search
+ * results from LDAP.
  *
- * @author Sergio del Amo
  * @author James Kleeh
- * @author Álvaro Sánchez-Mariscal
  * @since 1.0
  */
+@FunctionalInterface
+public interface SearchProvider {
 
-@Configuration
-@Requires(property = LdapConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
-package io.micronaut.configuration.security.ldap;
-
-import io.micronaut.configuration.security.ldap.configuration.LdapConfiguration;
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
+    /**
+     * @return The list of search results
+     * @throws NamingException If the search encounters an exception
+     */
+    List<LdapSearchResult> get() throws NamingException;
+}

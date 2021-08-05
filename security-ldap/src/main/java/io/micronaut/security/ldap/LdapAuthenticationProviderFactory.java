@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.configuration.security.ldap;
+package io.micronaut.security.ldap;
 
-import io.micronaut.configuration.security.ldap.configuration.LdapConfiguration;
-import io.micronaut.configuration.security.ldap.context.ContextBuilder;
-import io.micronaut.configuration.security.ldap.context.LdapSearchService;
-import io.micronaut.configuration.security.ldap.group.LdapGroupProcessor;
+import io.micronaut.security.ldap.configuration.LdapConfiguration;
+import io.micronaut.security.ldap.context.ContextBuilder;
+import io.micronaut.security.ldap.context.LdapSearchService;
+import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;

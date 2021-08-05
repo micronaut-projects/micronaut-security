@@ -4,6 +4,8 @@ This section will document breaking changes that may happen during milestone or 
 
 === What's New
 
+- Package `io.micronaut.configuration.security.ldap` has been renamed to `io.micronaut.security.ldap`
+
 - `RefreshTokenPersistence` extends `ApplicationEventListener<RefreshTokenGeneratedEvent>`.
 
 The following properties' default value has been removed in Micronaut Security 3.0.0:
