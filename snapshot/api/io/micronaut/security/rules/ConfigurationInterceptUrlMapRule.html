@@ -198,7 +198,7 @@ extends <a href="../../../../io/micronaut/security/rules/AbstractSecurityRule.ht
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
+<td class="colFirst"><code>org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
      io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
      <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
@@ -315,11 +315,11 @@ public&nbsp;ConfigurationInterceptUrlMapRule(<a href="../../../../io/micronaut/s
 <ul class="blockListLast">
 <li class="blockList">
 <h4>check</h4>
-<pre>public&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;check(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
-                                @Nullable
-                                io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
-                                @Nullable
-                                <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
+<pre>public&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;&nbsp;check(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                                               @Nullable
+                                                               io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
+                                                               @Nullable
+                                                               <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
 <div class="block">If no configured pattern matches the request, return <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html#UNKNOWN"><code>SecurityRuleResult.UNKNOWN</code></a>.
  Reads the rules in order. The first matched rule will be used for determining authorization.</div>
 <dl>

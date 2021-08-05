@@ -205,7 +205,7 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
+<td class="colFirst"><code>protected org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-io.micronaut.inject.ExecutableMethod-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
      <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
      io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</code>
@@ -213,15 +213,16 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
+<td class="colFirst"><code>org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
      io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
      <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
-<div class="block">Returns a security result based on any conditions.</div>
+<div class="block">Returns a publisher that is required to emit a single security result
+ based on any conditions.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
+<td class="colFirst"><code>protected org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#checkNotSensitive-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-io.micronaut.inject.ExecutableMethod-">checkNotSensitive</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
                  <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                  io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</code>
@@ -229,14 +230,14 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
+<td class="colFirst"><code>protected org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#checkSensitiveAnonymous-io.micronaut.http.HttpRequest-io.micronaut.inject.ExecutableMethod-">checkSensitiveAnonymous</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
                        io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</code>
 <div class="block">Evaluates a sensitive endpoint for an anonymous user.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
+<td class="colFirst"><code>protected org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#checkSensitiveAuthenticated-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-io.micronaut.inject.ExecutableMethod-">checkSensitiveAuthenticated</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
                            <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                            io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</code>
@@ -332,13 +333,14 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 <ul class="blockList">
 <li class="blockList">
 <h4>check</h4>
-<pre>public&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;check(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
-                                @Nullable
-                                io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
-                                @Nullable
-                                <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
+<pre>public&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;&nbsp;check(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                                               @Nullable
+                                                               io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
+                                                               @Nullable
+                                                               <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../io/micronaut/security/rules/SecurityRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">SecurityRule</a></code></span></div>
-<div class="block">Returns a security result based on any conditions.</div>
+<div class="block">Returns a publisher that is required to emit a single security result
+ based on any conditions.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../io/micronaut/security/rules/SecurityRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">check</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a></code></dd>
@@ -360,12 +362,12 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 <li class="blockList">
 <h4>check</h4>
 <pre>@NonNull
-protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;check(@NonNull
-                                            io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
-                                            @Nullable
-                                            <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
-                                            @NonNull
-                                            io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
+protected&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;&nbsp;check(@NonNull
+                                                                           io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                                                           @Nullable
+                                                                           <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+                                                                           @NonNull
+                                                                           io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
 <div class="block">Evaluate the Endpoint's method.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -397,12 +399,12 @@ protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResu
 <li class="blockList">
 <h4>checkSensitiveAuthenticated</h4>
 <pre>@NonNull
-protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;checkSensitiveAuthenticated(@NonNull
-                                                                  io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
-                                                                  @NonNull
-                                                                  <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
-                                                                  @NonNull
-                                                                  io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
+protected&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;&nbsp;checkSensitiveAuthenticated(@NonNull
+                                                                                                 io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                                                                                 @NonNull
+                                                                                                 <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+                                                                                                 @NonNull
+                                                                                                 io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
 <div class="block">Evaluates a sensitive endpoint for an authenticated user.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -421,10 +423,10 @@ protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResu
 <li class="blockList">
 <h4>checkSensitiveAnonymous</h4>
 <pre>@NonNull
-protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;checkSensitiveAnonymous(@NonNull
-                                                              io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
-                                                              @NonNull
-                                                              io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
+protected&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;&nbsp;checkSensitiveAnonymous(@NonNull
+                                                                                             io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                                                                             @NonNull
+                                                                                             io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
 <div class="block">Evaluates a sensitive endpoint for an anonymous user.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -442,12 +444,12 @@ protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResu
 <li class="blockList">
 <h4>checkNotSensitive</h4>
 <pre>@NonNull
-protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;checkNotSensitive(@NonNull
-                                                        io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
-                                                        @Nullable
-                                                        <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
-                                                        @NonNull
-                                                        io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
+protected&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;&nbsp;checkNotSensitive(@NonNull
+                                                                                       io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                                                                                       @Nullable
+                                                                                       <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+                                                                                       @NonNull
+                                                                                       io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
 <div class="block">Evaluates a non sensitive endpoint.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

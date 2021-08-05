@@ -185,7 +185,7 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
+<td class="colFirst"><code>protected org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/AbstractSecurityRule.html#compareRoles-java.util.List-java.util.Collection-">compareRoles</a></span>(java.util.List&lt;java.lang.String&gt;&nbsp;requiredRoles,
             java.util.Collection&lt;java.lang.String&gt;&nbsp;grantedRoles)</code>
 <div class="block">Compares the given roles to determine if the request is allowed by
@@ -280,8 +280,8 @@ public&nbsp;AbstractSecurityRule(<a href="../../../../io/micronaut/security/toke
 <ul class="blockListLast">
 <li class="blockList">
 <h4>compareRoles</h4>
-<pre>protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;compareRoles(java.util.List&lt;java.lang.String&gt;&nbsp;requiredRoles,
-                                          java.util.Collection&lt;java.lang.String&gt;&nbsp;grantedRoles)</pre>
+<pre>protected&nbsp;org.reactivestreams.Publisher&lt;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&gt;&nbsp;compareRoles(java.util.List&lt;java.lang.String&gt;&nbsp;requiredRoles,
+                                                                         java.util.Collection&lt;java.lang.String&gt;&nbsp;grantedRoles)</pre>
 <div class="block">Compares the given roles to determine if the request is allowed by
  comparing if any of the granted roles is in the required roles list.</div>
 <dl>

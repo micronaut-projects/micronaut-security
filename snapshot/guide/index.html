@@ -403,7 +403,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <h2 id="_3_0_0">3.0.0</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_what_s_new">What&#8217;s New</h3>
+<h3 id="_cookie_secure_configuration">Cookie Secure Configuration</h3>
 <div class="sect3">
 <h4 id="_securityrule_api_change">SecurityRule API Change</h4>
 <div class="ulist">
@@ -483,7 +483,16 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_3_0_0_deprecations_removal">3.0.0 Deprecations removal</h3>
+<h3 id="_securityrule_changes">SecurityRule Changes</h3>
+<div class="paragraph">
+<p>The <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> API has changed. The last argument to the method was a map that represented the user attributes. Instead that argument was replaced with a reference to the <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. This has the benefit of rules now having access to the username of the logged in user as well as access to the convenience method <code>getRoles()</code>.</p>
+</div>
+<div class="paragraph">
+<p>In addition, the return type of the method has changed to return a <code>Publisher</code>. This was necessary because the security rules execute as part of the security filter which may be on a non blocking thread. Because the method now returns a <code>Publisher</code>, blocking operations can be offloaded to another thread pool using the reactive streams implementation of your choice.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deprecations_removal">Deprecations Removal</h3>
 <div class="paragraph">
 <p>Micronaut security:</p>
 </div>
@@ -1377,7 +1386,7 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <p>Security rules implement the ordered interface and they are executed in order. All of the existing rules have a static variable <code>ORDER</code> that stores the order of that rule. You can use those variables to place your own rule before or after any of the existing rules.</p>
 </div>
 <div class="paragraph">
-<p>Security rules return a <a href="../api/io/micronaut/security/rules/SecurityRuleResult.html">SecurityRuleResult</a>. See the following table for a description of each result.</p>
+<p>Security rules return a publisher that should emit a single <a href="../api/io/micronaut/security/rules/SecurityRuleResult.html">SecurityRuleResult</a>. See the following table for a description of each result.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -1413,6 +1422,18 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 </td>
 <td class="content">
 If all security rules return <code>UNKNOWN</code>, the request will be rejected!
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Do not execute any blocking operations in the rule implementation without offloading those operations to another thread pool.
 </td>
 </tr>
 </table>
@@ -1715,6 +1736,9 @@ import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.security.rules.SensitiveEndpointRule;
 import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
+
 import java.util.Collections;
 
 @Replaces(SensitiveEndpointRule.class)
@@ -1730,11 +1754,11 @@ public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
 
     @Override
     @NonNull
-    protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
-                                                             @NonNull Authentication authentication,
-                                                             @NonNull ExecutableMethod&lt;?, ?&gt; method) {
-        return rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), authentication.getRoles())
-                    ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED;
+    protected Publisher&lt;SecurityRuleResult&gt; checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
+                                                                        @NonNull Authentication authentication,
+                                                                        @NonNull ExecutableMethod&lt;?, ?&gt; method) {
+        return Mono.just(rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), authentication)
+                    ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
     }
 }</code></pre>
 </div>
@@ -1750,8 +1774,10 @@ import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
-import io.micronaut.security.token.MapClaims
 import io.micronaut.security.token.RolesFinder
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
+
 
 @Replaces(SensitiveEndpointRule.class)
 @Singleton
@@ -1766,11 +1792,11 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
 
     @Override
     @NonNull
-    protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
-                                                             @NonNull Authentication authentication,
-                                                             @NonNull ExecutableMethod&lt;?, ?&gt; method) {
-        rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication.getRoles())
-                ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED
+    protected Publisher&lt;SecurityRuleResult&gt; checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
+                                                                        @NonNull Authentication authentication,
+                                                                        @NonNull ExecutableMethod&lt;?, ?&gt; method) {
+        Mono.just(rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication)
+                ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED)
     }
 }</code></pre>
 </div>
@@ -1786,9 +1812,10 @@ import io.micronaut.management.endpoint.EndpointSensitivityProcessor
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
-import io.micronaut.security.token.MapClaims
 import io.micronaut.security.token.RolesFinder
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
 
 @Replaces(SensitiveEndpointRule::class)
 @Singleton
@@ -1797,8 +1824,12 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
     @NonNull
     override fun checkSensitiveAuthenticated(@NonNull request: HttpRequest&lt;*&gt;,
                                              @NonNull authentication: Authentication,
-                                             @NonNull method: ExecutableMethod&lt;*, *&gt;): SecurityRuleResult {
-        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication.roles)) SecurityRuleResult.ALLOWED else SecurityRuleResult.REJECTED
+                                             @NonNull method: ExecutableMethod&lt;*, *&gt;): Publisher&lt;SecurityRuleResult&gt; {
+        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication)) {
+            Mono.just(SecurityRuleResult.ALLOWED)
+        } else {
+            Mono.just(SecurityRuleResult.REJECTED)
+        }
     }
 }</code></pre>
 </div>
