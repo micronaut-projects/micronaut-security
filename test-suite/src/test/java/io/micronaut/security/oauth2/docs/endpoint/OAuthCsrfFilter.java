@@ -9,7 +9,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
+import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import org.reactivestreams.Publisher;
 
@@ -17,10 +17,10 @@ import org.reactivestreams.Publisher;
 @Requires(property = "oauth.csrf")
 //tag::class[]
 @Filter(value = {"/oauth/login", "/oauth/login/*"})
-public class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
+public class OAuthCsrfFilter implements HttpServerFilter {
 
     @Override
-    protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
+    public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         String requestParameter = request.getParameters().get("_csrf");
         String cookieValue = request.getCookies().findCookie("_csrf").map(Cookie::getValue).orElse(null);
 
