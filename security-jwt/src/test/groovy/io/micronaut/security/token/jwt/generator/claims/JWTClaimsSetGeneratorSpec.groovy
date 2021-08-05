@@ -17,8 +17,7 @@ class JWTClaimsSetGeneratorSpec extends Specification {
                                             JwtClaims.EXPIRATION_TIME,
                                             JwtClaims.NOT_BEFORE,
                                             JwtClaims.ISSUER,
-                                            "roles",
-                                            "rolesKey"]
+                                            "roles"]
         then:
         claims
         claims.keySet().size() == expectedClaimsNames.size()

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.config.TokenConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,19 +79,20 @@ public class ClientAuthentication implements Authentication {
     public Collection<String> getRoles() {
         if (attributes != null) {
             Object rolesKey = attributes.get("rolesKey");
-            if (rolesKey != null) {
-                Object roleAttribute = attributes.get(rolesKey.toString());
-                if (roleAttribute != null) {
-                    List<String> roles = new ArrayList<>();
-                    if (roleAttribute instanceof Iterable) {
-                        for (Object o : ((Iterable) roleAttribute)) {
-                            roles.add(o.toString());
-                        }
-                    } else {
-                        roles.add(roleAttribute.toString());
+            if (rolesKey == null) {
+                rolesKey = TokenConfiguration.DEFAULT_ROLES_NAME;
+            }
+            Object roleAttribute = attributes.get(rolesKey.toString());
+            if (roleAttribute != null) {
+                List<String> roles = new ArrayList<>();
+                if (roleAttribute instanceof Iterable) {
+                    for (Object o : ((Iterable) roleAttribute)) {
+                        roles.add(o.toString());
                     }
-                    return roles;
+                } else {
+                    roles.add(roleAttribute.toString());
                 }
+                return roles;
             }
         }
         return Collections.emptyList();

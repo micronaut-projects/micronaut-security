@@ -175,7 +175,9 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         populateSub(builder, authentication);
         authentication.getAttributes().forEach(builder::claim);
         String rolesKey = tokenConfiguration.getRolesName();
-        builder.claim(ROLES_KEY, rolesKey);
+        if (!rolesKey.equalsIgnoreCase(TokenConfiguration.DEFAULT_ROLES_NAME)) {
+            builder.claim(ROLES_KEY, rolesKey);
+        }
         builder.claim(rolesKey, authentication.getRoles());
     }
 
