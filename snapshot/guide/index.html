@@ -325,64 +325,21 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <div class="sect1">
 <h2 id="_what_s_new_in_micronaut_security_3">What&#8217;s New in Micronaut Security 3</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Micronaut Security 3:</p>
-</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Uses Micronaut 3.</p>
+<p>Improvements to many APIs</p>
 </li>
 <li>
-<p>Replaces <code>javax.inject</code> with <code>jakarta.inject</code> annotations.</p>
+<p>Consolidated authentication state into a single interface</p>
 </li>
 <li>
-<p>Deletes deprecated methods. You can obtain more information in the <a href="#breaks">Breaks section</a>.</p>
+<p>The <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> API is now reactive</p>
+</li>
+<li>
+<p>A <code>getRoles</code> method was added to <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a></p>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_what_s_new_in_micronaut_security_2">What&#8217;s New in Micronaut Security 2</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_annotation_processing">Annotation Processing</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>The <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation has been moved to a separate module in order to reduce the number of classes in the annotation processor scope. If you currently have <code>micronaut-security</code> in the classpath of your compiler, the entry can be changed to <code>micronaut-security-annotations</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_improvements">Improvements</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A new constructor for <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a> that takes a string message has been added to allow for custom error messages.</p>
-</li>
-<li>
-<p>It is now possible to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response. Set <code>micronaut.security.authentication-provider-strategy: ALL</code> to enable this functionality.</p>
-</li>
-<li>
-<p>The token propagation implementation will now no longer override an existing token.</p>
-</li>
-<li>
-<p>It is now possible to allow for requests that would normally result in a 404 to return with 404 instead of almost always returning a 401 or 403. The current behavior is still the default because it prevents attackers from discovering what endpoints are available in your application. To enable the alternative behavior, set <code>micronaut.security.reject-not-found: false</code> in your configuration.</p>
-</li>
-<li>
-<p>It is now supported out of the box to redirect back to the prior URL after a successful login. If a user requests a URL that returns an unauthenticated response, after logging in successfully, the user can then be returned to the URL that previously returned unauthorized. This setting can be enabled with <code>micronaut.security.redirect.prior-to-login: true</code> in your configuration. It is disabled by default.</p>
-</li>
-<li>
-<p>Support for using tokens directly from OpenID providers has been added. By default the information from the OpenID JWT token is used to create a new token that uses Micronaut&#8217;s JWT settings. This allows for a common format across providers as well as standardized expiration. Some users may want to use the token coming from the provider directly. That is now supported with the configuration option and value <code>micronaut.security.authentication: idtoken</code>. Note that this authentication mode requires each application to implement any necessary refresh token functionality. The refresh token functionality in this library is specific to the tokens created by this library.</p>
-</li>
-<li>
-<p>The TokenValidator API now has access to the current request.</p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 </div>
@@ -399,56 +356,138 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <div class="paragraph">
 <p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x &#8594; 2.x.x).</p>
 </div>
-<div class="sect1">
-<h2 id="_3_0_0">3.0.0</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_user_details_removal">User Details Removal</h3>
+<div class="paragraph">
+<p>The <code>UserDetails</code> class has been removed and all usages should be replaced with <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="_affected_apis">Affected APIs</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/rules/AbstractSecurityRule.html">AbstractSecurityRule</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/rules/SensitiveEndpointRule.html">SensitiveEndpointRule</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/generator/TokenGenerator.html">TokenGenerator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html">CookieLoginHandler</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html">AccessRefreshTokenGenerator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html">ClaimsGenerator</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/render/TokenRenderer.html">TokenRenderer</a></p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_classes_renamed">Classes Renamed</h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Old</th>
+<th class="tableblock halign-left valign-top">New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_other_changes">Other Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The <a href="../api/io/micronaut/security/event/LoginSuccessfulEvent.html">LoginSuccessfulEvent</a> that gets emitted when a user logs in will now be created with an instance of <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
+</li>
+<li>
+<p>The <code>AuthenticationUserDetailsAdapter</code> class has been deleted.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_securityrule_changes">SecurityRule Changes</h3>
+<div class="paragraph">
+<p>The <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> API has changed. The last argument to the method was a map that represented the user attributes. Instead that argument was replaced with a reference to the <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. This has the benefit of rules now having access to the username of the logged in user as well as access to the convenience method <code>getRoles()</code>.</p>
+</div>
+<div class="paragraph">
+<p>In addition, the return type of the method has changed to return a <code>Publisher</code>. This was necessary because the security rules execute as part of the security filter which may be on a non blocking thread. Because the method now returns a <code>Publisher</code>, blocking operations can be offloaded to another thread pool using the reactive streams implementation of your choice.</p>
+</div>
+<div class="paragraph">
+<p>Micronaut 2 API:</p>
+</div>
+<div class="paragraph">
+<p><code>SecurityRuleResult check(HttpRequest&lt;?&gt; request, @Nullable RouteMatch&lt;?&gt; routeMatch, @Nullable Map&lt;String, Object&gt; claims);</code></p>
+</div>
+<div class="paragraph">
+<p>Micronaut 3 API:</p>
+</div>
+<div class="paragraph">
+<p><code>Publisher&lt;SecurityRuleResult&gt; check(HttpRequest&lt;?&gt; request, @Nullable RouteMatch&lt;?&gt; routeMatch, @Nullable Authentication authentication);</code></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ldap_package_change">LDAP Package Change</h3>
+<div class="paragraph">
+<p>All classes in the <code>io.micronaut.configuration.security.ldap</code> have been moved to the <code>io.micronaut.security.ldap</code> package.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_securityfilter">SecurityFilter</h3>
+<div class="paragraph">
+<p>The security filter no longer extends deprecated <code>OncePerRequestHttpServerFilter</code> because it has been deprecated in Micronaut 3.</p>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_cookie_secure_configuration">Cookie Secure Configuration</h3>
-<div class="sect3">
-<h4 id="_securityrule_api_change">SecurityRule API Change</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>SecurityRule::check</code> method receives an <code>Authentication</code> instance instead of a claims Map. The method signature was:</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><code>SecurityRuleResult check(HttpRequest&lt;?&gt; request, @Nullable RouteMatch&lt;?&gt; routeMatch, @Nullable  Map&lt;String, Object&gt; claims);</code></p>
-</div>
-<div class="paragraph">
-<p>In Micronaut Security 3.0 is:</p>
-</div>
-<div class="paragraph">
-<p><code>SecurityRuleResult check(HttpRequest&lt;?&gt; request, @Nullable RouteMatch&lt;?&gt; routeMatch, @Nullable Authentication authentication);</code></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_user_details_removal">User Details removal</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>UserDetails</code> has been removed. <code>Authentication</code> should be used instead. Moreover, several static methods to <code>AuthenticationResponse</code> and <code>Authentication</code> to ease the instances of those interfaces.
-API replaces the use of <code>UserDetails</code> with <code>Authentication</code>.</p>
-</li>
-<li>
-<p><code>RefreshTokenPersistence</code> extends <code>ApplicationEventListener&lt;RefreshTokenGeneratedEvent&gt;</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_cookie_secure_default_value">Cookie secure default value</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Package <code>io.micronaut.configuration.security.ldap</code> has been renamed to <code>io.micronaut.security.ldap</code></p>
-</li>
-<li>
-<p><code>SecurityFilter</code> no longer extends deprecated <code>OncePerRequestHttpServerFilter</code>. Instead, it implements <code>HttpServerFilter</code>.</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p>The following properties' default value has been removed in Micronaut Security 3.0.0:</p>
 </div>
@@ -481,440 +520,32 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 </table>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_securityrule_changes">SecurityRule Changes</h3>
-<div class="paragraph">
-<p>The <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> API has changed. The last argument to the method was a map that represented the user attributes. Instead that argument was replaced with a reference to the <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. This has the benefit of rules now having access to the username of the logged in user as well as access to the convenience method <code>getRoles()</code>.</p>
-</div>
-<div class="paragraph">
-<p>In addition, the return type of the method has changed to return a <code>Publisher</code>. This was necessary because the security rules execute as part of the security filter which may be on a non blocking thread. Because the method now returns a <code>Publisher</code>, blocking operations can be offloaded to another thread pool using the reactive streams implementation of your choice.</p>
-</div>
-</div>
 <div class="sect2">
 <h3 id="_deprecations_removal">Deprecations Removal</h3>
 <div class="paragraph">
-<p>Micronaut security:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Deletes deprecated methods <code>JwtValidator::validate(String)</code> and <code>JwtValidator::validate(JWT)</code></p>
-</li>
-<li>
-<p>Deletes deprecated class <code>SecuritySessionConfiguration</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>JwtCookieClearerLogoutHandler(JwtCookieConfiguration)</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration redirectConfiguration, PriorToLoginPersistence priorToLoginPersistence)</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>CookieLoginHandler(JwtCookieConfiguration,String, String)</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>DefaultOpenIdAuthenticationMapper</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructors <code>JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator accessRefreshTokenGenerator)</code>, <code>JwtCookieLoginHandler(RedirectConfiguration,JwtCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator accessRefreshTokenGenerator,PriorToLoginPersistence priorToLoginPersistence)</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>IdTokenLoginHandler(JwtCookieConfiguration,RedirectConfiguration,TokenConfiguration,PriorToLoginPersistence)</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>JwtCookieTokenReader(JwtCookieConfiguration)</code></p>
-</li>
-<li>
-<p>Deletes deprecated method <code>DefaultOauthClient::getTokenEndpoint</code></p>
-</li>
-<li>
-<p>Deletes <code>DefaultSecurityService#ROLES</code></p>
-</li>
-<li>
-<p>Deletes deprecated method <code>OauthUserDetailsMapper::createUserDetails(TokenResponse)</code></p>
-</li>
-<li>
-<p>Deletes <code>TokenValidator::validateToken(String)</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>SessionLoginHandler(SecuritySessionConfiguration,SessionStore&lt;Session&gt;,TokenConfiguration)</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>TokenRefreshRequest(String)</code></p>
-</li>
-<li>
-<p>Deletes deprecated method <code>SecurityService::hasRole</code></p>
-</li>
-<li>
-<p>Deletes deprecated class <code>TokenResponseExpiration</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>DefaultSecurityService(TokenConfiguration)</code>.</p>
-</li>
-<li>
-<p>Deletes deprecated method <code>OpenIdAuthenticationMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)</code></p>
-</li>
-<li>
-<p>Deletes deprecated method <code>BasicAuthAuthenticationFetcher::parseCredentials</code></p>
-</li>
-<li>
-<p>Deletes deprecated classes <code>JwtGeneratorConfiguration</code> and JwtGeneratorConfigurationProperties`</p>
-</li>
-<li>
-<p>Deletes deprecated method <code>JwtClaimsValidator:validate(JwtClaims)</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>JWTClaimsSetGenerator(TokenConfiguration,JwtIdGenerator, ClaimsAudienceProvider)</code></p>
-</li>
-<li>
-<p>Deletes deprecated constructor <code>RefreshTokenGeneratedEvent(Object)</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_2_0_0">2.0.0</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_new_maven_group_id">New Maven Group ID</h3>
-<div class="paragraph">
-<p>The Maven Group ID has changed from <code>io.micronaut</code> to <code>io.micronaut.security</code>.</p>
+<p>Most if not all deprecated classes constructors, and methods have been removed.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_modules_enabled_by_default">Modules Enabled by default</h3>
+<h3 id="_other_changes_2">Other Changes</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Modules are now enabled by default. The configuration keys <code>micronaut.security.enabled</code>, <code>micronaut.security.token.jwt.enabled</code>, <code>micronaut.security.oauth2.enabled</code>, and <code>micronaut.security.session.enabled</code> are now all <code>true</code> by default.</p>
+<p>The constructor of <a href="../api/io/micronaut/security/token/jwt/validator/DefaultJwtAuthenticationFactory.html">DefaultJwtAuthenticationFactory</a> has changed</p>
+</li>
+<li>
+<p>The constructor of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html">IdTokenLoginHandler</a> has changed</p>
+</li>
+<li>
+<p>The constructor of <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> has changed</p>
+</li>
+<li>
+<p>The constructor of <a href="../api/io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html">BasicAuthAuthenticationFetcher</a> has changed</p>
+</li>
+<li>
+<p>The <a href="../api/io/micronaut/security/token/RolesFinder.html">RolesFinder</a> method <code>findInClaims</code> has been deprecated and usages should be replaced with <code>resolveRoles(@Nullable Map&lt;String, Object&gt; attributes)</code>.</p>
 </li>
 </ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_endpoints_enabled_by_default">Endpoints enabled by default</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>You don&#8217;t need to enable Endpoints. The configuration keys <code>micronaut.security.endpoints.keys.enabled</code>, <code>micronaut.security.endpoints.login.enabled</code>, <code>micronaut.security.endpoints.logout.enabled</code>, <code>micronaut.security.endpoints.oauth.enabled</code> are now all <code>true</code> by default. However, You will need to provide the required beans for each endpoint.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_authentication_provider">Authentication Provider</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>The <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a> API has changed to include the HTTP request as a parameter. Thus, it is now possible to gain access to the request in your <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.</p>
-</li>
-<li>
-<p>It is no longer assumed that a failed authentication response is an instance of <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>. That now allows for any subclass of <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> to be emitted in the case of an authentication failure.</p>
-</li>
-<li>
-<p>Previously <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s were allowed to return hot observables, meaning the logic to authenticate the user could be done upon execution of the method. Allowing for that behavior caused the logic to execute the authenticators to be difficult to maintain. Now providers must return cold observables. The <code>authenticate</code> method will be executed for every authentication provider for every authentication request. If you were previously doing the authentication work then using something like <code>Flowable.just</code>, you must use something like <code>Flowable.create</code> to create a cold observable.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_delegating_authentication_provider">Delegating Authentication Provider</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>DelegatingAuthenticationProvider</code> and it&#8217;s related interfaces has been removed. If you provided implementations for <code>UserFetcher</code>, <code>UserState</code>, <code>PasswordEncoder</code>, and <code>AuthoritiesFetcher</code>, integrate them into your own implementation of <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. This API was removed because it only served a niche use case and increased the surface of this library&#8217;s API. None of the classes mentioned were directly used in this library and thus belong in the realm of user&#8217;s applications. Check <a href="https://guides.micronaut.io/latest/micronaut-database-authentication-provider.html">LDAP and Database authentication providers tutorial</a> to learn how to write a <code>DelegatingAuthenticationProvider</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_ldapauthenticationprovider">LdapAuthenticationProvider</h3>
-<div class="paragraph">
-<p>The constructor for <a href="../api/io/micronaut/configuration/security/ldap/LdapAuthenticationProvider.html">LdapAuthenticationProvider</a> has been changed to accept an executor to schedule the LDAP lookup operation on. By default it is now scheduled on the IO thread pool.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_loginhandler">LoginHandler</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>The <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> API has changed to accept an <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> object instead of an <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>.</p>
-</li>
-<li>
-<p>Previously, <code>AccessRefreshTokenLoginHandler</code> was enabled by default. Currently, no <code>LoginHandler</code> is enabled by default. If you wish to use any of the built-in `LoginHandler`s, you have to set the configuration:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>micronaut.security.authentication: bearer</code> to enable <a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a></p>
-</li>
-<li>
-<p><code>micronaut.security.authentication: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html">JwtCookieLoginHandler</a></p>
-</li>
-<li>
-<p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a></p>
-</li>
-<li>
-<p><code>micronaut.security.authentication: idtoken</code> to enable <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html">IdTokenLoginHandler</a></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-<div class="sect3">
-<h4 id="_migration_example_a">Migration Example A</h4>
-<div class="paragraph">
-<p>If you were using the default bearer authentication, you should set:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-    security:
-        authentication: bearer</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_migration_example_b">Migration Example B</h4>
-<div class="paragraph">
-<p>For a previous configuration such as:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-    security:
-        token:
-            jwt:
-                bearer:
-                     enabled: false
-                cookie:
-                     enabled: true</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>use instead:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
-    security:
-        authentication: cookie</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_logouthandler">LogoutHandler</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>To use any of the built-in <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> you have to set the configuration:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>micronaut.security.authentication:</code> <code>cookie</code> or <code>idtoken</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p>
-</li>
-<li>
-<p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_refresh_token">Refresh Token</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>The story around refresh tokens has been changed. There were a couple of core issues with the old implementation that needed resolved.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The refresh tokens were JWT tokens which also allowed them to be used to access resources.</p>
-</li>
-<li>
-<p>Because they never expire (by default), it requires a list of invalid tokens to be maintained in perpetuity if the ability to revoke tokens is a requirement. <code>JwtGeneratorConfiguration#getRefreshTokenExpiration</code> is deprecated and it is no longer used.</p>
-</li>
-<li>
-<p>The refresh mechanism simply copied the claims from the refresh token JWT back into a new access token. This made any changes to the state of the user (new roles, etc) were not be applied at the time of refresh.</p>
-<div class="paragraph">
-<p>The functionality has now been changed to generate a token that is not a JWT, but is instead a signed token of a unique key. The default implementation signs a UUID with a secret provided via configuration. After the token is generated, it is up to each application to provide an implementation of <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> to store the token and link it to the user it was created for. That is essential to generate new claims information in new access tokens created by the refresh endpoint. See the <a href="#refresh">refresh section</a> for more information.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_rejection_handler">Rejection Handler</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>The legacy rejection handler in the session module, which was enabled by default, has been removed. The setting <code>micronaut.security.session.legacy-rejection-handler</code> no longer has any effect and is equivalent to the behavior of <code>false</code> in previous versions.</p>
-</li>
-<li>
-<p>The entire <code>RejectionHandler</code> API and its dependents have been removed in favor of using the built in exception handling API in Micronaut. An <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a> will now be emitted when access to a resource has been rejected. A default exception handler has been created that will redirect on forbidden or unauthorized if the accept header of the request allows for text/html. For bearer authentication, that behavior can be disabled with:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut.security.redirect.forbidden.enabled: false
-micronaut.security.redirect.unauthorized.enabled: false</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_basic_auth">Basic Auth</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Basic authentication configuration has moved from <code>micronaut.security.token.basic-auth</code> to <code>micronaut.security.basic-auth</code>. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a <code>TokenValidatedEvent</code> was triggered as a result of basic authentication, however that is no longer the case.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_tokenpropagation">TokenPropagation</h3>
-<div class="paragraph">
-<p>Several classes related to <a href="#tokenPropagation">token propagation</a> have been renamed and relocated:</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Old</th>
-<th class="tableblock halign-left valign-top">New</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.HttpHeaderTokenWriter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html">HttpHeaderTokenPropagator</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.HttpHeaderTokenWriterConfiguration</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html">HttpHeaderTokenPropagatorConfiguration</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.HttpHeaderTokenWriterConfigurationProperties</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html">HttpHeaderTokenPropagatorConfigurationProperties</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.TokenWriter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/TokenPropagator.html">TokenPropagator</a></p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>Read <a href="#tokenPropagation">token propagation</a> section to learn more.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_misc">Misc</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Several APIs that lacked generics have been changed to add them. For example <code>HttpRequest</code> &#8594; <code>HttpRequest&lt;?&gt;</code>.</p>
-</li>
-<li>
-<p>Several APIs have been changed to return <a href="../api/io/micronaut/http/MutableHttpResponse.html">MutableHttpResponse</a> instead of <a href="../api/io/micronaut/http/HttpResponse.html">HttpResponse</a>.</p>
-</li>
-<li>
-<p>The SecurityFilterOrderProvider API has been deleted in favor of the standard ServerFilterPhase class. The security filter will now run on the order defined by the SECURITY phase.</p>
-</li>
-<li>
-<p>The io.micronaut.security.token.jwt.signature.secret.SecretSignatureFactory was deleted because the beans can be created directly from the SecretSignature class.</p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html">AccessRefreshTokenGenerator</a> is now the interface which defines how generate a <a href="../api/io/micronaut/security/token/jwt/render/AccessRefreshToken.html">AccessRefreshToken</a> for a particular user. The implementation has been moved to <a href="../api/io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html">DefaultAccessRefreshTokenGenerator</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_deprecated">Deprecated</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>All deprecations present in 1.3.x have been removed.</p>
-</li>
-<li>
-<p><code>JwtGeneratorConfiguration</code> has been deprecated in favor of <a href="../api/io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html">AccessTokenConfiguration</a>. The configuration has been changed from <code>micronaut.security.token.jwt.generator.access-token-expiration</code> to <code>micronaut.security.token.jwt.generator.access-token.expiration</code>.</p>
-</li>
-</ul>
-</div>
-<div class="sect3">
-<h4 id="_redirection">Redirection</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Redirection configuration has been simplified. The properties in the first column are deprecated and will be removed in a future version. The properties on the right should be used instead. All properties are prefixed with <code>micronaut.security</code>.</p>
-</li>
-</ul>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Old</th>
-<th class="tableblock halign-left valign-top">New</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.login-success-target-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.login-failure-target-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.logout-target-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.unauthorized-target-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized.url</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.forbidden-target-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.forbidden.url</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.redirect-on-rejection</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized.enabled</code> and <code>micronaut.security.redirect.forbidden.enabled</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.logout-target-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-success-target-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-failure-target-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 </div>
 
@@ -2375,7 +2006,7 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value ({@value #DEFAULT_SECURE}.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-max-age</code></p></td>
@@ -2978,11 +2609,33 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <div class="paragraph">
 <p>The LDAP authentication in Micronaut supports configuration of one or more LDAP servers to authenticate with. Each server has it&#8217;s own settings and can be enabled or disabled.</p>
 </div>
+<a id="io.micronaut.security.ldap.configuration.LdapConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.html">LdapConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether this configuration is enabled. Default true.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.adoc[]
-Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.ContextConfiguration.adoc[]
-Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.SearchConfiguration.adoc[]
-Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.GroupConfiguration.adoc[]</p>
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$ContextConfiguration.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$SearchConfiguration.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$GroupConfiguration.adoc[]</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -5509,7 +5162,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value ({@value #DEFAULT_SECURE}).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-max-age</code></p></td>
@@ -5721,7 +5374,7 @@ If nonce validation fails, the user will not be authenticated.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value ({@value #DEFAULT_SECURE}).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-max-age</code></p></td>
@@ -5930,11 +5583,6 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Client Credentials configuration.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a>. Default value true</p></td>
@@ -5958,6 +5606,11 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.advanced-expiration</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds for a token obtained via client credentials grant to be considered expired</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Client Credentials configuration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -6202,11 +5855,6 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the introspection endpoint configuration.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
@@ -6215,6 +5863,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection.auth-method</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html">AuthenticationMethod</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authentication Method</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the introspection endpoint configuration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -6251,11 +5904,6 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the revocation endpoint configuration.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
@@ -6264,6 +5912,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation.auth-method</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html">AuthenticationMethod</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authentication Method</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the revocation endpoint configuration.</p></td>
 </tr>
 </tbody>
 </table>
