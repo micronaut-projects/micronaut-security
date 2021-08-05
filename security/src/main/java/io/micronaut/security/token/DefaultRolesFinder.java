@@ -33,7 +33,7 @@ import java.util.Map;
 @Singleton
 public class DefaultRolesFinder implements RolesFinder {
 
-    private TokenConfiguration tokenConfiguration;
+    private final TokenConfiguration tokenConfiguration;
 
     /**
      * Constructs a Roles Parser.
