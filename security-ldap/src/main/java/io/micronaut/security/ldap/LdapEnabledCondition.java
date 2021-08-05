@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.configuration.security.ldap;
+package io.micronaut.security.ldap;
 
-import io.micronaut.configuration.security.ldap.configuration.LdapConfiguration;
+import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;

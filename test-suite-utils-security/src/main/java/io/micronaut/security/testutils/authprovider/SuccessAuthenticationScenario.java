@@ -28,6 +28,7 @@ import java.util.Map;
  */
 @Introspected
 public class SuccessAuthenticationScenario {
+
     @NonNull
     private final String username;
 

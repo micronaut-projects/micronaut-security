@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.configuration.security.ldap;
+package io.micronaut.security.ldap.context;
 
-import io.micronaut.core.convert.value.ConvertibleValues;
-import io.micronaut.security.authentication.AuthenticationResponse;
-
-import java.util.Set;
+import javax.naming.NamingException;
+import java.util.List;
 
 /**
- * Responsible for mapping the result of LDAP authentication to an {@link AuthenticationResponse}.
+ * Generic functional interface that returns a list of search
+ * results from LDAP.
  *
  * @author James Kleeh
  * @since 1.0
  */
-public interface ContextAuthenticationMapper {
+@FunctionalInterface
+public interface SearchProvider {
 
     /**
-     * @param attributes The attributes in the context
-     * @param username The username used to authenticate
-     * @param groups The roles associated with the user
-     * @return An {@link AuthenticationResponse}
+     * @return The list of search results
+     * @throws NamingException If the search encounters an exception
      */
-    AuthenticationResponse map(ConvertibleValues<Object> attributes, String username, Set<String> groups);
+    List<LdapSearchResult> get() throws NamingException;
 }

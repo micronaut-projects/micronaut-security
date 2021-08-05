@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.configuration.security.ldap.group;
+package io.micronaut.security.ldap.group;
 
-import io.micronaut.configuration.security.ldap.context.LdapSearchResult;
-import io.micronaut.configuration.security.ldap.context.SearchProvider;
+import io.micronaut.security.ldap.context.LdapSearchResult;
+import io.micronaut.security.ldap.context.SearchProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

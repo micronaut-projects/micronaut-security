@@ -1,12 +1,9 @@
 package io.micronaut.security.ldap
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer
-import io.micronaut.configuration.security.ldap.LdapAuthenticationProvider
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.security.authentication.AuthenticationException
 import io.micronaut.security.authentication.AuthenticationResponse
-import org.reactivestreams.Publisher
 import reactor.test.StepVerifier
 
 class LdapAuthenticationSpec extends InMemoryLdapSpec {

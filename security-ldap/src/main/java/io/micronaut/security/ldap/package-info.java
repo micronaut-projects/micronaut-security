@@ -24,9 +24,9 @@
 
 @Configuration
 @Requires(property = LdapConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
-package io.micronaut.configuration.security.ldap;
+package io.micronaut.security.ldap;
 
-import io.micronaut.configuration.security.ldap.configuration.LdapConfiguration;
+import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
