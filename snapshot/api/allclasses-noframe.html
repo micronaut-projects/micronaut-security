@@ -48,7 +48,6 @@
 <li><a href="io/micronaut/security/authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication"><span class="interfaceName">AuthenticationRequest</span></a></li>
 <li><a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><span class="interfaceName">AuthenticationResponse</span></a></li>
 <li><a href="io/micronaut/security/config/AuthenticationStrategy.html" title="enum in io.micronaut.security.config">AuthenticationStrategy</a></li>
-<li><a href="io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html" title="class in io.micronaut.security.authentication">AuthenticationUserDetailsAdapter</a></li>
 <li><a href="io/micronaut/security/authentication/Authenticator.html" title="class in io.micronaut.security.authentication">Authenticator</a></li>
 <li><a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html" title="class in io.micronaut.security.oauth2.grants">AuthorizationCodeGrant</a></li>
 <li><a href="io/micronaut/security/oauth2/configuration/endpoints/AuthorizationEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints"><span class="interfaceName">AuthorizationEndpointConfiguration</span></a></li>
@@ -73,6 +72,7 @@
 <li><a href="io/micronaut/security/token/Claims.html" title="interface in io.micronaut.security.token"><span class="interfaceName">Claims</span></a></li>
 <li><a href="io/micronaut/security/token/jwt/generator/claims/ClaimsAudienceProvider.html" title="interface in io.micronaut.security.token.jwt.generator.claims"><span class="interfaceName">ClaimsAudienceProvider</span></a></li>
 <li><a href="io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims"><span class="interfaceName">ClaimsGenerator</span></a></li>
+<li><a href="io/micronaut/security/authentication/ClientAuthentication.html" title="class in io.micronaut.security.authentication">ClientAuthentication</a></li>
 <li><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html" title="interface in io.micronaut.security.oauth2.client.clientcredentials"><span class="interfaceName">ClientCredentialsClient</span></a></li>
 <li><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsConfiguration.html" title="interface in io.micronaut.security.oauth2.client.clientcredentials"><span class="interfaceName">ClientCredentialsConfiguration</span></a></li>
 <li><a href="io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsEnabled.html" title="class in io.micronaut.security.oauth2.client.clientcredentials">ClientCredentialsEnabled</a></li>
@@ -97,7 +97,6 @@
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistence</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></li>
 <li><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></li>
-<li><a href="io/micronaut/security/authentication/DefaultAuthentication.html" title="class in io.micronaut.security.authentication">DefaultAuthentication</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultAuthorizationErrorResponse.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">DefaultAuthorizationErrorResponse</a></li>
 <li><a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html" title="class in io.micronaut.security.authentication">DefaultAuthorizationExceptionHandler</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a></li>
@@ -121,12 +120,12 @@
 <li><a href="io/micronaut/security/oauth2/client/DefaultOauthClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOauthClient</a></li>
 <li><a href="io/micronaut/security/oauth2/routes/DefaultOauthController.html" title="class in io.micronaut.security.oauth2.routes">DefaultOauthController</a></li>
 <li><a href="io/micronaut/security/oauth2/url/DefaultOauthRouteUrlBuilder.html" title="class in io.micronaut.security.oauth2.url">DefaultOauthRouteUrlBuilder</a></li>
+<li><a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdAuthenticationMapper</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponse.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">DefaultOpenIdAuthorizationResponse</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">DefaultOpenIdAuthorizationResponseHandler</a></li>
 <li><a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdClient</a></li>
 <li><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/DefaultOpenIdTokenResponseValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">DefaultOpenIdTokenResponseValidator</a></li>
-<li><a href="io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdUserDetailsMapper</a></li>
 <li><a href="io/micronaut/security/oauth2/DefaultProviderResolver.html" title="class in io.micronaut.security.oauth2">DefaultProviderResolver</a></li>
 <li><a href="io/micronaut/security/token/DefaultRolesFinder.html" title="class in io.micronaut.security.token">DefaultRolesFinder</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/DefaultSecureEndpoint.html" title="class in io.micronaut.security.oauth2.endpoint">DefaultSecureEndpoint</a></li>
@@ -252,6 +251,7 @@
 <li><a href="io/micronaut/security/oauth2/endpoint/nonce/NonceFactory.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce"><span class="interfaceName">NonceFactory</span></a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/NoncePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.nonce.persistence"><span class="interfaceName">NoncePersistence</span></a></li>
 <li><a href="io/micronaut/security/token/jwt/validator/NotBeforeJwtClaimsValidator.html" title="class in io.micronaut.security.token.jwt.validator">NotBeforeJwtClaimsValidator</a></li>
+<li><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response"><span class="interfaceName">OauthAuthenticationMapper</span></a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OauthAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request"><span class="interfaceName">OauthAuthorizationRequest</span></a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OauthAuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response"><span class="interfaceName">OauthAuthorizationResponse</span></a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OauthAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response"><span class="interfaceName">OauthAuthorizationResponseHandler</span></a></li>
@@ -287,10 +287,10 @@
 <li><a href="io/micronaut/security/oauth2/endpoint/token/request/password/OauthPasswordAuthenticationProvider.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">OauthPasswordAuthenticationProvider</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthPasswordTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OauthPasswordTokenRequestContext</a></li>
 <li><a href="io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url"><span class="interfaceName">OauthRouteUrlBuilder</span></a></li>
-<li><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response"><span class="interfaceName">OauthUserDetailsMapper</span></a></li>
 <li><a href="io/micronaut/security/errors/ObtainingAuthorizationErrorCode.html" title="enum in io.micronaut.security.errors">ObtainingAuthorizationErrorCode</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/endsession/request/OktaEndSessionEndpoint.html" title="class in io.micronaut.security.oauth2.endpoint.endsession.request">OktaEndSessionEndpoint</a></li>
 <li><a href="io/micronaut/security/oauth2/configuration/OpenIdAdditionalClaimsConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration"><span class="interfaceName">OpenIdAdditionalClaimsConfiguration</span></a></li>
+<li><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response"><span class="interfaceName">OpenIdAuthenticationMapper</span></a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request"><span class="interfaceName">OpenIdAuthorizationRequest</span></a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response"><span class="interfaceName">OpenIdAuthorizationResponse</span></a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response"><span class="interfaceName">OpenIdAuthorizationResponseHandler</span></a></li>
@@ -308,7 +308,6 @@
 <li><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdScope.html" title="enum in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdScope</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation"><span class="interfaceName">OpenIdTokenResponseValidator</span></a></li>
-<li><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response"><span class="interfaceName">OpenIdUserDetailsMapper</span></a></li>
 <li><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a></li>
 <li><a href="io/micronaut/security/oauth2/endpoint/token/request/password/PasswordGrantCondition.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.password">PasswordGrantCondition</a></li>
 <li><a href="io/micronaut/security/annotation/PermitAllAnnotationMapper.html" title="class in io.micronaut.security.annotation">PermitAllAnnotationMapper</a></li>
@@ -369,6 +368,7 @@
 <li><a href="io/micronaut/security/utils/SecurityService.html" title="interface in io.micronaut.security.utils"><span class="interfaceName">SecurityService</span></a></li>
 <li><a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session">SecuritySessionConfigurationProperties</a></li>
 <li><a href="io/micronaut/security/rules/SensitiveEndpointRule.html" title="class in io.micronaut.security.rules">SensitiveEndpointRule</a></li>
+<li><a href="io/micronaut/security/authentication/ServerAuthentication.html" title="class in io.micronaut.security.authentication">ServerAuthentication</a></li>
 <li><a href="io/micronaut/security/session/SessionAuthenticationFetcher.html" title="class in io.micronaut.security.session">SessionAuthenticationFetcher</a></li>
 <li><a href="io/micronaut/security/session/SessionAuthenticationModeCondition.html" title="class in io.micronaut.security.session">SessionAuthenticationModeCondition</a></li>
 <li><a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></li>
@@ -411,7 +411,6 @@
 <li><a href="io/micronaut/security/event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a></li>
 <li><a href="io/micronaut/security/token/validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator"><span class="interfaceName">TokenValidator</span></a></li>
 <li><a href="io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="interfaceName">UnauthorizedRedirectConfiguration</span></a></li>
-<li><a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a></li>
 <li><a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a></li>
 </ul>
 </div>

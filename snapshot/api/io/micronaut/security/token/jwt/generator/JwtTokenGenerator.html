@@ -194,12 +194,12 @@ implements <a href="../../../../../../io/micronaut/security/token/generator/Toke
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/JwtTokenGenerator.html#generateToken-java.util.Map-">generateToken</a></span>(java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/JwtTokenGenerator.html#generateToken-io.micronaut.security.authentication.Authentication-java.lang.Integer-">generateToken</a></span>(<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
+             java.lang.Integer&nbsp;expiration)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/JwtTokenGenerator.html#generateToken-io.micronaut.security.authentication.UserDetails-java.lang.Integer-">generateToken</a></span>(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
-             java.lang.Integer&nbsp;expiration)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/JwtTokenGenerator.html#generateToken-java.util.Map-">generateToken</a></span>(java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../io/micronaut/security/token/jwt/encryption/EncryptionConfiguration.html" title="interface in io.micronaut.security.token.jwt.encryption">EncryptionConfiguration</a></code></td>
@@ -373,20 +373,20 @@ implements <a href="../../../../../../io/micronaut/security/token/generator/Toke
 </dl>
 </li>
 </ul>
-<a name="generateToken-io.micronaut.security.authentication.UserDetails-java.lang.Integer-">
+<a name="generateToken-io.micronaut.security.authentication.Authentication-java.lang.Integer-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>generateToken</h4>
-<pre>public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;generateToken(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<pre>public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;generateToken(<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                                           @Nullable
                                                           java.lang.Integer&nbsp;expiration)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../io/micronaut/security/token/generator/TokenGenerator.html#generateToken-io.micronaut.security.authentication.UserDetails-java.lang.Integer-">generateToken</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a></code></dd>
+<dd><code><a href="../../../../../../io/micronaut/security/token/generator/TokenGenerator.html#generateToken-io.micronaut.security.authentication.Authentication-java.lang.Integer-">generateToken</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - Authenticated user's representation.</dd>
+<dd><code>authentication</code> - Authenticated user's representation.</dd>
 <dd><code>expiration</code> - The amount of time in seconds until the token expires</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>JWT token</dd>

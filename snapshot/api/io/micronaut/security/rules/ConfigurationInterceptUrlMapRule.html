@@ -199,9 +199,9 @@ extends <a href="../../../../io/micronaut/security/rules/AbstractSecurityRule.ht
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-java.util.Map-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
      io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
-     java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims)</code>
+     <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
 <div class="block">If no configured pattern matches the request, return <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html#UNKNOWN"><code>SecurityRuleResult.UNKNOWN</code></a>.</div>
 </td>
 </tr>
@@ -221,7 +221,7 @@ extends <a href="../../../../io/micronaut/security/rules/AbstractSecurityRule.ht
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;io.micronaut.security.rules.<a href="../../../../io/micronaut/security/rules/AbstractSecurityRule.html" title="class in io.micronaut.security.rules">AbstractSecurityRule</a></h3>
-<code><a href="../../../../io/micronaut/security/rules/AbstractSecurityRule.html#compareRoles-java.util.List-java.util.List-">compareRoles</a>, <a href="../../../../io/micronaut/security/rules/AbstractSecurityRule.html#getRoles-java.util.Map-">getRoles</a></code></li>
+<code><a href="../../../../io/micronaut/security/rules/AbstractSecurityRule.html#compareRoles-java.util.List-java.util.Collection-">compareRoles</a>, <a href="../../../../io/micronaut/security/rules/AbstractSecurityRule.html#getRoles-io.micronaut.security.authentication.Authentication-">getRoles</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -309,7 +309,7 @@ public&nbsp;ConfigurationInterceptUrlMapRule(<a href="../../../../io/micronaut/s
 <pre>public&nbsp;int&nbsp;getOrder()</pre>
 </li>
 </ul>
-<a name="check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-java.util.Map-">
+<a name="check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -319,14 +319,14 @@ public&nbsp;ConfigurationInterceptUrlMapRule(<a href="../../../../io/micronaut/s
                                 @Nullable
                                 io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
                                 @Nullable
-                                java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims)</pre>
+                                <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
 <div class="block">If no configured pattern matches the request, return <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html#UNKNOWN"><code>SecurityRuleResult.UNKNOWN</code></a>.
  Reads the rules in order. The first matched rule will be used for determining authorization.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>request</code> - The current request</dd>
 <dd><code>routeMatch</code> - The matched route</dd>
-<dd><code>claims</code> - The claims from the token. Null if not authenticated</dd>
+<dd><code>authentication</code> - The user authentication. Null if not authenticated</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The result</dd>
 <dt><span class="seeLabel">See Also:</span></dt>

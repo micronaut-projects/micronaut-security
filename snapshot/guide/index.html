@@ -404,6 +404,41 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_what_s_new">What&#8217;s New</h3>
+<div class="sect3">
+<h4 id="_securityrule_api_change">SecurityRule API Change</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityRule::check</code> method receives an <code>Authentication</code> instance instead of a claims Map. The method signature was:</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>SecurityRuleResult check(HttpRequest&lt;?&gt; request, @Nullable RouteMatch&lt;?&gt; routeMatch, @Nullable  Map&lt;String, Object&gt; claims);</code></p>
+</div>
+<div class="paragraph">
+<p>In Micronaut Security 3.0 is:</p>
+</div>
+<div class="paragraph">
+<p><code>SecurityRuleResult check(HttpRequest&lt;?&gt; request, @Nullable RouteMatch&lt;?&gt; routeMatch, @Nullable Authentication authentication);</code></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_user_details_removal">User Details removal</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>UserDetails</code> has been removed. <code>Authentication</code> should be used instead. Moreover, several static methods to <code>AuthenticationResponse</code> and <code>Authentication</code> to ease the instances of those interfaces.
+API replaces the use of <code>UserDetails</code> with <code>Authentication</code>.</p>
+</li>
+<li>
+<p><code>RefreshTokenPersistence</code> extends <code>ApplicationEventListener&lt;RefreshTokenGeneratedEvent&gt;</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_cookie_secure_default_value">Cookie secure default value</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -446,6 +481,7 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 </table>
 </div>
 </div>
+</div>
 <div class="sect2">
 <h3 id="_3_0_0_deprecations_removal">3.0.0 Deprecations removal</h3>
 <div class="paragraph">
@@ -469,7 +505,7 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 <p>Deletes deprecated constructor <code>CookieLoginHandler(JwtCookieConfiguration,String, String)</code></p>
 </li>
 <li>
-<p>Deletes deprecated constructor <code>DefaultOpenIdUserDetailsMapper</code></p>
+<p>Deletes deprecated constructor <code>DefaultOpenIdAuthenticationMapper</code></p>
 </li>
 <li>
 <p>Deletes deprecated constructors <code>JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator accessRefreshTokenGenerator)</code>, <code>JwtCookieLoginHandler(RedirectConfiguration,JwtCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator accessRefreshTokenGenerator,PriorToLoginPersistence priorToLoginPersistence)</code></p>
@@ -508,7 +544,7 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 <p>Deletes deprecated constructor <code>DefaultSecurityService(TokenConfiguration)</code>.</p>
 </li>
 <li>
-<p>Deletes deprecated method <code>OpenIdUserDetailsMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)</code></p>
+<p>Deletes deprecated method <code>OpenIdAuthenticationMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)</code></p>
 </li>
 <li>
 <p>Deletes deprecated method <code>BasicAuthAuthenticationFetcher::parseCredentials</code></p>
@@ -1293,13 +1329,10 @@ import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import org.reactivestreams.Publisher;
 
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
 @Singleton
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
@@ -1307,9 +1340,9 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
     public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
         return Mono.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
             if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
-                emitter.success(new UserDetails("user", new ArrayList&lt;&gt;()));
+                emitter.success(AuthenticationResponse.success("user"));
             } else {
-                emitter.error(new AuthenticationException(new AuthenticationFailed()));
+                emitter.error(AuthenticationResponse.exception());
             }
         });
     }
@@ -1677,13 +1710,12 @@ import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.security.rules.SensitiveEndpointRule;
-import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Singleton;
 import java.util.Collections;
-import java.util.Map;
 
 @Replaces(SensitiveEndpointRule.class)
 @Singleton
@@ -1699,9 +1731,9 @@ public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     @Override
     @NonNull
     protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
-                                                             @NonNull Map&lt;String, Object&gt; claims,
+                                                             @NonNull Authentication authentication,
                                                              @NonNull ExecutableMethod&lt;?, ?&gt; method) {
-        return rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), new MapClaims(claims))
+        return rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), authentication.getRoles())
                     ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED;
     }
 }</code></pre>
@@ -1727,7 +1759,7 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     private final RolesFinder rolesFinder;
 
     SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor,
-                                            RolesFinder rolesFinder) {
+                                     RolesFinder rolesFinder) {
         super(endpointSensitivityProcessor)
         this.rolesFinder = rolesFinder
     }
@@ -1735,9 +1767,9 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     @Override
     @NonNull
     protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
-                                                             @NonNull Map&lt;String, Object&gt; claims,
+                                                             @NonNull Authentication authentication,
                                                              @NonNull ExecutableMethod&lt;?, ?&gt; method) {
-        rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], new MapClaims(claims))
+        rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication.getRoles())
                 ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED
     }
 }</code></pre>
@@ -1751,6 +1783,7 @@ import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
 import io.micronaut.security.token.MapClaims
@@ -1763,9 +1796,9 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
                                        private val rolesFinder: RolesFinder) : SensitiveEndpointRule(endpointSensitivityProcessor) {
     @NonNull
     override fun checkSensitiveAuthenticated(@NonNull request: HttpRequest&lt;*&gt;,
-                                             @NonNull claims: Map&lt;String, Any&gt;,
+                                             @NonNull authentication: Authentication,
                                              @NonNull method: ExecutableMethod&lt;*, *&gt;): SecurityRuleResult {
-        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), MapClaims(claims))) SecurityRuleResult.ALLOWED else SecurityRuleResult.REJECTED
+        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication.roles)) SecurityRuleResult.ALLOWED else SecurityRuleResult.REJECTED
     }
 }</code></pre>
 </div>
@@ -1998,7 +2031,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.name-key</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s name. Default value "username".</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s name. Default value "sub".</p></td>
 </tr>
 </tbody>
 </table>
@@ -2770,79 +2803,6 @@ class KeyPairProvider {
 <a href="../api/io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html">JWTClaimsSetGenerator</a>, does not
 fulfil your needs you can provide your own <a href="#replaces">replacement</a> of <a href="../api/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html">ClaimsGenerator</a>.</p>
 </div>
-<div class="paragraph">
-<p>For example, if you want to add the email address of the user to the JWT Claims you could create a class which extends <code>UserDetails</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class EmailUserDetails extends UserDetails {
-
-    private String email;
-
-    public EmailUserDetails(String username, Collection&lt;String&gt; roles) {
-        super(username, roles);
-    }
-
-
-    public EmailUserDetails(String username, Collection&lt;String&gt; roles, String email) {
-        super(username, roles);
-        this.email = email;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Configure your <code>AuthenticationProvider</code> to respond such a class:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
-public class CustomAuthenticationProvider implements AuthenticationProvider {
-
-    @Override
-    public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
-        return Flux.create(emitter -&gt; {
-            emitter.next(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
-                emitter.complete();
-        }, FluxSink.OverflowStrategy.ERROR);
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>And then replace <code>JWTClaimsSetGenerator</code> with a bean that overrides the method <code>populateWithUserDetails</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
-@Replaces(bean = JWTClaimsSetGenerator.class)
-public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
-
-    public CustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                       @Nullable JwtIdGenerator jwtIdGenerator,
-                                       @Nullable ClaimsAudienceProvider claimsAudienceProvider,
-                                       @Nullable ApplicationConfiguration applicationConfiguration) {
-        super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration);
-    }
-
-    @Override
-    protected void populateWithUserDetails(JWTClaimsSet.Builder builder, UserDetails userDetails) {
-        super.populateWithUserDetails(builder, userDetails);
-        if (userDetails instanceof EmailUserDetails) {
-            builder.claim("email", ((EmailUserDetails)userDetails).getEmail());
-        }
-    }
-}</code></pre>
-</div>
-</div>
 
 <h2 id="claimsValidation"><a class="anchor" href="#claimsValidation"></a>9.3.6 Claims Validation</h2>
 
@@ -3028,10 +2988,7 @@ To connect to an LDAP server with SSL, set the standard Java system properties t
 <h2 id="_authentication_data">Authentication Data</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The authentication object returned from a successful authentication request is by default an instance of UserDetails, which only contains the username and any roles associated with the user. To store additional data in the authentication, extend <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> with your own implementation that has fields for the additional data you wish to store.</p>
-</div>
-<div class="paragraph">
-<p>To use this new implementation, you must override the <a href="../api/io/micronaut/security/ldap/DefaultContextAuthenticationMapper.html">DefaultContextAuthenticationMapper</a> and provide your own implementation.</p>
+<p>The authentication object returned from a successful authentication request is by default an instance of <code>Authentication</code>, which only contains the username and any roles associated with the user. You can use <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> <code>attributes</code> to store additional data. Replace <a href="../api/io/micronaut/security/ldap/DefaultContextAuthenticationMapper.html">DefaultContextAuthenticationMapper</a> and provide your own implementation.</p>
 </div>
 <div class="listingblock">
 <div class="title">MyContextAuthenticationMapper.java</div>
@@ -3042,7 +2999,7 @@ public class MyContextAuthenticationMapper implements ContextAuthenticationMappe
 
     @Override
     public AuthenticationResponse map(ConvertibleValues&lt;Object&gt; attributes, String username, Set&lt;String&gt; groups) {
-        // return an extended UserDetails or an AuthenticationFailed object
+        // return an Authentication instance (Authentication::build methods) or an AuthenticationFailed object
     }
 }</code></pre>
 </div>
@@ -3165,7 +3122,6 @@ import org.reactivestreams.Publisher;
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Mono;
-
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
@@ -3729,7 +3685,7 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <p>The refresh token endpoint uses the <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> API to verify the token matches the format that is expected. <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> attempts to verify the signature and returns the payload. Any validator implementations should not be concerned with revocation status, existence, or any other persistence related validation.</p>
 </div>
 <div class="paragraph">
-<p>If the validator successfully validates the token, it is then passed to a <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation, which each application must provide. A new access token is then created from the user details returned by <code>RefreshTokenPersistence::getUserDetails</code> and then sent in the response.</p>
+<p>If the validator successfully validates the token, it is then passed to a <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation, which each application must provide. A new access token is then created from the user details returned by <code>RefreshTokenPersistence::getAuthentication</code> and then sent in the response.</p>
 </div>
 <div class="paragraph">
 <p>Here is an example of a refresh token request. Send a POST request to the <code>/oauth/access_token</code> endpoint:</p>
@@ -3961,17 +3917,17 @@ import io.micronaut.core.annotation.Nullable
 
 
 @Controller("/user")
-public class UserController {
+class UserController {
 
     @Secured("isAnonymous()")
     @Get("/myinfo")
-    public Map myinfo(@Nullable Authentication authentication) {
+    Map myinfo(@Nullable Authentication authentication) {
         if (authentication == null) {
             return Collections.singletonMap("isLoggedIn", false);
         }
         return CollectionUtils.mapOf("isLoggedIn", true,
                 "username", authentication.getName(),
-                "roles", authentication.getAttributes().get("roles")
+                "roles", authentication.getRoles()
         );
     }
 }</code></pre>
@@ -4436,7 +4392,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 <p>Configuration of the client id and secret</p>
 </li>
 <li>
-<p>An implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html">OauthUserDetailsMapper</a></p>
+<p>An implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html">OauthAuthenticationMapper</a></p>
 </li>
 </ul>
 </div>
@@ -4520,13 +4476,13 @@ To disable a specific client for any given environment, set <code>enabled: false
 
 
 <div class="paragraph">
-<p>Beyond configuration, an implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html">OauthUserDetailsMapper</a> is required by the user to be implemented. The implementation must be qualified by name that matches the name present in the client configuration.</p>
+<p>Beyond configuration, an implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html">OauthAuthenticationMapper</a> is required by the user to be implemented. The implementation must be qualified by name that matches the name present in the client configuration.</p>
 </div>
 <div class="paragraph">
-<p>The purpose of the user details mapper is to transform the <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html">TokenResponse</a> into a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. That will entail calling some endpoint the provider exposes to retrieve the user&#8217;s information. Once that information is received, the user details can be populated per your requirements.</p>
+<p>The purpose of the user details mapper is to transform the <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html">TokenResponse</a> into a <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. That will entail calling some endpoint the provider exposes to retrieve the user&#8217;s information. Once that information is received, the user details can be populated per your requirements.</p>
 </div>
 <div class="paragraph">
-<p>Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> object stores three basic properties: <code>username</code>, <code>roles</code>, and arbitrary <code>attributes</code>. All data stored in the user details will be retrievable in controllers that accept an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
+<p>Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> object stores three basic properties: <code>username</code>, <code>roles</code>, and arbitrary <code>attributes</code>. All data stored in the user details will be retrievable in controllers that accept an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
 </div>
 <div class="paragraph">
 <p>For example, here is how it might be implemented for Github.</p>
@@ -4570,15 +4526,16 @@ class GithubUser {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import com.fasterxml.jackson.databind.PropertyNamingStrategy
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import io.micronaut.core.annotation.Introspected
 
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 class GithubUser {
 
-    var login: String? = null
+    lateinit var login: String
     var name: String? = null
     var email: String? = null
 }</code></pre>
@@ -4644,11 +4601,9 @@ interface GithubApiClient {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
 
@@ -4661,20 +4616,20 @@ import java.util.List;
 
 @Named("github") <b class="conum">(1)</b>
 @Singleton
-class GithubUserDetailsMapper implements OauthUserDetailsMapper {
+class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 
     private final GithubApiClient apiClient;
 
-    GithubUserDetailsMapper(GithubApiClient apiClient) {
+    GithubAuthenticationMapper(GithubApiClient apiClient) { <b class="conum">(2)</b>
         this.apiClient = apiClient;
-    } <b class="conum">(2)</b>
+    }
 
     @Override
     public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
         return Flux.from(apiClient.getUser("token " + tokenResponse.getAccessToken()))
                 .map(user -&gt; {
                     List&lt;String&gt; roles = Collections.singletonList("ROLE_GITHUB");
-                    return new UserDetails(user.getLogin(), roles); <b class="conum">(4)</b>
+                    return AuthenticationResponse.success(user.getLogin(), roles); <b class="conum">(4)</b>
                 });
     }
 }</code></pre>
@@ -4682,30 +4637,32 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.core.annotation.Nullable
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import reactor.core.publisher.Flux
 
 @Named("github") <b class="conum">(1)</b>
 @Singleton
-class GithubUserDetailsMapper implements OauthUserDetailsMapper {
+class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 
     private final GithubApiClient apiClient
 
-    GithubUserDetailsMapper(GithubApiClient apiClient) { <b class="conum">(2)</b>
+    GithubAuthenticationMapper(GithubApiClient apiClient) { <b class="conum">(2)</b>
         this.apiClient = apiClient
     }
 
     @Override
     Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
-        apiClient.getUser("token ${tokenResponse.accessToken}")
+        Flux.from(apiClient.getUser("token ${tokenResponse.accessToken}"))
             .map({ user -&gt;
-                new UserDetails(user.login, ["ROLE_GITHUB"]) <b class="conum">(4)</b>
+                AuthenticationResponse.success(user.login, ["ROLE_GITHUB"]) <b class="conum">(4)</b>
             })
     }
 }</code></pre>
@@ -4714,9 +4671,8 @@ class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
 import jakarta.inject.Named
@@ -4725,13 +4681,13 @@ import reactor.core.publisher.Flux
 
 @Named("github") <b class="conum">(1)</b>
 @Singleton
-internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <b class="conum">(2)</b>
-    : OauthUserDetailsMapper {
+internal class GithubAuthenticationMapper(private val apiClient: GithubApiClient) <b class="conum">(2)</b>
+    : OauthAuthenticationMapper {
 
     override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher&lt;AuthenticationResponse&gt; { <b class="conum">(3)</b>
         return Flux.from(apiClient.getUser("token " + tokenResponse.accessToken))
                 .map { user -&gt;
-                    UserDetails(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
+                    AuthenticationResponse.success(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
                 }
     }
 }</code></pre>
@@ -4753,7 +4709,7 @@ internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The user information is converted to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>.</td>
+<td>The user information is converted to a <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</td>
 </tr>
 </table>
 </div>
@@ -5109,7 +5065,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <p>Because the OpenID standard returns a JWT token in the token response, it is possible to retrieve information about the user without having to make an additional call. In addition, the data stored in the JWT is standardized so you can use the same code to retrieve that information across providers.</p>
 </div>
 <div class="paragraph">
-<p>A default implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.</p>
+<p>A default implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html">OpenIdAuthenticationMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
@@ -5168,33 +5124,30 @@ Enabling all of the above with cookie JWT storage has been known to cause issues
 <p>If the default implementation is not sufficient, it is possible to override the global default or provide an implementation specific to a provider.</p>
 </div>
 <div class="paragraph">
-<p>To override the global default mapper, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
+<p>To override the global default mapper, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html">DefaultOpenIdAuthenticationMapper</a>.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Replaces;
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
-import java.util.Collections;
 
 @Singleton
-@Replaces(DefaultOpenIdUserDetailsMapper.class)
-public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
+@Replaces(DefaultOpenIdAuthenticationMapper.class)
+public class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
     public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        return new UserDetails("name", Collections.emptyList());
+        return AuthenticationResponse.success("name");
     }
 }</code></pre>
 </div>
@@ -5204,24 +5157,23 @@ public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 
 import io.micronaut.core.annotation.NonNull
 import jakarta.inject.Singleton
 
 @Singleton
-@Replaces(DefaultOpenIdUserDetailsMapper.class)
-class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
+@Replaces(DefaultOpenIdAuthenticationMapper.class)
+class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
     AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        new UserDetails("name", [])
+        AuthenticationResponse.success("name")
     }
 }</code></pre>
 </div>
@@ -5230,22 +5182,20 @@ class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
 <div class="content">
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
-import java.lang.UnsupportedOperationException
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 
 import jakarta.inject.Singleton
 
 @Singleton
-@Replaces(DefaultOpenIdUserDetailsMapper::class)
-class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
+@Replaces(DefaultOpenIdAuthenticationMapper::class)
+class GlobalOpenIdAuthenticationMapper : OpenIdAuthenticationMapper {
 
     override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): AuthenticationResponse {
-        return UserDetails("name", emptyList())
+        return AuthenticationResponse.success("name")
     }
 }</code></pre>
 </div>
@@ -5257,20 +5207,18 @@ class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import java.util.Collections;
 
 @Singleton
 @Named("okta") <b class="conum">(1)</b>
-public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
+public class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
@@ -5278,20 +5226,17 @@ public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
                                                                OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
                                                                OpenIdClaims openIdClaims, <b class="conum">(4)</b>
                                                                @Nullable State state) { <b class="conum">(5)</b>
-        return new UserDetails("name", Collections.emptyList()); <b class="conum">(6)</b>
+        return AuthenticationResponse.success("name"); <b class="conum">(6)</b>
     }
-
-
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 
 import io.micronaut.core.annotation.NonNull
 import jakarta.inject.Named
@@ -5299,15 +5244,7 @@ import jakarta.inject.Singleton
 
 @Singleton
 @Named("okta") <b class="conum">(1)</b>
-class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
-
-    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
-    @NonNull
-    UserDetails createUserDetails(String providerName,
-                                  OpenIdTokenResponse tokenResponse,
-                                  OpenIdClaims openIdClaims) {
-        throw new UnsupportedOperationException()
-    }
+class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
@@ -5315,7 +5252,7 @@ class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
                                                         OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
                                                         OpenIdClaims openIdClaims, <b class="conum">(4)</b>
                                                         @Nullable State state) { <b class="conum">(5)</b>
-        new UserDetails("name", []) <b class="conum">(6)</b>
+        AuthenticationResponse.success("name") <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
@@ -5323,26 +5260,24 @@ class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
-import java.lang.UnsupportedOperationException
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 
 @Singleton
 @Named("okta") <b class="conum">(1)</b>
-class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
+class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 
     override fun createAuthenticationResponse(providerName: String, <b class="conum">(2)</b>
                                               tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
                                               openIdClaims: OpenIdClaims, <b class="conum">(4)</b>
                                               state: State?) <b class="conum">(5)</b>
             : AuthenticationResponse {
-        return UserDetails("name", emptyList()) <b class="conum">(6)</b>
+        return AuthenticationResponse.success("name") <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
@@ -5371,7 +5306,7 @@ class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>An instance of <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> is returned</td>
+<td>An instance of <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> is returned</td>
 </tr>
 </table>
 </div>

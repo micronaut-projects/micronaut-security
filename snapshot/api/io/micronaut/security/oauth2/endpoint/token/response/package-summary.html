@@ -81,22 +81,22 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthUserDetailsMapper</a></td>
+<td class="colFirst"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthAuthenticationMapper</a></td>
 <td class="colLast">
 <div class="block">A contract for mapping an OAuth 2.0 token endpoint response to a <a href="../../../../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a> object.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></td>
+<td class="colFirst"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a></td>
 <td class="colLast">
-<div class="block">ID Token.</div>
+<div class="block">Responsible for converting an OpenID token response to
+ a <a href="../../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> representing the authenticated user.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdUserDetailsMapper</a></td>
+<td class="colFirst"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></td>
 <td class="colLast">
-<div class="block">Responsible for converting an OpenID token response to
- a <a href="../../../../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a> representing the authenticated user.</div>
+<div class="block">ID Token.</div>
 </td>
 </tr>
 </tbody>
@@ -117,9 +117,9 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdUserDetailsMapper</a></td>
+<td class="colFirst"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdAuthenticationMapper</a></td>
 <td class="colLast">
-<div class="block">The default implementation of <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response"><code>OpenIdUserDetailsMapper</code></a> that uses
+<div class="block">The default implementation of <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response"><code>OpenIdAuthenticationMapper</code></a> that uses
  the subject claim for the username and populates the attributes with the
  non JWT standard claims.</div>
 </td>

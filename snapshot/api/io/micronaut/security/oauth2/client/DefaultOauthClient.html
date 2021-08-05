@@ -111,7 +111,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>@EachBean(value=<a href="../../../../../io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthUserDetailsMapper.class</a>)
+<pre>@EachBean(value=<a href="../../../../../io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthAuthenticationMapper.class</a>)
  @Requires(condition=<a href="../../../../../io/micronaut/security/oauth2/client/condition/OauthClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OauthClientCondition.class</a>)
 public class <span class="typeNameLabel">DefaultOauthClient</span>
 extends java.lang.Object
@@ -141,7 +141,7 @@ implements <a href="../../../../../io/micronaut/security/oauth2/client/OauthClie
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/client/DefaultOauthClient.html#DefaultOauthClient-io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler-io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler-io.micronaut.context.BeanContext-">DefaultOauthClient</a></span>(<a href="../../../../../io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthUserDetailsMapper</a>&nbsp;userDetailsMapper,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/client/DefaultOauthClient.html#DefaultOauthClient-io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler-io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler-io.micronaut.context.BeanContext-">DefaultOauthClient</a></span>(<a href="../../../../../io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthAuthenticationMapper</a>&nbsp;authenticationMapper,
                   <a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
                   <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRedirectHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRedirectHandler</a>&nbsp;redirectHandler,
                   <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/OauthAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">OauthAuthorizationResponseHandler</a>&nbsp;authorizationResponseHandler,
@@ -205,14 +205,14 @@ implements <a href="../../../../../io/micronaut/security/oauth2/client/OauthClie
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="DefaultOauthClient-io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler-io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler-io.micronaut.context.BeanContext-">
+<a name="DefaultOauthClient-io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler-io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler-io.micronaut.context.BeanContext-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DefaultOauthClient</h4>
 <pre>public&nbsp;DefaultOauthClient(@Parameter
-                          <a href="../../../../../io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthUserDetailsMapper</a>&nbsp;userDetailsMapper,
+                          <a href="../../../../../io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthAuthenticationMapper</a>&nbsp;authenticationMapper,
                           @Parameter
                           <a href="../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
                           <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRedirectHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRedirectHandler</a>&nbsp;redirectHandler,
@@ -221,7 +221,7 @@ implements <a href="../../../../../io/micronaut/security/oauth2/client/OauthClie
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clientConfiguration</code> - The client configuration</dd>
-<dd><code>userDetailsMapper</code> - The user details mapper</dd>
+<dd><code>authenticationMapper</code> - The user details mapper</dd>
 <dd><code>redirectHandler</code> - The redirect URL builder</dd>
 <dd><code>authorizationResponseHandler</code> - The authorization response handler</dd>
 <dd><code>beanContext</code> - The bean context</dd>

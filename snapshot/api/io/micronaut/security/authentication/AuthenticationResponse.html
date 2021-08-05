@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":18};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
+var methods = {"i0":17,"i1":17,"i2":17,"i3":17,"i4":17,"i5":17,"i6":6,"i7":18,"i8":18,"i9":17,"i10":17,"i11":17,"i12":17};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../io/micronaut/security/authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../io/micronaut/security/authentication/Authenticator.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?io/micronaut/security/authentication/AuthenticationResponse.html" target="_top">Frames</a></li>
@@ -103,11 +103,16 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><a href="../../../../io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a>, <a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a></dd>
+<dd><a href="../../../../io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a></dd>
+</dl>
+<dl>
+<dt>Functional Interface:</dt>
+<dd>This is a functional interface and can therefore be used as the assignment target for a lambda expression or method reference.</dd>
 </dl>
 <hr>
 <br>
-<pre>public interface <span class="typeNameLabel">AuthenticationResponse</span>
+<pre>@FunctionalInterface
+public interface <span class="typeNameLabel">AuthenticationResponse</span>
 extends java.io.Serializable</pre>
 <div class="block">The response of an authentication attempt.</div>
 <dl>
@@ -129,25 +134,69 @@ extends java.io.Serializable</pre>
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#getMessage--">getMessage</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationException.html" title="class in io.micronaut.security.authentication">AuthenticationException</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#exception--">exception</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#getUserDetails--">getUserDetails</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationException.html" title="class in io.micronaut.security.authentication">AuthenticationException</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#exception-io.micronaut.security.authentication.AuthenticationFailureReason-">exception</a></span>(<a href="../../../../io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum in io.micronaut.security.authentication">AuthenticationFailureReason</a>&nbsp;reason)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationException.html" title="class in io.micronaut.security.authentication">AuthenticationException</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#exception-java.lang.String-">exception</a></span>(java.lang.String&nbsp;message)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#failure--">failure</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#failure-io.micronaut.security.authentication.AuthenticationFailureReason-">failure</a></span>(<a href="../../../../io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum in io.micronaut.security.authentication">AuthenticationFailureReason</a>&nbsp;reason)</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#failure-java.lang.String-">failure</a></span>(java.lang.String&nbsp;message)</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#getAuthentication--">getAuthentication</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>default java.util.Optional&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#getMessage--">getMessage</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>default boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#isAuthenticated--">isAuthenticated</a></span>()</code>
-<div class="block">If true, it is expected the <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#getUserDetails--"><code>getUserDetails()</code></a> method will return
+<div class="block">If true, it is expected the <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#getAuthentication--"><code>getAuthentication()</code></a> method will return
  a non empty optional.</div>
 </td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#success-java.lang.String-">success</a></span>(java.lang.String&nbsp;username)</code>&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#success-java.lang.String-java.util.Collection-">success</a></span>(java.lang.String&nbsp;username,
+       java.util.Collection&lt;java.lang.String&gt;&nbsp;roles)</code>&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#success-java.lang.String-java.util.Collection-java.util.Map-">success</a></span>(java.lang.String&nbsp;username,
+       java.util.Collection&lt;java.lang.String&gt;&nbsp;roles,
+       java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;attributes)</code>&nbsp;</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#success-java.lang.String-java.util.Map-">success</a></span>(java.lang.String&nbsp;username,
+       java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;attributes)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -171,7 +220,7 @@ extends java.io.Serializable</pre>
 <li class="blockList">
 <h4>isAuthenticated</h4>
 <pre>default&nbsp;boolean&nbsp;isAuthenticated()</pre>
-<div class="block">If true, it is expected the <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#getUserDetails--"><code>getUserDetails()</code></a> method will return
+<div class="block">If true, it is expected the <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html#getAuthentication--"><code>getAuthentication()</code></a> method will return
  a non empty optional.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -179,13 +228,13 @@ extends java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a name="getUserDetails--">
+<a name="getAuthentication--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getUserDetails</h4>
-<pre>java.util.Optional&lt;<a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&gt;&nbsp;getUserDetails()</pre>
+<h4>getAuthentication</h4>
+<pre>java.util.Optional&lt;<a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&gt;&nbsp;getAuthentication()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The user details if the response is authenticated</dd>
@@ -195,14 +244,158 @@ extends java.io.Serializable</pre>
 <a name="getMessage--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getMessage</h4>
-<pre>java.util.Optional&lt;java.lang.String&gt;&nbsp;getMessage()</pre>
+<pre>default&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getMessage()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A message if the response chose to include one</dd>
 </dl>
+</li>
+</ul>
+<a name="success-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>success</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;success(@NonNull
+                                               java.lang.String&nbsp;username)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>username</code> - User's name</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>A successful <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="success-java.lang.String-java.util.Collection-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>success</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;success(@NonNull
+                                               java.lang.String&nbsp;username,
+                                               @NonNull
+                                               java.util.Collection&lt;java.lang.String&gt;&nbsp;roles)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>username</code> - User's name</dd>
+<dd><code>roles</code> - Users's roles</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>A successful <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="success-java.lang.String-java.util.Map-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>success</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;success(@NonNull
+                                               java.lang.String&nbsp;username,
+                                               @NonNull
+                                               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;attributes)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>username</code> - User's name</dd>
+<dd><code>attributes</code> - User's attributes</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>A successful <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="success-java.lang.String-java.util.Collection-java.util.Map-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>success</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;success(@NonNull
+                                               java.lang.String&nbsp;username,
+                                               @NonNull
+                                               java.util.Collection&lt;java.lang.String&gt;&nbsp;roles,
+                                               @NonNull
+                                               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;attributes)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>username</code> - User's name</dd>
+<dd><code>roles</code> - Users's roles</dd>
+<dd><code>attributes</code> - User's attributes</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>A successful <a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="failure-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>failure</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;failure(@NonNull
+                                               java.lang.String&nbsp;message)</pre>
+</li>
+</ul>
+<a name="failure-io.micronaut.security.authentication.AuthenticationFailureReason-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>failure</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;failure(@NonNull
+                                               <a href="../../../../io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum in io.micronaut.security.authentication">AuthenticationFailureReason</a>&nbsp;reason)</pre>
+</li>
+</ul>
+<a name="failure--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>failure</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a>&nbsp;failure()</pre>
+</li>
+</ul>
+<a name="exception-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>exception</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationException.html" title="class in io.micronaut.security.authentication">AuthenticationException</a>&nbsp;exception(@NonNull
+                                                  java.lang.String&nbsp;message)</pre>
+</li>
+</ul>
+<a name="exception-io.micronaut.security.authentication.AuthenticationFailureReason-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>exception</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationException.html" title="class in io.micronaut.security.authentication">AuthenticationException</a>&nbsp;exception(@NonNull
+                                                  <a href="../../../../io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum in io.micronaut.security.authentication">AuthenticationFailureReason</a>&nbsp;reason)</pre>
+</li>
+</ul>
+<a name="exception--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>exception</h4>
+<pre>@NonNull
+static&nbsp;<a href="../../../../io/micronaut/security/authentication/AuthenticationException.html" title="class in io.micronaut.security.authentication">AuthenticationException</a>&nbsp;exception()</pre>
 </li>
 </ul>
 </li>
@@ -233,7 +426,7 @@ extends java.io.Serializable</pre>
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../io/micronaut/security/authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../io/micronaut/security/authentication/Authenticator.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?io/micronaut/security/authentication/AuthenticationResponse.html" target="_top">Frames</a></li>

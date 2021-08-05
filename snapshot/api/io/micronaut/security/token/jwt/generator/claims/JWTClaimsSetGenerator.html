@@ -161,7 +161,7 @@ implements <a href="../../../../../../../io/micronaut/security/token/jwt/generat
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#generateClaims-io.micronaut.security.authentication.UserDetails-java.lang.Integer-">generateClaims</a></span>(<a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#generateClaims-io.micronaut.security.authentication.Authentication-java.lang.Integer-">generateClaims</a></span>(<a href="../../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
               java.lang.Integer&nbsp;expiration)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -210,16 +210,16 @@ implements <a href="../../../../../../../io/micronaut/security/token/jwt/generat
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#populateSub-com.nimbusds.jwt.JWTClaimsSet.Builder-io.micronaut.security.authentication.UserDetails-">populateSub</a></span>(com.nimbusds.jwt.JWTClaimsSet.Builder&nbsp;builder,
-           <a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#populateSub-com.nimbusds.jwt.JWTClaimsSet.Builder-io.micronaut.security.authentication.Authentication-">populateSub</a></span>(com.nimbusds.jwt.JWTClaimsSet.Builder&nbsp;builder,
+           <a href="../../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
 <div class="block">Populates sub claim.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#populateWithUserDetails-com.nimbusds.jwt.JWTClaimsSet.Builder-io.micronaut.security.authentication.UserDetails-">populateWithUserDetails</a></span>(com.nimbusds.jwt.JWTClaimsSet.Builder&nbsp;builder,
-                       <a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</code>
-<div class="block">Populates Claims with UserDetails object.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#populateWithAuthentication-com.nimbusds.jwt.JWTClaimsSet.Builder-io.micronaut.security.authentication.Authentication-">populateWithAuthentication</a></span>(com.nimbusds.jwt.JWTClaimsSet.Builder&nbsp;builder,
+                          <a href="../../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
+<div class="block">Populates Claims with Authentication object.</div>
 </td>
 </tr>
 </table>
@@ -274,20 +274,20 @@ implements <a href="../../../../../../../io/micronaut/security/token/jwt/generat
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="generateClaims-io.micronaut.security.authentication.UserDetails-java.lang.Integer-">
+<a name="generateClaims-io.micronaut.security.authentication.Authentication-java.lang.Integer-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>generateClaims</h4>
-<pre>public&nbsp;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;generateClaims(<a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<pre>public&nbsp;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;generateClaims(<a href="../../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                                                        @Nullable
                                                                        java.lang.Integer&nbsp;expiration)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html#generateClaims-io.micronaut.security.authentication.UserDetails-java.lang.Integer-">generateClaims</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a></code></dd>
+<dd><code><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html#generateClaims-io.micronaut.security.authentication.Authentication-java.lang.Integer-">generateClaims</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - Authenticated user's representation.</dd>
+<dd><code>authentication</code> - Authenticated user's representation.</dd>
 <dd><code>expiration</code> - expiration time in seconds</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The authentication claims</dd>
@@ -310,19 +310,19 @@ implements <a href="../../../../../../../io/micronaut/security/token/jwt/generat
 </dl>
 </li>
 </ul>
-<a name="populateSub-com.nimbusds.jwt.JWTClaimsSet.Builder-io.micronaut.security.authentication.UserDetails-">
+<a name="populateSub-com.nimbusds.jwt.JWTClaimsSet.Builder-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>populateSub</h4>
 <pre>protected&nbsp;void&nbsp;populateSub(com.nimbusds.jwt.JWTClaimsSet.Builder&nbsp;builder,
-                           <a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</pre>
+                           <a href="../../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
 <div class="block">Populates sub claim.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>builder</code> - The Claims Builder</dd>
-<dd><code>userDetails</code> - Authenticated user's representation.</dd>
+<dd><code>authentication</code> - Authenticated user's representation.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="https://tools.ietf.org/html/rfc7519#section-4.1.2">sub (Subject) Claim</a></dd>
 </dl>
@@ -411,19 +411,19 @@ implements <a href="../../../../../../../io/micronaut/security/token/jwt/generat
 </dl>
 </li>
 </ul>
-<a name="populateWithUserDetails-com.nimbusds.jwt.JWTClaimsSet.Builder-io.micronaut.security.authentication.UserDetails-">
+<a name="populateWithAuthentication-com.nimbusds.jwt.JWTClaimsSet.Builder-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>populateWithUserDetails</h4>
-<pre>protected&nbsp;void&nbsp;populateWithUserDetails(com.nimbusds.jwt.JWTClaimsSet.Builder&nbsp;builder,
-                                       <a href="../../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</pre>
-<div class="block">Populates Claims with UserDetails object.</div>
+<h4>populateWithAuthentication</h4>
+<pre>protected&nbsp;void&nbsp;populateWithAuthentication(com.nimbusds.jwt.JWTClaimsSet.Builder&nbsp;builder,
+                                          <a href="../../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
+<div class="block">Populates Claims with Authentication object.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>builder</code> - the Claims Builder</dd>
-<dd><code>userDetails</code> - Authenticated user's representation.</dd>
+<dd><code>authentication</code> - Authenticated user's representation.</dd>
 </dl>
 </li>
 </ul>

@@ -140,13 +140,13 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/handlers/LoginHandler.html#loginRefresh-io.micronaut.security.authentication.UserDetails-java.lang.String-io.micronaut.http.HttpRequest-">loginRefresh</a></span>(<a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/handlers/LoginHandler.html#loginRefresh-io.micronaut.security.authentication.Authentication-java.lang.String-io.micronaut.http.HttpRequest-">loginRefresh</a></span>(<a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
             java.lang.String&nbsp;refreshToken,
             io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>io.micronaut.http.MutableHttpResponse&lt;?&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/handlers/LoginHandler.html#loginSuccess-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">loginSuccess</a></span>(<a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/handlers/LoginHandler.html#loginSuccess-io.micronaut.security.authentication.Authentication-io.micronaut.http.HttpRequest-">loginSuccess</a></span>(<a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
             io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>&nbsp;</td>
 </tr>
 </table>
@@ -164,35 +164,35 @@ var activeTableTab = "activeTableTab";
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="loginSuccess-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">
+<a name="loginSuccess-io.micronaut.security.authentication.Authentication-io.micronaut.http.HttpRequest-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>loginSuccess</h4>
-<pre>io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;loginSuccess(<a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<pre>io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;loginSuccess(<a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                                       io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - Authenticated user's representation.</dd>
+<dd><code>authentication</code> - Authenticated user's representation.</dd>
 <dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>An HTTP Response. Eg. a redirect or an JWT token rendered to the response</dd>
 </dl>
 </li>
 </ul>
-<a name="loginRefresh-io.micronaut.security.authentication.UserDetails-java.lang.String-io.micronaut.http.HttpRequest-">
+<a name="loginRefresh-io.micronaut.security.authentication.Authentication-java.lang.String-io.micronaut.http.HttpRequest-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>loginRefresh</h4>
-<pre>io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;loginRefresh(<a href="../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<pre>io.micronaut.http.MutableHttpResponse&lt;?&gt;&nbsp;loginRefresh(<a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                                       java.lang.String&nbsp;refreshToken,
                                                       io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - Authenticated user's representation.</dd>
+<dd><code>authentication</code> - Authenticated user's representation.</dd>
 <dd><code>refreshToken</code> - The refresh token</dd>
 <dd><code>request</code> - The <code>HttpRequest</code> being executed</dd>
 <dt><span class="returnLabel">Returns:</span></dt>

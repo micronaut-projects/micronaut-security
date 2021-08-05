@@ -192,7 +192,7 @@ implements <a href="../../../../../io/micronaut/security/token/config/TokenConfi
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/config/TokenConfigurationProperties.html#getNameKey--">getNameKey</a></span>()</code>
-<div class="block"><a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> attributes map key for the user's name.</div>
+<div class="block">Key which will be used in the <a href="../../../../../io/micronaut/security/authentication/Authentication.html#getAttributes--"><code>Authentication.getAttributes()</code></a> for the User`s name.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -319,7 +319,7 @@ implements <a href="../../../../../io/micronaut/security/token/config/TokenConfi
 <pre>@NonNull
 public&nbsp;java.lang.String&nbsp;getRolesName()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html#getRolesName--">TokenConfiguration</a></code></span></div>
-<div class="block">Key which will be used in the <a href="../../../../../io/micronaut/security/authentication/Authentication.html#getAttributes--"><code>Authentication.getAttributes()</code></a> for the User`s roles.  Default value <a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_ROLES_NAME">"roles"</a>.</div>
+<div class="block">Key which will be used in the <a href="../../../../../io/micronaut/security/authentication/Authentication.html#getAttributes--"><code>Authentication.getAttributes()</code></a> for the User`s roles.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html#getRolesName--">getRolesName</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></code></dd>
@@ -369,7 +369,7 @@ public&nbsp;java.lang.String&nbsp;getRolesName()</pre>
 <pre>@NonNull
 public&nbsp;java.lang.String&nbsp;getNameKey()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html#getNameKey--">TokenConfiguration</a></code></span></div>
-<div class="block"><a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> attributes map key for the user's name. Default value <a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_NAME_KEY">"username"</a>.</div>
+<div class="block">Key which will be used in the <a href="../../../../../io/micronaut/security/authentication/Authentication.html#getAttributes--"><code>Authentication.getAttributes()</code></a> for the User`s name.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html#getNameKey--">getNameKey</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html" title="interface in io.micronaut.security.token.config">TokenConfiguration</a></code></dd>
@@ -388,7 +388,7 @@ public&nbsp;java.lang.String&nbsp;getNameKey()</pre>
 <h4>setNameKey</h4>
 <pre>public&nbsp;void&nbsp;setNameKey(@NonNull
                        java.lang.String&nbsp;nameKey)</pre>
-<div class="block"><a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> attributes map key for the user's name. Default value <a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_NAME_KEY">"username"</a>.</div>
+<div class="block"><a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication"><code>Authentication</code></a> attributes map key for the user's name. Default value <a href="../../../../../io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_NAME_KEY">"sub"</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>nameKey</code> - key for name</dd>

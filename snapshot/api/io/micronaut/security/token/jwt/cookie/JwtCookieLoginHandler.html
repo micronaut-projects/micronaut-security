@@ -210,14 +210,14 @@ extends <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Cookie
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#getCookies-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">getCookies</a></span>(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#getCookies-io.micronaut.security.authentication.Authentication-io.micronaut.http.HttpRequest-">getCookies</a></span>(<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
           io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>
 <div class="block">Return the cookies for the given parameters.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#getCookies-io.micronaut.security.authentication.UserDetails-java.lang.String-io.micronaut.http.HttpRequest-">getCookies</a></span>(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#getCookies-io.micronaut.security.authentication.Authentication-java.lang.String-io.micronaut.http.HttpRequest-">getCookies</a></span>(<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
           java.lang.String&nbsp;refreshToken,
           io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</code>
 <div class="block">Return the cookies for the given parameters.</div>
@@ -229,7 +229,7 @@ extends <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Cookie
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;io.micronaut.security.token.jwt.cookie.<a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></h3>
-<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#applyCookies-io.micronaut.http.MutableHttpResponse-java.util.List-">applyCookies</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#createRefreshResponse-io.micronaut.http.HttpRequest-">createRefreshResponse</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#createSuccessResponse-io.micronaut.http.HttpRequest-">createSuccessResponse</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">loginFailed</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginRefresh-io.micronaut.security.authentication.UserDetails-java.lang.String-io.micronaut.http.HttpRequest-">loginRefresh</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">loginSuccess</a></code></li>
+<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#applyCookies-io.micronaut.http.MutableHttpResponse-java.util.List-">applyCookies</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#createRefreshResponse-io.micronaut.http.HttpRequest-">createRefreshResponse</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#createSuccessResponse-io.micronaut.http.HttpRequest-">createSuccessResponse</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailed-io.micronaut.security.authentication.AuthenticationResponse-io.micronaut.http.HttpRequest-">loginFailed</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginRefresh-io.micronaut.security.authentication.Authentication-java.lang.String-io.micronaut.http.HttpRequest-">loginRefresh</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginSuccess-io.micronaut.security.authentication.Authentication-io.micronaut.http.HttpRequest-">loginSuccess</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -319,45 +319,45 @@ extends <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Cookie
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getCookies-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">
+<a name="getCookies-io.micronaut.security.authentication.Authentication-io.micronaut.http.HttpRequest-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getCookies</h4>
-<pre>public&nbsp;java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;&nbsp;getCookies(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<pre>public&nbsp;java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;&nbsp;getCookies(<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                                                   io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">CookieLoginHandler</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.Authentication-io.micronaut.http.HttpRequest-">CookieLoginHandler</a></code></span></div>
 <div class="block">Return the cookies for the given parameters. This method will generate new cookies based on the current
  configuration.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.UserDetails-io.micronaut.http.HttpRequest-">getCookies</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></code></dd>
+<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.Authentication-io.micronaut.http.HttpRequest-">getCookies</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - The Authenticated user's representation</dd>
+<dd><code>authentication</code> - The Authenticated user's representation</dd>
 <dd><code>request</code> - The current request</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A list of cookies</dd>
 </dl>
 </li>
 </ul>
-<a name="getCookies-io.micronaut.security.authentication.UserDetails-java.lang.String-io.micronaut.http.HttpRequest-">
+<a name="getCookies-io.micronaut.security.authentication.Authentication-java.lang.String-io.micronaut.http.HttpRequest-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getCookies</h4>
-<pre>public&nbsp;java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;&nbsp;getCookies(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<pre>public&nbsp;java.util.List&lt;io.micronaut.http.cookie.Cookie&gt;&nbsp;getCookies(<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                                                   java.lang.String&nbsp;refreshToken,
                                                                   io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.UserDetails-java.lang.String-io.micronaut.http.HttpRequest-">CookieLoginHandler</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.Authentication-java.lang.String-io.micronaut.http.HttpRequest-">CookieLoginHandler</a></code></span></div>
 <div class="block">Return the cookies for the given parameters. This method will generate new cookies based on the current
  configuration.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.UserDetails-java.lang.String-io.micronaut.http.HttpRequest-">getCookies</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></code></dd>
+<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#getCookies-io.micronaut.security.authentication.Authentication-java.lang.String-io.micronaut.http.HttpRequest-">getCookies</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - The Authenticated user's representation</dd>
+<dd><code>authentication</code> - The Authenticated user's representation</dd>
 <dd><code>refreshToken</code> - The access refresh token</dd>
 <dd><code>request</code> - The current request</dd>
 <dt><span class="returnLabel">Returns:</span></dt>

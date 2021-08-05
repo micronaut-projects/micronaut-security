@@ -208,13 +208,27 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>java.lang.Integer</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#accessTokenExpiration-java.util.Map-">accessTokenExpiration</a></span>(java.util.Map&lt;java.lang.String,?&gt;&nbsp;oldClaims)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#accessTokenExpiration-io.micronaut.security.authentication.Authentication-">accessTokenExpiration</a></span>(<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.lang.Integer</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#accessTokenExpiration-io.micronaut.security.authentication.UserDetails-">accessTokenExpiration</a></span>(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#accessTokenExpiration-java.util.Map-">accessTokenExpiration</a></span>(java.util.Map&lt;java.lang.String,?&gt;&nbsp;oldClaims)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#generate-io.micronaut.security.authentication.Authentication-">generate</a></span>(<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
+<div class="block">Generate an <a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render"><code>AccessRefreshToken</code></a> response for the given
+ user details.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#generate-java.lang.String-io.micronaut.security.authentication.Authentication-">generate</a></span>(java.lang.String&nbsp;refreshToken,
+        <a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
+<div class="block">Generate a new access refresh token.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#generate-java.lang.String-java.util.Map-">generate</a></span>(java.lang.String&nbsp;refreshToken,
         java.util.Map&lt;java.lang.String,?&gt;&nbsp;oldClaims)</code>
@@ -222,23 +236,9 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
  refresh token and claims.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#generate-java.lang.String-io.micronaut.security.authentication.UserDetails-">generate</a></span>(java.lang.String&nbsp;refreshToken,
-        <a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</code>
-<div class="block">Generate a new access refresh token.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>java.util.Optional&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#generate-io.micronaut.security.authentication.UserDetails-">generate</a></span>(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</code>
-<div class="block">Generate an <a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render"><code>AccessRefreshToken</code></a> response for the given
- user details.</div>
-</td>
-</tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#generateRefreshToken-io.micronaut.security.authentication.UserDetails-">generateRefreshToken</a></span>(<a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#generateRefreshToken-io.micronaut.security.authentication.Authentication-">generateRefreshToken</a></span>(<a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
 <div class="block">Generates a refresh token and emits a <a href="../../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><code>RefreshTokenGeneratedEvent</code></a>.</div>
 </td>
 </tr>
@@ -369,7 +369,7 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="generate-io.micronaut.security.authentication.UserDetails-">
+<a name="generate-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -377,20 +377,20 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/generator/
 <h4>generate</h4>
 <pre>@NonNull
 public&nbsp;java.util.Optional&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;&nbsp;generate(@NonNull
-                                                                <a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</pre>
+                                                                <a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
 <div class="block">Generate an <a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render"><code>AccessRefreshToken</code></a> response for the given
  user details.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#generate-io.micronaut.security.authentication.UserDetails-">generate</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></code></dd>
+<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#generate-io.micronaut.security.authentication.Authentication-">generate</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - Authenticated user's representation.</dd>
+<dd><code>authentication</code> - Authenticated user's representation.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The http response</dd>
 </dl>
 </li>
 </ul>
-<a name="generateRefreshToken-io.micronaut.security.authentication.UserDetails-">
+<a name="generateRefreshToken-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -398,13 +398,13 @@ public&nbsp;java.util.Optional&lt;<a href="../../../../../../io/micronaut/securi
 <h4>generateRefreshToken</h4>
 <pre>@NonNull
 public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;generateRefreshToken(@NonNull
-                                                                          <a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</pre>
+                                                                          <a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
 <div class="block">Generates a refresh token and emits a <a href="../../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><code>RefreshTokenGeneratedEvent</code></a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#generateRefreshToken-io.micronaut.security.authentication.UserDetails-">generateRefreshToken</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></code></dd>
+<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#generateRefreshToken-io.micronaut.security.authentication.Authentication-">generateRefreshToken</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - Authenticated user's representation.</dd>
+<dd><code>authentication</code> - Authenticated user's representation.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Optional#empty() if refresh token was not generated or the refresh token wrapped in an Optional.</dd>
 </dl>
@@ -434,7 +434,7 @@ public&nbsp;java.util.Optional&lt;<a href="../../../../../../io/micronaut/securi
 </dl>
 </li>
 </ul>
-<a name="generate-java.lang.String-io.micronaut.security.authentication.UserDetails-">
+<a name="generate-java.lang.String-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -444,20 +444,20 @@ public&nbsp;java.util.Optional&lt;<a href="../../../../../../io/micronaut/securi
 public&nbsp;java.util.Optional&lt;<a href="../../../../../../io/micronaut/security/token/jwt/render/AccessRefreshToken.html" title="class in io.micronaut.security.token.jwt.render">AccessRefreshToken</a>&gt;&nbsp;generate(@Nullable
                                                                 java.lang.String&nbsp;refreshToken,
                                                                 @NonNull
-                                                                <a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</pre>
+                                                                <a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
 <div class="block">Generate a new access refresh token.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#generate-java.lang.String-io.micronaut.security.authentication.UserDetails-">generate</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></code></dd>
+<dd><code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#generate-java.lang.String-io.micronaut.security.authentication.Authentication-">generate</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>refreshToken</code> - The refresh token</dd>
-<dd><code>userDetails</code> - The user details to create a new access token</dd>
+<dd><code>authentication</code> - The user details to create a new access token</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The optional access refresh token</dd>
 </dl>
 </li>
 </ul>
-<a name="accessTokenExpiration-io.micronaut.security.authentication.UserDetails-">
+<a name="accessTokenExpiration-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -465,10 +465,10 @@ public&nbsp;java.util.Optional&lt;<a href="../../../../../../io/micronaut/securi
 <h4>accessTokenExpiration</h4>
 <pre>@NonNull
 public&nbsp;java.lang.Integer&nbsp;accessTokenExpiration(@NonNull
-                                                        <a href="../../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails)</pre>
+                                                        <a href="../../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - User details for which the access token is being generated</dd>
+<dd><code>authentication</code> - User details for which the access token is being generated</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>expiration of the new access token</dd>
 </dl>

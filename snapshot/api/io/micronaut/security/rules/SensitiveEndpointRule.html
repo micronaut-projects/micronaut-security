@@ -206,24 +206,24 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#check-io.micronaut.http.HttpRequest-java.util.Map-io.micronaut.inject.ExecutableMethod-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
-     java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-io.micronaut.inject.ExecutableMethod-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+     <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
      io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</code>
 <div class="block">Evaluate the Endpoint's method.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-java.util.Map-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
      io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
-     java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims)</code>
+     <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
 <div class="block">Returns a security result based on any conditions.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#checkNotSensitive-io.micronaut.http.HttpRequest-java.util.Map-io.micronaut.inject.ExecutableMethod-">checkNotSensitive</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
-                 java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#checkNotSensitive-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-io.micronaut.inject.ExecutableMethod-">checkNotSensitive</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                 <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                  io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</code>
 <div class="block">Evaluates a non sensitive endpoint.</div>
 </td>
@@ -237,8 +237,8 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#checkSensitiveAuthenticated-io.micronaut.http.HttpRequest-java.util.Map-io.micronaut.inject.ExecutableMethod-">checkSensitiveAuthenticated</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
-                           java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SensitiveEndpointRule.html#checkSensitiveAuthenticated-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-io.micronaut.inject.ExecutableMethod-">checkSensitiveAuthenticated</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+                           <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                            io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</code>
 <div class="block">Evaluates a sensitive endpoint for an authenticated user.</div>
 </td>
@@ -326,7 +326,7 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-java.util.Map-">
+<a name="check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -336,16 +336,16 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
                                 @Nullable
                                 io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
                                 @Nullable
-                                java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../io/micronaut/security/rules/SecurityRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-java.util.Map-">SecurityRule</a></code></span></div>
+                                <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../io/micronaut/security/rules/SecurityRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">SecurityRule</a></code></span></div>
 <div class="block">Returns a security result based on any conditions.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../io/micronaut/security/rules/SecurityRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-java.util.Map-">check</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a></code></dd>
+<dd><code><a href="../../../../io/micronaut/security/rules/SecurityRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">check</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>request</code> - The current request</dd>
 <dd><code>routeMatch</code> - The matched route or empty if no route was matched. e.g. static resource.</dd>
-<dd><code>claims</code> - The claims from the token. Null if not authenticated</dd>
+<dd><code>authentication</code> - The user authentication. Null if not authenticated</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The result</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -353,7 +353,7 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 </dl>
 </li>
 </ul>
-<a name="check-io.micronaut.http.HttpRequest-java.util.Map-io.micronaut.inject.ExecutableMethod-">
+<a name="check-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-io.micronaut.inject.ExecutableMethod-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -363,14 +363,14 @@ implements <a href="../../../../io/micronaut/security/rules/SecurityRule.html" t
 protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;check(@NonNull
                                             io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
                                             @Nullable
-                                            java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims,
+                                            <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                             @NonNull
                                             io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
 <div class="block">Evaluate the Endpoint's method.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>request</code> - HTTP Request</dd>
-<dd><code>claims</code> - Claims of authenticated user. null if the user is not authenticated</dd>
+<dd><code>authentication</code> - The authentication, or null if none found</dd>
 <dd><code>method</code> - Route method</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The Result</dd>
@@ -390,7 +390,7 @@ protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResu
 </dl>
 </li>
 </ul>
-<a name="checkSensitiveAuthenticated-io.micronaut.http.HttpRequest-java.util.Map-io.micronaut.inject.ExecutableMethod-">
+<a name="checkSensitiveAuthenticated-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-io.micronaut.inject.ExecutableMethod-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -400,14 +400,14 @@ protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResu
 protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;checkSensitiveAuthenticated(@NonNull
                                                                   io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
                                                                   @NonNull
-                                                                  java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims,
+                                                                  <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                                                   @NonNull
                                                                   io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
 <div class="block">Evaluates a sensitive endpoint for an authenticated user.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>request</code> - HTTP Request</dd>
-<dd><code>claims</code> - Claims of authenticated user.</dd>
+<dd><code>authentication</code> - The authentication, or null if none found</dd>
 <dd><code>method</code> - Endpoint's method</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The Result</dd>
@@ -435,7 +435,7 @@ protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResu
 </dl>
 </li>
 </ul>
-<a name="checkNotSensitive-io.micronaut.http.HttpRequest-java.util.Map-io.micronaut.inject.ExecutableMethod-">
+<a name="checkNotSensitive-io.micronaut.http.HttpRequest-io.micronaut.security.authentication.Authentication-io.micronaut.inject.ExecutableMethod-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -445,14 +445,14 @@ protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResu
 protected&nbsp;<a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a>&nbsp;checkNotSensitive(@NonNull
                                                         io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
                                                         @Nullable
-                                                        java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims,
+                                                        <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                                         @NonNull
                                                         io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
 <div class="block">Evaluates a non sensitive endpoint.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>request</code> - HTTP Request</dd>
-<dd><code>claims</code> - Claims of authenticated user. null if the user is not authenticated.</dd>
+<dd><code>authentication</code> - The authentication, or null if none found</dd>
 <dd><code>method</code> - Endpoint's method</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The Result</dd>

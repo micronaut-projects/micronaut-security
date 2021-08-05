@@ -1125,7 +1125,7 @@
 </li>
 <li class="blockList">
 <table class="constantsSummary" border="0" cellpadding="3" cellspacing="0" summary="Constant Field Values table, listing constant fields, and values">
-<caption><span>io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthUserDetailsMapper</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthAuthenticationMapper</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th scope="col">Constant Field</th>
@@ -1133,25 +1133,44 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><a name="io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper.ACCESS_TOKEN_KEY">
+<td class="colFirst"><a name="io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper.ACCESS_TOKEN_KEY">
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
-<td><code><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#ACCESS_TOKEN_KEY">ACCESS_TOKEN_KEY</a></code></td>
+<td><code><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html#ACCESS_TOKEN_KEY">ACCESS_TOKEN_KEY</a></code></td>
 <td class="colLast"><code>"accessToken"</code></td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a name="io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper.PROVIDER_KEY">
+<td class="colFirst"><a name="io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper.PROVIDER_KEY">
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
-<td><code><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#PROVIDER_KEY">PROVIDER_KEY</a></code></td>
+<td><code><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html#PROVIDER_KEY">PROVIDER_KEY</a></code></td>
 <td class="colLast"><code>"oauth2Provider"</code></td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><a name="io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper.REFRESH_TOKEN_KEY">
+<td class="colFirst"><a name="io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper.REFRESH_TOKEN_KEY">
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
-<td><code><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html#REFRESH_TOKEN_KEY">REFRESH_TOKEN_KEY</a></code></td>
+<td><code><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html#REFRESH_TOKEN_KEY">REFRESH_TOKEN_KEY</a></code></td>
 <td class="colLast"><code>"refreshToken"</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList">
+<table class="constantsSummary" border="0" cellpadding="3" cellspacing="0" summary="Constant Field Values table, listing constant fields, and values">
+<caption><span>io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdAuthenticationMapper</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th scope="col">Constant Field</th>
+<th class="colLast" scope="col">Value</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><a name="io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper.OPENID_TOKEN_KEY">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<td><code><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html#OPENID_TOKEN_KEY">OPENID_TOKEN_KEY</a></code></td>
+<td class="colLast"><code>"openIdToken"</code></td>
 </tr>
 </tbody>
 </table>
@@ -1336,25 +1355,6 @@
 </tbody>
 </table>
 </li>
-<li class="blockList">
-<table class="constantsSummary" border="0" cellpadding="3" cellspacing="0" summary="Constant Field Values table, listing constant fields, and values">
-<caption><span>io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdUserDetailsMapper</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th scope="col">Constant Field</th>
-<th class="colLast" scope="col">Value</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><a name="io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper.OPENID_TOKEN_KEY">
-<!--   -->
-</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
-<td><code><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html#OPENID_TOKEN_KEY">OPENID_TOKEN_KEY</a></code></td>
-<td class="colLast"><code>"openIdToken"</code></td>
-</tr>
-</tbody>
-</table>
-</li>
 </ul>
 <ul class="blockList">
 <li class="blockList">
@@ -1488,7 +1488,7 @@
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
 <td><code><a href="io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_NAME_KEY">DEFAULT_NAME_KEY</a></code></td>
-<td class="colLast"><code>"username"</code></td>
+<td class="colLast"><code>"sub"</code></td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><a name="io.micronaut.security.token.config.TokenConfiguration.DEFAULT_ROLES_NAME">

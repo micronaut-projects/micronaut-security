@@ -176,9 +176,9 @@ extends io.micronaut.core.order.Ordered</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../io/micronaut/security/rules/SecurityRuleResult.html" title="enum in io.micronaut.security.rules">SecurityRuleResult</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SecurityRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-java.util.Map-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/security/rules/SecurityRule.html#check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">check</a></span>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
      io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
-     java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims)</code>
+     <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</code>
 <div class="block">Returns a security result based on any conditions.</div>
 </td>
 </tr>
@@ -254,7 +254,7 @@ extends io.micronaut.core.order.Ordered</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-java.util.Map-">
+<a name="check-io.micronaut.http.HttpRequest-io.micronaut.web.router.RouteMatch-io.micronaut.security.authentication.Authentication-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -264,13 +264,13 @@ extends io.micronaut.core.order.Ordered</pre>
                          @Nullable
                          io.micronaut.web.router.RouteMatch&lt;?&gt;&nbsp;routeMatch,
                          @Nullable
-                         java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;claims)</pre>
+                         <a href="../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication)</pre>
 <div class="block">Returns a security result based on any conditions.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>request</code> - The current request</dd>
 <dd><code>routeMatch</code> - The matched route or empty if no route was matched. e.g. static resource.</dd>
-<dd><code>claims</code> - The claims from the token. Null if not authenticated</dd>
+<dd><code>authentication</code> - The user authentication. Null if not authenticated</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The result</dd>
 <dt><span class="seeLabel">See Also:</span></dt>

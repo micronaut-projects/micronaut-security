@@ -111,30 +111,6 @@
 </li>
 </ul>
 </li>
-<li class="blockList"><a name="io.micronaut.security.authentication.AuthenticationUserDetailsAdapter">
-<!--   -->
-</a>
-<h3>Class <a href="io/micronaut/security/authentication/AuthenticationUserDetailsAdapter.html" title="class in io.micronaut.security.authentication">io.micronaut.security.authentication.AuthenticationUserDetailsAdapter</a> extends java.lang.Object implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>userDetails</h4>
-<pre><a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a> userDetails</pre>
-</li>
-<li class="blockList">
-<h4>rolesKey</h4>
-<pre>java.lang.String rolesKey</pre>
-</li>
-<li class="blockListLast">
-<h4>nameKey</h4>
-<pre>java.lang.String nameKey</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="blockList"><a name="io.micronaut.security.authentication.AuthorizationException">
 <!--   -->
 </a>
@@ -155,10 +131,10 @@
 </li>
 </ul>
 </li>
-<li class="blockList"><a name="io.micronaut.security.authentication.DefaultAuthentication">
+<li class="blockList"><a name="io.micronaut.security.authentication.ClientAuthentication">
 <!--   -->
 </a>
-<h3>Class <a href="io/micronaut/security/authentication/DefaultAuthentication.html" title="class in io.micronaut.security.authentication">io.micronaut.security.authentication.DefaultAuthentication</a> extends java.lang.Object implements Serializable</h3>
+<h3>Class <a href="io/micronaut/security/authentication/ClientAuthentication.html" title="class in io.micronaut.security.authentication">io.micronaut.security.authentication.ClientAuthentication</a> extends java.lang.Object implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -175,17 +151,17 @@
 </li>
 </ul>
 </li>
-<li class="blockList"><a name="io.micronaut.security.authentication.UserDetails">
+<li class="blockList"><a name="io.micronaut.security.authentication.ServerAuthentication">
 <!--   -->
 </a>
-<h3>Class <a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">io.micronaut.security.authentication.UserDetails</a> extends java.lang.Object implements Serializable</h3>
+<h3>Class <a href="io/micronaut/security/authentication/ServerAuthentication.html" title="class in io.micronaut.security.authentication">io.micronaut.security.authentication.ServerAuthentication</a> extends java.lang.Object implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>username</h4>
-<pre>java.lang.String username</pre>
+<h4>name</h4>
+<pre>java.lang.String name</pre>
 </li>
 <li class="blockList">
 <h4>roles</h4>
@@ -343,8 +319,8 @@
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>userDetails</h4>
-<pre><a href="io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a> userDetails</pre>
+<h4>authentication</h4>
+<pre><a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a> authentication</pre>
 </li>
 <li class="blockListLast">
 <h4>refreshToken</h4>

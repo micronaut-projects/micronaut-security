@@ -165,7 +165,7 @@ extends io.micronaut.context.event.ApplicationEvent</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#RefreshTokenGeneratedEvent-io.micronaut.security.authentication.UserDetails-java.lang.String-">RefreshTokenGeneratedEvent</a></span>(<a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#RefreshTokenGeneratedEvent-io.micronaut.security.authentication.Authentication-java.lang.String-">RefreshTokenGeneratedEvent</a></span>(<a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                           java.lang.String&nbsp;refreshToken)</code>
 <div class="block">Triggered when a refresh token is generated.</div>
 </td>
@@ -186,12 +186,12 @@ extends io.micronaut.context.event.ApplicationEvent</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#getRefreshToken--">getRefreshToken</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code><a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#getAuthentication--">getAuthentication</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#getUserDetails--">getUserDetails</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html#getRefreshToken--">getRefreshToken</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -222,18 +222,18 @@ extends io.micronaut.context.event.ApplicationEvent</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="RefreshTokenGeneratedEvent-io.micronaut.security.authentication.UserDetails-java.lang.String-">
+<a name="RefreshTokenGeneratedEvent-io.micronaut.security.authentication.Authentication-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>RefreshTokenGeneratedEvent</h4>
-<pre>public&nbsp;RefreshTokenGeneratedEvent(<a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;userDetails,
+<pre>public&nbsp;RefreshTokenGeneratedEvent(<a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;authentication,
                                   java.lang.String&nbsp;refreshToken)</pre>
 <div class="block">Triggered when a refresh token is generated.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>userDetails</code> - The user details</dd>
+<dd><code>authentication</code> - The user details</dd>
 <dd><code>refreshToken</code> - The refresh token</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code> - if source is null.</dd>
@@ -248,13 +248,13 @@ extends io.micronaut.context.event.ApplicationEvent</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getUserDetails--">
+<a name="getAuthentication--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getUserDetails</h4>
-<pre>public&nbsp;<a href="../../../../../io/micronaut/security/authentication/UserDetails.html" title="class in io.micronaut.security.authentication">UserDetails</a>&nbsp;getUserDetails()</pre>
+<h4>getAuthentication</h4>
+<pre>public&nbsp;<a href="../../../../../io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>&nbsp;getAuthentication()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The user details</dd>
