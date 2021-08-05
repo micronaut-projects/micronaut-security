@@ -61,7 +61,7 @@ class AuthenticatorSpec extends Specification {
         given:
         def authProviderFailed = Stub(AuthenticationProvider) {
             authenticate(_, _) >> Flux.create({ emitter ->
-                emitter.error(new AuthenticationException(new AuthenticationFailed()))
+                emitter.error(AuthenticationResponse.exception())
             }, FluxSink.OverflowStrategy.ERROR)
         }
         Authenticator authenticator = new Authenticator([authProviderFailed], new SecurityConfigurationProperties())
@@ -79,7 +79,7 @@ class AuthenticatorSpec extends Specification {
         def providers = [
                 Stub(AuthenticationProvider) {
                     authenticate(_, _) >> Flux.create({ emitter ->
-                        emitter.error(new AuthenticationException(new AuthenticationFailed("failed")))
+                        emitter.error(AuthenticationResponse.exception("failed"))
                     }, FluxSink.OverflowStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
@@ -108,7 +108,7 @@ class AuthenticatorSpec extends Specification {
         def providers = [
                 Stub(AuthenticationProvider) {
                     authenticate(_, _) >>  Flux.create({ emitter ->
-                        emitter.error(new AuthenticationException(new AuthenticationFailed("failed")))
+                        emitter.error(AuthenticationResponse.exception("failed"))
                     }, FluxSink.OverflowStrategy.ERROR)
                 },
                 Stub(AuthenticationProvider) {
@@ -140,7 +140,7 @@ class AuthenticatorSpec extends Specification {
                 },
                 Stub(AuthenticationProvider) {
                     authenticate(_, _) >> Flux.create({ emitter ->
-                        emitter.error(new AuthenticationException(new AuthenticationFailed("failed")))
+                        emitter.error(AuthenticationResponse.exception("failed"))
                     }, FluxSink.OverflowStrategy.ERROR)
                 },
         ]

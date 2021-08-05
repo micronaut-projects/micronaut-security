@@ -107,7 +107,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e.getMessage());
                 }
-                emitter.error(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.UNKNOWN)));
+                emitter.error(AuthenticationResponse.exception(AuthenticationFailureReason.UNKNOWN));
                 return;
             }
 
@@ -174,14 +174,14 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("User not found [{}]", username);
                     }
-                    emitter.error(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND)));
+                    emitter.error(AuthenticationResponse.exception(AuthenticationFailureReason.USER_NOT_FOUND));
                 }
             } catch (NamingException e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Failed to authenticate with user [{}].  {}", username, e);
                 }
                 if (e instanceof javax.naming.AuthenticationException) {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH)));
+                    emitter.error(AuthenticationResponse.exception(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH));
                 } else {
                     emitter.error(e);
                 }

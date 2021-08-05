@@ -25,7 +25,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
                 emitter.success(AuthenticationResponse.success("user"));
             } else {
-                emitter.error(new AuthenticationException(new AuthenticationFailed()));
+                emitter.error(AuthenticationResponse.exception());
             }
         });
     }

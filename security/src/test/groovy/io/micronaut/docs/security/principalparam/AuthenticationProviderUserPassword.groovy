@@ -27,7 +27,7 @@ class AuthenticationProviderUserPassword implements AuthenticationProvider {
                 emitter.next(AuthenticationResponse.success("user"))
                 emitter.complete()
             } else {
-                emitter.error(new AuthenticationException(new AuthenticationFailed()))
+                emitter.error(AuthenticationResponse.exception())
             }
         }, FluxSink.OverflowStrategy.ERROR)
     }

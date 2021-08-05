@@ -115,4 +115,19 @@ public interface AuthenticationResponse extends Serializable {
     static AuthenticationResponse failure() {
         return new AuthenticationFailed();
     }
+
+    @NonNull
+    static AuthenticationException exception(@NonNull String message) {
+        return new AuthenticationException(new AuthenticationFailed(message));
+    }
+
+    @NonNull
+    static AuthenticationException exception(@NonNull AuthenticationFailureReason reason) {
+        return new AuthenticationException(new AuthenticationFailed(reason));
+    }
+
+    @NonNull
+    static AuthenticationException exception() {
+        return new AuthenticationException(new AuthenticationFailed());
+    }
 }

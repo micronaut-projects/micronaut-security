@@ -17,8 +17,6 @@ package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import com.nimbusds.jwt.JWT;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationException;
-import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -105,7 +103,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
                                 emitter.error(e);
                             }
                         } else {
-                            emitter.error(new AuthenticationException(new AuthenticationFailed("JWT validation failed")));
+                            emitter.error(AuthenticationResponse.exception("JWT validation failed"));
                         }
                     }, FluxSink.OverflowStrategy.ERROR);
                 });
