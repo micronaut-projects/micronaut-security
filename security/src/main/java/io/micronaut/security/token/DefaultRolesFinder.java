@@ -43,19 +43,6 @@ public class DefaultRolesFinder implements RolesFinder {
         this.tokenConfiguration = tokenConfiguration;
     }
 
-    @Override
-    @NonNull
-    public List<String> findInClaims(@NonNull Claims claims) {
-        Object rolesObject = claims.get(tokenConfiguration.getRolesName());
-        return rolesAtObject(rolesObject);
-    }
-
-    @NonNull
-    @Override
-    public List<String> resolveRoles(@NonNull Authentication authentication) {
-        return resolveRoles(authentication.getAttributes());
-    }
-
     /**
      *
      * @param rolesObject Object containing the roles
