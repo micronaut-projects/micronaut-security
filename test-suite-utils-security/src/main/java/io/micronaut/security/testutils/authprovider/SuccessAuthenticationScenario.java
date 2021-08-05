@@ -28,6 +28,10 @@ import java.util.Map;
  */
 @Introspected
 public class SuccessAuthenticationScenario {
+
+    @NonNull
+    Map<String, Object> attributes;
+
     @NonNull
     private String username;
 
@@ -36,9 +40,6 @@ public class SuccessAuthenticationScenario {
 
     @NonNull
     private List<String> roles;
-
-    @NonNull
-    Map<String, Object> attributes;
 
     /**
      *

@@ -17,14 +17,12 @@ package io.micronaut.security.filters;
 
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.core.async.publisher.Publishers;
-import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.HttpServerFilter;
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.management.endpoint.EndpointsFilter;
