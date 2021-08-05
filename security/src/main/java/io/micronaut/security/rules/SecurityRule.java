@@ -15,14 +15,12 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.web.router.RouteMatch;
-
-import io.micronaut.core.annotation.Nullable;
 import org.reactivestreams.Publisher;
-
-import java.util.Map;
 
 /**
  * Informs the JWT filter what to do with the given request.
@@ -54,8 +52,8 @@ public interface SecurityRule extends Ordered {
      *
      * @param request The current request
      * @param routeMatch The matched route or empty if no route was matched. e.g. static resource.
-     * @param claims The claims from the token. Null if not authenticated
+     * @param authentication The user authentication. Null if not authenticated
      * @return The result
      */
-    Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims);
+    Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication);
 }

@@ -15,12 +15,14 @@
  */
 package io.micronaut.security.token;
 
-import io.micronaut.security.token.config.TokenConfiguration;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Default implementation of {@link RolesFinder}.
@@ -41,12 +43,16 @@ public class DefaultRolesFinder implements RolesFinder {
         this.tokenConfiguration = tokenConfiguration;
     }
 
-    @Override
+    /**
+     *
+     * @param rolesObject Object containing the roles
+     * @return if the supplied object is {@literal null} it returns an empty list, if it is an iterable, it returns a list of each element {@link Object#toString()}, else it returns {@link Object#toString()}
+     */
     @NonNull
-    public List<String> findInClaims(@NonNull Claims claims) {
+    private List<String> rolesAtObject(@Nullable Object rolesObject) {
         List<String> roles = new ArrayList<>();
-        Object rolesObject = claims.get(tokenConfiguration.getRolesName());
         if (rolesObject != null) {
+
             if (rolesObject instanceof Iterable) {
                 for (Object o : ((Iterable) rolesObject)) {
                     roles.add(o.toString());
@@ -54,7 +60,14 @@ public class DefaultRolesFinder implements RolesFinder {
             } else {
                 roles.add(rolesObject.toString());
             }
+
         }
         return roles;
+    }
+
+    @Override
+    @NonNull
+    public List<String> resolveRoles(@Nullable Map<String, Object> attributes) {
+        return rolesAtObject(attributes != null ? attributes.get(tokenConfiguration.getRolesName()) : null);
     }
 }

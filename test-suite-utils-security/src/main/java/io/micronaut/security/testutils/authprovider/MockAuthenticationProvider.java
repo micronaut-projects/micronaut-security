@@ -16,12 +16,9 @@
 package io.micronaut.security.testutils.authprovider;
 
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationException;
-import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
@@ -39,7 +36,6 @@ public class MockAuthenticationProvider implements AuthenticationProvider  {
     private final List<FailedAuthenticationScenario> failedAuthenticationScenarios;
 
     /**
-     *
      * @param successAuthenticationScenarioList Successful scenarios
      */
     public MockAuthenticationProvider(List<SuccessAuthenticationScenario> successAuthenticationScenarioList) {
@@ -48,7 +44,6 @@ public class MockAuthenticationProvider implements AuthenticationProvider  {
     }
 
     /**
-     *
      * @param successAuthenticationScenarioList Successful scenarios
      * @param failedAuthenticationScenarioList Failure scenarios
      */
@@ -72,16 +67,16 @@ public class MockAuthenticationProvider implements AuthenticationProvider  {
                     .findFirst();
             if (successAuth.isPresent()) {
                 SuccessAuthenticationScenario scenario = successAuth.get();
-                emitter.next(new UserDetails(scenario.getUsername(), scenario.getRoles(), scenario.getAttributes()));
+                emitter.next(AuthenticationResponse.success(scenario.getUsername(), scenario.getRoles(), scenario.getAttributes()));
                 emitter.complete();
             } else {
                 Optional<FailedAuthenticationScenario> failedAuthenticationScenario = failedAuthenticationScenarios.stream()
                         .filter(scenario -> scenario.getUsername().equalsIgnoreCase(authenticationRequest.getIdentity().toString()))
                         .findFirst();
                 if (failedAuthenticationScenario.isPresent()) {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed(failedAuthenticationScenario.get().getReason())));
+                    emitter.error(AuthenticationResponse.exception(failedAuthenticationScenario.get().getReason()));
                 } else {
-                    emitter.error(new AuthenticationException(new AuthenticationFailed()));
+                    emitter.error(AuthenticationResponse.exception());
                 }
             }
             }, FluxSink.OverflowStrategy.ERROR);

@@ -31,7 +31,7 @@ public interface AuthenticationProvider {
 
     /**
      * Authenticates a user with the given request. If a successful authentication is
-     * returned, the object must be an instance of {@link UserDetails}.
+     * returned, the object must be an instance of {@link Authentication}.
      *
      * Publishers <b>MUST emit cold observables</b>! This method will be called for
      * all authenticators for each authentication request and it is assumed no work

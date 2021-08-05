@@ -16,7 +16,7 @@
 package io.micronaut.security.token.event;
 
 import io.micronaut.context.event.ApplicationEvent;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 
 /**
  * Triggered when a JWT refresh token is generated.
@@ -26,27 +26,27 @@ import io.micronaut.security.authentication.UserDetails;
  */
 public class RefreshTokenGeneratedEvent extends ApplicationEvent {
 
-    private final UserDetails userDetails;
+    private final Authentication authentication;
     private final String refreshToken;
 
     /**
      * Triggered when a refresh token is generated.
      *
-     * @param userDetails The user details
+     * @param authentication The user details
      * @param refreshToken The refresh token
      * @throws IllegalArgumentException if source is null.
      */
-    public RefreshTokenGeneratedEvent(UserDetails userDetails, String refreshToken) {
+    public RefreshTokenGeneratedEvent(Authentication authentication, String refreshToken) {
         super(refreshToken);
-        this.userDetails = userDetails;
+        this.authentication = authentication;
         this.refreshToken = refreshToken;
     }
 
     /**
      * @return The user details
      */
-    public UserDetails getUserDetails() {
-        return userDetails;
+    public Authentication getAuthentication() {
+        return authentication;
     }
 
     /**

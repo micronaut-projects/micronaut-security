@@ -18,7 +18,9 @@ package io.micronaut.security.token.jwt.validator;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,9 +41,12 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
     private static final Logger LOG = LoggerFactory.getLogger(DefaultJwtAuthenticationFactory.class);
 
     private final TokenConfiguration tokenConfiguration;
+    private final RolesFinder rolesFinder;
 
-    public DefaultJwtAuthenticationFactory(TokenConfiguration tokenConfiguration) {
+    public DefaultJwtAuthenticationFactory(TokenConfiguration tokenConfiguration,
+                                           RolesFinder rolesFinder) {
         this.tokenConfiguration = tokenConfiguration;
+        this.rolesFinder = rolesFinder;
     }
 
     @Override
@@ -51,17 +56,11 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
             if (claimSet == null) {
                 return Optional.empty();
             }
-            return usernameForClaims(claimSet).map(username -> new Authentication() {
-                @Override
-                public Map<String, Object> getAttributes() {
-                    return claimSet.getClaims();
-                }
-
-                @Override
-                public String getName() {
-                    return username;
-                }
-            });
+            Map<String, Object> attributes = claimSet.getClaims();
+            return usernameForClaims(claimSet).map(username ->
+                    Authentication.build(username,
+                            rolesFinder.resolveRoles(attributes),
+                            attributes));
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("ParseException creating authentication", e);

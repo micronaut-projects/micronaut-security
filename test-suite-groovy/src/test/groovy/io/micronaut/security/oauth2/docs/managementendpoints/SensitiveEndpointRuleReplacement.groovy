@@ -1,5 +1,7 @@
 package io.micronaut.security.oauth2.docs.managementendpoints
 
+import io.micronaut.security.authentication.Authentication
+
 //tag::imports[]
 import jakarta.inject.Singleton
 import io.micronaut.context.annotation.Replaces
@@ -10,7 +12,6 @@ import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
-import io.micronaut.security.token.MapClaims
 import io.micronaut.security.token.RolesFinder
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
@@ -25,7 +26,7 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     private final RolesFinder rolesFinder;
 
     SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor,
-                                            RolesFinder rolesFinder) {
+                                     RolesFinder rolesFinder) {
         super(endpointSensitivityProcessor)
         this.rolesFinder = rolesFinder
     }
@@ -33,9 +34,9 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     @Override
     @NonNull
     protected Publisher<SecurityRuleResult> checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
-                                                                        @NonNull Map<String, Object> claims,
+                                                                        @NonNull Authentication authentication,
                                                                         @NonNull ExecutableMethod<?, ?> method) {
-        Mono.just(rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], new MapClaims(claims))
+        Mono.just(rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication)
                 ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED)
     }
 }

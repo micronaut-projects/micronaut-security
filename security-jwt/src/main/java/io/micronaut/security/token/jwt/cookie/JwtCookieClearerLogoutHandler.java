@@ -27,7 +27,6 @@ import io.micronaut.security.handlers.LogoutHandler;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 /**
  * Clears the cookie configured via {@link CookieLoginHandler}.
@@ -60,9 +59,9 @@ public class JwtCookieClearerLogoutHandler implements LogoutHandler {
         try {
             URI location = new URI(logout);
             MutableHttpResponse<?> response = HttpResponse.seeOther(location);
-            clearCookie(accessTokenCookieConfiguration, request, response);
+            clearCookie(accessTokenCookieConfiguration, response);
             if (refreshTokenCookieConfiguration != null) {
-                clearCookie(refreshTokenCookieConfiguration, request, response);
+                clearCookie(refreshTokenCookieConfiguration, response);
             }
             return response;
         } catch (URISyntaxException var5) {
@@ -70,15 +69,11 @@ public class JwtCookieClearerLogoutHandler implements LogoutHandler {
         }
     }
 
-    private void clearCookie(CookieConfiguration cookieConfiguration, HttpRequest<?> request, MutableHttpResponse<?> response) {
-        Optional<Cookie> cookie = request.getCookies().findCookie(cookieConfiguration.getCookieName());
-        if (cookie.isPresent()) {
-            Cookie requestCookie = cookie.get();
-            String domain = cookieConfiguration.getCookieDomain().orElse(null);
-            String path = cookieConfiguration.getCookiePath().orElse(null);
-            Cookie responseCookie = Cookie.of(requestCookie.getName(), "");
-            responseCookie.maxAge(0).domain(domain).path(path);
-            response.cookie(responseCookie);
-        }
+    private void clearCookie(CookieConfiguration cookieConfiguration, MutableHttpResponse<?> response) {
+        String domain = cookieConfiguration.getCookieDomain().orElse(null);
+        String path = cookieConfiguration.getCookiePath().orElse(null);
+        Cookie cookie = Cookie.of(cookieConfiguration.getCookieName(), "");
+        cookie.maxAge(0).domain(domain).path(path);
+        response.cookie(cookie);
     }
 }

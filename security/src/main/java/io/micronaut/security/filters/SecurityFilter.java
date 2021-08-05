@@ -24,7 +24,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
+import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.management.endpoint.EndpointsFilter;
@@ -53,7 +53,9 @@ import java.util.stream.Collectors;
  */
 @Replaces(EndpointsFilter.class)
 @Filter(Filter.MATCH_ALL_PATTERN)
-public class SecurityFilter extends OncePerRequestHttpServerFilter {
+public class SecurityFilter implements HttpServerFilter {
+
+    public static final String KEY = "io.micronaut.security.filters." + SecurityFilter.class.getSimpleName();
 
     /**
      * The attribute used to store the authentication object in the request.
@@ -101,14 +103,25 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
     }
 
     @Override
-    protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
+    public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
+        request.getAttributes().put(KEY, true);
+        populateWithOldKey(request);
         RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+
         return Flux.fromIterable(authenticationFetchers)
                 .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
                 .next()
                 .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain, routeMatch)))
                 .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain, routeMatch))
                         .next());
+    }
+
+    /**
+     * Remove once {@link io.micronaut.http.filter.OncePerRequestHttpServerFilter} is deleted.
+     */
+    @Deprecated
+    private void populateWithOldKey(HttpRequest<?> request) {
+        request.getAttributes().put("micronaut.once." + SecurityFilter.class.getSimpleName(), true);
     }
 
     private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,
@@ -147,10 +160,9 @@ public class SecurityFilter extends OncePerRequestHttpServerFilter {
         boolean forbidden = authentication != null;
         String method = request.getMethod().toString();
         String path = request.getPath();
-        Map<String, Object> attributes = authentication != null ? authentication.getAttributes() : null;
 
         return Flux.fromIterable(securityRules)
-                .concatMap(rule -> Mono.from(rule.check(request, routeMatch, attributes))
+                .concatMap(rule -> Mono.from(rule.check(request, routeMatch, authentication))
                                         .defaultIfEmpty(SecurityRuleResult.UNKNOWN)
                                         // Ideally should return just empty but filter the unknowns
                                         .filter((result) -> result != SecurityRuleResult.UNKNOWN)

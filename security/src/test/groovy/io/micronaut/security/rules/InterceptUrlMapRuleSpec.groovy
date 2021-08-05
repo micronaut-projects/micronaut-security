@@ -2,30 +2,21 @@ package io.micronaut.security.rules
 
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.config.InterceptUrlMapPattern
-import io.micronaut.security.token.Claims
 import io.micronaut.security.token.DefaultRolesFinder
-import io.micronaut.security.token.RolesFinder
 import io.micronaut.security.token.config.TokenConfiguration
 import reactor.core.publisher.Mono
 import spock.lang.Issue
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import io.micronaut.core.annotation.NonNull
-
 class InterceptUrlMapRuleSpec extends Specification {
 
     @Unroll
     void "test query arguments are ignored by matching logic"() {
         given:
-        SecurityRule rule = new InterceptUrlMapRule(new RolesFinder() {
-            @Override
-            @NonNull
-            List<String> findInClaims(@NonNull Claims claims) {
-                claims.get("roles")
-            }
-        }) {
+        SecurityRule rule = new InterceptUrlMapRule(new DefaultRolesFinder(new TokenConfiguration() {})) {
             @Override
             protected List<InterceptUrlMapPattern> getPatternList() {
                 [new InterceptUrlMapPattern("/foo", ["ROLE_ADMIN"], HttpMethod.GET)]
@@ -33,7 +24,7 @@ class InterceptUrlMapRuleSpec extends Specification {
         }
 
         expect:
-        Mono.from(rule.check(HttpRequest.GET(uri), null, [roles: ["ROLE_ADMIN"]])).block() == expectedResult
+        Mono.from(rule.check(HttpRequest.GET(uri), null, Authentication.build("john", ["ROLE_ADMIN"]))).block() == expectedResult
 
         where:
         uri             || expectedResult

@@ -16,17 +16,17 @@ import io.micronaut.core.annotation.Nullable
 @Requires(property = 'spec.name', value = 'authenticationparam')
 //tag::clazz[]
 @Controller("/user")
-public class UserController {
+class UserController {
 
     @Secured("isAnonymous()")
     @Get("/myinfo")
-    public Map myinfo(@Nullable Authentication authentication) {
+    Map myinfo(@Nullable Authentication authentication) {
         if (authentication == null) {
             return Collections.singletonMap("isLoggedIn", false);
         }
         return CollectionUtils.mapOf("isLoggedIn", true,
                 "username", authentication.getName(),
-                "roles", authentication.getAttributes().get("roles")
+                "roles", authentication.getRoles()
         );
     }
 }

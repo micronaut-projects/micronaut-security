@@ -8,13 +8,10 @@ import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
 import org.reactivestreams.Publisher;
 
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
 //end::clazz[]
 
 @Requires(property = "spec.name", value = "docsbasicauth")
@@ -26,9 +23,9 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Mono.<AuthenticationResponse>create(emitter -> {
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
-                emitter.success(new UserDetails("user", new ArrayList<>()));
+                emitter.success(AuthenticationResponse.success("user"));
             } else {
-                emitter.error(new AuthenticationException(new AuthenticationFailed()));
+                emitter.error(AuthenticationResponse.exception());
             }
         });
     }

@@ -18,7 +18,7 @@ package io.micronaut.security.handlers;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 
 /**
  * Defines how to respond to a successful or failed login attempt.
@@ -28,19 +28,19 @@ import io.micronaut.security.authentication.UserDetails;
 public interface LoginHandler {
 
     /**
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @param request The {@link HttpRequest} being executed
      * @return An HTTP Response. Eg. a redirect or an JWT token rendered to the response
      */
-    MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request);
+    MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request);
 
     /**
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @param refreshToken The refresh token
      * @param request The {@link HttpRequest} being executed
      * @return An HTTP Response. Eg. a redirect or an JWT token rendered to the response
      */
-    MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request);
+    MutableHttpResponse<?> loginRefresh(Authentication authentication, String refreshToken, HttpRequest<?> request);
 
     /**
      * @param authenticationResponse Object encapsulates the Login failure

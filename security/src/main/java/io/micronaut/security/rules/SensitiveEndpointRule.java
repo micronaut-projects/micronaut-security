@@ -29,6 +29,7 @@ import io.micronaut.management.endpoint.refresh.RefreshEndpoint;
 import io.micronaut.management.endpoint.routes.RoutesEndpoint;
 import io.micronaut.management.endpoint.stop.ServerStopEndpoint;
 import io.micronaut.management.endpoint.threads.ThreadDumpEndpoint;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
 import org.reactivestreams.Publisher;
@@ -84,11 +85,11 @@ public class SensitiveEndpointRule implements SecurityRule {
     }
 
     @Override
-    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             ExecutableMethod<?, ?> method = ((MethodBasedRouteMatch<?, ?>) routeMatch).getExecutableMethod();
             if (endpointMethods.containsKey(method)) {
-                return check(request, claims, method);
+                return check(request, authentication, method);
             }
         }
         return Mono.just(SecurityRuleResult.UNKNOWN);
@@ -97,22 +98,23 @@ public class SensitiveEndpointRule implements SecurityRule {
     /**
      * Evaluate the Endpoint's method.
      * @param request HTTP Request
-     * @param claims Claims of authenticated user. null if the user is not authenticated
+     * @param authentication The authentication, or null if none found
      * @param method Route method
      * @return The Result
      */
     @NonNull
     protected Publisher<SecurityRuleResult> check(@NonNull HttpRequest<?> request,
-                                                  @Nullable Map<String, Object> claims,
+                                                  @Nullable Authentication authentication,
                                                   @NonNull ExecutableMethod<?, ?> method) {
+
         Boolean sensitive = endpointMethods.get(method);
         if (sensitive) {
-            if (claims == null) {
+            if (authentication == null) {
                 return checkSensitiveAnonymous(request, method);
             }
-            return checkSensitiveAuthenticated(request, claims, method);
+            return checkSensitiveAuthenticated(request, authentication, method);
         }
-        return checkNotSensitive(request, claims, method);
+        return checkNotSensitive(request, authentication, method);
     }
 
     @Override
@@ -123,14 +125,14 @@ public class SensitiveEndpointRule implements SecurityRule {
     /**
      * Evaluates a sensitive endpoint for an authenticated user.
      * @param request HTTP Request
-     * @param claims Claims of authenticated user.
+     * @param authentication The authentication, or null if none found
      * @param method Endpoint's method
      * @return The Result
      */
     @NonNull
     protected Publisher<SecurityRuleResult> checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
-                                                             @NonNull Map<String, Object> claims,
-                                                             @NonNull ExecutableMethod<?, ?> method) {
+                                                                        @NonNull Authentication authentication,
+                                                                        @NonNull ExecutableMethod<?, ?> method) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("authentication was found for sensitive {} endpoint. Allowing the request.", endpointName(method));
         }
@@ -155,14 +157,14 @@ public class SensitiveEndpointRule implements SecurityRule {
     /**
      * Evaluates a non sensitive endpoint.
      * @param request HTTP Request
-     * @param claims Claims of authenticated user. null if the user is not authenticated.
+     * @param authentication The authentication, or null if none found
      * @param method Endpoint's method
      * @return The Result
      */
     @NonNull
     protected Publisher<SecurityRuleResult> checkNotSensitive(@NonNull HttpRequest<?> request,
-                                                   @Nullable Map<String, Object> claims,
-                                                   @NonNull ExecutableMethod<?, ?> method) {
+                                                              @Nullable Authentication authentication,
+                                                              @NonNull ExecutableMethod<?, ?> method) {
         if (LOG.isTraceEnabled()) {
             LOG.debug("{} endpoint is not sensitive. Allowing the request.", endpointName(method));
         }

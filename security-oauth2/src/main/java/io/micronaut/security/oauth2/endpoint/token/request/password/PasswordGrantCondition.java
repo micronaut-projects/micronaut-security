@@ -26,9 +26,9 @@ import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.grants.GrantType;
 
@@ -59,7 +59,7 @@ public class PasswordGrantCondition implements Condition {
                     if (clientConfiguration.isEnabled()) {
                         if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
                             if (clientConfiguration.getToken().isPresent()) {
-                                if (beanContext.containsBean(OauthUserDetailsMapper.class, Qualifiers.byName(name))) {
+                                if (beanContext.containsBean(OauthAuthenticationMapper.class, Qualifiers.byName(name))) {
                                     return true;
                                 } else {
                                     context.fail("Skipped password grant flow for provider [" + name + "] because no user details mapper could be found");
@@ -69,11 +69,11 @@ public class PasswordGrantCondition implements Condition {
                                 boolean hasTokenResponseValidator = beanContext.containsBean(OpenIdTokenResponseValidator.class);
                                 if (hasOpenIdProviderMetadata && hasTokenResponseValidator) {
 
-                                    boolean hasUserDetailsMapper = beanContext.containsBean(OpenIdUserDetailsMapper.class, Qualifiers.byName(name));
-                                    if (!hasUserDetailsMapper) {
-                                        hasUserDetailsMapper = beanContext.containsBean(DefaultOpenIdUserDetailsMapper.class);
+                                    boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(name));
+                                    if (!hasAuthenticationMapper) {
+                                        hasAuthenticationMapper = beanContext.containsBean(DefaultOpenIdAuthenticationMapper.class);
                                     }
-                                    if (hasUserDetailsMapper) {
+                                    if (hasAuthenticationMapper) {
                                         return true;
                                     } else {
                                         context.fail("Skipped password grant flow for provider [" + name + "] because no user details mapper could be found");

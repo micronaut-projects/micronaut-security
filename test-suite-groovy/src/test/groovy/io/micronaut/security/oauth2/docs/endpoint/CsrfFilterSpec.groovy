@@ -7,9 +7,8 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import reactor.core.publisher.FluxSink
 import reactor.core.publisher.Flux
@@ -52,12 +51,12 @@ class CsrfFilterSpec extends EmbeddedServerSpecification {
     @Singleton
     @Named("twitter")
     @Requires(property = "spec.name", value = "CsrfFilterSpec")
-    static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
+    static class TwitterAuthenticationMapper implements OauthAuthenticationMapper {
 
         @Override
         Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) {
             Flux.create({ emitter ->
-                emitter.next(new UserDetails("twitterUser", Collections.emptyList()))
+                emitter.next(AuthenticationResponse.success("twitterUser"))
                 emitter.complete()
             }, FluxSink.OverflowStrategy.ERROR)
         }

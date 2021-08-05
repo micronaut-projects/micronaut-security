@@ -1,9 +1,8 @@
 package io.micronaut.security.token.jwt.cookie
 
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpMethod
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.endpoints.OauthController
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
@@ -13,6 +12,9 @@ import io.micronaut.web.router.Router
 import org.reactivestreams.Publisher
 
 import jakarta.inject.Singleton
+import reactor.core.publisher.Mono
+
+import java.util.concurrent.ConcurrentHashMap
 
 class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
 
@@ -94,18 +96,17 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
     @Singleton
     static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
 
-        Map<String, UserDetails> tokens = [:]
+        private final ConcurrentHashMap<String, Authentication> tokens = new ConcurrentHashMap<>()
 
         @Override
         void persistToken(RefreshTokenGeneratedEvent event) {
-            tokens.put(event.getRefreshToken(), event.getUserDetails())
+            tokens.computeIfAbsent(event.getRefreshToken(), (provider)  -> event.getAuthentication())
         }
 
         @Override
-        Publisher<UserDetails> getUserDetails(String refreshToken) {
-            UserDetails userDetails = tokens.get(refreshToken)
-            userDetails.setUsername(userDetails.getUsername() + "-refreshed")
-            Publishers.just(userDetails)
+        Publisher<Authentication> getAuthentication(String refreshToken) {
+            return Mono.just(tokens.computeIfPresent(refreshToken,
+                    (s, auth) -> Authentication.build(auth.getName() + "-refreshed", auth.getAttributes())))
         }
     }
 }

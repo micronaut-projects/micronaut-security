@@ -16,7 +16,7 @@
 package io.micronaut.security.token.jwt.render;
 
 import io.micronaut.http.HttpHeaderValues;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 
 import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Singleton;
@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class BearerTokenRenderer implements TokenRenderer {
 
-    private final String BEARER_TOKEN_TYPE = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
+    private static final String BEARER_TOKEN_TYPE = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
 
     @Override
     public AccessRefreshToken render(Integer expiresIn, String accessToken, @Nullable String refreshToken) {
@@ -38,7 +38,7 @@ public class BearerTokenRenderer implements TokenRenderer {
     }
 
     @Override
-    public AccessRefreshToken render(UserDetails userDetails, Integer expiresIn, String accessToken, @Nullable String refreshToken) {
-        return new BearerAccessRefreshToken(userDetails.getUsername(), userDetails.getRoles(), expiresIn, accessToken, refreshToken, BEARER_TOKEN_TYPE);
+    public AccessRefreshToken render(Authentication authentication, Integer expiresIn, String accessToken, @Nullable String refreshToken) {
+        return new BearerAccessRefreshToken(authentication.getName(), authentication.getRoles(), expiresIn, accessToken, refreshToken, BEARER_TOKEN_TYPE);
     }
 }

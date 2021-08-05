@@ -31,7 +31,7 @@ import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.BasicAuthUtils
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
@@ -40,6 +40,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.grants.ClientCredentialsGrant
 import io.micronaut.security.oauth2.grants.GrantType
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
@@ -513,7 +514,7 @@ class ClientCredentialsSpec extends Specification {
             this.jwtTokenGenerator = jwtTokenGenerator
             this.sampleClientConfiguration = sampleClientConfiguration
             this.accessTokenConfiguration = accessTokenConfiguration
-            this.tokenExpiration = tokenExpiration;
+            this.tokenExpiration = tokenExpiration
         }
 
         @Secured(SecurityRule.IS_ANONYMOUS)
@@ -537,8 +538,8 @@ class ClientCredentialsSpec extends Specification {
             TokenResponse tokenResponse = new TokenResponse()
             tokenResponse.tokenType = 'bearer'
             tokenResponse.expiresIn = tokenExpiration
-            UserDetails userDetails = new UserDetails('john', [])
-            tokenResponse.accessToken = jwtTokenGenerator.generateToken(userDetails, accessTokenConfiguration.getExpiration()).get()
+            Authentication authentication = Authentication.build('john')
+            tokenResponse.accessToken = jwtTokenGenerator.generateToken(authentication, accessTokenConfiguration.getExpiration()).get()
             HttpResponse.ok(tokenResponse)
         }
 

@@ -9,7 +9,6 @@ import org.reactivestreams.Publisher;
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 import reactor.core.publisher.Mono;
-
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collections;

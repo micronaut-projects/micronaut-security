@@ -17,7 +17,7 @@ package io.micronaut.security.token.jwt.generator;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 
 import java.util.Map;
@@ -30,15 +30,37 @@ import java.util.Optional;
  */
 @DefaultImplementation(DefaultAccessRefreshTokenGenerator.class)
 public interface AccessRefreshTokenGenerator {
-    @NonNull
-    Optional<AccessRefreshToken> generate(@NonNull UserDetails userDetails);
 
+    /**
+     *
+     * @param authentication User's authentication
+     * @return An Optional {@link AccessRefreshToken}
+     */
     @NonNull
-    Optional<String> generateRefreshToken(@NonNull UserDetails userDetails);
+    Optional<AccessRefreshToken> generate(@NonNull Authentication authentication);
 
+    /**
+     *
+     * @param authentication User's authentication
+     * @return An Optional refresh token
+     */
+    @NonNull
+    Optional<String> generateRefreshToken(@NonNull Authentication authentication);
+
+    /**
+     *
+     * @param refreshToken refresh token
+     * @param oldClaims oldClaims
+     * @return An Optional {@link AccessRefreshToken}
+     */
     @NonNull
     Optional<AccessRefreshToken> generate(@NonNull String refreshToken, @NonNull Map<String, ?> oldClaims);
 
+    /**
+     * @param refreshToken refresh token
+     * @param authentication User's authentication
+     * @return An Optional refresh token
+     */
     @NonNull
-    Optional<AccessRefreshToken> generate(@NonNull String refreshToken, @NonNull UserDetails userDetails);
+    Optional<AccessRefreshToken> generate(@NonNull String refreshToken, @NonNull Authentication authentication);
 }

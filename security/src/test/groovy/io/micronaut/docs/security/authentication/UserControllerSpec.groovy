@@ -7,6 +7,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 
 class UserControllerSpec extends EmbeddedServerSpecification {
+
     @Override
     String getSpecName() {
         "authenticationparam"

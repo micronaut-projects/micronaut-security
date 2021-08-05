@@ -12,7 +12,7 @@ class TokenConfigurationSpec extends ApplicationContextSpecification {
         noExceptionThrown()
 
         and:
-        tokenConfiguration.getNameKey() == 'username'
+        tokenConfiguration.getNameKey() == 'sub'
 
         and:
         tokenConfiguration.getRolesName() == 'roles'

@@ -9,16 +9,17 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.routes.OauthController
+import io.micronaut.security.token.config.TokenConfiguration
 import reactor.core.publisher.FluxSink
 import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
@@ -98,12 +99,12 @@ class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecifi
     @Named("twitter")
     @Requires(property = "spec.name", value = "OpenIdAuthorizationRedirectOauthDisabledSpec")
     @Requires(property = "micronaut.security.oauth2.clients.twitter")
-    static class TwitterUserDetailsMapper implements OauthUserDetailsMapper {
+    static class TwitterAuthenticationMapper implements OauthAuthenticationMapper {
 
         @Override
-        Publisher<UserDetails> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
+        Publisher<Authentication> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
             Flux.create({ emitter ->
-                emitter.next(new UserDetails("twitterUser", Collections.emptyList()))
+                emitter.next(Authentication.build("twitterUser"))
                 emitter.complete()
             }, FluxSink.OverflowStrategy.ERROR)
         }

@@ -11,7 +11,7 @@ import io.micronaut.security.MockAuthenticationProvider
 import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.event.LoginFailedEvent
 import io.micronaut.security.event.LoginSuccessfulEvent
@@ -152,12 +152,12 @@ class EventListenerSpec extends EmbeddedServerSpecification {
     static class CustomLoginHandler implements LoginHandler {
 
         @Override
-        MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
+        MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {
             HttpResponse.ok()
         }
 
         @Override
-        MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
+        MutableHttpResponse<?> loginRefresh(Authentication authentication, String refreshToken, HttpRequest<?> request) {
             throw new UnsupportedOperationException()
         }
 

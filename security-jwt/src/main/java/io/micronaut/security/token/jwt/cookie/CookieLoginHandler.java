@@ -23,7 +23,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RefreshRedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
@@ -68,26 +68,26 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
      * Return the cookies for the given parameters. This method will generate new cookies based on the current
      * configuration.
      *
-     * @param userDetails The Authenticated user's representation
+     * @param authentication The Authenticated user's representation
      * @param request The current request
      * @return A list of cookies
      */
-    public abstract List<Cookie> getCookies(UserDetails userDetails, HttpRequest<?> request);
+    public abstract List<Cookie> getCookies(Authentication authentication, HttpRequest<?> request);
 
     /**
      * Return the cookies for the given parameters. This method will generate new cookies based on the current
      * configuration.
      *
-     * @param userDetails The Authenticated user's representation
+     * @param authentication The Authenticated user's representation
      * @param refreshToken The access refresh token
      * @param request The current request
      * @return A list of cookies
      */
-    public abstract List<Cookie> getCookies(UserDetails userDetails, String refreshToken, HttpRequest<?> request);
+    public abstract List<Cookie> getCookies(Authentication authentication, String refreshToken, HttpRequest<?> request);
 
     @Override
-    public MutableHttpResponse<?> loginSuccess(UserDetails userDetails, HttpRequest<?> request) {
-        return applyCookies(createSuccessResponse(request), getCookies(userDetails, request));
+    public MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {
+        return applyCookies(createSuccessResponse(request), getCookies(authentication, request));
     }
 
     @Override
@@ -101,8 +101,8 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
     }
 
     @Override
-    public MutableHttpResponse<?> loginRefresh(UserDetails userDetails, String refreshToken, HttpRequest<?> request) {
-        return applyCookies(createRefreshResponse(request), getCookies(userDetails, refreshToken, request));
+    public MutableHttpResponse<?> loginRefresh(Authentication authentication, String refreshToken, HttpRequest<?> request) {
+        return applyCookies(createRefreshResponse(request), getCookies(authentication, refreshToken, request));
     }
 
     /**

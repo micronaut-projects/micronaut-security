@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.generator;
 
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 
 import io.micronaut.core.annotation.Nullable;
 import java.util.Map;
@@ -30,11 +30,11 @@ import java.util.Optional;
 public interface TokenGenerator {
 
     /**
-     * @param userDetails Authenticated user's representation.
+     * @param authentication Authenticated user's representation.
      * @param expiration The amount of time in milliseconds until the token expires
      * @return An optional JWT string
      */
-    Optional<String> generateToken(UserDetails userDetails, @Nullable Integer expiration);
+    Optional<String> generateToken(Authentication authentication, @Nullable Integer expiration);
 
     /**
      * @param claims Claims to be included in the JWT token to be generated

@@ -7,14 +7,13 @@ import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
-import io.micronaut.security.token.MapClaims
 import io.micronaut.security.token.RolesFinder
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
-
 //end::imports[]
 
 @Requires(property = "spec.name", value = "LoggersSpec")
@@ -25,9 +24,9 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
                                        private val rolesFinder: RolesFinder) : SensitiveEndpointRule(endpointSensitivityProcessor) {
     @NonNull
     override fun checkSensitiveAuthenticated(@NonNull request: HttpRequest<*>,
-                                             @NonNull claims: Map<String, Any>,
+                                             @NonNull authentication: Authentication,
                                              @NonNull method: ExecutableMethod<*, *>): Publisher<SecurityRuleResult> {
-        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), MapClaims(claims))) {
+        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication)) {
             Mono.just(SecurityRuleResult.ALLOWED)
         } else {
             Mono.just(SecurityRuleResult.REJECTED)

@@ -37,7 +37,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.Authorizatio
 import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
-import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -51,14 +51,14 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.2.0
  */
-@EachBean(OauthUserDetailsMapper.class)
+@EachBean(OauthAuthenticationMapper.class)
 @Requires(condition = OauthClientCondition.class)
 public class DefaultOauthClient implements OauthClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOauthClient.class);
 
     private final OauthClientConfiguration clientConfiguration;
-    private final OauthUserDetailsMapper userDetailsMapper;
+    private final OauthAuthenticationMapper authenticationMapper;
     private final AuthorizationRedirectHandler redirectHandler;
     private final OauthAuthorizationResponseHandler authorizationResponseHandler;
     private final BeanContext beanContext;
@@ -66,18 +66,18 @@ public class DefaultOauthClient implements OauthClient {
 
     /**
      * @param clientConfiguration The client configuration
-     * @param userDetailsMapper The user details mapper
+     * @param authenticationMapper The user details mapper
      * @param redirectHandler The redirect URL builder
      * @param authorizationResponseHandler The authorization response handler
      * @param beanContext The bean context
      */
-    public DefaultOauthClient(@Parameter OauthUserDetailsMapper userDetailsMapper,
+    public DefaultOauthClient(@Parameter OauthAuthenticationMapper authenticationMapper,
                               @Parameter OauthClientConfiguration clientConfiguration,
                               AuthorizationRedirectHandler redirectHandler,
                               OauthAuthorizationResponseHandler authorizationResponseHandler,
                               BeanContext beanContext) {
         this.clientConfiguration = clientConfiguration;
-        this.userDetailsMapper = userDetailsMapper;
+        this.authenticationMapper = authenticationMapper;
         this.redirectHandler = redirectHandler;
         this.authorizationResponseHandler = authorizationResponseHandler;
         this.beanContext = beanContext;
@@ -124,7 +124,7 @@ public class DefaultOauthClient implements OauthClient {
             }
             return authorizationResponseHandler.handle(authorizationResponse,
                     clientConfiguration,
-                    userDetailsMapper,
+                    authenticationMapper,
                     tokenEndpoint);
         }
     }

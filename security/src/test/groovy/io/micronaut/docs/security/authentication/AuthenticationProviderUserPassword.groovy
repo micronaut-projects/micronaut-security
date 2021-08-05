@@ -7,7 +7,6 @@ import io.micronaut.security.authentication.AuthenticationFailed
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.UserDetails
 import reactor.core.publisher.FluxSink
 import reactor.core.publisher.Flux
 import org.reactivestreams.Publisher
@@ -19,19 +18,19 @@ import jakarta.inject.Singleton
 @Requires(property = "spec.name", value = "authenticationparam")
 //tag::clazz[]
 @Singleton
-public class AuthenticationProviderUserPassword implements AuthenticationProvider {
+class AuthenticationProviderUserPassword implements AuthenticationProvider {
+
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flux.create({emitter ->
             if (authenticationRequest.getIdentity().equals("user") && authenticationRequest.getSecret().equals("password")) {
-                emitter.next(new UserDetails("user", ["ROLE_USER"]));
+                emitter.next(AuthenticationResponse.success("user", ["ROLE_USER"]))
                 emitter.complete()
             } else {
-                emitter.error(new AuthenticationException(new AuthenticationFailed()))
+                emitter.error(AuthenticationResponse.exception())
             }
         }, FluxSink.OverflowStrategy.ERROR)
-
     }
 }
 //end::clazz[]

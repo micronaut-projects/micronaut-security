@@ -6,7 +6,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
-import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
@@ -66,15 +66,15 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
     @Singleton
     static class InMemoryRefreshTokenPersistence implements RefreshTokenPersistence {
 
-        Map<String, UserDetails> tokens = [:]
+        Map<String, Authentication> tokens = [:]
 
         @Override
         void persistToken(RefreshTokenGeneratedEvent event) {
-            tokens.put(event.getRefreshToken(), event.getUserDetails())
+            tokens.put(event.getRefreshToken(), event.getAuthentication())
         }
 
         @Override
-        Publisher<UserDetails> getUserDetails(String refreshToken) {
+        Publisher<Authentication> getAuthentication(String refreshToken) {
             Publishers.just(tokens.get(refreshToken))
         }
     }
@@ -86,5 +86,4 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
             super([new SuccessAuthenticationScenario('user')])
         }
     }
-
 }

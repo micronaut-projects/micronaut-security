@@ -11,6 +11,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.testutils.EmbeddedServerSpecification
@@ -126,7 +127,7 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
         }
 
         @Override
-        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
+        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
             return Mono.just(result)
                     .delayElement(Duration.ofMillis(delayMs))
                     .subscribeOn(Schedulers.fromExecutor(executorService))
@@ -145,7 +146,7 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
         static SecurityRuleResult result = UNKNOWN
 
         @Override
-        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
+        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
             return Mono.just(result)
         }
 
@@ -162,7 +163,7 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
         static SecurityRuleResult result = UNKNOWN
 
         @Override
-        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
+        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
             return Mono.just(result)
         }
 

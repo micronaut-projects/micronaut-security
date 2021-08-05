@@ -2,9 +2,7 @@ This section will outline some common requirements that will require custom code
 
 == Authentication Data
 
-The authentication object returned from a successful authentication request is by default an instance of UserDetails, which only contains the username and any roles associated with the user. To store additional data in the authentication, extend api:security.authentication.UserDetails[] with your own implementation that has fields for the additional data you wish to store.
-
-To use this new implementation, you must override the api:security.ldap.DefaultContextAuthenticationMapper[] and provide your own implementation.
+The authentication object returned from a successful authentication request is by default an instance of `Authentication`, which only contains the username and any roles associated with the user. You can use api:security.authentication.Authentication[] `attributes` to store additional data. Replace api:security.ldap.DefaultContextAuthenticationMapper[] and provide your own implementation.
 
 [source,java]
 .MyContextAuthenticationMapper.java
@@ -15,7 +13,7 @@ public class MyContextAuthenticationMapper implements ContextAuthenticationMappe
 
     @Override
     public AuthenticationResponse map(ConvertibleValues<Object> attributes, String username, Set<String> groups) {
-        // return an extended UserDetails or an AuthenticationFailed object
+        // return an Authentication instance (Authentication::build methods) or an AuthenticationFailed object
     }
 }
 ----

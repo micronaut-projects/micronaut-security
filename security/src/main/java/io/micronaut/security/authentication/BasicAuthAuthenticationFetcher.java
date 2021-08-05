@@ -20,7 +20,6 @@ import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import io.micronaut.security.token.config.TokenConfiguration;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,16 +39,12 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
 
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthAuthenticationFetcher.class);
     private final Authenticator authenticator;
-    private final TokenConfiguration configuration;
 
     /**
      * @param authenticator The authenticator to authenticate the credentials
-     * @param configuration The basic authentication configuration
      */
-    public BasicAuthAuthenticationFetcher(Authenticator authenticator,
-                                          TokenConfiguration configuration) {
+    public BasicAuthAuthenticationFetcher(Authenticator authenticator) {
         this.authenticator = authenticator;
-        this.configuration = configuration;
     }
 
     @Override
@@ -60,9 +55,8 @@ public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
             Flux<AuthenticationResponse> authenticationResponse = Flux.from(authenticator.authenticate(request, credentials.get()));
 
             return authenticationResponse.switchMap(response -> {
-                if (response.isAuthenticated()) {
-                    UserDetails userDetails = response.getUserDetails().get();
-                    return Flux.just(new AuthenticationUserDetailsAdapter(userDetails, configuration.getRolesName(), configuration.getNameKey()));
+                if (response.isAuthenticated() && response.getAuthentication().isPresent()) {
+                    return Flux.just(response.getAuthentication().get());
                 } else {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Could not authenticate {}", credentials.get().getUsername());

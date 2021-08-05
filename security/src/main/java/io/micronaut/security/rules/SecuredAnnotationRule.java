@@ -17,6 +17,7 @@ package io.micronaut.security.rules;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
@@ -27,7 +28,6 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 import java.util.List;
 
@@ -60,11 +60,11 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
      *
      * @param request The current request
      * @param routeMatch The matched route
-     * @param claims The claims from the token. Null if not authenticated
+     * @param authentication The authentication, or null if none found
      * @return The result
      */
     @Override
-    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Map<String, Object> claims) {
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             MethodBasedRouteMatch methodRoute = ((MethodBasedRouteMatch) routeMatch);
             if (methodRoute.hasAnnotation(Secured.class)) {
@@ -74,7 +74,7 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
                     if (values.contains(SecurityRule.DENY_ALL)) {
                         return Mono.just(SecurityRuleResult.REJECTED);
                     }
-                    return compareRoles(values, getRoles(claims));
+                    return compareRoles(values, getRoles(authentication));
                 }
             }
         }

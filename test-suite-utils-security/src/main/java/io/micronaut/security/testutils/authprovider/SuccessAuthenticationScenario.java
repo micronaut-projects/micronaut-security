@@ -28,17 +28,18 @@ import java.util.Map;
  */
 @Introspected
 public class SuccessAuthenticationScenario {
+
     @NonNull
-    private String username;
+    private final String username;
 
     @Nullable
-    private String password;
+    private final String password;
 
     @NonNull
-    private List<String> roles;
+    private final List<String> roles;
 
     @NonNull
-    Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
     /**
      *
@@ -46,6 +47,7 @@ public class SuccessAuthenticationScenario {
      */
     public SuccessAuthenticationScenario(@NonNull String username) {
         this.username = username;
+        this.password = null;
         this.roles = Collections.emptyList();
         this.attributes = Collections.emptyMap();
     }
@@ -71,6 +73,7 @@ public class SuccessAuthenticationScenario {
     public SuccessAuthenticationScenario(@NonNull String username,
                                          @NonNull List<String> roles) {
         this.username = username;
+        this.password = null;
         this.roles = roles;
         this.attributes = Collections.emptyMap();
     }
@@ -85,6 +88,7 @@ public class SuccessAuthenticationScenario {
                                          @NonNull List<String> roles,
                                          @NonNull Map<String, Object> attributes) {
         this.username = username;
+        this.password = null;
         this.roles = roles;
         this.attributes = attributes;
     }

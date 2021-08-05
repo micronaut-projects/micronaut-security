@@ -16,8 +16,12 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+
 import java.io.Serializable;
 import java.security.Principal;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -40,4 +44,62 @@ public interface Authentication extends Principal, Serializable {
      */
     @NonNull
     Map<String, Object> getAttributes();
+
+    /**
+     * @return Any roles associated with the authentication
+     */
+    @NonNull
+    default Collection<String> getRoles() {
+        return Collections.emptyList();
+    }
+
+    /**
+     * Builds an {@link Authentication} instance for the user.
+     * @param username User's name
+     * @return An {@link Authentication} for the User
+     */
+    @NonNull
+    static Authentication build(@NonNull String username) {
+        return Authentication.build(username, null, null);
+    }
+
+    /**
+     * Builds an {@link Authentication} instance for the user.
+     * @param username User's name
+     * @param roles User's roles
+     * @return An {@link Authentication} for the User
+     */
+    @NonNull
+    static Authentication build(@NonNull String username,
+                                @NonNull Collection<String> roles) {
+        return Authentication.build(username, roles, null);
+    }
+
+
+    /**
+     * Builds an {@link Authentication} instance for the user.
+     * @param username User's name
+     * @param attributes User's attributes
+     * @return An {@link Authentication} for the User
+     */
+    @NonNull
+    static Authentication build(@NonNull String username,
+                                @NonNull Map<String, Object> attributes) {
+        return new ServerAuthentication(username, null, attributes);
+    }
+
+    /**
+     * Builds an {@link Authentication} instance for the user.
+     * @param username User's name
+     * @param roles User's roles
+     * @param attributes User's attributes
+     * @return An {@link Authentication} for the User
+     */
+    @NonNull
+    static Authentication build(@NonNull String username,
+                                @Nullable Collection<String> roles,
+                                @Nullable Map<String, Object> attributes) {
+        return new ServerAuthentication(username, roles, attributes);
+    }
+
 }

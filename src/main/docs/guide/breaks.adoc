@@ -4,6 +4,29 @@ This section will document breaking changes that may happen during milestone or 
 
 === Cookie Secure Configuration
 
+==== SecurityRule API Change
+
+- `SecurityRule::check` method receives an `Authentication` instance instead of a claims Map. The method signature was:
+
+`SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable  Map<String, Object> claims);`
+
+In Micronaut Security 3.0 is:
+
+`SecurityRuleResult check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication);`
+
+==== User Details removal
+
+- `UserDetails` has been removed. `Authentication` should be used instead. Moreover, several static methods to `AuthenticationResponse` and `Authentication` to ease the instances of those interfaces.
+API replaces the use of `UserDetails` with `Authentication`.
+- `RefreshTokenPersistence` extends `ApplicationEventListener<RefreshTokenGeneratedEvent>`.
+
+==== Cookie secure default value
+
+- Package `io.micronaut.configuration.security.ldap` has been renamed to `io.micronaut.security.ldap`
+
+- `SecurityFilter` no longer extends deprecated `OncePerRequestHttpServerFilter`. Instead, it implements `HttpServerFilter`.
+
+
 The following properties' default value has been removed in Micronaut Security 3.0.0:
 
 - `micronaut.security.oauth2.openid.nonce.cookie.cookie-secure`
@@ -28,7 +51,7 @@ Micronaut security:
 - Deletes deprecated constructor `JwtCookieClearerLogoutHandler(JwtCookieConfiguration)`
 - Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration redirectConfiguration, PriorToLoginPersistence priorToLoginPersistence)`
 - Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration,String, String)`
-- Deletes deprecated constructor `DefaultOpenIdUserDetailsMapper`
+- Deletes deprecated constructor `DefaultOpenIdAuthenticationMapper`
 - Deletes deprecated constructors `JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator accessRefreshTokenGenerator)`, `JwtCookieLoginHandler(RedirectConfiguration,JwtCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator accessRefreshTokenGenerator,PriorToLoginPersistence priorToLoginPersistence)`
 - Deletes deprecated constructor `IdTokenLoginHandler(JwtCookieConfiguration,RedirectConfiguration,TokenConfiguration,PriorToLoginPersistence)`
 - Deletes deprecated constructor `JwtCookieTokenReader(JwtCookieConfiguration)`
@@ -41,7 +64,7 @@ Micronaut security:
 - Deletes deprecated method `SecurityService::hasRole`
 - Deletes deprecated class `TokenResponseExpiration`
 - Deletes deprecated constructor `DefaultSecurityService(TokenConfiguration)`.
-- Deletes deprecated method `OpenIdUserDetailsMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)`
+- Deletes deprecated method `OpenIdAuthenticationMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)`
 - Deletes deprecated method `BasicAuthAuthenticationFetcher::parseCredentials`
 - Deletes deprecated classes `JwtGeneratorConfiguration` and JwtGeneratorConfigurationProperties`
 - Deletes deprecated method `JwtClaimsValidator:validate(JwtClaims)`
