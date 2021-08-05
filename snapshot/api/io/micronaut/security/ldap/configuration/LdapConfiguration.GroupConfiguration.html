@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -193,42 +193,55 @@ implements io.micronaut.core.util.Toggleable</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#getFilter--">getFilter</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#getFilterAttribute--">getFilterAttribute</a></span>()</code>
+<div class="block">The argument to pass to the search filter.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../io/micronaut/security/ldap/context/SearchSettings.html" title="interface in io.micronaut.security.ldap.context">SearchSettings</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#getSearchSettings-java.lang.Object:A-">getSearchSettings</a></span>(java.lang.Object[]&nbsp;arguments)</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#isEnabled--">isEnabled</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#isSubtree--">isSubtree</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#setAttribute-java.lang.String-">setAttribute</a></span>(java.lang.String&nbsp;attribute)</code>
 <div class="block">Sets the group attribute name.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#setBase-java.lang.String-">setBase</a></span>(java.lang.String&nbsp;base)</code>
 <div class="block">Sets the base DN to search from.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#setEnabled-boolean-">setEnabled</a></span>(boolean&nbsp;enabled)</code>
 <div class="block">Sets if group search is enabled.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#setFilter-java.lang.String-">setFilter</a></span>(java.lang.String&nbsp;filter)</code>
 <div class="block">Sets the group search filter.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#setFilterAttribute-java.lang.String-">setFilterAttribute</a></span>(java.lang.String&nbsp;filterAttribute)</code>
+<div class="block">Sets the name of the user attribute to bind to the
+ group search filter.</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html#setSubtree-boolean-">setSubtree</a></span>(boolean&nbsp;subtree)</code>
 <div class="block">Sets if the subtree should be searched.</div>
@@ -446,7 +459,7 @@ implements io.micronaut.core.util.Toggleable</pre>
 <a name="getSearchSettings-java.lang.Object:A-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getSearchSettings</h4>
 <pre>public&nbsp;<a href="../../../../../io/micronaut/security/ldap/context/SearchSettings.html" title="interface in io.micronaut.security.ldap.context">SearchSettings</a>&nbsp;getSearchSettings(java.lang.Object[]&nbsp;arguments)</pre>
@@ -455,6 +468,35 @@ implements io.micronaut.core.util.Toggleable</pre>
 <dd><code>arguments</code> - The search arguments</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Settings to search ldap groups</dd>
+</dl>
+</li>
+</ul>
+<a name="getFilterAttribute--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getFilterAttribute</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getFilterAttribute()</pre>
+<div class="block">The argument to pass to the search filter.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The name of an attribute in the user</dd>
+</dl>
+</li>
+</ul>
+<a name="setFilterAttribute-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setFilterAttribute</h4>
+<pre>public&nbsp;void&nbsp;setFilterAttribute(java.lang.String&nbsp;filterAttribute)</pre>
+<div class="block">Sets the name of the user attribute to bind to the
+ group search filter. Defaults to the user's DN.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>filterAttribute</code> - The attribute</dd>
 </dl>
 </li>
 </ul>
