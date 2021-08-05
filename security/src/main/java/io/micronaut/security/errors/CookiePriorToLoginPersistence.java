@@ -80,6 +80,7 @@ public class CookiePriorToLoginPersistence implements PriorToLoginPersistence {
             cookie.configure(cookieConfiguration, request.isSecure());
         } else {
             cookie.secure(request.isSecure()).httpOnly(true);
+            cookie.path("/");
         }
     }
 }
