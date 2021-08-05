@@ -24,6 +24,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.HttpServerFilter;
+import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.filter.ServerFilterPhase;
 import io.micronaut.management.endpoint.EndpointsFilter;
@@ -106,13 +107,23 @@ public class SecurityFilter implements HttpServerFilter {
     @Override
     public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         request.getAttributes().put(KEY, true);
+        populateWithOldKey(request);
         RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
+
         return Flux.fromIterable(authenticationFetchers)
                 .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
                 .next()
                 .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain, routeMatch)))
                 .switchIfEmpty(Flux.<MutableHttpResponse<?>>defer(() -> createResponse(null, request, chain, routeMatch))
                         .next());
+    }
+
+    /**
+     * Remove once {@link io.micronaut.http.filter.OncePerRequestHttpServerFilter} is deleted.
+     */
+    @Deprecated
+    private void populateWithOldKey(HttpRequest<?> request) {
+        request.getAttributes().put("micronaut.once." + SecurityFilter.class.getSimpleName(), true);
     }
 
     private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,
