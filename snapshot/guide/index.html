@@ -404,6 +404,16 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_what_s_new">What&#8217;s New</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Package <code>io.micronaut.configuration.security.ldap</code> has been renamed to <code>io.micronaut.security.ldap</code></p>
+</li>
+<li>
+<p><code>SecurityFilter</code> no longer extends deprecated <code>OncePerRequestHttpServerFilter</code>. Instead, it implements <code>HttpServerFilter</code>.</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>The following properties' default value has been removed in Micronaut Security 3.0.0:</p>
 </div>
@@ -2977,168 +2987,12 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <div class="paragraph">
 <p>The LDAP authentication in Micronaut supports configuration of one or more LDAP servers to authenticate with. Each server has it&#8217;s own settings and can be enabled or disabled.</p>
 </div>
-<a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.html">LdapConfiguration</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether this configuration is enabled. Default true.</p></td>
-</tr>
-</tbody>
-</table>
-<a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.ContextConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.ContextConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration/ContextConfiguration.html">ContextConfiguration</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">LdapConfiguration$ContextConfiguration</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context configuration.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.server</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the server URL.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.manager-dn</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the manager DN.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.manager-password</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the manager password.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.factory</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context factory class. Default "com.sun.jndi.ldap.LdapCtxFactory"</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.properties</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.</p></td>
-</tr>
-</tbody>
-</table>
-<a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.SearchConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.SearchConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration/SearchConfiguration.html">SearchConfiguration</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">LdapConfiguration$SearchConfiguration</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search configuration.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.subtree</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if the subtree should be searched. Default true</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.base</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the base DN to search.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.filter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search filter. Default "(uid={0})"</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.attributes</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the attributes to return. Default all</p></td>
-</tr>
-</tbody>
-</table>
-<a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.GroupConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.GroupConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 4. Configuration Properties for <a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration/GroupConfiguration.html">GroupConfiguration</a></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">LdapConfiguration$GroupConfiguration</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group configuration.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if group search is enabled. Default false</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.subtree</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if the subtree should be searched. Default true</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.base</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the base DN to search from.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.filter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group search filter. Default "uniquemember={0}"</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.attribute</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group attribute name. Default "cn"</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.ContextConfiguration.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.SearchConfiguration.adoc[]
+Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.GroupConfiguration.adoc[]</p>
+</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -4451,16 +4305,16 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
+import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import org.reactivestreams.Publisher;
 
 
 @Filter(value = {"/oauth/login", "/oauth/login/*"})
-public class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
+public class OAuthCsrfFilter implements HttpServerFilter {
 
     @Override
-    protected Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilterOnce(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
+    public Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilter(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
         String requestParameter = request.getParameters().get("_csrf");
         String cookieValue = request.getCookies().findCookie("_csrf").map(Cookie::getValue).orElse(null);
 
@@ -4482,16 +4336,16 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Filter
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter
+import io.micronaut.http.filter.HttpServerFilter
 import io.micronaut.http.filter.ServerFilterChain
 import org.reactivestreams.Publisher
 
 
 @Filter(value = ["/oauth/login", "/oauth/login/*"])
-class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
+class OAuthCsrfFilter implements HttpServerFilter {
 
     @Override
-    protected Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilterOnce(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
+    public Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilter(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
         String requestParameter = request.parameters.get("_csrf")
         String cookieValue = request.cookies.findCookie("_csrf").map({c -&gt; c.getValue()}).orElse(null)
 
@@ -4514,15 +4368,15 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Filter
 import io.micronaut.http.cookie.Cookie
-import io.micronaut.http.filter.OncePerRequestHttpServerFilter
+import io.micronaut.http.filter.HttpServerFilter
 import io.micronaut.http.filter.ServerFilterChain
 import org.reactivestreams.Publisher
 
 
 @Filter(value = ["/oauth/login", "/oauth/login/*"])
-class OAuthCsrfFilter : OncePerRequestHttpServerFilter() {
+class OAuthCsrfFilter : HttpServerFilter {
 
-    override fun doFilterOnce(request: HttpRequest&lt;*&gt;, chain: ServerFilterChain): Publisher&lt;MutableHttpResponse&lt;*&gt;&gt; {
+    override fun doFilter(request: HttpRequest&lt;*&gt;, chain: ServerFilterChain): Publisher&lt;MutableHttpResponse&lt;*&gt;&gt; {
         val requestParameter = request.parameters["_csrf"]
         val cookieValue = request.cookies.findCookie("_csrf").map { obj: Cookie -&gt; obj.value }.orElse(null)
 
@@ -5028,11 +4882,6 @@ To disable a specific client for any given environment, set <code>enabled: false
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.issuer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL using the https scheme with no query or fragment component that the
@@ -5047,6 +4896,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.jwks-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The JWKS signature URI.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
 </tr>
 </tbody>
 </table>

@@ -1,7 +1,3 @@
-io.micronaut.configuration.security.ldap
-io.micronaut.configuration.security.ldap.configuration
-io.micronaut.configuration.security.ldap.context
-io.micronaut.configuration.security.ldap.group
 io.micronaut.security.annotation
 io.micronaut.security.authentication
 io.micronaut.security.authentication.jackson
@@ -12,6 +8,10 @@ io.micronaut.security.errors
 io.micronaut.security.event
 io.micronaut.security.filters
 io.micronaut.security.handlers
+io.micronaut.security.ldap
+io.micronaut.security.ldap.configuration
+io.micronaut.security.ldap.context
+io.micronaut.security.ldap.group
 io.micronaut.security.oauth2
 io.micronaut.security.oauth2.client
 io.micronaut.security.oauth2.client.clientcredentials
