@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.jwt.roles
 
+import com.nimbusds.jwt.JWTParser
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -58,6 +59,9 @@ class RolesNameCustomSpec extends EmbeddedServerSpecification {
         noExceptionThrown()
         bearer
         bearer.accessToken
+
+        and: 'there is a claim rolesKey because the value micronaut.security.token.roles-name is different than default'
+        JWTParser.parse(bearer.accessToken).getJWTClaimsSet().getClaim("rolesKey") != null
 
         when:
         client.exchange(HttpRequest.GET('/nightwatch').bearerAuth(bearer.accessToken))
