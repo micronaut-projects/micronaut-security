@@ -16,7 +16,6 @@ import io.micronaut.security.token.validator.TokenValidator
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
-import spock.lang.Ignore
 import spock.lang.Unroll
 
 class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
