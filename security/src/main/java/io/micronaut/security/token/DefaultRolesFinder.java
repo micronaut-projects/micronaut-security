@@ -49,7 +49,7 @@ public class DefaultRolesFinder implements RolesFinder {
      * @return if the supplied object is {@literal null} it returns an empty list, if it is an iterable, it returns a list of each element {@link Object#toString()}, else it returns {@link Object#toString()}
      */
     @NonNull
-    protected List<String> rolesAtObject(Object rolesObject) {
+    private List<String> rolesAtObject(@Nullable Object rolesObject) {
         List<String> roles = new ArrayList<>();
         if (rolesObject != null) {
 
