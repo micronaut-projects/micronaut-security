@@ -1,4 +1,4 @@
-Micronaut security classes generate several link:{api}/io/micronaut/context/event/ApplicationEvent.html[ApplicationEvent]s which you can subscribe to.
+Micronaut security classes generate several https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/context/event/ApplicationEvent.html[ApplicationEvent]s which you can subscribe to.
 
 |===
 
