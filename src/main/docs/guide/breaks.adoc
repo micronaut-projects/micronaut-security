@@ -79,6 +79,33 @@ NOTE: If the `cookie-secure` setting is not set, cookies will be secure if the r
 
 Most if not all deprecated classes constructors, and methods have been removed.
 
+Micronaut Security 3.0.0:
+
+- Deletes deprecated methods `JwtValidator::validate(String)` and `JwtValidator::validate(JWT)`
+- Deletes deprecated class `SecuritySessionConfiguration`
+- Deletes deprecated constructor `JwtCookieClearerLogoutHandler(JwtCookieConfiguration)`
+- Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration, RedirectConfiguration redirectConfiguration, PriorToLoginPersistence priorToLoginPersistence)`
+- Deletes deprecated constructor `CookieLoginHandler(JwtCookieConfiguration,String, String)`
+- Deletes deprecated constructor `DefaultOpenIdAuthenticationMapper`
+- Deletes deprecated constructors `JwtCookieLoginHandler(JwtCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator accessRefreshTokenGenerator)`, `JwtCookieLoginHandler(RedirectConfiguration,JwtCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator accessRefreshTokenGenerator,PriorToLoginPersistence priorToLoginPersistence)`
+- Deletes deprecated constructor `IdTokenLoginHandler(JwtCookieConfiguration,RedirectConfiguration,TokenConfiguration,PriorToLoginPersistence)`
+- Deletes deprecated constructor `JwtCookieTokenReader(JwtCookieConfiguration)`
+- Deletes deprecated method `DefaultOauthClient::getTokenEndpoint`
+- Deletes `DefaultSecurityService#ROLES`
+- Deletes deprecated method `OauthUserDetailsMapper::createUserDetails(TokenResponse)`
+- Deletes `TokenValidator::validateToken(String)`
+- Deletes deprecated constructor `SessionLoginHandler(SecuritySessionConfiguration,SessionStore<Session>,TokenConfiguration)`
+- Deletes deprecated constructor `TokenRefreshRequest(String)`
+- Deletes deprecated method `SecurityService::hasRole`
+- Deletes deprecated class `TokenResponseExpiration`
+- Deletes deprecated constructor `DefaultSecurityService(TokenConfiguration)`.
+- Deletes deprecated method `OpenIdAuthenticationMapper:createAuthenticationResponse(String, OpenIdTokenResponse, OpenIdClaims)`
+- Deletes deprecated method `BasicAuthAuthenticationFetcher::parseCredentials`
+- Deletes deprecated classes `JwtGeneratorConfiguration` and JwtGeneratorConfigurationProperties`
+- Deletes deprecated method `JwtClaimsValidator:validate(JwtClaims)`
+- Deletes deprecated constructor `JWTClaimsSetGenerator(TokenConfiguration,JwtIdGenerator, ClaimsAudienceProvider)`
+- Deletes deprecated constructor `RefreshTokenGeneratedEvent(Object)`
+
 === Other Changes
 
 - The constructor of api:security.token.jwt.validator.DefaultJwtAuthenticationFactory[] has changed
