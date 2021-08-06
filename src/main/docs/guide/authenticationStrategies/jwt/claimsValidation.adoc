@@ -4,7 +4,7 @@ Micronaut Security includes some validators by default:
 
 |===
 | Bean | Description | Enabled
-| api:io.micronaut.security.token.jwt.validator.AudienceJwtClaimsValidatorSpec[]
+| api:io.micronaut.security.token.jwt.validator.AudienceJwtClaimsValidator[]
 | JWT `aud` claim includes an expected value.
 | Enabled when the `micronaut.security.token.jwt.claims-validators.audience` property is set.
 | api:io.micronaut.security.token.jwt.validator.ExpirationJwtClaimsValidator[]
