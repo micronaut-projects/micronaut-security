@@ -16,7 +16,7 @@ The previous configuration, configures a link:{api}/io/micronaut/security/token/
 and a propagation filter, link:{api}/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html[TokenPropagationHttpClientFilter], which
 will propagate the security token seamlessly.
 
-If you use <<serviceDiscovery, Service Discovery>> features, you can use the service id in your service id regular expression:
+If you use https://micronaut-projects.github.io/micronaut-core/latest/guide/#serviceDiscovery[Service Discovery] features, you can use the service id in your service id regular expression:
 
 [source, bash]
 ----
