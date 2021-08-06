@@ -2,7 +2,7 @@ IMPORTANT: The refresh token functionality has changed dramatically starting in 
 
 Refresh tokens can be used to obtain a new access token. By default, refresh tokens are not generated.
 
-The api:security.token.generator.RefreshTokenGenerator[] API is responsible for generating the token that gets included in the response. The api:security.token.generator.RefreshTokenValidator[] is responsible for validating the refresh token. Note that this validation step is not related to the persistence of the token, but instead is intended to verify the token is not a random/guessed value.
+The api:security.token.generator.RefreshTokenGenerator[] API is responsible for generating the token that gets included in the response. The api:security.token.validator.RefreshTokenValidator[] is responsible for validating the refresh token. Note that this validation step is not related to the persistence of the token, but instead is intended to verify the token is not a random/guessed value.
 
 An implementation of both api:security.token.generator.RefreshTokenGenerator[] and  api:security.token.validator.RefreshTokenValidator[] has been provided by default. The api:io.micronaut.security.token.jwt.generator.SignedRefreshTokenGenerator[] creates and verifies a JWS (JSON web signature) encoded object whose payload is a UUID with a hash-based message authentication code (HMAC). See the following configuration options:
 
