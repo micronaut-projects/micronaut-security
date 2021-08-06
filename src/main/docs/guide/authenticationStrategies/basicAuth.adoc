@@ -16,7 +16,7 @@ curl "http://localhost:8080/info" \
 After credentials are read from the HTTP Header, they are feed into an link:{api}/io/micronaut/security/authentication/Authenticator.html[Authenticator]
 which attempts to validate them.
 
-The code snippet below illustrates how to send credentials using the `basicAuth` method from api:http.MutableHttpRequest[] method:
+The code snippet below illustrates how to send credentials using the `basicAuth` method from https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html[MutableHttpRequest] method:
 
 [source, groovy]
 .Accessing a protected resource using an Authorization request header

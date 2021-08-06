@@ -8,7 +8,7 @@ include::{includedir}configurationProperties/io.micronaut.security.token.jwt.bea
 
 == Sending tokens in the request
 
-The code snippet below illustrates how to send a JWT token in the `Authorization` request header, using the `bearerAuth` method from api:http.MutableHttpRequest[] method:
+The code snippet below illustrates how to send a JWT token in the `Authorization` request header, using the `bearerAuth` method from https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html[MutableHttpRequest] method:
 
 [source, groovy]
 .Accessing a protected resource using an Authorization request header
