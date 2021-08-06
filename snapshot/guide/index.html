@@ -1515,7 +1515,7 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
 which attempts to validate them.</p>
 </div>
 <div class="paragraph">
-<p>The code snippet below illustrates how to send credentials using the <code>basicAuth</code> method from <a href="../api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
+<p>The code snippet below illustrates how to send credentials using the <code>basicAuth</code> method from <a href="https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
 </div>
 <div class="listingblock">
 <div class="title">Accessing a protected resource using an Authorization request header</div>
@@ -1919,7 +1919,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="_sending_tokens_in_the_request">Sending tokens in the request</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The code snippet below illustrates how to send a JWT token in the <code>Authorization</code> request header, using the <code>bearerAuth</code> method from <a href="../api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
+<p>The code snippet below illustrates how to send a JWT token in the <code>Authorization</code> request header, using the <code>bearerAuth</code> method from <a href="https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
 </div>
 <div class="listingblock">
 <div class="title">Accessing a protected resource using an Authorization request header</div>
@@ -2466,7 +2466,7 @@ class KeyPairProvider {
 <div class="paragraph">
 <p>If the built-in
 <a href="../api/io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html">JWTClaimsSetGenerator</a>, does not
-fulfil your needs you can provide your own <a href="#replaces">replacement</a> of <a href="../api/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html">ClaimsGenerator</a>.</p>
+fulfil your needs you can provide your own <a href="https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces">replacement</a> of <a href="../api/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html">ClaimsGenerator</a>.</p>
 </div>
 
 <h2 id="claimsValidation"><a class="anchor" href="#claimsValidation"></a>9.3.6 Claims Validation</h2>
@@ -2497,7 +2497,7 @@ fulfil your needs you can provide your own <a href="#replaces">replacement</a> o
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enabled</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidatorSpec.html">AudienceJwtClaimsValidatorSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidator.html">AudienceJwtClaimsValidator</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT <code>aud</code> claim includes an expected value.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enabled when the <code>micronaut.security.token.jwt.claims-validators.audience</code> property is set.</p></td>
 </tr>
@@ -2991,7 +2991,7 @@ and a propagation filter, <a href="../api/io/micronaut/security/token/propagatio
 will propagate the security token seamlessly.</p>
 </div>
 <div class="paragraph">
-<p>If you use <a href="#serviceDiscovery">Service Discovery</a> features, you can use the service id in your service id regular expression:</p>
+<p>If you use <a href="https://micronaut-projects.github.io/micronaut-core/latest/guide/#serviceDiscovery">Service Discovery</a> features, you can use the service id in your service id regular expression:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3257,7 +3257,7 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <p>Refresh tokens can be used to obtain a new access token. By default, refresh tokens are not generated.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> API is responsible for generating the token that gets included in the response. The <a href="../api/io/micronaut/security/token/generator/RefreshTokenValidator.html">RefreshTokenValidator</a> is responsible for validating the refresh token. Note that this validation step is not related to the persistence of the token, but instead is intended to verify the token is not a random/guessed value.</p>
+<p>The <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> API is responsible for generating the token that gets included in the response. The <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> is responsible for validating the refresh token. Note that this validation step is not related to the persistence of the token, but instead is intended to verify the token is not a random/guessed value.</p>
 </div>
 <div class="paragraph">
 <p>An implementation of both <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> and  <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> has been provided by default. The <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> creates and verifies a JWS (JSON web signature) encoded object whose payload is a UUID with a hash-based message authentication code (HMAC). See the following configuration options:</p>
@@ -3644,7 +3644,7 @@ class UserController {
 
 
 <div class="paragraph">
-<p>Micronaut security classes generate several <a href="../api/io/micronaut/context/event/ApplicationEvent.html">ApplicationEvent</a>s which you can subscribe to.</p>
+<p>Micronaut security classes generate several <a href="https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/context/event/ApplicationEvent.html">ApplicationEvent</a>s which you can subscribe to.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -3673,11 +3673,11 @@ class UserController {
 <td class="tableblock halign-left valign-top"><p class="tableblock">Triggered when a token is validated.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/event/AccessTokenGeneratedEvent.html">AccessTokenGeneratedEvent</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/event/AccessTokenGeneratedEvent.html">AccessTokenGeneratedEvent</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Triggered when a JWT access token is generated.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Triggered when a JWT refresh token is generated.</p></td>
 </tr>
 </tbody>
