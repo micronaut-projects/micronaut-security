@@ -67,6 +67,12 @@ public interface OauthClientConfiguration extends Toggleable {
     String getClientSecret();
 
     /**
+     * @return The client audience
+     */
+    @Nullable
+    String getAudience();
+
+    /**
      * @return The scopes requested
      */
     @NonNull

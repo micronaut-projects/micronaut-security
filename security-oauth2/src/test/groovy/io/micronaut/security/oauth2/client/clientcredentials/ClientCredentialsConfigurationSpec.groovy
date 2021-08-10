@@ -3,8 +3,6 @@ package io.micronaut.security.oauth2.client.clientcredentials
 import io.micronaut.context.ApplicationContext
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
-import spock.lang.AutoCleanup
-import spock.lang.Shared
 import spock.lang.Specification
 
 import java.time.Duration
@@ -54,4 +52,6 @@ class ClientCredentialsConfigurationSpec extends Specification {
         cleanup:
         applicationContext.close()
     }
+
+
 }

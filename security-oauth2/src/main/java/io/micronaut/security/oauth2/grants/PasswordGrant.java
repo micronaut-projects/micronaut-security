@@ -42,6 +42,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_SCOPE = "scope";
+    public static final String KEY_AUDIENCE = "audience";
 
     private String grantType = GrantType.PASSWORD.toString();
     private String clientId;
@@ -49,7 +50,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
     private String username;
     private String password;
     private String scope;
-
+    private String audience;
     /**
      * Default constructor.
      */
@@ -66,6 +67,7 @@ public class PasswordGrant implements SecureGrant, AsMap {
         scope = clientConfiguration.getScopes().stream()
                 .reduce((a, b) -> a + StringUtils.SPACE + b)
                 .orElse(null);
+        audience = clientConfiguration.getAudience();
     }
 
     /**
@@ -169,6 +171,14 @@ public class PasswordGrant implements SecureGrant, AsMap {
         this.scope = scope;
     }
 
+    public String getAudience() {
+        return audience;
+    }
+
+    public void setAudience(String audience) {
+        this.audience = audience;
+    }
+
     /**
      *
      * @return this object as a Map
@@ -186,6 +196,9 @@ public class PasswordGrant implements SecureGrant, AsMap {
         }
         if (clientSecret != null) {
             m.put(KEY_CLIENT_SECRET, clientSecret);
+        }
+        if(audience!=null){
+            m.put(KEY_AUDIENCE, audience);
         }
         return m;
     }

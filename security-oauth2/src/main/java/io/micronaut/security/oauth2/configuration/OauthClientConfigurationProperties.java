@@ -64,6 +64,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private final String name;
     private String clientId;
     private String clientSecret;
+    private String audience;
     private List<String> scopes;
     private boolean enabled = DEFAULT_ENABLED;
     private GrantType grantType = GrantType.AUTHORIZATION_CODE;
@@ -109,6 +110,19 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     public void setClientSecret(@Nullable String clientSecret) {
         this.clientSecret = clientSecret;
+    }
+
+    @Nullable
+    @Override
+    public String getAudience() {
+        return audience;
+    }
+
+    /**
+     * @param audience the client audience
+     */
+    public void setAudience(String audience) {
+        this.audience = audience;
     }
 
     @Override

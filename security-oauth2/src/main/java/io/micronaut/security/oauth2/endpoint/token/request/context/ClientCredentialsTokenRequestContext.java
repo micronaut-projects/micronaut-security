@@ -45,6 +45,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
         ClientCredentialsGrant grant = new ClientCredentialsGrant();
         grant.setScope(scope);
+        grant.setAudience(clientConfiguration.getAudience());
         this.grant = grant;
     }
 
@@ -54,6 +55,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
     public ClientCredentialsTokenRequestContext(OauthClientConfiguration clientConfiguration) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
         this.grant = new ClientCredentialsGrant();
+        this.grant.setAudience(clientConfiguration.getAudience());
     }
 
     /**
@@ -64,6 +66,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
         this.grant = new ClientCredentialsGrant();
         this.grant.setScope(scope);
+        this.grant.setAudience(clientConfiguration.getAudience());
     }
 
     @Override

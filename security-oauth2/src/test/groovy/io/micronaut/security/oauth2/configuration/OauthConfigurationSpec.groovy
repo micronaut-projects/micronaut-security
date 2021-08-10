@@ -28,6 +28,29 @@ class OauthConfigurationSpec extends Specification {
         context.close()
     }
 
+    void "OauthConfiguration binds audience if present"() {
+        given:
+        ApplicationContext context = ApplicationContext.run([
+                (SPEC_NAME_PROPERTY): getClass().simpleName,
+                'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
+                'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
+                'micronaut.security.oauth2.clients.foo.audience': 'ZZZZ',
+        ], Environment.TEST)
+
+        when:
+        OauthClientConfiguration clientConfiguration = context.getBean(OauthClientConfiguration)
+
+        then:
+        noExceptionThrown()
+        clientConfiguration.getName() == "foo"
+        clientConfiguration.getClientId() == "XXXX"
+        clientConfiguration.getClientSecret() == "YYYY"
+        clientConfiguration.getAudience() == "ZZZZ"
+
+        cleanup:
+        context.close()
+    }
+
     void "OauthConfiguration is enabled by default"() {
         given:
         ApplicationContext context = ApplicationContext.run([

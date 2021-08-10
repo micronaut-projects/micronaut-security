@@ -39,6 +39,7 @@ public class ClientCredentialsGrant implements SecureGrant, AsMap {
 
     public static final String KEY_GRANT_TYPE = "grant_type";
     public static final String KEY_SCOPES = "scope";
+    public static final String KEY_AUDIENCE = "audience";
 
     @NonNull
     @NotBlank
@@ -52,6 +53,9 @@ public class ClientCredentialsGrant implements SecureGrant, AsMap {
 
     @Nullable
     private String clientSecret;
+
+    @Nullable
+    private String audience;
 
     /**
      * Default Constructor.
@@ -124,6 +128,21 @@ public class ClientCredentialsGrant implements SecureGrant, AsMap {
     }
 
     /**
+     * @return The application's audience
+     */
+    @Nullable
+    public String getAudience() {
+        return audience;
+    }
+
+    /**
+     * @param audience The application's audience
+     */
+    public void setAudience(@Nullable String audience) {
+        this.audience = audience;
+    }
+
+    /**
      * @return this object as a Map
      */
     @Override
@@ -138,6 +157,9 @@ public class ClientCredentialsGrant implements SecureGrant, AsMap {
         }
         if (clientSecret != null) {
             m.put(KEY_CLIENT_SECRET, clientSecret);
+        }
+        if (StringUtils.isNotEmpty(audience)) {
+            m.put(KEY_AUDIENCE, audience);
         }
         return m;
     }

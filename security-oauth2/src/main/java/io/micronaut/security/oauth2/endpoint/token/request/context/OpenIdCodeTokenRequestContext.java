@@ -75,6 +75,7 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
         codeGrant.setCode(authorizationResponse.getCode());
         codeGrant.setRedirectUri(oauthRouteUrlBuilder
                 .buildCallbackUrl(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()).toString());
+        codeGrant.setAudience(clientConfiguration.getAudience());
         return codeGrant.toMap();
     }
 

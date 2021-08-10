@@ -58,6 +58,7 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
         if (state != null && state.getRedirectUri() != null) {
             codeGrant.setRedirectUri(authorizationResponse.getState().getRedirectUri().toString());
         }
+        codeGrant.setAudience(clientConfiguration.getAudience());
         return codeGrant.toMap();
     }
 

@@ -38,12 +38,14 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
     private static final String KEY_CLIENT_SECRET = "client_secret";
     private static final String KEY_REDIRECT_URI = "redirect_uri";
     private static final String KEY_CODE = "code";
+    public static final String KEY_AUDIENCE = "audience";
 
     private String grantType = GrantType.AUTHORIZATION_CODE.toString();
     private String clientId;
     private String clientSecret;
     private String redirectUri;
     private String code;
+    private String audience;
 
     /**
      * Default Constructor.
@@ -136,6 +138,15 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
         this.code = code;
     }
 
+
+    public String getAudience() {
+        return audience;
+    }
+
+    public void setAudience(String audience) {
+        this.audience = audience;
+    }
+
     /**
      *
      * @return this object as a Map
@@ -153,6 +164,9 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
         }
         if (redirectUri != null) {
             m.put(KEY_REDIRECT_URI, getRedirectUri());
+        }
+        if(audience!=null) {
+            m.put(KEY_AUDIENCE, audience);
         }
         return m;
     }
