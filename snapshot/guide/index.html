@@ -272,7 +272,7 @@
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/introduction.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/introduction.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -297,7 +297,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/releaseHistory.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/releaseHistory.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -313,34 +313,52 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <h1 id="whatsNew"><a class="anchor" href="#whatsNew"></a>3 What's New</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/whatsNew.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/whatsNew.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
 <div class="paragraph">
-<p>Micronaut Security includes the following new features and improvements.</p>
+<p>Micronaut Security 2.5.1-SNAPSHOT includes the following new features and improvements.</p>
 </div>
 <div class="sect1">
-<h2 id="_what_s_new_in_micronaut_security_3">What&#8217;s New in Micronaut Security 3</h2>
+<h2 id="_annotation_processing">Annotation Processing</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Improvements to many APIs</p>
+<p>The <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation has been moved to a separate module in order to reduce the number of classes in the annotation processor scope. If you currently have <code>micronaut-security</code> in the classpath of your compiler, the entry can be changed to <code>micronaut-security-annotations</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_improvements">Improvements</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>A new constructor for <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a> that takes a string message has been added to allow for custom error messages.</p>
 </li>
 <li>
-<p>Consolidated authentication state into a single interface</p>
+<p>It is now possible to require all <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s to return a successful authentication response. Set <code>micronaut.security.authentication-provider-strategy: ALL</code> to enable this functionality.</p>
 </li>
 <li>
-<p>The <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> API is now reactive</p>
+<p>The token propagation implementation will now no longer override an existing token.</p>
 </li>
 <li>
-<p>A <code>getRoles</code> method was added to <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a></p>
+<p>It is now possible to allow for requests that would normally result in a 404 to return with 404 instead of almost always returning a 401 or 403. The current behavior is still the default because it prevents attackers from discovering what endpoints are available in your application. To enable the alternative behavior, set <code>micronaut.security.reject-not-found: false</code> in your configuration.</p>
 </li>
 <li>
-<p>New static methods on <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> and <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> have been added to help create authentication related objects</p>
+<p>It is now supported out of the box to redirect back to the prior URL after a successful login. If a user requests a URL that returns an unauthenticated response, after logging in successfully, the user can then be returned to the URL that previously returned unauthorized. This setting can be enabled with <code>micronaut.security.redirect.prior-to-login: true</code> in your configuration. It is disabled by default.</p>
+</li>
+<li>
+<p>Support for using tokens directly from OpenID providers has been added. By default the information from the OpenID JWT token is used to create a new token that uses Micronaut&#8217;s JWT settings. This allows for a common format across providers as well as standardized expiration. Some users may want to use the token coming from the provider directly. That is now supported with the configuration option and value <code>micronaut.security.authentication: idtoken</code>. Note that this authentication mode requires each application to implement any necessary refresh token functionality. The refresh token functionality in this library is specific to the tokens created by this library.</p>
+</li>
+<li>
+<p>The TokenValidator API now has access to the current request.</p>
 </li>
 </ul>
 </div>
@@ -350,7 +368,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <h1 id="breaks"><a class="anchor" href="#breaks"></a>4 Breaking Changes</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/breaks.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/breaks.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -359,62 +377,217 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <div class="paragraph">
 <p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x &#8594; 2.x.x).</p>
 </div>
+<div class="sect1">
+<h2 id="_2_0_0">2.0.0</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_user_details_removal">User Details Removal</h3>
+<h3 id="_new_maven_group_id">New Maven Group ID</h3>
 <div class="paragraph">
-<p>The <code>UserDetails</code> class has been removed and all usages should be replaced with <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
+<p>The Maven Group ID has changed from <code>io.micronaut</code> to <code>io.micronaut.security</code>.</p>
 </div>
-<div class="sect3">
-<h4 id="_affected_apis">Affected APIs</h4>
+</div>
+<div class="sect2">
+<h3 id="_modules_enabled_by_default">Modules Enabled by default</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/rules/AbstractSecurityRule.html">AbstractSecurityRule</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/rules/SensitiveEndpointRule.html">SensitiveEndpointRule</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/generator/TokenGenerator.html">TokenGenerator</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html">CookieLoginHandler</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html">AccessRefreshTokenGenerator</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html">ClaimsGenerator</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/jwt/render/TokenRenderer.html">TokenRenderer</a></p>
-</li>
-<li>
-<p><a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a></p>
+<p>Modules are now enabled by default. The configuration keys <code>micronaut.security.enabled</code>, <code>micronaut.security.token.jwt.enabled</code>, <code>micronaut.security.oauth2.enabled</code>, and <code>micronaut.security.session.enabled</code> are now all <code>true</code> by default.</p>
 </li>
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_endpoints_enabled_by_default">Endpoints enabled by default</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>You don&#8217;t need to enable Endpoints. The configuration keys <code>micronaut.security.endpoints.keys.enabled</code>, <code>micronaut.security.endpoints.login.enabled</code>, <code>micronaut.security.endpoints.logout.enabled</code>, <code>micronaut.security.endpoints.oauth.enabled</code> are now all <code>true</code> by default. However, You will need to provide the required beans for each endpoint.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_authentication_provider">Authentication Provider</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a> API has changed to include the HTTP request as a parameter. Thus, it is now possible to gain access to the request in your <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. Simply override the default method in the interface that takes the request as an argument with your own implementation. The old method is no longer called from the framework.</p>
+</li>
+<li>
+<p>It is no longer assumed that a failed authentication response is an instance of <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>. That now allows for any subclass of <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> to be emitted in the case of an authentication failure.</p>
+</li>
+<li>
+<p>Previously <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>s were allowed to return hot observables, meaning the logic to authenticate the user could be done upon execution of the method. Allowing for that behavior caused the logic to execute the authenticators to be difficult to maintain. Now providers must return cold observables. The <code>authenticate</code> method will be executed for every authentication provider for every authentication request. If you were previously doing the authentication work then using something like <code>Flowable.just</code>, you must use something like <code>Flowable.create</code> to create a cold observable.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delegating_authentication_provider">Delegating Authentication Provider</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>DelegatingAuthenticationProvider</code> and it&#8217;s related interfaces has been removed. If you provided implementations for <code>UserFetcher</code>, <code>UserState</code>, <code>PasswordEncoder</code>, and <code>AuthoritiesFetcher</code>, integrate them into your own implementation of <a href="../api/io/micronaut/security/authentication/AuthenticationProvider.html">AuthenticationProvider</a>. This API was removed because it only served a niche use case and increased the surface of this library&#8217;s API. None of the classes mentioned were directly used in this library and thus belong in the realm of user&#8217;s applications. Check <a href="https://guides.micronaut.io/latest/micronaut-database-authentication-provider.html">LDAP and Database authentication providers tutorial</a> to learn how to write a <code>DelegatingAuthenticationProvider</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ldapauthenticationprovider">LdapAuthenticationProvider</h3>
+<div class="paragraph">
+<p>The constructor for <a href="../api/io/micronaut/configuration/security/ldap/LdapAuthenticationProvider.html">LdapAuthenticationProvider</a> has been changed to accept an executor to schedule the LDAP lookup operation on. By default it is now scheduled on the IO thread pool.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_loginhandler">LoginHandler</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a> API has changed to accept an <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> object instead of an <a href="../api/io/micronaut/security/authentication/AuthenticationFailed.html">AuthenticationFailed</a>.</p>
+</li>
+<li>
+<p>Previously, <code>AccessRefreshTokenLoginHandler</code> was enabled by default. Currently, no <code>LoginHandler</code> is enabled by default. If you wish to use any of the built-in `LoginHandler`s, you have to set the configuration:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>micronaut.security.authentication: bearer</code> to enable <a href="../api/io/micronaut/security/token/jwt/bearer/AccessRefreshTokenLoginHandler.html">AccessRefreshTokenLoginHandler</a></p>
+</li>
+<li>
+<p><code>micronaut.security.authentication: cookie</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html">JwtCookieLoginHandler</a></p>
+</li>
+<li>
+<p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a></p>
+</li>
+<li>
+<p><code>micronaut.security.authentication: idtoken</code> to enable <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html">IdTokenLoginHandler</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 <div class="sect3">
-<h4 id="_classes_renamed">Classes Renamed</h4>
+<h4 id="_migration_example_a">Migration Example A</h4>
+<div class="paragraph">
+<p>If you were using the default bearer authentication, you should set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    security:
+        authentication: bearer</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_migration_example_b">Migration Example B</h4>
+<div class="paragraph">
+<p>For a previous configuration such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    security:
+        token:
+            jwt:
+                bearer:
+                     enabled: false
+                cookie:
+                     enabled: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>use instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+    security:
+        authentication: cookie</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logouthandler">LogoutHandler</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>To use any of the built-in <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a> you have to set the configuration:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>micronaut.security.authentication:</code> <code>cookie</code> or <code>idtoken</code> to enable <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html">JwtCookieClearerLogoutHandler</a></p>
+</li>
+<li>
+<p><code>micronaut.security.authentication: session</code> to enable <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_refresh_token">Refresh Token</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The story around refresh tokens has been changed. There were a couple of core issues with the old implementation that needed resolved.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The refresh tokens were JWT tokens which also allowed them to be used to access resources.</p>
+</li>
+<li>
+<p>Because they never expire (by default), it requires a list of invalid tokens to be maintained in perpetuity if the ability to revoke tokens is a requirement. <code>JwtGeneratorConfiguration#getRefreshTokenExpiration</code> is deprecated and it is no longer used.</p>
+</li>
+<li>
+<p>The refresh mechanism simply copied the claims from the refresh token JWT back into a new access token. This made any changes to the state of the user (new roles, etc) were not be applied at the time of refresh.</p>
+<div class="paragraph">
+<p>The functionality has now been changed to generate a token that is not a JWT, but is instead a signed token of a unique key. The default implementation signs a UUID with a secret provided via configuration. After the token is generated, it is up to each application to provide an implementation of <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> to store the token and link it to the user it was created for. That is essential to generate new claims information in new access tokens created by the refresh endpoint. See the <a href="#refresh">refresh section</a> for more information.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rejection_handler">Rejection Handler</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The legacy rejection handler in the session module, which was enabled by default, has been removed. The setting <code>micronaut.security.session.legacy-rejection-handler</code> no longer has any effect and is equivalent to the behavior of <code>false</code> in previous versions.</p>
+</li>
+<li>
+<p>The entire <code>RejectionHandler</code> API and its dependents have been removed in favor of using the built in exception handling API in Micronaut. An <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a> will now be emitted when access to a resource has been rejected. A default exception handler has been created that will redirect on forbidden or unauthorized if the accept header of the request allows for text/html. For bearer authentication, that behavior can be disabled with:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut.security.redirect.forbidden.enabled: false
+micronaut.security.redirect.unauthorized.enabled: false</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_basic_auth">Basic Auth</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Basic authentication configuration has moved from <code>micronaut.security.token.basic-auth</code> to <code>micronaut.security.basic-auth</code>. The implementation surrounding basic authentication has changed and some classes have been deleted. If you have not overridden any beans related to basic authentication, the functionality will remain the same as it was. Previously a <code>TokenValidatedEvent</code> was triggered as a result of basic authentication, however that is no longer the case.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tokenpropagation">TokenPropagation</h3>
+<div class="paragraph">
+<p>Several classes related to <a href="#tokenPropagation">token propagation</a> have been renamed and relocated:</p>
+</div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 50%;">
@@ -428,134 +601,129 @@ Micronaut Security 2.x requires Micronaut 2.x.
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.HttpHeaderTokenWriter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html">HttpHeaderTokenPropagator</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.HttpHeaderTokenWriterConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfiguration.html">HttpHeaderTokenPropagatorConfiguration</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.HttpHeaderTokenWriterConfigurationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html">HttpHeaderTokenPropagatorConfigurationProperties</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.micronaut.security.token.writer.TokenWriter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/propagation/TokenPropagator.html">TokenPropagator</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Read <a href="#tokenPropagation">token propagation</a> section to learn more.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_misc">Misc</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Several APIs that lacked generics have been changed to add them. For example <code>HttpRequest</code> &#8594; <code>HttpRequest&lt;?&gt;</code>.</p>
+</li>
+<li>
+<p>Several APIs have been changed to return <a href="../api/io/micronaut/http/MutableHttpResponse.html">MutableHttpResponse</a> instead of <a href="../api/io/micronaut/http/HttpResponse.html">HttpResponse</a>.</p>
+</li>
+<li>
+<p>The SecurityFilterOrderProvider API has been deleted in favor of the standard ServerFilterPhase class. The security filter will now run on the order defined by the SECURITY phase.</p>
+</li>
+<li>
+<p>The io.micronaut.security.token.jwt.signature.secret.SecretSignatureFactory was deleted because the beans can be created directly from the SecretSignature class.</p>
+</li>
+<li>
+<p><a href="../api/io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html">AccessRefreshTokenGenerator</a> is now the interface which defines how generate a <a href="../api/io/micronaut/security/token/jwt/render/AccessRefreshToken.html">AccessRefreshToken</a> for a particular user. The implementation has been moved to <a href="../api/io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html">DefaultAccessRefreshTokenGenerator</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deprecated">Deprecated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>All deprecations present in 1.3.x have been removed.</p>
+</li>
+<li>
+<p><code>JwtGeneratorConfiguration</code> has been deprecated in favor of <a href="../api/io/micronaut/security/token/jwt/generator/AccessTokenConfiguration.html">AccessTokenConfiguration</a>. The configuration has been changed from <code>micronaut.security.token.jwt.generator.access-token-expiration</code> to <code>micronaut.security.token.jwt.generator.access-token.expiration</code>.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_redirection">Redirection</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Redirection configuration has been simplified. The properties in the first column are deprecated and will be removed in a future version. The properties on the right should be used instead. All properties are prefixed with <code>micronaut.security</code>.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Old</th>
+<th class="tableblock halign-left valign-top">New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.login-success-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.login-failure-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.logout-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.unauthorized-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized.url</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.forbidden-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.forbidden.url</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.session.redirect-on-rejection</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized.enabled</code> and <code>micronaut.security.redirect.forbidden.enabled</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.logout-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-success-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-failure-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sect3">
-<h4 id="_other_changes">Other Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <a href="../api/io/micronaut/security/event/LoginSuccessfulEvent.html">LoginSuccessfulEvent</a> that gets emitted when a user logs in will now be created with an instance of <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
-</li>
-<li>
-<p>The <code>AuthenticationUserDetailsAdapter</code> class has been deleted.</p>
-</li>
-</ul>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_securityrule_changes">SecurityRule Changes</h3>
-<div class="paragraph">
-<p>The <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> API has changed. The last argument to the method was a map that represented the user attributes. Instead that argument was replaced with a reference to the <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. This has the benefit of rules now having access to the username of the logged in user as well as access to the convenience method <code>getRoles()</code>.</p>
-</div>
-<div class="paragraph">
-<p>In addition, the return type of the method has changed to return a <code>Publisher</code>. This was necessary because the security rules execute as part of the security filter which may be on a non blocking thread. Because the method now returns a <code>Publisher</code>, blocking operations can be offloaded to another thread pool using the reactive streams implementation of your choice.</p>
-</div>
-<div class="paragraph">
-<p>Micronaut 2 API:</p>
-</div>
-<div class="paragraph">
-<p><code>SecurityRuleResult check(HttpRequest&lt;?&gt; request, @Nullable RouteMatch&lt;?&gt; routeMatch, @Nullable Map&lt;String, Object&gt; claims);</code></p>
-</div>
-<div class="paragraph">
-<p>Micronaut 3 API:</p>
-</div>
-<div class="paragraph">
-<p><code>Publisher&lt;SecurityRuleResult&gt; check(HttpRequest&lt;?&gt; request, @Nullable RouteMatch&lt;?&gt; routeMatch, @Nullable Authentication authentication);</code></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_ldap_package_change">LDAP Package Change</h3>
-<div class="paragraph">
-<p>All classes in the <code>io.micronaut.configuration.security.ldap</code> have been moved to the <code>io.micronaut.security.ldap</code> package.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_securityfilter">SecurityFilter</h3>
-<div class="paragraph">
-<p>The security filter no longer extends deprecated <code>OncePerRequestHttpServerFilter</code> because it has been deprecated in Micronaut 3.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_cookie_secure_configuration">Cookie Secure Configuration</h3>
-<div class="paragraph">
-<p>The following properties' default value has been removed in Micronaut Security 3.0.0:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-secure</code></p>
-</li>
-<li>
-<p><code>micronaut.security.oauth2.state.cookie.cookie-secure</code></p>
-</li>
-<li>
-<p><code>micronaut.security.token.jwt.cookie.cookie-secure</code></p>
-</li>
-<li>
-<p><code>micronaut.security.token.refresh.cookie.cookie-secure`</code></p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If the <code>cookie-secure</code> setting is not set, cookies will be secure if the request is determined to be HTTPS.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_deprecations_removal">Deprecations Removal</h3>
-<div class="paragraph">
-<p>Most if not all deprecated classes constructors, and methods have been removed.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_other_changes_2">Other Changes</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>The constructor of <a href="../api/io/micronaut/security/token/jwt/validator/DefaultJwtAuthenticationFactory.html">DefaultJwtAuthenticationFactory</a> has changed</p>
-</li>
-<li>
-<p>The constructor of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html">IdTokenLoginHandler</a> has changed</p>
-</li>
-<li>
-<p>The constructor of <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> has changed</p>
-</li>
-<li>
-<p>The constructor of <a href="../api/io/micronaut/security/authentication/BasicAuthAuthenticationFetcher.html">BasicAuthAuthenticationFetcher</a> has changed</p>
-</li>
-<li>
-<p>The <a href="../api/io/micronaut/security/token/RolesFinder.html">RolesFinder</a> method <code>findInClaims</code> has been deprecated and usages should be replaced with <code>resolveRoles(@Nullable Map&lt;String, Object&gt; attributes)</code>.</p>
-</li>
-</ul>
 </div>
 </div>
 
 <h1 id="gettingStarted"><a class="anchor" href="#gettingStarted"></a>5 Getting Started</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/gettingStarted.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/gettingStarted.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -642,7 +810,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h1 id="securityConfiguration"><a class="anchor" href="#securityConfiguration"></a>6 Security Configuration</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityConfiguration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -704,7 +872,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="rejectNotFound"><a class="anchor" href="#rejectNotFound"></a>6.1 Reject Not Found Routes</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/rejectNotFound.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityConfiguration/rejectNotFound.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -717,7 +885,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="authenticationStrategy"><a class="anchor" href="#authenticationStrategy"></a>6.2 Authentication Strategy</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/authenticationStrategy.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityConfiguration/authenticationStrategy.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -730,7 +898,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="loginHandler"><a class="anchor" href="#loginHandler"></a>6.3 Login Handler</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/loginHandler.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityConfiguration/loginHandler.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -782,7 +950,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="logoutHandler"><a class="anchor" href="#logoutHandler"></a>6.4 Logout Handler</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/logoutHandler.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityConfiguration/logoutHandler.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -829,7 +997,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="redirection"><a class="anchor" href="#redirection"></a>6.5 Redirection Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/redirection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityConfiguration/redirection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -951,7 +1119,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h1 id="authenticationProviders"><a class="anchor" href="#authenticationProviders"></a>7 Authentication Providers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationProviders.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationProviders.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -967,27 +1135,24 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationException;
-import io.micronaut.security.authentication.AuthenticationFailed;
-import io.micronaut.security.authentication.AuthenticationProvider;
-import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.*;
+import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
 
-import jakarta.inject.Singleton;
-import reactor.core.publisher.Mono;
+import javax.inject.Singleton;
+import java.util.ArrayList;
 @Singleton
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
     @Override
     public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
-        return Mono.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
+        return Maybe.&lt;AuthenticationResponse&gt;create(emitter -&gt; {
             if (authenticationRequest.getIdentity().equals("user") &amp;&amp; authenticationRequest.getSecret().equals("password")) {
-                emitter.success(AuthenticationResponse.success("user"));
+                emitter.onSuccess(new UserDetails("user", new ArrayList&lt;&gt;()));
             } else {
-                emitter.error(AuthenticationResponse.exception());
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
             }
-        });
+        }).toFlowable();
     }
 }</code></pre>
 </div>
@@ -1005,7 +1170,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
 <h1 id="securityRule"><a class="anchor" href="#securityRule"></a>8 Security Rules</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityRule.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1020,7 +1185,7 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <p>Security rules implement the ordered interface and they are executed in order. All of the existing rules have a static variable <code>ORDER</code> that stores the order of that rule. You can use those variables to place your own rule before or after any of the existing rules.</p>
 </div>
 <div class="paragraph">
-<p>Security rules return a publisher that should emit a single <a href="../api/io/micronaut/security/rules/SecurityRuleResult.html">SecurityRuleResult</a>. See the following table for a description of each result.</p>
+<p>Security rules return a <a href="../api/io/micronaut/security/rules/SecurityRuleResult.html">SecurityRuleResult</a>. See the following table for a description of each result.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -1067,18 +1232,6 @@ If all security rules return <code>UNKNOWN</code>, the request will be rejected!
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Do not execute any blocking operations in the rule implementation without offloading those operations to another thread pool.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
 Since version 2.5, the Micronaut Framework executes the filters and then it reads the HTTP Request&#8217;s body.
 <a href="../api/io/micronaut/security/filter/SecurityFilter.html">SecurityFilter</a> evaluates the beans of type <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a>.
 Because of that, <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a> cannot rely on HTTP Request&#8217;s body because the Micronaut Framework has not read the body yet.
@@ -1090,7 +1243,7 @@ Because of that, <a href="../api/io/micronaut/security/rules/SecurityRule.html">
 <h2 id="ipPattern"><a class="anchor" href="#ipPattern"></a>8.1 IP Pattern Rule</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/ipPattern.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityRule/ipPattern.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1125,7 +1278,7 @@ either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
 <h2 id="secured"><a class="anchor" href="#secured"></a>8.2 Secured Annotation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/secured.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityRule/secured.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1244,7 +1397,7 @@ The use of JSR 250 annotations requires <code>io.micronaut.security:micronaut-se
 <h2 id="interceptUrlMap"><a class="anchor" href="#interceptUrlMap"></a>8.3 Intercept URL Map</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/interceptUrlMap.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityRule/interceptUrlMap.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1336,7 +1489,7 @@ and an optional HTTP method.</p>
 <h2 id="builtInEndpointsAccess"><a class="anchor" href="#builtInEndpointsAccess"></a>8.4 Built-In Endpoints Security</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/builtInEndpointsAccess.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityRule/builtInEndpointsAccess.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1379,15 +1532,13 @@ import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.security.rules.SensitiveEndpointRule;
+import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
-import jakarta.inject.Singleton;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
-
+import javax.inject.Singleton;
 import java.util.Collections;
+import java.util.Map;
 
 @Replaces(SensitiveEndpointRule.class)
 @Singleton
@@ -1402,18 +1553,18 @@ public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
 
     @Override
     @NonNull
-    protected Publisher&lt;SecurityRuleResult&gt; checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
-                                                                        @NonNull Authentication authentication,
-                                                                        @NonNull ExecutableMethod&lt;?, ?&gt; method) {
-        return Mono.just(rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), authentication)
-                    ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
+    protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
+                                                             @NonNull Map&lt;String, Object&gt; claims,
+                                                             @NonNull ExecutableMethod&lt;?, ?&gt; method) {
+        return rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), new MapClaims(claims))
+                    ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED;
     }
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import jakarta.inject.Singleton
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import javax.inject.Singleton
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.NonNull
@@ -1422,10 +1573,8 @@ import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
+import io.micronaut.security.token.MapClaims
 import io.micronaut.security.token.RolesFinder
-import org.reactivestreams.Publisher
-import reactor.core.publisher.Mono
-
 
 @Replaces(SensitiveEndpointRule.class)
 @Singleton
@@ -1433,18 +1582,18 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     private final RolesFinder rolesFinder;
 
     SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor,
-                                     RolesFinder rolesFinder) {
+                                            RolesFinder rolesFinder) {
         super(endpointSensitivityProcessor)
         this.rolesFinder = rolesFinder
     }
 
     @Override
     @NonNull
-    protected Publisher&lt;SecurityRuleResult&gt; checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
-                                                                        @NonNull Authentication authentication,
-                                                                        @NonNull ExecutableMethod&lt;?, ?&gt; method) {
-        Mono.just(rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication)
-                ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED)
+    protected SecurityRuleResult checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
+                                                             @NonNull Map&lt;String, Object&gt; claims,
+                                                             @NonNull ExecutableMethod&lt;?, ?&gt; method) {
+        rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], new MapClaims(claims))
+                ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED
     }
 }</code></pre>
 </div>
@@ -1457,13 +1606,11 @@ import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
-import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
+import io.micronaut.security.token.MapClaims
 import io.micronaut.security.token.RolesFinder
-import jakarta.inject.Singleton
-import org.reactivestreams.Publisher
-import reactor.core.publisher.Mono
+import javax.inject.Singleton
 
 @Replaces(SensitiveEndpointRule::class)
 @Singleton
@@ -1471,13 +1618,9 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
                                        private val rolesFinder: RolesFinder) : SensitiveEndpointRule(endpointSensitivityProcessor) {
     @NonNull
     override fun checkSensitiveAuthenticated(@NonNull request: HttpRequest&lt;*&gt;,
-                                             @NonNull authentication: Authentication,
-                                             @NonNull method: ExecutableMethod&lt;*, *&gt;): Publisher&lt;SecurityRuleResult&gt; {
-        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication)) {
-            Mono.just(SecurityRuleResult.ALLOWED)
-        } else {
-            Mono.just(SecurityRuleResult.REJECTED)
-        }
+                                             @NonNull claims: Map&lt;String, Any&gt;,
+                                             @NonNull method: ExecutableMethod&lt;*, *&gt;): SecurityRuleResult {
+        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), MapClaims(claims))) SecurityRuleResult.ALLOWED else SecurityRuleResult.REJECTED
     }
 }</code></pre>
 </div>
@@ -1486,7 +1629,7 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
 <h1 id="authenticationStrategies"><a class="anchor" href="#authenticationStrategies"></a>9 Authorization Strategies</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1497,7 +1640,7 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
 <h2 id="basicAuth"><a class="anchor" href="#basicAuth"></a>9.1 Basic Authentication</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/basicAuth.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/basicAuth.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1529,7 +1672,7 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
 which attempts to validate them.</p>
 </div>
 <div class="paragraph">
-<p>The code snippet below illustrates how to send credentials using the <code>basicAuth</code> method from <a href="https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
+<p>The code snippet below illustrates how to send credentials using the <code>basicAuth</code> method from <a href="../api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
 </div>
 <div class="listingblock">
 <div class="title">Accessing a protected resource using an Authorization request header</div>
@@ -1553,7 +1696,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-basicaut
 <h2 id="session"><a class="anchor" href="#session"></a>9.2 Session Authorization</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/session.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/session.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1672,7 +1815,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.
 <h2 id="jwt"><a class="anchor" href="#jwt"></a>9.3 JSON Web Token</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1710,7 +1853,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.name-key</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s name. Default value "sub".</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s name. Default value "username".</p></td>
 </tr>
 </tbody>
 </table>
@@ -1868,7 +2011,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="reader"><a class="anchor" href="#reader"></a>9.3.1 Reading JWT Token</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1879,7 +2022,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="bearerToken"><a class="anchor" href="#bearerToken"></a>9.3.1.1 Bearer Token Reader</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1933,7 +2076,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="_sending_tokens_in_the_request">Sending tokens in the request</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The code snippet below illustrates how to send a JWT token in the <code>Authorization</code> request header, using the <code>bearerAuth</code> method from <a href="https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
+<p>The code snippet below illustrates how to send a JWT token in the <code>Authorization</code> request header, using the <code>bearerAuth</code> method from <a href="../api/io/micronaut/http/MutableHttpRequest.html">MutableHttpRequest</a> method:</p>
 </div>
 <div class="listingblock">
 <div class="title">Accessing a protected resource using an Authorization request header</div>
@@ -1969,7 +2112,7 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <h2 id="cookieToken"><a class="anchor" href="#cookieToken"></a>9.3.1.2 Cookie Token Reader</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2023,7 +2166,7 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value (true.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-max-age</code></p></td>
@@ -2045,6 +2188,21 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ("JWT").</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.logout-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated. user micronaut.security.redirect.logout instead</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-success-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated. user micronaut.security.redirect.login-success instead</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.login-failure-target-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated. user micronaut.security.redirect.login-failure instead</p></td>
+</tr>
 </tbody>
 </table>
 <div class="admonitionblock tip">
@@ -2063,7 +2221,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwtValidation"><a class="anchor" href="#jwtValidation"></a>9.3.2 JWT Signature Validation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2090,7 +2248,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwks"><a class="anchor" href="#jwks"></a>9.3.2.1 Validation with remote JWKS</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2124,7 +2282,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwtGenerator"><a class="anchor" href="#jwtGenerator"></a>9.3.3 JWT Token Generation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2157,13 +2315,18 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value (3600).</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deprecated Use micronaut.security.token.jwt.generator.access-token.expiration instead.</p></td>
+</tr>
 </tbody>
 </table>
 
 <h2 id="jwtGeneratorSignature"><a class="anchor" href="#jwtGeneratorSignature"></a>9.3.3.1 Signed JWT Generation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2195,7 +2358,7 @@ Remember to qualify with <code>@Named</code> <code>generator</code> your signatu
 <h2 id="jwtGeneratorSecret"><a class="anchor" href="#jwtGeneratorSecret"></a>9.3.3.2 Example of JWT Signed with Secret</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSecret.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSecret.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2262,7 +2425,7 @@ Remember to qualify with <code>@Named</code> <code>generator</code> your signatu
 <h2 id="jwtGeneratorRSA"><a class="anchor" href="#jwtGeneratorRSA"></a>9.3.3.3 Example of JWT Signed with RSA</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorRSA.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorRSA.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2299,7 +2462,7 @@ class MySignatureGeneratorConfigurationFactory {
 <h2 id="jwtEncryption"><a class="anchor" href="#jwtEncryption"></a>9.3.4 JWT Encryption</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2331,7 +2494,7 @@ class MySignatureGeneratorConfigurationFactory {
 <h2 id="jwtGeneratorEncryption"><a class="anchor" href="#jwtGeneratorEncryption"></a>9.3.4.1 Example of JWT Signed with Secret and Encrypted with RSA</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption/jwtGeneratorEncryption.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption/jwtGeneratorEncryption.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2471,7 +2634,7 @@ class KeyPairProvider {
 <h2 id="claimsGeneration"><a class="anchor" href="#claimsGeneration"></a>9.3.5 Claims Generation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2480,13 +2643,86 @@ class KeyPairProvider {
 <div class="paragraph">
 <p>If the built-in
 <a href="../api/io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html">JWTClaimsSetGenerator</a>, does not
-fulfil your needs you can provide your own <a href="https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces">replacement</a> of <a href="../api/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html">ClaimsGenerator</a>.</p>
+fulfil your needs you can provide your own <a href="#replaces">replacement</a> of <a href="../api/io/micronaut/security/token/jwt/generator/claims/ClaimsGenerator.html">ClaimsGenerator</a>.</p>
+</div>
+<div class="paragraph">
+<p>For example, if you want to add the email address of the user to the JWT Claims you could create a class which extends <code>UserDetails</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class EmailUserDetails extends UserDetails {
+
+    private String email;
+
+    public EmailUserDetails(String username, Collection&lt;String&gt; roles) {
+        super(username, roles);
+    }
+
+
+    public EmailUserDetails(String username, Collection&lt;String&gt; roles, String email) {
+        super(username, roles);
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configure your <code>AuthenticationProvider</code> to respond such a class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+public class CustomAuthenticationProvider implements AuthenticationProvider {
+
+    @Override
+    public Publisher&lt;AuthenticationResponse&gt; authenticate(HttpRequest&lt;?&gt; httpRequest, AuthenticationRequest&lt;?, ?&gt; authenticationRequest) {
+        return Flowable.create(emitter -&gt; {
+            emitter.onNext(new EmailUserDetails("sherlock", Collections.emptyList(), "sherlock@micronaut.example"));
+                emitter.onComplete();
+        }, BackpressureStrategy.ERROR);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And then replace <code>JWTClaimsSetGenerator</code> with a bean that overrides the method <code>populateWithUserDetails</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+@Replaces(bean = JWTClaimsSetGenerator.class)
+public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
+
+    public CustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
+                                       @Nullable JwtIdGenerator jwtIdGenerator,
+                                       @Nullable ClaimsAudienceProvider claimsAudienceProvider,
+                                       @Nullable ApplicationConfiguration applicationConfiguration) {
+        super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration);
+    }
+
+    @Override
+    protected void populateWithUserDetails(JWTClaimsSet.Builder builder, UserDetails userDetails) {
+        super.populateWithUserDetails(builder, userDetails);
+        if (userDetails instanceof EmailUserDetails) {
+            builder.claim("email", ((EmailUserDetails)userDetails).getEmail());
+        }
+    }
+}</code></pre>
+</div>
 </div>
 
 <h2 id="claimsValidation"><a class="anchor" href="#claimsValidation"></a>9.3.6 Claims Validation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/claimsValidation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/claimsValidation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2511,7 +2747,7 @@ fulfil your needs you can provide your own <a href="https://micronaut-projects.g
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enabled</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidator.html">AudienceJwtClaimsValidator</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/validator/AudienceJwtClaimsValidatorSpec.html">AudienceJwtClaimsValidatorSpec</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JWT <code>aud</code> claim includes an expected value.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enabled when the <code>micronaut.security.token.jwt.claims-validators.audience</code> property is set.</p></td>
 </tr>
@@ -2544,7 +2780,7 @@ fulfil your needs you can provide your own <a href="https://micronaut-projects.g
 <h2 id="render"><a class="anchor" href="#render"></a>9.3.7 Token Render</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/render.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/jwt/render.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2582,7 +2818,7 @@ Pragma: no-cache
 <h2 id="ldap"><a class="anchor" href="#ldap"></a>9.4 LDAP Authentication</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/ldap.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/ldap.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2617,7 +2853,7 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <h2 id="configuration"><a class="anchor" href="#configuration"></a>9.4.1 Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/ldap/configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2626,9 +2862,9 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <div class="paragraph">
 <p>The LDAP authentication in Micronaut supports configuration of one or more LDAP servers to authenticate with. Each server has it&#8217;s own settings and can be enabled or disabled.</p>
 </div>
-<a id="io.micronaut.security.ldap.configuration.LdapConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration">&#128279;</a>
+<a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.html">LdapConfiguration</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.html">LdapConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -2649,11 +2885,145 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$ContextConfiguration.adoc[]
-Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$SearchConfiguration.adoc[]
-Unresolved directive in &lt;stdin&gt; - include::/home/runner/work/micronaut-security/micronaut-security/build/generated/configurationProperties/io.micronaut.security.ldap.configuration.LdapConfiguration$GroupConfiguration.adoc[]</p>
-</div>
+<a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.ContextConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.ContextConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration/ContextConfiguration.html">ContextConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the server URL.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.manager-dn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the manager DN.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.manager-password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the manager password.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.factory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context factory class. Default "com.sun.jndi.ldap.LdapCtxFactory"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.properties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">LdapConfiguration$ContextConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context configuration.</p></td>
+</tr>
+</tbody>
+</table>
+<a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.SearchConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.SearchConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration/SearchConfiguration.html">SearchConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.subtree</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if the subtree should be searched. Default true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.base</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the base DN to search.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.filter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search filter. Default "(uid={0})"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.attributes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the attributes to return. Default all</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">LdapConfiguration$SearchConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search configuration.</p></td>
+</tr>
+</tbody>
+</table>
+<a id="io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.GroupConfiguration" href="#io.micronaut.configuration.security.ldap.configuration.LdapConfiguration.GroupConfiguration">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 4. Configuration Properties for <a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration/GroupConfiguration.html">GroupConfiguration</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if group search is enabled. Default false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.subtree</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if the subtree should be searched. Default true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.base</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the base DN to search from.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.filter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group search filter. Default "uniquemember={0}"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.attribute</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group attribute name. Default "cn"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/configuration/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">LdapConfiguration$GroupConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group configuration.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -2676,7 +3046,7 @@ To connect to an LDAP server with SSL, set the standard Java system properties t
 <h2 id="extending"><a class="anchor" href="#extending"></a>9.4.2 Extending Default Behavior</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/extending.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/ldap/extending.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2689,7 +3059,10 @@ To connect to an LDAP server with SSL, set the standard Java system properties t
 <h2 id="_authentication_data">Authentication Data</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The authentication object returned from a successful authentication request is by default an instance of <code>Authentication</code>, which only contains the username and any roles associated with the user. You can use <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> <code>attributes</code> to store additional data. Replace <a href="../api/io/micronaut/security/ldap/DefaultContextAuthenticationMapper.html">DefaultContextAuthenticationMapper</a> and provide your own implementation.</p>
+<p>The authentication object returned from a successful authentication request is by default an instance of UserDetails, which only contains the username and any roles associated with the user. To store additional data in the authentication, extend <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> with your own implementation that has fields for the additional data you wish to store.</p>
+</div>
+<div class="paragraph">
+<p>To use this new implementation, you must override the <a href="../api/io/micronaut/security/ldap/DefaultContextAuthenticationMapper.html">DefaultContextAuthenticationMapper</a> and provide your own implementation.</p>
 </div>
 <div class="listingblock">
 <div class="title">MyContextAuthenticationMapper.java</div>
@@ -2700,7 +3073,7 @@ public class MyContextAuthenticationMapper implements ContextAuthenticationMappe
 
     @Override
     public AuthenticationResponse map(ConvertibleValues&lt;Object&gt; attributes, String username, Set&lt;String&gt; groups) {
-        // return an Authentication instance (Authentication::build methods) or an AuthenticationFailed object
+        // return an extended UserDetails or an AuthenticationFailed object
     }
 }</code></pre>
 </div>
@@ -2800,7 +3173,7 @@ public class MyContextBuilder implements ContextBuilder {
 <h2 id="custom"><a class="anchor" href="#custom"></a>9.5 Custom Authorization Strategies</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/custom.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/authenticationStrategies/custom.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2819,10 +3192,11 @@ public class MyContextBuilder implements ContextBuilder {
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
+import io.reactivex.Maybe;
 import org.reactivestreams.Publisher;
+
 import io.micronaut.core.annotation.NonNull;
-import jakarta.inject.Singleton;
-import reactor.core.publisher.Mono;
+import javax.inject.Singleton;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
@@ -2833,12 +3207,12 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 
     @Override
     public Publisher&lt;Authentication&gt; fetchAuthentication(HttpRequest&lt;?&gt; request) {
-        return Mono.&lt;Authentication&gt;create(emitter -&gt; {
+        return Maybe.&lt;Authentication&gt;create(emitter -&gt; {
             Optional&lt;Certificate&gt; optionalCertificate = request.getCertificate();
             if (optionalCertificate.isPresent()) {
                 Certificate certificate = optionalCertificate.get();
                 if (certificate instanceof X509Certificate) {
-                    emitter.success(new Authentication() {
+                    emitter.onSuccess(new Authentication() {
                         X509Certificate x509Certificate = ((X509Certificate) certificate);
                         @Override
                         public String getName() {
@@ -2854,8 +3228,8 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
                     return;
                 }
             }
-            emitter.success();
-        });
+            emitter.onComplete();
+        }).toFlowable();
     }
 }</code></pre>
 </div>
@@ -2864,7 +3238,7 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 <h1 id="rejection"><a class="anchor" href="#rejection"></a>10 Rejection Handling</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/rejection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/rejection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2937,7 +3311,7 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
 
-import jakarta.inject.Singleton;
+import javax.inject.Singleton;
 
 @Singleton
 @Replaces(DefaultAuthorizationExceptionHandler.class)
@@ -2956,7 +3330,7 @@ public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
 <h1 id="tokenPropagation"><a class="anchor" href="#tokenPropagation"></a>11 Token Propagation</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/tokenPropagation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/tokenPropagation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3005,7 +3379,7 @@ and a propagation filter, <a href="../api/io/micronaut/security/token/propagatio
 will propagate the security token seamlessly.</p>
 </div>
 <div class="paragraph">
-<p>If you use <a href="https://micronaut-projects.github.io/micronaut-core/latest/guide/#serviceDiscovery">Service Discovery</a> features, you can use the service id in your service id regular expression:</p>
+<p>If you use <a href="#serviceDiscovery">Service Discovery</a> features, you can use the service id in your service id regular expression:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3105,7 +3479,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <h1 id="endpoints"><a class="anchor" href="#endpoints"></a>12 Built-In Security Controllers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/endpoints.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3116,7 +3490,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <h2 id="login"><a class="anchor" href="#login"></a>12.1 Login Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/login.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/endpoints/login.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3176,7 +3550,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <h2 id="logout"><a class="anchor" href="#logout"></a>12.2 Logout Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/logout.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/endpoints/logout.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3249,7 +3623,7 @@ If you are using JWT authentication not stored in a cookie, you may not need to 
 <h2 id="refresh"><a class="anchor" href="#refresh"></a>12.3 Refresh Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/refresh.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/endpoints/refresh.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3271,7 +3645,7 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <p>Refresh tokens can be used to obtain a new access token. By default, refresh tokens are not generated.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> API is responsible for generating the token that gets included in the response. The <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> is responsible for validating the refresh token. Note that this validation step is not related to the persistence of the token, but instead is intended to verify the token is not a random/guessed value.</p>
+<p>The <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> API is responsible for generating the token that gets included in the response. The <a href="../api/io/micronaut/security/token/generator/RefreshTokenValidator.html">RefreshTokenValidator</a> is responsible for validating the refresh token. Note that this validation step is not related to the persistence of the token, but instead is intended to verify the token is not a random/guessed value.</p>
 </div>
 <div class="paragraph">
 <p>An implementation of both <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> and  <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> has been provided by default. The <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> creates and verifies a JWS (JSON web signature) encoded object whose payload is a UUID with a hash-based message authentication code (HMAC). See the following configuration options:</p>
@@ -3386,7 +3760,7 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <p>The refresh token endpoint uses the <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> API to verify the token matches the format that is expected. <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> attempts to verify the signature and returns the payload. Any validator implementations should not be concerned with revocation status, existence, or any other persistence related validation.</p>
 </div>
 <div class="paragraph">
-<p>If the validator successfully validates the token, it is then passed to a <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation, which each application must provide. A new access token is then created from the user details returned by <code>RefreshTokenPersistence::getAuthentication</code> and then sent in the response.</p>
+<p>If the validator successfully validates the token, it is then passed to a <a href="../api/io/micronaut/security/token/refresh/RefreshTokenPersistence.html">RefreshTokenPersistence</a> implementation, which each application must provide. A new access token is then created from the user details returned by <code>RefreshTokenPersistence::getUserDetails</code> and then sent in the response.</p>
 </div>
 <div class="paragraph">
 <p>Here is an example of a refresh token request. Send a POST request to the <code>/oauth/access_token</code> endpoint:</p>
@@ -3428,7 +3802,7 @@ See <a href="https://tools.ietf.org/html/rfc6749#section-10.4">section 10.4 of t
 <h2 id="keys"><a class="anchor" href="#keys"></a>12.4 Keys Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/keys.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/endpoints/keys.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3490,7 +3864,7 @@ This controller can only be enabled if you are using JWT authentication.
 <h2 id="introspectionendpoint"><a class="anchor" href="#introspectionendpoint"></a>12.5 Introspection Endpoint</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/introspectionendpoint.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/endpoints/introspectionendpoint.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3567,7 +3941,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3O
 <h1 id="retrievingAuthenticatedUser"><a class="anchor" href="#retrievingAuthenticatedUser"></a>13 Retrieve the authenticated user</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/retrievingAuthenticatedUser.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/retrievingAuthenticatedUser.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3618,17 +3992,17 @@ import io.micronaut.core.annotation.Nullable
 
 
 @Controller("/user")
-class UserController {
+public class UserController {
 
     @Secured("isAnonymous()")
     @Get("/myinfo")
-    Map myinfo(@Nullable Authentication authentication) {
+    public Map myinfo(@Nullable Authentication authentication) {
         if (authentication == null) {
             return Collections.singletonMap("isLoggedIn", false);
         }
         return CollectionUtils.mapOf("isLoggedIn", true,
                 "username", authentication.getName(),
-                "roles", authentication.getRoles()
+                "roles", authentication.getAttributes().get("roles")
         );
     }
 }</code></pre>
@@ -3638,7 +4012,7 @@ class UserController {
 <h2 id="securityService"><a class="anchor" href="#securityService"></a>13.1 User outside of a controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/retrievingAuthenticatedUser/securityService.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/retrievingAuthenticatedUser/securityService.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3651,14 +4025,14 @@ class UserController {
 <h1 id="securityEvents"><a class="anchor" href="#securityEvents"></a>14 Security Events</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityEvents.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/securityEvents.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
 <div class="paragraph">
-<p>Micronaut security classes generate several <a href="https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/context/event/ApplicationEvent.html">ApplicationEvent</a>s which you can subscribe to.</p>
+<p>Micronaut security classes generate several <a href="../api/io/micronaut/context/event/ApplicationEvent.html">ApplicationEvent</a>s which you can subscribe to.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -3687,11 +4061,11 @@ class UserController {
 <td class="tableblock halign-left valign-top"><p class="tableblock">Triggered when a token is validated.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/event/AccessTokenGeneratedEvent.html">AccessTokenGeneratedEvent</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/event/AccessTokenGeneratedEvent.html">AccessTokenGeneratedEvent</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Triggered when a JWT access token is generated.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/token/jwt/event/RefreshTokenGeneratedEvent.html">RefreshTokenGeneratedEvent</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Triggered when a JWT refresh token is generated.</p></td>
 </tr>
 </tbody>
@@ -3703,7 +4077,7 @@ class UserController {
 <h1 id="oauth"><a class="anchor" href="#oauth"></a>15 OAuth 2.0</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3756,7 +4130,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 <h2 id="installation"><a class="anchor" href="#installation"></a>15.1 Installation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/installation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/installation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3789,7 +4163,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 <h2 id="openid"><a class="anchor" href="#openid"></a>15.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/openid.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/openid.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3850,7 +4224,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <h2 id="flows"><a class="anchor" href="#flows"></a>15.3 Flows</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3861,7 +4235,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <h2 id="authorization-code"><a class="anchor" href="#authorization-code"></a>15.3.1 Authorization Code</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3962,16 +4336,16 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.http.filter.HttpServerFilter;
+import io.micronaut.http.filter.OncePerRequestHttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import org.reactivestreams.Publisher;
 
 
 @Filter(value = {"/oauth/login", "/oauth/login/*"})
-public class OAuthCsrfFilter implements HttpServerFilter {
+public class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
 
     @Override
-    public Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilter(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
+    protected Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilterOnce(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
         String requestParameter = request.getParameters().get("_csrf");
         String cookieValue = request.getCookies().findCookie("_csrf").map(Cookie::getValue).orElse(null);
 
@@ -3993,16 +4367,16 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Filter
-import io.micronaut.http.filter.HttpServerFilter
+import io.micronaut.http.filter.OncePerRequestHttpServerFilter
 import io.micronaut.http.filter.ServerFilterChain
 import org.reactivestreams.Publisher
 
 
 @Filter(value = ["/oauth/login", "/oauth/login/*"])
-class OAuthCsrfFilter implements HttpServerFilter {
+class OAuthCsrfFilter extends OncePerRequestHttpServerFilter {
 
     @Override
-    public Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilter(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
+    protected Publisher&lt;MutableHttpResponse&lt;?&gt;&gt; doFilterOnce(HttpRequest&lt;?&gt; request, ServerFilterChain chain) {
         String requestParameter = request.parameters.get("_csrf")
         String cookieValue = request.cookies.findCookie("_csrf").map({c -&gt; c.getValue()}).orElse(null)
 
@@ -4025,15 +4399,15 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Filter
 import io.micronaut.http.cookie.Cookie
-import io.micronaut.http.filter.HttpServerFilter
+import io.micronaut.http.filter.OncePerRequestHttpServerFilter
 import io.micronaut.http.filter.ServerFilterChain
 import org.reactivestreams.Publisher
 
 
 @Filter(value = ["/oauth/login", "/oauth/login/*"])
-class OAuthCsrfFilter : HttpServerFilter {
+class OAuthCsrfFilter : OncePerRequestHttpServerFilter() {
 
-    override fun doFilter(request: HttpRequest&lt;*&gt;, chain: ServerFilterChain): Publisher&lt;MutableHttpResponse&lt;*&gt;&gt; {
+    override fun doFilterOnce(request: HttpRequest&lt;*&gt;, chain: ServerFilterChain): Publisher&lt;MutableHttpResponse&lt;*&gt;&gt; {
         val requestParameter = request.parameters["_csrf"]
         val cookieValue = request.cookies.findCookie("_csrf").map { obj: Cookie -&gt; obj.value }.orElse(null)
 
@@ -4051,7 +4425,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 <h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>15.3.1.1 OAuth 2.0</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4072,7 +4446,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 <h2 id="oauth2-configuration"><a class="anchor" href="#oauth2-configuration"></a>15.3.1.1.1 Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4093,7 +4467,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 <p>Configuration of the client id and secret</p>
 </li>
 <li>
-<p>An implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html">OauthAuthenticationMapper</a></p>
+<p>An implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html">OauthUserDetailsMapper</a></p>
 </li>
 </ul>
 </div>
@@ -4170,20 +4544,20 @@ To disable a specific client for any given environment, set <code>enabled: false
 <h2 id="oauth2-user-details"><a class="anchor" href="#oauth2-user-details"></a>15.3.1.1.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
 <div class="paragraph">
-<p>Beyond configuration, an implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html">OauthAuthenticationMapper</a> is required by the user to be implemented. The implementation must be qualified by name that matches the name present in the client configuration.</p>
+<p>Beyond configuration, an implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OauthUserDetailsMapper.html">OauthUserDetailsMapper</a> is required by the user to be implemented. The implementation must be qualified by name that matches the name present in the client configuration.</p>
 </div>
 <div class="paragraph">
-<p>The purpose of the user details mapper is to transform the <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html">TokenResponse</a> into a <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. That will entail calling some endpoint the provider exposes to retrieve the user&#8217;s information. Once that information is received, the user details can be populated per your requirements.</p>
+<p>The purpose of the user details mapper is to transform the <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html">TokenResponse</a> into a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. That will entail calling some endpoint the provider exposes to retrieve the user&#8217;s information. Once that information is received, the user details can be populated per your requirements.</p>
 </div>
 <div class="paragraph">
-<p>Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> object stores three basic properties: <code>username</code>, <code>roles</code>, and arbitrary <code>attributes</code>. All data stored in the user details will be retrievable in controllers that accept an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
+<p>Common requirements of a user details mapper may be to combine data from the OAuth 2.0 provider with data from a remote database and/or create new user records. The <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a> object stores three basic properties: <code>username</code>, <code>roles</code>, and arbitrary <code>attributes</code>. All data stored in the user details will be retrievable in controllers that accept an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</p>
 </div>
 <div class="paragraph">
 <p>For example, here is how it might be implemented for Github.</p>
@@ -4227,16 +4601,15 @@ class GithubUser {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import io.micronaut.core.annotation.Introspected
 
 @Introspected
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
 class GithubUser {
 
-    lateinit var login: String
+    var login: String? = null
     var name: String? = null
     var email: String? = null
 }</code></pre>
@@ -4250,15 +4623,14 @@ class GithubUser {
 <pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.http.client.annotation.Client;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
+import io.reactivex.Flowable;
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
 public interface GithubApiClient {
 
     @Get("/user")
-    Publisher&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization);
+    Flowable&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization);
 }</code></pre>
 </div>
 </div>
@@ -4267,15 +4639,14 @@ public interface GithubApiClient {
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
-import org.reactivestreams.Publisher
-import reactor.core.publisher.Flux
+import io.reactivex.Flowable
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
 interface GithubApiClient {
 
     @Get("/user")
-    Publisher&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization)
+    Flowable&lt;GithubUser&gt; getUser(@Header("Authorization") String authorization)
 }</code></pre>
 </div>
 </div>
@@ -4284,15 +4655,14 @@ interface GithubApiClient {
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
-import org.reactivestreams.Publisher
-import reactor.core.publisher.Flux
+import io.reactivex.Flowable
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
 interface GithubApiClient {
 
     @Get("/user")
-    fun getUser(@Header("Authorization") authorization: String): Publisher&lt;GithubUser&gt;
+    fun getUser(@Header("Authorization") authorization: String): Flowable&lt;GithubUser&gt;
 }</code></pre>
 </div>
 </div>
@@ -4302,35 +4672,40 @@ interface GithubApiClient {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
 
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
-import reactor.core.publisher.Flux;
-
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 
 @Named("github") <b class="conum">(1)</b>
 @Singleton
-class GithubAuthenticationMapper implements OauthAuthenticationMapper {
+class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 
     private final GithubApiClient apiClient;
 
-    GithubAuthenticationMapper(GithubApiClient apiClient) { <b class="conum">(2)</b>
+    GithubUserDetailsMapper(GithubApiClient apiClient) {
         this.apiClient = apiClient;
+    } <b class="conum">(2)</b>
+
+    @Override
+    public Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) {
+        return Publishers.just(new UnsupportedOperationException());
     }
 
     @Override
     public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
-        return Flux.from(apiClient.getUser("token " + tokenResponse.getAccessToken()))
+        return apiClient.getUser("token " + tokenResponse.getAccessToken())
                 .map(user -&gt; {
                     List&lt;String&gt; roles = Collections.singletonList("ROLE_GITHUB");
-                    return AuthenticationResponse.success(user.getLogin(), roles); <b class="conum">(4)</b>
+                    return new UserDetails(user.getLogin(), roles); <b class="conum">(4)</b>
                 });
     }
 }</code></pre>
@@ -4338,32 +4713,35 @@ class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.core.annotation.Nullable
-import io.micronaut.security.authentication.AuthenticationResponse
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
 
-import jakarta.inject.Named
-import jakarta.inject.Singleton
-import reactor.core.publisher.Flux
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Named("github") <b class="conum">(1)</b>
 @Singleton
-class GithubAuthenticationMapper implements OauthAuthenticationMapper {
+class GithubUserDetailsMapper implements OauthUserDetailsMapper {
 
     private final GithubApiClient apiClient
 
-    GithubAuthenticationMapper(GithubApiClient apiClient) { <b class="conum">(2)</b>
+    GithubUserDetailsMapper(GithubApiClient apiClient) { <b class="conum">(2)</b>
         this.apiClient = apiClient
     }
 
     @Override
+    Publisher&lt;UserDetails&gt; createUserDetails(TokenResponse tokenResponse) {
+        Publishers.just(new UnsupportedOperationException())
+    }
+
+    @Override
     Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
-        Flux.from(apiClient.getUser("token ${tokenResponse.accessToken}"))
+        apiClient.getUser("token ${tokenResponse.accessToken}")
             .map({ user -&gt;
-                AuthenticationResponse.success(user.login, ["ROLE_GITHUB"]) <b class="conum">(4)</b>
+                new UserDetails(user.login, ["ROLE_GITHUB"]) <b class="conum">(4)</b>
             })
     }
 }</code></pre>
@@ -4371,24 +4749,31 @@ class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.core.async.publisher.Publishers
+import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OauthUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import org.reactivestreams.Publisher
-import jakarta.inject.Named
-import jakarta.inject.Singleton
-import reactor.core.publisher.Flux
+import java.lang.UnsupportedOperationException
+
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Named("github") <b class="conum">(1)</b>
 @Singleton
-internal class GithubAuthenticationMapper(private val apiClient: GithubApiClient) <b class="conum">(2)</b>
-    : OauthAuthenticationMapper {
+internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) <b class="conum">(2)</b>
+    : OauthUserDetailsMapper {
+
+    override fun createUserDetails(tokenResponse: TokenResponse?): Publisher&lt;UserDetails&gt; {
+        return Publishers.just(UnsupportedOperationException())
+    }
 
     override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher&lt;AuthenticationResponse&gt; { <b class="conum">(3)</b>
-        return Flux.from(apiClient.getUser("token " + tokenResponse.accessToken))
+        return apiClient.getUser("token " + tokenResponse.accessToken)
                 .map { user -&gt;
-                    AuthenticationResponse.success(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
+                    UserDetails(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
                 }
     }
 }</code></pre>
@@ -4410,7 +4795,7 @@ internal class GithubAuthenticationMapper(private val apiClient: GithubApiClient
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The user information is converted to a <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>.</td>
+<td>The user information is converted to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>.</td>
 </tr>
 </table>
 </div>
@@ -4430,7 +4815,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 <h2 id="openid-authorization-code"><a class="anchor" href="#openid-authorization-code"></a>15.3.1.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4451,7 +4836,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 <h2 id="openid-configuration"><a class="anchor" href="#openid-configuration"></a>15.3.1.2.1 Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4756,7 +5141,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>15.3.1.2.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4766,7 +5151,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <p>Because the OpenID standard returns a JWT token in the token response, it is possible to retrieve information about the user without having to make an additional call. In addition, the data stored in the JWT is standardized so you can use the same code to retrieve that information across providers.</p>
 </div>
 <div class="paragraph">
-<p>A default implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html">OpenIdAuthenticationMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.</p>
+<p>A default implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdUserDetailsMapper.html">OpenIdUserDetailsMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/UserDetails.html">UserDetails</a>. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all spread">
@@ -4825,30 +5210,40 @@ Enabling all of the above with cookie JWT storage has been known to cause issues
 <p>If the default implementation is not sufficient, it is possible to override the global default or provide an implementation specific to a provider.</p>
 </div>
 <div class="paragraph">
-<p>To override the global default mapper, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html">DefaultOpenIdAuthenticationMapper</a>.</p>
+<p>To override the global default mapper, register a bean that replaces <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdUserDetailsMapper.html">DefaultOpenIdUserDetailsMapper</a>.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Replaces;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
 import io.micronaut.core.annotation.NonNull;
-import jakarta.inject.Singleton;
+import javax.inject.Singleton;
+import java.util.Collections;
 
 @Singleton
-@Replaces(DefaultOpenIdAuthenticationMapper.class)
-public class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
+@Replaces(DefaultOpenIdUserDetailsMapper.class)
+public class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    @NonNull
+    @Override
+    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     @NonNull
     public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        return AuthenticationResponse.success("name");
+        return new UserDetails("name", Collections.emptyList());
     }
 }</code></pre>
 </div>
@@ -4858,24 +5253,33 @@ public class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMap
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
 import io.micronaut.core.annotation.NonNull
-import jakarta.inject.Singleton
+import javax.inject.Singleton
 
 @Singleton
-@Replaces(DefaultOpenIdAuthenticationMapper.class)
-class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
+@Replaces(DefaultOpenIdUserDetailsMapper.class)
+class GlobalOpenIdUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    @Override
+    UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        throw new UnsupportedOperationException()
+    }
 
     @Override
     @NonNull
     AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        AuthenticationResponse.success("name")
+        new UserDetails("name", [])
     }
+
+
 }</code></pre>
 </div>
 </div>
@@ -4883,20 +5287,27 @@ class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
 <div class="content">
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
 import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdUserDetailsMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+import java.lang.UnsupportedOperationException
 
-import jakarta.inject.Singleton
+import javax.inject.Singleton
 
 @Singleton
-@Replaces(DefaultOpenIdAuthenticationMapper::class)
-class GlobalOpenIdAuthenticationMapper : OpenIdAuthenticationMapper {
+@Replaces(DefaultOpenIdUserDetailsMapper::class)
+class GlobalOpenIdUserDetailsMapper : OpenIdUserDetailsMapper {
+
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
+        throw UnsupportedOperationException()
+    }
 
     override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): AuthenticationResponse {
-        return AuthenticationResponse.success("name")
+        return UserDetails("name", emptyList())
     }
 }</code></pre>
 </div>
@@ -4908,18 +5319,27 @@ class GlobalOpenIdAuthenticationMapper : OpenIdAuthenticationMapper {
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.authentication.UserDetails;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper;
 
 import io.micronaut.core.annotation.NonNull;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.Collections;
 
 @Singleton
 @Named("okta") <b class="conum">(1)</b>
-public class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
+public class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    @NonNull
+    @Override
+    public UserDetails createUserDetails(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     @NonNull
@@ -4927,25 +5347,36 @@ public class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
                                                                OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
                                                                OpenIdClaims openIdClaims, <b class="conum">(4)</b>
                                                                @Nullable State state) { <b class="conum">(5)</b>
-        return AuthenticationResponse.success("name"); <b class="conum">(6)</b>
+        return new UserDetails("name", Collections.emptyList()); <b class="conum">(6)</b>
     }
+
+
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.oauth2.endpoint.authorization.state.State
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.authentication.UserDetails
+import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
 
 import io.micronaut.core.annotation.NonNull
-import jakarta.inject.Named
-import jakarta.inject.Singleton
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Singleton
 @Named("okta") <b class="conum">(1)</b>
-class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
+class OktaUserDetailsMapper implements OpenIdUserDetailsMapper {
+
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    @NonNull
+    UserDetails createUserDetails(String providerName,
+                                  OpenIdTokenResponse tokenResponse,
+                                  OpenIdClaims openIdClaims) {
+        throw new UnsupportedOperationException()
+    }
 
     @Override
     @NonNull
@@ -4953,7 +5384,7 @@ class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
                                                         OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
                                                         OpenIdClaims openIdClaims, <b class="conum">(4)</b>
                                                         @Nullable State state) { <b class="conum">(5)</b>
-        AuthenticationResponse.success("name") <b class="conum">(6)</b>
+        new UserDetails("name", []) <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
@@ -4961,24 +5392,31 @@ class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
+import io.micronaut.security.authentication.UserDetails
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdUserDetailsMapper
+import java.lang.UnsupportedOperationException
 
-import jakarta.inject.Named
-import jakarta.inject.Singleton
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Singleton
 @Named("okta") <b class="conum">(1)</b>
-class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
+class OktaUserDetailsMapper : OpenIdUserDetailsMapper {
+
+    //This method is deprecated and will only be called if the createAuthenticationResponse is not implemented
+    override fun createUserDetails(providerName: String?, tokenResponse: OpenIdTokenResponse?, openIdClaims: OpenIdClaims?): UserDetails {
+        throw UnsupportedOperationException()
+    }
 
     override fun createAuthenticationResponse(providerName: String, <b class="conum">(2)</b>
                                               tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
                                               openIdClaims: OpenIdClaims, <b class="conum">(4)</b>
                                               state: State?) <b class="conum">(5)</b>
             : AuthenticationResponse {
-        return AuthenticationResponse.success("name") <b class="conum">(6)</b>
+        return UserDetails("name", emptyList()) <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
@@ -5007,7 +5445,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>An instance of <a href="../api/io/micronaut/security/authentication/AuthenticationResponse.html">AuthenticationResponse</a> is returned</td>
+<td>An instance of <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> is returned</td>
 </tr>
 </table>
 </div>
@@ -5015,7 +5453,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>15.3.1.2.3 Parameters</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5095,7 +5533,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <h2 id="nonce"><a class="anchor" href="#nonce"></a>15.3.1.2.3.1 Nonce</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5179,7 +5617,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-max-age</code></p></td>
@@ -5300,7 +5738,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="login-hint"><a class="anchor" href="#login-hint"></a>15.3.1.2.3.2 Login Hint</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5313,7 +5751,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="id-token-hint"><a class="anchor" href="#id-token-hint"></a>15.3.1.2.3.3 ID Token Hint</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5326,7 +5764,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="token-validation"><a class="anchor" href="#token-validation"></a>15.3.1.2.4 Token Validation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5345,7 +5783,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="state"><a class="anchor" href="#state"></a>15.3.1.3 State Parameter</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5391,7 +5829,7 @@ If nonce validation fails, the user will not be authenticated.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-max-age</code></p></td>
@@ -5494,7 +5932,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="clientcredentials"><a class="anchor" href="#clientcredentials"></a>15.3.2 Client Credentials</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/clientcredentials.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5517,7 +5955,7 @@ If nonce validation fails, the user will not be authenticated.
           client-secret: 'YYY'
           token:
             url: "https://foo.bar/token"
-            auth-method: "client_secret_basic",
+            auth-method': "client_secret_basic",
         google:
           client-id: 'ZZZZ'
           client-secret: 'PPPP'
@@ -5552,17 +5990,17 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <h2 id="clientecredentialshttpclient"><a class="anchor" href="#clientecredentialshttpclient"></a>15.3.2.1 HTTP Client Filter for Client Credentials</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials/clientecredentialshttpclient.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/clientcredentials/clientecredentialshttpclient.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
 <div class="paragraph">
-<p>Micronaut Security includes <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html">ClientCredentialsHttpClientFilter</a>. This <a href="https://docs.micronaut.io/latest/guide/index.html#clientFilter">HTTP Client Filter</a> allows you to automatically include an access token to an outgoing request HTTP Header. It obtains the access token via a Client Credentials request.</p>
+<p>Micronaut Security includes <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHttpClientFilter.html">ClientCredentialsHttpClientFilter</a>. A <a href="https://docs.micronaut.io/latest/guide/index.html#clientFilter">HTTP Client Filter</a> which allows you to automatically include an access token to an outgoing request HTTP Header. It obtains the access token via a Client Credentials request.</p>
 </div>
 <div class="paragraph">
-<p>For example, the next configuration adds an access token to the requests' HTTP Headers done via the HTTP Client <code>inventory</code>. It obtains the access token with a Client Credentials request with the OAuth 2.0 client <code>companyauthserver</code>.</p>
+<p>For example, the next configuration adds an access token to the requests' HTTP Headers done via the HTTP Client <code>inventory</code>. It obtains the access token with a Client Credentials request with the OAuth 2.0 client <code>companyauthorserver</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5635,7 +6073,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <h2 id="password"><a class="anchor" href="#password"></a>15.3.3 Password</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/password.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/flows/password.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5695,7 +6133,7 @@ This example above is not intended to be a complete configuration reference
 <h2 id="oauth-endpoints"><a class="anchor" href="#oauth-endpoints"></a>15.4 Endpoints</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/oauth-endpoints.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5706,7 +6144,7 @@ This example above is not intended to be a complete configuration reference
 <h2 id="endsession"><a class="anchor" href="#endsession"></a>15.4.1 OpenID End Session</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5843,7 +6281,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="introspection"><a class="anchor" href="#introspection"></a>15.4.2 Introspection</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/introspection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/oauth-endpoints/introspection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5892,7 +6330,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="revocation"><a class="anchor" href="#revocation"></a>15.4.3 Revocation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/revocation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/oauth-endpoints/revocation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5941,7 +6379,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="user-info"><a class="anchor" href="#user-info"></a>15.4.4 OpenID User Info</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5985,7 +6423,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="custom-client"><a class="anchor" href="#custom-client"></a>15.5 Custom Clients</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/custom-client.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/oauth/custom-client.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6046,7 +6484,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h1 id="repository"><a class="anchor" href="#repository"></a>16 Repository</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/repository.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/2.5.x/src/main/docs/guide/repository.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
