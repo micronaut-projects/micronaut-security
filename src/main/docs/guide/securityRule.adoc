@@ -23,4 +23,6 @@ IMPORTANT: If all security rules return `UNKNOWN`, the request will be rejected!
 
 WARNING: Do not execute any blocking operations in the rule implementation without offloading those operations to another thread pool.
 
-
+WARNING: Since version 2.5, the Micronaut Framework executes the filters and then it reads the HTTP Request's body.
+api:security.filter.SecurityFilter[] evaluates the beans of type api:security.rules.SecurityRule[].
+Because of that, api:security.rules.SecurityRule[] cannot rely on HTTP Request's body because the Micronaut Framework has not read the body yet.
