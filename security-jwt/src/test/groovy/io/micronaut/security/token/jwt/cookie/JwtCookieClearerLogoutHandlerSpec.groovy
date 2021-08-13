@@ -1,7 +1,9 @@
 package io.micronaut.security.token.jwt.cookie
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.http.HttpRequest
 import io.micronaut.security.authentication.AuthenticationMode
+import io.micronaut.security.config.RedirectConfiguration
 import io.micronaut.security.handlers.LogoutHandler
 import spock.lang.Specification
 
@@ -50,4 +52,36 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
         true     || AuthenticationMode.IDTOKEN.toString()
     }
 
+    void "token and refresh token cookie are getting cleared on logout"() {
+        given:
+        RedirectConfiguration redirectConfiguration = Mock() {
+            1 * getLogout() >> "logout"
+        }
+        AccessTokenCookieConfiguration accessTokenCookieConfiguration = Mock() {
+            1 * getCookieDomain() >> Optional.of("domain")
+            1 * getCookiePath() >> Optional.of("/")
+            1 * getCookieName() >> "JWT"
+        }
+        RefreshTokenCookieConfiguration refreshTokenCookieConfiguration = Mock() {
+            1 * getCookieDomain() >> Optional.of("domain")
+            1 * getCookiePath() >> Optional.of("/oauth/access_token")
+            1 * getCookieName() >> "JWT_REFRESH"
+        }
+        HttpRequest<?> request = Mock()
+
+        def handler = new JwtCookieClearerLogoutHandler(accessTokenCookieConfiguration, refreshTokenCookieConfiguration, redirectConfiguration);
+        def response = handler.logout(request)
+        def cookieHeaders = response.getHeaders().getAll("Set-Cookie")
+
+        expect:
+        cookieHeaders.size() == 2
+        cookieHeaders.get(0).containsIgnoreCase("Domain=domain")
+        cookieHeaders.get(0).containsIgnoreCase("JWT=")
+        cookieHeaders.get(0).containsIgnoreCase("Path=/")
+        cookieHeaders.get(0).containsIgnoreCase("Max-Age=0")
+        cookieHeaders.get(1).containsIgnoreCase("Domain=domain")
+        cookieHeaders.get(1).containsIgnoreCase("JWT_REFRESH=")
+        cookieHeaders.get(1).containsIgnoreCase("Path=/oauth/access_token")
+        cookieHeaders.get(1).containsIgnoreCase("Max-Age=0")
+    }
 }
