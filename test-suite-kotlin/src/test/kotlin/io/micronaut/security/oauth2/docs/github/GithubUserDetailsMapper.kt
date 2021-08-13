@@ -1,6 +1,6 @@
 package io.micronaut.security.oauth2.docs.github
 
-//tag::clazz[]
+import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UserDetails
@@ -13,7 +13,9 @@ import java.lang.UnsupportedOperationException
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Named("github") // <1>
+@Requires(property = "docs.classes")
+//tag::clazz[]
+// @Named("github") // <1>
 @Singleton
 internal class GithubUserDetailsMapper(private val apiClient: GithubApiClient) // <2>
     : OauthUserDetailsMapper {

@@ -19,6 +19,7 @@ securityRule:
   secured: Secured Annotation
   interceptUrlMap: Intercept URL Map
   builtInEndpointsAccess: Built-In Endpoints Security
+  securityRuleBody: Security Rule based on Request body
 authenticationStrategies:
   title: Authorization Strategies
   basicAuth: Basic Authentication

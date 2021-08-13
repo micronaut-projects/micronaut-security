@@ -1,0 +1,20 @@
+WARNING: Since version 2.5, the Micronaut Framework executes the filters and then it reads the HTTP Request's body.
+api:security.filters.SecurityFilter[] evaluates the beans of type api:security.rules.SecurityRule[].
+Because of that, api:security.rules.SecurityRule[] cannot rely on HTTP Request's body because the Micronaut Framework has not read the body yet.
+
+You could work around it by creating an https://docs.micronaut.io/latest/guide/#aroundAdvice[Around Advice]:
+
+Create a custom annotation:
+
+snippet::io.micronaut.security.docs.securityrule.BodySecured[tags="clazz"]
+
+Use the annotation in a controller:
+
+snippet::io.micronaut.security.docs.securityrule.GameOfThronesController[tags="clazz"]
+
+<1> Annotate with `@Secured(SecurityRule.IS_ANONYMOUS)` so that the api:security.filters.SecurityFilter[] does not reject the request.
+<2> Annotate with the custom annotation `BodySecured`
+
+Create a `MethodInterceptor` to evaluate the HTTP Request Body:
+
+snippet::io.micronaut.security.docs.securityrule.BodySecuredInterceptor[tags="clazz"]

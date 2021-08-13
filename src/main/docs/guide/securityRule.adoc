@@ -21,6 +21,5 @@ Security rules return a api:security.rules.SecurityRuleResult[]. See the followi
 
 IMPORTANT: If all security rules return `UNKNOWN`, the request will be rejected!
 
-WARNING: Since version 2.5, the Micronaut Framework executes the filters and then it reads the HTTP Request's body.
-api:security.filter.SecurityFilter[] evaluates the beans of type api:security.rules.SecurityRule[].
-Because of that, api:security.rules.SecurityRule[] cannot rely on HTTP Request's body because the Micronaut Framework has not read the body yet.
+WARNING: See section <<securityRuleBody, Security Rule based on Request body>> if you need to evaluate the HTTP Request's body
+to grant access.
