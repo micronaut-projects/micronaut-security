@@ -203,7 +203,7 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
     }
 
     /**
-     * Sets the same-site setting of the cookie. Default value null.
+     * Sets the same-site setting of the cookie. Default value null. Value is case sensitive. Allowed values: `Strict`, `Lax` or `None`.
      * @param cookieSameSite The same-site setting of the cookie.
      */
     public void setCookieSameSite(@Nullable SameSite cookieSameSite) {
