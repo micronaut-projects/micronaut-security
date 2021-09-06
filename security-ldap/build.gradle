@@ -4,7 +4,7 @@ dependencies {
     implementation "io.projectreactor:reactor-core"
     testImplementation "io.projectreactor:reactor-test:3.4.9"
 
-    testImplementation "com.unboundid:unboundid-ldapsdk:6.0.0"
+    testImplementation "com.unboundid:unboundid-ldapsdk:6.0.1"
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
