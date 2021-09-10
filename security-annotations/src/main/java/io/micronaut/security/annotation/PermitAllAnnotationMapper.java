@@ -17,10 +17,10 @@ package io.micronaut.security.annotation;
 
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.inject.annotation.TypedAnnotationMapper;
+import io.micronaut.inject.annotation.NamedAnnotationMapper;
 import io.micronaut.inject.visitor.VisitorContext;
 
-import javax.annotation.security.PermitAll;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,14 +32,14 @@ import java.util.List;
  */
 // tag::clazz[]
 @Internal
-public class PermitAllAnnotationMapper implements TypedAnnotationMapper<PermitAll> { // <1>
+public class PermitAllAnnotationMapper implements NamedAnnotationMapper { // <1>
     @Override
-    public Class<PermitAll> annotationType() {
-        return PermitAll.class;
+    public String getName() {
+        return "javax.annotation.security.PermitAll";
     }
 
     @Override
-    public List<AnnotationValue<?>> map(AnnotationValue<PermitAll> annotation, VisitorContext visitorContext) { // <2>
+    public List<AnnotationValue<?>> map(AnnotationValue<Annotation> annotation, VisitorContext visitorContext) { // <2>
         List<AnnotationValue<?>> annotationValues = new ArrayList<>(1);
         annotationValues.add(
                 AnnotationValue.builder(Secured.class) // <3>

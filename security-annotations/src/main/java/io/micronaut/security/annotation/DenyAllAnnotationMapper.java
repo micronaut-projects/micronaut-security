@@ -17,10 +17,10 @@ package io.micronaut.security.annotation;
 
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.inject.annotation.TypedAnnotationMapper;
+import io.micronaut.inject.annotation.NamedAnnotationMapper;
 import io.micronaut.inject.visitor.VisitorContext;
 
-import javax.annotation.security.DenyAll;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +31,14 @@ import java.util.List;
  * @since 1.0
  */
 @Internal
-public class DenyAllAnnotationMapper implements TypedAnnotationMapper<DenyAll> {
+public class DenyAllAnnotationMapper implements NamedAnnotationMapper {
     @Override
-    public Class<DenyAll> annotationType() {
-        return DenyAll.class;
+    public String getName() {
+        return "javax.annotation.security.DenyAll";
     }
 
     @Override
-    public List<AnnotationValue<?>> map(AnnotationValue<DenyAll> annotation, VisitorContext visitorContext) {
+    public List<AnnotationValue<?>> map(AnnotationValue<Annotation> annotation, VisitorContext visitorContext) {
         List<AnnotationValue<?>> annotationValues = new ArrayList<>(1);
         annotationValues.add(
                 AnnotationValue.builder(Secured.class)
