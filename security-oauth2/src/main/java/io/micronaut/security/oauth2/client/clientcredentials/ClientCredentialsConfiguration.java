@@ -21,6 +21,7 @@ import io.micronaut.http.util.OutgointRequestProcessorMatcher;
 import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -48,4 +49,7 @@ public interface ClientCredentialsConfiguration extends Toggleable, OutgointRequ
 
     @NonNull
     Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> getHeaderPropagation();
+
+    @NonNull
+    Map<String, String> getAdditionalRequestParams();
 }
