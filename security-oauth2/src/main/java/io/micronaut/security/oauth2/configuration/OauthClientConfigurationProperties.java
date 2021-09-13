@@ -441,12 +441,20 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
 
         }
 
+        /**
+         *
+         * @return a Map of additional request parameters
+         */
         @Override
         @NonNull
         public Map<String, String> getAdditionalRequestParams() {
             return additonalRequestParams;
         }
 
+        /**
+         * Additional parameters included in the client-credentials flow
+         * @param additionalRequestParams Map of additional request parameters to include in client-credentials flow
+         */
         public void setAdditionalRequestParams(@MapFormat(transformation = MapFormat.MapTransformation.FLAT) Map<String, String> additionalRequestParams) {
             this.additonalRequestParams = additionalRequestParams;
         }

@@ -72,7 +72,7 @@ class ClientCredentialsConfigurationSpec extends Specification {
         noExceptionThrown()
 
         expect:
-        configuration.getClientCredentials().get().getAdditionalRequestParams().get("audience") == "test"
+        "test" == configuration.getClientCredentials().get().getAdditionalRequestParams().get("audience")
 
         cleanup:
         applicationContext.close()
