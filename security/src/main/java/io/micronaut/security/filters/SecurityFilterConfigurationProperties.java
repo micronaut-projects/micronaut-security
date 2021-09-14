@@ -71,7 +71,7 @@ public class SecurityFilterConfigurationProperties implements SecurityFilterConf
     }
 
     /**
-     * The pattern the {@link SecurityFilter} should match.. Default value `/**`.
+     * Pattern the {@link SecurityFilter} should match. Default value `/**`. URLS NOT MATCHED BY PREVIOUS PATTERN ARE NOT SECURED
      * @param pattern The pattern
      */
     public void setPath(@NonNull String pattern) {
