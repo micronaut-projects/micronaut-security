@@ -23,6 +23,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.ClientCredentialsGrant;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -33,6 +34,7 @@ import java.util.Map;
  */
 public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, TokenResponse> {
     private final ClientCredentialsGrant grant;
+    private final Map<String, String> additionalRequestParams;
 
     /**
      * @param scope requested scopes
@@ -46,6 +48,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
         ClientCredentialsGrant grant = new ClientCredentialsGrant();
         grant.setScope(scope);
         this.grant = grant;
+        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(configuration -> configuration.getAdditionalRequestParams()).orElseGet(Collections::emptyMap);
     }
 
     /**
@@ -54,6 +57,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
     public ClientCredentialsTokenRequestContext(OauthClientConfiguration clientConfiguration) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
         this.grant = new ClientCredentialsGrant();
+        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(configuration -> configuration.getAdditionalRequestParams()).orElseGet(Collections::emptyMap);
     }
 
     /**
@@ -64,11 +68,14 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
         this.grant = new ClientCredentialsGrant();
         this.grant.setScope(scope);
+        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(configuration -> configuration.getAdditionalRequestParams()).orElseGet(Collections::emptyMap);
     }
 
     @Override
     public Map<String, String> getGrant() {
-        return grant.toMap();
+        Map<String, String> grantMap = grant.toMap();
+        grantMap.putAll(additionalRequestParams);
+        return grantMap;
     }
 
     @Override

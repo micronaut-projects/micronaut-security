@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.convert.format.MapFormat;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
@@ -35,7 +36,9 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -277,6 +280,8 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
 
         private HeaderTokenPropagatorConfigurationProperties headerPropagation;
 
+        private Map<String, String> additonalRequestParams = Collections.emptyMap();
+
         @NonNull
         @Override
         public Duration getAdvancedExpiration() {
@@ -375,6 +380,24 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+        }
+
+        /**
+         *
+         * @return a Map of additional request parameters
+         */
+        @Override
+        @NonNull
+        public Map<String, String> getAdditionalRequestParams() {
+            return additonalRequestParams;
+        }
+
+        /**
+         * Additional parameters included in the client-credentials flow.
+         * @param additionalRequestParams Map of additional request parameters to include in client-credentials flow
+         */
+        public void setAdditionalRequestParams(@MapFormat(transformation = MapFormat.MapTransformation.FLAT) Map<String, String> additionalRequestParams) {
+            this.additonalRequestParams = additionalRequestParams;
         }
 
         /**
