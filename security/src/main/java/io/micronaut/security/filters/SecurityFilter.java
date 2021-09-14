@@ -15,10 +15,11 @@
  */
 package io.micronaut.security.filters;
 
-
 import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
@@ -51,8 +52,9 @@ import java.util.stream.Collectors;
  * @author Graeme Rocher
  * @since 1.0
  */
+@Requires(property = SecurityFilterConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Replaces(EndpointsFilter.class)
-@Filter(Filter.MATCH_ALL_PATTERN)
+@Filter("${" + SecurityFilterConfigurationProperties.PREFIX + ".pattern:" + Filter.MATCH_ALL_PATTERN + "}")
 public class SecurityFilter implements HttpServerFilter {
 
     public static final String KEY = "io.micronaut.security.filters." + SecurityFilter.class.getSimpleName();
