@@ -17,10 +17,10 @@ package io.micronaut.security.annotation;
 
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.inject.annotation.TypedAnnotationMapper;
+import io.micronaut.inject.annotation.NamedAnnotationMapper;
 import io.micronaut.inject.visitor.VisitorContext;
 
-import javax.annotation.security.RolesAllowed;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +31,14 @@ import java.util.List;
  * @since 1.0
  */
 @Internal
-public class RolesAllowedAnnotationMapper implements TypedAnnotationMapper<RolesAllowed> {
+public class RolesAllowedAnnotationMapper implements NamedAnnotationMapper {
     @Override
-    public Class<RolesAllowed> annotationType() {
-        return RolesAllowed.class;
+    public String getName() {
+        return "javax.annotation.security.RolesAllowed";
     }
 
     @Override
-    public List<AnnotationValue<?>> map(AnnotationValue<RolesAllowed> annotation, VisitorContext visitorContext) {
+    public List<AnnotationValue<?>> map(AnnotationValue<Annotation> annotation, VisitorContext visitorContext) {
         String[] values = annotation.get("value", String[].class).orElse(new String[0]);
 
         List<AnnotationValue<?>> annotationValues = new ArrayList<>(1);
@@ -50,3 +50,4 @@ public class RolesAllowedAnnotationMapper implements TypedAnnotationMapper<Roles
         return annotationValues;
     }
 }
+
