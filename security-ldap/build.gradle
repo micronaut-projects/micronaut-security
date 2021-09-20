@@ -2,7 +2,7 @@ dependencies {
     api project(":security")
 
     implementation "io.projectreactor:reactor-core"
-    testImplementation "io.projectreactor:reactor-test:3.4.9"
+    testImplementation "io.projectreactor:reactor-test:3.4.10"
 
     testImplementation "com.unboundid:unboundid-ldapsdk:6.0.1"
 }
