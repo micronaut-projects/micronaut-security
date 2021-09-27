@@ -21,6 +21,7 @@ import io.micronaut.core.annotation.Introspected;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.annotation.ReflectiveAccess;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@ReflectiveAccess
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {

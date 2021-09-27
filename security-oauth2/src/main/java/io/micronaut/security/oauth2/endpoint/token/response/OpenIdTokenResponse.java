@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.ReflectiveAccess;
 
 /**
  * Id Token Access Token Response.
@@ -30,6 +31,7 @@ import io.micronaut.core.annotation.NonNull;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@ReflectiveAccess
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class OpenIdTokenResponse extends TokenResponse {
