@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.state;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.annotation.ReflectiveAccess;
 import java.net.URI;
 import java.util.UUID;
 
@@ -27,6 +28,7 @@ import java.util.UUID;
  * @author James Kleeh
  * @since 1.2.0
  */
+@ReflectiveAccess
 @Introspected
 public class DefaultState implements MutableState {
 
