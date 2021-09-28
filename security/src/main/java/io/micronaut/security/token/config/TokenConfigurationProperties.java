@@ -17,6 +17,7 @@ package io.micronaut.security.token.config;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
@@ -43,6 +44,9 @@ public class TokenConfigurationProperties implements TokenConfiguration {
 
     @NonNull
     private String nameKey = TokenConfiguration.DEFAULT_NAME_KEY;
+
+    @Nullable
+    private String rolesSeparator = TokenConfiguration.DEFAULT_ROLES_SEPARATOR;
 
     @Override
     public boolean isEnabled() {
@@ -95,5 +99,19 @@ public class TokenConfigurationProperties implements TokenConfiguration {
      */
     public void setNameKey(@NonNull String nameKey) {
         this.nameKey = nameKey;
+    }
+
+    @Override
+    @Nullable
+    public String getRolesSeparator() {
+        return rolesSeparator;
+    }
+
+    /**
+     * Used to change how the roles from the {@link io.micronaut.security.authentication.Authentication} attributes map are converted. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_SEPARATOR}.
+     * @param rolesSeparator separator to split roles by
+     */
+    public void setRolesSeparator(@Nullable String rolesSeparator) {
+        this.rolesSeparator = rolesSeparator;
     }
 }

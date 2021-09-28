@@ -20,6 +20,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +52,10 @@ public class DefaultRolesFinder implements RolesFinder {
     private List<String> rolesAtObject(@Nullable Object rolesObject) {
         List<String> roles = new ArrayList<>();
         if (rolesObject != null) {
+
+            if (tokenConfiguration.getRolesSeparator() != null && rolesObject instanceof CharSequence) {
+                rolesObject = Arrays.asList(((String) rolesObject).split(tokenConfiguration.getRolesSeparator()));
+            }
 
             if (rolesObject instanceof Iterable) {
                 for (Object o : ((Iterable) rolesObject)) {
