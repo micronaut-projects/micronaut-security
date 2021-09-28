@@ -20,9 +20,12 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 /**
  * Default implementation of {@link RolesFinder}.
@@ -46,27 +49,30 @@ public class DefaultRolesFinder implements RolesFinder {
     /**
      *
      * @param rolesObject Object containing the roles
-     * @return if the supplied object is {@literal null} it returns an empty list, if it is an iterable, it returns a list of each element {@link Object#toString()}, else it returns {@link Object#toString()}
+     * @return if the supplied object is {@literal null} it returns an empty list,<br />
+     *         if it is a String and the {@link io.micronaut.security.token.config.TokenConfiguration#getRolesSeparator()} is not null then it will be split by the separator and returned as a list,<br />
+     *         if it is an iterable, it returns a list of each element {@link Object#toString()},<br />
+     *         else it returns {@link Object#toString()}
      */
     @NonNull
     private List<String> rolesAtObject(@Nullable Object rolesObject) {
-        List<String> roles = new ArrayList<>();
-        if (rolesObject != null) {
-
-            if (tokenConfiguration.getRolesSeparator() != null && rolesObject instanceof CharSequence) {
-                rolesObject = Arrays.asList(((String) rolesObject).split(tokenConfiguration.getRolesSeparator()));
-            }
-
-            if (rolesObject instanceof Iterable) {
-                for (Object o : ((Iterable) rolesObject)) {
-                    roles.add(o.toString());
-                }
-            } else {
-                roles.add(rolesObject.toString());
-            }
-
+        if (rolesObject == null) {
+            return emptyList();
         }
-        return roles;
+
+        if (rolesObject instanceof CharSequence && tokenConfiguration.getRolesSeparator() != null) {
+            return asList(rolesObject.toString().split(tokenConfiguration.getRolesSeparator()));
+        }
+
+        if (rolesObject instanceof Iterable) {
+            List<String> roles = new ArrayList<>();
+            for (Object o : ((Iterable<?>) rolesObject)) {
+                roles.add(o.toString());
+            }
+            return roles;
+        }
+
+        return singletonList(rolesObject.toString());
     }
 
     @Override
