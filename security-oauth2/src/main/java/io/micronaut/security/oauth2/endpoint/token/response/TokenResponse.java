@@ -21,6 +21,7 @@ import io.micronaut.core.annotation.Introspected;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.annotation.ReflectiveAccess;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -34,6 +35,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.2.0
  */
+@ReflectiveAccess
 @Introspected
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TokenResponse {

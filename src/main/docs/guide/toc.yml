@@ -79,7 +79,7 @@ oauth:
       openid-authorization-code:
         title: OpenID Connect
         openid-configuration: Configuration
-        openid-user-details: User Details Mapper
+        openid-user-details: OAuth 2.0 Authentication Mapper
         openid-auth-parameters:
           title: Parameters
           nonce: Nonce
