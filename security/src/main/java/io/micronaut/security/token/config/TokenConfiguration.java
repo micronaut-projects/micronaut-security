@@ -16,6 +16,7 @@
 package io.micronaut.security.token.config;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.Toggleable;
 
 /**
@@ -28,6 +29,8 @@ public interface TokenConfiguration extends Toggleable {
     String DEFAULT_ROLES_NAME = "roles";
 
     String DEFAULT_NAME_KEY = "sub";
+
+    String DEFAULT_ROLES_SEPARATOR = null;
 
     /**
      * Key which will be used in the {@link io.micronaut.security.authentication.Authentication#getAttributes()} for the User`s roles.
@@ -47,5 +50,15 @@ public interface TokenConfiguration extends Toggleable {
     @NonNull
     default String getNameKey() {
         return DEFAULT_NAME_KEY;
+    }
+
+    /**
+     * Separator which will be used for splitting the roles before processing the {@link io.micronaut.security.authentication.Authentication}.
+     *
+     * @return The separator used for splitting the users roles
+     */
+    @Nullable
+    default String getRolesSeparator() {
+        return DEFAULT_ROLES_SEPARATOR;
     }
 }
