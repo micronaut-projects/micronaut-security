@@ -1,4 +1,5 @@
 dependencies {
+    testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation project(":security-jwt")

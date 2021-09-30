@@ -14,6 +14,7 @@ dependencies {
     testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
     testImplementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
 
+    testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-client"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation "io.micronaut:micronaut-http-server-netty"

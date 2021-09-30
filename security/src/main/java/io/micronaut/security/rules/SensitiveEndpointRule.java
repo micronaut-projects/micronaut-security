@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -49,6 +50,7 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.0
  */
+@Requires(beans = EndpointSensitivityProcessor.class)
 @Singleton
 public class SensitiveEndpointRule implements SecurityRule {
     /**
