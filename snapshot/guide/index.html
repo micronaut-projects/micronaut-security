@@ -359,6 +359,17 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <div class="paragraph">
 <p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x &#8594; 2.x.x).</p>
 </div>
+<div class="sect1">
+<h2 id="_micronaut_security_3_1_breaking_changes">Micronaut Security 3.1 breaking changes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Micronaut security no longer exposes <code>micronaut-management</code> dependency.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_micronaut_security_3_0_breaking_changes">Micronaut Security 3.0 breaking changes</h2>
+<div class="sectionbody">
 <div class="sect2">
 <h3 id="_user_details_removal">User Details Removal</h3>
 <div class="paragraph">
@@ -549,6 +560,8 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 <p>The <a href="../api/io/micronaut/security/token/RolesFinder.html">RolesFinder</a> method <code>findInClaims</code> has been deprecated and usages should be replaced with <code>resolveRoles(@Nullable Map&lt;String, Object&gt; attributes)</code>.</p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 </div>
 
@@ -5614,6 +5627,11 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Client Credentials configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a>. Default value true</p></td>
@@ -5642,11 +5660,6 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.additional-request-params</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Additional parameters included in the client-credentials flow.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Client Credentials configuration.</p></td>
 </tr>
 </tbody>
 </table>
