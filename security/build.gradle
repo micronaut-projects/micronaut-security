@@ -1,5 +1,4 @@
 dependencies {
-    api "io.micronaut:micronaut-management"
     api "io.micronaut:micronaut-http"
     api "io.micronaut:micronaut-http-server"
     api "io.micronaut:micronaut-validation"
@@ -7,6 +6,9 @@ dependencies {
 
     implementation "io.projectreactor:reactor-core"
 
+    compileOnly "io.micronaut:micronaut-management"
+
+    testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-client"
     testAnnotationProcessor project(":security-annotations")
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
