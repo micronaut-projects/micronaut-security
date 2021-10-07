@@ -53,7 +53,7 @@ class JwtCookieSameSiteCaseSensitiveSpec extends Specification {
         where:
         sameSiteValue || expected
         'Strict'      || 'SameSite=Strict'
-        'strict'      || null
+        'strict'      || 'SameSite=Strict'
         'Lax'         || 'SameSite=Lax'
         'None'        || 'SameSite=None'
     }
