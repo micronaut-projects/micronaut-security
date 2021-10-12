@@ -40,6 +40,10 @@ public class PasetoConfigurationProperties implements PasetoConfiguration {
 
     private boolean enabled = DEFAULT_ENABLED;
 
+    /**
+     *
+     * @return a boolean flag indicating whether PASETO beans should be enabled or not
+     */
     @Override
     public boolean isEnabled() {
         return enabled;

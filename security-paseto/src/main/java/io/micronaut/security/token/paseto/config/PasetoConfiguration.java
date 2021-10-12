@@ -26,10 +26,4 @@ import io.micronaut.core.util.Toggleable;
  */
 public interface PasetoConfiguration extends Toggleable {
 
-    /**
-     *
-     * @return a boolean flag indicating whether PASETO beans should be enabled or not
-     */
-    @Override
-    boolean isEnabled();
 }
