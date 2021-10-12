@@ -35,7 +35,6 @@ public class PasetoConfigurationProperties implements PasetoConfiguration {
     /**
      * The default enable value.
      */
-    @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
     private boolean enabled = DEFAULT_ENABLED;
