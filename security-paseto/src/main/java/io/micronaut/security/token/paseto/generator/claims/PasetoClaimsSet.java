@@ -15,6 +15,9 @@
  */
 package io.micronaut.security.token.paseto.generator.claims;
 
+import dev.paseto.jpaseto.Claims;
+
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -52,6 +55,85 @@ public final class PasetoClaimsSet {
         public PasetoClaimsSet build() {
             return new PasetoClaimsSet(claims);
         }
+
+        /**
+         * Sets the issuer(iss) claim.
+         *
+         * @param iss The issuer claim.
+         * @return This builder.
+         */
+        public Builder issuer(String iss) {
+            claim(Claims.ISSUER, iss);
+            return this;
+        }
+
+        /**
+         * Sets the subject(sub) claim.
+         *
+         * @param sub The subject claim.
+         * @return This builder.
+         */
+        public Builder subject(String sub) {
+            claim(Claims.SUBJECT, sub);
+            return this;
+        }
+
+        /**
+         * Sets the audience(aud) claim.
+         *
+         * @param aud The audience claim.
+         * @return This builder.
+         */
+        public Builder audience(String aud) {
+            claim(Claims.AUDIENCE, aud);
+            return this;
+        }
+
+        /**
+         * Sets the expiery(exp) claim.
+         *
+         * @param exp The expiry claim.
+         * @return This builder.
+         */
+        public Builder expiration(Instant exp) {
+            claim(Claims.EXPIRATION, exp);
+            return this;
+        }
+
+        /**
+         * Sets not before(nbf) claim.
+         *
+         * @param nbf not before claim.
+         * @return This builder.
+         */
+        public Builder notBefore(Instant nbf) {
+            claim(Claims.NOT_BEFORE, nbf);
+            return this;
+        }
+
+        /**
+         * Sets the issued at(iat) claim.
+         *
+         * @param iat The issued at claim.
+         * @return This builder.
+         */
+        public Builder issuedAt(Instant iat) {
+            claim(Claims.ISSUED_AT, iat);
+            return this;
+        }
+
+        /**
+         * Sets the token id(jti) claim.
+         *
+         * @param jti The token id claim.
+         * @return This builder.
+         */
+        public Builder tokenId(String jti) {
+            claim(Claims.TOKEN_ID, jti);
+            return this;
+        }
+
+        //TODO:  Add Support for footer in token
 
         /**
          * Set the specified claim.
