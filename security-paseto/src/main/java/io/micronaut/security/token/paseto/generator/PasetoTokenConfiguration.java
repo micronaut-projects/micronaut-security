@@ -16,6 +16,8 @@
 
 package io.micronaut.security.token.paseto.generator;
 
+import javax.crypto.SecretKey;
+
 /**
  * @author Utsav Varia
  * @since 3.0
@@ -32,4 +34,9 @@ public interface PasetoTokenConfiguration {
     default String getTokenType() {
         return "local";
     }
+
+    default SecretKey getSecretKey() {
+        return null;
+    }
+
 }

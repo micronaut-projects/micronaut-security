@@ -52,13 +52,13 @@ public class PasetoTokenGenerator implements TokenGenerator {
     public PasetoBuilder<?> getPasetoBuilder() {
         if (tokenConfigurationProperties.getVersion() == 1) {
             if (tokenConfigurationProperties.getTokenType().equals("local")) {
-                return Pasetos.V1.LOCAL.builder();
+                return Pasetos.V1.LOCAL.builder().setSharedSecret(tokenConfigurationProperties.getSecretKey());
             } else {
                 return Pasetos.V1.PUBLIC.builder();
             }
         } else {
             if (tokenConfigurationProperties.getTokenType().equals("local")) {
-                return Pasetos.V2.LOCAL.builder();
+                return Pasetos.V2.LOCAL.builder().setSharedSecret(tokenConfigurationProperties.getSecretKey());
             } else {
                 return Pasetos.V2.PUBLIC.builder();
             }

@@ -13,11 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package io.micronaut.security.token.paseto.generator;
 
+import dev.paseto.jpaseto.lang.Keys;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.token.paseto.config.PasetoConfigurationProperties;
+
+import javax.crypto.SecretKey;
+import java.util.Base64;
 
 /**
  * @author Utsav Varia
@@ -38,8 +41,14 @@ public class PasetoTokenConfigurationProperties implements PasetoTokenConfigurat
      */
     public static final int DEFAULT_VERSION = 1;
 
+    /**
+     * The default secret key.
+     */
+    public static final SecretKey DEFAULT_SECRET_KEY = null;
+
     private String tokenType = DEFAULT_TOKEN_TYPE;
     private int version = DEFAULT_VERSION;
+    private SecretKey secretKey = DEFAULT_SECRET_KEY;
 
     /**
      * @return An integer indicating version of paseto
@@ -73,6 +82,24 @@ public class PasetoTokenConfigurationProperties implements PasetoTokenConfigurat
      */
     public void setTokenType(String tokenType) {
         this.tokenType = tokenType;
+    }
+
+    /**
+     * @return return token type
+     */
+    @Override
+    public SecretKey getSecretKey() {
+        return secretKey;
+    }
+
+    /**
+     * Sets Secret key for Paseto token to encrypt with. Default value ({@value #DEFAULT_TOKEN_TYPE})
+     *
+     * @param secretKey Secret key for encryption
+     */
+    public void setSecretKey(String secretKey) {
+        byte[] decodedKey = Base64.getDecoder().decode(secretKey);
+        this.secretKey = Keys.secretKey(decodedKey);
     }
 
 }
