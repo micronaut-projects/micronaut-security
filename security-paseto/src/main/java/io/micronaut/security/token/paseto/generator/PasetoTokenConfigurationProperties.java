@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.token.paseto.generator;
 
+import dev.paseto.jpaseto.Purpose;
+import dev.paseto.jpaseto.Version;
 import dev.paseto.jpaseto.lang.Keys;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.token.paseto.config.PasetoConfigurationProperties;
@@ -34,54 +36,54 @@ public class PasetoTokenConfigurationProperties implements PasetoTokenConfigurat
     /**
      * The default token type. Possible values local, public.
      */
-    public static final String DEFAULT_TOKEN_TYPE = "local";
+    public static final Purpose DEFAULT_PURPOSE = Purpose.PUBLIC;
 
     /**
      * The default Paseto version. Possible values 1, 2.
      */
-    public static final int DEFAULT_VERSION = 1;
+    public static final Version DEFAULT_VERSION = Version.V1;
 
     /**
      * The default secret key.
      */
     public static final SecretKey DEFAULT_SECRET_KEY = null;
 
-    private String tokenType = DEFAULT_TOKEN_TYPE;
-    private int version = DEFAULT_VERSION;
+    private Purpose purpose = DEFAULT_PURPOSE;
+    private Version version = DEFAULT_VERSION;
     private SecretKey secretKey = DEFAULT_SECRET_KEY;
 
     /**
      * @return An integer indicating version of paseto
      */
     @Override
-    public int getVersion() {
+    public Version getVersion() {
         return version;
     }
 
     /**
-     * Sets Paseto version. Default value ({@value #DEFAULT_VERSION}).
+     * Sets Paseto version.
      *
      * @param version Paseto version
      */
-    public void setVersion(int version) {
-        this.version = version;
+    public void setVersion(String version) {
+        this.version = Version.from(version);
     }
 
     /**
      * @return return token type
      */
     @Override
-    public String getTokenType() {
-        return tokenType;
+    public Purpose getPurpose() {
+        return purpose;
     }
 
     /**
-     * Sets Paseto token type. Default value ({@value #DEFAULT_TOKEN_TYPE})
+     * Sets Paseto token type.
      *
-     * @param tokenType Paseto token type
+     * @param purpose Paseto token type
      */
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
+    public void setPurpose(String purpose) {
+        this.purpose = Purpose.from(purpose);
     }
 
     /**
@@ -93,7 +95,7 @@ public class PasetoTokenConfigurationProperties implements PasetoTokenConfigurat
     }
 
     /**
-     * Sets Secret key for Paseto token to encrypt with. Default value ({@value #DEFAULT_TOKEN_TYPE})
+     * Sets Secret key for Paseto token to encrypt with.
      *
      * @param secretKey Secret key for encryption
      */

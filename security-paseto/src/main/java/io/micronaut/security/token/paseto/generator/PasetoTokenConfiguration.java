@@ -16,6 +16,9 @@
 
 package io.micronaut.security.token.paseto.generator;
 
+import dev.paseto.jpaseto.Purpose;
+import dev.paseto.jpaseto.Version;
+
 import javax.crypto.SecretKey;
 
 /**
@@ -27,12 +30,12 @@ public interface PasetoTokenConfiguration {
     /**
      * @return Paseto Version
      */
-    default int getVersion() {
-        return 1;
+    default Version getVersion() {
+        return Version.V1;
     }
 
-    default String getTokenType() {
-        return "local";
+    default Purpose getPurpose() {
+        return Purpose.LOCAL;
     }
 
     default SecretKey getSecretKey() {

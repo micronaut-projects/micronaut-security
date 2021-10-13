@@ -17,6 +17,8 @@ package io.micronaut.security.token.paseto.generator;
 
 import dev.paseto.jpaseto.PasetoBuilder;
 import dev.paseto.jpaseto.Pasetos;
+import dev.paseto.jpaseto.Purpose;
+import dev.paseto.jpaseto.Version;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.security.token.paseto.generator.claims.ClaimsGenerator;
@@ -50,14 +52,14 @@ public class PasetoTokenGenerator implements TokenGenerator {
      * @return Paseto Builder
      */
     public PasetoBuilder<?> getPasetoBuilder() {
-        if (tokenConfigurationProperties.getVersion() == 1) {
-            if (tokenConfigurationProperties.getTokenType().equals("local")) {
+        if (Version.V1.equals(tokenConfigurationProperties.getVersion())) {
+            if (Purpose.LOCAL.equals(tokenConfigurationProperties.getPurpose())) {
                 return Pasetos.V1.LOCAL.builder().setSharedSecret(tokenConfigurationProperties.getSecretKey());
             } else {
                 return Pasetos.V1.PUBLIC.builder();
             }
         } else {
-            if (tokenConfigurationProperties.getTokenType().equals("local")) {
+            if (Purpose.LOCAL.equals(tokenConfigurationProperties.getPurpose())) {
                 return Pasetos.V2.LOCAL.builder().setSharedSecret(tokenConfigurationProperties.getSecretKey());
             } else {
                 return Pasetos.V2.PUBLIC.builder();
