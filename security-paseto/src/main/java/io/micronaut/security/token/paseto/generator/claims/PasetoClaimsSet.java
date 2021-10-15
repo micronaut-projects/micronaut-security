@@ -37,6 +37,20 @@ public final class PasetoClaimsSet {
         return claims;
     }
 
+    public Instant getNotBeforeTime() {
+        Object value = claims.get(Claims.NOT_BEFORE);
+
+        if (value == null) {
+            return null;
+        } else if (value instanceof Instant) {
+            return (Instant) value;
+        } else if (value instanceof Number) {
+            return Instant.ofEpochSecond(((Number) value).longValue());
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Builder for creating Paseto Claims builder.
      */

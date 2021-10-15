@@ -20,6 +20,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ import java.util.Map;
  * @author Utsav Varia
  * @since 3.0
  */
+@Singleton
 public class PasetoClaimsGenerator implements ClaimsGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(PasetoClaimsGenerator.class);
