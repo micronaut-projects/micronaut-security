@@ -68,10 +68,10 @@ public class PasetoTokenGenerator implements TokenGenerator {
     }
 
     /**
-     * Generate a JWT from a map of claims.
+     * Generate a Paseto from a map of claims.
      *
      * @param claims the map of claims
-     * @return the created JWT
+     * @return the created Paseto
      */
     protected String generate(final Map<String, Object> claims) {
         // claims builder
