@@ -17,7 +17,11 @@ package io.micronaut.security.token.jwt.validator;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.AbstractTokenAuthenticationFactory;
+import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.MapClaims;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.security.token.config.TokenConfiguration;
 import org.slf4j.Logger;
@@ -35,17 +39,18 @@ import java.util.Optional;
  * @since 1.1.0
  */
 @Singleton
-public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory {
+public class DefaultJwtAuthenticationFactory extends AbstractTokenAuthenticationFactory<JWT> implements JwtAuthenticationFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultJwtAuthenticationFactory.class);
 
-    private final TokenConfiguration tokenConfiguration;
-    private final RolesFinder rolesFinder;
-
+    /**
+     *
+     * @param tokenConfiguration Token Configuration
+     * @param rolesFinder Utility to retrieve roles from token claims
+     */
     public DefaultJwtAuthenticationFactory(TokenConfiguration tokenConfiguration,
                                            RolesFinder rolesFinder) {
-        this.tokenConfiguration = tokenConfiguration;
-        this.rolesFinder = rolesFinder;
+        super(tokenConfiguration, rolesFinder);
     }
 
     @Override
@@ -55,11 +60,7 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
             if (claimSet == null) {
                 return Optional.empty();
             }
-            Map<String, Object> attributes = claimSet.getClaims();
-            return usernameForClaims(claimSet).map(username ->
-                    Authentication.build(username,
-                            rolesFinder.resolveRoles(attributes),
-                            attributes));
+            return createAuthentication(claimSet.getClaims());
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("ParseException creating authentication", e);
@@ -72,13 +73,13 @@ public class DefaultJwtAuthenticationFactory implements JwtAuthenticationFactory
      *
      * @param claimSet JWT Claims
      * @return the username defined by {@link TokenConfiguration#getNameKey()} ()} or the sub claim.
+     * @deprecated Use {@link AbstractTokenAuthenticationFactory#usernameForClaims(Claims)} instead.
      * @throws ParseException might be thrown parsing claims
      */
+    @Deprecated
     protected Optional<String> usernameForClaims(JWTClaimsSet claimSet) throws ParseException {
-        String username = claimSet.getStringClaim(tokenConfiguration.getNameKey());
-        if (username == null) {
-            return Optional.ofNullable(claimSet.getSubject());
-        }
-        return Optional.of(username);
+        return super.usernameForClaims(new MapClaims(claimSet.getClaims()));
     }
+
+
 }

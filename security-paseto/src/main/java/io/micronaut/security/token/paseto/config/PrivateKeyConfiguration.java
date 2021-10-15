@@ -13,18 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.security.token.paseto.config;
+
+import dev.paseto.jpaseto.Version;
+import io.micronaut.core.annotation.NonNull;
+import java.security.PrivateKey;
+
 /**
- * Contains classes specific to Platform-Agnostic Security Tokens (PASETO) Authentication within Micronaut.
- *
- * @author Utsav Varia
- * @since 3.0
+ * Private Key Configuration used to sign a Paseto token.
+ * @author Sergio del Amo
+ * @since 3.2.0
  */
+public interface PrivateKeyConfiguration {
 
-@Configuration
-@Requires(property = PasetoConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
-package io.micronaut.security.token.paseto;
+    /**
+     *
+     * @return The Paseto Version
+     */
+    @NonNull
+    Version getVersion();
 
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
-import io.micronaut.security.token.paseto.config.PasetoConfigurationProperties;
+    /**
+     *
+     * @return Private Key used to sign the Paseto token
+     */
+    @NonNull
+    PrivateKey getPrivateKey();
+}

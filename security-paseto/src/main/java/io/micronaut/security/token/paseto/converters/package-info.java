@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 /**
- * Contains classes specific to Platform-Agnostic Security Tokens (PASETO) Authentication within Micronaut.
+ * Security related Converters.
  *
- * @author Utsav Varia
- * @since 3.0
+ * @author Sergio del Amo Caballero
+ * @since 1.0
  */
-
-@Configuration
-@Requires(property = PasetoConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
-package io.micronaut.security.token.paseto;
-
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
-import io.micronaut.security.token.paseto.config.PasetoConfigurationProperties;
+package io.micronaut.security.token.paseto.converters;

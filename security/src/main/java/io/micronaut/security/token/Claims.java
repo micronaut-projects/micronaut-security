@@ -26,6 +26,19 @@ import java.util.Set;
  * @author Sergio del Amo
  */
 public interface Claims {
+    String ISSUER = "iss";
+
+    String SUBJECT = "sub";
+
+    String EXPIRATION_TIME = "exp";
+
+    String NOT_BEFORE = "nbf";
+
+    String ISSUED_AT = "iat";
+
+    String JWT_ID = "jti";
+
+    String AUDIENCE = "aud";
 
     /**
      * Retrieves a value from the claims for the given name.

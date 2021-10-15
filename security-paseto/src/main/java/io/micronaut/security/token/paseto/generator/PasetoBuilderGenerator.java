@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.security.token.paseto.generator;
+
+import dev.paseto.jpaseto.PasetoBuilder;
+import io.micronaut.core.annotation.NonNull;
+
 /**
- * Contains classes specific to Platform-Agnostic Security Tokens (PASETO) Authentication within Micronaut.
- *
- * @author Utsav Varia
- * @since 3.0
+ * Returns a {@link PasetoBuilder} which will be used to sign a Paseto token.
+ * @author Sergio del Amo
+ * @since 3.2.0
  */
+@FunctionalInterface
+public interface PasetoBuilderGenerator {
 
-@Configuration
-@Requires(property = PasetoConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
-package io.micronaut.security.token.paseto;
-
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
-import io.micronaut.security.token.paseto.config.PasetoConfigurationProperties;
+    /**
+     *
+     * @return a {@link PasetoBuilder} which will be used to sign a Paseto token.
+     */
+    @NonNull
+    PasetoBuilder<?> builder();
+}
