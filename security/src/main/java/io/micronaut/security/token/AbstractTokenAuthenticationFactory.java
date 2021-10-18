@@ -28,6 +28,7 @@ import java.util.Optional;
  * Abstract implementation of {@link TokenAuthenticationFactory} which creates an authentication for a set of claims.
  * @author Sergio del Amo
  * @since 3.2.0
+ * @param <T> The Token type. e.g JWT or Paseto
  */
 public abstract class AbstractTokenAuthenticationFactory<T> implements TokenAuthenticationFactory<T> {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractTokenAuthenticationFactory.class);
