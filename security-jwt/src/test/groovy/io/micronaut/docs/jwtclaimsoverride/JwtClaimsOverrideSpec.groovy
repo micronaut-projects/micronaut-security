@@ -1,19 +1,16 @@
 package io.micronaut.docs.jwtclaimsoverride
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
+
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
-import io.micronaut.http.client.HttpClient
-import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
-import io.micronaut.security.token.jwt.render.AccessRefreshToken
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.validator.TokenValidator
-import io.micronaut.security.testutils.EmbeddedServerSpecification
 import reactor.core.publisher.Flux
 
 class JwtClaimsOverrideSpec extends EmbeddedServerSpecification {

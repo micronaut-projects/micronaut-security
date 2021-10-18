@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * JWT token renderer.
- *
- * @author Sergio del Amo
- * @since 1.0
- */
-package io.micronaut.security.token.jwt.render;
+package io.micronaut.security.token.cookie;
 
+import io.micronaut.security.config.TokenCookieConfiguration;
+
+/**
+ * Configuration for the refresh token cookie.
+ *
+ * @author James Kleeh
+ * @since 2.1.0
+ */
+public interface RefreshTokenCookieConfiguration extends TokenCookieConfiguration {
+}

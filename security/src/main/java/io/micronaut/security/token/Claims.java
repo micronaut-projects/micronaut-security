@@ -17,6 +17,9 @@ package io.micronaut.security.token;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,9 +39,13 @@ public interface Claims {
 
     String ISSUED_AT = "iat";
 
-    String JWT_ID = "jti";
+    String TOKEN_ID = "jti";
+
+    String KEY_ID = "kid";
 
     String AUDIENCE = "aud";
+
+    List<String> ALL_CLAIMS = Arrays.asList(ISSUER, SUBJECT, EXPIRATION_TIME, NOT_BEFORE, ISSUED_AT, TOKEN_ID, AUDIENCE);
 
     /**
      * Retrieves a value from the claims for the given name.

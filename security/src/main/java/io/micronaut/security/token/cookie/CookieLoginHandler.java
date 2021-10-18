@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.cookie;
+package io.micronaut.security.token.cookie;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.functional.ThrowingSupplier;
@@ -38,7 +38,7 @@ import java.util.Optional;
  * For a successful login a cookie is added to the response with a token.
  *
  * @author Sergio del Amo
- * @since 2.0.0
+ * @since 3.2.0
  */
 public abstract class CookieLoginHandler implements RedirectingLoginHandler {
 

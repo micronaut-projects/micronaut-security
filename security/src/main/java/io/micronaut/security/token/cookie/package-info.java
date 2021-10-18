@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.cookie;
-
-import io.micronaut.security.config.TokenCookieConfiguration;
-
 /**
- * Configuration for the refresh token cookie.
+ * JWT cookie configuration and handlers.
  *
- * @author James Kleeh
- * @since 2.1.0
+ * @author Sergio del Amo
+ * @since 1.0
  */
-public interface RefreshTokenCookieConfiguration extends TokenCookieConfiguration {
-}
+package io.micronaut.security.token.cookie;

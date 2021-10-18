@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.cookie;
-
-import io.micronaut.security.config.TokenCookieConfiguration;
+package io.micronaut.security.token.claims;
 
 /**
- * Configuration for the access token cookie.
- *
- * @author James Kleeh
- * @since 2.1.0
+ * Generates the "jti" (Token ID) claim, which provides a unique identifier for the token.
+ * @see <a href="https://tools.ietf.org/html/rfc7519#section-4.1">4.1.7. "jti" (JWT ID) Claim</a> for JWT tokens.
+ * @author Sergio del Amo
+ * @version 1.0
  */
-public interface AccessTokenCookieConfiguration extends TokenCookieConfiguration {
+public interface JtiGenerator {
+
+    /**
+     *
+     * @return a case-sensitive String which is used as a unique identifier for the JWT.
+     */
+    String generateJtiClaim();
 }

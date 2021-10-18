@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.endpoints;
+package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
@@ -68,7 +68,7 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
     }
 
     /**
-     * Sets whether the {@link io.micronaut.security.token.jwt.endpoints.OauthController} is enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * Sets whether the {@link OauthController} is enabled. Default value ({@value #DEFAULT_ENABLED}).
      *
      * @param enabled True if is enabled
      */
@@ -77,7 +77,7 @@ public class OauthControllerConfigurationProperties implements OauthControllerCo
     }
 
     /**
-     * Sets the path to map the {@link io.micronaut.security.token.jwt.endpoints.OauthController} to. Default value ({@value #DEFAULT_PATH}).
+     * Sets the path to map the {@link OauthController} to. Default value ({@value #DEFAULT_PATH}).
      *
      * @param path The path
      */

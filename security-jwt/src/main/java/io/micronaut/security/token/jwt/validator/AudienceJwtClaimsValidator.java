@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.validator;
 
 import java.util.List;
 
+import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
 
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -28,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 /**
  * Validates JWT audience claim contains a configured value.
@@ -84,7 +84,7 @@ public class AudienceJwtClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     @Override
-    public boolean validate(@NonNull JwtClaims claims,
+    public boolean validate(@NonNull Claims claims,
                             @Nullable HttpRequest<?> request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }

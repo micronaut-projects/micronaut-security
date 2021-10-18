@@ -1,6 +1,7 @@
 package io.micronaut.security.token.jwt.render
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.micronaut.security.token.render.AccessRefreshToken
 import spock.lang.Specification
 
 import static com.fasterxml.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY
@@ -12,7 +13,7 @@ class AccessRefreshTokenSpec extends Specification {
             mapper.configure(SORT_PROPERTIES_ALPHABETICALLY, true)
 
         and : "a fully populated token"
-            AccessRefreshToken token = new AccessRefreshToken("1234", "abcd", "Bearer")
+        AccessRefreshToken token = new AccessRefreshToken("1234", "abcd", "Bearer")
 
         when: "we serialize the object to json"
             def rawJsonString = mapper.writeValueAsString(token)

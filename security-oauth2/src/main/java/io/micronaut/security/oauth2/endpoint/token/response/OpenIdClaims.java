@@ -15,10 +15,10 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.Claims;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Sergio del Amo
  * @version 1.1.0
  */
-public interface OpenIdClaims extends JwtClaims {
+public interface OpenIdClaims extends Claims {
 
     String CLAIMS_NAME = "name";
     String CLAIMS_GIVEN_NAME = "given_name";

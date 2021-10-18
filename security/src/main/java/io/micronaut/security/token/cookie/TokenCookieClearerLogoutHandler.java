@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.cookie;
+package io.micronaut.security.token.cookie;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
@@ -35,7 +35,7 @@ import java.net.URISyntaxException;
  */
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Singleton
-public class JwtCookieClearerLogoutHandler implements LogoutHandler {
+public class TokenCookieClearerLogoutHandler implements LogoutHandler {
 
     protected final String logout;
     protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
@@ -46,9 +46,9 @@ public class JwtCookieClearerLogoutHandler implements LogoutHandler {
      * @param refreshTokenCookieConfiguration Refresh token cookie configuration
      * @param redirectConfiguration Redirect configuration
      */
-    public JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
-                                         RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
-                                         RedirectConfiguration redirectConfiguration) {
+    public TokenCookieClearerLogoutHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                                           RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
+                                           RedirectConfiguration redirectConfiguration) {
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
         this.logout = redirectConfiguration.getLogout();

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.cookie;
+package io.micronaut.security.token.cookie;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
@@ -31,9 +31,9 @@ import java.util.Optional;
  * @since 1.0
  */
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
-@Requires(property = JwtCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(property = TokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Singleton
-public class JwtCookieTokenReader implements TokenReader {
+public class TokenCookieTokenReader implements TokenReader {
 
     /*
      *
@@ -47,7 +47,7 @@ public class JwtCookieTokenReader implements TokenReader {
      *
      * @param accessTokenCookieConfiguration Configuration properties for JWT Cookie support
      */
-    public JwtCookieTokenReader(AccessTokenCookieConfiguration accessTokenCookieConfiguration) {
+    public TokenCookieTokenReader(AccessTokenCookieConfiguration accessTokenCookieConfiguration) {
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
     }
 

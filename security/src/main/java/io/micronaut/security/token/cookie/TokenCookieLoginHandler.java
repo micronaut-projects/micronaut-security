@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.cookie;
+package io.micronaut.security.token.cookie;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
@@ -26,9 +26,9 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
-import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
-import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
-import io.micronaut.security.token.jwt.render.AccessRefreshToken;
+import io.micronaut.security.token.generator.AccessRefreshTokenGenerator;
+import io.micronaut.security.token.generator.AccessTokenConfiguration;
+import io.micronaut.security.token.render.AccessRefreshToken;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
@@ -42,7 +42,7 @@ import java.util.List;
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "cookie")
 @Singleton
-public class JwtCookieLoginHandler extends CookieLoginHandler {
+public class TokenCookieLoginHandler extends CookieLoginHandler {
 
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
     protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
@@ -56,12 +56,12 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
      * @param priorToLoginPersistence Prior To Login Persistence Mechanism
      */
-    public JwtCookieLoginHandler(RedirectConfiguration redirectConfiguration,
-                                 AccessTokenCookieConfiguration accessTokenCookieConfiguration,
-                                 RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
-                                 AccessTokenConfiguration accessTokenConfiguration,
-                                 AccessRefreshTokenGenerator accessRefreshTokenGenerator,
-                                 @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+    public TokenCookieLoginHandler(RedirectConfiguration redirectConfiguration,
+                                   AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                                   RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
+                                   AccessTokenConfiguration accessTokenConfiguration,
+                                   AccessRefreshTokenGenerator accessRefreshTokenGenerator,
+                                   @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         super(accessTokenCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
         this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
         this.accessTokenConfiguration = accessTokenConfiguration;

@@ -18,6 +18,8 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.token.cookie.TokenCookieClearerLogoutHandler
+import io.micronaut.security.token.cookie.TokenCookieLoginHandler
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import jakarta.inject.Singleton
@@ -48,8 +50,8 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
         applicationContext.getBean(AuthenticationProviderUserPassword.class)
         applicationContext.getBean(LoginController.class)
         applicationContext.getBean(LogoutController.class)
-        applicationContext.getBean(JwtCookieLoginHandler.class)
-        applicationContext.getBean(JwtCookieClearerLogoutHandler.class)
+        applicationContext.getBean(TokenCookieLoginHandler.class)
+        applicationContext.getBean(TokenCookieClearerLogoutHandler.class)
         applicationContext.getBean(SignatureConfiguration.class)
         applicationContext.getBean(SignatureConfiguration.class, Qualifiers.byName("generator"))
 

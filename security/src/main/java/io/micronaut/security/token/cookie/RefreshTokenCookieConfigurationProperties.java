@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.cookie;
+package io.micronaut.security.token.cookie;
 
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
-import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.config.TokenConfigurationProperties;
+import io.micronaut.security.endpoints.OauthControllerConfigurationProperties;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
@@ -33,11 +35,11 @@ import java.util.Optional;
  * @since 1.0
  */
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
-@Requires(property = JwtCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@ConfigurationProperties(JwtCookieConfigurationProperties.PREFIX)
-public class JwtCookieConfigurationProperties implements AccessTokenCookieConfiguration {
+@Requires(property = RefreshTokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@ConfigurationProperties(RefreshTokenCookieConfigurationProperties.PREFIX)
+public class RefreshTokenCookieConfigurationProperties implements RefreshTokenCookieConfiguration {
 
-    public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".cookie";
+    public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".refresh.cookie";
 
     /**
      * The default enable value.
@@ -55,13 +57,13 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
      * The default cookie name.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_COOKIENAME = "JWT";
+    public static final String DEFAULT_COOKIENAME = "JWT_REFRESH_TOKEN";
 
     /**
      * Default Cookie Path.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_COOKIEPATH = "/";
+    public static final String DEFAULT_COOKIEPATH = OauthControllerConfigurationProperties.DEFAULT_PATH;
 
     /**
      * The default same-site setting for the JWT cookie.
@@ -77,6 +79,16 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
     private SameSite cookieSameSite = DEFAULT_COOKIESAMESITE;
     private boolean enabled = DEFAULT_ENABLED;
     private String cookieName = DEFAULT_COOKIENAME;
+
+    /**
+     * @param oauthControllerPath The path for the oauth controller
+     */
+    public RefreshTokenCookieConfigurationProperties(
+            @Nullable @Property(name = OauthControllerConfigurationProperties.PREFIX + ".path") String oauthControllerPath) {
+        if (oauthControllerPath != null) {
+            cookiePath = oauthControllerPath;
+        }
+    }
 
     /**
      *
@@ -171,7 +183,7 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
     }
 
     /**
-     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}.
+     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
      * @param cookiePath The path of the cookie.
      */
     public void setCookiePath(@Nullable String cookiePath) {
@@ -179,7 +191,7 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
     }
 
     /**
-     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}.
+     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}).
      * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
      */
     public void setCookieHttpOnly(Boolean cookieHttpOnly) {

@@ -13,34 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.bearer;
+package io.micronaut.security.endpoints;
 
 import io.micronaut.core.util.Toggleable;
 
 /**
- * Configuration for the {@link BearerTokenReader}.
+ * Encapsulates the configuration of {@link OauthController}.
  *
  * @author Sergio del Amo
  * @since 1.0
  */
-@Deprecated
-public interface BearerTokenConfiguration extends Toggleable {
+public interface OauthControllerConfiguration extends Toggleable {
 
     /**
+     * The path the controller can be accessed at.
      *
-     * @return a boolean flag indicating whether BearerTokenReader bean should be enabled or not
+     * @return The path e.g. /oauth/access_token
      */
-    boolean isEnabled();
+    String getPath();
 
     /**
-     *
-     * @return a Prefix before the token in the header value. E.g. Bearer
+     * @return Whether GET requests are allowed to refresh tokens. Only applies to cookie based requests.
      */
-    String getPrefix();
-
-    /**
-     *
-     * @return an HTTP Header name. e.g. Authorization
-     */
-    String getHeaderName();
+    boolean isGetAllowed();
 }

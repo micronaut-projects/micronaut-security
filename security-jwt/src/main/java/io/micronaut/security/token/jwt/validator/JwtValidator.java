@@ -20,8 +20,8 @@ import com.nimbusds.jwt.*;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.token.Claims;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import org.slf4j.Logger;
@@ -117,7 +117,7 @@ public final class JwtValidator {
         } else {
             return validationResult.filter(jwt -> {
                 try {
-                    JwtClaims claims = new JwtClaimsSetAdapter(jwt.getJWTClaimsSet());
+                    Claims claims = new JwtClaimsSetAdapter(jwt.getJWTClaimsSet());
                     return claimsValidators.stream().allMatch(validator -> validator.validate(claims, request));
                 } catch (ParseException e) {
                     if (LOG.isErrorEnabled()) {

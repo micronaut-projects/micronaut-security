@@ -19,15 +19,16 @@ import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.endpoints.TokenRefreshRequest
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.token.Claims
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims
-import io.micronaut.security.token.jwt.render.AccessRefreshToken
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.token.render.AccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
@@ -123,21 +124,21 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         TokenValidator tokenValidator = applicationContext.getBean(JwtTokenValidator.class)
         Map<String, Object> newAccessTokenClaims = Flux.from(tokenValidator.validateToken(refreshRsp.body().accessToken, null)).blockFirst().getAttributes()
         Map<String, Object> originalAccessTokenClaims = Flux.from(tokenValidator.validateToken(originalAccessToken, null)).blockFirst().getAttributes()
-        List<String> expectedClaims = [JwtClaims.SUBJECT,
-                                       JwtClaims.ISSUED_AT,
-                                       JwtClaims.EXPIRATION_TIME,
-                                       JwtClaims.NOT_BEFORE,
+        List<String> expectedClaims = [Claims.SUBJECT,
+                                       Claims.ISSUED_AT,
+                                       Claims.EXPIRATION_TIME,
+                                       Claims.NOT_BEFORE,
                                        "roles"]
         then:
         expectedClaims.each { String claimName ->
             assert newAccessTokenClaims.containsKey(claimName)
             assert originalAccessTokenClaims.containsKey(claimName)
         }
-        originalAccessTokenClaims.get(JwtClaims.SUBJECT) == newAccessTokenClaims.get(JwtClaims.SUBJECT)
+        originalAccessTokenClaims.get(Claims.SUBJECT) == newAccessTokenClaims.get(Claims.SUBJECT)
         originalAccessTokenClaims.get("roles") == newAccessTokenClaims.get("roles")
-        originalAccessTokenClaims.get(JwtClaims.ISSUED_AT) != newAccessTokenClaims.get(JwtClaims.ISSUED_AT)
-        originalAccessTokenClaims.get(JwtClaims.EXPIRATION_TIME) != newAccessTokenClaims.get(JwtClaims.EXPIRATION_TIME)
-        originalAccessTokenClaims.get(JwtClaims.NOT_BEFORE) != newAccessTokenClaims.get(JwtClaims.NOT_BEFORE)
+        originalAccessTokenClaims.get(Claims.ISSUED_AT) != newAccessTokenClaims.get(Claims.ISSUED_AT)
+        originalAccessTokenClaims.get(Claims.EXPIRATION_TIME) != newAccessTokenClaims.get(Claims.EXPIRATION_TIME)
+        originalAccessTokenClaims.get(Claims.NOT_BEFORE) != newAccessTokenClaims.get(Claims.NOT_BEFORE)
 
         cleanup:
         applicationContext.getBean(InMemoryRefreshTokenPersistence).tokens.clear()

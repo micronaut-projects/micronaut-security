@@ -19,9 +19,9 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.token.Claims
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
@@ -89,7 +89,7 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
     static class HttpRequestClaimsValidator implements GenericJwtClaimsValidator {
 
         @Override
-        boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+        boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
             request != null
         }
     }

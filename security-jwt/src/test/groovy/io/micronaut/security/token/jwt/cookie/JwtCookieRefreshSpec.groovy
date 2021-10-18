@@ -4,7 +4,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpMethod
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
-import io.micronaut.security.token.jwt.endpoints.OauthController
+import io.micronaut.security.endpoints.OauthController
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.web.router.RouteMatch

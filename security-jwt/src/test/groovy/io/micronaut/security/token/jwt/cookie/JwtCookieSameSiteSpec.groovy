@@ -21,8 +21,8 @@ class JwtCookieSameSiteSpec extends EmbeddedServerSpecification {
         super.configuration + [
                 'micronaut.http.client.followRedirects': false,
                 'micronaut.security.authentication': 'cookie',
-                'micronaut.security.token.jwt.cookie.cookie-max-age': '5m',
-                'micronaut.security.token.jwt.cookie.cookie-same-site': 'None',
+                'micronaut.security.token.cookie.cookie-max-age': '5m',
+                'micronaut.security.token.cookie.cookie-same-site': 'None',
                 'micronaut.security.redirect.login-failure': '/login/authFailed',
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'qrD6h8K6S9503Q06Y6Rfk21TErImPYqa',
         ]

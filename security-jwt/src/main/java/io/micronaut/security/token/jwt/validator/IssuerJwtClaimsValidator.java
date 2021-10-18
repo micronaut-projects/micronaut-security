@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
+import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
 
 import io.micronaut.core.annotation.Nullable;
@@ -24,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 /**
  * Validates JWT issuer claim matches a configured value.
@@ -56,11 +56,11 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     @Override
-    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
         if (expectedIssuer == null) {
             return true;
         }
-        Object issuerObject = claims.get(JwtClaims.ISSUER);
+        Object issuerObject = claims.get(Claims.ISSUER);
         if (issuerObject == null) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Expected JWT issuer claim of '{}', but the token did not include an issuer.", expectedIssuer);

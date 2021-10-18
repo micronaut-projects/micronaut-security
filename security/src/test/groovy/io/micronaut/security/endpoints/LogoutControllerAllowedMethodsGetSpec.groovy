@@ -19,6 +19,11 @@ class LogoutControllerAllowedMethodsGetSpec extends EmbeddedServerSpecification 
     }
 
     @Override
+    Map<String, Object> getLoginModeCookie() {
+        [:]
+    }
+
+    @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 'micronaut.security.endpoints.logout.get-allowed': true

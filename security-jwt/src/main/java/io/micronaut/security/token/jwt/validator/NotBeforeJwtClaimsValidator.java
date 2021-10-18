@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.validator;
 
 import java.util.Date;
 
+import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
 
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -29,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 /**
  * Validate current time is not before the not-before claim of a JWT token.
@@ -76,7 +76,7 @@ public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
      * @return true if the not-before claim denotes a date before now
      */
     @Override
-    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 

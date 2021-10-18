@@ -37,10 +37,10 @@ import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenari
 import io.micronaut.security.token.config.TokenConfiguration
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.endpoints.KeysController
-import io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider
+import io.micronaut.security.token.claims.ClaimsAudienceProvider
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator
-import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
-import io.micronaut.security.token.jwt.render.AccessRefreshToken
+import io.micronaut.security.token.claims.JtiGenerator
+import io.micronaut.security.token.render.AccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
@@ -189,10 +189,10 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerACustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
         Integer port
         AuthServerACustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                    @Nullable JwtIdGenerator jwtIdGenerator,
-                                    @Nullable ClaimsAudienceProvider claimsAudienceProvider,
-                                    @Nullable ApplicationConfiguration applicationConfiguration,
-                                    @Value('${micronaut.server.port}') Integer port) {
+                                               @Nullable JtiGenerator jwtIdGenerator,
+                                               @Nullable ClaimsAudienceProvider claimsAudienceProvider,
+                                               @Nullable ApplicationConfiguration applicationConfiguration,
+                                               @Value('${micronaut.server.port}') Integer port) {
             super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration)
             this.port = port
         }
@@ -214,10 +214,10 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerBCustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
         Integer port
         AuthServerBCustomJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                    @Nullable JwtIdGenerator jwtIdGenerator,
-                                    @Nullable ClaimsAudienceProvider claimsAudienceProvider,
-                                    @Nullable ApplicationConfiguration applicationConfiguration,
-                                    @Value('${micronaut.server.port}') Integer port) {
+                                               @Nullable JtiGenerator jwtIdGenerator,
+                                               @Nullable ClaimsAudienceProvider claimsAudienceProvider,
+                                               @Nullable ApplicationConfiguration applicationConfiguration,
+                                               @Value('${micronaut.server.port}') Integer port) {
             super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration)
             this.port = port
         }
