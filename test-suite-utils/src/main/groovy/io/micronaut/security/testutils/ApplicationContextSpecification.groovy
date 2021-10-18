@@ -16,6 +16,7 @@
 package io.micronaut.security.testutils
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.core.annotation.NonNull
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -25,4 +26,16 @@ abstract class ApplicationContextSpecification extends Specification implements 
     @Shared
     @AutoCleanup
     ApplicationContext applicationContext = ApplicationContext.run(configuration)
+
+    boolean containsBean(Class beanType) {
+        applicationContext.containsBean(beanType)
+    }
+
+    public <T> T getBean(@NonNull Class<T> beanType) {
+        applicationContext.getBean(beanType)
+    }
+
+    public <T> Collection<T> getBeansOfType(@NonNull Class<T> beanType) {
+        applicationContext.getBeansOfType(beanType)
+    }
 }

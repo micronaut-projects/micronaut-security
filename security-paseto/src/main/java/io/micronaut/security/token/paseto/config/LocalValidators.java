@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.paseto.validators.sharedsecret;
+package io.micronaut.security.token.paseto.config;
 
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.security.token.paseto.config.PasetoConfigurationProperties;
-import io.micronaut.security.token.paseto.config.SharedSecretConfiguration;
 import jakarta.inject.Singleton;
+
 import javax.crypto.SecretKey;
 import javax.validation.constraints.NotNull;
 
@@ -28,12 +27,12 @@ import javax.validation.constraints.NotNull;
  * {@link EachProperty} implementation of {@link SharedSecretConfiguration}.
  */
 @Singleton
-@EachProperty(PasetoConfigurationProperties.PREFIX + ".shared-secret-validators")
-public class SharedSecretConfigurationProperties implements SharedSecretConfiguration {
+@EachProperty(PasetoConfigurationProperties.PREFIX + ".local-validators")
+public class LocalValidators implements SharedSecretConfiguration {
 
     @NonNull
     @NotNull
-    private SecretKey sharedSecret;
+    private SecretKey base64SharedSecret;
 
     @Nullable
     private String requiredAudience;
@@ -53,7 +52,7 @@ public class SharedSecretConfigurationProperties implements SharedSecretConfigur
     @Override
     @NonNull
     public SecretKey getSharedSecret() {
-        return sharedSecret;
+        return base64SharedSecret;
     }
 
     @Nullable
@@ -87,11 +86,19 @@ public class SharedSecretConfigurationProperties implements SharedSecretConfigur
     }
 
     /**
-     *
-     * @param sharedSecret
+     * The required value for the required token id.
+     * @param requiredTokenId The required value for the token id
      */
-    public void setSharedSecret(@NonNull SecretKey sharedSecret) {
-        this.sharedSecret = sharedSecret;
+    public void setRequiredTokenId(@Nullable String requiredTokenId) {
+        this.requiredTokenId = requiredTokenId;
+    }
+
+    /**
+     * Shared Secret.
+     * @param base64SharedSecret Shared Secret
+     */
+    public void setBase64SharedSecret(@NonNull SecretKey base64SharedSecret) {
+        this.base64SharedSecret = base64SharedSecret;
     }
 
     /**

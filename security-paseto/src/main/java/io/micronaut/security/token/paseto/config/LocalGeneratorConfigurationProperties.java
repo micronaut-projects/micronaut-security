@@ -17,7 +17,10 @@ package io.micronaut.security.token.paseto.config;
 
 import dev.paseto.jpaseto.Version;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Named;
+
 import javax.crypto.SecretKey;
 import javax.validation.constraints.NotNull;
 
@@ -25,15 +28,20 @@ import javax.validation.constraints.NotNull;
  * @author Sergio del Amo
  * @since 3.1.0
  */
-@ConfigurationProperties(PasetoConfigurationProperties.PREFIX + ".shared-key-generator")
-public class VersionedSharedSecretConfigurationProperties implements VersionedSharedSecretConfiguration {
+@Requires(property = PasetoConfigurationProperties.PREFIX + ".local-generator.base64-shared-secret")
+@ConfigurationProperties(PasetoConfigurationProperties.PREFIX + ".local-generator")
+@Named("local-generator")
+public class LocalGeneratorConfigurationProperties implements VersionedSharedSecretConfiguration {
+
+    public static final Version DEFAULT_VERSION = Version.V1;
+
     @NotNull
     @NonNull
-    private Version version;
+    private Version version = DEFAULT_VERSION;
 
     @NonNull
     @NotNull
-    private SecretKey sharedSecret;
+    private SecretKey base64SharedSecret;
 
     @Override
     @NonNull
@@ -42,7 +50,7 @@ public class VersionedSharedSecretConfigurationProperties implements VersionedSh
     }
 
     /**
-     *
+     * Paseto version. Defaults to v1.
      * @param version Paseto version
      */
     public void setVersion(@NonNull Version version) {
@@ -52,14 +60,14 @@ public class VersionedSharedSecretConfigurationProperties implements VersionedSh
     @Override
     @NonNull
     public SecretKey getSharedSecret() {
-        return sharedSecret;
+        return base64SharedSecret;
     }
 
     /**
-     *
-     * @param sharedSecret shared secret used for Paseto token
+     * shared secret used for Paseto token base64 encoded.
+     * @param base64SharedSecret shared secret used for Paseto token base64 encoded.
      */
-    public void setSharedSecret(@NonNull SecretKey sharedSecret) {
-        this.sharedSecret = sharedSecret;
+    public void setBase64SharedSecret(@NonNull SecretKey base64SharedSecret) {
+        this.base64SharedSecret = base64SharedSecret;
     }
 }

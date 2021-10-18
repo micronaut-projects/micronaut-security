@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.bearer;
+package io.micronaut.security.token.bearer;
 
 import io.micronaut.core.util.Toggleable;
 
@@ -23,7 +23,6 @@ import io.micronaut.core.util.Toggleable;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Deprecated
 public interface BearerTokenConfiguration extends Toggleable {
 
     /**

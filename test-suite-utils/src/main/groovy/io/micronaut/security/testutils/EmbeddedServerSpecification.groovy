@@ -16,6 +16,7 @@
 package io.micronaut.security.testutils
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
@@ -37,4 +38,16 @@ abstract class EmbeddedServerSpecification extends Specification implements Conf
 
     @Shared
     BlockingHttpClient client = httpClient.toBlocking()
+
+    boolean containsBean(Class beanType) {
+        applicationContext.containsBean(beanType)
+    }
+
+    public <T> T getBean(@NonNull Class<T> beanType) {
+        applicationContext.getBean(beanType)
+    }
+
+    public <T> Collection<T> getBeansOfType(@NonNull Class<T> beanType) {
+        applicationContext.getBeansOfType(beanType)
+    }
 }

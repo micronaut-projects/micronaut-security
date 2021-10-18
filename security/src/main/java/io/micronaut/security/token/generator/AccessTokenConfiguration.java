@@ -13,34 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.bearer;
+package io.micronaut.security.token.generator;
 
-import io.micronaut.core.util.Toggleable;
+import io.micronaut.core.annotation.NonNull;
 
 /**
- * Configuration for the {@link BearerTokenReader}.
+ * Configuration for access tokens.
  *
  * @author Sergio del Amo
- * @since 1.0
+ * @since 3.2.0
  */
-@Deprecated
-public interface BearerTokenConfiguration extends Toggleable {
+@FunctionalInterface
+public interface AccessTokenConfiguration {
 
     /**
-     *
-     * @return a boolean flag indicating whether BearerTokenReader bean should be enabled or not
+     * @return The number of seconds until the access token expires.
      */
-    boolean isEnabled();
-
-    /**
-     *
-     * @return a Prefix before the token in the header value. E.g. Bearer
-     */
-    String getPrefix();
-
-    /**
-     *
-     * @return an HTTP Header name. e.g. Authorization
-     */
-    String getHeaderName();
+    @NonNull
+    Integer getExpiration();
 }

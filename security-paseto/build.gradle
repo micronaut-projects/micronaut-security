@@ -3,6 +3,9 @@ dependencies {
     api "io.micronaut:micronaut-http-server"
     api project(":security")
     api "dev.paseto:jpaseto-api:$jpasetoVersion"
+    implementation "dev.paseto:jpaseto-bouncy-castle:$jpasetoVersion"
+    implementation "dev.paseto:jpaseto-impl:$jpasetoVersion"
+    implementation "dev.paseto:jpaseto-jackson:$jpasetoVersion"
 
     implementation "io.projectreactor:reactor-core"
 
@@ -12,9 +15,7 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
 
-    testRuntimeOnly "dev.paseto:jpaseto-impl:$jpasetoVersion"
-    testRuntimeOnly "dev.paseto:jpaseto-jackson:$jpasetoVersion"
-    testRuntimeOnly "dev.paseto:jpaseto-bouncy-castle:$jpasetoVersion"
+
 }
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 

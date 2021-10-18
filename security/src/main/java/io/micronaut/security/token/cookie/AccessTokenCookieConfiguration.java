@@ -13,24 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.generator;
+package io.micronaut.security.token.cookie;
 
-import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.config.TokenCookieConfiguration;
 
 /**
- * Configuration for access tokens.
+ * Configuration for the access token cookie.
  *
- * @deprecated Use {@link io.micronaut.security.token.generator.AccessTokenConfiguration} instead.
  * @author James Kleeh
- * @since 2.0.0
+ * @since 2.1.0
  */
-@Deprecated
-@FunctionalInterface
-public interface AccessTokenConfiguration {
-
-    /**
-     * @return The number of seconds until the access token expires.
-     */
-    @NonNull
-    Integer getExpiration();
+public interface AccessTokenCookieConfiguration extends TokenCookieConfiguration {
 }

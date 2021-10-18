@@ -24,6 +24,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.paseto.config.PublicKeyConfiguration;
 import io.micronaut.security.token.paseto.config.RequiredConfiguration;
 import io.micronaut.security.token.paseto.config.SharedSecretConfiguration;
+import jakarta.inject.Singleton;
 
 /**
  * {@link Factory} to generate beans of type {@link PasetoParser} for beans of type {@link PublicKeyConfiguration} or {@link SharedSecretConfiguration}.
@@ -38,6 +39,7 @@ public class PasetoParserFactory {
      * @return A Paseto Parser
      */
     @EachBean(PublicKeyConfiguration.class)
+    @Singleton
     PasetoParser pasetoParserWithPublicKey(PublicKeyConfiguration configuration) {
         PasetoParserBuilder builder = Pasetos.parserBuilder()
                 .setPublicKey(configuration.getPublicKey());
@@ -51,6 +53,7 @@ public class PasetoParserFactory {
      * @return A Paseto Parser
      */
     @EachBean(SharedSecretConfiguration.class)
+    @Singleton
     PasetoParser pasetoParserWithSharedSecretConfiguration(SharedSecretConfiguration configuration) {
         PasetoParserBuilder builder = Pasetos.parserBuilder()
                 .setSharedSecret(configuration.getSharedSecret());

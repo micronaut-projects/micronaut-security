@@ -22,8 +22,10 @@ import java.util.Map;
 /**
  *
  * @author Sergio del Amo
+ * @deprecated Use {@link io.micronaut.security.token.claims.ClaimsGenerator} instead.
  * @since 1.0
  */
+@Deprecated
 public interface ClaimsGenerator {
 
     /**

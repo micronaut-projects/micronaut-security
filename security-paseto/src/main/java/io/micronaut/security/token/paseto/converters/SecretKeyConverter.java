@@ -20,11 +20,11 @@ import io.micronaut.core.convert.ConversionContext;
 import io.micronaut.core.convert.TypeConverter;
 import jakarta.inject.Singleton;
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
 
 /**
- * Converts a {@link CharSequence} to a {@link javax.crypto.SecretKey}.
+ * Converts a {@link CharSequence} base64 encoded to a {@link javax.crypto.SecretKey}.
  *
  * @author Sergio del Amo
  * @since 3.2.0
@@ -38,6 +38,7 @@ public class SecretKeyConverter implements TypeConverter<CharSequence, SecretKey
             return Optional.empty();
         }
         String value = object.toString();
-        return Optional.of(Keys.secretKey(value.getBytes(StandardCharsets.UTF_8)));
+        byte[] decodedBytes = Base64.getDecoder().decode(value);
+        return Optional.of(Keys.secretKey(decodedBytes));
     }
 }

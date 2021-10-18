@@ -49,6 +49,6 @@ public class DefaultPasetoAuthenticationFactory extends AbstractTokenAuthenticat
         if (attributes == null) {
             return Optional.empty();
         }
-        return super.createAuthentication(attributes);
+           return super.createAuthentication(attributes);
     }
 }

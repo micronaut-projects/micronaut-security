@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.bearer;
+package io.micronaut.security.token.bearer;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.http.HttpHeaders;
-import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
+import io.micronaut.security.token.config.TokenConfigurationProperties;
 
 /**
  * Default implementation of {@link BearerTokenConfiguration}.
@@ -28,12 +28,11 @@ import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Deprecated
 @Requires(property = BearerTokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @ConfigurationProperties(BearerTokenConfigurationProperties.PREFIX)
 public class BearerTokenConfigurationProperties implements BearerTokenConfiguration {
 
-    public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".bearer";
+    public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".bearer";
 
     public static final boolean DEFAULT_ENABLED = true;
 

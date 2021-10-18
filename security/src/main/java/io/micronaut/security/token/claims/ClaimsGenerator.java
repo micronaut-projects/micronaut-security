@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.paseto.generator.claims;
+package io.micronaut.security.token.claims;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.authentication.Authentication;
 
 import java.util.Map;
 
 /**
- * @author Utsav Varia
- * @since 3.0
+ *
+ * @author Sergio del Amo
+ * @since 3.2.0
  */
 public interface ClaimsGenerator {
 
@@ -32,7 +32,14 @@ public interface ClaimsGenerator {
      * @param expiration JWT token expiration time in seconds
      * @return The Claims
      */
-    @NonNull
     Map<String, Object> generateClaims(Authentication authentication, Integer expiration);
 
+    /**
+     * Generate a claims set based on claims.
+     *
+     * @param oldClaims The old claims to use as a base in the new token generation.
+     * @param expiration JWT token expiration time in seconds
+     * @return The Claims
+     */
+    Map<String, Object> generateClaimsSet(Map<String, ?> oldClaims, Integer expiration);
 }

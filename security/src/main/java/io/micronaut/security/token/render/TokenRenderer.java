@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.render;
-
-import io.micronaut.security.authentication.Authentication;
+package io.micronaut.security.token.render;
 
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.authentication.Authentication;
 
 /**
  * Responsible for converting token information to an {@link AccessRefreshToken}.
  *
- * @deprecated Use {@link io.micronaut.security.token.render.TokenRenderer} instead.
  * @author Sergio del Amo
  * @since 1.0
  */
-@Deprecated
 public interface TokenRenderer {
 
     /**

@@ -13,34 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.bearer;
-
-import io.micronaut.core.util.Toggleable;
-
 /**
- * Configuration for the {@link BearerTokenReader}.
+ * Claims related classes.
  *
  * @author Sergio del Amo
- * @since 1.0
+ * @since 3.2.0
  */
-@Deprecated
-public interface BearerTokenConfiguration extends Toggleable {
+package io.micronaut.security.token.claims;
 
-    /**
-     *
-     * @return a boolean flag indicating whether BearerTokenReader bean should be enabled or not
-     */
-    boolean isEnabled();
-
-    /**
-     *
-     * @return a Prefix before the token in the header value. E.g. Bearer
-     */
-    String getPrefix();
-
-    /**
-     *
-     * @return an HTTP Header name. e.g. Authorization
-     */
-    String getHeaderName();
-}

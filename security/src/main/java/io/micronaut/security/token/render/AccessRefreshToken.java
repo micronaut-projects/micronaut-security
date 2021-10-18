@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.render;
+package io.micronaut.security.token.render;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,9 +24,7 @@ import io.micronaut.core.annotation.Introspected;
  *
  * @author Sergio del Amo
  * @since 1.0
- * @deprecated Use {@link io.micronaut.security.token.render.AccessRefreshToken}.
  */
-@Deprecated
 @Introspected
 public class AccessRefreshToken {
 

@@ -20,6 +20,8 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.claims.ClaimsGenerator;
 import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -27,7 +29,10 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Utsav Varia
@@ -157,6 +162,23 @@ public class PasetoClaimsGenerator implements ClaimsGenerator {
             LOG.debug("}");
         }
         return claimsSet.getClaims();
+    }
+
+    @Override
+    public Map<String, Object> generateClaimsSet(Map<String, ?> oldClaims, Integer expiration) {
+
+        PasetoClaimsSet.Builder builder = new PasetoClaimsSet.Builder();
+        List<String> excludedClaims = Arrays.asList(Claims.EXPIRATION_TIME, Claims.ISSUED_AT, Claims.NOT_BEFORE);
+        for (String k : oldClaims.keySet()
+                .stream()
+                .filter(p -> !excludedClaims.contains(p))
+                .collect(Collectors.toList())) {
+            builder.claim(k, oldClaims.get(k));
+        }
+        populateExp(builder, expiration);
+        populateIat(builder);
+        populateNbf(builder);
+        return builder.build().getClaims();
     }
 
     /**

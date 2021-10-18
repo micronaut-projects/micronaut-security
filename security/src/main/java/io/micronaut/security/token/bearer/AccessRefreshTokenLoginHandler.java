@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.bearer;
+package io.micronaut.security.token.bearer;
 
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationException;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.token.generator.AccessRefreshTokenGenerator;
-import io.micronaut.security.token.jwt.render.AccessRefreshToken;
-
+import io.micronaut.security.token.render.AccessRefreshToken;
 import jakarta.inject.Singleton;
+
 import java.util.Optional;
 
 /**
@@ -36,11 +35,8 @@ import java.util.Optional;
  *
  * @author Sergio del Amo
  * @since 1.0
- * @deprecated Use {@link io.micronaut.security.token.bearer.AccessRefreshTokenLoginHandler} instead.
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "bearer")
-@Replaces(io.micronaut.security.token.bearer.AccessRefreshTokenLoginHandler.class)
-@Deprecated
 @Singleton
 public class AccessRefreshTokenLoginHandler implements LoginHandler {
 

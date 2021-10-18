@@ -18,6 +18,7 @@ package io.micronaut.security.token.paseto.validator;
 import dev.paseto.jpaseto.PasetoParser;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
+import jakarta.inject.Singleton;
 
 /**
  * {@link Factory} to create multiple {@link PasetoTokenValidator} for beans of type {@link PasetoParser}.
@@ -38,6 +39,7 @@ public class PasetoTokenValidatorFactory {
      * @return A PastetoTokenValidator
      */
     @EachBean(PasetoParser.class)
+    @Singleton
     PasetoTokenValidator createPasetoTokenValidator(PasetoParser pasetoParser) {
         return new PasetoTokenValidator(pasetoAuthenticationFactory, pasetoParser);
     }

@@ -13,44 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.render;
-
-import io.micronaut.http.HttpHeaderValues;
-import io.micronaut.security.authentication.Authentication;
+package io.micronaut.security.token.render;
 
 import io.micronaut.core.annotation.Nullable;
-import jakarta.inject.Inject;
+import io.micronaut.http.HttpHeaderValues;
+import io.micronaut.security.authentication.Authentication;
 import jakarta.inject.Singleton;
 
 /**
  *
  * @author Sergio del Amo
  * @since 1.0
- * @deprecated Use {@link io.micronaut.security.token.render.AccessRefreshToken}.
  */
-@Deprecated
+
 @Singleton
 public class BearerTokenRenderer implements TokenRenderer {
 
     private static final String BEARER_TOKEN_TYPE = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
 
-    private final io.micronaut.security.token.render.TokenRenderer tokenRenderer;
-    public BearerTokenRenderer() {
-        this.tokenRenderer = new io.micronaut.security.token.render.BearerTokenRenderer();
-    }
-
-    @Inject
-    public BearerTokenRenderer(io.micronaut.security.token.render.TokenRenderer tokenRenderer) {
-        this.tokenRenderer = new io.micronaut.security.token.render.BearerTokenRenderer();
-    }
-
     @Override
     public AccessRefreshToken render(Integer expiresIn, String accessToken, @Nullable String refreshToken) {
-        return new OldAccessRefreshTokenAdapter(tokenRenderer.render(expiresIn, accessToken, refreshToken));
+        return new AccessRefreshToken(accessToken, refreshToken, BEARER_TOKEN_TYPE, expiresIn);
     }
 
     @Override
     public AccessRefreshToken render(Authentication authentication, Integer expiresIn, String accessToken, @Nullable String refreshToken) {
-        return new OldAccessRefreshTokenAdapter(tokenRenderer.render(authentication, expiresIn, accessToken, refreshToken));
+        return new BearerAccessRefreshToken(authentication.getName(), authentication.getRoles(), expiresIn, accessToken, refreshToken, BEARER_TOKEN_TYPE);
     }
 }

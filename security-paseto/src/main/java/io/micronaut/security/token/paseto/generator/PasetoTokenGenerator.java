@@ -18,7 +18,7 @@ package io.micronaut.security.token.paseto.generator;
 import dev.paseto.jpaseto.PasetoBuilder;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.generator.TokenGenerator;
-import io.micronaut.security.token.paseto.generator.claims.ClaimsGenerator;
+import io.micronaut.security.token.claims.ClaimsGenerator;
 import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;

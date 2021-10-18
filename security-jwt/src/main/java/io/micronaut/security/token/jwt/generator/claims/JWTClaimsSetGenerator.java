@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Singleton
-public class JWTClaimsSetGenerator implements ClaimsGenerator {
+public class JWTClaimsSetGenerator implements ClaimsGenerator, io.micronaut.security.token.claims.ClaimsGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(JWTClaimsSetGenerator.class);
     private static final String ROLES_KEY = "rolesKey";

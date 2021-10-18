@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.bearer;
+package io.micronaut.security.token.bearer;
 
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader;
+import io.micronaut.security.token.cookie.CookieTokenReader;
 import io.micronaut.security.token.reader.HttpHeaderTokenReader;
 import io.micronaut.security.token.reader.TokenReader;
-
 import jakarta.inject.Singleton;
 
 /**
@@ -30,9 +28,7 @@ import jakarta.inject.Singleton;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Deprecated
 @Requires(property = BearerTokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
-@Replaces(io.micronaut.security.token.bearer.BearerTokenReader.class)
 @Singleton
 public class BearerTokenReader extends HttpHeaderTokenReader implements TokenReader {
 
@@ -40,7 +36,7 @@ public class BearerTokenReader extends HttpHeaderTokenReader implements TokenRea
      *
      * The order of the TokenReader.
      */
-    public static final Integer ORDER = JwtCookieTokenReader.ORDER - 100;
+    public static final Integer ORDER = CookieTokenReader.ORDER - 100;
 
     protected final BearerTokenConfiguration bearerTokenConfiguration;
 

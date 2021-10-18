@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,41 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.jwt.generator;
+package io.micronaut.security.token.generator;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.claims.ClaimsGenerator;
+import io.micronaut.security.token.event.AccessTokenGeneratedEvent;
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
-import io.micronaut.security.token.generator.RefreshTokenGenerator;
-import io.micronaut.security.token.generator.TokenGenerator;
-import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator;
-import io.micronaut.security.token.jwt.generator.claims.ClaimsGeneratorAdapter;
-import io.micronaut.security.token.jwt.generator.claims.OldAccessTokenConfigurationAdapter;
-import io.micronaut.security.token.jwt.generator.claims.OldClaimsGeneratorAdapter;
-import io.micronaut.security.token.jwt.render.AccessRefreshToken;
-import io.micronaut.security.token.jwt.render.OldAccessRefreshTokenAdapter;
-import io.micronaut.security.token.jwt.render.OldTokenRenderAdapter;
-import io.micronaut.security.token.jwt.render.TokenRenderAdapter;
-import io.micronaut.security.token.jwt.render.TokenRenderer;
-import jakarta.inject.Inject;
+import io.micronaut.security.token.refresh.RefreshTokenPersistence;
+import io.micronaut.security.token.render.AccessRefreshToken;
+import io.micronaut.security.token.render.TokenRenderer;
+import io.micronaut.security.token.validator.RefreshTokenValidator;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Generates http responses with access and refresh token.
  *
  * @author Sergio del Amo
- * @since 1.0
- * @deprecated Use {@link io.micronaut.security.token.generator.DefaultAccessRefreshTokenGenerator} instead.
+ * @since 3.2.0
  */
-@Deprecated
 @Singleton
 public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGenerator {
 
@@ -61,8 +54,6 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
     protected final TokenGenerator tokenGenerator;
     protected final ApplicationEventPublisher eventPublisher;
 
-    private final io.micronaut.security.token.generator.AccessRefreshTokenGenerator accessRefreshTokenGenerator;
-
     /**
      *
      * @param accessTokenConfiguration The access token generator config
@@ -72,16 +63,14 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      * @param refreshTokenGenerator The refresh token generator
      * @param claimsGenerator Claims generator
      * @param eventPublisher The Application event publisher
-     * @deprecated Use {@link DefaultAccessRefreshTokenGenerator(AccessRefreshTokenGenerator) instead.
      */
-    @Deprecated
     public DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration accessTokenConfiguration,
-                                       TokenRenderer tokenRenderer,
-                                       TokenGenerator tokenGenerator,
-                                       BeanContext beanContext,
-                                       @Nullable RefreshTokenGenerator refreshTokenGenerator,
-                                       ClaimsGenerator claimsGenerator,
-                                       ApplicationEventPublisher eventPublisher) {
+                                              TokenRenderer tokenRenderer,
+                                              TokenGenerator tokenGenerator,
+                                              BeanContext beanContext,
+                                              @Nullable RefreshTokenGenerator refreshTokenGenerator,
+                                              ClaimsGenerator claimsGenerator,
+                                              ApplicationEventPublisher eventPublisher) {
         this.accessTokenConfiguration = accessTokenConfiguration;
         this.tokenRenderer = tokenRenderer;
         this.tokenGenerator = tokenGenerator;
@@ -89,44 +78,6 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
         this.refreshTokenGenerator = refreshTokenGenerator;
         this.claimsGenerator = claimsGenerator;
         this.eventPublisher = eventPublisher;
-
-        this.accessRefreshTokenGenerator = new io.micronaut.security.token.generator.DefaultAccessRefreshTokenGenerator(new AccessTokenConfigurationAdapter(accessTokenConfiguration),
-                new TokenRenderAdapter(tokenRenderer),
-                tokenGenerator,
-                beanContext,
-                refreshTokenGenerator,
-                new ClaimsGeneratorAdapter(claimsGenerator),
-                eventPublisher);
-    }
-
-    /**
-     *
-     * @param accessTokenConfiguration The access token generator config
-     * @param tokenRenderer The token renderer
-     * @param tokenGenerator The token generator
-     * @param beanContext Bean Context
-     * @param refreshTokenGenerator The refresh token generator
-     * @param claimsGenerator Claims generator
-     * @param eventPublisher The Application event publisher
-     * @param accessRefreshTokenGenerator Access Refresh Token Generator
-     */
-    @Inject
-    public DefaultAccessRefreshTokenGenerator(io.micronaut.security.token.generator.AccessTokenConfiguration accessTokenConfiguration,
-                                              io.micronaut.security.token.render.TokenRenderer tokenRenderer,
-                                              TokenGenerator tokenGenerator,
-                                              BeanContext beanContext,
-                                              @Nullable RefreshTokenGenerator refreshTokenGenerator,
-                                              io.micronaut.security.token.claims.ClaimsGenerator claimsGenerator,
-                                              ApplicationEventPublisher eventPublisher,
-                                              io.micronaut.security.token.generator.AccessRefreshTokenGenerator accessRefreshTokenGenerator) {
-        this.accessTokenConfiguration = new OldAccessTokenConfigurationAdapter(accessTokenConfiguration);
-        this.tokenRenderer = new OldTokenRenderAdapter(tokenRenderer);
-        this.tokenGenerator = tokenGenerator;
-        this.beanContext = beanContext;
-        this.refreshTokenGenerator = refreshTokenGenerator;
-        this.claimsGenerator = new OldClaimsGeneratorAdapter(claimsGenerator);
-        this.eventPublisher = eventPublisher;
-        this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
     }
 
     /**
@@ -139,7 +90,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
     @NonNull
     @Override
     public Optional<AccessRefreshToken> generate(@NonNull Authentication authentication) {
-        return accessRefreshTokenGenerator.generate(authentication).map(OldAccessRefreshTokenAdapter::new);
+        return generate(generateRefreshToken(authentication).orElse(null), authentication);
     }
 
     /**
@@ -149,7 +100,30 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      */
     @NonNull
     public Optional<String> generateRefreshToken(@NonNull Authentication authentication) {
-        return accessRefreshTokenGenerator.generateRefreshToken(authentication);
+        Optional<String> refreshToken = Optional.empty();
+        if (beanContext.containsBean(RefreshTokenValidator.class)) {
+            if (beanContext.containsBean(RefreshTokenPersistence.class)) {
+                if (refreshTokenGenerator != null) {
+                    String key = refreshTokenGenerator.createKey(authentication);
+                    refreshToken = refreshTokenGenerator.generate(authentication, key);
+                    refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(authentication, key)));
+                } else {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenGenerator.class.getName());
+                    }
+                }
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenPersistence.class.getName());
+                }
+            }
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenValidator.class.getName());
+            }
+        }
+
+        return refreshToken;
     }
 
     /**
@@ -162,7 +136,21 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      */
     @NonNull
     public Optional<AccessRefreshToken> generate(@Nullable String refreshToken, @NonNull Map<String, ?> oldClaims) {
-        return accessRefreshTokenGenerator.generate(refreshToken, oldClaims).map(OldAccessRefreshTokenAdapter::new);
+        Map<String, Object> claims = claimsGenerator.generateClaimsSet(oldClaims, accessTokenExpiration(oldClaims));
+
+        Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
+        if (!optionalAccessToken.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("tokenGenerator failed to generate access token claims: {}", claims.entrySet()
+                        .stream()
+                        .map((entry) -> entry.getKey() + "=>" + entry.getValue().toString())
+                        .collect(Collectors.joining(", ")));
+            }
+            return Optional.empty();
+        }
+        String accessToken = optionalAccessToken.get();
+        eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
+        return Optional.of(tokenRenderer.render(accessTokenExpiration(oldClaims), accessToken, refreshToken));
     }
 
     /**
@@ -175,7 +163,17 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
     @NonNull
     @Override
     public Optional<AccessRefreshToken> generate(@Nullable String refreshToken, @NonNull Authentication authentication) {
-        return accessRefreshTokenGenerator.generate(refreshToken, authentication).map(OldAccessRefreshTokenAdapter::new);
+        Optional<String> optionalAccessToken = tokenGenerator.generateToken(authentication, accessTokenExpiration(authentication));
+        if (!optionalAccessToken.isPresent()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Failed to generate access token for user {}", authentication.getName());
+            }
+            return Optional.empty();
+        }
+
+        String accessToken = optionalAccessToken.get();
+        eventPublisher.publishEvent(new AccessTokenGeneratedEvent(accessToken));
+        return Optional.of(tokenRenderer.render(authentication, accessTokenExpiration(authentication), accessToken, refreshToken));
     }
 
     /**

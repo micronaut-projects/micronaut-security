@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,42 +15,26 @@
  */
 package io.micronaut.security.token.jwt.render;
 
-import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.security.authentication.Authentication;
 
-import io.micronaut.core.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 /**
- *
+ * Adapts from {@link io.micronaut.security.token.render.TokenRenderer} to {@link TokenRenderer}.
  * @author Sergio del Amo
- * @since 1.0
- * @deprecated Use {@link io.micronaut.security.token.render.AccessRefreshToken}.
+ * @since 3.2.0
  */
-@Deprecated
-@Singleton
-public class BearerTokenRenderer implements TokenRenderer {
-
-    private static final String BEARER_TOKEN_TYPE = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
-
+public class OldTokenRenderAdapter implements TokenRenderer  {
     private final io.micronaut.security.token.render.TokenRenderer tokenRenderer;
-    public BearerTokenRenderer() {
-        this.tokenRenderer = new io.micronaut.security.token.render.BearerTokenRenderer();
-    }
-
-    @Inject
-    public BearerTokenRenderer(io.micronaut.security.token.render.TokenRenderer tokenRenderer) {
-        this.tokenRenderer = new io.micronaut.security.token.render.BearerTokenRenderer();
+    public OldTokenRenderAdapter(io.micronaut.security.token.render.TokenRenderer tokenRenderer) {
+        this.tokenRenderer = tokenRenderer;
     }
 
     @Override
-    public AccessRefreshToken render(Integer expiresIn, String accessToken, @Nullable String refreshToken) {
+    public AccessRefreshToken render(Integer expiresIn, String accessToken, String refreshToken) {
         return new OldAccessRefreshTokenAdapter(tokenRenderer.render(expiresIn, accessToken, refreshToken));
     }
 
     @Override
-    public AccessRefreshToken render(Authentication authentication, Integer expiresIn, String accessToken, @Nullable String refreshToken) {
+    public AccessRefreshToken render(Authentication authentication, Integer expiresIn, String accessToken, String refreshToken) {
         return new OldAccessRefreshTokenAdapter(tokenRenderer.render(authentication, expiresIn, accessToken, refreshToken));
     }
 }
