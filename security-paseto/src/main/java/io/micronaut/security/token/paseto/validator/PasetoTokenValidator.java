@@ -29,7 +29,7 @@ import reactor.core.publisher.Mono;
 import java.util.Optional;
 
 /**
- * {@link TokenValidator} for Paseto tokens;
+ * {@link TokenValidator} for Paseto tokens.
  * @author Utsav Varia
  * @since 3.0
  */
