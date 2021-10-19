@@ -44,6 +44,7 @@ public class EndSessionEndpointResolver {
     private static final String OKTA = "okta";
     private static final String COGNITO = "cognito";
     private static final String AUTH0 = "auth0";
+    private static final String KEYCLOAK = "/auth/realms/";
 
     private final BeanContext beanContext;
 
@@ -141,6 +142,12 @@ public class EndSessionEndpointResolver {
             return Optional.of(new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
         }
 
+        if (issuer.contains(KEYCLOAK)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Resolved the KeycloakEndSessionEndpoint for provider [{}]", providerName);
+            }
+            return Optional.of(new KeycloakEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+        }
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("No EndSessionEndpoint can be resolved. The issuer for provider [{}] does not match any of the providers supported by default", providerName);
