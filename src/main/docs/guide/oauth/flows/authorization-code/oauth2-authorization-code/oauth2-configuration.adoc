@@ -19,11 +19,12 @@ micronaut:
           scopes: // <4>
             - user:email
             - read:user
-          authorization:
-            url: https://github.com/login/oauth/authorize // <5>
-          token:
-            url: https://github.com/login/oauth/access_token // <6>
-            auth-method: client-secret-post // <7>
+          openid:
+            authorization:
+              url: https://github.com/login/oauth/authorize // <5>
+            token:
+              url: https://github.com/login/oauth/access_token // <6>
+              auth-method: client-secret-post // <7>
 ----
 
 <1> Configure a client. The name here is arbitrary
