@@ -24,14 +24,13 @@ class JwksSignature500Spec extends Specification implements JwtFixture {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             (SPEC_NAME_PROPERTY) : 'jwkssignature500spec',
-
-    ], Environment.TEST)
+    ])
 
     void "if the remote JWKS endpoint throws 500, the JwksSignature handles it and it does not crash"() {
         given:
         ApplicationContext context = ApplicationContext.run([
                 'micronaut.security.token.jwt.signatures.jwks.awscognito.url':  "http://localhost:${embeddedServer.getPort()}/keys",
-        ], Environment.TEST)
+        ])
 
         when:
         Collection<JwksSignature> beans = context.getBeansOfType(JwksSignature)
@@ -60,7 +59,7 @@ class JwksSignature500Spec extends Specification implements JwtFixture {
         noExceptionThrown()
 
         and: // calls the JWKS endpoint several times (first attempt and the configured number of attempts)
-        fooController.called == 3 /* JwksSignature::supportedAlgorithmsMessage JwksSignature:::supports JwksSignature::::verify */ + jwksSignature.getRefreshJwksAttempts()
+        fooController.called == 3 /* JwksSignature::supportedAlgorithmsMessage JwksSignature:::supports JwksSignature::::verify */
 
         cleanup:
         context.close()

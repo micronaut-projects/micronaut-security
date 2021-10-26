@@ -142,14 +142,24 @@ public class JwksSignature implements SignatureConfiguration {
      */
     @Override
     public boolean verify(SignedJWT jwt) throws JOSEException {
-        List<JWK> matches = matches(jwt, getJWKSet().orElse(null), getRefreshJwksAttempts());
+        return verify(jwt,  getRefreshJwksAttempts());
+    }
+
+    protected boolean verify(SignedJWT jwt, int refreshKeysAttempts) throws JOSEException {
+        List<JWK> matches = matches(jwt, getJWKSet().orElse(null));
         if (LOG.isDebugEnabled()) {
             LOG.debug("Found {} matching JWKs", matches.size());
         }
         if (matches == null || matches.isEmpty()) {
             return false;
         }
-        return verify(matches, jwt);
+        boolean verified = verify(matches, jwt);
+        if (!verified && refreshKeysAttempts > 0) {
+            //Clear the cache in case the provider changed the key set
+            this.jwkSet = null;
+            return verify(jwt, refreshKeysAttempts - 1);
+        }
+        return verified;
     }
 
     /**
@@ -182,9 +192,25 @@ public class JwksSignature implements SignatureConfiguration {
      * @param jwt A Signed JWT
      * @param jwkSet A JSON Web Key Set
      * @param refreshKeysAttempts Number of times to attempt refreshing the JWK Set
+     * @deprecated Use {@link JwksSignature#matches(SignedJWT, JWKSet)} instead
      * @return a List of JSON Web Keys
      */
+    @Deprecated
     protected List<JWK> matches(SignedJWT jwt, @Nullable JWKSet jwkSet, int refreshKeysAttempts) {
+        return matches(jwt, jwkSet);
+    }
+
+    /**
+     * Calculates a list of JWK matches for a JWT.
+     *
+     * Since the JWTSet is cached it attempts to refresh it (by calling its self recursive)
+     * if the {@code refreshKeysAttempts} is greater than 0.
+     *
+     * @param jwt A Signed JWT
+     * @param jwkSet A JSON Web Key Set
+     * @return a List of JSON Web Keys
+     */
+    protected List<JWK> matches(SignedJWT jwt, @Nullable JWKSet jwkSet) {
         List<JWK> matches = Collections.emptyList();
         if (jwkSet != null) {
             JWKMatcher.Builder builder = new JWKMatcher.Builder();
@@ -197,11 +223,6 @@ public class JwksSignature implements SignatureConfiguration {
             }
 
             matches = new JWKSelector(builder.build()).select(jwkSet);
-        }
-        if (refreshKeysAttempts > 0 && matches.isEmpty()) {
-            //Clear the cache in case the provider changed the key set
-            this.jwkSet = null;
-            return matches(jwt, getJWKSet().orElse(null), refreshKeysAttempts - 1);
         }
         return matches;
     }
