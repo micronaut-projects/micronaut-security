@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.authentication;
+package io.micronaut.security.x509;
 
-import jakarta.inject.Singleton;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.Toggleable;
 
 /**
- * Binds the authentication object to a route argument.
+ * X.509 authentication configuration.
  *
- * @author James Kleeh
- * @since 1.0
+ * @author Burt Beckwith
+ * @since 3.2
  */
-@Singleton
-public class AuthenticationArgumentBinder extends AbstractAuthenticationArgumentBinder<Authentication> {
+public interface X509Configuration extends Toggleable {
 
-    public AuthenticationArgumentBinder() {
-        super(Authentication.class);
-    }
+    /**
+     * The default Subject Distinguished Name (DN) regex.
+     */
+    String DEFAULT_SUBJECT_DN_REGEX = "CN=(.*?)(?:,|$)";
+
+    /**
+     * @return the Subject Distinguished Name (DN) regex
+     */
+    @NonNull
+    String getSubjectDnRegex();
 }

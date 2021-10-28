@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.authentication;
+package io.micronaut.security.x509;
 
+import io.micronaut.security.authentication.AbstractAuthenticationArgumentBinder;
 import jakarta.inject.Singleton;
 
 /**
- * Binds the authentication object to a route argument.
+ * Binds the authentication if it's an {@link X509Authentication} to a route argument.
  *
- * @author James Kleeh
- * @since 1.0
+ * @author Burt Beckwith
+ * @since 3.2
  */
 @Singleton
-public class AuthenticationArgumentBinder extends AbstractAuthenticationArgumentBinder<Authentication> {
+public class X509AuthenticationArgumentBinder extends AbstractAuthenticationArgumentBinder<X509Authentication> {
 
-    public AuthenticationArgumentBinder() {
-        super(Authentication.class);
+    public X509AuthenticationArgumentBinder() {
+        super(X509Authentication.class);
     }
 }
