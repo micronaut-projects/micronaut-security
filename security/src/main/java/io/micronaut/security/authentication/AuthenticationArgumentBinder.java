@@ -24,7 +24,7 @@ import jakarta.inject.Singleton;
  * @since 1.0
  */
 @Singleton
-public class AuthenticationArgumentBinder extends AbstractAuthenticationArgumentBinder<Authentication> {
+public class AuthenticationArgumentBinder extends AbstractPrincipalArgumentBinder<Authentication> {
 
     public AuthenticationArgumentBinder() {
         super(Authentication.class);
