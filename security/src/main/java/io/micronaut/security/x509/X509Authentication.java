@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.x509;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.authentication.ServerAuthentication;
 
 import java.security.cert.X509Certificate;
@@ -27,9 +28,10 @@ import java.security.cert.X509Certificate;
  */
 public class X509Authentication extends ServerAuthentication {
 
+    @NonNull
     private final X509Certificate certificate;
 
-    public X509Authentication(X509Certificate certificate, String name) {
+    public X509Authentication(@NonNull X509Certificate certificate, @NonNull String name) {
         super(name, null, null);
         this.certificate = certificate;
     }
@@ -37,6 +39,7 @@ public class X509Authentication extends ServerAuthentication {
     /**
      * @return the X.509 certificate
      */
+    @NonNull
     public X509Certificate getCertificate() {
         return certificate;
     }
