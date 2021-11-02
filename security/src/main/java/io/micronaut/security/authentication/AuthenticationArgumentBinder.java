@@ -15,40 +15,18 @@
  */
 package io.micronaut.security.authentication;
 
-import io.micronaut.core.convert.ArgumentConversionContext;
-import io.micronaut.core.type.Argument;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.bind.binders.TypedRequestArgumentBinder;
-import io.micronaut.security.filters.SecurityFilter;
-
 import jakarta.inject.Singleton;
-import java.util.Optional;
 
 /**
- * Responsible for binding the authentication object to a route argument.
+ * Binds the authentication object to a route argument.
  *
  * @author James Kleeh
  * @since 1.0
  */
 @Singleton
-public class AuthenticationArgumentBinder implements TypedRequestArgumentBinder<Authentication> {
+public class AuthenticationArgumentBinder extends AbstractPrincipalArgumentBinder<Authentication> {
 
-    @Override
-    public Argument<Authentication> argumentType() {
-        return Argument.of(Authentication.class);
-    }
-
-    @Override
-    public BindingResult<Authentication> bind(ArgumentConversionContext<Authentication> context, HttpRequest<?> source) {
-        if (source.getAttributes().contains(SecurityFilter.KEY)) {
-            final Optional<Authentication> existing = source.getUserPrincipal(Authentication.class);
-            if (existing.isPresent()) {
-                return () -> existing;
-            } else {
-                return BindingResult.EMPTY;
-            }
-        } else {
-            return BindingResult.UNSATISFIED;
-        }
+    public AuthenticationArgumentBinder() {
+        super(Authentication.class);
     }
 }
