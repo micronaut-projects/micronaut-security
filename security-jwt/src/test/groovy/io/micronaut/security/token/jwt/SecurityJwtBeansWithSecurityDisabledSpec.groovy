@@ -43,7 +43,7 @@ class SecurityJwtBeansWithSecurityDisabledSpec extends Specification {
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : SecurityJwtBeansWithSecurityDisabledSpec.simpleName,
             'micronaut.security.enabled': false,
-    ], Environment.TEST)
+    ])
 
     @Unroll("if micronaut.security.enabled=false bean [#description] is not loaded")
     void "if micronaut.security.enabled=false security related beans are not loaded"(Class clazz, String description) {

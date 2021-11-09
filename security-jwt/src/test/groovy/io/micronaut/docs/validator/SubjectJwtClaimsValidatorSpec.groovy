@@ -14,7 +14,7 @@ class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : SubjectNotNullJwtClaimsValidatorSpec.simpleName,
 
-        ], Environment.TEST)
+        ])
 
         when:
         embeddedServer.applicationContext.getBean(SubjectNotNullJwtClaimsValidator)
@@ -33,7 +33,7 @@ class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
                 'spec.name'                 : SubjectNotNullJwtClaimsValidatorSpec.simpleName,
                 'micronaut.security.token.jwt.claims-validators.subject-not-null': false
 
-        ], Environment.TEST)
+        ])
 
         when:
         embeddedServer.applicationContext.getBean(SubjectNotNullJwtClaimsValidator)
