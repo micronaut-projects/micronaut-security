@@ -14,7 +14,7 @@ class SecurityConfigurationPropertiesSpec extends Specification {
         def ctx = ApplicationContext.run([
                 'micronaut.security.intercept-url-map': [
                         [pattern: '/health']
-        ]], Environment.TEST)
+        ]])
 
         when:
         ctx.getBean(SecurityConfigurationProperties)
@@ -32,7 +32,7 @@ class SecurityConfigurationPropertiesSpec extends Specification {
         def ctx = ApplicationContext.run([
                 "micronaut.security.intercept-url-map": [
                         [httpMethod: 'FOO', pattern: '/health', access: ['isAnonymous()']]
-                ]], Environment.TEST)
+                ]])
 
         when:
         ctx.getBean(SecurityConfigurationProperties)
@@ -50,7 +50,7 @@ class SecurityConfigurationPropertiesSpec extends Specification {
         def ctx = ApplicationContext.run([
                 "micronaut.security.intercept-url-map": [
                         [httpMethod: 'POST', access: ['isAnonymous()']]
-                ]], Environment.TEST)
+                ]])
 
         when:
         ctx.getBean(SecurityConfigurationProperties)
@@ -71,7 +71,7 @@ class SecurityConfigurationPropertiesSpec extends Specification {
                         [pattern: '/health', access: 'isAnonymous()'],
                         [httpMethod: 'POST', pattern: '/health', access: ['isAnonymous()']],
                         [httpMethod: 'post', pattern: '/health', access: ['isAnonymous()']]
-                ]], Environment.TEST)
+                ]])
 
         when:
         SecurityConfigurationProperties config = ctx.getBean(SecurityConfigurationProperties)

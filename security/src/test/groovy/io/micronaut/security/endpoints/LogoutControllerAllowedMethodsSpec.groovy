@@ -32,7 +32,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
 
     void "LogoutController does not accept GET requests by default"() {
         given:
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration, Environment.TEST)
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
         HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
         when:
@@ -53,7 +53,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
         m.putAll(configuration)
         m.put('micronaut.security.endpoints.logout.get-allowed', true)
 
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m, Environment.TEST)
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m)
         HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
         when:
@@ -73,7 +73,7 @@ class LogoutControllerAllowedMethodsSpec extends Specification {
         m.putAll(configuration)
         m.put('micronaut.security.endpoints.logout.get-allowed', true)
 
-        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m, Environment.TEST)
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, m)
         HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
         when:

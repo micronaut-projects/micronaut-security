@@ -25,7 +25,7 @@ class CustomRolesParserSpec extends Specification {
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': "customclaimsrolesparser",
             'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
-    ], Environment.TEST)
+    ])
 
     @Shared
     @AutoCleanup
