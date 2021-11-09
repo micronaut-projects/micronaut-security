@@ -12,7 +12,7 @@ import java.security.Principal
 
 @Requires(property = "spec.name", value = "securitysession")
 @Secured("isAnonymous()")
-@Controller("/")
+@Controller
 class HomeController {
 
     @Produces(MediaType.TEXT_HTML)
