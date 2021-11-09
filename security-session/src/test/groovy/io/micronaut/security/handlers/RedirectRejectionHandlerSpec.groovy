@@ -64,7 +64,7 @@ class RedirectRejectionHandlerSpec extends EmbeddedServerSpecification {
     }
 
     @Requires(property = "spec.name", value = "RedirectRejectionHandlerSpec")
-    @Controller("/")
+    @Controller
     static class HomeController {
 
         @Secured(SecurityRule.IS_ANONYMOUS)

@@ -152,7 +152,7 @@ class JwksSpec extends Specification {
 
     @Singleton
     @Requires(property = 'spec.name', value = 'jwks.books')
-    @Controller("/")
+    @Controller
     @Secured(SecurityRule.IS_AUTHENTICATED)
     static class HomeController {
 

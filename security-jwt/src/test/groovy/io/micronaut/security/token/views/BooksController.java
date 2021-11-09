@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Requires(property = "spec.name", value = "SecurityViewModelProcessorSpec")
 //tag::class[]
-@Controller("/")
+@Controller
 public class BooksController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
