@@ -89,7 +89,7 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
                 'micronaut.server.port'                       : -1,
         ]
 
-        booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig, Environment.TEST)
+        booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig)
         booksPort = booksEmbeddedServer.getPort()
         BooksRsaSignatureConfiguration booksRsaSignatureConfiguration = new BooksRsaSignatureConfiguration(rsaJwk)
         booksEmbeddedServer.applicationContext.registerSingleton(RSASignatureConfiguration, booksRsaSignatureConfiguration, Qualifiers.byName("validation"))
@@ -126,7 +126,7 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
                 'micronaut.security.authentication'   : 'bearer',
         ]
 
-        gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig, Environment.TEST)
+        gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig)
         GatewayRsaSignatureConfiguration bean  = gatewayEmbeddedServer.applicationContext.createBean(GatewayRsaSignatureConfiguration, rsaJwk)
         gatewayEmbeddedServer.applicationContext.registerSingleton(bean)
 

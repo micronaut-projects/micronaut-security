@@ -13,7 +13,7 @@ class OauthConfigurationSpec extends Specification {
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
                 'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
                 'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
-        ], Environment.TEST)
+        ])
 
         when:
         OauthClientConfiguration clientConfiguration = context.getBean(OauthClientConfiguration)
@@ -34,7 +34,7 @@ class OauthConfigurationSpec extends Specification {
                 (SPEC_NAME_PROPERTY): getClass().simpleName,
                 'micronaut.security.oauth2.clients.foo.client-id': 'XXXX',
                 'micronaut.security.oauth2.clients.foo.client-secret': 'YYYY',
-        ], Environment.TEST)
+        ])
 
         when:
         context.getBean(OauthClientConfiguration)
@@ -61,7 +61,7 @@ class OauthConfigurationSpec extends Specification {
                 'micronaut.security.oauth2.openid.additional-claims.jwt': true,
                 'micronaut.security.oauth2.openid.additional-claims.access-token': true,
                 'micronaut.security.oauth2.openid.additional-claims.refresh-token': true,
-        ], Environment.TEST)
+        ])
 
         when:
         OauthConfiguration config = context.getBean(OauthConfiguration)

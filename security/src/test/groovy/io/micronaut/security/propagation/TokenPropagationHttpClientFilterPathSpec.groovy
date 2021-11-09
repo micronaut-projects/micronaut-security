@@ -21,7 +21,7 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
                 'micronaut.security.token.writer.header.enabled': true,
                 'micronaut.security.token.propagation.enabled': true,
                 (SPEC_NAME_PROPERTY):getClass().simpleName
-        ], Environment.TEST)
+        ])
 
         when:
         TokenPropagationHttpClientFilter filter = context.getBean(TokenPropagationHttpClientFilter)
@@ -64,7 +64,7 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
                 'micronaut.security.token.propagation.enabled': true,
                 'micronaut.security.token.propagation.path': '/books/**',
                 (SPEC_NAME_PROPERTY):getClass().simpleName
-        ], Environment.TEST)
+        ])
 
         when:
         TokenPropagationHttpClientFilter filter = context.getBean(TokenPropagationHttpClientFilter)

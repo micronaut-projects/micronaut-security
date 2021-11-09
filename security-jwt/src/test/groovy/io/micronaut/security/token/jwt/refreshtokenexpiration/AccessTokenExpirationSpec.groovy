@@ -55,7 +55,7 @@ class AccessTokenExpirationSpec extends EmbeddedServerSpecification {
     @Controller("/secured")
     static class SecuredController {
 
-        @Get("/")
+        @Get
         String test() {
             "test"
         }
