@@ -237,9 +237,9 @@ public final class JwtValidator {
     private static boolean signatureConfigurationSupportsAlgorithm(@NonNull SignatureConfiguration sig, @NonNull JWSAlgorithm algorithm) {
         if (sig instanceof JwksSignature) {
             boolean jsonWebKeySetResolved = ((JwksSignature) sig).getJwkSet() != null;
-            // {@link JwksSignature#supports} does a HTTP request if the Json Web Key Set is not present.
+            // {@link JwksSignature#supports} does an HTTP request if the Json Web Key Set is not present.
             // Thus, don't call it unless the keys have been already been fetched.
-            if(jsonWebKeySetResolved) {
+            if (jsonWebKeySetResolved) {
                 return sig.supports(algorithm);
             }
         } else {
