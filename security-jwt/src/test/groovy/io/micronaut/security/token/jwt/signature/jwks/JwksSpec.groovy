@@ -157,7 +157,7 @@ class JwksSpec extends Specification {
     static class HomeController {
 
         @Produces(MediaType.TEXT_HTML)
-        @Get("/")
+        @Get
         String username(Principal principal) {
             principal.name
         }
