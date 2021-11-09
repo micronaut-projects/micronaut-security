@@ -8,7 +8,6 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -35,49 +34,44 @@ import org.slf4j.LoggerFactory
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
-import spock.lang.Stepwise
 
 import java.security.Principal
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
-@Stepwise
 class JwksSpec extends Specification {
 
     static final String SPEC_NAME_PROPERTY = 'spec.name'
 
     @Shared
-    int gatewayPort
+    Map gatewayConfig = [
+            (SPEC_NAME_PROPERTY)                           : 'jwks.gateway',
+            'micronaut.security.authentication': 'bearer',
+    ]
 
     @AutoCleanup
     @Shared
-    EmbeddedServer booksEmbeddedServer
+    EmbeddedServer gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig)
 
     @AutoCleanup
     @Shared
-    HttpClient booksClient
+    HttpClient gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(HttpClient, gatewayEmbeddedServer.getURL())
 
-    @AutoCleanup
     @Shared
-    EmbeddedServer gatewayEmbeddedServer
+    Map booksConfig = [
+            (SPEC_NAME_PROPERTY)                           : 'jwks.books',
+            'micronaut.security.token.jwt.signatures.jwks.gateway.url' : "http://localhost:${gatewayEmbeddedServer.port}/keys",
+    ]
 
-    @AutoCleanup
     @Shared
-    HttpClient gatewayClient
+    @AutoCleanup
+    EmbeddedServer booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig)
+
+    @Shared
+    @AutoCleanup
+    HttpClient booksClient = booksEmbeddedServer.applicationContext.createBean(HttpClient, booksEmbeddedServer.getURL())
 
     def "setup gateway server"() {
-        given:
-        Map gatewayConfig = [
-                (SPEC_NAME_PROPERTY)                           : 'jwks.gateway',
-                'micronaut.security.authentication': 'bearer',
-        ]
-
-        gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig, Environment.TEST)
-        gatewayPort = gatewayEmbeddedServer.port
-
-        expect:
-        gatewayPort > 0
-
         when:
         for (Class beanClazz : [
                 RSAJwkProvider,
@@ -90,25 +84,9 @@ class JwksSpec extends Specification {
 
         then:
         noExceptionThrown()
-
-        when:
-        gatewayClient = gatewayEmbeddedServer.applicationContext.createBean(HttpClient, gatewayEmbeddedServer.getURL())
-
-        then:
-        noExceptionThrown()
     }
 
     def "setup books server"() {
-        given:
-        Map booksConfig = [
-                (SPEC_NAME_PROPERTY)                           : 'jwks.books',
-                'micronaut.security.token.jwt.signatures.jwks.gateway.url' : "http://localhost:${gatewayPort}/keys",
-        ]
-
-        booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig, Environment.TEST)
-
-        booksClient = booksEmbeddedServer.applicationContext.createBean(HttpClient, booksEmbeddedServer.getURL())
-
         when:
         for (Class beanClazz : [SignatureConfiguration,
                                 JwksSignatureConfigurationProperties,
