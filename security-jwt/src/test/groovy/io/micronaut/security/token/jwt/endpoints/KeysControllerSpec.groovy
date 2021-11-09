@@ -28,7 +28,7 @@ class KeysControllerSpec extends Specification {
                 'spec.name'                 : 'keyscontrollerspec',
                 'micronaut.security.endpoints.keys.path': path,
 
-        ], Environment.TEST)
+        ])
         HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
 
         when:

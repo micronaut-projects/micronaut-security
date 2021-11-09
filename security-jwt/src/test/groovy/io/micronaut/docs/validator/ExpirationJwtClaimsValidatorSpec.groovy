@@ -13,7 +13,7 @@ class ExpirationJwtClaimsValidatorSpec extends Specification {
         given:
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : ExpirationJwtClaimsValidatorSpec.simpleName,
-                ], Environment.TEST)
+                ])
 
         when:
         embeddedServer.applicationContext.getBean(ExpirationJwtClaimsValidator)
@@ -31,7 +31,7 @@ class ExpirationJwtClaimsValidatorSpec extends Specification {
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : ExpirationJwtClaimsValidatorSpec.simpleName,
                 'micronaut.security.token.jwt.claims-validators.expiration': false
-        ], Environment.TEST)
+        ])
 
         when:
         embeddedServer.applicationContext.getBean(ExpirationJwtClaimsValidator)
