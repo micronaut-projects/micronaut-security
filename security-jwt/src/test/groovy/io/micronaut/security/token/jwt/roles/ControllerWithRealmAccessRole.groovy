@@ -14,7 +14,7 @@ import io.micronaut.security.annotation.Secured
 class ControllerWithRealmAccessRole {
 
     @Secured("uma_authorization")
-    @Get("/")
+    @Get
     @Status(HttpStatus.OK)
     void index() {}
 }

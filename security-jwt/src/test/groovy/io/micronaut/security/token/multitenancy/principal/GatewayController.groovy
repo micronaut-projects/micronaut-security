@@ -17,7 +17,7 @@ class GatewayController {
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Get("/")
+    @Get
     List<String> index() {
         List<String> booksNames = bookFetcher.findAll()
 
