@@ -145,6 +145,13 @@ public class JwksSignature implements SignatureConfiguration {
         return verify(jwt,  getRefreshJwksAttempts());
     }
 
+    /**
+     *
+     * @param jwt the signed JWT
+     * @param refreshKeysAttempts Number of times to attempt refreshing the JWK Set
+     * @return whether the signed JWT is verified
+     * @throws JOSEException exception when verifying the JWT
+     */
     protected boolean verify(SignedJWT jwt, int refreshKeysAttempts) throws JOSEException {
         List<JWK> matches = matches(jwt, getJWKSet().orElse(null));
         if (LOG.isDebugEnabled()) {
