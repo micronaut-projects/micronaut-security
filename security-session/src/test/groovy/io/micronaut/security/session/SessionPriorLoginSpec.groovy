@@ -53,7 +53,7 @@ class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
     }
 
     @Requires(property = "spec.name", value = "SessionPriorLoginSpec")
-    @Controller("/")
+    @Controller
     static class HomeController {
 
         @Produces(MediaType.TEXT_HTML)

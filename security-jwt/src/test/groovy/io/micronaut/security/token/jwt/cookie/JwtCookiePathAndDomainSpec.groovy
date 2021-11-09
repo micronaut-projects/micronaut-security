@@ -87,7 +87,7 @@ class JwtCookiePathAndDomainSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "JwtCookiePathAndDomainSpec")
     @Secured("isAnonymous()")
-    @Controller("/")
+    @Controller
     static class HomeController {
 
         @Produces(MediaType.TEXT_HTML)
