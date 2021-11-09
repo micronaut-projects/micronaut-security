@@ -24,6 +24,7 @@ import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -221,8 +222,8 @@ public final class JwtValidator {
 
     private static Comparator<SignatureConfiguration> comparator(JWSAlgorithm algorithm) {
         return (sig, otherSig) -> {
-            boolean supports = sig.supports(algorithm);
-            boolean otherSupports = otherSig.supports(algorithm);
+            boolean supports = signatureConfigurationSupportsAlgorithm(sig, algorithm);
+            boolean otherSupports = signatureConfigurationSupportsAlgorithm(otherSig, algorithm);
             if (supports == otherSupports) {
                 return 0;
             } else if (supports) {
@@ -231,6 +232,20 @@ public final class JwtValidator {
                 return 1;
             }
         };
+    }
+
+    private static boolean signatureConfigurationSupportsAlgorithm(@NonNull SignatureConfiguration sig, @NonNull JWSAlgorithm algorithm) {
+        if (sig instanceof JwksSignature) {
+            boolean jsonWebKeySetResolved = ((JwksSignature) sig).getJwkSet() != null;
+            // {@link JwksSignature#supports} does a HTTP request if the Json Web Key Set is not present.
+            // Thus, don't call it unless the keys have been already been fetched.
+            if(jsonWebKeySetResolved) {
+                return sig.supports(algorithm);
+            }
+        } else {
+            return sig.supports(algorithm);
+        }
+        return false;
     }
 
     private static Comparator<EncryptionConfiguration> comparator(JWEHeader header) {

@@ -1,5 +1,6 @@
 package io.micronaut.security.token.jwt.signature.jwks
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
@@ -9,8 +10,13 @@ import com.nimbusds.jwt.JWT
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.async.annotation.SingleResult
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
@@ -23,12 +29,19 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.token.generator.TokenGenerator
+import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
+import io.micronaut.security.token.jwt.endpoints.KeysController
+import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
+import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
-import io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration
+import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
+import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -38,30 +51,36 @@ import java.security.interfaces.RSAPublicKey
 
 class JwksCacheSpec extends Specification {
 
+    @Shared
+    Map<String, Object> authServerConfig = [
+            'micronaut.http.client.read-timeout': '30s',
+            'micronaut.security.authentication': 'bearer',
+    ]
+
     @AutoCleanup
     @Shared
-    EmbeddedServer googleEmbeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'micronaut.security.authentication'   : 'bearer',
-            'spec.name': 'GoogleJwksCacheSpec'
+    EmbeddedServer googleEmbeddedServer = ApplicationContext.run(EmbeddedServer, authServerConfig + [
+            'spec.name': 'GoogleJwksCacheSpec',
     ])
 
     @AutoCleanup
     @Shared
-    EmbeddedServer cognitoEmbeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'micronaut.security.authentication'   : 'bearer',
-            'spec.name': 'CognitoJwksCacheSpec'
+    EmbeddedServer cognitoEmbeddedServer = ApplicationContext.run(EmbeddedServer, authServerConfig + [
+            'spec.name': 'CognitoJwksCacheSpec',
+            'endpoints.refresh.enabled': StringUtils.TRUE,
+            'endpoints.refresh.sensitive': StringUtils.FALSE,
     ])
 
     @AutoCleanup
     @Shared
-    EmbeddedServer appleEmbeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'micronaut.security.authentication'   : 'bearer',
-            'spec.name': 'AppleJwksCacheSpec'
+    EmbeddedServer appleEmbeddedServer = ApplicationContext.run(EmbeddedServer, authServerConfig + [
+            'spec.name': 'AppleJwksCacheSpec',
     ])
 
     @AutoCleanup
     @Shared
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
+            'micronaut.http.client.read-timeout': '30s',
             'micronaut.security.token.jwt.signatures.jwks.apple.url': "http://localhost:${appleEmbeddedServer.port}/keys",
             'micronaut.security.token.jwt.signatures.jwks.google.url': "http://localhost:${googleEmbeddedServer.port}/keys",
             'micronaut.security.token.jwt.signatures.jwks.cognito.url': "http://localhost:${cognitoEmbeddedServer.port}/keys",
@@ -69,20 +88,28 @@ class JwksCacheSpec extends Specification {
     ])
 
     int googleInvocations() {
-        GoogleSignatureConfiguration googleJsonWebKeysProvider = googleEmbeddedServer.applicationContext.getBean(GoogleSignatureConfiguration)
-        googleJsonWebKeysProvider.invocations
+        googleEmbeddedServer.applicationContext.getBean(GoogleKeysController).invocations
     }
 
     int appleInvocations() {
-        AppleSignatureConfiguration appleJsonWebKeysProvider = appleEmbeddedServer.applicationContext.getBean(AppleSignatureConfiguration)
-        appleJsonWebKeysProvider.invocations
+        appleEmbeddedServer.applicationContext.getBean(AppleKeysController).invocations
     }
 
     int cognitoInvocations() {
-        CognitoSignatureConfiguration cognitoJsonWebKeysProvider = cognitoEmbeddedServer.applicationContext.getBean(CognitoSignatureConfiguration)
-        cognitoJsonWebKeysProvider.invocations
+        cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations
     }
 
+    static String login(BlockingHttpClient client) {
+        BearerAccessRefreshToken bearerAccessRefreshToken = client.retrieve(HttpRequest.POST('/login', [username: 'sherlock', password: 'elementary']), BearerAccessRefreshToken)
+        assert bearerAccessRefreshToken
+        assert bearerAccessRefreshToken.accessToken
+        bearerAccessRefreshToken.accessToken
+    }
+
+    static void refresh(BlockingHttpClient client) {
+        HttpResponse<?> response = client.exchange(HttpRequest.POST('/refresh', '{"force": true}'))
+        assert response.status() == HttpStatus.OK
+    }
 
     void "JWK are cached"() {
         expect:
@@ -97,7 +124,7 @@ class JwksCacheSpec extends Specification {
 
         then:
         noExceptionThrown()
-        1 == googleInvocations()
+        0 == googleInvocations()
         0 == appleInvocations()
         0 == cognitoInvocations()
         googleBearerAccessRefreshToken.accessToken
@@ -117,8 +144,8 @@ class JwksCacheSpec extends Specification {
 
         then:
         noExceptionThrown()
-        1 == googleInvocations()
-        1 == appleInvocations()
+        0 == googleInvocations()
+        0 == appleInvocations()
         0 == cognitoInvocations()
         appleBearerAccessRefreshToken.accessToken
 
@@ -137,9 +164,9 @@ class JwksCacheSpec extends Specification {
 
         then:
         noExceptionThrown()
-        1 == googleInvocations()
-        1 == appleInvocations()
-        1 == cognitoInvocations()
+        0 == googleInvocations()
+        0 == appleInvocations()
+        0 == cognitoInvocations()
         cognitoBearerAccessRefreshToken.accessToken
 
         when:
@@ -157,26 +184,48 @@ class JwksCacheSpec extends Specification {
 
         then:
         'Hello World' == response
-        2 == googleInvocations()
-        2 == appleInvocations()
-        2 == cognitoInvocations()
+        1 == googleInvocations()
+        1 >= appleInvocations()
+        1 >= cognitoInvocations()
 
         when:
         response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(appleAccessToken))
 
         then:
         'Hello World' == response
-        2 == googleInvocations()
-        2 == appleInvocations()
-        2 == cognitoInvocations()
+        1 == googleInvocations()
+        1 == appleInvocations()
+        1 >= cognitoInvocations()
 
         when:
         response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(cognitoAccessToken))
 
         then:
         'Hello World' == response
-        2 == googleInvocations()
-        2 == appleInvocations()
+        1 == googleInvocations()
+        1 == appleInvocations()
+        1 == cognitoInvocations()
+
+        when: 'when you invoke it again all the keys are cached'
+        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(appleAccessToken))
+
+        then:
+        'Hello World' == response
+        1 == googleInvocations()
+        1 == appleInvocations()
+        1 == cognitoInvocations()
+
+        when: "generate new keys for cognito, other JWK sets do not match the ID, for cognito the verification key fails and a new one is fetched from the server"
+        int invocations = cognitoInvocations()
+        refresh(cognitoClient)
+        cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations = invocations
+        cognitoAccessToken = login(cognitoClient)
+        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(cognitoAccessToken))
+
+        then:
+        'Hello World' == response
+        1 == googleInvocations()
+        1 == appleInvocations()
         2 == cognitoInvocations()
     }
 
@@ -188,6 +237,57 @@ class JwksCacheSpec extends Specification {
         @Secured(SecurityRule.IS_AUTHENTICATED)
         String index() {
             'Hello World'
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'GoogleJwksCacheSpec')
+    @Controller("/keys")
+    @Replaces(KeysController.class)
+    static class GoogleKeysController extends KeysController {
+        int invocations = 0
+        GoogleKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
+            super(jwkProviders, objectMapper)
+        }
+        @Get
+        @SingleResult
+        Publisher<String> keys() {
+            Publisher<String> result = super.keys()
+            invocations++
+            return result
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'AppleJwksCacheSpec')
+    @Controller("/keys")
+    @Replaces(KeysController.class)
+    static class AppleKeysController extends KeysController {
+        int invocations = 0
+        AppleKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
+            super(jwkProviders, objectMapper)
+        }
+        @Get
+        @SingleResult
+        Publisher<String> keys() {
+            Publisher<String> result = super.keys()
+            invocations++
+            return result
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'CognitoJwksCacheSpec')
+    @Controller("/keys")
+    @Replaces(KeysController.class)
+    static class CognitoKeysController extends KeysController {
+        int invocations = 0
+        CognitoKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
+            super(jwkProviders, objectMapper)
+        }
+        @Get
+        @SingleResult
+        Publisher<String> keys() {
+            Publisher<String> result = super.keys()
+            invocations++
+            return result
         }
     }
 
@@ -216,15 +316,18 @@ class JwksCacheSpec extends Specification {
     }
 
     @Requires(property = 'spec.name', value = 'AppleJwksCacheSpec')
-    @Refreshable
     @Named("generator")
+    @Singleton
     static class AppleSignatureConfiguration implements RSASignatureGeneratorConfiguration, JwkProvider {
-        private final List<JWK> jwks
-        int invocations = 0
+        private List<JWK> jwks
         private final static String KID = 'apple'
-        private final RSAKey rsaKey
+        private RSAKey rsaKey
         private final static JWSAlgorithm ALG = JWSAlgorithm.RS256
         AppleSignatureConfiguration() {
+            refreshKey()
+        }
+
+        void refreshKey() {
             this.rsaKey = new RSAKeyGenerator(2048)
                     .algorithm(ALG)
                     .keyUse(KeyUse.SIGNATURE)
@@ -233,7 +336,6 @@ class JwksCacheSpec extends Specification {
 
             this.jwks = Collections.singletonList(rsaKey.toPublicJWK())
         }
-
         @Override
         RSAPublicKey getPublicKey() {
             rsaKey.toRSAPublicKey()
@@ -251,37 +353,62 @@ class JwksCacheSpec extends Specification {
 
         @Override
         List<JWK> retrieveJsonWebKeys() {
-            invocations++
             jwks
         }
     }
 
     @Requires(property = 'spec.name', value = 'CognitoJwksCacheSpec')
     @Refreshable
+    @Singleton
+    @Replaces(JwtTokenGenerator.class)
+    static class JwtTokenGeneratorReplacement extends JwtTokenGenerator {
+        JwtTokenGeneratorReplacement(CognitoSignatureConfiguration cognitoSignatureConfiguration,
+                                     ClaimsGenerator claimsGenerator) {
+            super(new RSASignatureGenerator(cognitoSignatureConfiguration), null, claimsGenerator)
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'CognitoJwksCacheSpec')
     @Named("generator")
+    @Refreshable
+    @Singleton
     static class CognitoSignatureConfiguration implements RSASignatureGeneratorConfiguration, JwkProvider {
-        private final List<JWK> jwks
-        int invocations = 0
         private final static String KID = 'cognito'
-        private final RSAKey rsaKey
         private final static JWSAlgorithm ALG = JWSAlgorithm.RS256
+        private List<JWK> jwks
+        private RSAKey rsaKey
+
         CognitoSignatureConfiguration() {
-            this.rsaKey = new RSAKeyGenerator(2048)
-                    .algorithm(ALG)
-                    .keyUse(KeyUse.SIGNATURE)
-                    .keyID(KID)
-                    .generate()
-            this.jwks = Collections.singletonList(rsaKey.toPublicJWK())
+            this.rsaKey = null
+            this.jwks = null
+        }
+
+        List<JWK> getJwks() {
+            if (jwks == null) {
+                this.jwks = Collections.singletonList(rsaKey.toPublicJWK())
+            }
+            return jwks
+        }
+
+        RSAKey getRsaKey() {
+            if (rsaKey == null) {
+                this.rsaKey = new RSAKeyGenerator(2048)
+                        .algorithm(ALG)
+                        .keyUse(KeyUse.SIGNATURE)
+                        .keyID(KID)
+                        .generate()
+            }
+            return rsaKey
         }
 
         @Override
         RSAPublicKey getPublicKey() {
-            rsaKey.toRSAPublicKey()
+            getRsaKey().toRSAPublicKey()
         }
 
         @Override
         RSAPrivateKey getPrivateKey() {
-            rsaKey.toRSAPrivateKey()
+            getRsaKey().toRSAPrivateKey()
         }
 
         @Override
@@ -291,21 +418,24 @@ class JwksCacheSpec extends Specification {
 
         @Override
         List<JWK> retrieveJsonWebKeys() {
-            invocations++
-            jwks
+            getJwks()
         }
     }
 
     @Requires(property = 'spec.name', value = 'GoogleJwksCacheSpec')
-    @Refreshable
     @Named("generator")
+    @Singleton
     static class GoogleSignatureConfiguration implements RSASignatureGeneratorConfiguration, JwkProvider {
-        int invocations = 0
-        private final List<JWK> jwks
         private final static String KID = 'google'
         private final static JWSAlgorithm ALG = JWSAlgorithm.RS256
-        private final RSAKey rsaKey
+        private List<JWK> jwks
+        private RSAKey rsaKey
         GoogleSignatureConfiguration() {
+            refreshKey()
+        }
+
+        void refreshKey() {
+
             this.rsaKey = new RSAKeyGenerator(2048)
                     .algorithm(ALG)
                     .keyUse(KeyUse.SIGNATURE)
@@ -331,7 +461,6 @@ class JwksCacheSpec extends Specification {
 
         @Override
         List<JWK> retrieveJsonWebKeys() {
-            invocations++
             jwks
         }
     }
