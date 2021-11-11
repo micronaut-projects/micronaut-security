@@ -25,7 +25,6 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksCache;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

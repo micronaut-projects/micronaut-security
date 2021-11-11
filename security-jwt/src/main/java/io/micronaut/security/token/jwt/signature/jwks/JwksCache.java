@@ -22,7 +22,8 @@ package io.micronaut.security.token.jwt.signature.jwks;
  */
 public interface JwksCache {
     /**
-     * Whether the cache has been populated
+     *
+     * @return Whether the cache has been populated.
      */
     boolean isJsonWebKeySetPresent();
 
