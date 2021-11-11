@@ -5,6 +5,7 @@ import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
 import com.nimbusds.jose.jwk.RSAKey
+import com.nimbusds.jose.jwk.gen.JWKGenerator
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import com.nimbusds.jwt.JWT
 import com.nimbusds.jwt.JWTParser
@@ -61,6 +62,8 @@ class JwksCacheSpec extends Specification {
     @Shared
     EmbeddedServer googleEmbeddedServer = ApplicationContext.run(EmbeddedServer, authServerConfig + [
             'spec.name': 'GoogleJwksCacheSpec',
+            'endpoints.refresh.enabled': StringUtils.TRUE,
+            'endpoints.refresh.sensitive': StringUtils.FALSE,
     ])
 
     @AutoCleanup
@@ -242,6 +245,21 @@ class JwksCacheSpec extends Specification {
         2 >= googleInvocations()
         2 >= appleInvocations()
         3 == cognitoInvocations()
+
+        when:
+        GoogleSignatureConfiguration googleSignatureConfiguration = googleEmbeddedServer.applicationContext.getBean(GoogleSignatureConfiguration)
+        invocations = googleInvocations()
+        refresh(googleClient)
+        googleEmbeddedServer.applicationContext.getBean(GoogleKeysController).invocations = invocations
+        googleSignatureConfiguration.clearKid()
+        googleAccessToken = login(googleClient)
+        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(googleAccessToken))
+
+        then:
+        'Hello World' == response
+        3 == googleInvocations()
+        2 >= appleInvocations()
+        3 == cognitoInvocations()
     }
 
     @Requires(property = 'spec.name', value = 'JwksCacheSpec')
@@ -403,6 +421,10 @@ class JwksCacheSpec extends Specification {
             this.kid = 'cognito-' + UUID.randomUUID().toString().substring(0, 5)
         }
 
+        void clearKid() {
+            this.kid = null
+        }
+
         List<JWK> getJwks() {
             if (jwks == null) {
                 this.jwks = Collections.singletonList(rsaKey.toPublicJWK())
@@ -412,11 +434,13 @@ class JwksCacheSpec extends Specification {
 
         RSAKey getRsaKey() {
             if (rsaKey == null) {
-                this.rsaKey = new RSAKeyGenerator(2048)
+                JWKGenerator jwkGenerator = new RSAKeyGenerator(2048)
                         .algorithm(ALG)
                         .keyUse(KeyUse.SIGNATURE)
-                        .keyID(kid)
-                        .generate()
+                if (kid) {
+                    jwkGenerator = jwkGenerator.keyID(kid)
+                }
+                this.rsaKey = jwkGenerator.generate()
             }
             return rsaKey
         }
@@ -443,35 +467,67 @@ class JwksCacheSpec extends Specification {
     }
 
     @Requires(property = 'spec.name', value = 'GoogleJwksCacheSpec')
+    @Refreshable
+    @Singleton
+    @Replaces(JwtTokenGenerator.class)
+    static class GoogleJwtTokenGeneratorReplacement extends JwtTokenGenerator {
+        GoogleJwtTokenGeneratorReplacement(GoogleSignatureConfiguration googleSignatureConfiguration,
+                                           ClaimsGenerator claimsGenerator) {
+            super(new RSASignatureGenerator(googleSignatureConfiguration), null, claimsGenerator)
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'GoogleJwksCacheSpec')
     @Named("generator")
+    @Refreshable
     @Singleton
     static class GoogleSignatureConfiguration implements RSASignatureGeneratorConfiguration, JwkProvider {
-        private final static String KID = 'google'
         private final static JWSAlgorithm ALG = JWSAlgorithm.RS256
         private List<JWK> jwks
         private RSAKey rsaKey
+        String kid = 'google'
+
         GoogleSignatureConfiguration() {
-            refreshKey()
+            this.rsaKey = null
+            this.jwks = null
         }
 
-        void refreshKey() {
+        void rotateKid() {
+            this.kid = 'google-' + UUID.randomUUID().toString().substring(0, 5)
+        }
 
-            this.rsaKey = new RSAKeyGenerator(2048)
-                    .algorithm(ALG)
-                    .keyUse(KeyUse.SIGNATURE)
-                    .keyID(KID)
-                    .generate()
-            this.jwks = Collections.singletonList(rsaKey.toPublicJWK())
+        void clearKid() {
+            this.kid = null
+        }
+
+        List<JWK> getJwks() {
+            if (jwks == null) {
+                this.jwks = Collections.singletonList(rsaKey.toPublicJWK())
+            }
+            return jwks
+        }
+
+        RSAKey getRsaKey() {
+            if (rsaKey == null) {
+                JWKGenerator jwkGenerator = new RSAKeyGenerator(2048)
+                        .algorithm(ALG)
+                        .keyUse(KeyUse.SIGNATURE)
+                if (kid) {
+                    jwkGenerator = jwkGenerator.keyID(kid)
+                }
+                this.rsaKey = jwkGenerator.generate()
+            }
+            return rsaKey
         }
 
         @Override
         RSAPublicKey getPublicKey() {
-            rsaKey.toRSAPublicKey()
+            getRsaKey().toRSAPublicKey()
         }
 
         @Override
         RSAPrivateKey getPrivateKey() {
-            rsaKey.toRSAPrivateKey()
+            getRsaKey().toRSAPrivateKey()
         }
 
         @Override
@@ -481,7 +537,7 @@ class JwksCacheSpec extends Specification {
 
         @Override
         List<JWK> retrieveJsonWebKeys() {
-            jwks
+            getJwks()
         }
     }
 }

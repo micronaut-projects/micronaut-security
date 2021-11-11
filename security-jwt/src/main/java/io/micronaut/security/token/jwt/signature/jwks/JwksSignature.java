@@ -37,6 +37,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
@@ -232,11 +233,17 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
         if (jwkSet != null) {
             JWKMatcher.Builder builder = new JWKMatcher.Builder();
             if (keyType != null) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Key Type: {}", keyType);
+                }
                 builder = builder.keyType(keyType);
             }
             String keyId = jwt.getHeader().getKeyID();
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("JWT Trace ID: {}", keyId);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWT Key ID: {}", keyId);
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("JWK Set Key IDs: {}", jwkSet.getKeys().stream().map(JWK::getKeyID).collect(Collectors.joining(",")));
             }
             if (keyId != null) {
                 builder = builder.keyID(keyId);
