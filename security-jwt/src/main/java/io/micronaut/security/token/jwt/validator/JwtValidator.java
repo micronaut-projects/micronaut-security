@@ -24,6 +24,7 @@ import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
+import io.micronaut.security.token.jwt.signature.jwks.JwksCache;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -196,19 +197,20 @@ public final class JwtValidator {
         List<SignatureConfiguration> sortedConfigs = new ArrayList<>(signatures);
         sortedConfigs.sort(comparator(algorithm));
 
-        for (SignatureConfiguration config: sortedConfigs) {
-            try {
-                boolean verified = config.verify(jwt);
-                if (!verified) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("JWT Signature verification failed: {}", jwt.getParsedString());
+        Optional<JWT> optionalJWT = validate(jwt, sortedConfigs);
+        if (optionalJWT.isPresent()) {
+            return optionalJWT;
+        }
+
+        // If any of the signature configurations is a JwksCache, evict the cache and attempt to verify again
+        if (sortedConfigs.stream().anyMatch(it -> it instanceof JwksCache)) {
+            for (SignatureConfiguration config: sortedConfigs) {
+                if (config instanceof JwksCache) {
+                    ((JwksCache) config).clearJsonWebKeySet();
+                    optionalJWT = validate(jwt, config);
+                    if (optionalJWT.isPresent()) {
+                        return optionalJWT;
                     }
-                } else {
-                    return Optional.of(jwt);
-                }
-            } catch (final JOSEException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Verification failed with signature configuration: {}, passing to the next one", config);
                 }
             }
         }
@@ -217,6 +219,34 @@ public final class JwtValidator {
             LOG.debug("JWT is signed and no signature configurations -> not verified");
         }
 
+        return Optional.empty();
+    }
+
+    private Optional<JWT> validate(SignedJWT jwt, SignatureConfiguration signatureConfiguration) {
+        try {
+            boolean verified = signatureConfiguration.verify(jwt);
+            if (!verified) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("JWT Signature verification failed: {}", jwt.getParsedString());
+                }
+            } else {
+                return Optional.of(jwt);
+            }
+        } catch (final JOSEException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Verification failed with signature configuration: {}, passing to the next one", signatureConfiguration);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Optional<JWT> validate(SignedJWT jwt, List<SignatureConfiguration> signatureConfigurations) {
+        for (SignatureConfiguration config: signatureConfigurations) {
+            Optional<JWT> optionalJWT = validate(jwt, config);
+            if (optionalJWT.isPresent()) {
+                return optionalJWT;
+            }
+        }
         return Optional.empty();
     }
 
@@ -235,11 +265,10 @@ public final class JwtValidator {
     }
 
     private static boolean signatureConfigurationSupportsAlgorithm(@NonNull SignatureConfiguration sig, @NonNull JWSAlgorithm algorithm) {
-        if (sig instanceof JwksSignature) {
-            boolean jsonWebKeySetResolved = ((JwksSignature) sig).getJwkSet() != null;
+        if (sig instanceof JwksCache) {
             // {@link JwksSignature#supports} does an HTTP request if the Json Web Key Set is not present.
             // Thus, don't call it unless the keys have been already been fetched.
-            if (jsonWebKeySetResolved) {
+            if (((JwksCache) sig).isJsonWebKeySetPresent()) {
                 return sig.supports(algorithm);
             }
         } else {

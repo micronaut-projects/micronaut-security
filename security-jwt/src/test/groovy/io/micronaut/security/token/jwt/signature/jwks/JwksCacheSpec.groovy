@@ -227,6 +227,21 @@ class JwksCacheSpec extends Specification {
         1 == googleInvocations()
         1 == appleInvocations()
         2 == cognitoInvocations()
+
+        when:
+        CognitoSignatureConfiguration cognitoSignatureConfiguration = cognitoEmbeddedServer.applicationContext.getBean(CognitoSignatureConfiguration)
+        invocations = cognitoInvocations()
+        refresh(cognitoClient)
+        cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations = invocations
+        cognitoSignatureConfiguration.rotateKid()
+        cognitoAccessToken = login(cognitoClient)
+        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(cognitoAccessToken))
+
+        then:
+        'Hello World' == response
+        2 >= googleInvocations()
+        2 >= appleInvocations()
+        3 == cognitoInvocations()
     }
 
     @Requires(property = 'spec.name', value = 'JwksCacheSpec')
@@ -373,14 +388,19 @@ class JwksCacheSpec extends Specification {
     @Refreshable
     @Singleton
     static class CognitoSignatureConfiguration implements RSASignatureGeneratorConfiguration, JwkProvider {
-        private final static String KID = 'cognito'
+
         private final static JWSAlgorithm ALG = JWSAlgorithm.RS256
         private List<JWK> jwks
         private RSAKey rsaKey
+        String kid = 'cognito'
 
         CognitoSignatureConfiguration() {
             this.rsaKey = null
             this.jwks = null
+        }
+
+        void rotateKid() {
+            this.kid = 'cognito-' + UUID.randomUUID().toString().substring(0, 5)
         }
 
         List<JWK> getJwks() {
@@ -395,7 +415,7 @@ class JwksCacheSpec extends Specification {
                 this.rsaKey = new RSAKeyGenerator(2048)
                         .algorithm(ALG)
                         .keyUse(KeyUse.SIGNATURE)
-                        .keyID(KID)
+                        .keyID(kid)
                         .generate()
             }
             return rsaKey

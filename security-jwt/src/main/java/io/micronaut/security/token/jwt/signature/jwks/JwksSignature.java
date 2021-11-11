@@ -47,7 +47,7 @@ import java.util.Optional;
  * @since 1.1.0
  */
 @EachBean(JwksSignatureConfiguration.class)
-public class JwksSignature implements SignatureConfiguration {
+public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     public static final int DEFAULT_REFRESH_JWKS_ATTEMPTS = 1;
 
@@ -163,10 +163,20 @@ public class JwksSignature implements SignatureConfiguration {
         boolean verified = verify(matches, jwt);
         if (!verified && refreshKeysAttempts > 0) {
             //Clear the cache in case the provider changed the key set
-            this.jwkSet = null;
+            clearJsonWebKeySet();
             return verify(jwt, refreshKeysAttempts - 1);
         }
         return verified;
+    }
+
+    @Override
+    public void clearJsonWebKeySet() {
+        this.jwkSet = null;
+    }
+
+    @Override
+    public boolean isJsonWebKeySetPresent() {
+        return this.jwkSet != null;
     }
 
     /**
@@ -225,6 +235,9 @@ public class JwksSignature implements SignatureConfiguration {
                 builder = builder.keyType(keyType);
             }
             String keyId = jwt.getHeader().getKeyID();
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("JWT Trace ID: {}", keyId);
+            }
             if (keyId != null) {
                 builder = builder.keyID(keyId);
             }
