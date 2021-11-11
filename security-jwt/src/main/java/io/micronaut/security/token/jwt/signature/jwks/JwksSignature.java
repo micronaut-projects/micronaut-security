@@ -130,6 +130,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     }
 
     @Override
+    @NonNull
     public Optional<Boolean> isJwksCacheExpired() {
         return (jwkSetCachedAt == null) ? Optional.empty() :
                 Optional.of(!new Date().before(jwkSetCachedAt));
