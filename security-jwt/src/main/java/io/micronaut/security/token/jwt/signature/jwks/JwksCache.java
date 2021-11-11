@@ -33,7 +33,7 @@ public interface JwksCache {
 
     /**
      *
-     * @return Whether the cache is expired
+     * @return Whether the cache is expired or empty optional if JWKS still not cached
      */
     Optional<Boolean> isJwksCacheExpired();
 

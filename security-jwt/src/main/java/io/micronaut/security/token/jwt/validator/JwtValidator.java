@@ -213,7 +213,7 @@ public final class JwtValidator {
                 }
             }
         }
-        
+
         if (LOG.isDebugEnabled() && signatures.isEmpty()) {
             LOG.debug("JWT is signed and no signature configurations -> not verified");
         }
