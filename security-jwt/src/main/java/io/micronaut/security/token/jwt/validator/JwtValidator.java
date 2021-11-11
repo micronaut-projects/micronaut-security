@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * A builder style class for validating JWT tokens against any number of provided
@@ -201,25 +202,21 @@ public final class JwtValidator {
         }
 
         // If any of the signature configurations is a JwksCache, evict the cache and attempt to verify again
-        if (sortedConfigs.stream().anyMatch(it -> it instanceof JwksCache)) {
-            for (SignatureConfiguration config: sortedConfigs) {
-                if (config instanceof JwksCache) {
-                    JwksCache jwksCache = (JwksCache) config;
-                    if (jwksCache.isJwksCacheExpired().orElse(false)) {
-                        jwksCache.clearJwksCache();
-                        optionalJWT = validate(jwt, config);
-                        if (optionalJWT.isPresent()) {
-                            return optionalJWT;
-                        }
-                    }
+        for (SignatureConfiguration c : sortedConfigs.stream()
+                .filter(signConf -> signConf instanceof JwksCache)
+                .collect(Collectors.toList())) {
+            if (((JwksCache) c).isJwksCacheExpired().orElse(false)) {
+                ((JwksCache) c).clearJwksCache();
+                optionalJWT = validate(jwt, c);
+                if (optionalJWT.isPresent()) {
+                    return optionalJWT;
                 }
             }
         }
-
+        
         if (LOG.isDebugEnabled() && signatures.isEmpty()) {
             LOG.debug("JWT is signed and no signature configurations -> not verified");
         }
-
         return Optional.empty();
     }
 
