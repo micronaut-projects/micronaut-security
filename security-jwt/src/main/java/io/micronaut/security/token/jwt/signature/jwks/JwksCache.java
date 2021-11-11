@@ -15,6 +15,11 @@
  */
 package io.micronaut.security.token.jwt.signature.jwks;
 
+import io.micronaut.core.annotation.NonNull;
+
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Designates a class which caching a Json Web Key Set which may typically be fetched from a remote authorization server.
  * @author Sergio del Amo
@@ -31,4 +36,10 @@ public interface JwksCache {
      * Clears the JWK Set cache.
      */
     void clearJsonWebKeySet();
+
+    /*
+     * Key IDs for JWK Set.
+     */
+    @NonNull
+    List<String> getJsonWebKeySetKeyIDs();
 }

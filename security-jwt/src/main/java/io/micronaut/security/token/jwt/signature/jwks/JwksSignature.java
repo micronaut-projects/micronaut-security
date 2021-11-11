@@ -25,6 +25,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -243,7 +245,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
                 LOG.debug("JWT Key ID: {}", keyId);
             }
             if (LOG.isDebugEnabled()) {
-                LOG.debug("JWK Set Key IDs: {}", jwkSet.getKeys().stream().map(JWK::getKeyID).collect(Collectors.joining(",")));
+                LOG.debug("JWK Set Key IDs: {}", String.join(",", getJsonWebKeySetKeyIDs()));
             }
             if (keyId != null) {
                 builder = builder.keyID(keyId);
@@ -252,6 +254,16 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
             matches = new JWKSelector(builder.build()).select(jwkSet);
         }
         return matches;
+    }
+
+    @Override
+    @NonNull
+    public List<String> getJsonWebKeySetKeyIDs() {
+        return jwkSet == null ? Collections.emptyList() : jwkSet.getKeys()
+                .stream()
+                .map(JWK::getKeyID)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**

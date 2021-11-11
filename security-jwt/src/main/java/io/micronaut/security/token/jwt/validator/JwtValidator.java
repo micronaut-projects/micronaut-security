@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * A builder style class for validating JWT tokens against any number of provided
@@ -192,9 +193,8 @@ public final class JwtValidator {
         }
 
         final JWSAlgorithm algorithm = jwt.getHeader().getAlgorithm();
-
         List<SignatureConfiguration> sortedConfigs = new ArrayList<>(signatures);
-        sortedConfigs.sort(comparator(algorithm));
+        sortedConfigs.sort(comparator(algorithm, jwt.getHeader().getKeyID()));
 
         Optional<JWT> optionalJWT = validate(jwt, sortedConfigs);
         if (optionalJWT.isPresent()) {
@@ -249,8 +249,30 @@ public final class JwtValidator {
         return Optional.empty();
     }
 
-    private static Comparator<SignatureConfiguration> comparator(JWSAlgorithm algorithm) {
+    private static int compareMatchingKids(SignatureConfiguration sig,
+                                           SignatureConfiguration otherSig,
+                                           @Nullable String kid) {
+        if (kid == null) {
+            return 0;
+        }
+        Optional<Boolean> matchesKid = signatureConfigurationMatchesKid(sig, kid);
+        Optional<Boolean> otherMatchesKid = signatureConfigurationMatchesKid(otherSig, kid);
+        if (matchesKid.isPresent() && otherMatchesKid.isPresent()) {
+            return otherMatchesKid.get().compareTo(matchesKid.get());
+        } else if (matchesKid.isPresent()) {
+            return matchesKid.get() ? 1 : -1;
+        } else if (otherMatchesKid.isPresent()) {
+            return otherMatchesKid.get() ? 1 : -1;
+        }
+        return 0;
+    }
+
+    private static Comparator<SignatureConfiguration> comparator(JWSAlgorithm algorithm, @Nullable String kid) {
         return (sig, otherSig) -> {
+            int compareKids = compareMatchingKids(sig, otherSig, kid);
+            if (compareKids != 0) {
+                return compareKids;
+            }
             boolean supports = signatureConfigurationSupportsAlgorithm(sig, algorithm);
             boolean otherSupports = signatureConfigurationSupportsAlgorithm(otherSig, algorithm);
             if (supports == otherSupports) {
@@ -261,6 +283,15 @@ public final class JwtValidator {
                 return 1;
             }
         };
+    }
+
+    private static Optional<Boolean> signatureConfigurationMatchesKid(@NonNull SignatureConfiguration sig,
+                                                                      @NonNull String kid) {
+        return sig instanceof JwksCache ?
+                (((JwksCache) sig).getJsonWebKeySetKeyIDs().isEmpty() ?
+                        Optional.empty() :
+                        Optional.of(((JwksCache) sig).getJsonWebKeySetKeyIDs().contains(kid)))
+                : Optional.empty();
     }
 
     private static boolean signatureConfigurationSupportsAlgorithm(@NonNull SignatureConfiguration sig, @NonNull JWSAlgorithm algorithm) {
