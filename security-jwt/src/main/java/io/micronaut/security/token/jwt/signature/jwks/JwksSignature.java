@@ -35,7 +35,10 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -56,12 +59,10 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     public static final int DEFAULT_REFRESH_JWKS_ATTEMPTS = 1;
 
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);
-
     private final JwkValidator jwkValidator;
-
+    private final JwksSignatureConfiguration jwksSignatureConfiguration;
+    private Date jwkSetCachedAt;
     private JWKSet jwkSet;
-    private final KeyType keyType;
-    private final String url;
 
     /**
      *
@@ -71,22 +72,41 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     @Inject
     public JwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
                          JwkValidator jwkValidator) {
-        this(jwksSignatureConfiguration.getUrl(), jwksSignatureConfiguration.getKeyType(), jwkValidator);
+        this.jwksSignatureConfiguration = jwksSignatureConfiguration;
+        this.jwkValidator = jwkValidator;
     }
 
     /**
      * @param url The JWK url
      * @param keyType The JWK key type
      * @param jwkValidator JWK Validator to be used.
+     * @deprecated Use {@link JwksSignature(JwksSignatureConfiguration,JwkValidator)} instead.
      */
+    @Deprecated
     public JwksSignature(String url,
                          @Nullable KeyType keyType,
                          JwkValidator jwkValidator) {
-        this.url = url;
         if (LOG.isDebugEnabled()) {
             LOG.debug("JWT validation URL: {}", url);
         }
-        this.keyType = keyType;
+        this.jwksSignatureConfiguration = new JwksSignatureConfiguration() {
+            @Override
+            @NonNull
+            public String getUrl() {
+                return url;
+            }
+
+            @Override
+            public KeyType getKeyType() {
+                return keyType;
+            }
+
+            @Override
+            @NonNull
+            public Integer getCacheExpiration() {
+                return JwksSignatureConfigurationProperties.DEFAULT_CACHE_EXPIRATION;
+            }
+        };
         this.jwkValidator = jwkValidator;
     }
 
@@ -98,6 +118,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
                 if (jwkSet == null) {
                     jwkSet = loadJwkSet(getUrl());
                     this.jwkSet = jwkSet;
+                    this.jwkSetCachedAt = Date.from(Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS));
                 }
             }
         }
@@ -106,6 +127,12 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     private List<JWK> getJsonWebKeys() {
         return getJWKSet().map(JWKSet::getKeys).orElse(Collections.emptyList());
+    }
+
+    @Override
+    public Optional<Boolean> isJwksCacheExpired() {
+        return (jwkSetCachedAt == null) ? Optional.empty() :
+                Optional.of(!new Date().before(jwkSetCachedAt));
     }
 
     /**
@@ -157,12 +184,15 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     }
 
     @Override
-    public void clearJsonWebKeySet() {
-        this.jwkSet = null;
+    public void clearJwksCache() {
+        synchronized (this) {
+            this.jwkSet = null;
+            this.jwkSetCachedAt = null;
+        }
     }
 
     @Override
-    public boolean isJsonWebKeySetPresent() {
+    public boolean isJwksCachePresent() {
         return this.jwkSet != null;
     }
 
@@ -183,7 +213,6 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
                 LOG.error("Exception loading JWK from " + url + ". The JwksSignature will not be used to verify a JWT if further refresh attempts fail", e);
             }
         }
-
         return null;
     }
 
@@ -218,18 +247,18 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
         List<JWK> matches = Collections.emptyList();
         if (jwkSet != null) {
             JWKMatcher.Builder builder = new JWKMatcher.Builder();
-            if (keyType != null) {
+            if (jwksSignatureConfiguration.getKeyType() != null) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Key Type: {}", keyType);
+                    LOG.debug("Key Type: {}", jwksSignatureConfiguration.getKeyType());
                 }
-                builder = builder.keyType(keyType);
+                builder = builder.keyType(jwksSignatureConfiguration.getKeyType());
             }
             String keyId = jwt.getHeader().getKeyID();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("JWT Key ID: {}", keyId);
             }
             if (LOG.isDebugEnabled()) {
-                LOG.debug("JWK Set Key IDs: {}", String.join(",", getJsonWebKeySetKeyIDs()));
+                LOG.debug("JWK Set Key IDs: {}", String.join(",", getJwkstKeyIDs().orElse(Collections.emptyList())));
             }
             if (keyId != null) {
                 builder = builder.keyID(keyId);
@@ -242,12 +271,12 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     @Override
     @NonNull
-    public List<String> getJsonWebKeySetKeyIDs() {
-        return jwkSet == null ? Collections.emptyList() : jwkSet.getKeys()
+    public Optional<List<String>> getJwkstKeyIDs() {
+        return jwkSet == null ? Optional.empty() : Optional.of(jwkSet.getKeys()
                 .stream()
                 .map(JWK::getKeyID)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -291,7 +320,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * @return the Key Type.
      */
     public KeyType getKeyType() {
-        return keyType;
+        return jwksSignatureConfiguration.getKeyType();
     }
 
     /**
@@ -299,6 +328,6 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * @return The JSON Web Key Set (JWKS) URL.
      */
     public String getUrl() {
-        return url;
+        return jwksSignatureConfiguration.getUrl();
     }
 }

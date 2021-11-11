@@ -2,6 +2,11 @@ package io.micronaut.security.token.jwt.signature.jwks
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nimbusds.jose.JWSAlgorithm
+import com.nimbusds.jose.JWSHeader
+import com.nimbusds.jose.JWSObject
+import com.nimbusds.jose.JWSSigner
+import com.nimbusds.jose.Payload
+import com.nimbusds.jose.crypto.MACSigner
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
 import com.nimbusds.jose.jwk.RSAKey
@@ -24,6 +29,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.context.scope.Refreshable
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
@@ -47,6 +53,7 @@ import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.security.SecureRandom
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
@@ -85,34 +92,13 @@ class JwksCacheSpec extends Specification {
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'micronaut.http.client.read-timeout': '30s',
             'micronaut.security.token.jwt.signatures.jwks.apple.url': "http://localhost:${appleEmbeddedServer.port}/keys",
+            'micronaut.security.token.jwt.signatures.jwks.apple.cache-expiration': 5,
             'micronaut.security.token.jwt.signatures.jwks.google.url': "http://localhost:${googleEmbeddedServer.port}/keys",
+            'micronaut.security.token.jwt.signatures.jwks.google.cache-expiration': 5,
             'micronaut.security.token.jwt.signatures.jwks.cognito.url': "http://localhost:${cognitoEmbeddedServer.port}/keys",
+            'micronaut.security.token.jwt.signatures.jwks.cognito.cache-expiration': 5,
             'spec.name': 'JwksCacheSpec'
     ])
-
-    int googleInvocations() {
-        googleEmbeddedServer.applicationContext.getBean(GoogleKeysController).invocations
-    }
-
-    int appleInvocations() {
-        appleEmbeddedServer.applicationContext.getBean(AppleKeysController).invocations
-    }
-
-    int cognitoInvocations() {
-        cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations
-    }
-
-    static String login(BlockingHttpClient client) {
-        BearerAccessRefreshToken bearerAccessRefreshToken = client.retrieve(HttpRequest.POST('/login', [username: 'sherlock', password: 'elementary']), BearerAccessRefreshToken)
-        assert bearerAccessRefreshToken
-        assert bearerAccessRefreshToken.accessToken
-        bearerAccessRefreshToken.accessToken
-    }
-
-    static void refresh(BlockingHttpClient client) {
-        HttpResponse<?> response = client.exchange(HttpRequest.POST('/refresh', '{"force": true}'))
-        assert response.status() == HttpStatus.OK
-    }
 
     void "JWK are cached"() {
         expect:
@@ -186,6 +172,7 @@ class JwksCacheSpec extends Specification {
         String response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(googleAccessToken))
 
         then:
+        noExceptionThrown()
         'Hello World' == response
         1 == googleInvocations()
         1 >= appleInvocations()
@@ -195,6 +182,7 @@ class JwksCacheSpec extends Specification {
         response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(appleAccessToken))
 
         then:
+        noExceptionThrown()
         'Hello World' == response
         1 == googleInvocations()
         1 == appleInvocations()
@@ -204,6 +192,7 @@ class JwksCacheSpec extends Specification {
         response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(cognitoAccessToken))
 
         then:
+        noExceptionThrown()
         'Hello World' == response
         1 == googleInvocations()
         1 == appleInvocations()
@@ -213,6 +202,7 @@ class JwksCacheSpec extends Specification {
         response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(appleAccessToken))
 
         then:
+        noExceptionThrown()
         'Hello World' == response
         1 == googleInvocations()
         1 == appleInvocations()
@@ -223,9 +213,11 @@ class JwksCacheSpec extends Specification {
         refresh(cognitoClient)
         cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations = invocations
         cognitoAccessToken = login(cognitoClient)
+        sleep(6_000) // sleep for six seconds so JWKS cache expires
         response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(cognitoAccessToken))
 
         then:
+        noExceptionThrown()
         'Hello World' == response
         1 == googleInvocations()
         1 == appleInvocations()
@@ -238,9 +230,11 @@ class JwksCacheSpec extends Specification {
         cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations = invocations
         cognitoSignatureConfiguration.rotateKid()
         cognitoAccessToken = login(cognitoClient)
+        sleep(6_000) // sleep for six seconds so JWKS cache expires
         response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(cognitoAccessToken))
 
         then:
+        noExceptionThrown()
         'Hello World' == response
         2 >= googleInvocations()
         2 >= appleInvocations()
@@ -249,20 +243,42 @@ class JwksCacheSpec extends Specification {
         when: 'generate a new JWT without kid, JWKS attempt to refresh'
         GoogleSignatureConfiguration googleSignatureConfiguration = googleEmbeddedServer.applicationContext.getBean(GoogleSignatureConfiguration)
         invocations = googleInvocations()
-        System.out.println("google invocations: " + googleInvocations())
-        System.out.println("apple invocations: " + appleInvocations())
-        System.out.println("cognito invocations: " + cognitoInvocations())
         refresh(googleClient)
         googleEmbeddedServer.applicationContext.getBean(GoogleKeysController).invocations = invocations
         googleSignatureConfiguration.clearKid()
         googleAccessToken = login(googleClient)
+        sleep(6_000) // sleep for six seconds so JWKS cache expires
         response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(googleAccessToken))
+
+        then:
+        noExceptionThrown()
+        'Hello World' == response
+        3 >= googleInvocations()
+        3 >= appleInvocations()
+        4 >= cognitoInvocations()
+
+        when:
+        String randomSignedJwt = randomSignedJwt()
+        20.times {
+            try {
+                response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(randomSignedJwt))
+            } catch(HttpClientResponseException e) {
+                assert true // token is not valid for cached JWKS
+            }
+        }
 
         then:
         'Hello World' == response
         3 >= googleInvocations()
         3 >= appleInvocations()
         4 >= cognitoInvocations()
+
+        when:
+        sleep(6_000) // cache expires the token is still invalid but JWKS attempts to refresh
+        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(randomSignedJwt))
+
+        then:
+        thrown(HttpClientResponseException)
     }
 
     @Requires(property = 'spec.name', value = 'JwksCacheSpec')
@@ -542,5 +558,40 @@ class JwksCacheSpec extends Specification {
         List<JWK> retrieveJsonWebKeys() {
             getJwks()
         }
+    }
+
+
+    private int googleInvocations() {
+        googleEmbeddedServer.applicationContext.getBean(GoogleKeysController).invocations
+    }
+
+    private int appleInvocations() {
+        appleEmbeddedServer.applicationContext.getBean(AppleKeysController).invocations
+    }
+
+    private int cognitoInvocations() {
+        cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations
+    }
+
+    private static String login(BlockingHttpClient client) {
+        BearerAccessRefreshToken bearerAccessRefreshToken = client.retrieve(HttpRequest.POST('/login', [username: 'sherlock', password: 'elementary']), BearerAccessRefreshToken)
+        assert bearerAccessRefreshToken
+        assert bearerAccessRefreshToken.accessToken
+        bearerAccessRefreshToken.accessToken
+    }
+
+    private static String randomSignedJwt() {
+        SecureRandom random = new SecureRandom()
+        byte[] sharedSecret = new byte[32]
+        random.nextBytes(sharedSecret)
+        JWSSigner signer = new MACSigner(sharedSecret)
+        JWSObject jwsObject = new JWSObject(new JWSHeader(JWSAlgorithm.HS256), new Payload('{"username": "sherlock"}'))
+        jwsObject.sign(signer)
+        jwsObject.serialize()
+    }
+
+    private static void refresh(BlockingHttpClient client) {
+        HttpResponse<?> response = client.exchange(HttpRequest.POST('/refresh', '{"force": true}'))
+        assert response.status() == HttpStatus.OK
     }
 }

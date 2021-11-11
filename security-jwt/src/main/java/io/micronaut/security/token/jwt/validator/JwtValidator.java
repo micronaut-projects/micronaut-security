@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * A builder style class for validating JWT tokens against any number of provided
@@ -205,10 +204,13 @@ public final class JwtValidator {
         if (sortedConfigs.stream().anyMatch(it -> it instanceof JwksCache)) {
             for (SignatureConfiguration config: sortedConfigs) {
                 if (config instanceof JwksCache) {
-                    ((JwksCache) config).clearJsonWebKeySet();
-                    optionalJWT = validate(jwt, config);
-                    if (optionalJWT.isPresent()) {
-                        return optionalJWT;
+                    JwksCache jwksCache = (JwksCache) config;
+                    if (jwksCache.isJwksCacheExpired().orElse(false)) {
+                        jwksCache.clearJwksCache();
+                        optionalJWT = validate(jwt, config);
+                        if (optionalJWT.isPresent()) {
+                            return optionalJWT;
+                        }
                     }
                 }
             }
@@ -288,9 +290,8 @@ public final class JwtValidator {
     private static Optional<Boolean> signatureConfigurationMatchesKid(@NonNull SignatureConfiguration sig,
                                                                       @NonNull String kid) {
         return sig instanceof JwksCache ?
-                (((JwksCache) sig).getJsonWebKeySetKeyIDs().isEmpty() ?
-                        Optional.empty() :
-                        Optional.of(((JwksCache) sig).getJsonWebKeySetKeyIDs().contains(kid)))
+                (((JwksCache) sig).getJwkstKeyIDs().isPresent() ?
+                        Optional.of(((JwksCache) sig).getJwkstKeyIDs().get().contains(kid)) : Optional.empty())
                 : Optional.empty();
     }
 
@@ -298,7 +299,7 @@ public final class JwtValidator {
         if (sig instanceof JwksCache) {
             // {@link JwksSignature#supports} does an HTTP request if the Json Web Key Set is not present.
             // Thus, don't call it unless the keys have been already been fetched.
-            if (((JwksCache) sig).isJsonWebKeySetPresent()) {
+            if (((JwksCache) sig).isJwksCachePresent()) {
                 return sig.supports(algorithm);
             }
         } else {

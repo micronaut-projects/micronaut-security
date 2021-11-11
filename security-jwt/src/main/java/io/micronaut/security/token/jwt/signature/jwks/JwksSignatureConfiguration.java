@@ -41,4 +41,10 @@ public interface JwksSignatureConfiguration {
      */
     @Nullable
     KeyType getKeyType();
+
+    /**
+     * @return The number of seconds to cache the JWKS.
+     */
+    @NonNull
+    Integer getCacheExpiration();
 }
