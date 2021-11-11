@@ -1352,7 +1352,7 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
     override fun checkSensitiveAuthenticated(@NonNull request: HttpRequest&lt;*&gt;,
                                              @NonNull authentication: Authentication,
                                              @NonNull method: ExecutableMethod&lt;*, *&gt;): Publisher&lt;SecurityRuleResult&gt; {
-        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication)) {
+        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication.roles)) {
             Mono.just(SecurityRuleResult.ALLOWED)
         } else {
             Mono.just(SecurityRuleResult.REJECTED)
