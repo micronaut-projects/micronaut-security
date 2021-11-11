@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
 @EachBean(JwksSignatureConfiguration.class)
 public class JwksSignature implements JwksCache, SignatureConfiguration {
 
+    @Deprecated
     public static final int DEFAULT_REFRESH_JWKS_ATTEMPTS = 1;
 
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);
@@ -145,17 +146,6 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Override
     public boolean verify(SignedJWT jwt) throws JOSEException {
-        return verify(jwt,  getRefreshJwksAttempts());
-    }
-
-    /**
-     *
-     * @param jwt the signed JWT
-     * @param refreshKeysAttempts Number of times to attempt refreshing the JWK Set
-     * @return whether the signed JWT is verified
-     * @throws JOSEException exception when verifying the JWT
-     */
-    protected boolean verify(SignedJWT jwt, int refreshKeysAttempts) throws JOSEException {
         List<JWK> matches = matches(jwt, getJWKSet().orElse(null));
         if (LOG.isDebugEnabled()) {
             LOG.debug("Found {} matching JWKs", matches.size());
@@ -163,13 +153,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
         if (matches == null || matches.isEmpty()) {
             return false;
         }
-        boolean verified = verify(matches, jwt);
-        if (!verified && refreshKeysAttempts > 0) {
-            //Clear the cache in case the provider changed the key set
-            clearJsonWebKeySet();
-            return verify(jwt, refreshKeysAttempts - 1);
-        }
-        return verified;
+        return verify(matches, jwt);
     }
 
     @Override
@@ -281,6 +265,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * Returns the number of attempts to refresh the cached JWKS.
      * @return Number of attempts to refresh the cached JWKS.
      */
+    @Deprecated
     public int getRefreshJwksAttempts() {
         return DEFAULT_REFRESH_JWKS_ATTEMPTS;
     }
