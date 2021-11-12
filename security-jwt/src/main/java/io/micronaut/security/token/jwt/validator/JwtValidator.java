@@ -287,8 +287,8 @@ public final class JwtValidator {
     private static Optional<Boolean> signatureConfigurationMatchesKid(@NonNull SignatureConfiguration sig,
                                                                       @NonNull String kid) {
         return sig instanceof JwksCache ?
-                (((JwksCache) sig).getJwkstKeyIDs().isPresent() ?
-                        Optional.of(((JwksCache) sig).getJwkstKeyIDs().get().contains(kid)) : Optional.empty())
+                (((JwksCache) sig).getJwksKeyIDs().isPresent() ?
+                        Optional.of(((JwksCache) sig).getJwksKeyIDs().get().contains(kid)) : Optional.empty())
                 : Optional.empty();
     }
 

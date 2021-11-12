@@ -47,5 +47,5 @@ public interface JwksCache {
      * @return Key IDs for JWK Set or empty optional if JWKS still not cached
      */
     @NonNull
-    Optional<List<String>> getJwkstKeyIDs();
+    Optional<List<String>> getJwksKeyIDs();
 }
