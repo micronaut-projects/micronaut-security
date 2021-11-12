@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Designates a class which caching a Json Web Key Set which may typically be fetched from a remote authorization server.
+ * Designates a class which caches a Json Web Key Set which may typically be fetched from a remote authorization server.
  * @author Sergio del Amo
  * @since 3.2.0
  */
