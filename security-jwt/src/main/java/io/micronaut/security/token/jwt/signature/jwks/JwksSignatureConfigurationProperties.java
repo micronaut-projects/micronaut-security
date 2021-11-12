@@ -61,7 +61,7 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     }
 
     /**
-     * JWKS cache expiration. ({@value #DEFAULT_CACHE_EXPIRATION}).
+     * JWKS cache expiration. Default value {@value #DEFAULT_CACHE_EXPIRATION} seconds.
      * @param cacheExpiration The expiration
      */
     public void setCacheExpiration(Integer cacheExpiration) {
