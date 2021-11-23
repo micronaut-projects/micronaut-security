@@ -154,6 +154,7 @@ public class EndSessionEndpointResolver {
         }
     }
 
+    @NonNull
     private Optional<EndSessionEndpoint> oktaEndSessionEndpoint(OauthClientConfiguration oauthClientConfiguration,
                                                                 Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
                                                                 EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
