@@ -1,3 +1,7 @@
+plugins {
+    id "io.micronaut.build.internal.module"
+}
+
 dependencies {
     annotationProcessor project(":security-annotations")
 
@@ -20,3 +24,5 @@ dependencies {
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+
+group "io.micronaut.security"

@@ -1,16 +1,27 @@
 plugins {
+    id 'java-library'
     id 'groovy'
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    implementation "io.micronaut:micronaut-http-server-netty"
-    implementation "io.micronaut:micronaut-http-client"
     api "org.gebish:geb-spock:$gebVersion"
+    compileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    implementation "io.micronaut.test:micronaut-test-spock"
+    implementation "io.micronaut:micronaut-http-server-netty:$micronautVersion"
+    implementation "io.micronaut:micronaut-http-client:$micronautVersion"
     implementation "org.testcontainers:selenium"
     implementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
     implementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
     implementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
-    testImplementation "io.projectreactor:reactor-core"
     runtimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
 }
 
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}
