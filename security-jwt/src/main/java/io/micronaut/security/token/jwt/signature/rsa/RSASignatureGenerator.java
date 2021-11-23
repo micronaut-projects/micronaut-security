@@ -28,6 +28,7 @@ import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
 
 import io.micronaut.core.annotation.NonNull;
 import java.security.interfaces.RSAPrivateKey;
+import java.util.Objects;
 
 /**
  * RSA signature Generator. Expands {@link RSASignature} to add methods to sign JWT.
@@ -53,6 +54,7 @@ public class RSASignatureGenerator extends RSASignature implements SignatureGene
         if (config instanceof JwkProvider) {
             ((JwkProvider) config).retrieveJsonWebKeys().stream()
                     .map(JWK::getKeyID)
+                    .filter(Objects::nonNull)
                     .findFirst()
                     .ifPresent(keyIdentifier -> this.keyId = keyIdentifier);
         }
