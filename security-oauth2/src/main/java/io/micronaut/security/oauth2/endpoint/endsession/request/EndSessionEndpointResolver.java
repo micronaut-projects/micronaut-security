@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -41,10 +42,6 @@ import java.util.function.Supplier;
 public class EndSessionEndpointResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(EndSessionEndpointResolver.class);
-    private static final String OKTA = "okta";
-    private static final String COGNITO = "cognito";
-    private static final String AUTH0 = "auth0";
-    private static final String KEYCLOAK = "/auth/realms/";
 
     private final BeanContext beanContext;
 
@@ -115,43 +112,57 @@ public class EndSessionEndpointResolver {
             return Optional.empty();
         }
 
-        if (issuer.contains(OKTA)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
-            }
-            SecurityConfiguration securityConfiguration = beanContext.getBean(SecurityConfiguration.class);
-            TokenResolver tokenResolver = beanContext.getBean(TokenResolver.class);
-            return Optional.of(new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder,
-                        oauthClientConfiguration,
-                        openIdProviderMetadata,
-                        securityConfiguration,
-                        tokenResolver));
-        }
+        return getEndSessionEndpoint(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder, providerName, issuer);
+    }
 
-        if (issuer.contains(COGNITO)) {
+    @NonNull
+    private Optional<EndSessionEndpoint> getEndSessionEndpoint(OauthClientConfiguration oauthClientConfiguration,
+                                                               Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
+                                                               EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                                               @NonNull String providerName,
+                                                               @NonNull String issuer) {
+        Optional<AuthorizationServer> inferOptional = AuthorizationServer.infer(issuer);
+        if (!inferOptional.isPresent()) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Resolved the AwsCognitoEndSessionEndpoint for provider [{}]", providerName);
+                LOG.debug("No EndSessionEndpoint can be resolved. The issuer for provider [{}] does not match any of the providers supported by default", providerName);
             }
-            return Optional.of(new AwsCognitoEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+            return Optional.empty();
         }
+        switch (inferOptional.get()) {
+            case OKTA:
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
+                }
+                return oktaEndSessionEndpoint(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder);
+            case COGNITO:
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Resolved the AwsCognitoEndSessionEndpoint for provider [{}]", providerName);
+                }
+                return Optional.of(new AwsCognitoEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+            case AUTH0:
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Resolved the Auth0EndSessionEndpoint for provider [{}]", providerName);
+                }
+                return Optional.of(new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+            case KEYCLOAK:
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Resolved the KeycloakEndSessionEndpoint for provider [{}]", providerName);
+                }
+                return Optional.of(new KeycloakEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+            default:
+                return Optional.empty();
+        }
+    }
 
-        if (issuer.contains(AUTH0)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Resolved the Auth0EndSessionEndpoint for provider [{}]", providerName);
-            }
-            return Optional.of(new Auth0EndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
-        }
-
-        if (issuer.contains(KEYCLOAK)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Resolved the KeycloakEndSessionEndpoint for provider [{}]", providerName);
-            }
-            return Optional.of(new KeycloakEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
-        }
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("No EndSessionEndpoint can be resolved. The issuer for provider [{}] does not match any of the providers supported by default", providerName);
-        }
-        return Optional.empty();
+    private Optional<EndSessionEndpoint> oktaEndSessionEndpoint(OauthClientConfiguration oauthClientConfiguration,
+                                                                Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
+                                                                EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
+        SecurityConfiguration securityConfiguration = beanContext.getBean(SecurityConfiguration.class);
+        TokenResolver tokenResolver = beanContext.getBean(TokenResolver.class);
+        return Optional.of(new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder,
+                oauthClientConfiguration,
+                openIdProviderMetadata,
+                securityConfiguration,
+                tokenResolver));
     }
 }
