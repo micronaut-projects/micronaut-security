@@ -1,9 +1,22 @@
 plugins {
+    id 'java-library'
     id 'groovy'
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
+    annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    api "io.micronaut:micronaut-inject"
     implementation project(":security")
     implementation "io.projectreactor:reactor-core"
 }
 
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}

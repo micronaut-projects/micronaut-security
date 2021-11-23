@@ -1,4 +1,10 @@
+plugins {
+    id "io.micronaut.build.internal.module"
+}
+
 dependencies {
+    annotationProcessor "io.micronaut:micronaut-graal"
+
     api project(":security")
 
     implementation "io.projectreactor:reactor-core"
@@ -10,3 +16,5 @@ dependencies {
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+
+group "io.micronaut.security"
