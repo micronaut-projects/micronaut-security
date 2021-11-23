@@ -130,7 +130,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     @Override
     public boolean isExpired() {
         Instant cachedAt = jwkSetCachedAt;
-        return cachedAt != null && Instant.now().isBefore(cachedAt);
+        return cachedAt != null && Instant.now().isAfter(cachedAt);
     }
 
     @Override
