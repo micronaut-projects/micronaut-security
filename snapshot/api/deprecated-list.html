@@ -73,6 +73,7 @@
 <ul>
 <li><a href="#field">Deprecated Fields</a></li>
 <li><a href="#method">Deprecated Methods</a></li>
+<li><a href="#constructor">Deprecated Constructors</a></li>
 </ul>
 </div>
 <div class="contentContainer"><a name="field">
@@ -87,6 +88,9 @@
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#DEFAULT_REFRESH_JWKS_ATTEMPTS">io.micronaut.security.token.jwt.signature.jwks.JwksSignature.DEFAULT_REFRESH_JWKS_ATTEMPTS</a></td>
+</tr>
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/token/jwt/validator/JwtClaimsValidator.html#PREFIX">io.micronaut.security.token.jwt.validator.JwtClaimsValidator.PREFIX</a></td>
 </tr>
 </tbody>
@@ -110,19 +114,59 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/State.html#getOriginalUri--">io.micronaut.security.oauth2.endpoint.authorization.state.State.getOriginalUri()</a></td>
+<td class="colOne"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getJwkSet--">io.micronaut.security.token.jwt.signature.jwks.JwksSignature.getJwkSet()</a></td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultState.html#getOriginalUri--">io.micronaut.security.oauth2.endpoint.authorization.state.DefaultState.getOriginalUri()</a></td>
+<td class="colOne"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getJwkValidator--">io.micronaut.security.token.jwt.signature.jwks.JwksSignature.getJwkValidator()</a></td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getKeyType--">io.micronaut.security.token.jwt.signature.jwks.JwksSignature.getKeyType()</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/State.html#getOriginalUri--">io.micronaut.security.oauth2.endpoint.authorization.state.State.getOriginalUri()</a></td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultState.html#getOriginalUri--">io.micronaut.security.oauth2.endpoint.authorization.state.DefaultState.getOriginalUri()</a></td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getRefreshJwksAttempts--">io.micronaut.security.token.jwt.signature.jwks.JwksSignature.getRefreshJwksAttempts()</a></td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#getUrl--">io.micronaut.security.token.jwt.signature.jwks.JwksSignature.getUrl()</a></td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><a href="io/micronaut/security/token/RolesFinder.html#hasAnyRequiredRoles-java.util.List-io.micronaut.security.authentication.Authentication-">io.micronaut.security.token.RolesFinder.hasAnyRequiredRoles(List&lt;String&gt;, Authentication)</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/RolesFinder.html#hasAnyRequiredRoles-java.util.List-java.util.Map-"><code>RolesFinder.hasAnyRequiredRoles(List, Map)</code></a> instead.</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colOne"><a href="io/micronaut/security/token/RolesFinder.html#hasAnyRequiredRoles-java.util.List-io.micronaut.security.token.Claims-">io.micronaut.security.token.RolesFinder.hasAnyRequiredRoles(List&lt;String&gt;, Claims)</a>
 <div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/RolesFinder.html#hasAnyRequiredRoles-java.util.List-java.util.Map-"><code>RolesFinder.hasAnyRequiredRoles(List, Map)</code></a> instead.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#matches-com.nimbusds.jwt.SignedJWT-com.nimbusds.jose.jwk.JWKSet-int-">io.micronaut.security.token.jwt.signature.jwks.JwksSignature.matches(SignedJWT, JWKSet, int)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#matches-com.nimbusds.jwt.SignedJWT-com.nimbusds.jose.jwk.JWKSet-"><code>JwksSignature.matches(SignedJWT, JWKSet)</code></a> instead</span></div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<a name="constructor">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<table class="deprecatedSummary" border="0" cellpadding="3" cellspacing="0" summary="Deprecated Constructors table, listing deprecated constructors, and an explanation">
+<caption><span>Deprecated Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#JwksSignature-java.lang.String-com.nimbusds.jose.jwk.KeyType-io.micronaut.security.token.jwt.signature.jwks.JwkValidator-">io.micronaut.security.token.jwt.signature.jwks.JwksSignature(String, KeyType, JwkValidator)</a>
+<div class="block"><span class="deprecationComment">Use <a href="io/micronaut/security/token/jwt/signature/jwks/JwksSignature.html#JwksSignature-io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration-io.micronaut.security.token.jwt.signature.jwks.JwkValidator-"><code>JwksSignature(JwksSignatureConfiguration, JwkValidator)</code></a> instead.</span></div>
 </td>
 </tr>
 </tbody>
