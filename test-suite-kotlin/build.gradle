@@ -1,9 +1,27 @@
 plugins {
+    id "groovy"
     id "org.jetbrains.kotlin.jvm" version "1.6.0"
     id("org.jetbrains.kotlin.kapt") version "1.6.0"
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
+    annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    api "io.micronaut:micronaut-inject"
+    testAnnotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    testCompileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
+    testImplementation("org.spockframework:spock-core:${spockVersion}") {
+        exclude module:'groovy-all'
+    }
+    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
+
     kaptTest "io.micronaut:micronaut-inject-java:$micronautVersion"
     testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-server-netty"
@@ -16,6 +34,10 @@ dependencies {
     testImplementation "io.projectreactor:reactor-core"
 }
 
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = '1.8'
@@ -24,3 +46,8 @@ compileTestKotlin {
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}

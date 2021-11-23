@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
@@ -25,9 +24,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 
 /**
  * Factory to create {@link JwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
@@ -49,18 +46,8 @@ public class JwksUriSignatureFactory {
     @EachBean(DefaultOpenIdProviderMetadata.class)
     public JwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
                                                 JwkValidator jwkValidator) {
-        return new JwksSignature(new JwksSignatureConfiguration() {
-            @NonNull
-            @Override
-            public String getUrl() {
-                return openIdProviderMetadata.get().getJwksUri();
-            }
-
-            @Nullable
-            @Override
-            public KeyType getKeyType() {
-                return null;
-            }
-        }, jwkValidator);
+        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties();
+        jwksSignatureConfiguration.setUrl(openIdProviderMetadata.get().getJwksUri());
+        return new JwksSignature(jwksSignatureConfiguration, jwkValidator);
     }
 }

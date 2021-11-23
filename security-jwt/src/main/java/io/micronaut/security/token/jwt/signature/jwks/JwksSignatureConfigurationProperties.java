@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachProperty;
+import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 import io.micronaut.core.annotation.NonNull;
@@ -40,9 +41,33 @@ public class JwksSignatureConfigurationProperties implements JwksSignatureConfig
     @SuppressWarnings("WeakerAccess")
     public static final KeyType DEFAULT_KEYTYPE = KeyType.RSA;
 
+    /**
+     * The default cache expiration.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final int DEFAULT_CACHE_EXPIRATION = 60;
+
+    @NonNull
+    private Integer cacheExpiration = DEFAULT_CACHE_EXPIRATION;
+
     private String url;
 
     private KeyType keyType = DEFAULT_KEYTYPE;
+
+    @Override
+    @NonNull
+    public Integer getCacheExpiration() {
+        return cacheExpiration;
+    }
+
+    /**
+     * JWKS cache expiration. Default value {@value #DEFAULT_CACHE_EXPIRATION} seconds.
+     * @param cacheExpiration The expiration
+     */
+    public void setCacheExpiration(Integer cacheExpiration) {
+        ArgumentUtils.requireNonNull("cacheExpiration", cacheExpiration);
+        this.cacheExpiration = cacheExpiration;
+    }
 
     /**
      *
