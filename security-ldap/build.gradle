@@ -3,6 +3,8 @@ plugins {
 }
 
 dependencies {
+    annotationProcessor "io.micronaut:micronaut-graal"
+
     api project(":security")
 
     implementation "io.projectreactor:reactor-core"

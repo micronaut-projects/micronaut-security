@@ -2,6 +2,8 @@ plugins {
     id "io.micronaut.build.internal.module"
 }
 dependencies {
+    annotationProcessor "io.micronaut:micronaut-graal"
+
     api "io.micronaut:micronaut-http"
     api "io.micronaut:micronaut-session"
     api project(":security")

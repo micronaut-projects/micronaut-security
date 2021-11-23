@@ -8,6 +8,7 @@ ext {
 }
 
 dependencies {
+    annotationProcessor "io.micronaut:micronaut-graal"
     api "io.micronaut:micronaut-http"
     api "io.micronaut:micronaut-http-server"
     api project(":security")
