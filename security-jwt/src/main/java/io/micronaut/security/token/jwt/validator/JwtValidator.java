@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * A builder style class for validating JWT tokens against any number of provided
@@ -202,14 +201,14 @@ public final class JwtValidator {
         }
 
         // If any of the signature configurations is a JwksCache, evict the cache and attempt to verify again
-        for (SignatureConfiguration c : sortedConfigs.stream()
-                .filter(signConf -> signConf instanceof JwksCache)
-                .collect(Collectors.toList())) {
-            if (((JwksCache) c).isJwksCacheExpired().orElse(false)) {
-                ((JwksCache) c).clearJwksCache();
-                optionalJWT = validate(jwt, c);
-                if (optionalJWT.isPresent()) {
-                    return optionalJWT;
+        for (SignatureConfiguration c : sortedConfigs) {
+            if (c instanceof JwksCache) {
+                if (((JwksCache) c).isExpired()) {
+                    ((JwksCache) c).clear();
+                    optionalJWT = validate(jwt, c);
+                    if (optionalJWT.isPresent()) {
+                        return optionalJWT;
+                    }
                 }
             }
         }
@@ -248,27 +247,27 @@ public final class JwtValidator {
         return Optional.empty();
     }
 
-    private static int compareMatchingKids(SignatureConfiguration sig,
-                                           SignatureConfiguration otherSig,
-                                           @Nullable String kid) {
-        if (kid == null) {
+    private static int compareKeyIds(SignatureConfiguration sig,
+                                     SignatureConfiguration otherSig,
+                                     @Nullable String keyId) {
+        if (keyId == null) {
             return 0;
         }
-        Optional<Boolean> matchesKid = signatureConfigurationMatchesKid(sig, kid);
-        Optional<Boolean> otherMatchesKid = signatureConfigurationMatchesKid(otherSig, kid);
-        if (matchesKid.isPresent() && otherMatchesKid.isPresent()) {
-            return otherMatchesKid.get().compareTo(matchesKid.get());
-        } else if (matchesKid.isPresent()) {
-            return matchesKid.get() ? 1 : -1;
-        } else if (otherMatchesKid.isPresent()) {
-            return otherMatchesKid.get() ? 1 : -1;
+        Optional<Boolean> matchesKeyId = signatureConfigurationMatchesKeyId(sig, keyId);
+        Optional<Boolean> otherMatchesKeyId = signatureConfigurationMatchesKeyId(otherSig, keyId);
+        if (matchesKeyId.isPresent() && otherMatchesKeyId.isPresent()) {
+            return otherMatchesKeyId.get().compareTo(matchesKeyId.get());
+        } else if (matchesKeyId.isPresent()) {
+            return matchesKeyId.get() ? 1 : -1;
+        } else if (otherMatchesKeyId.isPresent()) {
+            return otherMatchesKeyId.get() ? 1 : -1;
         }
         return 0;
     }
 
     private static Comparator<SignatureConfiguration> comparator(JWSAlgorithm algorithm, @Nullable String kid) {
         return (sig, otherSig) -> {
-            int compareKids = compareMatchingKids(sig, otherSig, kid);
+            int compareKids = compareKeyIds(sig, otherSig, kid);
             if (compareKids != 0) {
                 return compareKids;
             }
@@ -284,22 +283,20 @@ public final class JwtValidator {
         };
     }
 
-    private static Optional<Boolean> signatureConfigurationMatchesKid(@NonNull SignatureConfiguration sig,
-                                                                      @NonNull String kid) {
-        return sig instanceof JwksCache ?
-                (((JwksCache) sig).getJwksKeyIDs().isPresent() ?
-                        Optional.of(((JwksCache) sig).getJwksKeyIDs().get().contains(kid)) : Optional.empty())
-                : Optional.empty();
+    private static Optional<Boolean> signatureConfigurationMatchesKeyId(@NonNull SignatureConfiguration sig,
+                                                                        @NonNull String keyId) {
+        if (sig instanceof JwksCache) {
+            final Optional<List<String>> keyIds = ((JwksCache) sig).getKeyIds();
+            return keyIds.map(ids -> ids.contains(keyId));
+        } else {
+            return Optional.empty();
+        }
     }
 
     private static boolean signatureConfigurationSupportsAlgorithm(@NonNull SignatureConfiguration sig, @NonNull JWSAlgorithm algorithm) {
-        if (sig instanceof JwksCache) {
-            // {@link JwksSignature#supports} does an HTTP request if the Json Web Key Set is not present.
-            // Thus, don't call it unless the keys have been already been fetched.
-            if (((JwksCache) sig).isJwksCachePresent()) {
-                return sig.supports(algorithm);
-            }
-        } else {
+        // {@link JwksSignature#supports} does an HTTP request if the Json Web Key Set is not present.
+        // Thus, don't call it unless the keys have been already been fetched.
+        if (!(sig instanceof JwksCache) || ((JwksCache) sig).isPresent()) {
             return sig.supports(algorithm);
         }
         return false;

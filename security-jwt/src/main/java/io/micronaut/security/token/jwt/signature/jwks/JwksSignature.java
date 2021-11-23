@@ -37,6 +37,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -61,7 +62,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);
     private final JwkValidator jwkValidator;
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
-    private volatile Date jwkSetCachedAt;
+    private volatile Instant jwkSetCachedAt;
     private volatile JWKSet jwkSet;
 
     /**
@@ -80,7 +81,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * @param url The JWK url
      * @param keyType The JWK key type
      * @param jwkValidator JWK Validator to be used.
-     * @deprecated Use {@link JwksSignature(JwksSignatureConfiguration,JwkValidator)} instead.
+     * @deprecated Use {@link #JwksSignature(JwksSignatureConfiguration, JwkValidator)} instead.
      */
     @Deprecated
     public JwksSignature(String url,
@@ -118,7 +119,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
                 if (jwkSet == null) {
                     jwkSet = loadJwkSet(this.jwksSignatureConfiguration.getUrl());
                     this.jwkSet = jwkSet;
-                    this.jwkSetCachedAt = Date.from(Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS));
+                    this.jwkSetCachedAt = Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS);
                 }
             }
         }
@@ -130,28 +131,41 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     }
 
     @Override
+    public boolean isExpired() {
+        Instant cachedAt = jwkSetCachedAt;
+        return cachedAt != null && Instant.now().isBefore(cachedAt);
+    }
+
+    @Override
+    public void clear() {
+        jwkSet = null;
+        jwkSetCachedAt = null;
+    }
+
+    @Override
+    public boolean isPresent() {
+        return jwkSet != null;
+    }
+
+    @Override
     @NonNull
-    public synchronized Optional<Boolean> isJwksCacheExpired() {
-        Date cachedAt = this.jwkSetCachedAt;
-        return isExpired(cachedAt);
-    }
-
-    @Override
-    public synchronized void clearJwksCache() {
-        this.jwkSet = null;
-        this.jwkSetCachedAt = null;
-    }
-
-    @Override
-    public synchronized boolean isJwksCachePresent() {
-        return this.jwkSet != null;
-    }
-
-    @Override
-    @NonNull
-    public synchronized Optional<List<String>> getJwksKeyIDs() {
+    public Optional<List<String>> getKeyIds() {
         JWKSet jwkSet = this.jwkSet;
-        return parseJwksKeyIDs(jwkSet);
+        if (jwkSet != null) {
+            List<String> keyIds = new ArrayList<>(jwkSet.getKeys().size());
+            for (JWK key : jwkSet.getKeys()) {
+                String keyId = key.getKeyID();
+                if (keyId != null) {
+                    keyIds.add(keyId);
+                }
+            }
+            if (keyIds.isEmpty()) {
+                return Optional.empty();
+            } else {
+                return Optional.of(keyIds);
+            }
+        }
+        return Optional.empty();
     }
 
     /**
@@ -259,7 +273,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
                 LOG.debug("JWT Key ID: {}", keyId);
             }
             if (LOG.isDebugEnabled()) {
-                LOG.debug("JWK Set Key IDs: {}", String.join(",", getJwksKeyIDs().orElse(Collections.emptyList())));
+                LOG.debug("JWK Set Key IDs: {}", String.join(",", getKeyIds().orElse(Collections.emptyList())));
             }
             if (keyId != null) {
                 builder = builder.keyID(keyId);
@@ -268,20 +282,6 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
             matches = new JWKSelector(builder.build()).select(jwkSet);
         }
         return matches;
-    }
-
-    @NonNull
-    private static Optional<List<String>> parseJwksKeyIDs(@Nullable JWKSet jwkSet) {
-        return jwkSet == null ? Optional.empty() : Optional.of(jwkSet.getKeys()
-                .stream()
-                .map(JWK::getKeyID)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList()));
-    }
-
-    @NonNull
-    private static Optional<Boolean> isExpired(@Nullable Date cachedAt) {
-        return (cachedAt == null) ? Optional.empty() : Optional.of(!new Date().before(cachedAt));
     }
 
     /**
@@ -303,7 +303,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     public int getRefreshJwksAttempts() {
         return DEFAULT_REFRESH_JWKS_ATTEMPTS;
     }
-    
+
     /**
      *
      * @return A JSON Web Key Validator.

@@ -29,23 +29,22 @@ public interface JwksCache {
      *
      * @return Whether the cache has been populated.
      */
-    boolean isJwksCachePresent();
+    boolean isPresent();
 
     /**
      *
      * @return Whether the cache is expired or empty optional if JWKS still not cached
      */
-    @NonNull
-    Optional<Boolean> isJwksCacheExpired();
+    boolean isExpired();
 
     /**
      * Clears the JWK Set cache.
      */
-    void clearJwksCache();
+    void clear();
 
     /*
      * @return Key IDs for JWK Set or empty optional if JWKS still not cached
      */
     @NonNull
-    Optional<List<String>> getJwksKeyIDs();
+    Optional<List<String>> getKeyIds();
 }
