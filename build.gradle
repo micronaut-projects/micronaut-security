@@ -1,45 +1,4 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath "io.micronaut.build.internal:micronaut-gradle-plugins:4.2.6"
-    }
+plugins {
+    id "io.micronaut.build.internal.docs"
+    id "io.micronaut.build.internal.dependency-updates"
 }
-
-subprojects { Project subproject ->
-    group "io.micronaut.security"
-    apply plugin: "io.micronaut.build.internal.common"
-
-    apply plugin: "io.micronaut.build.internal.dependency-updates"
-    if (!subproject.name.startsWith("test-suite")) {
-        apply plugin: "io.micronaut.build.internal.publishing"
-    }
-
-    dependencies {
-        annotationProcessor "io.micronaut:micronaut-inject-java"
-        if (subproject.parent.name != "examples" && subproject.name != "examples" && !subproject.name.startsWith("test-suite")) {
-            annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
-        }
-        annotationProcessor "io.micronaut:micronaut-graal"
-
-        api "io.micronaut:micronaut-inject"
-        
-        testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-        testImplementation("org.spockframework:spock-core:${spockVersion}") {
-            exclude module:'groovy-all'
-        }
-        testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"        
-    }
-
-    project.tasks.withType(Test) {
-        reports {
-          junitXml.enabled = true
-        }        
-    }        
-}
-
-apply plugin: "io.micronaut.build.internal.docs"
-apply plugin: "io.micronaut.build.internal.dependency-updates"
-
