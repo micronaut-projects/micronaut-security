@@ -23,5 +23,3 @@ dependencies {
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
-
-group "io.micronaut.security"

@@ -1,5 +1,3 @@
 plugins {
     id "io.micronaut.build.internal.module"
 }
-
-group "io.micronaut.security"
