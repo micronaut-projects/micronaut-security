@@ -36,5 +36,3 @@ test {
     testLogging.showStandardStreams = true
     testLogging.exceptionFormat = 'full'
 }
-
-group "io.micronaut.security"
