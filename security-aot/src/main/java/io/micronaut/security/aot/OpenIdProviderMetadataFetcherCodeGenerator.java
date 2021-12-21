@@ -15,31 +15,30 @@
  */
 package io.micronaut.security.aot;
 
-import com.squareup.javapoet.AnnotationSpec;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import io.micronaut.aot.core.AOTContext;
 import io.micronaut.aot.core.AOTModule;
 import io.micronaut.aot.core.codegen.AbstractCodeGenerator;
 import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import jakarta.inject.Named;
-import jakarta.inject.Qualifier;
-import jakarta.inject.Singleton;
 
 import javax.lang.model.element.Modifier;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author Sergio del Amo
@@ -56,6 +55,8 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
     public static final String FORMAT_STRING = "$S";
     public static final String ANNOTATION_ATTRIBUTE_VALUE = "value";
 
+    private static final ParameterizedTypeName SUPPLIER_OF_METADATA = ParameterizedTypeName.get(Supplier.class, DefaultOpenIdProviderMetadata.class);
+
     @Override
     public void generate(@NonNull AOTContext context) {
 
@@ -65,14 +66,22 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         Collection<OpenIdClientConfiguration> clientConfigurations = ctx
                 .getBeansOfType(OpenIdClientConfiguration.class);
 
-        for (OpenIdClientConfiguration clientConfig : clientConfigurations) {
-            if (clientConfig.getIssuer().isPresent() && ctx.containsBean(OpenIdProviderMetadataFetcher.class, Qualifiers.byName(clientConfig.getName()))) {
-                OpenIdProviderMetadataFetcher fetcher = ctx.getBean(OpenIdProviderMetadataFetcher.class, Qualifiers.byName(clientConfig.getName()));
-                DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = fetcher.fetch();
-                String simpleName = "Aot" + OpenIdProviderMetadataFetcher.class.getSimpleName() + StringUtils.capitalize(clientConfig.getName());
-                context.registerGeneratedSourceFile(generateJavaFile(context, simpleName, clientConfig, defaultOpenIdProviderMetadata));
+        context.registerStaticInitializer(staticMethod("preloadOpenIdMetadata", body -> {
+            body.addStatement("$T configs = new $T()",
+                    ParameterizedTypeName.get(ClassName.get(Map.class), TypeName.get(String.class), SUPPLIER_OF_METADATA),
+                    ParameterizedTypeName.get(ClassName.get(HashMap.class), TypeName.get(String.class), SUPPLIER_OF_METADATA)
+            );
+            for (OpenIdClientConfiguration clientConfig : clientConfigurations) {
+                if (clientConfig.getIssuer().isPresent() && ctx.containsBean(OpenIdProviderMetadataFetcher.class, Qualifiers.byName(clientConfig.getName()))) {
+                    OpenIdProviderMetadataFetcher fetcher = ctx.getBean(OpenIdProviderMetadataFetcher.class, Qualifiers.byName(clientConfig.getName()));
+                    DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = fetcher.fetch();
+                    String simpleName = "Aot" + OpenIdProviderMetadataFetcher.class.getSimpleName() + StringUtils.capitalize(clientConfig.getName());
+                    context.registerGeneratedSourceFile(generateJavaFile(context, simpleName, clientConfig, defaultOpenIdProviderMetadata));
+                    body.addStatement("context.put($S, $T::create)", clientConfig.getName(), ClassName.bestGuess(simpleName));
+                }
             }
-        }
+            body.addStatement("$T.set($T, configs)", StaticOptimizations.class, DefaultOpenIdProviderMetadataFetcher.Optimizations.class);
+        }));
         ctx.close();
     }
 
@@ -81,25 +90,14 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                                       @NonNull OpenIdClientConfiguration clientConfig,
                                       @NonNull DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata) {
         TypeSpec.Builder builder = TypeSpec.classBuilder(fileSimpleName)
-                .addAnnotation(Singleton.class)
-                .addAnnotation(AnnotationSpec.builder(Named.class)
-                        .addMember(ANNOTATION_ATTRIBUTE_VALUE, FORMAT_STRING, clientConfig.getName())
-                        .build())
-                .addAnnotation(AnnotationSpec.builder(Replaces.class)
-                        .addMember(ANNOTATION_ATTRIBUTE_VALUE, FORMAT_TYPE, OpenIdProviderMetadataFetcher.class)
-                        .build())
-                .addSuperinterface(OpenIdProviderMetadataFetcher.class)
-                .addMethod(MethodSpec.methodBuilder("fetch")
+                .addModifiers(Modifier.PUBLIC)
+                .addMethod(MethodSpec.methodBuilder("create")
                         .returns(DefaultOpenIdProviderMetadata.class)
-                        .addModifiers(Modifier.PUBLIC)
-                        .addAnnotation(Override.class)
-                        .addAnnotation(NonNull.class)
-                        .addCode("return this.defaultOpenIdProviderMetadata")
-                        .build())
-                .addField(FieldSpec.builder(DefaultOpenIdProviderMetadata.class, "defaultOpenIdProviderMetadata").build())
-                .addMethod(MethodSpec.constructorBuilder()
-                        .addCode("this.defaultOpenIdProviderMetadata = new $T();\n", DefaultOpenIdProviderMetadata.class)
-                                .addCode("this.defaultOpenIdProviderMetadata.setUserinfoEndpoint($S);\n", defaultOpenIdProviderMetadata.getUserinfoEndpoint())
+                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                        .addStatement("$T metadata = new $T()", DefaultOpenIdProviderMetadata.class, DefaultOpenIdProviderMetadata.class)
+                        .addStatement("metadata.setUserinfoEndpoint($S)", defaultOpenIdProviderMetadata.getUserinfoEndpoint())
+                        .addStatement("return metadata")
+                        .build());
                         /*
         public void setRequireRequestUriRegistration(@Nullable Boolean requireRequestUriRegistration);
 public void setAuthorizationEndpoint(@NonNull String authorizationEndpoint);
@@ -142,7 +140,6 @@ public void setRequestObjectEncryptionAlgValuesSupported(@Nullable List<String> 
 public void setRequestObjectEncryptionEncValuesSupported(@Nullable List<String> requestObjectEncryptionEncValuesSupported);
 public void setRequestObjectSigningAlgValuesSupported(@Nullable List<String> requestObjectSigningAlgValuesSupported);
                         */
-                        .build());
         return context.javaFile(builder.build());
     }
 

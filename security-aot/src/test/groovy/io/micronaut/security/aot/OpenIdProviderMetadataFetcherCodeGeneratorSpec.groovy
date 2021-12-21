@@ -1,3 +1,4 @@
+//file:noinspection HardCodedStringLiteral
 package io.micronaut.security.aot
 
 import io.micronaut.aot.core.AOTCodeGenerator
@@ -47,8 +48,23 @@ class OpenIdProviderMetadataFetcherCodeGeneratorSpec extends AbstractSourceGener
 
         then:
         assertThatGeneratedSources {
+            createsInitializer """private static void preloadOpenIdMetadata() {
+  java.util.Map<java.lang.String, java.util.function.Supplier<io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata>> configs = new java.util.HashMap<java.lang.String, java.util.function.Supplier<io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata>>();
+  context.put("cognito", AotOpenIdProviderMetadataFetcherCognito::create);
+  io.micronaut.core.optim.StaticOptimizations.set(io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher.Optimizations, configs);
+}"""
             hasClass("AotOpenIdProviderMetadataFetcherCognito") {
-                withSources("foo")
+                withSources """package io.micronaut.test;
+
+import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
+
+public class AotOpenIdProviderMetadataFetcherCognito {
+  public static DefaultOpenIdProviderMetadata create() {
+    DefaultOpenIdProviderMetadata metadata = new DefaultOpenIdProviderMetadata();
+    metadata.setUserinfoEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/userInfo");
+    return metadata;
+  }
+}"""
             }
         }
     }

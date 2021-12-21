@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
@@ -29,17 +30,37 @@ import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
+
 
 /**
  * Default implementation of {@link OpenIdProviderMetadataFetcher}.
+ *
  * @author Sergio del Amo
  * @since 3.3.0
  */
 public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetadataFetcher {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdProviderMetadataFetcher.class);
+    private final static Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
+
     private final HttpClient client;
     private final ObjectMapper objectMapper;
     private final OpenIdClientConfiguration openIdClientConfiguration;
+
+    public static class Optimizations {
+        private final Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers;
+
+        public Optimizations(Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers) {
+            this.suppliers = suppliers;
+        }
+
+        public Optional<Supplier<DefaultOpenIdProviderMetadata>> findMetadata(String name) {
+            return Optional.ofNullable(suppliers.get(name));
+        }
+    }
 
     public DefaultOpenIdProviderMetadataFetcher(OpenIdClientConfiguration openIdClientConfiguration,
                                                 ObjectMapper objectMapper,
@@ -52,25 +73,28 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
     @Override
     @NonNull
     public DefaultOpenIdProviderMetadata fetch() {
-        return openIdClientConfiguration.getIssuer()
-                .map(issuer -> {
-                    try {
-                        URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
-                        }
-                        //TODO this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
-                        String json = client.toBlocking().retrieve(configurationUrl.toString(), String.class);
-                        return objectMapper.readValue(json, DefaultOpenIdProviderMetadata.class);
+        return OPTIMIZATIONS.findMetadata(openIdClientConfiguration.getName())
+                .map(Supplier::get)
+                .orElseGet(() -> openIdClientConfiguration.getIssuer()
+                        .map(issuer -> {
+                            try {
+                                URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
+                                if (LOG.isDebugEnabled()) {
+                                    LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
+                                }
+                                //TODO this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                                String json = client.toBlocking().retrieve(configurationUrl.toString(), String.class);
+                                return objectMapper.readValue(json, DefaultOpenIdProviderMetadata.class);
 
-                    } catch (MalformedURLException e) {
-                        throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
-                    } catch (HttpClientResponseException e) {
-                        throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
+                            } catch (MalformedURLException e) {
+                                throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
+                            } catch (HttpClientResponseException e) {
+                                throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
 
-                    } catch (JsonProcessingException e) {
-                        throw new BeanInstantiationException("JSON Processing Exception parsing issuer URL returned JSON " + issuer.toString(), e);
-                    }
-                }).orElse(new DefaultOpenIdProviderMetadata());
+                            } catch (JsonProcessingException e) {
+                                throw new BeanInstantiationException("JSON Processing Exception parsing issuer URL returned JSON " + issuer.toString(), e);
+                            }
+                        }).orElse(new DefaultOpenIdProviderMetadata())
+                );
     }
 }
