@@ -4,15 +4,13 @@ plugins {
 
 micronautBuild {
     aot {
-        version = '1.0.0-M4'
+        version = '1.0.0-M5'
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
+    compileOnly platform("io.micronaut:micronaut-bom:$micronautVersion")
+
     testCompileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
     testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     testImplementation("org.spockframework:spock-core:${spockVersion}") {
@@ -26,6 +24,5 @@ dependencies {
 
     compileOnly(project(":security-oauth2"))
     testImplementation(project(":security-oauth2"))
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
 
 }

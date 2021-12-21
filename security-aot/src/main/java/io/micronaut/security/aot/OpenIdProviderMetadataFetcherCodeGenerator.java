@@ -51,9 +51,6 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
      */
     @SuppressWarnings("WeakerAccess")
     public static final String SECURITY_AOT_MODULE_ID = "micronaut.security.xxx";
-    public static final String FORMAT_TYPE = "$T.class";
-    public static final String FORMAT_STRING = "$S";
-    public static final String ANNOTATION_ATTRIBUTE_VALUE = "value";
 
     private static final ParameterizedTypeName SUPPLIER_OF_METADATA = ParameterizedTypeName.get(Supplier.class, DefaultOpenIdProviderMetadata.class);
 
@@ -62,7 +59,6 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
 
         ApplicationContext ctx = context.getAnalyzer()
                 .getApplicationContext();
-        ctx.start();
         Collection<OpenIdClientConfiguration> clientConfigurations = ctx
                 .getBeansOfType(OpenIdClientConfiguration.class);
 
@@ -76,18 +72,16 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                     OpenIdProviderMetadataFetcher fetcher = ctx.getBean(OpenIdProviderMetadataFetcher.class, Qualifiers.byName(clientConfig.getName()));
                     DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = fetcher.fetch();
                     String simpleName = "Aot" + OpenIdProviderMetadataFetcher.class.getSimpleName() + StringUtils.capitalize(clientConfig.getName());
-                    context.registerGeneratedSourceFile(generateJavaFile(context, simpleName, clientConfig, defaultOpenIdProviderMetadata));
+                    context.registerGeneratedSourceFile(generateJavaFile(context, simpleName, defaultOpenIdProviderMetadata));
                     body.addStatement("context.put($S, $T::create)", clientConfig.getName(), ClassName.bestGuess(simpleName));
                 }
             }
             body.addStatement("$T.set($T, configs)", StaticOptimizations.class, DefaultOpenIdProviderMetadataFetcher.Optimizations.class);
         }));
-        ctx.close();
     }
 
     private JavaFile generateJavaFile(@NonNull AOTContext context,
                                       @NonNull String fileSimpleName,
-                                      @NonNull OpenIdClientConfiguration clientConfig,
                                       @NonNull DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata) {
         TypeSpec.Builder builder = TypeSpec.classBuilder(fileSimpleName)
                 .addModifiers(Modifier.PUBLIC)
