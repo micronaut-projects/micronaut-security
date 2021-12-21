@@ -62,6 +62,29 @@ public class AotOpenIdProviderMetadataFetcherCognito {
   public static DefaultOpenIdProviderMetadata create() {
     DefaultOpenIdProviderMetadata metadata = new DefaultOpenIdProviderMetadata();
     metadata.setUserinfoEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/userInfo");
+    metadata.setAuthorizationEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/authorize");
+    metadata.setIdTokenSigningAlgValuesSupported("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/authorize");
+    metadata.setIssuer("https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ");
+    metadata.setJwksUri(""https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ/.well-known/jwks.json");
+    List<String> responseTypesSupported = new ArrayList<>();
+    responseTypesSupported.add("code");
+     responseTypesSupported.add("token");
+    metadata.setResponseTypesSupported(responseTypesSupported);
+    List<String> scopesSupported = new ArrayList<>();
+    scopesSupported.add("openid");
+    scopesSupported.add("email");
+    scopesSupported.add("phone");
+    scopesSupported.add("profile");
+    metadata.setScopesSupported(scopesSupported);
+    List<String> subjectTypesSupported = new ArrayList<>();
+    subjectTypesSupported.add("public");
+    metadata.setSubjectTypesSupported(subjectTypesSupported);
+    metadata.setTokenEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/token");
+    List<String> tokenEndpointAuthMethodsSupported = new ArrayList<>();
+    tokenEndpointAuthMethodsSupported.add("client_secret_basic");
+    tokenEndpointAuthMethodsSupported.add("client_secret_post");
+    metadata.setTokenEndpointAuthMethodsSupported(tokenEndpointAuthMethodsSupported);
+    metadata.setUserinfoEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/userInfo");
     return metadata;
   }
 }"""

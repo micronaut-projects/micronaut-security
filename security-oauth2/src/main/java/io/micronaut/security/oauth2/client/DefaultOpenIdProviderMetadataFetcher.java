@@ -50,9 +50,16 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
     private final ObjectMapper objectMapper;
     private final OpenIdClientConfiguration openIdClientConfiguration;
 
+    /**
+     * AOT Optimizations.
+     */
     public static class Optimizations {
         private final Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers;
 
+        /**
+         *
+         * @param suppliers Map with key being the OpenID Name qualifier and
+         */
         public Optimizations(Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers) {
             this.suppliers = suppliers;
         }
