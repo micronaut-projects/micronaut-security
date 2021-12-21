@@ -1,10 +1,17 @@
 plugins {
-    id 'groovy'
-    id 'java-library'
+    id("io.micronaut.build.internal.aot-module")
 }
+
+micronautBuild {
+    aot {
+        version = '1.0.0-M4'
+    }
+}
+
 repositories {
     mavenCentral()
 }
+
 dependencies {
     testCompileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
     testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
@@ -16,20 +23,9 @@ dependencies {
     testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut:micronaut-http-client"
-    testImplementation project(":security-jwt")
-    testImplementation project(":security-oauth2")
-    testImplementation project(":test-suite-utils")
-    testImplementation project(":test-suite-utils-security")
-    testImplementation "io.projectreactor:reactor-core"
-}
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+    compileOnly(project(":security-oauth2"))
+    testImplementation(project(":security-oauth2"))
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
 
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("1.8")
-    targetCompatibility = JavaVersion.toVersion("1.8")
 }

@@ -22,6 +22,7 @@ import io.micronaut.core.annotation.NonNull;
  * @author Sergio del Amo
  * @since 3.3.0
  */
+@FunctionalInterface
 public interface OpenIdProviderMetadataFetcher {
     /**
      *
