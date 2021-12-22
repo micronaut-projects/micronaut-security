@@ -68,7 +68,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                 );
                 for (GeneratedFile f : files) {
                     context.registerGeneratedSourceFile(f.getJavaFile());
-                    body.addStatement("context.put($S, $T::create)", f.getName(), ClassName.bestGuess(f.getSimpleName()));
+                    body.addStatement("configs.put($S, $T::create)", f.getName(), ClassName.bestGuess(f.getSimpleName()));
                 }
                 body.addStatement("$T.set($T, configs)", StaticOptimizations.class, DefaultOpenIdProviderMetadataFetcher.Optimizations.class);
             }));
