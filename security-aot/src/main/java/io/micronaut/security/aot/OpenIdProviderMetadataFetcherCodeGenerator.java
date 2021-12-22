@@ -49,12 +49,12 @@ import java.util.function.Supplier;
  * @author Sergio del Amo
  * @since 3.3.0
  */
-@AOTModule(id = OpenIdProviderMetadataFetcherCodeGenerator.SECURITY_AOT_MODULE_ID)
-public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGenerator { //TODO renames this class
+@AOTModule(id = OpenIdProviderMetadataFetcherCodeGenerator.SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID)
+public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGenerator {
     /**
      * AOT Module ID.
      */
-    public static final String SECURITY_AOT_MODULE_ID = "micronaut.security.openid-configuration";
+    public static final String SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID = "micronaut.security.openid-configuration";
     private static final ParameterizedTypeName SUPPLIER_OF_METADATA = ParameterizedTypeName.get(Supplier.class, DefaultOpenIdProviderMetadata.class);
 
     @Override

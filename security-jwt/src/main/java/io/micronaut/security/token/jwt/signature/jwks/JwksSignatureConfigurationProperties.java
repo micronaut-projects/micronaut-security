@@ -19,7 +19,6 @@ import com.nimbusds.jose.jwk.KeyType;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import javax.validation.constraints.NotNull;
