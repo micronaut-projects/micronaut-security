@@ -69,7 +69,7 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
                 );
                 for (GeneratedFile generatedFile : files) {
                     context.registerGeneratedSourceFile(generatedFile.getJavaFile());
-                    body.addStatement("context.put($S, $T::create)", generatedFile.getName(), ClassName.bestGuess(generatedFile.getSimpleName()));
+                    body.addStatement("configs.put($S, $T::create)", generatedFile.getName(), ClassName.bestGuess(generatedFile.getSimpleName()));
                 }
                 body.addStatement("$T.set($T, configs)", StaticOptimizations.class, DefaultJwkSetFetcher.Optimizations.class);
             }));

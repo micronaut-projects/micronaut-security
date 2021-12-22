@@ -50,7 +50,7 @@ class OpenIdProviderMetadataFetcherCodeGeneratorSpec extends AbstractSourceGener
         assertThatGeneratedSources {
             createsInitializer """private static void preloadOpenIdMetadata() {
   java.util.Map<java.lang.String, java.util.function.Supplier<io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata>> configs = new java.util.HashMap<java.lang.String, java.util.function.Supplier<io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata>>();
-  context.put("cognito", AotOpenIdProviderMetadataFetcherCognito::create);
+  configs.put("cognito", AotOpenIdProviderMetadataFetcherCognito::create);
   io.micronaut.core.optim.StaticOptimizations.set(io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher.Optimizations, configs);
 }"""
             hasClass("AotOpenIdProviderMetadataFetcherCognito") {
