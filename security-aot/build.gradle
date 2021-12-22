@@ -10,19 +10,12 @@ micronautBuild {
 
 dependencies {
     compileOnly platform("io.micronaut:micronaut-bom:$micronautVersion")
+    compileOnly(project(":security-oauth2"))
 
-    testCompileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
-    testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     testImplementation("org.spockframework:spock-core:${spockVersion}") {
         exclude module:'groovy-all'
     }
-    runtimeOnly("ch.qos.logback:logback-classic:1.2.8")
-    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
-    testImplementation "io.micronaut:micronaut-management"
+    testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation "io.micronaut:micronaut-http-client"
-
-    compileOnly(project(":security-oauth2"))
     testImplementation(project(":security-oauth2"))
-
 }
