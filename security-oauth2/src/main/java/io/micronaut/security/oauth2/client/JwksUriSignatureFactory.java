@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
@@ -22,6 +23,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
@@ -36,6 +38,16 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 @Internal
 public class JwksUriSignatureFactory {
 
+    private final JwkSetFetcher<JWKSet> jwkSetFetcher;
+
+    /**
+     *
+     * @param jwkSetFetcher Json Web Key Set Fetcher
+     */
+    public JwksUriSignatureFactory(JwkSetFetcher<JWKSet> jwkSetFetcher) {
+        this.jwkSetFetcher = jwkSetFetcher;
+    }
+
     /**
      *
      * @param openIdProviderMetadata The open id provider metadata
@@ -48,6 +60,6 @@ public class JwksUriSignatureFactory {
                                                 JwkValidator jwkValidator) {
         JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties();
         jwksSignatureConfiguration.setUrl(openIdProviderMetadata.get().getJwksUri());
-        return new JwksSignature(jwksSignatureConfiguration, jwkValidator);
+        return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
     }
 }

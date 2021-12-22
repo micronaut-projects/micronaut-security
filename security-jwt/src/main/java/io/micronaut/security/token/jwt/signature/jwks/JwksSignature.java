@@ -32,9 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Inject;
-import java.io.IOException;
-import java.net.URL;
-import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -61,36 +58,52 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
     private volatile Instant jwkSetCachedAt;
     private volatile JWKSet jwkSet;
+    private final JwkSetFetcher<JWKSet> jwkSetFetcher;
 
     /**
      *
      * @param jwksSignatureConfiguration JSON Web Key Set configuration.
      * @param jwkValidator JWK Validator to be used.
+     * @param jwkSetFetcher Json Web Key Set fetcher
      */
     @Inject
     public JwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
-                         JwkValidator jwkValidator) {
+                         JwkValidator jwkValidator,
+                         JwkSetFetcher<JWKSet> jwkSetFetcher) {
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
         this.jwkValidator = jwkValidator;
+        this.jwkSetFetcher = jwkSetFetcher;
+    }
+
+    /**
+     *
+     * @param jwksSignatureConfiguration JSON Web Key Set configuration.
+     * @param jwkValidator JWK Validator to be used.
+     * @deprecated Use {@link #JwksSignature(JwksSignatureConfiguration, JwkValidator, JwkSetFetcher)} instead.
+     */
+    @Deprecated
+    public JwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
+                         JwkValidator jwkValidator) {
+        this(jwksSignatureConfiguration, jwkValidator, new DefaultJwkSetFetcher());
     }
 
     /**
      * @param url The JWK url
      * @param keyType The JWK key type
      * @param jwkValidator JWK Validator to be used.
-     * @deprecated Use {@link #JwksSignature(JwksSignatureConfiguration, JwkValidator)} instead.
+     * @deprecated Use {@link #JwksSignature(JwksSignatureConfiguration, JwkValidator, JwkSetFetcher)} instead.
      */
     @Deprecated
     public JwksSignature(String url,
                          @Nullable KeyType keyType,
                          JwkValidator jwkValidator) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("JWT validation URL: {}", url);
-        }
-        this.jwksSignatureConfiguration = new JwksSignatureConfiguration() {
+        this(new JwksSignatureConfiguration() {
             @Override
             @NonNull
             public String getUrl() {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("JWT validation URL: {}", url);
+                }
                 return url;
             }
 
@@ -104,8 +117,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
             public Integer getCacheExpiration() {
                 return JwksSignatureConfigurationProperties.DEFAULT_CACHE_EXPIRATION;
             }
-        };
-        this.jwkValidator = jwkValidator;
+        }, jwkValidator, new DefaultJwkSetFetcher());
     }
 
     private Optional<JWKSet> getJWKSet() {
@@ -135,6 +147,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     @Override
     public void clear() {
+        jwkSetFetcher.clearCache(jwksSignatureConfiguration.getUrl());
         jwkSet = null;
         jwkSetCachedAt = null;
     }
@@ -220,17 +233,8 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Nullable
     protected JWKSet loadJwkSet(String url) {
-        if (url == null) {
-            return null;
-        }
-        try {
-            return JWKSet.load(new URL(url));
-        } catch (IOException | ParseException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Exception loading JWK from " + url + ". The JwksSignature will not be used to verify a JWT if further refresh attempts fail", e);
-            }
-        }
-        return null;
+        return jwkSetFetcher.fetch(url)
+                .orElse(null);
     }
 
     /**

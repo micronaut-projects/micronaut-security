@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-
 /**
  * Default implementation of {@link OpenIdProviderMetadataFetcher}.
  *
@@ -44,37 +43,30 @@ import java.util.function.Supplier;
  */
 public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetadataFetcher {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdProviderMetadataFetcher.class);
-    private final static Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
+    private static final Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
 
     private final HttpClient client;
     private final ObjectMapper objectMapper;
     private final OpenIdClientConfiguration openIdClientConfiguration;
 
     /**
-     * AOT Optimizations.
+     *
+     * @param openIdClientConfiguration OpenID Client Configuration
+     * @param objectMapper Object Mapper
+     * @param client HTTP Client
      */
-    public static class Optimizations {
-        private final Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers;
-
-        /**
-         *
-         * @param suppliers Map with key being the OpenID Name qualifier and
-         */
-        public Optimizations(Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers) {
-            this.suppliers = suppliers;
-        }
-
-        public Optional<Supplier<DefaultOpenIdProviderMetadata>> findMetadata(String name) {
-            return Optional.ofNullable(suppliers.get(name));
-        }
-    }
-
     public DefaultOpenIdProviderMetadataFetcher(OpenIdClientConfiguration openIdClientConfiguration,
                                                 ObjectMapper objectMapper,
                                                 @Client HttpClient client) {
         this.openIdClientConfiguration = openIdClientConfiguration;
         this.objectMapper = objectMapper;
         this.client = client;
+    }
+
+    @Override
+    @NonNull
+    public String getName() {
+        return openIdClientConfiguration.getName();
     }
 
     @Override
@@ -103,5 +95,29 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
                             }
                         }).orElse(new DefaultOpenIdProviderMetadata())
                 );
+    }
+
+    /**
+     * AOT Optimizations.
+     */
+    public static class Optimizations {
+        private final Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers;
+
+        /**
+         *
+         * @param suppliers Map with key being the OpenID Name qualifier and
+         */
+        public Optimizations(Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers) {
+            this.suppliers = suppliers;
+        }
+
+        /**
+         *
+         * @param name name qualifier
+         * @return {@link DefaultOpenIdProviderMetadata} supplier or empty optional if not found for the given name qualifier.
+         */
+        public Optional<Supplier<DefaultOpenIdProviderMetadata>> findMetadata(String name) {
+            return Optional.ofNullable(suppliers.get(name));
+        }
     }
 }

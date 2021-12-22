@@ -13,23 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.client;
+package io.micronaut.security.token.jwt.signature.jwks;
 
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.naming.Named;
+import io.micronaut.core.annotation.Nullable;
+import java.util.Optional;
+
 
 /**
- * Fetches OpenIdProviderMetadata for a {@link io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration}.
+ * Fetch a Json Web Key Set by a given url.
  * @author Sergio del Amo
  * @since 3.3.0
+ * @param <T> Json Web Key Set type
  */
-@DefaultImplementation(DefaultOpenIdProviderMetadataFetcher.class)
-public interface OpenIdProviderMetadataFetcher extends Named {
+@DefaultImplementation(DefaultJwkSetFetcher.class)
+public interface JwkSetFetcher<T> {
     /**
      *
-     * @return OpenID Provider Metadata
+     * @param url The Jwks uri
+     * @return The Json Web Key Set representation or an empty optional if it could not be loaded
      */
     @NonNull
-    DefaultOpenIdProviderMetadata fetch();
+    Optional<T> fetch(@Nullable String url);
+
+    /**
+     * @param url The Jwks uri
+     * Clears cache
+     */
+    void clearCache(String url);
 }

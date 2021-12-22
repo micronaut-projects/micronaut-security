@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
+ * Optimization to fetch OpenID Configuration at build time.
  * @author Sergio del Amo
  * @since 3.3.0
  */
@@ -58,28 +59,41 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
 
     @Override
     public void generate(@NonNull AOTContext context) {
+        List<GeneratedFile> files = generateJavaFiles(context);
+        if (!files.isEmpty()) {
+            context.registerStaticInitializer(staticMethod("preloadOpenIdMetadata", body -> {
+                body.addStatement("$T configs = new $T()",
+                        ParameterizedTypeName.get(ClassName.get(Map.class), TypeName.get(String.class), SUPPLIER_OF_METADATA),
+                        ParameterizedTypeName.get(ClassName.get(HashMap.class), TypeName.get(String.class), SUPPLIER_OF_METADATA)
+                );
+                for (GeneratedFile f : files) {
+                    context.registerGeneratedSourceFile(f.getJavaFile());
+                    body.addStatement("context.put($S, $T::create)", f.getName(), ClassName.bestGuess(f.getSimpleName()));
+                }
+                body.addStatement("$T.set($T, configs)", StaticOptimizations.class, DefaultOpenIdProviderMetadataFetcher.Optimizations.class);
+            }));
+        }
+    }
+
+    private List<GeneratedFile> generateJavaFiles(@NonNull AOTContext context) {
         ApplicationContext ctx = context.getAnalyzer()
                 .getApplicationContext();
         Collection<OpenIdClientConfiguration> clientConfigurations = ctx
                 .getBeansOfType(OpenIdClientConfiguration.class);
 
-        context.registerStaticInitializer(staticMethod("preloadOpenIdMetadata", body -> {
-            body.addStatement("$T configs = new $T()",
-                    ParameterizedTypeName.get(ClassName.get(Map.class), TypeName.get(String.class), SUPPLIER_OF_METADATA),
-                    ParameterizedTypeName.get(ClassName.get(HashMap.class), TypeName.get(String.class), SUPPLIER_OF_METADATA)
-            );
-            for (OpenIdClientConfiguration clientConfig : clientConfigurations) {
-                final Qualifier<OpenIdProviderMetadataFetcher> nameQualifier = Qualifiers.byName(clientConfig.getName());
-                if (clientConfig.getIssuer().isPresent() && ctx.containsBean(OpenIdProviderMetadataFetcher.class, nameQualifier)) {
-                    OpenIdProviderMetadataFetcher fetcher = ctx.getBean(OpenIdProviderMetadataFetcher.class, nameQualifier);
-                    DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = fetcher.fetch();
-                    final String simpleName = generatedClassSimpleName(clientConfig);
-                    context.registerGeneratedSourceFile(generateJavaFile(context, simpleName, defaultOpenIdProviderMetadata));
-                    body.addStatement("context.put($S, $T::create)", clientConfig.getName(), ClassName.bestGuess(simpleName));
-                }
+        List<GeneratedFile> files = new ArrayList<>();
+        for (OpenIdClientConfiguration clientConfig : clientConfigurations) {
+            final Qualifier<OpenIdProviderMetadataFetcher> nameQualifier = Qualifiers.byName(clientConfig.getName());
+            if (clientConfig.getIssuer().isPresent() && ctx.containsBean(OpenIdProviderMetadataFetcher.class, nameQualifier)) {
+                OpenIdProviderMetadataFetcher fetcher = ctx.getBean(OpenIdProviderMetadataFetcher.class, nameQualifier);
+                DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = fetcher.fetch();
+                final String simpleName = generatedClassSimpleName(clientConfig);
+                files.add(new GeneratedFile(clientConfig.getName(),
+                        simpleName,
+                        generateJavaFile(context, simpleName, defaultOpenIdProviderMetadata)));
             }
-            body.addStatement("$T.set($T, configs)", StaticOptimizations.class, DefaultOpenIdProviderMetadataFetcher.Optimizations.class);
-        }));
+        }
+        return files;
     }
 
     private String generatedClassSimpleName(@NonNull OpenIdClientConfiguration clientConfig) {
@@ -94,7 +108,6 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                 .addMethod(generateMethod(defaultOpenIdProviderMetadata))
                 .build());
     }
-
 
     private MethodSpec generateMethod(@NonNull DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata) {
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("create")
