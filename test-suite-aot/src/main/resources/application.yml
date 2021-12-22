@@ -1,0 +1,11 @@
+micronaut:
+  application:
+    name: 'Test application'
+  security:
+    oauth2:
+      clients:
+        cognito:
+          client-id: 'XXX'
+          client-secret: 'YYY'
+          openid:
+            issuer: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ/'
