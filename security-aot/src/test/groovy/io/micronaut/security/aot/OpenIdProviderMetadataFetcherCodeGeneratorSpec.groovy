@@ -57,18 +57,23 @@ class OpenIdProviderMetadataFetcherCodeGeneratorSpec extends AbstractSourceGener
                 withSources """package io.micronaut.test;
 
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
+import java.lang.String;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AotOpenIdProviderMetadataFetcherCognito {
   public static DefaultOpenIdProviderMetadata create() {
     DefaultOpenIdProviderMetadata metadata = new DefaultOpenIdProviderMetadata();
     metadata.setUserinfoEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/userInfo");
     metadata.setAuthorizationEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/authorize");
-    metadata.setIdTokenSigningAlgValuesSupported("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/authorize");
+    List<String> idTokenSigningAlgValuesSupported = new ArrayList<>();
+    idTokenSigningAlgValuesSupported.add("RS256");
+    metadata.setIdTokenSigningAlgValuesSupported(idTokenSigningAlgValuesSupported);
     metadata.setIssuer("https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ");
-    metadata.setJwksUri(""https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ/.well-known/jwks.json");
+    metadata.setJwksUri("https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ/.well-known/jwks.json");
     List<String> responseTypesSupported = new ArrayList<>();
     responseTypesSupported.add("code");
-     responseTypesSupported.add("token");
+    responseTypesSupported.add("token");
     metadata.setResponseTypesSupported(responseTypesSupported);
     List<String> scopesSupported = new ArrayList<>();
     scopesSupported.add("openid");
@@ -84,10 +89,11 @@ public class AotOpenIdProviderMetadataFetcherCognito {
     tokenEndpointAuthMethodsSupported.add("client_secret_basic");
     tokenEndpointAuthMethodsSupported.add("client_secret_post");
     metadata.setTokenEndpointAuthMethodsSupported(tokenEndpointAuthMethodsSupported);
-    metadata.setUserinfoEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/userInfo");
+    metadata.setClaimsParameterSupported(false);
     return metadata;
   }
 }"""
+                compiles()
             }
         }
     }
