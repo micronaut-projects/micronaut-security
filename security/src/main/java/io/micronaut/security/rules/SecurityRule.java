@@ -19,11 +19,12 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.web.router.RouteMatch;
 import org.reactivestreams.Publisher;
 
 /**
- * Informs the JWT filter what to do with the given request.
+ * Informs the {@link SecurityFilter} filter what to do with the given request.
  *
  * @author James Kleeh
  * @since 1.0
