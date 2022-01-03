@@ -15,20 +15,18 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.optim.StaticOptimizations;
+import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.json.JsonMapper;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
@@ -46,20 +44,20 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
     private static final Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
 
     private final HttpClient client;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
     private final OpenIdClientConfiguration openIdClientConfiguration;
 
     /**
      *
      * @param openIdClientConfiguration OpenID Client Configuration
-     * @param objectMapper Object Mapper
+     * @param jsonMapper JSON Mapper
      * @param client HTTP Client
      */
     public DefaultOpenIdProviderMetadataFetcher(OpenIdClientConfiguration openIdClientConfiguration,
-                                                ObjectMapper objectMapper,
+                                                JsonMapper jsonMapper,
                                                 @Client HttpClient client) {
         this.openIdClientConfiguration = openIdClientConfiguration;
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
         this.client = client;
     }
 
@@ -83,15 +81,17 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
                                 }
                                 //TODO this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
                                 String json = client.toBlocking().retrieve(configurationUrl.toString(), String.class);
-                                return objectMapper.readValue(json, DefaultOpenIdProviderMetadata.class);
+                                return jsonMapper.readValue(json, Argument.of(DefaultOpenIdProviderMetadata.class));
 
-                            } catch (MalformedURLException e) {
+                            /*} catch (MalformedURLException e) {
                                 throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
                             } catch (HttpClientResponseException e) {
                                 throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
 
                             } catch (JsonProcessingException e) {
-                                throw new BeanInstantiationException("JSON Processing Exception parsing issuer URL returned JSON " + issuer.toString(), e);
+                                throw new BeanInstantiationException("JSON Processing Exception parsing issuer URL returned JSON " + issuer.toString(), e);*/
+                            } catch (IOException e) {
+                                throw new BeanInstantiationException("IOException parsing issuer URL returned JSON " + issuer.toString(), e);
                             }
                         }).orElse(new DefaultOpenIdProviderMetadata())
                 );

@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
@@ -23,6 +22,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.json.JsonMapper;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 
 /**
@@ -32,14 +32,14 @@ import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 @Factory
 @Internal
 public class OpenIdProviderMetadataFetcherFactory {
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     /**
      *
-     * @param objectMapper Object Mapper.
+     * @param jsonMapper JSON Mapper.
      */
-    public OpenIdProviderMetadataFetcherFactory(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public OpenIdProviderMetadataFetcherFactory(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
     }
 
     /**
@@ -53,6 +53,6 @@ public class OpenIdProviderMetadataFetcherFactory {
     @NonNull
     public OpenIdProviderMetadataFetcher openIdConfiguration(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                                              @Client HttpClient issuerClient) {
-        return new DefaultOpenIdProviderMetadataFetcher(openIdClientConfiguration, objectMapper, issuerClient);
+        return new DefaultOpenIdProviderMetadataFetcher(openIdClientConfiguration, jsonMapper, issuerClient);
     }
 }
