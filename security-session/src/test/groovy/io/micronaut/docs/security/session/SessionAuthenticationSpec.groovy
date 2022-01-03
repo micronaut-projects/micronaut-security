@@ -135,7 +135,7 @@ micronaut:
 
         when:
         String cookie = loginRsp.getHeaders().get('Set-Cookie')
-        println cookie
+
         then:
         cookie
         cookie.contains('SESSION=')

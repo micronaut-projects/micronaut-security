@@ -91,7 +91,7 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
 
         when:
         String cookie = loginRsp.getHeaders().get('Set-Cookie')
-        println cookie
+
         then:
         cookie
         cookie.contains('JWT=')
@@ -161,7 +161,6 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
         then:
         homePage.username() == null
     }
-
 
     @Requires(property = "spec.name", value = "JwtCookieAuthenticationSpec")
     @Singleton
