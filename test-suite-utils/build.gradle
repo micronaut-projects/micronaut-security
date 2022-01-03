@@ -19,6 +19,7 @@ dependencies {
     implementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
     implementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
     runtimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    runtimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
 }
 
 java {
