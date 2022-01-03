@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: ['java11']
+        java: ['java11', 'java17']
     steps:
        # https://github.com/actions/virtual-environments/issues/709
       - name: Free disk space
@@ -38,7 +38,7 @@ jobs:
       - name: Setup GraalVM CE
         uses: DeLaGuardo/setup-graalvm@5.0
         with:
-          graalvm: 21.2.0
+          graalvm: 21.3.0
           java: ${{ matrix.java }}
       - name: Install Native Image
         run: gu install native-image
@@ -53,6 +53,8 @@ jobs:
         env:
            TESTCONTAINERS_RYUK_DISABLED: true
            GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+           GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USERNAME }}
+           GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
       - name: Publish Test Report
         if: always()
         uses: mikepenz/action-junit-report@v2

@@ -23,7 +23,7 @@ import io.micronaut.web.router.RouteMatch;
 import org.reactivestreams.Publisher;
 
 /**
- * Informs the JWT filter what to do with the given request.
+ * Informs the {@link io.micronaut.security.filters.SecurityFilter} filter what to do with the given request.
  *
  * @author James Kleeh
  * @since 1.0
