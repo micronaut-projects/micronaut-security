@@ -32,3 +32,9 @@ include::{testssecuritysession}/security/session/SessionAuthenticationSpec.groov
 ----
 
 TIP: Read the https://guides.micronaut.io/latest/micronaut-security-session.html[Session-Based Authentication Micronaut Guide] to learn more.
+
+== Session-based authentication without redirection
+
+When you set `micronaut.security.authentication` to `session`, you enable api:security.session.SessionLoginHandler[] and api:security.session.SessionLogoutHandler[].
+
+These handlers return 303 responses to the urls defined in the <<redirection, Redirection Configuration>>. Disable redirection configuration with `micronaut.security.redirection.enabled=false` to respond with 200 responses instead.
