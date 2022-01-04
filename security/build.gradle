@@ -2,6 +2,11 @@ plugins {
     id "io.micronaut.build.internal.module"
 }
 
+repositories {
+    mavenCentral()
+    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+}
+
 dependencies {
     annotationProcessor "io.micronaut:micronaut-graal"
 
@@ -13,6 +18,8 @@ dependencies {
     implementation "io.projectreactor:reactor-core"
 
     compileOnly "io.micronaut:micronaut-management"
+
+    annotationProcessor "io.micronaut.serde:micronaut-serde-processor:1.0.0-SNAPSHOT"
 
     testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-client"
