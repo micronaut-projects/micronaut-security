@@ -38,7 +38,6 @@ class KeycloakEndSessionEndpoint implements EndSessionEndpoint {
             String uri = UriBuilder.of(endsessionUri).queryParam(PARAM_REDIRECT_URI, redirectUri)
                     .build()
                     .toString()
-            System.out.println(uri)
             return uri
         }
         return null

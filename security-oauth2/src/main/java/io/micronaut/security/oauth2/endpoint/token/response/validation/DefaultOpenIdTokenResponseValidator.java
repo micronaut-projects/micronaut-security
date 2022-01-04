@@ -17,8 +17,8 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 import jakarta.inject.Singleton;
-
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -170,7 +170,9 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
         final String jwksuri = openIdProviderMetadata.getJwksUri();
         if (!jwksSignatures.containsKey(jwksuri)) {
-            jwksSignatures.put(jwksuri, new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator));
+            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties();
+            config.setUrl(openIdProviderMetadata.getJwksUri());
+            jwksSignatures.put(jwksuri, new JwksSignature(config, jwkValidator));
         }
         return jwksSignatures.get(jwksuri);
     }

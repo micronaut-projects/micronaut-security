@@ -13,7 +13,7 @@ class SecretEncryptionSpec extends Specification {
                 'micronaut.security.token.jwt.encryptions.secret.generator.secret': 'XXX',
                 'micronaut.security.token.jwt.encryptions.secret.generator.jwe-algorithm': 'dir',
                 'micronaut.security.token.jwt.encryptions.secret.generator.encryption-method': 'A128CBC-HS256',
-        ], Environment.TEST)
+        ])
 
         when:
         ctx.getBean(SecretEncryptionFactory)

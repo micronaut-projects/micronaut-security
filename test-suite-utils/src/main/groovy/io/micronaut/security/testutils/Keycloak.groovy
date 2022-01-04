@@ -43,6 +43,12 @@ class Keycloak {
         }
         issuer
     }
+
+    static Integer getPort() {
+        String issuer = getIssuer()
+        Integer.valueOf(issuer.substring(issuer.indexOf("localhost:") + "localhost:".length(),  issuer.indexOf("/auth/realms")))
+    }
+
     static void init() {
         if (keycloak == null) {
             keycloak = new GenericContainer("jboss/keycloak:8.0.0")

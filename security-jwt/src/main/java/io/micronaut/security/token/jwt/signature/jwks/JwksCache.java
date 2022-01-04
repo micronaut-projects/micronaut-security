@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,36 @@
  */
 package io.micronaut.security.token.jwt.signature.jwks;
 
-import com.nimbusds.jose.jwk.KeyType;
-
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * JSON Web Key Set Configuration.
- *
+ * Designates a class which caches a Json Web Key Set which may typically be fetched from a remote authorization server.
  * @author Sergio del Amo
- * @since 1.1.0
+ * @since 3.2.0
  */
-public interface JwksSignatureConfiguration {
+public interface JwksCache {
+    /**
+     *
+     * @return Whether the cache has been populated.
+     */
+    boolean isPresent();
 
     /**
-     * Json Web Key Set endpoint url.
-     * @return returns a url where a JWKS is exposed.
+     *
+     * @return Whether the cache is expired or empty optional if JWKS still not cached
+     */
+    boolean isExpired();
+
+    /**
+     * Clears the JWK Set cache.
+     */
+    void clear();
+
+    /*
+     * @return Key IDs for JWK Set or empty optional if JWKS still not cached
      */
     @NonNull
-    String getUrl();
-
-    /**
-     * Representation the KeyType for this JWKS signature configuration. KeyType is the kty parameter in a JSON Web Key (JWK).
-     * @return The KeyType for the JWKS signature configuration.
-     */
-    @Nullable
-    KeyType getKeyType();
-
-    /**
-     * @return The number of seconds to cache the JWKS.
-     */
-    @NonNull
-    Integer getCacheExpiration();
+    Optional<List<String>> getKeyIds();
 }

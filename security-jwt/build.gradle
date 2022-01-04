@@ -1,9 +1,14 @@
+plugins {
+    id "io.micronaut.build.internal.module"
+}
+
 ext {
     nimbusJoseJwtVersion = '9.15.2'
-    bouncyCastleVersion = '1.69'
+    bouncyCastleVersion = '1.70'
 }
 
 dependencies {
+    annotationProcessor "io.micronaut:micronaut-graal"
     api "io.micronaut:micronaut-http"
     api "io.micronaut:micronaut-http-server"
     api project(":security")
@@ -31,5 +36,3 @@ test {
     testLogging.showStandardStreams = true
     testLogging.exceptionFormat = 'full'
 }
-
-//compileTestGroovy.groovyOptions.forkOptions.jvmArgs = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']

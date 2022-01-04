@@ -37,13 +37,13 @@ class JwsSignatureSpec extends Specification implements JwtFixture {
 
     @AutoCleanup
     @Shared
-    EmbeddedServer embeddedServer = embeddedServer = ApplicationContext.run(EmbeddedServer, conf, Environment.TEST)
+    EmbeddedServer embeddedServer = embeddedServer = ApplicationContext.run(EmbeddedServer, conf)
 
     void "JwsSignature does not verify a RSA256 signed JWT, which was generated with a different signature, even if both the JwsSiganture and the JWT support the same algorithm"() {
         given:
         ApplicationContext context = ApplicationContext.run([
                 'micronaut.security.token.jwt.signatures.jwks.awscognito.url':  "http://localhost:${embeddedServer.getPort()}/keys",
-        ], Environment.TEST)
+        ])
 
         when:
         Collection<JwksSignature> beans = context.getBeansOfType(JwksSignature)

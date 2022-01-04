@@ -49,7 +49,7 @@ public class IpPatternsRule extends AbstractSecurityRule {
      */
     public static final Integer ORDER = SecuredAnnotationRule.ORDER - 100;
 
-    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IpPatternsRule.class);
 
     private final List<Pattern> patternList;
 

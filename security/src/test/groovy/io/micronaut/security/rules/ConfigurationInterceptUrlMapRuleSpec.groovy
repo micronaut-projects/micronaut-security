@@ -1,5 +1,6 @@
 package io.micronaut.security.rules
 
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.security.config.InterceptUrlMapPattern
@@ -17,11 +18,13 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
     @Shared
     TokenConfiguration tokenConfiguration = new TokenConfiguration() {
         @Override
+        @NonNull
         String getRolesName() {
             'roles'
         }
 
         @Override
+        @NonNull
         String getNameKey() {
             'username'
         }
