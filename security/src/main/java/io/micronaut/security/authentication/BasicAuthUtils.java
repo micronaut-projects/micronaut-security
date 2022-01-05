@@ -21,8 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Utility class for Basic Auth.
@@ -57,14 +56,14 @@ public class BasicAuthUtils {
 
         String token = new String(decoded, StandardCharsets.UTF_8);
 
-        String[] parts = token.split(":");
-        if (parts.length < 2) {
+        ArrayList<String> parts = new ArrayList<>(Arrays.asList(token.split(":")));
+        if (parts.size() < 2) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Bad format of the basic auth header - Delimiter : not found");
             }
             return Optional.empty();
         }
 
-        return Optional.of(new UsernamePasswordCredentials(parts[0], parts[1]));
+        return Optional.of(new UsernamePasswordCredentials(parts.remove(0), String.join(":", parts)));
     }
 }
