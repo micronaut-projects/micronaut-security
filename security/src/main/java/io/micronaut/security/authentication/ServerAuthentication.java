@@ -16,9 +16,9 @@
 package io.micronaut.security.authentication;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.annotation.ReflectiveAccess;
 import io.micronaut.security.token.config.TokenConfiguration;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.Map;
  * @author James Kleeh
  * @since 3.0.0
  */
-@ReflectiveAccess
+@Introspected
 public class ServerAuthentication implements Authentication {
 
     private static final String JSON_KEY_NAME = "name";
