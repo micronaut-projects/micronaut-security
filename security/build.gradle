@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
     annotationProcessor "io.micronaut:micronaut-graal"
+    annotationProcessor "io.micronaut.serde:micronaut-serde-processor:$serdeVersion"
 
     api "io.micronaut:micronaut-http"
     api "io.micronaut:micronaut-http-server"
@@ -17,8 +18,6 @@ dependencies {
     implementation "io.projectreactor:reactor-core"
 
     compileOnly "io.micronaut:micronaut-management"
-
-    annotationProcessor "io.micronaut.serde:micronaut-serde-processor:1.0.0-SNAPSHOT"
 
     testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-client"
