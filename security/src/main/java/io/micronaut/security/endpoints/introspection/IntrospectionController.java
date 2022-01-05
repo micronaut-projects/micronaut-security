@@ -59,6 +59,7 @@ public class IntrospectionController {
     /**
      *
      * @param processor Introspection Processor
+     * @deprecated Use {@link #IntrospectionController(IntrospectionProcessor, JsonMapper)} instead
      */
     @Deprecated
     public IntrospectionController(IntrospectionProcessor processor) {
