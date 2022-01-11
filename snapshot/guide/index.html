@@ -124,7 +124,9 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-logoutHandler"><a href="#logoutHandler"><strong>6.4</strong><span>Logout Handler</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-redirection"><a href="#redirection"><strong>6.5</strong><span>Redirection Configuration</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-noRedirection"><a href="#noRedirection"><strong>6.5</strong><span>Handlers without redirection</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-redirection"><a href="#redirection"><strong>6.6</strong><span>Redirection Configuration</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-authenticationProviders"><a href="#authenticationProviders"><strong>7</strong><span>Authentication Providers</span></a></div>
         
@@ -839,7 +841,21 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 </tbody>
 </table>
 
-<h2 id="redirection"><a class="anchor" href="#redirection"></a>6.5 Redirection Configuration</h2>
+<h2 id="noRedirection"><a class="anchor" href="#noRedirection"></a>6.5 Handlers without redirection</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/noRedirection.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Some built-in handlers respond with a 303 (See other) response to the urls defined in the <a href="#redirection">Redirection Configuration</a>
+If you disable redirection configuration with by setting <code>micronaut.security.redirection.enabled</code> to <code>false</code>, these handlers respond with 200 responses instead.</p>
+</div>
+
+<h2 id="redirection"><a class="anchor" href="#redirection"></a>6.6 Redirection Configuration</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/redirection.adoc"'>
@@ -870,6 +886,11 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether Redirection configuration enabled. Default value (true).</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -1687,6 +1708,17 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_session_based_authentication_without_redirection">Session-based authentication without redirection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you set <code>micronaut.security.authentication</code> to <code>session</code>, you enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> and <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a>.</p>
+</div>
+<div class="paragraph">
+<p>These handlers return 303 responses to the urls defined in the <a href="#redirection">Redirection Configuration</a>. Disable redirection configuration with <code>micronaut.security.redirection.enabled=false</code> to respond with 200 responses instead.</p>
 </div>
 </div>
 </div>
@@ -3059,6 +3091,11 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether Redirection configuration enabled. Default value (true).</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
