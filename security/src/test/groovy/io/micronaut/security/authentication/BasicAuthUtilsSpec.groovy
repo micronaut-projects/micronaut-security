@@ -15,6 +15,16 @@ class BasicAuthUtilsSpec extends Specification {
         creds.get().secret == 'password'
     }
 
+    void "BasicAuthAuthenticationFetcher::parseCredentials must handle : on password"() {
+        when:
+        Optional<UsernamePasswordCredentials> creds = BasicAuthUtils.parseCredentials('Basic dXNlcjpwYXNzOndvcmQ=')
+
+        then:
+        creds.isPresent()
+        creds.get().identity == 'user'
+        creds.get().secret == 'pass:word'
+    }
+
     @Unroll("BasicAuthUtils::parseCredentials returns an empty optional if HTTP Authorization header value ( #value ) does not start with `Basic `")
     void "For HTTP Header Authroziation value which do not start with Basic BasicAuthAuthenticationFetcher::parseCredentials returns an empty optional"(String value) {
         when:
