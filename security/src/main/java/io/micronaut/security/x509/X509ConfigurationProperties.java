@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  * Configuration for X.509 authentication.
  *
  * @author Burt Beckwith
- * @since 3.2
+ * @since 3.3
  */
 @ConfigurationProperties(X509ConfigurationProperties.PREFIX)
 public class X509ConfigurationProperties implements X509Configuration {
