@@ -11,6 +11,7 @@ securityConfiguration:
   authenticationStrategy: Authentication Strategy
   loginHandler: Login Handler
   logoutHandler: Logout Handler
+  noRedirection: Handlers without redirection
   redirection: Redirection Configuration
 authenticationProviders: Authentication Providers
 securityRule:

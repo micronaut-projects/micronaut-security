@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
@@ -37,6 +38,7 @@ import java.net.URISyntaxException;
 @Singleton
 public class JwtCookieClearerLogoutHandler implements LogoutHandler {
 
+    @Nullable
     protected final String logout;
     protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
     protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
@@ -51,14 +53,14 @@ public class JwtCookieClearerLogoutHandler implements LogoutHandler {
                                          RedirectConfiguration redirectConfiguration) {
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
-        this.logout = redirectConfiguration.getLogout();
+
+        this.logout = redirectConfiguration.isEnabled() ? redirectConfiguration.getLogout() : null;
     }
 
     @Override
     public MutableHttpResponse<?> logout(HttpRequest<?> request) {
         try {
-            URI location = new URI(logout);
-            MutableHttpResponse<?> response = HttpResponse.seeOther(location);
+            MutableHttpResponse<?> response = logout == null ? HttpResponse.ok() : HttpResponse.seeOther(new URI(logout));
             clearCookie(accessTokenCookieConfiguration, response);
             if (refreshTokenCookieConfiguration != null) {
                 clearCookie(refreshTokenCookieConfiguration, response);
