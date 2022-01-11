@@ -30,6 +30,7 @@ import java.util.Optional;
 public class BasicAuthUtils {
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthUtils.class);
     private static final String PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC + " ";
+    private static final String DELIMITER = ":";
 
     /**
      *
@@ -56,15 +57,14 @@ public class BasicAuthUtils {
         }
 
         String token = new String(decoded, StandardCharsets.UTF_8);
-
-        String[] parts = token.split(":");
-        if (parts.length < 2) {
+        int index = token.indexOf(DELIMITER);
+        if (index == -1) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Bad format of the basic auth header - Delimiter : not found");
             }
             return Optional.empty();
         }
-
-        return Optional.of(new UsernamePasswordCredentials(parts[0], parts[1]));
+        return Optional.of(new UsernamePasswordCredentials(token.substring(0, index),
+                token.substring(index + DELIMITER.length())));
     }
 }

@@ -32,6 +32,12 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".redirect";
 
     /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ENABLED = true;
+
+    /**
      * The default logout URL.
      */
     @SuppressWarnings("WeakerAccess")
@@ -53,6 +59,8 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
      * The default behavior of redirect to the uri prior to login.
      */
     public static final boolean DEFAULT_PRIOR_TO_LOGIN = false;
+
+    private boolean enabled = DEFAULT_ENABLED;
 
     @NonNull
     @NotBlank
@@ -178,6 +186,19 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     @Override
     public boolean isPriorToLogin() {
         return priorToLogin;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Sets whether Redirection configuration enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * @param enabled True if it is
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**
