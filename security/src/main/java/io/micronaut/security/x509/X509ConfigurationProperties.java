@@ -39,6 +39,7 @@ public class X509ConfigurationProperties implements X509Configuration {
     private String subjectDnRegex = DEFAULT_SUBJECT_DN_REGEX;
 
     @NonNull
+    @Override
     public String getSubjectDnRegex() {
         return subjectDnRegex;
     }
