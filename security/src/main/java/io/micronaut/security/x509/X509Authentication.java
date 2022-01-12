@@ -16,9 +16,12 @@
 package io.micronaut.security.x509;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.ServerAuthentication;
 
 import java.security.cert.X509Certificate;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * An Authentication derived from an X509Certificate.
@@ -31,8 +34,28 @@ public class X509Authentication extends ServerAuthentication {
     @NonNull
     private final X509Certificate certificate;
 
-    public X509Authentication(@NonNull X509Certificate certificate, @NonNull String name) {
-        super(name, null, null);
+    /**
+     *
+     * @param name The name of this principal
+     * @param certificate X509 certification
+     */
+    public X509Authentication(@NonNull String name, @NonNull X509Certificate certificate) {
+        this(name, certificate, null, null);
+    }
+
+    /**
+     *
+     * @param name The name of this principal name
+
+     * @param certificate X509 certification
+     * @param roles Roles of the authenticated user
+     * @param attributes Attributes of the authenticated user
+     */
+    public X509Authentication(@NonNull String name,
+                              @NonNull X509Certificate certificate,
+                              @Nullable Collection<String> roles,
+                              @Nullable Map<String, Object> attributes) {
+        super(name, roles, attributes);
         this.certificate = certificate;
     }
 

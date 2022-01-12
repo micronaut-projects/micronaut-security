@@ -94,8 +94,8 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
      * @return the authentication if the certificate contains a valid name
      */
     protected Optional<Authentication> createX509Authentication(@NonNull X509Certificate certificate) {
-        final Optional<String> optionalName = extractName(certificate);
-        return optionalName.map(name -> new X509Authentication(certificate, name));
+        return extractName(certificate)
+                .map(name -> new X509Authentication(name, certificate));
     }
 
     /**
