@@ -142,7 +142,8 @@
 <li><a href="io/micronaut/security/token/reader/package-tree.html">io.micronaut.security.token.reader</a>, </li>
 <li><a href="io/micronaut/security/token/refresh/package-tree.html">io.micronaut.security.token.refresh</a>, </li>
 <li><a href="io/micronaut/security/token/validator/package-tree.html">io.micronaut.security.token.validator</a>, </li>
-<li><a href="io/micronaut/security/utils/package-tree.html">io.micronaut.security.utils</a></li>
+<li><a href="io/micronaut/security/utils/package-tree.html">io.micronaut.security.utils</a>, </li>
+<li><a href="io/micronaut/security/x509/package-tree.html">io.micronaut.security.x509</a></li>
 </ul>
 </div>
 <div class="contentContainer">
@@ -184,6 +185,7 @@
 <ul>
 <li type="circle">io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationArgumentBinder.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">AuthenticationArgumentBinder</span></a></li>
 <li type="circle">io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/PrincipalArgumentBinder.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">PrincipalArgumentBinder</span></a></li>
+<li type="circle">io.micronaut.security.x509.<a href="io/micronaut/security/x509/X509AuthenticationArgumentBinder.html" title="class in io.micronaut.security.x509"><span class="typeNameLink">X509AuthenticationArgumentBinder</span></a></li>
 </ul>
 </li>
 <li type="circle">io.micronaut.security.rules.<a href="io/micronaut/security/rules/AbstractSecurityRule.html" title="class in io.micronaut.security.rules"><span class="typeNameLink">AbstractSecurityRule</span></a> (implements io.micronaut.security.rules.<a href="io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>)
@@ -456,7 +458,11 @@
 <li type="circle">io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfigurationProperties.html" title="class in io.micronaut.security.filters"><span class="typeNameLink">SecurityFilterConfigurationProperties</span></a> (implements io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilterConfiguration.html" title="interface in io.micronaut.security.filters">SecurityFilterConfiguration</a>)</li>
 <li type="circle">io.micronaut.security.session.<a href="io/micronaut/security/session/SecuritySessionConfigurationProperties.html" title="class in io.micronaut.security.session"><span class="typeNameLink">SecuritySessionConfigurationProperties</span></a> (implements io.micronaut.core.util.Toggleable)</li>
 <li type="circle">io.micronaut.security.rules.<a href="io/micronaut/security/rules/SensitiveEndpointRule.html" title="class in io.micronaut.security.rules"><span class="typeNameLink">SensitiveEndpointRule</span></a> (implements io.micronaut.security.rules.<a href="io/micronaut/security/rules/SecurityRule.html" title="interface in io.micronaut.security.rules">SecurityRule</a>)</li>
-<li type="circle">io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/ServerAuthentication.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">ServerAuthentication</span></a> (implements io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>)</li>
+<li type="circle">io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/ServerAuthentication.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">ServerAuthentication</span></a> (implements io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/Authentication.html" title="interface in io.micronaut.security.authentication">Authentication</a>)
+<ul>
+<li type="circle">io.micronaut.security.x509.<a href="io/micronaut/security/x509/X509Authentication.html" title="class in io.micronaut.security.x509"><span class="typeNameLink">X509Authentication</span></a></li>
+</ul>
+</li>
 <li type="circle">io.micronaut.security.session.<a href="io/micronaut/security/session/SessionAuthenticationFetcher.html" title="class in io.micronaut.security.session"><span class="typeNameLink">SessionAuthenticationFetcher</span></a> (implements io.micronaut.security.filters.<a href="io/micronaut/security/filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>)</li>
 <li type="circle">io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session"><span class="typeNameLink">SessionLoginHandler</span></a> (implements io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers">RedirectingLoginHandler</a>)</li>
 <li type="circle">io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLogoutHandler.html" title="class in io.micronaut.security.session"><span class="typeNameLink">SessionLogoutHandler</span></a> (implements io.micronaut.security.handlers.<a href="io/micronaut/security/handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a>)</li>
@@ -504,6 +510,8 @@
 </ul>
 </li>
 <li type="circle">io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication"><span class="typeNameLink">UsernamePasswordCredentials</span></a> (implements io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationRequest.html" title="interface in io.micronaut.security.authentication">AuthenticationRequest</a>&lt;T,S&gt;, java.io.Serializable)</li>
+<li type="circle">io.micronaut.security.x509.<a href="io/micronaut/security/x509/X509AuthenticationFetcher.html" title="class in io.micronaut.security.x509"><span class="typeNameLink">X509AuthenticationFetcher</span></a> (implements io.micronaut.security.filters.<a href="io/micronaut/security/filters/AuthenticationFetcher.html" title="interface in io.micronaut.security.filters">AuthenticationFetcher</a>)</li>
+<li type="circle">io.micronaut.security.x509.<a href="io/micronaut/security/x509/X509ConfigurationProperties.html" title="class in io.micronaut.security.x509"><span class="typeNameLink">X509ConfigurationProperties</span></a> (implements io.micronaut.security.x509.<a href="io/micronaut/security/x509/X509Configuration.html" title="interface in io.micronaut.security.x509">X509Configuration</a>)</li>
 </ul>
 </li>
 </ul>
@@ -736,6 +744,7 @@
 </li>
 <li type="circle">io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/TokenPropagationConfiguration.html" title="interface in io.micronaut.security.token.propagation"><span class="typeNameLink">TokenPropagationConfiguration</span></a> (also extends io.micronaut.http.util.OutgointRequestProcessorMatcher)</li>
 <li type="circle">io.micronaut.security.config.<a href="io/micronaut/security/config/UnauthorizedRedirectConfiguration.html" title="interface in io.micronaut.security.config"><span class="typeNameLink">UnauthorizedRedirectConfiguration</span></a></li>
+<li type="circle">io.micronaut.security.x509.<a href="io/micronaut/security/x509/X509Configuration.html" title="interface in io.micronaut.security.x509"><span class="typeNameLink">X509Configuration</span></a></li>
 </ul>
 </li>
 <li type="circle">io.micronaut.security.token.<a href="io/micronaut/security/token/TokenAuthenticationFactory.html" title="interface in io.micronaut.security.token"><span class="typeNameLink">TokenAuthenticationFactory</span></a>&lt;T&gt;

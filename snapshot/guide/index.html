@@ -182,7 +182,9 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-extending"><a href="#extending"><strong>9.4.2</strong><span>Extending Default Behavior</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-custom"><a href="#custom"><strong>9.5</strong><span>Custom Authorization Strategies</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-x509"><a href="#x509"><strong>9.5</strong><span>X.509 Certificate Authentication</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-custom"><a href="#custom"><strong>9.6</strong><span>Custom Authorization Strategies</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-rejection"><a href="#rejection"><strong>10</strong><span>Rejection Handling</span></a></div>
         
@@ -2996,7 +2998,96 @@ public class MyContextBuilder implements ContextBuilder {
 </div>
 </div>
 
-<h2 id="custom"><a class="anchor" href="#custom"></a>9.5 Custom Authorization Strategies</h2>
+<h2 id="x509"><a class="anchor" href="#x509"></a>9.5 X.509 Certificate Authentication</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/x509.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Security supports using <a href="https://en.wikipedia.org/wiki/X.509#Certificates">X.509 client certificates</a> with HTTPS to enable <a href="https://en.wikipedia.org/wiki/Mutual_authentication">mutual authentication</a>.</p>
+</div>
+<div class="paragraph">
+<p>Once you have <a href="https://docs.micronaut.io/latest/guide/#https">configured HTTPS</a> in your application, users can install X.509 browser certificates to provide authentication information and access restricted URLs.</p>
+</div>
+<div class="paragraph">
+<p>When X.509 is enabled, in addition to the client (e.g. browser or API client) verifying that the server certificate is valid (i.e. that it was issued and signed by a trusted certificate authority (CA)), the server can also verify the client with the certificate from the client SSL handshake. If the client certificate is valid and contains a username/principal that corresponds to an application user, access will be granted.</p>
+</div>
+<div class="sect2">
+<h3 id="_configuration">Configuration</h3>
+<div class="paragraph">
+<p>There are two configuration options as seen in the following table:</p>
+</div>
+<a id="io.micronaut.security.x509.X509ConfigurationProperties" href="#io.micronaut.security.x509.X509ConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/x509/X509ConfigurationProperties.html">X509ConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.x509.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the {@link X509AuthenticationFetcher}. Default value false.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.x509.subject-dn-regex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the Subject DN regex. Default value "CN=(.*?)(?:,</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Use <code>micronaut.security.x509.enabled</code> to enable X.509 support, or enable per-environment.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>micronaut.security.x509.subject-dn-regex</code> property to override the default regular expression used to extract the principal (username) from the certificate. Typically, the principal is stored in the <code>CN</code> (Common Name) property, prefixed with <code>"CN="</code>. The default regular expression <code>"CN=(.*?)(?:,|$)"</code> will extract the text after <code>"CN="</code> and up to the next (optional) delimiter, but if your certificates are configured differently, override the regex as needed.</p>
+</div>
+<div class="paragraph">
+<p>In addition to X.509-specific configuration, you must also <a href="https://docs.micronaut.io/latest/guide/#https">configure HTTPS</a> for your server, and configure requesting client certificates during the SSL handshake. Set the value of the property <code>micronaut.server.ssl.client-authentication</code> to <code>want</code> or <code>need</code> (depending on whether client certificates are optional or required).</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a sample configuration enabling and configuring HTTPS and X.509:</p>
+</div>
+<div class="listingblock">
+<div class="title">application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  application:
+    name: your_application_name
+  security:
+    x509:
+      enabled: true
+  ssl:
+    enabled: true
+  server:
+    ssl:
+      client-authentication: want # or 'need'
+      key-store:
+        path: classpath:ssl/keystore.p12
+        password: your_keystore_password
+        type: PKCS12
+      trust-store:
+        path: classpath:ssl/truststore.jks
+        password: your_truststore_password
+        type: JKS</code></pre>
+</div>
+</div>
+</div>
+
+<h2 id="custom"><a class="anchor" href="#custom"></a>9.6 Custom Authorization Strategies</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/custom.adoc"'>
@@ -3006,54 +3097,41 @@ public class MyContextBuilder implements ContextBuilder {
 
 
 <div class="paragraph">
-<p>All authorization strategies implement the <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> interface. The contract is designed to return an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> object from the request. To implement custom logic to retrieve the currently logged in user, simply create a bean that implements the contract and it will be picked up automatically.</p>
+<p>All authorization strategies implement the <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> interface. The contract is designed to return an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> from the request. To implement custom logic to retrieve the currently logged in user, simply create a bean that implements the contract and it will be picked up automatically.</p>
 </div>
 <div class="paragraph">
-<p>For example to retrieve information from an X509 certificate:</p>
+<p>For example, if you use a product like <a href="https://www.broadcom.com/products/cyber-security/identity/siteminder">SiteMinder</a> that handles authentication for you, you can trust that users access your application are authenticated, and you can access their username via the <code>SM_USER</code> request header and build an <code>Authentication</code> from that:</p>
 </div>
 <div class="listingblock">
-<div class="title">X509 Authentication Fetcher</div>
+<div class="title">SiteMinder Authentication Fetcher</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import org.reactivestreams.Publisher;
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
+
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
 @Singleton
-public class X509AuthenticationFetcher implements AuthenticationFetcher {
+public class SiteminderAuthenticationFetcher implements AuthenticationFetcher {
+
+    public static final String SITEMINDER_USER_HEADER = "SM_USER";
 
     @Override
     public Publisher&lt;Authentication&gt; fetchAuthentication(HttpRequest&lt;?&gt; request) {
         return Mono.&lt;Authentication&gt;create(emitter -&gt; {
-            Optional&lt;Certificate&gt; optionalCertificate = request.getCertificate();
-            if (optionalCertificate.isPresent()) {
-                Certificate certificate = optionalCertificate.get();
-                if (certificate instanceof X509Certificate) {
-                    emitter.success(new Authentication() {
-                        X509Certificate x509Certificate = ((X509Certificate) certificate);
-                        @Override
-                        public String getName() {
-                            return x509Certificate.getIssuerX500Principal().getName();
-                        }
-
-                        @NonNull
-                        @Override
-                        public Map&lt;String, Object&gt; getAttributes() {
-                            return Collections.emptyMap();
-                        }
-                    });
-                    return;
-                }
+            String siteminderUser = request.getHeaders().get(SITEMINDER_USER_HEADER);
+            if (StringUtils.isEmpty(siteminderUser)) {
+                emitter.success();
+                return;
             }
-            emitter.success();
+
+            Collection&lt;String&gt; roles = Collections.singleton("ROLE_USER");
+            emitter.success(Authentication.build(siteminderUser, roles));
         });
     }
 }</code></pre>
@@ -4743,6 +4821,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.issuer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL using the https scheme with no query or fragment component that the
@@ -4757,11 +4840,6 @@ To disable a specific client for any given environment, set <code>enabled: false
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.jwks-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The JWKS signature URI.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
 </tr>
 </tbody>
 </table>
