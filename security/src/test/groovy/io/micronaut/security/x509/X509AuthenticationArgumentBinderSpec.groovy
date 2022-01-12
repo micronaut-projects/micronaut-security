@@ -21,15 +21,22 @@ class X509AuthenticationArgumentBinderSpec extends AbstractX509Spec {
 
     void 'test X509AuthenticationFetcher'() {
         expect:
-        embeddedServer.applicationContext.getBean X509AuthenticationFetcher
+        applicationContext.containsBean(X509AuthenticationFetcher)
+
+        when:
+        X509Controller controller = applicationContext.getBean(X509Controller)
+
+        then:
+        !controller.authentication
+        !controller.x509Authentication
 
         and:
         'x509test' == client.retrieve('/x509')
 
         and:
-        X509Controller.authentication
-        X509Controller.x509Authentication
-        X509Controller.authentication.is X509Controller.x509Authentication
+        controller.authentication
+        controller.x509Authentication
+        controller.authentication.is(controller.x509Authentication)
     }
 
     @Requires(property = 'spec.name', value = SPEC_NAME)
@@ -37,17 +44,15 @@ class X509AuthenticationArgumentBinderSpec extends AbstractX509Spec {
     @Controller('/x509')
     static class X509Controller {
 
-        static Authentication authentication
-        static X509Authentication x509Authentication
+        Authentication authentication
+        X509Authentication x509Authentication
 
         @Produces(MediaType.TEXT_PLAIN)
         @Get
         String username(Authentication auth,
                         X509Authentication x509Auth) {
-
             authentication = auth
             x509Authentication = x509Auth
-
             auth.name
         }
     }
