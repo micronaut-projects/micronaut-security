@@ -42,4 +42,3 @@ micronaut:
         type: JKS
 ----
 
-TIP: Read the https://guides.micronaut.io/latest/micronaut-security-x509.html[X.509 Authentication Micronaut Guide] to learn about configuring applications to use X.509 and how to create the various certificates for testing.
