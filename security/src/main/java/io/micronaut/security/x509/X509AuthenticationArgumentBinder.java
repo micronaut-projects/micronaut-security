@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.x509;
 
-import io.micronaut.security.authentication.AbstractAuthenticationArgumentBinder;
+import io.micronaut.security.authentication.AbstractPrincipalArgumentBinder;
 import jakarta.inject.Singleton;
 
 /**
@@ -25,7 +25,7 @@ import jakarta.inject.Singleton;
  * @since 3.3
  */
 @Singleton
-public class X509AuthenticationArgumentBinder extends AbstractAuthenticationArgumentBinder<X509Authentication> {
+public class X509AuthenticationArgumentBinder extends AbstractPrincipalArgumentBinder<X509Authentication> {
 
     public X509AuthenticationArgumentBinder() {
         super(X509Authentication.class);
