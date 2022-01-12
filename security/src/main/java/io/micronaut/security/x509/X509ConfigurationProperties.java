@@ -33,7 +33,14 @@ public class X509ConfigurationProperties implements X509Configuration {
     /**
      * The default enabled value.
      */
+    @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = false;
+
+    /**
+     * The default Subject Distinguished Name (DN) regex.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final String DEFAULT_SUBJECT_DN_REGEX = "CN=(.*?)(?:,|$)";
 
     private boolean enabled = DEFAULT_ENABLED;
     private String subjectDnRegex = DEFAULT_SUBJECT_DN_REGEX;

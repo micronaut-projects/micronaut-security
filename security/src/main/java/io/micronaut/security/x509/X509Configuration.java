@@ -27,11 +27,6 @@ import io.micronaut.core.util.Toggleable;
 public interface X509Configuration extends Toggleable {
 
     /**
-     * The default Subject Distinguished Name (DN) regex.
-     */
-    String DEFAULT_SUBJECT_DN_REGEX = "CN=(.*?)(?:,|$)";
-
-    /**
      * @return the Subject Distinguished Name (DN) regex
      */
     @NonNull
