@@ -19,6 +19,8 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * Configuration for X.509 authentication.
  *
@@ -43,6 +45,9 @@ public class X509ConfigurationProperties implements X509Configuration {
     public static final String DEFAULT_SUBJECT_DN_REGEX = "CN=(.*?)(?:,|$)";
 
     private boolean enabled = DEFAULT_ENABLED;
+
+    @NonNull
+    @NotBlank
     private String subjectDnRegex = DEFAULT_SUBJECT_DN_REGEX;
 
     @NonNull
