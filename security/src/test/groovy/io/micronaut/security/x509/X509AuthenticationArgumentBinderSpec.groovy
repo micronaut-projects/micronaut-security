@@ -1,8 +1,10 @@
 package io.micronaut.security.x509
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 
@@ -38,6 +40,7 @@ class X509AuthenticationArgumentBinderSpec extends AbstractX509Spec {
         static Authentication authentication
         static X509Authentication x509Authentication
 
+        @Produces(MediaType.TEXT_PLAIN)
         @Get
         String username(Authentication auth,
                         X509Authentication x509Auth) {

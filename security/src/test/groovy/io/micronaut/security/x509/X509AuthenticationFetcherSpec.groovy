@@ -1,8 +1,10 @@
 package io.micronaut.security.x509
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 
@@ -29,6 +31,7 @@ class X509AuthenticationFetcherSpec extends AbstractX509Spec {
     @Secured(IS_AUTHENTICATED)
     @Controller('/x509')
     static class X509Controller {
+        @Produces(MediaType.TEXT_PLAIN)
         @Get
         String username(Authentication authentication) {
             authentication.name

@@ -3,8 +3,10 @@ package io.micronaut.docs.security.authorization
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
@@ -34,6 +36,7 @@ class SiteminderAuthorizationSpec extends Specification {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Controller('/sm')
     static class MyController {
+        @Produces(MediaType.TEXT_PLAIN)
         @Get
         String username(Authentication authentication) {
             authentication.name
