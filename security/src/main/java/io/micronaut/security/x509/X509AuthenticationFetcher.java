@@ -49,6 +49,10 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 
     private final Pattern subjectDnPattern;
 
+    /**
+     *
+     * @param x509Configuration x509 configuration
+     */
     public X509AuthenticationFetcher(X509Configuration x509Configuration) {
         subjectDnPattern = Pattern.compile(x509Configuration.getSubjectDnRegex(), CASE_INSENSITIVE);
     }
