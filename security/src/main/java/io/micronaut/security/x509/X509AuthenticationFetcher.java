@@ -73,6 +73,7 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
      * @param request the request
      * @return the authentication if the certificate exists and contains a valid name
      */
+    @NonNull
     protected Optional<Authentication> createAuthentication(HttpRequest<?> request) {
         Optional<Certificate> optionalCertificate = request.getCertificate();
         if (optionalCertificate.isPresent()) {
@@ -90,6 +91,7 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
      * @param certificate the certificate
      * @return the authentication if the certificate contains a valid name
      */
+    @NonNull
     protected Optional<Authentication> createX509Authentication(@NonNull X509Certificate certificate) {
         return extractName(certificate)
                 .map(name -> new X509Authentication(name, certificate));
@@ -101,6 +103,7 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
      * @param certificate the client certificate
      * @return the name if found
      */
+    @NonNull
     protected Optional<String> extractName(@NonNull X509Certificate certificate) {
         String subjectDN = certificate.getSubjectX500Principal().getName();
 
