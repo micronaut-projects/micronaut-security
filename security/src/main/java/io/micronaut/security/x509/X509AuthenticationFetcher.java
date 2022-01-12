@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.x509;
 
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
@@ -31,7 +30,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.micronaut.core.util.StringUtils.TRUE;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 /**
@@ -42,7 +40,6 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
  * @since 3.3
  */
 @Singleton
-@Requires(property = X509ConfigurationProperties.PREFIX + ".enabled", value = TRUE)
 public class X509AuthenticationFetcher implements AuthenticationFetcher {
 
     /**
