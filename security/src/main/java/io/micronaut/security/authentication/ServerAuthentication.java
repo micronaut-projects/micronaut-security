@@ -42,6 +42,12 @@ public class ServerAuthentication implements Authentication {
     private final Collection<String> roles;
     private final Map<String, Object> attributes;
 
+    /**
+     *
+     * @param name The name of this principal name
+     * @param roles Roles of the authenticated user
+     * @param attributes Attributes of the authenticated user
+     */
     public ServerAuthentication(@NonNull String name,
                                 @Nullable Collection<String> roles,
                                 @Nullable Map<String, Object> attributes) {
