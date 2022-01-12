@@ -62,7 +62,12 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {
         return Mono.create(emitter -> {
             Optional<Authentication> authentication = createAuthentication(request);
-            emitter.success(authentication.orElse(null));
+            if (authentication.isPresent()) {
+                emitter.success(authentication.get());
+            } else {
+                emitter.success();
+            }
+
         });
     }
 
