@@ -21,7 +21,7 @@ class X509AuthenticationFetcherSpec extends AbstractX509Spec {
 
     void 'test X509AuthenticationFetcher'() {
         expect:
-        embeddedServer.applicationContext.getBean X509AuthenticationFetcher
+        applicationContext.getBean(X509AuthenticationFetcher)
 
         and:
         'x509test' == client.retrieve('/x509')
