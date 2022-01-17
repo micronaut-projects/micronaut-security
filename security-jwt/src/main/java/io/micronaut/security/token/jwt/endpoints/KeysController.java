@@ -36,7 +36,6 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * Endpoint which exposes a JSON Web Key Set built with the JWK provided by {@link io.micronaut.security.token.jwt.endpoints.JwkProvider} beans.
@@ -97,7 +96,7 @@ public class KeysController {
                 .map(m -> {
                     // we need "keys" in the output, and the mapper may be configured to drop empty lists, so we have a
                     // separate branch for that.
-                    if (!((Map<?, ?>) m.getOrDefault("keys", Collections.emptyMap())).isEmpty()) {
+                    if (!((Collection<?>) m.getOrDefault("keys", Collections.emptyList())).isEmpty()) {
                         try {
                             return new String(jsonMapper.writeValueAsBytes(m));
                         } catch (IOException e) {
