@@ -49,7 +49,7 @@ import java.util.Collections;
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class KeysController {
     private static final Logger LOG = LoggerFactory.getLogger(KeysController.class);
-    private static final String EMPTY_KEYS = "{\"keys\": []}";
+    private static final String EMPTY_KEYS = "{\"keys\":[]}";
 
     private final Collection<JwkProvider> jwkProviders;
     private final JsonMapper jsonMapper;
