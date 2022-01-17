@@ -124,7 +124,9 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-logoutHandler"><a href="#logoutHandler"><strong>6.4</strong><span>Logout Handler</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-redirection"><a href="#redirection"><strong>6.5</strong><span>Redirection Configuration</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-noRedirection"><a href="#noRedirection"><strong>6.5</strong><span>Handlers without redirection</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-redirection"><a href="#redirection"><strong>6.6</strong><span>Redirection Configuration</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-authenticationProviders"><a href="#authenticationProviders"><strong>7</strong><span>Authentication Providers</span></a></div>
         
@@ -180,7 +182,9 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-extending"><a href="#extending"><strong>9.4.2</strong><span>Extending Default Behavior</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-custom"><a href="#custom"><strong>9.5</strong><span>Custom Authorization Strategies</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-x509"><a href="#x509"><strong>9.5</strong><span>X.509 Certificate Authentication</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-custom"><a href="#custom"><strong>9.6</strong><span>Custom Authorization Strategies</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-rejection"><a href="#rejection"><strong>10</strong><span>Rejection Handling</span></a></div>
         
@@ -272,7 +276,7 @@
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/introduction.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/introduction.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -297,7 +301,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/releaseHistory.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/releaseHistory.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -313,7 +317,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <h1 id="whatsNew"><a class="anchor" href="#whatsNew"></a>3 What's New</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/whatsNew.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/whatsNew.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -350,7 +354,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <h1 id="breaks"><a class="anchor" href="#breaks"></a>4 Breaking Changes</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/breaks.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/breaks.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -568,7 +572,7 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 <h1 id="gettingStarted"><a class="anchor" href="#gettingStarted"></a>5 Getting Started</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/gettingStarted.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/gettingStarted.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -655,7 +659,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h1 id="securityConfiguration"><a class="anchor" href="#securityConfiguration"></a>6 Security Configuration</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityConfiguration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -717,7 +721,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="rejectNotFound"><a class="anchor" href="#rejectNotFound"></a>6.1 Reject Not Found Routes</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityConfiguration/rejectNotFound.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/rejectNotFound.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -730,7 +734,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="authenticationStrategy"><a class="anchor" href="#authenticationStrategy"></a>6.2 Authentication Strategy</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityConfiguration/authenticationStrategy.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/authenticationStrategy.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -743,7 +747,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="loginHandler"><a class="anchor" href="#loginHandler"></a>6.3 Login Handler</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityConfiguration/loginHandler.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/loginHandler.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -795,7 +799,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="logoutHandler"><a class="anchor" href="#logoutHandler"></a>6.4 Logout Handler</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityConfiguration/logoutHandler.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/logoutHandler.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -839,10 +843,24 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 </tbody>
 </table>
 
-<h2 id="redirection"><a class="anchor" href="#redirection"></a>6.5 Redirection Configuration</h2>
+<h2 id="noRedirection"><a class="anchor" href="#noRedirection"></a>6.5 Handlers without redirection</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityConfiguration/redirection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/noRedirection.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Some built-in handlers respond with a 303 (See other) response to the urls defined in the <a href="#redirection">Redirection Configuration</a>
+If you disable redirection configuration with by setting <code>micronaut.security.redirection.enabled</code> to <code>false</code>, these handlers respond with 200 responses instead.</p>
+</div>
+
+<h2 id="redirection"><a class="anchor" href="#redirection"></a>6.6 Redirection Configuration</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/redirection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -870,6 +888,11 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether Redirection configuration enabled. Default value (true).</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -964,7 +987,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h1 id="authenticationProviders"><a class="anchor" href="#authenticationProviders"></a>7 Authentication Providers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationProviders.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationProviders.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1018,7 +1041,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
 <h1 id="securityRule"><a class="anchor" href="#securityRule"></a>8 Security Rules</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityRule.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1103,7 +1126,7 @@ Because of that, <a href="../api/io/micronaut/security/rules/SecurityRule.html">
 <h2 id="ipPattern"><a class="anchor" href="#ipPattern"></a>8.1 IP Pattern Rule</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityRule/ipPattern.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/ipPattern.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1138,7 +1161,7 @@ either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
 <h2 id="secured"><a class="anchor" href="#secured"></a>8.2 Secured Annotation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityRule/secured.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/secured.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1266,7 +1289,7 @@ The use of JSR 250 annotations requires <code>io.micronaut.security:micronaut-se
 <h2 id="interceptUrlMap"><a class="anchor" href="#interceptUrlMap"></a>8.3 Intercept URL Map</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityRule/interceptUrlMap.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/interceptUrlMap.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1358,7 +1381,7 @@ and an optional HTTP method.</p>
 <h2 id="builtInEndpointsAccess"><a class="anchor" href="#builtInEndpointsAccess"></a>8.4 Built-In Endpoints Security</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityRule/builtInEndpointsAccess.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/builtInEndpointsAccess.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1508,7 +1531,7 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
 <h1 id="authenticationStrategies"><a class="anchor" href="#authenticationStrategies"></a>9 Authorization Strategies</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1519,7 +1542,7 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
 <h2 id="basicAuth"><a class="anchor" href="#basicAuth"></a>9.1 Basic Authentication</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/basicAuth.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/basicAuth.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1575,7 +1598,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-basicaut
 <h2 id="session"><a class="anchor" href="#session"></a>9.2 Session Authorization</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/session.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/session.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1690,11 +1713,22 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_session_based_authentication_without_redirection">Session-based authentication without redirection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you set <code>micronaut.security.authentication</code> to <code>session</code>, you enable <a href="../api/io/micronaut/security/session/SessionLoginHandler.html">SessionLoginHandler</a> and <a href="../api/io/micronaut/security/session/SessionLogoutHandler.html">SessionLogoutHandler</a>.</p>
+</div>
+<div class="paragraph">
+<p>These handlers return 303 responses to the urls defined in the <a href="#redirection">Redirection Configuration</a>. Disable redirection configuration with <code>micronaut.security.redirection.enabled=false</code> to respond with 200 responses instead.</p>
+</div>
+</div>
+</div>
 
 <h2 id="jwt"><a class="anchor" href="#jwt"></a>9.3 JSON Web Token</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1895,7 +1929,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="reader"><a class="anchor" href="#reader"></a>9.3.1 Reading JWT Token</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1906,7 +1940,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="bearerToken"><a class="anchor" href="#bearerToken"></a>9.3.1.1 Bearer Token Reader</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1996,7 +2030,7 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <h2 id="cookieToken"><a class="anchor" href="#cookieToken"></a>9.3.1.2 Cookie Token Reader</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2090,7 +2124,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwtValidation"><a class="anchor" href="#jwtValidation"></a>9.3.2 JWT Signature Validation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2117,7 +2151,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwks"><a class="anchor" href="#jwks"></a>9.3.2.1 Validation with remote JWKS</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2151,7 +2185,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwtGenerator"><a class="anchor" href="#jwtGenerator"></a>9.3.3 JWT Token Generation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2190,7 +2224,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwtGeneratorSignature"><a class="anchor" href="#jwtGeneratorSignature"></a>9.3.3.1 Signed JWT Generation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2222,7 +2256,7 @@ Remember to qualify with <code>@Named</code> <code>generator</code> your signatu
 <h2 id="jwtGeneratorSecret"><a class="anchor" href="#jwtGeneratorSecret"></a>9.3.3.2 Example of JWT Signed with Secret</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSecret.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSecret.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2289,7 +2323,7 @@ Remember to qualify with <code>@Named</code> <code>generator</code> your signatu
 <h2 id="jwtGeneratorRSA"><a class="anchor" href="#jwtGeneratorRSA"></a>9.3.3.3 Example of JWT Signed with RSA</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorRSA.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorRSA.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2326,7 +2360,7 @@ class MySignatureGeneratorConfigurationFactory {
 <h2 id="jwtEncryption"><a class="anchor" href="#jwtEncryption"></a>9.3.4 JWT Encryption</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2358,7 +2392,7 @@ class MySignatureGeneratorConfigurationFactory {
 <h2 id="jwtGeneratorEncryption"><a class="anchor" href="#jwtGeneratorEncryption"></a>9.3.4.1 Example of JWT Signed with Secret and Encrypted with RSA</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption/jwtGeneratorEncryption.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption/jwtGeneratorEncryption.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2498,7 +2532,7 @@ class KeyPairProvider {
 <h2 id="claimsGeneration"><a class="anchor" href="#claimsGeneration"></a>9.3.5 Claims Generation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2513,7 +2547,7 @@ fulfil your needs you can provide your own <a href="https://micronaut-projects.g
 <h2 id="claimsValidation"><a class="anchor" href="#claimsValidation"></a>9.3.6 Claims Validation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/claimsValidation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/claimsValidation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2571,7 +2605,7 @@ fulfil your needs you can provide your own <a href="https://micronaut-projects.g
 <h2 id="render"><a class="anchor" href="#render"></a>9.3.7 Token Render</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/jwt/render.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/render.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2609,7 +2643,7 @@ Pragma: no-cache
 <h2 id="ldap"><a class="anchor" href="#ldap"></a>9.4 LDAP Authentication</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/ldap.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/ldap.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2644,7 +2678,7 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <h2 id="configuration"><a class="anchor" href="#configuration"></a>9.4.1 Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/ldap/configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2843,7 +2877,7 @@ To connect to an LDAP server with SSL, set the standard Java system properties t
 <h2 id="extending"><a class="anchor" href="#extending"></a>9.4.2 Extending Default Behavior</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/ldap/extending.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/extending.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2964,64 +2998,140 @@ public class MyContextBuilder implements ContextBuilder {
 </div>
 </div>
 
-<h2 id="custom"><a class="anchor" href="#custom"></a>9.5 Custom Authorization Strategies</h2>
+<h2 id="x509"><a class="anchor" href="#x509"></a>9.5 X.509 Certificate Authentication</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/authenticationStrategies/custom.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/x509.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
 <div class="paragraph">
-<p>All authorization strategies implement the <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> interface. The contract is designed to return an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> object from the request. To implement custom logic to retrieve the currently logged in user, simply create a bean that implements the contract and it will be picked up automatically.</p>
+<p>Micronaut Security supports using <a href="https://en.wikipedia.org/wiki/X.509#Certificates">X.509 client certificates</a> with HTTPS to enable <a href="https://en.wikipedia.org/wiki/Mutual_authentication">mutual authentication</a>.</p>
 </div>
 <div class="paragraph">
-<p>For example to retrieve information from an X509 certificate:</p>
+<p>Once you have <a href="https://docs.micronaut.io/latest/guide/#https">configured HTTPS</a> in your application, users can install X.509 browser certificates to provide authentication information and access restricted URLs.</p>
+</div>
+<div class="paragraph">
+<p>When X.509 is enabled, in addition to the client (e.g. browser or API client) verifying that the server certificate is valid (i.e. that it was issued and signed by a trusted certificate authority (CA)), the server can also verify the client with the certificate from the client SSL handshake. If the client certificate is valid and contains a username/principal that corresponds to an application user, access will be granted.</p>
+</div>
+<div class="sect2">
+<h3 id="_configuration">Configuration</h3>
+<div class="paragraph">
+<p>There are two configuration options as seen in the following table:</p>
+</div>
+<a id="io.micronaut.security.x509.X509ConfigurationProperties" href="#io.micronaut.security.x509.X509ConfigurationProperties">&#128279;</a>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/x509/X509ConfigurationProperties.html">X509ConfigurationProperties</a></caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.x509.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the {@link X509AuthenticationFetcher}. Default value false.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.x509.subject-dn-regex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the Subject DN regex. Default value "CN=(.*?)(?:,</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Use <code>micronaut.security.x509.enabled</code> to enable X.509 support, or enable per-environment.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>micronaut.security.x509.subject-dn-regex</code> property to override the default regular expression used to extract the principal (username) from the certificate. Typically, the principal is stored in the <code>CN</code> (Common Name) property, prefixed with <code>"CN="</code>. The default regular expression <code>"CN=(.*?)(?:,|$)"</code> will extract the text after <code>"CN="</code> and up to the next (optional) delimiter, but if your certificates are configured differently, override the regex as needed.</p>
+</div>
+<div class="paragraph">
+<p>In addition to X.509-specific configuration, you must also <a href="https://docs.micronaut.io/latest/guide/#https">configure HTTPS</a> for your server, and configure requesting client certificates during the SSL handshake. Set the value of the property <code>micronaut.server.ssl.client-authentication</code> to <code>want</code> or <code>need</code> (depending on whether client certificates are optional or required).</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a sample configuration enabling and configuring HTTPS and X.509:</p>
 </div>
 <div class="listingblock">
-<div class="title">X509 Authentication Fetcher</div>
+<div class="title">application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">micronaut:
+  application:
+    name: your_application_name
+  security:
+    x509:
+      enabled: true
+  ssl:
+    enabled: true
+  server:
+    ssl:
+      client-authentication: want # or 'need'
+      key-store:
+        path: classpath:ssl/keystore.p12
+        password: your_keystore_password
+        type: PKCS12
+      trust-store:
+        path: classpath:ssl/truststore.jks
+        password: your_truststore_password
+        type: JKS</code></pre>
+</div>
+</div>
+</div>
+
+<h2 id="custom"><a class="anchor" href="#custom"></a>9.6 Custom Authorization Strategies</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/custom.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>All authorization strategies implement the <a href="../api/io/micronaut/security/filters/AuthenticationFetcher.html">AuthenticationFetcher</a> interface. The contract is designed to return an <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> from the request. To implement custom logic to retrieve the currently logged in user, simply create a bean that implements the contract and it will be picked up automatically.</p>
+</div>
+<div class="paragraph">
+<p>For example, if you use a product like <a href="https://www.broadcom.com/products/cyber-security/identity/siteminder">SiteMinder</a> that handles authentication for you, you can trust that users access your application are authenticated, and you can access their username via the <code>SM_USER</code> request header and build an <code>Authentication</code> from that:</p>
+</div>
+<div class="listingblock">
+<div class="title">SiteMinder Authentication Fetcher</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import org.reactivestreams.Publisher;
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
+
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
 @Singleton
-public class X509AuthenticationFetcher implements AuthenticationFetcher {
+public class SiteminderAuthenticationFetcher implements AuthenticationFetcher {
+
+    public static final String SITEMINDER_USER_HEADER = "SM_USER";
 
     @Override
     public Publisher&lt;Authentication&gt; fetchAuthentication(HttpRequest&lt;?&gt; request) {
         return Mono.&lt;Authentication&gt;create(emitter -&gt; {
-            Optional&lt;Certificate&gt; optionalCertificate = request.getCertificate();
-            if (optionalCertificate.isPresent()) {
-                Certificate certificate = optionalCertificate.get();
-                if (certificate instanceof X509Certificate) {
-                    emitter.success(new Authentication() {
-                        X509Certificate x509Certificate = ((X509Certificate) certificate);
-                        @Override
-                        public String getName() {
-                            return x509Certificate.getIssuerX500Principal().getName();
-                        }
-
-                        @NonNull
-                        @Override
-                        public Map&lt;String, Object&gt; getAttributes() {
-                            return Collections.emptyMap();
-                        }
-                    });
-                    return;
-                }
+            String siteminderUser = request.getHeaders().get(SITEMINDER_USER_HEADER);
+            if (StringUtils.isEmpty(siteminderUser)) {
+                emitter.success();
+                return;
             }
-            emitter.success();
+
+            Collection&lt;String&gt; roles = Collections.singleton("ROLE_USER");
+            emitter.success(Authentication.build(siteminderUser, roles));
         });
     }
 }</code></pre>
@@ -3031,7 +3141,7 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 <h1 id="rejection"><a class="anchor" href="#rejection"></a>10 Rejection Handling</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/rejection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/rejection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3059,6 +3169,11 @@ public class X509AuthenticationFetcher implements AuthenticationFetcher {
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether Redirection configuration enabled. Default value (true).</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -3123,7 +3238,7 @@ public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
 <h1 id="tokenPropagation"><a class="anchor" href="#tokenPropagation"></a>11 Token Propagation</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/tokenPropagation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/tokenPropagation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3272,7 +3387,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <h1 id="endpoints"><a class="anchor" href="#endpoints"></a>12 Built-In Security Controllers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/endpoints.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3283,7 +3398,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <h2 id="login"><a class="anchor" href="#login"></a>12.1 Login Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/endpoints/login.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/login.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3343,7 +3458,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <h2 id="logout"><a class="anchor" href="#logout"></a>12.2 Logout Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/endpoints/logout.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/logout.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3416,7 +3531,7 @@ If you are using JWT authentication not stored in a cookie, you may not need to 
 <h2 id="refresh"><a class="anchor" href="#refresh"></a>12.3 Refresh Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/endpoints/refresh.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/refresh.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3595,7 +3710,7 @@ See <a href="https://tools.ietf.org/html/rfc6749#section-10.4">section 10.4 of t
 <h2 id="keys"><a class="anchor" href="#keys"></a>12.4 Keys Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/endpoints/keys.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/keys.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3657,7 +3772,7 @@ This controller can only be enabled if you are using JWT authentication.
 <h2 id="introspectionendpoint"><a class="anchor" href="#introspectionendpoint"></a>12.5 Introspection Endpoint</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/endpoints/introspectionendpoint.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/introspectionendpoint.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3734,7 +3849,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3O
 <h1 id="retrievingAuthenticatedUser"><a class="anchor" href="#retrievingAuthenticatedUser"></a>13 Retrieve the authenticated user</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/retrievingAuthenticatedUser.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/retrievingAuthenticatedUser.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3805,7 +3920,7 @@ class UserController {
 <h2 id="securityService"><a class="anchor" href="#securityService"></a>13.1 User outside of a controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/retrievingAuthenticatedUser/securityService.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/retrievingAuthenticatedUser/securityService.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3818,7 +3933,7 @@ class UserController {
 <h1 id="securityEvents"><a class="anchor" href="#securityEvents"></a>14 Security Events</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/securityEvents.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityEvents.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3870,7 +3985,7 @@ class UserController {
 <h1 id="oauth"><a class="anchor" href="#oauth"></a>15 OAuth 2.0</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3923,7 +4038,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 <h2 id="installation"><a class="anchor" href="#installation"></a>15.1 Installation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/installation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/installation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3956,7 +4071,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 <h2 id="openid"><a class="anchor" href="#openid"></a>15.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/openid.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/openid.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4017,7 +4132,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <h2 id="flows"><a class="anchor" href="#flows"></a>15.3 Flows</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4028,7 +4143,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <h2 id="authorization-code"><a class="anchor" href="#authorization-code"></a>15.3.1 Authorization Code</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4218,7 +4333,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 <h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>15.3.1.1 OAuth 2.0</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4239,7 +4354,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 <h2 id="oauth2-configuration"><a class="anchor" href="#oauth2-configuration"></a>15.3.1.1.1 Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4337,7 +4452,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <h2 id="oauth2-user-details"><a class="anchor" href="#oauth2-user-details"></a>15.3.1.1.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4597,7 +4712,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 <h2 id="openid-authorization-code"><a class="anchor" href="#openid-authorization-code"></a>15.3.1.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4618,7 +4733,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 <h2 id="openid-configuration"><a class="anchor" href="#openid-configuration"></a>15.3.1.2.1 Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4706,6 +4821,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.issuer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL using the https scheme with no query or fragment component that the
@@ -4720,11 +4840,6 @@ To disable a specific client for any given environment, set <code>enabled: false
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.jwks-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The JWKS signature URI.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -4923,7 +5038,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>15.3.1.2.2 OAuth 2.0 Authentication Mapper</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5182,7 +5297,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>15.3.1.2.3 Parameters</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5262,7 +5377,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <h2 id="nonce"><a class="anchor" href="#nonce"></a>15.3.1.2.3.1 Nonce</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5467,7 +5582,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="login-hint"><a class="anchor" href="#login-hint"></a>15.3.1.2.3.2 Login Hint</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5480,7 +5595,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="id-token-hint"><a class="anchor" href="#id-token-hint"></a>15.3.1.2.3.3 ID Token Hint</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5493,7 +5608,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="token-validation"><a class="anchor" href="#token-validation"></a>15.3.1.2.4 Token Validation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5512,7 +5627,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="state"><a class="anchor" href="#state"></a>15.3.1.3 State Parameter</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5661,7 +5776,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="clientcredentials"><a class="anchor" href="#clientcredentials"></a>15.3.2 Client Credentials</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/clientcredentials.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5719,7 +5834,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <h2 id="clientecredentialshttpclient"><a class="anchor" href="#clientecredentialshttpclient"></a>15.3.2.1 HTTP Client Filter for Client Credentials</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/clientcredentials/clientecredentialshttpclient.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials/clientecredentialshttpclient.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5767,6 +5882,11 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Client Credentials configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a>. Default value true</p></td>
@@ -5796,18 +5916,13 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Additional parameters included in the client-credentials flow.</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Client Credentials configuration.</p></td>
-</tr>
 </tbody>
 </table>
 
 <h2 id="password"><a class="anchor" href="#password"></a>15.3.3 Password</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/flows/password.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/password.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5867,7 +5982,7 @@ This example above is not intended to be a complete configuration reference
 <h2 id="oauth-endpoints"><a class="anchor" href="#oauth-endpoints"></a>15.4 Endpoints</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/oauth-endpoints.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5878,7 +5993,7 @@ This example above is not intended to be a complete configuration reference
 <h2 id="endsession"><a class="anchor" href="#endsession"></a>15.4.1 OpenID End Session</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6015,7 +6130,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="introspection"><a class="anchor" href="#introspection"></a>15.4.2 Introspection</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/oauth-endpoints/introspection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/introspection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6044,6 +6159,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the introspection endpoint configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
@@ -6053,18 +6173,13 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html">AuthenticationMethod</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authentication Method</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the introspection endpoint configuration.</p></td>
-</tr>
 </tbody>
 </table>
 
 <h2 id="revocation"><a class="anchor" href="#revocation"></a>15.4.3 Revocation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/oauth-endpoints/revocation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/revocation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6093,6 +6208,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the revocation endpoint configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
@@ -6102,18 +6222,13 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html">AuthenticationMethod</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authentication Method</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the revocation endpoint configuration.</p></td>
-</tr>
 </tbody>
 </table>
 
 <h2 id="user-info"><a class="anchor" href="#user-info"></a>15.4.4 OpenID User Info</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6157,7 +6272,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="custom-client"><a class="anchor" href="#custom-client"></a>15.5 Custom Clients</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/oauth/custom-client.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/custom-client.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6218,7 +6333,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h1 id="repository"><a class="anchor" href="#repository"></a>16 Repository</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.2.x/src/main/docs/guide/repository.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/repository.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
