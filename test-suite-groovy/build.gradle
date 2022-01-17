@@ -11,7 +11,7 @@ dependencies {
     testImplementation("org.spockframework:spock-core:${spockVersion}") {
         exclude module:'groovy-all'
     }
-    runtimeOnly("ch.qos.logback:logback-classic")
+    testRuntimeOnly("ch.qos.logback:logback-classic")
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
     testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-server-netty"
