@@ -49,18 +49,22 @@ public class AudienceClaimValidator implements OpenIdClaimsValidator {
         List<String> audienceList = claims.getAudience();
 
         //The Client MUST validate that the aud (audience) Claim contains its client_id value registered at the Issuer identified by the iss (issuer) Claim as an audience.
-        boolean clientIdIsValid = audienceList.stream().anyMatch(audience -> audience.equals(clientConfiguration.getClientId()));
-        if (!clientIdIsValid && LOG.isTraceEnabled()) {
-            LOG.trace("JWT validation failed for provider [{}]. Audience claims does not contain [{}]", clientConfiguration.getName(), clientConfiguration.getClientId());
+        boolean condition = audienceList.stream().anyMatch(audience -> audience.equals(clientConfiguration.getClientId()));
+        if (!condition) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("JWT validation failed for provider [{}]. Audience claims does not contain [{}]", clientConfiguration.getName(), clientConfiguration.getClientId());
+            }
+            return false;
         }
 
         //If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is present.
-        boolean azpClaimIsValid = audienceList.size() <= 1 || claims.getAuthorizedParty() != null;
-        if (!azpClaimIsValid && LOG.isTraceEnabled()) {
-            LOG.trace("JWT validation failed for provider [{}]. Multiple audience claims present but no authorized party", clientConfiguration.getName());
+        if (audienceList.size() > 1 && claims.getAuthorizedParty() == null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("JWT validation failed for provider [{}]. Multiple audience claims present but no authorized party", clientConfiguration.getName());
+            }
+            return false;
         }
-
-        return clientIdIsValid && azpClaimIsValid;
+        return true;
     }
 
 }
