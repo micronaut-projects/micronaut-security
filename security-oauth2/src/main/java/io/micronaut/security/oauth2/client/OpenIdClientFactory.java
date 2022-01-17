@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
@@ -29,6 +30,7 @@ import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -51,6 +53,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Supplier;
 
@@ -71,6 +74,17 @@ class OpenIdClientFactory {
     private final BeanContext beanContext;
 
     private final JsonMapper jsonMapper;
+
+    /**
+     * @param beanContext The bean context
+     * @param objectMapper Object Mapper
+     * @deprecated Use {@link #OpenIdClientFactory(BeanContext, JsonMapper)} instead
+     */
+    @Deprecated
+    OpenIdClientFactory(BeanContext beanContext, ObjectMapper objectMapper) {
+        this.beanContext = beanContext;
+        this.jsonMapper = new JacksonDatabindMapper(objectMapper);
+    }
 
     /**
      * @param beanContext The bean context
