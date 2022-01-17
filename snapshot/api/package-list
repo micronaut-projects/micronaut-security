@@ -70,3 +70,4 @@ io.micronaut.security.token.reader
 io.micronaut.security.token.refresh
 io.micronaut.security.token.validator
 io.micronaut.security.utils
+io.micronaut.security.x509
