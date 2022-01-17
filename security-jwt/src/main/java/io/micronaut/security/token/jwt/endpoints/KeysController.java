@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.token.jwt.endpoints;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.annotation.Requires;
@@ -36,6 +35,8 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Endpoint which exposes a JSON Web Key Set built with the JWK provided by {@link io.micronaut.security.token.jwt.endpoints.JwkProvider} beans.
@@ -63,8 +64,7 @@ public class KeysController {
     @Deprecated
     public KeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
         this.jwkProviders = jwkProviders;
-        // Include.ALWAYS shouldn't actually be necessary, since we only serialize a Map anyway
-        this.jsonMapper = new JacksonDatabindMapper(objectMapper.copy().setSerializationInclusion(JsonInclude.Include.ALWAYS));
+        this.jsonMapper = new JacksonDatabindMapper(objectMapper);
     }
 
     /**
@@ -95,14 +95,18 @@ public class KeysController {
                 .map(JWKSet::new)
                 .map(JWKSet::toJSONObject)
                 .map(m -> {
-                    try {
-                        return new String(jsonMapper.writeValueAsBytes(m));
-                    } catch (IOException e) {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("JSON Processing exception getting JSON representation of the JSON Web Key sets");
+                    // we need "keys" in the output, and the mapper may be configured to drop empty lists, so we have a
+                    // separate branch for that.
+                    if (!((Map<?, ?>) m.getOrDefault("keys", Collections.emptyMap())).isEmpty()) {
+                        try {
+                            return new String(jsonMapper.writeValueAsBytes(m));
+                        } catch (IOException e) {
+                            if (LOG.isErrorEnabled()) {
+                                LOG.error("JSON Processing exception getting JSON representation of the JSON Web Key sets");
+                            }
                         }
-                        return EMPTY_KEYS;
                     }
+                    return EMPTY_KEYS;
                 });
 
     }
