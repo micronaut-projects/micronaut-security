@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.token.jwt.endpoints;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.annotation.Requires;
@@ -24,14 +22,20 @@ import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.jackson.databind.JacksonDatabindMapper;
+import io.micronaut.json.JsonMapper;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Endpoint which exposes a JSON Web Key Set built with the JWK provided by {@link io.micronaut.security.token.jwt.endpoints.JwkProvider} beans.
@@ -45,19 +49,33 @@ import java.util.Collection;
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class KeysController {
     private static final Logger LOG = LoggerFactory.getLogger(KeysController.class);
-    private static final String EMPTY_KEYS = "{\"keys\": []}";
+    private static final String EMPTY_KEYS = "{\"keys\":[]}";
 
     private final Collection<JwkProvider> jwkProviders;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     /**
      * Instantiates a {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
      * @param jwkProviders a collection of JSON Web Key providers.
      * @param objectMapper Jackson ObjectMapper used to do serialization.
+     * @deprecated Use {@link #KeysController(Collection, JsonMapper)} instead
      */
+    @Deprecated
     public KeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
         this.jwkProviders = jwkProviders;
-        this.objectMapper = objectMapper.copy().setSerializationInclusion(JsonInclude.Include.ALWAYS);
+        this.jsonMapper = new JacksonDatabindMapper(objectMapper);
+    }
+
+    /**
+     * Instantiates a {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
+     * @param jwkProviders a collection of JSON Web Key providers.
+     * @param jsonMapper Jackson ObjectMapper used to do serialization.
+     * @since 3.3
+     */
+    @Inject
+    public KeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+        this.jwkProviders = jwkProviders;
+        this.jsonMapper = jsonMapper;
     }
 
     /**
@@ -76,14 +94,18 @@ public class KeysController {
                 .map(JWKSet::new)
                 .map(JWKSet::toJSONObject)
                 .map(m -> {
-                    try {
-                        return objectMapper.writeValueAsString(m);
-                    } catch (JsonProcessingException e) {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("JSON Processing exception getting JSON representation of the JSON Web Key sets");
+                    // we need "keys" in the output, and the mapper may be configured to drop empty lists, so we have a
+                    // separate branch for that.
+                    if (!((Collection<?>) m.getOrDefault("keys", Collections.emptyList())).isEmpty()) {
+                        try {
+                            return new String(jsonMapper.writeValueAsBytes(m));
+                        } catch (IOException e) {
+                            if (LOG.isErrorEnabled()) {
+                                LOG.error("JSON Processing exception getting JSON representation of the JSON Web Key sets");
+                            }
                         }
-                        return EMPTY_KEYS;
                     }
+                    return EMPTY_KEYS;
                 });
 
     }

@@ -27,7 +27,6 @@ class AuthenticationSerializationSpec extends Specification {
 
     void "test authentication is serializable to json"() {
         ObjectMapper objectMapper = new ObjectMapper()
-        objectMapper.registerModule(new SecurityJacksonModule())
         JacksonObjectSerializer serializer = new JacksonObjectSerializer(objectMapper)
 
         when:

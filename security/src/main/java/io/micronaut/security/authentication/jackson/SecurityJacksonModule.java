@@ -21,15 +21,14 @@ import io.micronaut.core.annotation.TypeHint;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.ClientAuthentication;
 
-import jakarta.inject.Singleton;
-
 /**
  * A module to extend Jackson for security related classes.
  *
  * @author James Kleeh
  * @since 1.0
+ * @deprecated Not necessary anymore, now based on annotations on the proper classes.
  */
-@Singleton
+@Deprecated
 @TypeHint(typeNames = {
         "com.fasterxml.jackson.databind.PropertyNamingStrategy$SnakeCaseStrategy"
 })
