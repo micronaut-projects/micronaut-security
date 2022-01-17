@@ -108,7 +108,7 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      * @return true if the request accepts text/html
      */
     protected boolean shouldRedirect(HttpRequest<?> request, AuthorizationException exception) {
-        if (redirectConfiguration != null) {
+        if (redirectConfiguration != null && redirectConfiguration.isEnabled()) {
             return (
                     (exception.isForbidden() && redirectConfiguration.getForbidden().isEnabled()) ||
                             (!exception.isForbidden() && redirectConfiguration.getUnauthorized().isEnabled())

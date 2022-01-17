@@ -11,6 +11,7 @@ securityConfiguration:
   authenticationStrategy: Authentication Strategy
   loginHandler: Login Handler
   logoutHandler: Logout Handler
+  noRedirection: Handlers without redirection
   redirection: Redirection Configuration
 authenticationProviders: Authentication Providers
 securityRule:
@@ -48,6 +49,7 @@ authenticationStrategies:
     title: LDAP Authentication
     configuration: Configuration
     extending: Extending Default Behavior
+  x509: X.509 Certificate Authentication
   custom: Custom Authorization Strategies
 rejection: Rejection Handling
 tokenPropagation: Token Propagation

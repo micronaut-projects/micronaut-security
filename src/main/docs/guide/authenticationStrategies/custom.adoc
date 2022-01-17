@@ -1,9 +1,9 @@
-All authorization strategies implement the api:security.filters.AuthenticationFetcher[] interface. The contract is designed to return an api:security.authentication.Authentication[] object from the request. To implement custom logic to retrieve the currently logged in user, simply create a bean that implements the contract and it will be picked up automatically.
+All authorization strategies implement the api:security.filters.AuthenticationFetcher[] interface. The contract is designed to return an api:security.authentication.Authentication[] from the request. To implement custom logic to retrieve the currently logged in user, simply create a bean that implements the contract and it will be picked up automatically.
 
-For example to retrieve information from an X509 certificate:
+For example, if you use a product like https://www.broadcom.com/products/cyber-security/identity/siteminder[SiteMinder] that handles authentication for you, you can trust that users access your application are authenticated, and you can access their username via the `SM_USER` request header and build an `Authentication` from that:
 
 [source, java]
-.X509 Authentication Fetcher
+.SiteMinder Authentication Fetcher
 ----
-include::{testssecurity}/security/authorization/X509AuthenticationFetcher.java[tag=clazz, indent=0]
+include::{testssecurity}/security/authorization/SiteminderAuthenticationFetcher.java[tag=clazz, indent=0]
 ----
