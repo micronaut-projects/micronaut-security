@@ -16,12 +16,13 @@
 package io.micronaut.security.config;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.Toggleable;
 
 /**
  * @author Sergio del Amo
  * @since 2.0.0
  */
-public interface RedirectConfiguration {
+public interface RedirectConfiguration extends Toggleable {
 
     /**
      *
