@@ -48,12 +48,28 @@ class OpenIdProviderMetadataFetcherCodeGeneratorSpec extends AbstractSourceGener
 
         then:
         assertThatGeneratedSources {
-            createsInitializer """private static void preloadOpenIdMetadata() {
-  java.util.Map<java.lang.String, java.util.function.Supplier<io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata>> configs = new java.util.HashMap<java.lang.String, java.util.function.Supplier<io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata>>();
-  configs.put("cognito", AotOpenIdProviderMetadataFetcherCognito::create);
-  io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher.Optimizations opts = new io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher.Optimizations(configs);
-  io.micronaut.core.optim.StaticOptimizations.set(opts);
+            doesNotCreateInitializer()
+            hasClass("AotOpenIdProviderMetadataFetcherCode") {
+                withSources """package io.micronaut.test;
+
+import io.micronaut.core.optim.StaticOptimizations;
+import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher;
+import java.lang.Override;
+import java.lang.String;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
+public class AotOpenIdProviderMetadataFetcherCode implements StaticOptimizations.Loader<DefaultOpenIdProviderMetadataFetcher.Optimizations> {
+  @Override
+  public DefaultOpenIdProviderMetadataFetcher.Optimizations load() {
+    Map<String, Supplier<DefaultOpenIdProviderMetadata>> configs = new HashMap<String, Supplier<DefaultOpenIdProviderMetadata>>();
+    configs.put("cognito", AotOpenIdProviderMetadataFetcherCognito::create);
+    return new DefaultOpenIdProviderMetadataFetcher.Optimizations(configs);
+  }
 }"""
+            }
             hasClass("AotOpenIdProviderMetadataFetcherCognito") {
                 withSources """package io.micronaut.test;
 

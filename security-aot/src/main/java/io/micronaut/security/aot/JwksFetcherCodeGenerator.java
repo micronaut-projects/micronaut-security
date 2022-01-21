@@ -27,7 +27,6 @@ import io.micronaut.aot.core.AOTModule;
 import io.micronaut.aot.core.codegen.AbstractCodeGenerator;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
@@ -62,7 +61,7 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
     public void generate(@NonNull AOTContext context) {
         List<GeneratedFile> files = generateJavaFiles(context);
         if (!files.isEmpty()) {
-            context.registerStaticInitializer(staticMethod("preloadJwkSet", body -> {
+            context.registerStaticOptimization("AotJwksFetcher", DefaultJwkSetFetcher.Optimizations.class, body -> {
                 body.addStatement("$T configs = new $T()",
                         ParameterizedTypeName.get(ClassName.get(Map.class), TypeName.get(String.class), SUPPLIER_OF_METADATA),
                         ParameterizedTypeName.get(ClassName.get(HashMap.class), TypeName.get(String.class), SUPPLIER_OF_METADATA)
@@ -71,8 +70,8 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
                     context.registerGeneratedSourceFile(generatedFile.getJavaFile());
                     body.addStatement("configs.put($S, $T::create)", generatedFile.getName(), ClassName.bestGuess(generatedFile.getSimpleName()));
                 }
-                body.addStatement("$T.set($T, configs)", StaticOptimizations.class, DefaultJwkSetFetcher.Optimizations.class);
-            }));
+                body.addStatement("return new $T(configs)", DefaultJwkSetFetcher.Optimizations.class);
+            });
         }
     }
 

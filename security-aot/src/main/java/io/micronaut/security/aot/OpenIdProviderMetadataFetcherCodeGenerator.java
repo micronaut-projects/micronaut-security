@@ -28,7 +28,6 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.Qualifier;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
@@ -61,7 +60,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
     public void generate(@NonNull AOTContext context) {
         List<GeneratedFile> files = generateJavaFiles(context);
         if (!files.isEmpty()) {
-            context.registerStaticInitializer(staticMethod("preloadOpenIdMetadata", body -> {
+            context.registerStaticOptimization("AotOpenIdProviderMetadataFetcherCode", DefaultOpenIdProviderMetadataFetcher.Optimizations.class, body -> {
                 body.addStatement("$T configs = new $T()",
                         ParameterizedTypeName.get(ClassName.get(Map.class), TypeName.get(String.class), SUPPLIER_OF_METADATA),
                         ParameterizedTypeName.get(ClassName.get(HashMap.class), TypeName.get(String.class), SUPPLIER_OF_METADATA)
@@ -70,9 +69,8 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                     context.registerGeneratedSourceFile(f.getJavaFile());
                     body.addStatement("configs.put($S, $T::create)", f.getName(), ClassName.bestGuess(f.getSimpleName()));
                 }
-                body.addStatement("$T opts = new $T(configs)", DefaultOpenIdProviderMetadataFetcher.Optimizations.class, DefaultOpenIdProviderMetadataFetcher.Optimizations.class);
-                body.addStatement("$T.set(opts)", StaticOptimizations.class);
-            }));
+                body.addStatement("return new $T(configs)", DefaultOpenIdProviderMetadataFetcher.Optimizations.class);
+            });
         }
     }
 
