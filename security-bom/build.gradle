@@ -1,0 +1,8 @@
+plugins {
+    id "io.micronaut.build.internal.bom"
+}
+dependencies {
+    constraints {
+        api("com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion")
+    }
+}
