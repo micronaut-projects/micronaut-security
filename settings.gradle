@@ -11,6 +11,7 @@ plugins {
 
 rootProject.name = 'micronaut-security'
 
+include "security-bom"
 include "security"
 include "security-annotations"
 include "security-jwt"
