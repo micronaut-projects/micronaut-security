@@ -51,7 +51,10 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
 
     /**
      * Default constructor.
+     *
+     * @deprecated Please use {@link #DefaultAuthorizationExceptionHandler(RedirectConfiguration, PriorToLoginPersistence, ErrorResponseProcessor)}
      */
+    @Deprecated
     public DefaultAuthorizationExceptionHandler() {
         this(null, null, null);
     }
@@ -59,7 +62,10 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
     /**
      * @param redirectConfiguration Redirect configuration
      * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
+     *
+     * @deprecated Please use {@link #DefaultAuthorizationExceptionHandler(RedirectConfiguration, PriorToLoginPersistence, ErrorResponseProcessor)}
      */
+    @Deprecated
     public DefaultAuthorizationExceptionHandler(RedirectConfiguration redirectConfiguration, @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         this(redirectConfiguration, priorToLoginPersistence, null);
     }

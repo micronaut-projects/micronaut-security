@@ -47,8 +47,11 @@ public class AuthenticationExceptionHandler implements ExceptionHandler<Authenti
     private final ErrorResponseProcessor<?> responseProcessor;
 
     /**
-     * @param eventPublisher The event publisher
+     * @param eventPublisher The event publisher.
+     *
+     * @deprecated {@link #AuthenticationExceptionHandler(ApplicationEventPublisher, ErrorResponseProcessor)}
      */
+    @Deprecated
     public AuthenticationExceptionHandler(ApplicationEventPublisher eventPublisher) {
         this(eventPublisher, null);
     }

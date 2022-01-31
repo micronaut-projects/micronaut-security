@@ -38,7 +38,10 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
 
     /**
      * Default constructor.
+     *
+     * @deprecated See @{link #AuthorizationErrorResponseExceptionHandler(ErrorResponseProcessor)}.
      */
+    @Deprecated
     public AuthorizationErrorResponseExceptionHandler() {
         this(null);
     }
