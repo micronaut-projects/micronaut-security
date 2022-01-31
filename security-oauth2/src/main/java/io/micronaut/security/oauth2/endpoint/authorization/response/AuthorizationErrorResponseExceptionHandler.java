@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 
+import io.micronaut.http.server.exceptions.response.ErrorContext;
+import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,8 +34,34 @@ import jakarta.inject.Singleton;
 @Singleton
 public class AuthorizationErrorResponseExceptionHandler implements ExceptionHandler<AuthorizationErrorResponseException, MutableHttpResponse<?>> {
 
+    private final ErrorResponseProcessor<?> responseProcessor;
+
+    /**
+     * Default constructor
+     */
+    public AuthorizationErrorResponseExceptionHandler() {
+        this(null);
+    }
+
+    /**
+     * @param responseProcessor Error Response Processor
+     */
+    @Inject
+    public AuthorizationErrorResponseExceptionHandler(ErrorResponseProcessor<?> responseProcessor) {
+        this.responseProcessor = responseProcessor;
+    }
+
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationErrorResponseException exception) {
-        return HttpResponse.badRequest(exception.getAuthorizationErrorResponse());
+        MutableHttpResponse<AuthorizationErrorResponse> response = HttpResponse.badRequest(exception.getAuthorizationErrorResponse());
+        if (responseProcessor == null) {
+            return response;
+        } else {
+            return responseProcessor.processResponse(ErrorContext
+                    .builder(request)
+                    .cause(exception)
+                    .errorMessage(exception.getMessage())
+                    .build(), response);
+        }
     }
 }

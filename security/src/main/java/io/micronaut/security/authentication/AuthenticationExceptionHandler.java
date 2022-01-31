@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.micronaut.security.authentication;
 
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
@@ -25,6 +26,9 @@ import io.micronaut.http.hateoas.JsonError;
 import io.micronaut.http.hateoas.Link;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 
+import io.micronaut.http.server.exceptions.response.ErrorContext;
+import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 
@@ -40,15 +44,41 @@ import jakarta.inject.Singleton;
 public class AuthenticationExceptionHandler implements ExceptionHandler<AuthenticationException, MutableHttpResponse<?>> {
     protected final ApplicationEventPublisher eventPublisher;
 
+    private final ErrorResponseProcessor<?> responseProcessor;
+
+    /**
+     * @param eventPublisher The event publisher
+     */
     public AuthenticationExceptionHandler(ApplicationEventPublisher eventPublisher) {
+        this(eventPublisher, null);
+    }
+
+    /**
+     * @param eventPublisher The event publisher
+     * @param responseProcessor Error Response Processor
+     */
+    @Inject
+    public AuthenticationExceptionHandler(ApplicationEventPublisher eventPublisher, @Nullable ErrorResponseProcessor<?> responseProcessor) {
         this.eventPublisher = eventPublisher;
+        this.responseProcessor = responseProcessor;
     }
 
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthenticationException exception) {
-        JsonError error = new JsonError(exception.getMessage());
-        error.link(Link.SELF, Link.of(request.getUri()));
-        return HttpResponse.unauthorized().body(error);
+        return processResponse(request, exception, HttpResponse.unauthorized());
+    }
+
+    private MutableHttpResponse<?> processResponse(HttpRequest request, AuthenticationException exception, MutableHttpResponse<Object> response) {
+        if (responseProcessor == null) {
+            JsonError error = new JsonError(exception.getMessage()).link(Link.SELF, Link.of(request.getUri()));
+            return response.body(error);
+        } else {
+            return responseProcessor.processResponse(ErrorContext
+                    .builder(request)
+                    .cause(exception)
+                    .errorMessage(exception.getMessage())
+                    .build(), response);
+        }
     }
 }
 

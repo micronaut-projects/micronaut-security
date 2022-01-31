@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
+import io.micronaut.http.server.exceptions.response.ErrorContext;
+import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import org.slf4j.Logger;
@@ -45,23 +47,33 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
 
     private final RedirectConfiguration redirectConfiguration;
     private final PriorToLoginPersistence priorToLoginPersistence;
+    private final ErrorResponseProcessor<?> responseProcessor;
 
     /**
      * Default constructor.
      */
     public DefaultAuthorizationExceptionHandler() {
-        this.redirectConfiguration = null;
-        this.priorToLoginPersistence = null;
+        this(null, null, null);
     }
 
     /**
      * @param redirectConfiguration Redirect configuration
      * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
      */
-    @Inject
     public DefaultAuthorizationExceptionHandler(RedirectConfiguration redirectConfiguration, @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        this(redirectConfiguration, priorToLoginPersistence, null);
+    }
+
+    /**
+     * @param redirectConfiguration Redirect configuration
+     * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
+     * @param responseProcessor Error Response Processor
+     */
+    @Inject
+    public DefaultAuthorizationExceptionHandler(RedirectConfiguration redirectConfiguration, @Nullable PriorToLoginPersistence priorToLoginPersistence, @Nullable ErrorResponseProcessor<?> responseProcessor) {
         this.redirectConfiguration = redirectConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
+        this.responseProcessor = responseProcessor;
     }
 
     @Override
@@ -71,7 +83,7 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
                 URI location = new URI(getRedirectUri(request, exception));
                 //prevent redirect loop
                 if (!request.getUri().equals(location)) {
-                    MutableHttpResponse<?> response = httpResponseWithStatus(location);
+                    MutableHttpResponse<?> response = httpResponseWithStatus(request, location, exception);
                     if (priorToLoginPersistence != null && !exception.isForbidden()) {
                         priorToLoginPersistence.onUnauthorized(request, response);
                     }
@@ -96,8 +108,11 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      * @return The response to be used when a redirect is not appropriate
      */
     protected MutableHttpResponse<?> httpResponseWithStatus(HttpRequest request, AuthorizationException exception) {
-        return HttpResponse.status(exception.isForbidden() ? HttpStatus.FORBIDDEN :
-                    HttpStatus.UNAUTHORIZED);
+        return processResponse(
+                request,
+                exception,
+                HttpResponse.status(exception.isForbidden() ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED)
+        );
     }
 
     /**
@@ -140,11 +155,44 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      *
      * @param location The Uri to redirect to
      * @return an HTTP response with the Uri as location
+     *
+     * @deprecated see {@link #httpResponseWithStatus(HttpRequest, URI, AuthorizationException)}
      */
+    @Deprecated
     protected MutableHttpResponse<?> httpResponseWithStatus(URI location) {
         return HttpResponse.status(HttpStatus.SEE_OTHER)
                 .headers((headers) ->
                         headers.location(location)
                 );
+    }
+
+    /**
+     * Builds a HTTP Response redirection to the supplied location.
+     *
+     * @param request The request
+     * @param location The Uri to redirect to
+     * @param exception The exception
+     * @return an HTTP response with the Uri as location
+     */
+    protected MutableHttpResponse<?> httpResponseWithStatus(HttpRequest<?> request, URI location, AuthorizationException exception) {
+        return processResponse(
+                request,
+                exception,
+                HttpResponse.status(HttpStatus.SEE_OTHER).headers((headers) ->
+                        headers.location(location)
+                )
+        );
+    }
+
+    private MutableHttpResponse<?> processResponse(HttpRequest<?> request, AuthorizationException exception, MutableHttpResponse<?> response) {
+        if (responseProcessor == null) {
+            return response;
+        } else {
+            return responseProcessor.processResponse(ErrorContext
+                    .builder(request)
+                    .cause(exception)
+                    .errorMessage(exception.getMessage())
+                    .build(), response);
+        }
     }
 }

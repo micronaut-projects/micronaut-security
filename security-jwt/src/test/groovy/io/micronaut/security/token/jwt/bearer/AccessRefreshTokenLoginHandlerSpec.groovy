@@ -49,7 +49,7 @@ class AccessRefreshTokenLoginHandlerSpec extends EmbeddedServerSpecification {
         then:
         HttpClientResponseException e = thrown(HttpClientResponseException)
         e.status == HttpStatus.UNAUTHORIZED
-        e.message == message
+        e.response.getBody(Map).get()._embedded.errors.message == [message]
 
         where:
         username          | password  | message
