@@ -37,7 +37,7 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
     private final ErrorResponseProcessor<?> responseProcessor;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public AuthorizationErrorResponseExceptionHandler() {
         this(null);
