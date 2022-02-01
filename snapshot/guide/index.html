@@ -4123,7 +4123,7 @@ To use OpenID client flows, the <code>security-jwt</code> dependency must be in 
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Even though OpenID providers return JWT tokens, that token is not used directly to authorize requests with Micronaut. Instead a new token is created if the application is using JWT. This allows for authorization to be standardized across custom authentication providers, normal OAuth 2.0 flows, and OpenID flows. It also allows for purely session based authorization as a result of OpenID authentication.
+Even though OpenID providers return JWT tokens, that token is not used directly to authorize requests with Micronaut by default. Instead a new token is created if the application is using JWT. This allows for authorization to be standardized across custom authentication providers, normal OAuth 2.0 flows, and OpenID flows. It also allows for purely session based authorization as a result of OpenID authentication. To use the provider token directly, set the authentication mode to <code>idtoken</code>.
 </td>
 </tr>
 </table>
