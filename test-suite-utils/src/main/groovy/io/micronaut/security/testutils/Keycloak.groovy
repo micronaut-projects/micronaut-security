@@ -19,7 +19,9 @@ import org.testcontainers.Testcontainers
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
+import org.testcontainers.images.builder.ImageFromDockerfile
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
+import spock.util.environment.OperatingSystem
 
 import java.time.Duration
 
@@ -51,14 +53,19 @@ class Keycloak {
 
     static void init() {
         if (keycloak == null) {
-            keycloak = new GenericContainer("jboss/keycloak:8.0.0")
-                    .withExposedPorts(8080)
+            if (OperatingSystem.current.macOs && System.getProperty("os.arch") == 'aarch64') {
+                keycloak = new GenericContainer(new ImageFromDockerfile("keycloak-m1", false).withFileFromClasspath("Dockerfile", "/Dockerfile.keycloak"))
+            } else {
+                keycloak = new GenericContainer("jboss/keycloak:8.0.0")
+            }
+
+            keycloak = keycloak.withExposedPorts(8080)
                     .withEnv([
                             KEYCLOAK_USER: 'user',
                             KEYCLOAK_PASSWORD: 'password',
                             DB_VENDOR: 'H2',
                     ])
-                    .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*").withStartupTimeout(Duration.ofMinutes(2)))
+                    .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*").withStartupTimeout(Duration.ofMinutes(5)))
             keycloak.start()
             keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "))
             keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh create -s clientId=$CLIENT_ID -s redirectUris=[\"http://${getRedirectUriHost()}*\"]".split(" "))
