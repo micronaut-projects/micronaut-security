@@ -327,7 +327,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <p>Micronaut Security includes the following new features and improvements.</p>
 </div>
 <div class="sect1">
-<h2 id="_what_s_new_in_micronaut_security_3">What&#8217;s New in Micronaut Security 3</h2>
+<h2 id="_whats_new_in_micronaut_security_3">What&#8217;s New in Micronaut Security 3</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -430,7 +430,7 @@ Micronaut Security 2.x requires Micronaut 2.x.
 </div>
 <div class="sect3">
 <h4 id="_classes_renamed">Classes Renamed</h4>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -605,18 +605,20 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.security:micronaut-security-annotations")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">annotationProcessor(<span class="hljs-string">"io.micronaut.security:micronaut-security-annotations")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
+<div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
-    &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
-    &lt;artifactId&gt;micronaut-security-annotations&lt;/artifactId&gt;
-&lt;/dependency&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;annotationProcessorPaths&gt;
+    &lt;path&gt;
+        &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
+        &lt;artifactId&gt;micronaut-security-annotations&lt;/artifactId&gt;
+    &lt;/path&gt;
+&lt;/annotationProcessorPaths&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
@@ -632,8 +634,7 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
     &lt;artifactId&gt;micronaut-security-jwt&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -669,7 +670,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <p>The following global configuration options are available:</p>
 </div>
 <a id="io.micronaut.security.config.SecurityConfigurationProperties" href="#io.micronaut.security.config.SecurityConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/config/SecurityConfigurationProperties.html">SecurityConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -759,7 +760,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <div class="paragraph">
 <p>You can provide your own implementation of <a href="../api/io/micronaut/security/handlers/LoginHandler.html">LoginHandler</a>. However, Micronaut security modules ship with several implementations which you can enable by setting the configuration <code>micronaut.security.authentication</code></p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -811,7 +812,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <div class="paragraph">
 <p>You can provide your own implementation of <a href="../api/io/micronaut/security/handlers/LogoutHandler.html">LogoutHandler</a>. However, Micronaut security modules ship with several implementations which you can enable by setting the configuration property <code>micronaut.security.authentication</code> with values:</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -873,7 +874,7 @@ If you disable redirection configuration with by setting <code>micronaut.securit
 <p>You can configure the redirection destinations with:</p>
 </div>
 <a id="io.micronaut.security.config.RedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.html">RedirectConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -918,7 +919,7 @@ If you disable redirection configuration with by setting <code>micronaut.securit
 </tbody>
 </table>
 <a id="io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html">ForbiddenRedirectConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -951,7 +952,7 @@ If you disable redirection configuration with by setting <code>micronaut.securit
 </tbody>
 </table>
 <a id="io.micronaut.security.config.RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html">UnauthorizedRedirectConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -1058,7 +1059,7 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <div class="paragraph">
 <p>Security rules return a publisher that should emit a single <a href="../api/io/micronaut/security/rules/SecurityRuleResult.html">SecurityRuleResult</a>. See the following table for a description of each result.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1318,11 +1319,11 @@ The use of JSR 250 annotations requires <code>io.micronaut.security:micronaut-se
         access:
           - ROLE_GRAILS <i class="conum" data-value="3"></i><b>(3)</b>
           - ROLE_GROOVY
-      -
+      - 
         pattern: /books/grails
         http-method: PUT
-        access:
-          - ROLE_ADMIN</code></pre>
+        access: 
+          - ROLE_ADMIN        </code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1418,7 +1419,7 @@ and an optional HTTP method.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Requires;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpRequest;
@@ -1458,7 +1459,7 @@ public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import jakarta.inject.Singleton
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import jakarta.inject.Singleton
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.NonNull
@@ -1496,7 +1497,7 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
@@ -1634,18 +1635,20 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-basicaut
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.security:micronaut-security-annotations")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">annotationProcessor(<span class="hljs-string">"io.micronaut.security:micronaut-security-annotations")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
+<div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
-    &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
-    &lt;artifactId&gt;micronaut-security-annotations&lt;/artifactId&gt;
-&lt;/dependency&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;annotationProcessorPaths&gt;
+    &lt;path&gt;
+        &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
+        &lt;artifactId&gt;micronaut-security-annotations&lt;/artifactId&gt;
+    &lt;/path&gt;
+&lt;/annotationProcessorPaths&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
@@ -1661,8 +1664,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-basicaut
     &lt;artifactId&gt;micronaut-security-session&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1738,7 +1740,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.
 <p>The following configuration properties are available to customize token based authentication:</p>
 </div>
 <a id="io.micronaut.security.token.config.TokenConfigurationProperties" href="#io.micronaut.security.token.config.TokenConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/config/TokenConfigurationProperties.html">TokenConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -1806,18 +1808,20 @@ JWT is an <a href="https://tools.ietf.org/html/rfc7519">IETF standard</a> which 
 <p>        <div class="listingblock multi-language-sample">
 <div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.security:micronaut-security-annotations")</span></code></pre>
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">annotationProcessor(<span class="hljs-string">"io.micronaut.security:micronaut-security-annotations")</span></code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
+<div class="title"></div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
-    &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
-    &lt;artifactId&gt;micronaut-security-annotations&lt;/artifactId&gt;
-&lt;/dependency&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;annotationProcessorPaths&gt;
+    &lt;path&gt;
+        &lt;groupId&gt;io.micronaut.security&lt;/groupId&gt;
+        &lt;artifactId&gt;micronaut-security-annotations&lt;/artifactId&gt;
+    &lt;/path&gt;
+&lt;/annotationProcessorPaths&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
@@ -1833,8 +1837,7 @@ JWT is an <a href="https://tools.ietf.org/html/rfc7519">IETF standard</a> which 
     &lt;artifactId&gt;micronaut-security-jwt&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1852,7 +1855,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <p>The following configuration properties are available to customize JWT based authentication behaviour:</p>
 </div>
 <a id="io.micronaut.security.token.jwt.config.JwtConfigurationProperties" href="#io.micronaut.security.token.jwt.config.JwtConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/config/JwtConfigurationProperties.html">JwtConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -1958,7 +1961,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <p>The following configuration properties are available to customize how the Bearer Token will be read:</p>
 </div>
 <a id="io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/bearer/BearerTokenConfigurationProperties.html">BearerTokenConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -2051,7 +2054,7 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <p>Reading tokens from Cookies is disabled by default. Note that using JWT tokens from cookies requires JWT Authentication to be enabled.</p>
 </div>
 <a id="io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties" href="#io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html">JwtCookieConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -2171,7 +2174,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
       jwt:
         signatures:
           jwks:
-            awscognito:
+            awscognito: 
               url: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXX/.well-known/jwks.json'</code></pre>
 </div>
 </div>
@@ -2198,7 +2201,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <p>The following configuration options are available:</p>
 </div>
 <a id="io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/AccessTokenConfigurationProperties.html">AccessTokenConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -2273,7 +2276,7 @@ Remember to qualify with <code>@Named</code> <code>generator</code> your signatu
       jwt:
         signatures:
           secret:
-            generator:
+            generator: 
               secret: pleaseChangeThisSecretForANewOne <i class="conum" data-value="1"></i><b>(1)</b>
               jws-algorithm: HS256 <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
@@ -2301,7 +2304,7 @@ Remember to qualify with <code>@Named</code> <code>generator</code> your signatu
       jwt:
         signatures:
           secret:
-            generator:
+            generator: 
               secret: 'cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=' <i class="conum" data-value="1"></i><b>(1)</b>
               base64: true <i class="conum" data-value="2"></i><b>(2)</b>
               jws-algorithm: HS256</code></pre>
@@ -2409,7 +2412,7 @@ class MySignatureGeneratorConfigurationFactory {
       jwt:
         signatures:
           secret:
-            generator:
+            generator: 
               secret: pleaseChangeThisSecretForANewOne <i class="conum" data-value="1"></i><b>(1)</b>
               jws-algorithm: HS256 <i class="conum" data-value="2"></i><b>(2)</b>
 pem:
@@ -2559,7 +2562,7 @@ fulfil your needs you can provide your own <a href="https://micronaut-projects.g
 <div class="paragraph">
 <p>Micronaut Security includes some validators by default:</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -2688,7 +2691,7 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <p>The LDAP authentication in Micronaut supports configuration of one or more LDAP servers to authenticate with. Each server has it&#8217;s own settings and can be enabled or disabled.</p>
 </div>
 <a id="io.micronaut.security.ldap.configuration.LdapConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.html">LdapConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -2711,7 +2714,7 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tbody>
 </table>
 <a id="io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">ContextConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -2759,7 +2762,7 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tbody>
 </table>
 <a id="io.micronaut.security.ldap.configuration.LdapConfiguration.SearchConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration.SearchConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">SearchConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -2802,7 +2805,7 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tbody>
 </table>
 <a id="io.micronaut.security.ldap.configuration.LdapConfiguration.GroupConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration.GroupConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">GroupConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -2869,7 +2872,7 @@ To connect to an LDAP server with SSL, set the standard Java system properties t
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>-Djavax.net.ssl.trustStore="&lt;path to truststore file&gt;"
+<pre class="highlightjs highlight"><code class="language-none hljs">-Djavax.net.ssl.trustStore="&lt;path to truststore file&gt;"
 -Djavax.net.ssl.trustStorePassword="&lt;passphrase for truststore&gt;"</code></pre>
 </div>
 </div>
@@ -3022,7 +3025,7 @@ public class MyContextBuilder implements ContextBuilder {
 <p>There are two configuration options as seen in the following table:</p>
 </div>
 <a id="io.micronaut.security.x509.X509ConfigurationProperties" href="#io.micronaut.security.x509.X509ConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/x509/X509ConfigurationProperties.html">X509ConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3154,7 +3157,7 @@ public class SiteminderAuthenticationFetcher implements AuthenticationFetcher {
 <p>When a request is rejected, the security filter emits an <a href="../api/io/micronaut/security/authentication/AuthorizationException.html">AuthorizationException</a>. The default implementation (<a href="../api/io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html">DefaultAuthorizationExceptionHandler</a>) redirects based on the redirect configuration only if the request accepts text/html:</p>
 </div>
 <a id="io.micronaut.security.config.RedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.html">RedirectConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3278,7 +3281,7 @@ that token to other requests in your network.</p>
                     headerName: "Authorization"
                     prefix: "Bearer "
                 enabled: true
-                service-id-regex: "http://localhost:(8083|8081|8082)"</code></pre>
+                service-id-regex: "http://localhost:(8083|8081|8082)"                            </code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3298,7 +3301,7 @@ will propagate the security token seamlessly.</p>
 <p>Several configuration options are available:</p>
 </div>
 <a id="io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties" href="#io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/propagation/TokenPropagationConfigurationProperties.html">TokenPropagationConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3339,7 +3342,7 @@ will propagate the security token seamlessly.</p>
 <p>For propagation via an HTTP Header, you can configure:</p>
 </div>
 <a id="io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties" href="#io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagatorConfigurationProperties.html">HttpHeaderTokenPropagatorConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3411,7 +3414,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <p>You can configure the <code>LoginController</code> with:</p>
 </div>
 <a id="io.micronaut.security.endpoints.LoginControllerConfigurationProperties" href="#io.micronaut.security.endpoints.LoginControllerConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/endpoints/LoginControllerConfigurationProperties.html">LoginControllerConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3472,7 +3475,7 @@ A custom implementation can, of course, be provided. However, several <a href="#
 <p>You can configure the logout endpoint with:</p>
 </div>
 <a id="io.micronaut.security.endpoints.LogoutControllerConfigurationProperties" href="#io.micronaut.security.endpoints.LogoutControllerConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/endpoints/LogoutControllerConfigurationProperties.html">LogoutControllerConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3559,7 +3562,7 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <p>An implementation of both <a href="../api/io/micronaut/security/token/generator/RefreshTokenGenerator.html">RefreshTokenGenerator</a> and  <a href="../api/io/micronaut/security/token/validator/RefreshTokenValidator.html">RefreshTokenValidator</a> has been provided by default. The <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> creates and verifies a JWS (JSON web signature) encoded object whose payload is a UUID with a hash-based message authentication code (HMAC). See the following configuration options:</p>
 </div>
 <a id="io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties" href="#io.micronaut.security.token.jwt.generator.RefreshTokenConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/generator/RefreshTokenConfigurationProperties.html">RefreshTokenConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3628,7 +3631,7 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <p>Moreover, the controller can be configured with:</p>
 </div>
 <a id="io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties" href="#io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthControllerConfigurationProperties.html">OauthControllerConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3741,7 +3744,7 @@ This controller can only be enabled if you are using JWT authentication.
 <p>Moreover, you can configure it with:</p>
 </div>
 <a id="io.micronaut.security.token.jwt.endpoints.KeysControllerConfigurationProperties" href="#io.micronaut.security.token.jwt.endpoints.KeysControllerConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysControllerConfigurationProperties.html">KeysControllerConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3818,7 +3821,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3O
 </div>
 </div>
 <a id="io.micronaut.security.endpoints.introspection.IntrospectionConfigurationProperties" href="#io.micronaut.security.endpoints.introspection.IntrospectionConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/endpoints/introspection/IntrospectionConfigurationProperties.html">IntrospectionConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3942,7 +3945,7 @@ class UserController {
 <div class="paragraph">
 <p>Micronaut security classes generate several <a href="https://micronaut-projects.github.io/micronaut-core/latest/api/io/micronaut/context/event/ApplicationEvent.html">ApplicationEvent</a>s which you can subscribe to.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -4058,8 +4061,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
     &lt;artifactId&gt;micronaut-security-oauth2&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="paragraph">
 <p>To use the <code>BUILD-SNAPSHOT</code> version of this library, check the <a href="https://docs.micronaut.io/latest/guide/index.html#usingsnapshots">documentation to use snapshots</a>.</p>
@@ -4113,8 +4115,7 @@ To use OpenID client flows, the <code>security-jwt</code> dependency must be in 
     &lt;artifactId&gt;micronaut-security-jwt&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -4156,7 +4157,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <p>The OAuth 2.0 authorization code flow requires a callback endpoint. In addition, a login endpoint is available to trigger the flow. The URIs are configurable.</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html">OauthConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -4236,7 +4237,7 @@ It is possible to designate a default provider. The value of the configuration m
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.context.annotation.Requires;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -4268,7 +4269,7 @@ public class OAuthCsrfFilter implements HttpServerFilter {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Requires
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -4299,7 +4300,7 @@ class OAuthCsrfFilter implements HttpServerFilter {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -4475,7 +4476,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
@@ -4493,7 +4494,7 @@ public class GithubUser {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import com.fasterxml.jackson.databind.PropertyNamingStrategy
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import io.micronaut.core.annotation.Introspected
 
@@ -4509,7 +4510,7 @@ class GithubUser {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import com.fasterxml.jackson.databind.PropertyNamingStrategies
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import io.micronaut.core.annotation.Introspected
@@ -4529,7 +4530,7 @@ class GithubUser {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.http.annotation.Get;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.http.client.annotation.Client;
 import org.reactivestreams.Publisher;
@@ -4546,7 +4547,7 @@ public interface GithubApiClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.http.annotation.Get
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
 import org.reactivestreams.Publisher
@@ -4563,7 +4564,7 @@ interface GithubApiClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.http.annotation.Get
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
 import org.reactivestreams.Publisher
@@ -4583,7 +4584,7 @@ interface GithubApiClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.core.annotation.Nullable;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
@@ -4597,22 +4598,22 @@ import reactor.core.publisher.Flux;
 import java.util.Collections;
 import java.util.List;
 
-@Named("github") <b class="conum">(1)</b>
+@Named("github") // <b class="conum">(1)</b>
 @Singleton
 class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 
     private final GithubApiClient apiClient;
 
-    GithubAuthenticationMapper(GithubApiClient apiClient) { <b class="conum">(2)</b>
+    GithubAuthenticationMapper(GithubApiClient apiClient) { // <b class="conum">(2)</b>
         this.apiClient = apiClient;
     }
 
     @Override
-    public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
+    public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { // <b class="conum">(3)</b>
         return Flux.from(apiClient.getUser("token " + tokenResponse.getAccessToken()))
                 .map(user -&gt; {
                     List&lt;String&gt; roles = Collections.singletonList("ROLE_GITHUB");
-                    return AuthenticationResponse.success(user.getLogin(), roles); <b class="conum">(4)</b>
+                    return AuthenticationResponse.success(user.getLogin(), roles); // <b class="conum">(4)</b>
                 });
     }
 }</code></pre>
@@ -4620,7 +4621,7 @@ class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.core.annotation.Nullable
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.core.annotation.Nullable
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
@@ -4631,21 +4632,21 @@ import jakarta.inject.Named
 import jakarta.inject.Singleton
 import reactor.core.publisher.Flux
 
-@Named("github") <b class="conum">(1)</b>
+@Named("github") // <b class="conum">(1)</b>
 @Singleton
 class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 
     private final GithubApiClient apiClient
 
-    GithubAuthenticationMapper(GithubApiClient apiClient) { <b class="conum">(2)</b>
+    GithubAuthenticationMapper(GithubApiClient apiClient) { // <b class="conum">(2)</b>
         this.apiClient = apiClient
     }
 
     @Override
-    Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { <b class="conum">(3)</b>
+    Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State state) { // <b class="conum">(3)</b>
         Flux.from(apiClient.getUser("token ${tokenResponse.accessToken}"))
             .map({ user -&gt;
-                AuthenticationResponse.success(user.login, ["ROLE_GITHUB"]) <b class="conum">(4)</b>
+                AuthenticationResponse.success(user.login, ["ROLE_GITHUB"]) // <b class="conum">(4)</b>
             })
     }
 }</code></pre>
@@ -4653,7 +4654,7 @@ class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
@@ -4662,15 +4663,15 @@ import jakarta.inject.Named
 import jakarta.inject.Singleton
 import reactor.core.publisher.Flux
 
-@Named("github") <b class="conum">(1)</b>
+@Named("github") // <b class="conum">(1)</b>
 @Singleton
-internal class GithubAuthenticationMapper(private val apiClient: GithubApiClient) <b class="conum">(2)</b>
+internal class GithubAuthenticationMapper(private val apiClient: GithubApiClient) // <b class="conum">(2)</b>
     : OauthAuthenticationMapper {
 
-    override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher&lt;AuthenticationResponse&gt; { <b class="conum">(3)</b>
+    override fun createAuthenticationResponse(tokenResponse: TokenResponse, state: State?): Publisher&lt;AuthenticationResponse&gt; { // <b class="conum">(3)</b>
         return Flux.from(apiClient.getUser("token " + tokenResponse.accessToken))
                 .map { user -&gt;
-                    AuthenticationResponse.success(user.login, listOf("ROLE_GITHUB")) <b class="conum">(4)</b>
+                    AuthenticationResponse.success(user.login, listOf("ROLE_GITHUB")) // <b class="conum">(4)</b>
                 }
     }
 }</code></pre>
@@ -4805,7 +4806,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <p>See the following tables for the configuration options:</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OpenIdClientConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -4844,7 +4845,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tbody>
 </table>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html">AuthorizationEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -4908,7 +4909,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tbody>
 </table>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html">TokenEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -4946,7 +4947,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tbody>
 </table>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">EndSessionConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -4979,7 +4980,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tbody>
 </table>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 5. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties.html">RegistrationEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -5007,7 +5008,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tbody>
 </table>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 6. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html">UserInfoEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -5051,7 +5052,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <p>A default implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html">OpenIdAuthenticationMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html">AdditionalClaimsConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -5111,7 +5112,7 @@ Enabling all of the above with cookie JWT storage has been known to cause issues
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.core.annotation.Nullable;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
@@ -5137,7 +5138,7 @@ public class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMap
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.context.annotation.Replaces
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
@@ -5163,7 +5164,7 @@ class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper
@@ -5188,7 +5189,7 @@ class GlobalOpenIdAuthenticationMapper : OpenIdAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import io.micronaut.core.annotation.Nullable;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
@@ -5200,23 +5201,23 @@ import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 @Singleton
-@Named("okta") <b class="conum">(1)</b>
+@Named("okta") // <b class="conum">(1)</b>
 public class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
-    public AuthenticationResponse createAuthenticationResponse(String providerName, <b class="conum">(2)</b>
-                                                               OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
-                                                               OpenIdClaims openIdClaims, <b class="conum">(4)</b>
-                                                               @Nullable State state) { <b class="conum">(5)</b>
-        return AuthenticationResponse.success("name"); <b class="conum">(6)</b>
+    public AuthenticationResponse createAuthenticationResponse(String providerName, // <b class="conum">(2)</b>
+                                                               OpenIdTokenResponse tokenResponse, // <b class="conum">(3)</b>
+                                                               OpenIdClaims openIdClaims, // <b class="conum">(4)</b>
+                                                               @Nullable State state) { // <b class="conum">(5)</b>
+        return AuthenticationResponse.success("name"); // <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import io.micronaut.security.oauth2.endpoint.authorization.state.State
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
@@ -5226,23 +5227,23 @@ import jakarta.inject.Named
 import jakarta.inject.Singleton
 
 @Singleton
-@Named("okta") <b class="conum">(1)</b>
+@Named("okta") // <b class="conum">(1)</b>
 class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
-    AuthenticationResponse createAuthenticationResponse(String providerName, <b class="conum">(2)</b>
-                                                        OpenIdTokenResponse tokenResponse, <b class="conum">(3)</b>
-                                                        OpenIdClaims openIdClaims, <b class="conum">(4)</b>
-                                                        @Nullable State state) { <b class="conum">(5)</b>
-        AuthenticationResponse.success("name") <b class="conum">(6)</b>
+    AuthenticationResponse createAuthenticationResponse(String providerName, // <b class="conum">(2)</b>
+                                                        OpenIdTokenResponse tokenResponse, // <b class="conum">(3)</b>
+                                                        OpenIdClaims openIdClaims, // <b class="conum">(4)</b>
+                                                        @Nullable State state) { // <b class="conum">(5)</b>
+        AuthenticationResponse.success("name") // <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
@@ -5252,15 +5253,15 @@ import jakarta.inject.Named
 import jakarta.inject.Singleton
 
 @Singleton
-@Named("okta") <b class="conum">(1)</b>
+@Named("okta") // <b class="conum">(1)</b>
 class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 
-    override fun createAuthenticationResponse(providerName: String, <b class="conum">(2)</b>
-                                              tokenResponse: OpenIdTokenResponse, <b class="conum">(3)</b>
-                                              openIdClaims: OpenIdClaims, <b class="conum">(4)</b>
-                                              state: State?) <b class="conum">(5)</b>
+    override fun createAuthenticationResponse(providerName: String, // <b class="conum">(2)</b>
+                                              tokenResponse: OpenIdTokenResponse, // <b class="conum">(3)</b>
+                                              openIdClaims: OpenIdClaims, // <b class="conum">(4)</b>
+                                              state: State?) // <b class="conum">(5)</b>
             : AuthenticationResponse {
-        return AuthenticationResponse.success("name") <b class="conum">(6)</b>
+        return AuthenticationResponse.success("name") // <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
@@ -5310,7 +5311,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <p>Here are the configuration option for authorization request parameters:</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html">AuthorizationEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -5396,7 +5397,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <p>You can configure which implementation to use:</p>
 </div>
 <a id="io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration" href="#io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html">DefaultNonceConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -5428,7 +5429,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <p>If you use the default implementation, which stores the nonce in a HTTP cookie, you can  configure how the cookie is built. See the following configuration options:</p>
 </div>
 <a id="io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration" href="#io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistenceConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html">CookieNoncePersistenceConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -5496,8 +5497,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
     &lt;artifactId&gt;micronaut-session&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 </li>
 <li>
@@ -5540,7 +5540,7 @@ If nonce validation fails, the user will not be authenticated.
 <div class="paragraph">
 <p>There are several interfaces that implementations can be provided for to override how the nonce parameter is handled.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -5640,7 +5640,7 @@ If nonce validation fails, the user will not be authenticated.
 <p>Because the validation of the state requires the state to be stored somewhere temporarily, a <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/StatePersistence.html">StatePersistence</a> bean must be present to retrieve the state for validation. The default implementation stores the state in an HTTP cookie. To configure how the cookie is built, see the following configuration options:</p>
 </div>
 <a id="io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistenceConfiguration" href="#io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistenceConfiguration">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html">CookieStatePersistenceConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -5711,8 +5711,7 @@ If nonce validation fails, the user will not be authenticated.
     &lt;artifactId&gt;micronaut-session&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 </li>
 <li>
@@ -5734,7 +5733,7 @@ If nonce validation fails, the user will not be authenticated.
 <div class="paragraph">
 <p>There are several interfaces that implementations can be provided for to override how the state parameter is handled.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -5866,7 +5865,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <p>The following configuration options are available per OAuth 2.0 client:</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">ClientCredentialsConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -6014,7 +6013,7 @@ This example above is not intended to be a complete configuration reference
 <p>All of the above is configurable through <code>micronaut.security.oauth2.openid</code>:</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html">OpenIdConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -6042,7 +6041,7 @@ This example above is not intended to be a complete configuration reference
 </tbody>
 </table>
 <a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.html">EndSessionConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -6094,7 +6093,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <p>If for example you are using one of the providers that is supported out of the box and you don&#8217;t want the end session support, it is possible to disable it per client.</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">EndSessionConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -6143,7 +6142,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <p>See the following configuration table:</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">IntrospectionEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -6192,7 +6191,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <p>See the following configuration table:</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">RevocationEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -6241,7 +6240,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <p>See the following configuration table:</p>
 </div>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties">&#128279;</a>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html">UserInfoEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
