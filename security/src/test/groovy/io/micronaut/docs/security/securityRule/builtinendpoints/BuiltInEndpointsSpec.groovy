@@ -1,13 +1,15 @@
 package io.micronaut.docs.security.securityRule.builtinendpoints
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.micronaut.docs.security.SensitiveEndpointRuleReplacement
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
-import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.rules.SensitiveEndpointRule
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -43,6 +45,7 @@ endpoints:
     @Shared
     Map<String, Object> config = [
             'spec.name': 'docbuiltinendpoints',
+            *: SensitiveEndpointRuleReplacement.EXCLUDE_SENSITIVE_RULE_REPLACEMENT,
     ] << flatten(endpointsMap)
 
     @Shared
@@ -66,7 +69,32 @@ endpoints:
         m == endpointsMap
     }
 
-    void "test accessing a sensitive endpoint requires authentication"() {
+    void "test accessing a sensitive endpoint with authentication but no SensitiveEndpointRule replacement throws an exception"() {
+        when:
+        client.toBlocking().exchange(HttpRequest.GET("/beans"))
+
+        then:
+        HttpClientResponseException e = thrown(HttpClientResponseException)
+        e.status == HttpStatus.UNAUTHORIZED
+
+        when:
+        client.toBlocking().exchange(HttpRequest.GET("/beans").basicAuth("user", "password"))
+
+        then:
+        def ex = thrown(HttpClientResponseException)
+
+        when:
+        Map m = new ObjectMapper().readValue(ex.response.getBody(String).get(), Map)
+
+        then:
+        m._embedded.errors == [[message: "Internal Server Error: ${SensitiveEndpointRule.NON_REPLACED_SECURITY_ERROR_MESSAGE}"]]
+    }
+
+    void "test accessing a sensitive endpoint with authentication and a SensitiveEndpointRule replacement works"() {
+        given:
+        def server = ApplicationContext.run(EmbeddedServer, config - SensitiveEndpointRuleReplacement.EXCLUDE_SENSITIVE_RULE_REPLACEMENT)
+        def client = server.applicationContext.createBean(HttpClient, server.getURL())
+
         when:
         client.toBlocking().exchange(HttpRequest.GET("/beans"))
 
@@ -85,5 +113,9 @@ endpoints:
 
         then:
         m == endpointsMap
+
+        cleanup:
+        client.close()
+        server.close()
     }
 }

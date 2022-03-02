@@ -1,7 +1,7 @@
 package io.micronaut.security
 
+import io.micronaut.docs.security.SensitiveEndpointRuleReplacement
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.AuthenticationArgumentBinder
@@ -39,6 +39,7 @@ class SecurityDisabledSpec extends Specification {
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                 : SecurityDisabledSpec.simpleName,
             'micronaut.security.enabled': false,
+            *: SensitiveEndpointRuleReplacement.EXCLUDE_SENSITIVE_RULE_REPLACEMENT,
     ])
 
     @Unroll("if micronaut.security.enabled=false bean [#description] is not loaded")
