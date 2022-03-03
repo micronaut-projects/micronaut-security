@@ -32,6 +32,9 @@ public class BasicAuthUtils {
     private static final String PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC + " ";
     private static final String DELIMITER = ":";
 
+    private BasicAuthUtils() {
+    }
+
     /**
      *
      * @param authorization Authorization HTTP Header value

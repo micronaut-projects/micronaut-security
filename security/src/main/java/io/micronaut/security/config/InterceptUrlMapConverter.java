@@ -21,8 +21,6 @@ import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.TypeConverter;
 import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.http.HttpMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Singleton;
 import java.util.HashMap;
@@ -36,9 +34,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Singleton
-public class InterceptUrlMapConverter implements TypeConverter<Map, InterceptUrlMapPattern> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapConverter.class);
+public class InterceptUrlMapConverter implements TypeConverter<Map<String, Object>, InterceptUrlMapPattern> {
 
     private static final String PATTERN = "pattern";
     private static final String ACCESS = "access";
@@ -60,7 +56,7 @@ public class InterceptUrlMapConverter implements TypeConverter<Map, InterceptUrl
      * @return An optional InterceptUrlMapConverter
      */
     @Override
-    public Optional<InterceptUrlMapPattern> convert(Map m, Class<InterceptUrlMapPattern> targetType, ConversionContext context) {
+    public Optional<InterceptUrlMapPattern> convert(Map<String, Object> m, Class<InterceptUrlMapPattern> targetType, ConversionContext context) {
         if (m == null) {
             return Optional.empty();
         }
@@ -68,14 +64,12 @@ public class InterceptUrlMapConverter implements TypeConverter<Map, InterceptUrl
         Optional<String> optionalPattern = conversionService.convert(m.get(PATTERN), String.class);
         if (optionalPattern.isPresent()) {
             Optional<List<String>> optionalAccessList = conversionService.convert(m.get(ACCESS), List.class);
-            optionalAccessList = optionalAccessList.map((list) -> {
-                return list.stream()
-                    .map((o) -> conversionService.convert(o, String.class))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .map(String.class::cast)
-                    .collect(Collectors.toList());
-            });
+            optionalAccessList = optionalAccessList.map(list -> list.stream()
+                .map(o -> conversionService.convert(o, String.class))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(String.class::cast)
+                .collect(Collectors.toList()));
             if (optionalAccessList.isPresent()) {
                 Optional<HttpMethod> httpMethod;
                 if (m.containsKey(HTTP_METHOD)) {
@@ -96,7 +90,7 @@ public class InterceptUrlMapConverter implements TypeConverter<Map, InterceptUrl
         }
     }
 
-    private Map transform(Map<String, Object> map) {
+    private Map<String, Object> transform(Map<String, Object> map) {
         Map<String, Object> transformed = new HashMap<>();
         StringConvention convention = StringConvention.HYPHENATED;
         for (Map.Entry<String, Object> entry: map.entrySet()) {

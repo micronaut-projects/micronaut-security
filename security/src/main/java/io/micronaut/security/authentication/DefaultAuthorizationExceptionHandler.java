@@ -77,7 +77,7 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
                     }
                     return response;
                 } else {
-                    return httpResponseWithStatus(request, exception);
+                    return httpResponseWithStatus(exception);
                 }
             } catch (URISyntaxException e) {
                 if (LOG.isErrorEnabled()) {
@@ -86,16 +86,15 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
                 return HttpResponse.serverError();
             }
         } else {
-            return httpResponseWithStatus(request, exception);
+            return httpResponseWithStatus(exception);
         }
     }
 
     /**
-     * @param request The request
      * @param exception The exception
      * @return The response to be used when a redirect is not appropriate
      */
-    protected MutableHttpResponse<?> httpResponseWithStatus(HttpRequest request, AuthorizationException exception) {
+    protected MutableHttpResponse<?> httpResponseWithStatus(AuthorizationException exception) {
         return HttpResponse.status(exception.isForbidden() ? HttpStatus.FORBIDDEN :
                     HttpStatus.UNAUTHORIZED);
     }
@@ -143,8 +142,6 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      */
     protected MutableHttpResponse<?> httpResponseWithStatus(URI location) {
         return HttpResponse.status(HttpStatus.SEE_OTHER)
-                .headers((headers) ->
-                        headers.location(location)
-                );
+                .headers(headers -> headers.location(location));
     }
 }

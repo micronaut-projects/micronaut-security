@@ -109,7 +109,7 @@ public class IntrospectionRequest {
     @Nullable
     @SuppressWarnings("MethodName")
     public String getToken_type_hint() {
-        return token_type_hint;
+        return getTokenTypeHint();
     }
 
     /**
@@ -118,7 +118,7 @@ public class IntrospectionRequest {
      */
     @SuppressWarnings("MethodName")
     public void setToken_type_hint(@Nullable String tokenTypeHint) {
-        this.token_type_hint = tokenTypeHint;
+        setTokenTypeHint(tokenTypeHint);
     }
 
     @Override

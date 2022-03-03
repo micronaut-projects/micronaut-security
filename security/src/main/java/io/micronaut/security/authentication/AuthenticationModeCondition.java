@@ -60,10 +60,8 @@ public abstract class AuthenticationModeCondition implements Condition {
         }
         final String propertyvalue = propertyValueOptional.get();
         final boolean result = acceptableModes.stream().map(AuthenticationMode::toString).anyMatch(propertyvalue::equals);
-        if (!result) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("{} is not fulfilled because {} is not one of {}.", getClass().getSimpleName(), propertyName, acceptableModes);
-            }
+        if (!result && LOG.isDebugEnabled()) {
+            LOG.debug("{} is not fulfilled because {} is not one of {}.", getClass().getSimpleName(), propertyName, acceptableModes);
         }
         return result;
     }

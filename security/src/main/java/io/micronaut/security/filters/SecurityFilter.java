@@ -120,6 +120,8 @@ public class SecurityFilter implements HttpServerFilter {
 
     /**
      * Remove once {@link io.micronaut.http.filter.OncePerRequestHttpServerFilter} is deleted.
+     *
+     * @deprecated see {@link io.micronaut.http.filter.OncePerRequestHttpServerFilter}.
      */
     @Deprecated
     private void populateWithOldKey(HttpRequest<?> request) {

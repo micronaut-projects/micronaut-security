@@ -78,17 +78,9 @@ public class Authenticator {
 
             return Flux.mergeDelayError(1,
                     authenticationProviders.stream()
-                            .map(provider -> {
-                                return Flux.from(provider.authenticate(request, authenticationRequest))
-                                        .switchMap(response -> {
-                                            if (response.isAuthenticated()) {
-                                                return Flux.just(response);
-                                            } else {
-                                                return Flux.error(() -> new AuthenticationException(response));
-                                            }
-                                        })
-                                        .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected")));
-                            })
+                            .map(provider -> Flux.from(provider.authenticate(request, authenticationRequest))
+                                    .switchMap(this::handleResponse)
+                                    .switchIfEmpty(Flux.error(() -> new AuthenticationException("Provider did not respond. Authentication rejected"))))
                             .collect(Collectors.toList())
                     .toArray(emptyArr))
                     .last()
@@ -99,13 +91,7 @@ public class Authenticator {
             Flux<AuthenticationResponse> authentication = Flux.mergeDelayError(1,  authenticationProviders.stream()
                     .map(auth -> auth.authenticate(request, authenticationRequest))
                     .map(Flux::from)
-                    .map(sequence -> sequence.switchMap(response -> {
-                        if (response.isAuthenticated()) {
-                            return Flux.just(response);
-                        } else {
-                            return Flux.error(new AuthenticationException(response));
-                        }
-                    }).onErrorResume(t -> {
+                    .map(sequence -> sequence.switchMap(this::handleResponse).onErrorResume(t -> {
                         lastError.set(t);
                         return Flux.empty();
                     })).collect(Collectors.toList())
@@ -130,6 +116,14 @@ public class Authenticator {
                     emitter.complete();
                 }
             }, FluxSink.OverflowStrategy.ERROR));
+        }
+    }
+
+    private Flux<AuthenticationResponse> handleResponse(AuthenticationResponse response) {
+        if (response.isAuthenticated()) {
+            return Flux.just(response);
+        } else {
+            return Flux.error(new AuthenticationException(response));
         }
     }
 

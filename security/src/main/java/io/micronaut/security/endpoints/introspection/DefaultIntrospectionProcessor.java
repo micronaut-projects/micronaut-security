@@ -281,7 +281,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
                     return Optional.of(Long.valueOf(obj.toString()));
                 } catch (NumberFormatException e) {
                     if (LOG.isWarnEnabled()) {
-                        LOG.warn("cannot convert attribute {} with value {} to Integer", attributeName, obj.toString());
+                        LOG.warn("cannot convert attribute {} with value {} to Integer", attributeName, obj);
                     }
                 }
             }
