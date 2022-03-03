@@ -1,16 +1,25 @@
 package io.micronaut.security
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.inject.ExecutableMethod
+import io.micronaut.management.endpoint.EndpointSensitivityProcessor
 import io.micronaut.management.endpoint.health.HealthLevelOfDetail
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.rules.SecurityRuleResult
+import io.micronaut.security.rules.SensitiveEndpointRule
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -197,6 +206,21 @@ class HealthSensitivitySpec extends Specification {
     static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
         AuthenticationProviderUserPassword() {
             super([new SuccessAuthenticationScenario('user')])
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'healthsensitivity')
+    @Replaces(SensitiveEndpointRule.class)
+    @Singleton
+    static class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
+        SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor) {
+            super(endpointSensitivityProcessor)
+        }
+        @Override
+        protected Publisher<SecurityRuleResult> checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
+                                                                            @NonNull Authentication authentication,
+                                                                            @NonNull ExecutableMethod<?, ?> method) {
+            Mono.just(SecurityRuleResult.ALLOWED)
         }
     }
 }
