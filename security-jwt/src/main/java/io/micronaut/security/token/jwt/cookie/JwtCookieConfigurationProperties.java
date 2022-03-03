@@ -171,7 +171,7 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
     }
 
     /**
-     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}.
+     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
      * @param cookiePath The path of the cookie.
      */
     public void setCookiePath(@Nullable String cookiePath) {
@@ -179,7 +179,7 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
     }
 
     /**
-     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}.
+     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}).
      * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
      */
     public void setCookieHttpOnly(Boolean cookieHttpOnly) {
