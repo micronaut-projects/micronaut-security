@@ -1,16 +1,26 @@
 package io.micronaut.docs.security.token.basicauth
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
+import io.micronaut.inject.ExecutableMethod
+import io.micronaut.management.endpoint.EndpointSensitivityProcessor
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.rules.SecurityRuleResult
+import io.micronaut.security.rules.SensitiveEndpointRule
 import io.micronaut.security.testutils.YamlAsciidocTagCleaner
+import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
 class BasicAuthSpec extends Specification implements YamlAsciidocTagCleaner {
-
 
     @Shared
     Map<String, Object> config = [
@@ -46,5 +56,21 @@ class BasicAuthSpec extends Specification implements YamlAsciidocTagCleaner {
         then:
         request.headers.get('Authorization')
         request.headers.get('Authorization') == "Basic ${'sherlock:password'.bytes.encodeBase64().toString()}"
+    }
+
+    @Requires(property = 'spec.name', value = 'docsbasicauth')
+    @Replaces(SensitiveEndpointRule.class)
+    @Singleton
+    static class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
+        SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor) {
+            super(endpointSensitivityProcessor)
+        }
+
+        @Override
+        protected Publisher<SecurityRuleResult> checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
+                                                                            @NonNull Authentication authentication,
+                                                                            @NonNull ExecutableMethod<?, ?> method) {
+            Mono.just(SecurityRuleResult.ALLOWED)
+        }
     }
 }

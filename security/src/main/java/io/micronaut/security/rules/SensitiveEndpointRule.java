@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,6 +55,25 @@ public class SensitiveEndpointRule implements SecurityRule {
      * The order of the rule.
      */
     public static final Integer ORDER = 0;
+
+    public static final String NON_REPLACED_SECURITY_ERROR_MESSAGE = "For security purposes, sensitive endpoints are disabled until you supply your own replacement for SensitiveEndpointRule::checkSensitiveAuthenticated, eg:\n" +
+            "\n" +
+            "@Singleton\n" +
+            "@Replaces(SensitiveEndpointRule.class)\n" +
+            "class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {\n" +
+            "\n" +
+            "    SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor) {\n" +
+            "        super(endpointSensitivityProcessor);\n" +
+            "    }\n" +
+            "\n" +
+            "    @Override\n" +
+            "    @NonNull\n" +
+            "    protected Publisher<SecurityRuleResult> checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,\n" +
+            "                                                                        @NonNull Authentication authentication,\n" +
+            "                                                                        @NonNull ExecutableMethod<?, ?> method) {\n" +
+            "        return Mono.just(authentication.getRoles().contains(\"ADMIN\") ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);\n" +
+            "    }\n" +
+            "}\n";
 
     private static final Logger LOG = LoggerFactory.getLogger(SensitiveEndpointRule.class);
     private static final String ENDPOINTS_BEANS = "beans";
@@ -133,10 +152,7 @@ public class SensitiveEndpointRule implements SecurityRule {
     protected Publisher<SecurityRuleResult> checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
                                                                         @NonNull Authentication authentication,
                                                                         @NonNull ExecutableMethod<?, ?> method) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("authentication was found for sensitive {} endpoint. Allowing the request.", endpointName(method));
-        }
-        return Mono.just(SecurityRuleResult.ALLOWED);
+        return Mono.error(new UnsupportedOperationException(NON_REPLACED_SECURITY_ERROR_MESSAGE));
     }
 
     /**

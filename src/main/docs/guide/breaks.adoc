@@ -1,6 +1,16 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 3.4 breaking changes
+
+Sensitive endpoints will now respond with an error unless a replacement for the api:security.rules.SensitiveEndpointRule[] is bound.
+
+The following code snippet illustrates how to restore the previous functionality:
+
+NOTE: The previous functionality allows any authenticated user, no matter their role to view sensitive endpoints.
+
+snippet::io.micronaut.security.docs.sensitiveendpointrule.SensitiveEndpointRuleReplacement[tags="imports,clazz"]
+
 == Micronaut Security 3.1 breaking changes
 
 Micronaut security no longer exposes `micronaut-management` dependency.
