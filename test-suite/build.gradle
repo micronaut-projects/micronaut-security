@@ -1,31 +1,25 @@
 plugins {
     id 'java-library'
-    id 'groovy'
 }
 repositories {
     mavenCentral()
 }
 dependencies {
-    annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    annotationProcessor "io.micronaut:micronaut-inject-java"
 
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    api "io.micronaut:micronaut-inject"
-    runtimeOnly("ch.qos.logback:logback-classic")
     testAnnotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testCompileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
+
     testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    testImplementation("org.spockframework:spock-core:${spockVersion}") {
-        exclude module:'groovy-all'
-    }
-    testImplementation "io.micronaut.test:micronaut-test-spock"
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
+    testRuntimeOnly("ch.qos.logback:logback-classic")
     testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation project(":security-jwt")
     testImplementation project(":security-oauth2")
-    testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
     testImplementation "io.projectreactor:reactor-core"
 }
@@ -35,3 +29,8 @@ tasks.named('test') {
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}

@@ -1,4 +1,4 @@
-package io.micronaut.security.oauth2.docs.managementendpoints
+package io.micronaut.security.docs.managementendpoints
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
@@ -18,17 +18,12 @@ class LoggersSpec extends EmbeddedServerSpecification {
     }
 
     @Override
-    String getOpenIdClientName() {
-        'github'
-    }
-
-    @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'endpoints.loggers.enabled': true,
-                'endpoints.loggers.sensitive': true,
-                'endpoints.health.enabled': true,
-                'endpoints.health.sensitive': false,
+            'endpoints.loggers.enabled': true,
+            'endpoints.loggers.sensitive': true,
+            'endpoints.health.enabled': true,
+            'endpoints.health.sensitive': false,
         ]
     }
 
@@ -80,12 +75,9 @@ class LoggersSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'LoggersSpec')
     @Singleton
-    static class AuthenticationProviderUserPassword  extends MockAuthenticationProvider {
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
         AuthenticationProviderUserPassword() {
-            super([
-                    new SuccessAuthenticationScenario('user'),
-                    new SuccessAuthenticationScenario('system', ['ROLE_SYSTEM']),
-            ])
+            super([new SuccessAuthenticationScenario('user'), new SuccessAuthenticationScenario('system', ['ROLE_SYSTEM'])])
         }
     }
 }
