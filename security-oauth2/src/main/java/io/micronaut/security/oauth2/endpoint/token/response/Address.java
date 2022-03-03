@@ -43,13 +43,6 @@ public class Address {
     private String country;
 
     /**
-     * Default constructor.
-     */
-    public Address() {
-
-    }
-
-    /**
      * @param map The address data
      */
     public Address(Map<String, Object> map) {
