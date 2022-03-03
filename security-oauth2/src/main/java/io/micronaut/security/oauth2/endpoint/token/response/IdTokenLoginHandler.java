@@ -17,25 +17,29 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
-import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jakarta.inject.Singleton;
 import java.text.ParseException;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Sets {@link CookieLoginHandler}`s cookie value to the idtoken received from an authentication provider.

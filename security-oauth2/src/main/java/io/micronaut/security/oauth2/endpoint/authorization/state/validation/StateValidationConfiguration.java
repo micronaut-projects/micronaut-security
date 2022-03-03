@@ -16,7 +16,6 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
 
 import io.micronaut.core.util.Toggleable;
-
 import java.util.Optional;
 
 /**

@@ -24,13 +24,12 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides the default behavior for responding to an {@link AuthorizationException}.

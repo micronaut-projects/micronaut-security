@@ -19,16 +19,16 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.URL;
-import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * Provides specific configuration to logout from AWS Cognito.

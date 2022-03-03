@@ -18,7 +18,6 @@ package io.micronaut.security.testutils.authprovider;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

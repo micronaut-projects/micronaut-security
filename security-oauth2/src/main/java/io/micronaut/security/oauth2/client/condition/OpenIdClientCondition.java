@@ -30,7 +30,6 @@ import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpoin
 import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.grants.GrantType;
-
 import java.util.Optional;
 
 /**

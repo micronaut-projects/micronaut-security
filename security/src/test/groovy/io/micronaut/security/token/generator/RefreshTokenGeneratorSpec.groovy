@@ -1,15 +1,14 @@
 package io.micronaut.security.token.generator
 
-import io.micronaut.core.annotation.NonNull
 import io.micronaut.context.annotation.Requires
-import io.micronaut.security.testutils.ApplicationContextSpecification
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.token.config.TokenConfiguration
+import jakarta.inject.Singleton
 import spock.lang.Shared
 import spock.lang.Subject
 import spock.lang.Unroll
-
-import jakarta.inject.Singleton
 
 class RefreshTokenGeneratorSpec extends ApplicationContextSpecification {
 

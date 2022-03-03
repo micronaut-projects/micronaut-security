@@ -17,7 +17,6 @@ package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
-
 import java.util.regex.Pattern;
 
 /**

@@ -15,10 +15,10 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.exceptions.NoSuchBeanException;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -32,11 +32,6 @@ import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsCl
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import reactor.core.publisher.Flux;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,6 +39,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 /**
  * An {@link HttpClientFilter} to add an access token to outgoing request thanks to a  Client Credentials request.

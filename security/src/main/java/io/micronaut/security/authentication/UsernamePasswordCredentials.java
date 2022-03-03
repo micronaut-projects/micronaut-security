@@ -16,10 +16,9 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.Introspected;
-
+import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  *

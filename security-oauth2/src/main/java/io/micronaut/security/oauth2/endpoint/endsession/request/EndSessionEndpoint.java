@@ -15,10 +15,9 @@
  */
 package io.micronaut.security.oauth2.endpoint.endsession.request;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
-
-import io.micronaut.core.annotation.Nullable;
 
 /**
  * Represents the end session endpoint of an OpenID provider.

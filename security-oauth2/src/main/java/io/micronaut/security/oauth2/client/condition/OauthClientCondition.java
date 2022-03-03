@@ -27,7 +27,6 @@ import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.grants.GrantType;
-
 import java.util.Optional;
 
 /**

@@ -16,11 +16,10 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.security.config.SecurityConfigurationProperties;
-import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 import java.util.Optional;
 
 /**

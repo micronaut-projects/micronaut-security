@@ -15,14 +15,13 @@
  */
 package io.micronaut.security.oauth2.url;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.web.router.exceptions.RoutingException;
-
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Singleton;
 import java.net.MalformedURLException;
 import java.net.URI;

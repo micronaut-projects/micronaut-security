@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
-
 import java.util.Map;
 import java.util.Optional;
 

@@ -15,14 +15,13 @@
  */
 package io.micronaut.security.oauth2.endpoint.endsession.request;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.uri.UriTemplate;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
-
-import io.micronaut.core.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Supplier;

@@ -16,7 +16,6 @@
 package io.micronaut.security.config;
 
 import io.micronaut.core.util.Toggleable;
-
 import java.util.List;
 
 /**

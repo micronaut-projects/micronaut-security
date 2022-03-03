@@ -23,9 +23,8 @@ import com.nimbusds.jose.JWEEncrypter;
 import com.nimbusds.jose.crypto.ECDHDecrypter;
 import com.nimbusds.jose.crypto.ECDHEncrypter;
 import com.nimbusds.jose.crypto.impl.ECDHCryptoProvider;
-import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 

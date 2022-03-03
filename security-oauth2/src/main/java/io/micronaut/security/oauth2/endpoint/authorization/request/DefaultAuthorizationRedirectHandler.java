@@ -15,20 +15,19 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.uri.UriBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Builds an authorization redirect url.

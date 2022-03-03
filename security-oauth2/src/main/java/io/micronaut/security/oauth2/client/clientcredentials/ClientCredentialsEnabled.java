@@ -25,7 +25,6 @@ import io.micronaut.core.naming.Named;
 import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-
 import java.util.Optional;
 
 /**

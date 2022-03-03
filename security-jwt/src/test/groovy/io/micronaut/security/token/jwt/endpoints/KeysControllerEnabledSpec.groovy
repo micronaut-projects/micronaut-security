@@ -4,9 +4,9 @@ import com.nimbusds.jose.jwk.JWK
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
+import jakarta.inject.Singleton
 import spock.lang.Specification
 import spock.lang.Unroll
-import jakarta.inject.Singleton
 
 class KeysControllerEnabledSpec extends Specification {
 

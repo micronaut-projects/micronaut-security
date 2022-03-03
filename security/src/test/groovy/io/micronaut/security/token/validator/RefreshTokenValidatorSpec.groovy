@@ -1,13 +1,12 @@
 package io.micronaut.security.token.validator
 
-import io.micronaut.core.annotation.NonNull
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.security.testutils.ApplicationContextSpecification
+import jakarta.inject.Singleton
 import spock.lang.Shared
 import spock.lang.Subject
 import spock.lang.Unroll
-
-import jakarta.inject.Singleton
 
 class RefreshTokenValidatorSpec extends ApplicationContextSpecification {
 

@@ -15,27 +15,26 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.generator.RefreshTokenGenerator;
-import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.security.token.event.AccessTokenGeneratedEvent;
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
+import io.micronaut.security.token.generator.RefreshTokenGenerator;
+import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import io.micronaut.security.token.jwt.render.TokenRenderer;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generates http responses with access and refresh token.

@@ -15,16 +15,15 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsEnabled;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-
 import java.util.Optional;
 
 /**

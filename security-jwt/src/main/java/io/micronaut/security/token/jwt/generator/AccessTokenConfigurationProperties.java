@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 

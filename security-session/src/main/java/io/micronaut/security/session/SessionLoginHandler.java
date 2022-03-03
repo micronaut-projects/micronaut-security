@@ -15,16 +15,16 @@
  */
 package io.micronaut.security.session;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.filters.SecurityFilter;

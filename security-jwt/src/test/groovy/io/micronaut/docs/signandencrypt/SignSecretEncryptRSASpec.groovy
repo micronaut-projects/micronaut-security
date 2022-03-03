@@ -5,6 +5,8 @@ import com.nimbusds.jwt.JWTParser
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.AuthorizationUtils
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
@@ -12,8 +14,6 @@ import io.micronaut.security.token.jwt.encryption.rsa.RSAEncryption
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.secret.SecretSignature
-import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 
 class SignSecretEncryptRSASpec extends EmbeddedServerSpecification implements AuthorizationUtils, YamlAsciidocTagCleaner {

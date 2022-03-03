@@ -31,7 +31,6 @@ import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationM
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.grants.GrantType;
-
 import java.util.Optional;
 
 /**

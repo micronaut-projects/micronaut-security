@@ -1,8 +1,8 @@
 package io.micronaut.security.oauth2.endpoint.endsession.request
 
 import io.micronaut.http.HttpHeaders
-import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpMethod
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.simple.SimpleHttpRequest
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.Authentication

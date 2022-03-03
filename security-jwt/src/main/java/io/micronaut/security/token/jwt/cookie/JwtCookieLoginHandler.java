@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;

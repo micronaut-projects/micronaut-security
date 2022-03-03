@@ -15,15 +15,14 @@
  */
 package io.micronaut.security.ldap.configuration;
 
-import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
-import io.micronaut.security.ldap.context.ContextSettings;
-import io.micronaut.security.ldap.context.SearchSettings;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-
+import io.micronaut.security.ldap.context.ContextConfigurationContextSettings;
+import io.micronaut.security.ldap.context.ContextSettings;
+import io.micronaut.security.ldap.context.SearchSettings;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;

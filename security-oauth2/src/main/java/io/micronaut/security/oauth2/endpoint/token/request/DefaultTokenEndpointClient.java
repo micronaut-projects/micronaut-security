@@ -16,30 +16,29 @@
 package io.micronaut.security.oauth2.endpoint.token.request;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
-import io.micronaut.http.client.HttpClient;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.SecureGrant;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The default implementation of {@link TokenEndpointClient}.

@@ -23,7 +23,6 @@ import com.nimbusds.jose.crypto.impl.ECDSAProvider;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
-
 import java.security.interfaces.ECPublicKey;
 
 /**

@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.token.jwt.encryption.secret;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEDecrypter;
@@ -28,8 +30,6 @@ import com.nimbusds.jose.crypto.impl.AESCryptoProvider;
 import com.nimbusds.jose.crypto.impl.DirectCryptoProvider;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Secret encryption configuration.

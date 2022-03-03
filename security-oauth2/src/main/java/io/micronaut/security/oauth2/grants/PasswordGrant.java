@@ -18,12 +18,11 @@ package io.micronaut.security.oauth2.grants;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import java.util.Map;
 
 /**

@@ -21,7 +21,6 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
-
 import java.util.Optional;
 
 /**

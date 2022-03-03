@@ -26,12 +26,8 @@ import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
-import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
@@ -41,6 +37,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.

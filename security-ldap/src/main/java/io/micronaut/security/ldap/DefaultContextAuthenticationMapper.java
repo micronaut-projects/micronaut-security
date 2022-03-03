@@ -17,7 +17,6 @@ package io.micronaut.security.ldap;
 
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.security.authentication.AuthenticationResponse;
-
 import jakarta.inject.Singleton;
 import java.util.Set;
 

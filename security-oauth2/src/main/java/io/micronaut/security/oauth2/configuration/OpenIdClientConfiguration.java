@@ -15,10 +15,12 @@
  */
 package io.micronaut.security.oauth2.configuration;
 
-import io.micronaut.core.naming.Named;
-import io.micronaut.security.oauth2.configuration.endpoints.*;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.naming.Named;
+import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import java.net.URL;
 import java.util.Optional;
 

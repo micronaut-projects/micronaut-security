@@ -9,19 +9,18 @@ import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.jwt.JwtFixture
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
-import jakarta.inject.Named
-import jakarta.inject.Singleton
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 

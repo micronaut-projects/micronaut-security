@@ -16,7 +16,6 @@
 package io.micronaut.security.ldap.context;
 
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
-
 import java.util.Map;
 
 /**

@@ -2,12 +2,9 @@ package io.micronaut.security.token.jwt.signature.rsagenerationvalidation;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.RSAKey;
-import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureConfiguration;
-import jakarta.inject.Named;
-
 import java.security.interfaces.RSAPublicKey;
 
 @Requires(property = "spec.name", value = "rsajwtbooks")

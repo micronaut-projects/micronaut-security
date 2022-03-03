@@ -16,7 +16,6 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-
 import io.micronaut.core.annotation.Nullable;
 
 /**

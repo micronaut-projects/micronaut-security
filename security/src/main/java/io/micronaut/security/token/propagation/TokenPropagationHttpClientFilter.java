@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.token.propagation;
 
+import static io.micronaut.security.filters.SecurityFilter.TOKEN;
+
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -25,11 +27,8 @@ import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import io.micronaut.http.util.OutgoingHttpRequestProcessor;
-import org.reactivestreams.Publisher;
-
 import java.util.Optional;
-
-import static io.micronaut.security.filters.SecurityFilter.TOKEN;
+import org.reactivestreams.Publisher;
 
 /**
  * {@link io.micronaut.http.filter.HttpClientFilter} to enable Token propagation.

@@ -18,11 +18,9 @@ package io.micronaut.security.oauth2.endpoint.token.response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;

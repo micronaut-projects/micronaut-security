@@ -1,12 +1,10 @@
 package io.micronaut.docs.security.token.basicauth
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
-import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
-import org.yaml.snakeyaml.Yaml
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification

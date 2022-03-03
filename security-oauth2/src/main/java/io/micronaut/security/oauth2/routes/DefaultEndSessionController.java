@@ -22,11 +22,10 @@ import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.ProviderResolver;
 import io.micronaut.security.oauth2.client.OpenIdClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A controller for the end session endpoint.

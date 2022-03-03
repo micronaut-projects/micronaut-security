@@ -17,12 +17,12 @@ package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;

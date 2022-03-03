@@ -16,11 +16,10 @@
 package io.micronaut.security.oauth2.endpoint.token.request;
 
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import org.reactivestreams.Publisher;
-
-import io.micronaut.core.annotation.NonNull;
 
 /**
  * Responsible for sending requests to a token endpoint.

@@ -24,7 +24,7 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
  * @author Sergio del Amo
  * @since 1.1.0
  */
-public class JWTClaimsSetUtils {
+public final class JWTClaimsSetUtils {
 
     private JWTClaimsSetUtils() {
     }

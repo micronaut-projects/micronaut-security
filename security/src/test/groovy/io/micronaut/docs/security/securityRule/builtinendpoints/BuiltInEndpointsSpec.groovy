@@ -1,13 +1,12 @@
 package io.micronaut.docs.security.securityRule.builtinendpoints
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
-import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
 import spock.lang.Shared

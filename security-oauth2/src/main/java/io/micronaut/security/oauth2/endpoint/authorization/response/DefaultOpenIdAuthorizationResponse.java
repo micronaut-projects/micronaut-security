@@ -17,11 +17,10 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
-
-import io.micronaut.core.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 

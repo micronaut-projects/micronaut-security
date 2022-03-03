@@ -17,14 +17,13 @@ package io.micronaut.security.ldap.group;
 
 import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.SearchProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
-import javax.naming.NamingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.naming.NamingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link LdapGroupProcessor}.

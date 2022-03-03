@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Nullable;
 import java.util.Map;
 
 /**

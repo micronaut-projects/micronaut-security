@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.oauth2.configuration;
 
-import io.micronaut.core.util.Toggleable;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.Toggleable;
 import java.util.Optional;
 
 /**

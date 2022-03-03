@@ -21,7 +21,6 @@ import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.TypeConverter;
 import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.http.HttpMethod;
-
 import jakarta.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;

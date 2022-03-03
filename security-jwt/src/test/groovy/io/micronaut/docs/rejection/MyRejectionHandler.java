@@ -1,13 +1,13 @@
 package io.micronaut.docs.rejection;
 
 //tag::clazz[]
+
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
-
 import jakarta.inject.Singleton;
 
 //end::clazz[]

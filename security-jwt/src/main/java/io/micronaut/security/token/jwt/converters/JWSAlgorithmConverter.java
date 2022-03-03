@@ -18,7 +18,6 @@ package io.micronaut.security.token.jwt.converters;
 import com.nimbusds.jose.JWSAlgorithm;
 import io.micronaut.core.convert.ConversionContext;
 import io.micronaut.core.convert.TypeConverter;
-
 import jakarta.inject.Singleton;
 import java.util.Optional;
 

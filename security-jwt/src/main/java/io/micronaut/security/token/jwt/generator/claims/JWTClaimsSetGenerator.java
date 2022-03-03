@@ -17,12 +17,10 @@ package io.micronaut.security.token.jwt.generator.claims;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.env.Environment;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Singleton;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -31,6 +29,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Sergio del Amo

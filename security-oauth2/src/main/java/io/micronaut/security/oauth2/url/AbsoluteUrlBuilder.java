@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.oauth2.url;
 
-import io.micronaut.http.HttpRequest;
-
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpRequest;
 import java.net.URL;
 
 /**

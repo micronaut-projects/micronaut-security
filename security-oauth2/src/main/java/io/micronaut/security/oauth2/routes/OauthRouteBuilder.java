@@ -32,12 +32,11 @@ import io.micronaut.security.oauth2.client.OpenIdClient;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import io.micronaut.web.router.DefaultRouteBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Registers routes dynamically for OAuth 2.0 authorization

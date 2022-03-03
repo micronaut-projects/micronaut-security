@@ -17,17 +17,16 @@ package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpHeaderValues;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for Basic Auth.
  */
-public class BasicAuthUtils {
+public final class BasicAuthUtils {
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthUtils.class);
     private static final String PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC + " ";
     private static final String DELIMITER = ":";

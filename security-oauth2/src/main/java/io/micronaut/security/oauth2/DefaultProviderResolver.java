@@ -20,7 +20,6 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
-
 import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.Optional;

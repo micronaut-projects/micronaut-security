@@ -27,11 +27,10 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import reactor.core.publisher.Flux;
-import org.reactivestreams.Publisher;
-
 import java.util.Collections;
 import java.util.List;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 /**
  * An {@link AuthenticationProvider} that delegates to an OAuth 2.0 provider using the

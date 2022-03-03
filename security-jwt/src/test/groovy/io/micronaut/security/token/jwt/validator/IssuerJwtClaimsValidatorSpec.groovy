@@ -1,8 +1,8 @@
 package io.micronaut.security.token.jwt.validator
 
-import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.ApplicationContext
 import io.micronaut.core.annotation.NonNull
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims

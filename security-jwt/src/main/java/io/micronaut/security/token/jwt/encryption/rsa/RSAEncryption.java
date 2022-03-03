@@ -22,9 +22,8 @@ import com.nimbusds.jose.JWEEncrypter;
 import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import com.nimbusds.jose.crypto.impl.RSACryptoProvider;
-import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 

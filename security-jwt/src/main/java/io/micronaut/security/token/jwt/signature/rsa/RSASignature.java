@@ -21,9 +21,8 @@ import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.crypto.impl.RSASSAProvider;
 import com.nimbusds.jwt.SignedJWT;
-import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 import java.security.interfaces.RSAPublicKey;
 
 /**

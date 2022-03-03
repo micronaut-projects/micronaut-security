@@ -17,12 +17,10 @@ package io.micronaut.security.token.jwt.roles
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator

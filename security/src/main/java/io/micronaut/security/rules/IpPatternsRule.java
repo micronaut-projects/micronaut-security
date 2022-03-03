@@ -15,25 +15,23 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.RouteMatch;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Mono;
-
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 /**
  * A security rule implementation backed by the {@link SecurityConfigurationProperties#getIpPatterns()} ()}.

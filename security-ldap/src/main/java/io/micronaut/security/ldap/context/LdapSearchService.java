@@ -15,10 +15,10 @@
  */
 package io.micronaut.security.ldap.context;
 
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import java.util.List;
 import java.util.Optional;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
 
 /**
  * Contract for searching LDAP using an existing context.

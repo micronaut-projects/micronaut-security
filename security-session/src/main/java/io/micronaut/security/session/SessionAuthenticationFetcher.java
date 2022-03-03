@@ -22,12 +22,10 @@ import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.token.TokenAuthenticationFetcher;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
-import org.reactivestreams.Publisher;
-
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Mono;
-
 import java.util.Optional;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 
 /**
  * Attempts to retrieve an instance of {@link Authentication} from {@link Session}.

@@ -22,12 +22,7 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.security.token.validator.TokenValidator;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Flux;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -35,6 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 /**
  * Validates the {@link IntrospectionRequest#getToken()} with the available {@link TokenValidator}.

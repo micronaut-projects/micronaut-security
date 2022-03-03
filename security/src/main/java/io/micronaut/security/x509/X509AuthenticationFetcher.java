@@ -15,22 +15,21 @@
  */
 package io.micronaut.security.x509;
 
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.TokenAuthenticationFetcher;
 import jakarta.inject.Singleton;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
-
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 
 /**
  * Creates an Authentication if an X.509 client certificate is present and a

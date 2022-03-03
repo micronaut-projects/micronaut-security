@@ -18,7 +18,6 @@ package io.micronaut.security.oauth2.endpoint.endsession.response;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 import io.micronaut.security.oauth2.url.AbsoluteUrlBuilder;
-
 import jakarta.inject.Singleton;
 import java.net.URL;
 

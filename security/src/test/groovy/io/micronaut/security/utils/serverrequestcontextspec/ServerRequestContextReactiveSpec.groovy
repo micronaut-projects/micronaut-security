@@ -4,11 +4,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
-import spock.lang.Ignore
-import spock.lang.Shared
-import spock.lang.Specification
-import spock.lang.Stepwise
+import spock.lang.*
 
 @Stepwise
 class ServerRequestContextReactiveSpec extends Specification {

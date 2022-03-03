@@ -14,6 +14,7 @@ import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
+
 import java.security.Principal
 
 class JwtCookieAuthenticationNoRedirectSpec extends EmbeddedServerSpecification {

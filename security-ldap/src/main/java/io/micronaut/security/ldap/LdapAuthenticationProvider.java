@@ -15,33 +15,33 @@
  */
 package io.micronaut.security.ldap;
 
+import io.micronaut.http.HttpRequest;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.security.authentication.AuthenticationException;
+import io.micronaut.security.authentication.AuthenticationFailureReason;
+import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.security.authentication.AuthenticationRequest;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.security.ldap.context.ContextBuilder;
 import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.LdapSearchService;
 import io.micronaut.security.ldap.group.LdapGroupProcessor;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.scheduling.TaskExecutors;
-import io.micronaut.security.authentication.AuthenticationProvider;
-import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.authentication.AuthenticationRequest;
-import io.micronaut.security.authentication.AuthenticationException;
-import io.micronaut.security.authentication.AuthenticationFailureReason;
-import reactor.core.publisher.FluxSink;
-import reactor.core.publisher.Flux;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 import jakarta.inject.Named;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import java.io.Closeable;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * Authenticates against an LDAP server using the configuration provided through

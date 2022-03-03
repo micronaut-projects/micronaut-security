@@ -3,9 +3,8 @@ package io.micronaut.security.token.multitenancy.principal
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.context.event.StartupEvent
-
 import jakarta.inject.Inject
-import jakarta.inject.Singleton;
+import jakarta.inject.Singleton
 
 @Requires(property = 'spec.name', value = 'multitenancy.principal.gorm')
 @Singleton

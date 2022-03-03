@@ -10,8 +10,8 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 
 class AccessTokenExpirationSpec extends EmbeddedServerSpecification {
 

@@ -17,16 +17,15 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.authentication.AuthenticationMode;
+import io.micronaut.security.config.SecurityConfiguration;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.reader.TokenResolver;
-
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 

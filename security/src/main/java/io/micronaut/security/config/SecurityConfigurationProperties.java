@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.config;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.security.authentication.AuthenticationMode;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
