@@ -1432,7 +1432,6 @@ import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
-
 import java.util.Collections;
 
 @Replaces(SensitiveEndpointRule.class)
@@ -1451,8 +1450,8 @@ public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     protected Publisher&lt;SecurityRuleResult&gt; checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
                                                                         @NonNull Authentication authentication,
                                                                         @NonNull ExecutableMethod&lt;?, ?&gt; method) {
-        return Mono.just(rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), authentication)
-                    ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
+        return Mono.just(rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), authentication.getRoles())
+                ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
     }
 }</code></pre>
 </div>
@@ -1489,7 +1488,7 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     protected Publisher&lt;SecurityRuleResult&gt; checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
                                                                         @NonNull Authentication authentication,
                                                                         @NonNull ExecutableMethod&lt;?, ?&gt; method) {
-        Mono.just(rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication)
+        Mono.just(rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication.roles)
                 ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED)
     }
 }</code></pre>
@@ -1499,7 +1498,6 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpRequest
 import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
@@ -1511,19 +1509,20 @@ import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
 
+
 @Replaces(SensitiveEndpointRule::class)
 @Singleton
 class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSensitivityProcessor,
                                        private val rolesFinder: RolesFinder) : SensitiveEndpointRule(endpointSensitivityProcessor) {
-    @NonNull
-    override fun checkSensitiveAuthenticated(@NonNull request: HttpRequest&lt;*&gt;,
-                                             @NonNull authentication: Authentication,
-                                             @NonNull method: ExecutableMethod&lt;*, *&gt;): Publisher&lt;SecurityRuleResult&gt; {
-        return if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication.roles)) {
-            Mono.just(SecurityRuleResult.ALLOWED)
-        } else {
-            Mono.just(SecurityRuleResult.REJECTED)
-        }
+    override fun checkSensitiveAuthenticated(
+        request: HttpRequest&lt;*&gt;,
+        authentication: Authentication,
+        method: ExecutableMethod&lt;*, *&gt;
+    ): Publisher&lt;SecurityRuleResult&gt; {
+        return Mono.just(
+            if (rolesFinder.hasAnyRequiredRoles(listOf("ROLE_SYSTEM"), authentication.roles)) SecurityRuleResult.ALLOWED
+            else SecurityRuleResult.REJECTED
+        )
     }
 }</code></pre>
 </div>
