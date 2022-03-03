@@ -7,12 +7,15 @@ repositories {
 }
 dependencies {
     testCompileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
-    testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+
     testImplementation("org.spockframework:spock-core:${spockVersion}") {
         exclude module:'groovy-all'
     }
-    runtimeOnly("ch.qos.logback:logback-classic")
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
+
+    runtimeOnly("ch.qos.logback:logback-classic")
+
+    testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     testImplementation "io.micronaut:micronaut-management"
     testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut:micronaut-http-client"
