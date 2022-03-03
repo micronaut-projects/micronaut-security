@@ -92,7 +92,7 @@ endpoints:
 
     void "test accessing a sensitive endpoint with authentication and a SensitiveEndpointRule replacement works"() {
         given:
-        def server = ApplicationContext.run(EmbeddedServer, config - SensitiveEndpointRuleReplacement.EXCLUDE_SENSITIVE_RULE_REPLACEMENT)
+        EmbeddedServer server = ApplicationContext.run(EmbeddedServer, config - SensitiveEndpointRuleReplacement.EXCLUDE_SENSITIVE_RULE_REPLACEMENT)
         HttpClient client = server.applicationContext.createBean(HttpClient, server.URL)
 
         when:
