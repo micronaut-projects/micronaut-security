@@ -89,23 +89,21 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
 
         return Flux.from(
                 tokenEndpointClient.sendRequest(requestContext))
-                .switchMap(response -> {
-                    return Flux.create(emitter -> {
-                        Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
-                        if (jwt.isPresent()) {
-                            try {
-                                OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                                emitter.next(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null));
-                                emitter.complete();
-                            } catch (ParseException e) {
-                                //Should never happen as validation succeeded
-                                emitter.error(e);
-                            }
-                        } else {
-                            emitter.error(AuthenticationResponse.exception("JWT validation failed"));
+                .switchMap(response -> Flux.create(emitter -> {
+                    Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
+                    if (jwt.isPresent()) {
+                        try {
+                            OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
+                            emitter.next(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null));
+                            emitter.complete();
+                        } catch (ParseException e) {
+                            //Should never happen as validation succeeded
+                            emitter.error(e);
                         }
-                    }, FluxSink.OverflowStrategy.ERROR);
-                });
+                    } else {
+                        emitter.error(AuthenticationResponse.exception("JWT validation failed"));
+                    }
+                }, FluxSink.OverflowStrategy.ERROR));
     }
 
     /**

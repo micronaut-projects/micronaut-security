@@ -97,7 +97,7 @@ public class Authenticator {
                     .toArray(emptyArr));
 
             return authentication.take(1)
-                    .switchIfEmpty(Flux.create((emitter) -> {
+                    .switchIfEmpty(Flux.create(emitter -> {
                 Throwable error = lastError.get();
                 if (error != null) {
                     if (error instanceof AuthenticationException) {

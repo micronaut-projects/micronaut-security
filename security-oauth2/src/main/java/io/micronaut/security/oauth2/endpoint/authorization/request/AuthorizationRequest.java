@@ -51,7 +51,7 @@ public interface AuthorizationRequest {
      * @param response authorization redirect response
      * @return Opaque value used to maintain state between the request and the callback.
      */
-    Optional<String> getState(MutableHttpResponse response);
+    Optional<String> getState(MutableHttpResponse<?> response);
 
     /**
      * @return OAuth 2.0 Response Type value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used.

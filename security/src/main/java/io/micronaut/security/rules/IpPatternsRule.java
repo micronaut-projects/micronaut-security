@@ -33,6 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
+import static io.micronaut.security.utils.LoggingUtils.debug;
+
 /**
  * A security rule implementation backed by the {@link SecurityConfigurationProperties#getIpPatterns()} ()}.
  *
@@ -74,9 +76,7 @@ public class IpPatternsRule extends AbstractSecurityRule {
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
 
         if (patternList.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No IP patterns provided. Skipping host address check.");
-            }
+            debug(LOG, "No IP patterns provided. Skipping host address check.");
             return Mono.just(SecurityRuleResult.UNKNOWN);
         } else {
             InetSocketAddress socketAddress = request.getRemoteAddress();
@@ -88,26 +88,18 @@ public class IpPatternsRule extends AbstractSecurityRule {
                     if (patternList.stream().anyMatch(pattern ->
                             pattern.pattern().equals(SecurityConfigurationProperties.ANYWHERE) ||
                                     pattern.matcher(hostAddress).matches())) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("One or more of the IP patterns matched the host address [{}]. Continuing request processing.", hostAddress);
-                        }
+                        debug(LOG, "One or more of the IP patterns matched the host address [{}]. Continuing request processing.", hostAddress);
                         return Mono.just(SecurityRuleResult.UNKNOWN);
                     } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("None of the IP patterns [{}] matched the host address [{}]. Rejecting the request.", patternList.stream().map(Pattern::pattern).collect(Collectors.toList()), hostAddress);
-                        }
+                        debug(LOG, "None of the IP patterns [{}] matched the host address [{}]. Rejecting the request.", patternList.stream().map(Pattern::pattern).collect(Collectors.toList()), hostAddress);
                         return Mono.just(SecurityRuleResult.REJECTED);
                     }
                 } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Could not resolve the InetAddress. Continuing request processing.");
-                    }
+                    debug(LOG, "Could not resolve the InetAddress. Continuing request processing.");
                     return Mono.just(SecurityRuleResult.UNKNOWN);
                 }
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Request remote address was not found. Continuing request processing.");
-                }
+                debug(LOG, "Request remote address was not found. Continuing request processing.");
                 return Mono.just(SecurityRuleResult.UNKNOWN);
             }
         }

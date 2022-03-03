@@ -127,7 +127,7 @@ public class SensitiveEndpointRule implements SecurityRule {
                                                   @NonNull ExecutableMethod<?, ?> method) {
 
         Boolean sensitive = endpointMethods.get(method);
-        if (sensitive) {
+        if (Boolean.TRUE.equals(sensitive)) {
             if (authentication == null) {
                 return checkSensitiveAnonymous(request, method);
             }

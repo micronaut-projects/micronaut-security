@@ -48,7 +48,7 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
     @Override
     public MutableHttpResponse redirect(AuthorizationRequest authorizationRequest,
                                         String authorizationEndpoint) {
-        MutableHttpResponse response = HttpResponse.status(HttpStatus.FOUND);
+        MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.FOUND);
         Map<String, Object> arguments = instantiateParameters(authorizationRequest, response);
         String expandedUri = expandedUri(authorizationEndpoint, arguments);
         if (LOG.isTraceEnabled()) {
@@ -65,12 +65,10 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
     protected String expandedUri(@NonNull String baseUrl,
                                  @NonNull Map<String, Object> queryParams) {
         UriBuilder builder = UriBuilder.of(baseUrl);
-        for (String k : queryParams.keySet()) {
-            Object val = queryParams.get(k);
-            if (val != null) {
-                builder.queryParam(k, val);
-            }
-        }
+        queryParams.entrySet().stream()
+                .filter(entry -> entry.getValue() != null)
+                .forEach(entry -> builder.queryParam(entry.getKey(), entry.getValue()));
+
         return builder.toString();
     }
 

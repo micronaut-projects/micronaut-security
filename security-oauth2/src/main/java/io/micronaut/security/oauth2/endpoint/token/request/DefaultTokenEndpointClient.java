@@ -113,7 +113,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                 LOG.trace("Using client_secret_post authentication. The client_id and client_secret will be present in the body");
             }
             request.getBody()
-                    .filter(body -> body instanceof SecureGrant)
+                    .filter(SecureGrant.class::isInstance)
                     .map(SecureGrant.class::cast)
                     .ifPresent(body -> {
                         body.setClientId(clientConfiguration.getClientId());
@@ -124,7 +124,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                 LOG.trace("Unsupported or no authentication method. The client_id will be present in the body");
             }
             request.getBody()
-                    .filter(body -> body instanceof SecureGrant)
+                    .filter(SecureGrant.class::isInstance)
                     .map(SecureGrant.class::cast)
                     .ifPresent(body -> body.setClientId(clientConfiguration.getClientId()));
         }
@@ -137,7 +137,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      * @return An HTTP client to use to send the request
      */
     protected HttpClient getClient(String providerName) {
-        return tokenClients.computeIfAbsent(providerName, (provider) -> {
+        return tokenClients.computeIfAbsent(providerName, provider -> {
             Optional<HttpClient> client = beanContext.findBean(HttpClient.class, Qualifiers.byName(provider));
             return client.orElseGet(defaultTokenClient);
         });

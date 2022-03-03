@@ -42,24 +42,23 @@ public class ClientCredentialsEnabled implements Condition {
         AnnotationMetadataProvider component = context.getComponent();
         BeanContext beanContext = context.getBeanContext();
 
-        if (beanContext instanceof ApplicationContext) {
-            if (component instanceof ValueResolver) {
-                Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-                if (optional.isPresent()) {
-                    String name = optional.get();
-                    OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-                    if (clientConfiguration.isEnabled()) {
-                        Optional<ClientCredentialsConfiguration> clientCredentialsConfiguration = clientConfiguration.getClientCredentials();
-                        if (!clientCredentialsConfiguration.isPresent() || clientCredentialsConfiguration.get().isEnabled()) {
-                            return true;
-                        } else {
-                           context.fail("Client credentials is disabled for the client [" + name + "]");
-                           return false;
-                        }
+        if (beanContext instanceof ApplicationContext && component instanceof ValueResolver) {
+            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
+            if (optional.isPresent()) {
+                String name = optional.get();
+                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+                String failureMessage = "Client credentials is disabled for the client [" + name + "]";
+                if (clientConfiguration.isEnabled()) {
+                    Optional<ClientCredentialsConfiguration> clientCredentialsConfiguration = clientConfiguration.getClientCredentials();
+                    if (!clientCredentialsConfiguration.isPresent() || clientCredentialsConfiguration.get().isEnabled()) {
+                        return true;
                     } else {
-                        context.fail("Client credentials is disabled for the client [" + name + "]");
-                        return false;
+                       context.fail(failureMessage);
+                       return false;
                     }
+                } else {
+                    context.fail(failureMessage);
+                    return false;
                 }
             }
         }

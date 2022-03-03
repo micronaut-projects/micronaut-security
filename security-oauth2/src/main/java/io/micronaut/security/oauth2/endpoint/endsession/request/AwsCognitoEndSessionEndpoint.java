@@ -27,8 +27,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provides specific configuration to logout from AWS Cognito.
@@ -40,7 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 public class AwsCognitoEndSessionEndpoint extends AbstractEndSessionRequest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AwsCognitoEndSessionEndpoint.class);
     private static final String PARAM_CLIENT_ID = "client_id";
     private static final String PARAM_LOGOUT_URI = "logout_uri";
 

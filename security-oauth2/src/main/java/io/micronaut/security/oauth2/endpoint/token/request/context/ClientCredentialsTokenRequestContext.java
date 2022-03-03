@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.endpoint.token.request.context;
 
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.MediaType;
+import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
@@ -44,10 +45,10 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
                                                 SecureEndpoint tokenEndpoint,
                                                 OauthClientConfiguration clientConfiguration) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
-        ClientCredentialsGrant grant = new ClientCredentialsGrant();
-        grant.setScope(scope);
-        this.grant = grant;
-        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(configuration -> configuration.getAdditionalRequestParams()).orElseGet(Collections::emptyMap);
+        ClientCredentialsGrant clientCredentialsGrant = new ClientCredentialsGrant();
+        clientCredentialsGrant.setScope(scope);
+        this.grant = clientCredentialsGrant;
+        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(ClientCredentialsConfiguration::getAdditionalRequestParams).orElseGet(Collections::emptyMap);
     }
 
     /**
@@ -56,7 +57,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
     public ClientCredentialsTokenRequestContext(OauthClientConfiguration clientConfiguration) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
         this.grant = new ClientCredentialsGrant();
-        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(configuration -> configuration.getAdditionalRequestParams()).orElseGet(Collections::emptyMap);
+        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(ClientCredentialsConfiguration::getAdditionalRequestParams).orElseGet(Collections::emptyMap);
     }
 
     /**
@@ -67,7 +68,7 @@ public class ClientCredentialsTokenRequestContext extends AbstractTokenRequestCo
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, clientConfiguration.getTokenEndpoint(), clientConfiguration);
         this.grant = new ClientCredentialsGrant();
         this.grant.setScope(scope);
-        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(configuration -> configuration.getAdditionalRequestParams()).orElseGet(Collections::emptyMap);
+        this.additionalRequestParams = clientConfiguration.getClientCredentials().map(ClientCredentialsConfiguration::getAdditionalRequestParams).orElseGet(Collections::emptyMap);
     }
 
     @Override

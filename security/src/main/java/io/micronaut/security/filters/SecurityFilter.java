@@ -168,8 +168,8 @@ public class SecurityFilter implements HttpServerFilter {
                 .concatMap(rule -> Mono.from(rule.check(request, routeMatch, authentication))
                                         .defaultIfEmpty(SecurityRuleResult.UNKNOWN)
                                         // Ideally should return just empty but filter the unknowns
-                                        .filter((result) -> result != SecurityRuleResult.UNKNOWN)
-                                        .doOnSuccess((result) -> logResult(result, method, path, rule)))
+                                        .filter(result -> result != SecurityRuleResult.UNKNOWN)
+                                        .doOnSuccess(result -> logResult(result, method, path, rule)))
                 .next()
                 .flatMapMany(result -> {
                     if (result == SecurityRuleResult.REJECTED) {

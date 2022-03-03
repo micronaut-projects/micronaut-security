@@ -88,7 +88,7 @@ public class AttributesConvertibleValues implements ConvertibleValues<Object> {
             while (enumeration.hasMore()) {
                 results.add(enumeration.next());
             }
-            if (results.size() > 0) {
+            if (!results.isEmpty()) {
                 Object value;
                 if (results.size() > 1) {
                     value = results;

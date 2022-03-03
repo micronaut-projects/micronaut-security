@@ -47,50 +47,49 @@ public class PasswordGrantCondition implements Condition {
         AnnotationMetadataProvider component = context.getComponent();
         BeanContext beanContext = context.getBeanContext();
 
-        if (beanContext instanceof ApplicationContext) {
-            if (component instanceof ValueResolver) {
-                Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-                if (optional.isPresent()) {
-                    String name = optional.get();
+        if (beanContext instanceof ApplicationContext && component instanceof ValueResolver) {
+            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
+            if (optional.isPresent()) {
+                String name = optional.get();
 
-                    OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
 
-                    if (clientConfiguration.isEnabled()) {
-                        if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
-                            if (clientConfiguration.getToken().isPresent()) {
-                                if (beanContext.containsBean(OauthAuthenticationMapper.class, Qualifiers.byName(name))) {
+                String failureMsgPrefix = "Skipped password grant flow for provider [" + name;
+                if (clientConfiguration.isEnabled()) {
+                    if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
+                        if (clientConfiguration.getToken().isPresent()) {
+                            if (beanContext.containsBean(OauthAuthenticationMapper.class, Qualifiers.byName(name))) {
+                                return true;
+                            } else {
+                                context.fail(failureMsgPrefix + "] because no user details mapper could be found");
+                            }
+                        } else if (clientConfiguration.getOpenid().isPresent()) {
+                            boolean hasOpenIdProviderMetadata = beanContext.containsBean(OpenIdProviderMetadata.class, Qualifiers.byName(name));
+                            boolean hasTokenResponseValidator = beanContext.containsBean(OpenIdTokenResponseValidator.class);
+                            if (hasOpenIdProviderMetadata && hasTokenResponseValidator) {
+
+                                boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(name));
+                                if (!hasAuthenticationMapper) {
+                                    hasAuthenticationMapper = beanContext.containsBean(DefaultOpenIdAuthenticationMapper.class);
+                                }
+                                if (hasAuthenticationMapper) {
                                     return true;
                                 } else {
-                                    context.fail("Skipped password grant flow for provider [" + name + "] because no user details mapper could be found");
-                                }
-                            } else if (clientConfiguration.getOpenid().isPresent()) {
-                                boolean hasOpenIdProviderMetadata = beanContext.containsBean(OpenIdProviderMetadata.class, Qualifiers.byName(name));
-                                boolean hasTokenResponseValidator = beanContext.containsBean(OpenIdTokenResponseValidator.class);
-                                if (hasOpenIdProviderMetadata && hasTokenResponseValidator) {
-
-                                    boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(name));
-                                    if (!hasAuthenticationMapper) {
-                                        hasAuthenticationMapper = beanContext.containsBean(DefaultOpenIdAuthenticationMapper.class);
-                                    }
-                                    if (hasAuthenticationMapper) {
-                                        return true;
-                                    } else {
-                                        context.fail("Skipped password grant flow for provider [" + name + "] because no user details mapper could be found");
-                                    }
-                                } else {
-                                    context.fail("Skipped password grant flow for provider [" + name + "] because no provider metadata and token validator could be found");
+                                    context.fail(failureMsgPrefix + "] because no user details mapper could be found");
                                 }
                             } else {
-                                context.fail("Skipped password grant flow for provider [" + name + "] because no token endpoint or openid configuration was found");
+                                context.fail(failureMsgPrefix + "] because no provider metadata and token validator could be found");
                             }
                         } else {
-                            context.fail("Skipped password grant flow for provider [" + name + "] because the grant type is not 'password'");
+                            context.fail(failureMsgPrefix + "] because no token endpoint or openid configuration was found");
                         }
                     } else {
-                        context.fail("Skipped password grant flow for provider [" + name + "] because the configuration is disabled");
+                        context.fail(failureMsgPrefix + "] because the grant type is not 'password'");
                     }
-                    return false;
+                } else {
+                    context.fail(failureMsgPrefix + "] because the configuration is disabled");
                 }
+                return false;
             }
         }
         return true;

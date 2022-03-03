@@ -73,7 +73,7 @@ public class DefaultContextBuilder implements ContextBuilder {
         if (context != null) {
             try {
                 context.close();
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Exception occurred while closing an LDAP context", e);
                 }

@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.micronaut.security.utils.LoggingUtils.debug;
+
 /**
  * Generates http responses with access and refresh token.
  *
@@ -110,19 +112,13 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
                     refreshToken = refreshTokenGenerator.generate(authentication, key);
                     refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(authentication, key)));
                 } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(msg, RefreshTokenGenerator.class.getName());
-                    }
+                    debug(LOG, msg, RefreshTokenGenerator.class.getName());
                 }
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(msg, RefreshTokenPersistence.class.getName());
-                }
+                debug(LOG, msg, RefreshTokenPersistence.class.getName());
             }
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(msg, RefreshTokenValidator.class.getName());
-            }
+            debug(LOG, msg, RefreshTokenValidator.class.getName());
         }
 
         return refreshToken;
@@ -142,12 +138,10 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
 
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
         if (!optionalAccessToken.isPresent()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("tokenGenerator failed to generate access token claims: {}", claims.entrySet()
+                debug(LOG, "tokenGenerator failed to generate access token claims: {}", claims.entrySet()
                         .stream()
                         .map(entry -> entry.getKey() + "=>" + entry.getValue().toString())
                         .collect(Collectors.joining(", ")));
-            }
             return Optional.empty();
         }
         String accessToken = optionalAccessToken.get();
@@ -167,9 +161,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
     public Optional<AccessRefreshToken> generate(@Nullable String refreshToken, @NonNull Authentication authentication) {
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(authentication, accessTokenExpiration(authentication));
         if (!optionalAccessToken.isPresent()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Failed to generate access token for user {}", authentication.getName());
-            }
+            debug(LOG, "Failed to generate access token for user {}", authentication.getName());
             return Optional.empty();
         }
 

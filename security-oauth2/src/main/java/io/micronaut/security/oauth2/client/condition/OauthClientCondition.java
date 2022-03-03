@@ -43,33 +43,32 @@ public class OauthClientCondition implements Condition {
         AnnotationMetadataProvider component = context.getComponent();
         BeanContext beanContext = context.getBeanContext();
 
-        if (beanContext instanceof ApplicationContext) {
-            if (component instanceof ValueResolver) {
-                Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-                if (optional.isPresent()) {
-                    String name = optional.get();
+        if (beanContext instanceof ApplicationContext && component instanceof ValueResolver) {
+            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
+            if (optional.isPresent()) {
+                String name = optional.get();
 
-                    OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
 
-                    if (clientConfiguration.isEnabled()) {
-                        if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
-                            if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
-                                if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                                    return true;
-                                } else {
-                                    context.fail("Skipped client creation for provider [" + name + "] because grant type is not authorization code");
-                                }
+                String failureMsgPrefix = "Skipped client creation for provider [" + name;
+                if (clientConfiguration.isEnabled()) {
+                    if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
+                        if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
+                            if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
+                                return true;
                             } else {
-                                context.fail("Skipped client creation for provider [" + name + "] because no token endpoint is configured");
+                                context.fail(failureMsgPrefix + "] because grant type is not authorization code");
                             }
                         } else {
-                            context.fail("Skipped client creation for provider [" + name + "] because no authorization endpoint is configured");
+                            context.fail(failureMsgPrefix + "] because no token endpoint is configured");
                         }
                     } else {
-                        context.fail("Skipped client creation for provider [" + name + "] because the configuration is disabled");
+                        context.fail(failureMsgPrefix + "] because no authorization endpoint is configured");
                     }
-                    return false;
+                } else {
+                    context.fail(failureMsgPrefix + "] because the configuration is disabled");
                 }
+                return false;
             }
         }
         return true;

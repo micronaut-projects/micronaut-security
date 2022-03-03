@@ -122,20 +122,14 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
                     }
                     if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
                         return Optional.of(jwt);
-                    } else {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("Nonce {} validation failed for claims {}", nonce, claims.getClaims().keySet().stream().map(key -> key + "=" + claims.getClaims().get(key)).collect(Collectors.joining(", ", "{", "}")));
-                        }
+                    } else if (LOG.isErrorEnabled()) {
+                        LOG.error("Nonce {} validation failed for claims {}", nonce, claims.getClaims().keySet().stream().map(key -> key + "=" + claims.getClaims().get(key)).collect(Collectors.joining(", ", "{", "}")));
                     }
-                } else {
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
-                    }
+                } else if (LOG.isErrorEnabled()) {
+                    LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
                 }
-            } else {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("JWT generic claims validation failed for provider [{}]", clientConfiguration.getName());
-                }
+            } else if (LOG.isErrorEnabled()) {
+                LOG.error("JWT generic claims validation failed for provider [{}]", clientConfiguration.getName());
             }
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {

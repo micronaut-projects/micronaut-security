@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.naming.Named;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
@@ -64,14 +65,10 @@ public class DefaultProviderResolver implements ProviderResolver {
      */
     @NonNull
     protected Optional<String> openIdClientNameWhichMatchesIssuer(@NonNull String issuer) {
-        for (OpenIdClientConfiguration conf : openIdClientConfigurations) {
-            if (conf.getIssuer().isPresent()) {
-                // use starts with instead of equals because you may have in config a trailing slash
-                if (conf.getIssuer().get().toString().startsWith(issuer)) {
-                    return Optional.of(conf.getName());
-                }
-            }
-        }
-        return Optional.empty();
+        return openIdClientConfigurations.stream()
+                .filter(conf -> conf.getIssuer().isPresent())
+                .filter(conf -> conf.getIssuer().get().toString().startsWith(issuer))
+                .map(Named::getName)
+                .findFirst();
     }
 }

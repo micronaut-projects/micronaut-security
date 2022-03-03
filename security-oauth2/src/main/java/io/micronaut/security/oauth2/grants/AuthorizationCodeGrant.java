@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.grants;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
@@ -29,7 +29,7 @@ import java.util.Map;
  * @since 1.2.0
  */
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AuthorizationCodeGrant implements SecureGrant, AsMap {
 
     private static final String KEY_GRANT_TYPE = "grant_type";
@@ -43,13 +43,6 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
     private String clientSecret;
     private String redirectUri;
     private String code;
-
-    /**
-     * Default Constructor.
-     */
-    public AuthorizationCodeGrant() {
-
-    }
 
     /**
      *

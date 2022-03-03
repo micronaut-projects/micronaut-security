@@ -69,7 +69,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private static final List<String> DEFAULT_SCOPES_OPENID = Arrays.asList(OpenIdScope.OPENID.toString(),
             OpenIdScope.EMAIL.toString(),
             OpenIdScope.PROFILE.toString());
-    private List<String> DEFAULT_SCOPES = new ArrayList<>();
+    private List<String> defaultScopes = new ArrayList<>();
 
     private final String name;
     private String clientId;
@@ -138,7 +138,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     @NonNull
     @Override
     public List<String> getScopes() {
-        return scopes == null ? DEFAULT_SCOPES : scopes;
+        return scopes == null ? defaultScopes : scopes;
     }
 
     /**
@@ -228,7 +228,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     public void setOpenid(OpenIdClientConfigurationProperties openid) {
         this.openid = openid;
-        this.DEFAULT_SCOPES = DEFAULT_SCOPES_OPENID;
+        this.defaultScopes = DEFAULT_SCOPES_OPENID;
     }
 
     @Override

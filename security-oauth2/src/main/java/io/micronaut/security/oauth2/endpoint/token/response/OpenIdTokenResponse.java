@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
@@ -32,17 +32,10 @@ import io.micronaut.core.annotation.ReflectiveAccess;
  */
 @ReflectiveAccess
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class OpenIdTokenResponse extends TokenResponse {
 
     private String idToken;
-
-    /**
-     * Instantiates ID Token Access Token Response.
-     */
-    public OpenIdTokenResponse() {
-
-    }
 
     /**
      *

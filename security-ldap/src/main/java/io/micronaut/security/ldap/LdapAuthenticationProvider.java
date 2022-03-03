@@ -43,6 +43,8 @@ import reactor.core.publisher.FluxSink;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
+import static io.micronaut.security.utils.LoggingUtils.debug;
+
 /**
  * Authenticates against an LDAP server using the configuration provided through
  * {@link LdapConfiguration}. One provider will be created for each configuration.
@@ -91,37 +93,26 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Starting authentication with configuration [{}]", configuration.getName());
-            }
-
-            if (LOG.isDebugEnabled()) {
                 LOG.debug("Attempting to initialize manager context");
             }
             DirContext managerContext;
             try {
                 managerContext = contextBuilder.build(configuration.getManagerSettings());
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Manager context initialized successfully");
-                }
+                debug(LOG, "Manager context initialized successfully");
             } catch (NamingException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Failed to create manager context. Returning unknown authentication failure. Encountered {}", e.getMessage());
-                }
+                debug(LOG, "Failed to create manager context. Returning unknown authentication failure. Encountered {}", e.getMessage());
                 emitter.error(AuthenticationResponse.exception(AuthenticationFailureReason.UNKNOWN));
                 return;
             }
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Attempting to authenticate with user [{}]", username);
-            }
+            debug(LOG, "Attempting to authenticate with user [{}]", username);
 
             try {
                 Optional<LdapSearchResult> optionalResult = ldapSearchService.searchFirst(managerContext, configuration.getSearch().getSettings(new Object[]{username}));
 
                 if (optionalResult.isPresent()) {
                     LdapSearchResult result = optionalResult.get();
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("User found in context [{}]. Attempting to bind.", result.getDn());
-                    }
+                    debug(LOG, "User found in context [{}]. Attempting to bind.", result.getDn());
 
                     DirContext userContext = null;
                     try {
@@ -134,9 +125,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                         contextBuilder.close(userContext);
                     }
 
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Successfully bound user [{}]. Attempting to retrieving groups.", result.getDn());
-                    }
+                    debug(LOG, "Successfully bound user [{}]. Attempting to retrieving groups.", result.getDn());
 
                     Set<String> groups = Collections.emptySet();
 
@@ -152,13 +141,9 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                                 });
 
 
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Group search returned [{}] for user [{}]", groups, username);
-                        }
+                        debug(LOG, "Group search returned [{}] for user [{}]", groups, username);
                     } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Group search is disabled for configuration [{}]", configuration.getName());
-                        }
+                        debug(LOG, "Group search is disabled for configuration [{}]", configuration.getName());
                     }
 
                     if (LOG.isTraceEnabled()) {
@@ -173,19 +158,13 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
                         emitter.error(new AuthenticationException(response));
                     }
 
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Response successfully created for [{}]. Response is authenticated: [{}]", username, response.isAuthenticated());
-                    }
+                    debug(LOG, "Response successfully created for [{}]. Response is authenticated: [{}]", username, response.isAuthenticated());
                 } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("User not found [{}]", username);
-                    }
+                    debug(LOG, "User not found [{}]", username);
                     emitter.error(AuthenticationResponse.exception(AuthenticationFailureReason.USER_NOT_FOUND));
                 }
             } catch (NamingException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Failed to authenticate with user [{}].  {}", username, e);
-                }
+                debug(LOG, "Failed to authenticate with user [{}].  {}", username, e);
                 if (e instanceof javax.naming.AuthenticationException) {
                     emitter.error(AuthenticationResponse.exception(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH));
                 } else {
@@ -200,5 +179,7 @@ public class LdapAuthenticationProvider implements AuthenticationProvider, Close
     }
 
     @Override
-    public void close() { }
+    public void close() {
+        //No op
+    }
 }

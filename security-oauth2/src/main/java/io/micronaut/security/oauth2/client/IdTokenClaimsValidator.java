@@ -238,10 +238,8 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
         }
         String azp = azpOptional.get();
         boolean result = azp.equalsIgnoreCase(clientId);
-        if (!result) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
-            }
+        if (!result && LOG.isTraceEnabled()) {
+            LOG.trace("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
         }
         return result;
     }

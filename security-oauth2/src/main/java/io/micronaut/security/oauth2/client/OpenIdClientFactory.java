@@ -112,7 +112,7 @@ class OpenIdClientFactory {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                         }
-                        //TODO this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                        //TODO NOSONAR this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
                         String json = issuerClient.toBlocking().retrieve(configurationUrl.toString(), String.class);
                         return jsonMapper.readValue(json.getBytes(StandardCharsets.UTF_8), Argument.of(DefaultOpenIdProviderMetadata.class));
                     } catch (HttpClientResponseException e) {
@@ -143,6 +143,7 @@ class OpenIdClientFactory {
      */
     @EachBean(OpenIdClientConfiguration.class)
     @Requires(condition = OpenIdClientCondition.class)
+    @SuppressWarnings("java:S107")
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
                                      @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
