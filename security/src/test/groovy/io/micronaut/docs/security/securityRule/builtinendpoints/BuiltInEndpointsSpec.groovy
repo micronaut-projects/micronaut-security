@@ -54,7 +54,7 @@ endpoints:
 
     @Shared
     @AutoCleanup
-    HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.getURL())
+    HttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.URL)
 
     void "test accessing a non sensitive endpoint without authentication"() {
         when:
@@ -93,7 +93,7 @@ endpoints:
     void "test accessing a sensitive endpoint with authentication and a SensitiveEndpointRule replacement works"() {
         given:
         def server = ApplicationContext.run(EmbeddedServer, config - SensitiveEndpointRuleReplacement.EXCLUDE_SENSITIVE_RULE_REPLACEMENT)
-        def client = server.applicationContext.createBean(HttpClient, server.getURL())
+        HttpClient client = server.applicationContext.createBean(HttpClient, server.URL)
 
         when:
         client.toBlocking().exchange(HttpRequest.GET("/beans"))
