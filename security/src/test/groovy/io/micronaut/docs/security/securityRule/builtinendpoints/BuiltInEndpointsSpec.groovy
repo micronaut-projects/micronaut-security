@@ -1,6 +1,6 @@
 package io.micronaut.docs.security.securityRule.builtinendpoints
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.micronaut.core.type.Argument
 import io.micronaut.docs.security.SensitiveEndpointRuleReplacement
 import io.micronaut.context.ApplicationContext
 import io.micronaut.http.HttpRequest
@@ -78,13 +78,13 @@ endpoints:
         e.status == HttpStatus.UNAUTHORIZED
 
         when:
-        client.toBlocking().exchange(HttpRequest.GET("/beans").basicAuth("user", "password"))
+        client.toBlocking().exchange(HttpRequest.GET("/beans").basicAuth("user", "password"), Argument.of(Map), Argument.of(Map))
 
         then:
-        def ex = thrown(HttpClientResponseException)
+        HttpClientResponseException ex = thrown()
 
         when:
-        Map m = new ObjectMapper().readValue(ex.response.getBody(String).get(), Map)
+        Map m = ex.response.body()
 
         then:
         m._embedded.errors == [[message: "Internal Server Error: ${SensitiveEndpointRule.NON_REPLACED_SECURITY_ERROR_MESSAGE}"]]
