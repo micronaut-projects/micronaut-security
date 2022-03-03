@@ -1,4 +1,4 @@
-package io.micronaut.security.oauth2.docs.managementendpoints
+package io.micronaut.security.docs.managementendpoints
 
 import io.micronaut.security.authentication.Authentication
 
@@ -36,7 +36,7 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     protected Publisher<SecurityRuleResult> checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
                                                                         @NonNull Authentication authentication,
                                                                         @NonNull ExecutableMethod<?, ?> method) {
-        Mono.just(rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication)
+        Mono.just(rolesFinder.hasAnyRequiredRoles(["ROLE_SYSTEM"], authentication.roles)
                 ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED)
     }
 }
