@@ -19,6 +19,7 @@ include "security-session"
 include "security-ldap"
 include "security-oauth2"
 
+include "test-suite-serde-java"
 include "test-suite-groovy"
 include "test-suite"
 include "test-suite-utils"

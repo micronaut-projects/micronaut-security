@@ -1,0 +1,42 @@
+plugins {
+    id 'java-library'
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testAnnotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    testAnnotationProcessor("io.micronaut:micronaut-validation")
+    testAnnotationProcessor("io.micronaut.serde:micronaut-serde-processor:$serdeVersion")
+    testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    testImplementation("io.micronaut:micronaut-validation")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
+    testRuntimeOnly("ch.qos.logback:logback-classic")
+
+    testImplementation("io.micronaut:micronaut-http-server-netty")
+    testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation project(":security-jwt")
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}
+
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute(module("io.micronaut:micronaut-jackson-databind"))
+                .using(module("io.micronaut.serde:micronaut-serde-jackson:$serdeVersion"))
+    }
+}
