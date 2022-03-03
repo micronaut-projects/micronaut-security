@@ -364,6 +364,119 @@ Micronaut Security 2.x requires Micronaut 2.x.
 <p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x &#8594; 2.x.x).</p>
 </div>
 <div class="sect1">
+<h2 id="_micronaut_security_3_4_breaking_changes">Micronaut Security 3.4 breaking changes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sensitive endpoints will now respond with an error unless a replacement for the <a href="../api/io/micronaut/security/rules/SensitiveEndpointRule.html">SensitiveEndpointRule</a> is bound.</p>
+</div>
+<div class="paragraph">
+<p>The following code snippet illustrates how to restore the previous functionality:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The previous functionality allows any authenticated user, no matter their role to view sensitive endpoints.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.inject.ExecutableMethod;
+import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.rules.SecurityRuleResult;
+import io.micronaut.security.rules.SensitiveEndpointRule;
+import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
+
+@Singleton
+@Replaces(SensitiveEndpointRule.class)
+class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
+    SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor) {
+        super(endpointSensitivityProcessor);
+    }
+
+    @Override
+    @NonNull
+    protected Publisher&lt;SecurityRuleResult&gt; checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
+                                                                        @NonNull Authentication authentication,
+                                                                        @NonNull ExecutableMethod&lt;?, ?&gt; method) {
+        return Mono.just(SecurityRuleResult.ALLOWED);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.http.HttpRequest
+import io.micronaut.inject.ExecutableMethod
+import io.micronaut.management.endpoint.EndpointSensitivityProcessor
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.rules.SecurityRuleResult
+import io.micronaut.security.rules.SensitiveEndpointRule
+import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
+
+@Singleton
+@Replaces(SensitiveEndpointRule.class)
+class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
+    SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor) {
+        super(endpointSensitivityProcessor);
+    }
+
+    @Override
+    @NonNull
+    protected Publisher&lt;SecurityRuleResult&gt; checkSensitiveAuthenticated(@NonNull HttpRequest&lt;?&gt; request,
+                                                                        @NonNull Authentication authentication,
+                                                                        @NonNull ExecutableMethod&lt;?, ?&gt; method) {
+        return Mono.just(SecurityRuleResult.ALLOWED);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Replaces
+import io.micronaut.context.annotation.Requires
+import io.micronaut.http.HttpRequest
+import io.micronaut.inject.ExecutableMethod
+import io.micronaut.management.endpoint.EndpointSensitivityProcessor
+import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.rules.SecurityRuleResult
+import io.micronaut.security.rules.SensitiveEndpointRule
+import io.micronaut.security.token.RolesFinder
+import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
+
+@Replaces(SensitiveEndpointRule::class)
+@Singleton
+class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSensitivityProcessor) : SensitiveEndpointRule(endpointSensitivityProcessor) {
+    override fun checkSensitiveAuthenticated(
+        request: HttpRequest&lt;*&gt;,
+        authentication: Authentication,
+        method: ExecutableMethod&lt;*, *&gt;
+    ): Publisher&lt;SecurityRuleResult&gt; = Mono.just(SecurityRuleResult.ALLOWED)
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_micronaut_security_3_1_breaking_changes">Micronaut Security 3.1 breaking changes</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1415,7 +1528,7 @@ and an optional HTTP method.</p>
 </table>
 </div>
 <div class="paragraph">
-<p>By default, authenticated users are allowed to access sensitive endpoints. To change that behaviour, replace the default implementation <a href="../api/io/micronaut/security/rules/SensitiveEndpointRule.html">SensitiveEndpointRule</a> with your own. For example, you may want to restrict access to users with a specific role:</p>
+<p>You need to replace the default implementation <a href="../api/io/micronaut/security/rules/SensitiveEndpointRule.html">SensitiveEndpointRule</a> and implement <code>SensitiveEndpointRule::checkSensitiveAuthenticated</code> to allow authenticated users access to sensitive endpoints. For example, you may want to restrict access to users with a specific role:</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
@@ -2729,6 +2842,11 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">LdapConfiguration$ContextConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.server</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the server URL.</p></td>
@@ -2753,11 +2871,6 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">LdapConfiguration$ContextConfiguration</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context configuration.</p></td>
-</tr>
 </tbody>
 </table>
 <a id="io.micronaut.security.ldap.configuration.LdapConfiguration.SearchConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration.SearchConfiguration">&#128279;</a>
@@ -2776,6 +2889,11 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">LdapConfiguration$SearchConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.subtree</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
@@ -2796,11 +2914,6 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the attributes to return. Default all</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">LdapConfiguration$SearchConfiguration</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search configuration.</p></td>
-</tr>
 </tbody>
 </table>
 <a id="io.micronaut.security.ldap.configuration.LdapConfiguration.GroupConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration.GroupConfiguration">&#128279;</a>
@@ -2819,6 +2932,11 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">LdapConfiguration$GroupConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
@@ -2849,11 +2967,6 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.attribute</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group attribute name. Default "cn"</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">LdapConfiguration$GroupConfiguration</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group configuration.</p></td>
 </tr>
 </tbody>
 </table>
