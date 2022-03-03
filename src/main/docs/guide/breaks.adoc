@@ -8,11 +8,8 @@ Sensitive endpoints will now respond with an error unless a replacement for the 
 The following code snippet illustrates how to restore the previous functionality:
 
 NOTE: The previous functionality allows any authenticated user, no matter their role to view sensitive endpoints.
-[source, java]
-----
-include::{testssecurity}/security/SensitiveEndpointRuleReplacement.groovy[tag=preamble,indent=0]
-include::{testssecurity}/security/SensitiveEndpointRuleReplacement.groovy[tag=continued,indent=0]
-----
+
+snippet::io.micronaut.security.docs.sensitiveendpointrule.SensitiveEndpointRuleReplacement[tags="preamble","continued]
 
 == Micronaut Security 3.1 breaking changes
 

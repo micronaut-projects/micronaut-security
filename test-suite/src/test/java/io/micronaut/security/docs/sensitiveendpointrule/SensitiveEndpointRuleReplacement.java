@@ -1,34 +1,28 @@
-package io.micronaut.security.oauth2.docs.managementendpoints;
+package io.micronaut.security.docs.sensitiveendpointrule;
 
-//tag::imports[]
+import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.security.rules.SensitiveEndpointRule;
-import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
-//end::imports[]
-
-@Requires(property = "spec.name", value = "LoggersSpec")
-//tag::clazz[]
-@Replaces(SensitiveEndpointRule.class)
+@Requires(property = "spec.name", value = "SensitiveEndpointRuleReplacementTest")
+//tag::preamble[]
 @Singleton
-public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
-    private final RolesFinder rolesFinder;
+@Replaces(SensitiveEndpointRule.class)
+class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
+//end::preamble[]
 
-    public SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor,
-                                            RolesFinder rolesFinder) {
+    //tag::continued[]
+    SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor) {
         super(endpointSensitivityProcessor);
-        this.rolesFinder = rolesFinder;
     }
 
     @Override
@@ -36,8 +30,7 @@ public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
     protected Publisher<SecurityRuleResult> checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
                                                                         @NonNull Authentication authentication,
                                                                         @NonNull ExecutableMethod<?, ?> method) {
-        return Mono.just(rolesFinder.hasAnyRequiredRoles(Collections.singletonList("ROLE_SYSTEM"), authentication)
-                    ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
+        return Mono.just(SecurityRuleResult.ALLOWED);
     }
 }
-//end::clazz[]
+//end::continued[]

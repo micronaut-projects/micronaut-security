@@ -1,15 +1,18 @@
 package io.micronaut.docs.security.securityRule.builtinendpoints
 
-import io.micronaut.core.type.Argument
-import io.micronaut.docs.security.SensitiveEndpointRuleReplacement
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.MockAuthenticationProvider
+import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.rules.SensitiveEndpointRule
 import io.micronaut.security.testutils.YamlAsciidocTagCleaner
+import jakarta.inject.Singleton
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -43,10 +46,7 @@ endpoints:
     ]
 
     @Shared
-    Map<String, Object> config = [
-            'spec.name': 'docbuiltinendpoints',
-            *: SensitiveEndpointRuleReplacement.EXCLUDE_SENSITIVE_RULE_REPLACEMENT,
-    ] << flatten(endpointsMap)
+    Map<String, Object> config = ['spec.name': 'BuiltInEndpointsSpec'] << flatten(endpointsMap)
 
     @Shared
     @AutoCleanup
@@ -65,6 +65,7 @@ endpoints:
 
         when:
         Map m = new Yaml().load(cleanYamlAsciidocTag(yamlConfig))
+
         then:
         m == endpointsMap
     }
@@ -90,32 +91,11 @@ endpoints:
         m._embedded.errors == [[message: "Internal Server Error: ${SensitiveEndpointRule.NON_REPLACED_SECURITY_ERROR_MESSAGE}"]]
     }
 
-    void "test accessing a sensitive endpoint with authentication and a SensitiveEndpointRule replacement works"() {
-        given:
-        EmbeddedServer server = ApplicationContext.run(EmbeddedServer, config - SensitiveEndpointRuleReplacement.EXCLUDE_SENSITIVE_RULE_REPLACEMENT)
-        HttpClient client = server.applicationContext.createBean(HttpClient, server.URL)
-
-        when:
-        client.toBlocking().exchange(HttpRequest.GET("/beans"))
-
-        then:
-        HttpClientResponseException e = thrown(HttpClientResponseException)
-        e.status == HttpStatus.UNAUTHORIZED
-
-        when:
-        client.toBlocking().exchange(HttpRequest.GET("/beans").basicAuth("user", "password"))
-
-        then:
-        noExceptionThrown()
-
-        when:
-        Map m = new Yaml().load(cleanYamlAsciidocTag(yamlConfig))
-
-        then:
-        m == endpointsMap
-
-        cleanup:
-        client.close()
-        server.close()
+    @Singleton
+    @Requires(property = 'spec.name', value = 'BuiltInEndpointsSpec')
+    static class AuthenticationProviderUserPassword extends MockAuthenticationProvider {
+        AuthenticationProviderUserPassword() {
+            super([new SuccessAuthenticationScenario('user')])
+        }
     }
 }

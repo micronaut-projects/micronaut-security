@@ -1,4 +1,4 @@
-package io.micronaut.docs.security
+package io.micronaut.security.docs.sensitiveendpointrule
 
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
@@ -13,15 +13,12 @@ import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
 
-@Requires(missingProperty = EXCLUSION_KEY)
+@Requires(property = 'spec.name', value = 'SensitiveEndpointRuleReplacementSpec')
 //tag::preamble[]
 @Singleton
 @Replaces(SensitiveEndpointRule.class)
 class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
-
 //end::preamble[]
-    private static final String EXCLUSION_KEY = 'no.rule.replacement'
-    static final Map<String, String> EXCLUDE_SENSITIVE_RULE_REPLACEMENT = [(EXCLUSION_KEY): 'yes']
 
 //tag::continued[]
     SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor) {
