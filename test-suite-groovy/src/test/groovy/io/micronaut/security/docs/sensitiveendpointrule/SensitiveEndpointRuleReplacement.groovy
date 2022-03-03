@@ -1,5 +1,6 @@
 package io.micronaut.security.docs.sensitiveendpointrule
 
+//tag::imports[]
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.NonNull
@@ -12,15 +13,12 @@ import io.micronaut.security.rules.SensitiveEndpointRule
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
-
+//end::imports[]
 @Requires(property = 'spec.name', value = 'SensitiveEndpointRuleReplacementSpec')
-//tag::preamble[]
+//tag::clazz[]
 @Singleton
 @Replaces(SensitiveEndpointRule.class)
 class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
-//end::preamble[]
-
-//tag::continued[]
     SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor) {
         super(endpointSensitivityProcessor);
     }
@@ -33,4 +31,4 @@ class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
         return Mono.just(SecurityRuleResult.ALLOWED);
     }
 }
-//end::continued[]
+//end::clazz[]

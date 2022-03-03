@@ -13,7 +13,6 @@ import io.micronaut.security.token.RolesFinder
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
-
 //end::imports[]
 
 @Requires(property = "spec.name", value = "SensitiveEndpointRuleReplacementTest")

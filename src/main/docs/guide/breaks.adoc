@@ -9,7 +9,7 @@ The following code snippet illustrates how to restore the previous functionality
 
 NOTE: The previous functionality allows any authenticated user, no matter their role to view sensitive endpoints.
 
-snippet::io.micronaut.security.docs.sensitiveendpointrule.SensitiveEndpointRuleReplacement[tags="preamble","continued]
+snippet::io.micronaut.security.docs.sensitiveendpointrule.SensitiveEndpointRuleReplacement[tags="imports,clazz"]
 
 == Micronaut Security 3.1 breaking changes
 
