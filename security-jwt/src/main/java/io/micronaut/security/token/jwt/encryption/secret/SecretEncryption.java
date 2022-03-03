@@ -24,6 +24,8 @@ import com.nimbusds.jose.crypto.AESDecrypter;
 import com.nimbusds.jose.crypto.AESEncrypter;
 import com.nimbusds.jose.crypto.DirectDecrypter;
 import com.nimbusds.jose.crypto.DirectEncrypter;
+import com.nimbusds.jose.crypto.impl.AESCryptoProvider;
+import com.nimbusds.jose.crypto.impl.DirectCryptoProvider;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
 
@@ -65,10 +67,10 @@ public class SecretEncryption extends AbstractEncryptionConfiguration {
     @Override
     public boolean supports(final JWEAlgorithm algorithm, final EncryptionMethod method) {
         if (algorithm != null && method != null) {
-            final boolean isDirect = DirectDecrypter.SUPPORTED_ALGORITHMS.contains(algorithm)
-                    && DirectDecrypter.SUPPORTED_ENCRYPTION_METHODS.contains(method);
-            final boolean isAes = AESDecrypter.SUPPORTED_ALGORITHMS.contains(algorithm)
-                    && AESDecrypter.SUPPORTED_ENCRYPTION_METHODS.contains(method);
+            final boolean isDirect = DirectCryptoProvider.SUPPORTED_ALGORITHMS.contains(algorithm)
+                    && DirectCryptoProvider.SUPPORTED_ENCRYPTION_METHODS.contains(method);
+            final boolean isAes = AESCryptoProvider.SUPPORTED_ALGORITHMS.contains(algorithm)
+                    && AESCryptoProvider.SUPPORTED_ENCRYPTION_METHODS.contains(method);
             return isDirect || isAes;
         }
         return false;
@@ -85,7 +87,7 @@ public class SecretEncryption extends AbstractEncryptionConfiguration {
 
     @Override
     protected JWEEncrypter buildEncrypter() throws KeyLengthException {
-        if (DirectDecrypter.SUPPORTED_ALGORITHMS.contains(algorithm)) {
+        if (DirectCryptoProvider.SUPPORTED_ALGORITHMS.contains(algorithm)) {
             return new DirectEncrypter(this.secret);
         } else {
             return new AESEncrypter(this.secret);
@@ -94,7 +96,7 @@ public class SecretEncryption extends AbstractEncryptionConfiguration {
 
     @Override
     protected JWEDecrypter buildDecrypter() throws KeyLengthException {
-        if (DirectDecrypter.SUPPORTED_ALGORITHMS.contains(algorithm)) {
+        if (DirectCryptoProvider.SUPPORTED_ALGORITHMS.contains(algorithm)) {
             return new DirectDecrypter(this.secret);
         } else {
             return new AESDecrypter(this.secret);

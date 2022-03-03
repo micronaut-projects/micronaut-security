@@ -19,13 +19,11 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.ECDSAVerifier;
+import com.nimbusds.jose.crypto.impl.ECDSAProvider;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import io.micronaut.core.annotation.NonNull;
 import java.security.interfaces.ECPublicKey;
 
 /**
@@ -37,9 +35,7 @@ import java.security.interfaces.ECPublicKey;
  */
 public class ECSignature extends AbstractSignatureConfiguration {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ECSignature.class);
-
-    private ECPublicKey publicKey;
+    private final ECPublicKey publicKey;
 
     /**
      *
@@ -64,15 +60,11 @@ public class ECSignature extends AbstractSignatureConfiguration {
 
     @Override
     public boolean supports(final JWSAlgorithm algorithm) {
-        return algorithm != null && ECDSAVerifier.SUPPORTED_ALGORITHMS.contains(algorithm);
+        return algorithm != null && ECDSAProvider.SUPPORTED_ALGORITHMS.contains(algorithm);
     }
 
     @Override
     public boolean verify(final SignedJWT jwt) throws JOSEException {
-        return verify(jwt, this.publicKey);
-    }
-
-    private boolean verify(final SignedJWT jwt, @NonNull ECPublicKey publicKey) throws JOSEException {
         final JWSVerifier verifier = new ECDSAVerifier(this.publicKey);
         return jwt.verify(verifier);
     }

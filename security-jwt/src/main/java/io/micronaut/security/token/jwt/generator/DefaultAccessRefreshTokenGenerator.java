@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGenerator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccessRefreshTokenGenerator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultAccessRefreshTokenGenerator.class);
 
     protected final BeanContext beanContext;
     protected final RefreshTokenGenerator refreshTokenGenerator;
@@ -103,6 +103,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
     @NonNull
     public Optional<String> generateRefreshToken(@NonNull Authentication authentication) {
         Optional<String> refreshToken = Optional.empty();
+        String msg = "Skipped refresh token generation because no {} implementation is present";
         if (beanContext.containsBean(RefreshTokenValidator.class)) {
             if (beanContext.containsBean(RefreshTokenPersistence.class)) {
                 if (refreshTokenGenerator != null) {
@@ -111,17 +112,17 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
                     refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(authentication, key)));
                 } else {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenGenerator.class.getName());
+                        LOG.debug(msg, RefreshTokenGenerator.class.getName());
                     }
                 }
             } else {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenPersistence.class.getName());
+                    LOG.debug(msg, RefreshTokenPersistence.class.getName());
                 }
             }
         } else {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenValidator.class.getName());
+                LOG.debug(msg, RefreshTokenValidator.class.getName());
             }
         }
 
@@ -145,7 +146,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
             if (LOG.isDebugEnabled()) {
                 LOG.debug("tokenGenerator failed to generate access token claims: {}", claims.entrySet()
                         .stream()
-                        .map((entry) -> entry.getKey() + "=>" + entry.getValue().toString())
+                        .map(entry -> entry.getKey() + "=>" + entry.getValue().toString())
                         .collect(Collectors.joining(", ")));
             }
             return Optional.empty();

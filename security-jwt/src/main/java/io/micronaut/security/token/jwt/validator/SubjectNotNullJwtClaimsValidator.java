@@ -47,10 +47,8 @@ public class SubjectNotNullJwtClaimsValidator implements GenericJwtClaimsValidat
     public boolean validate(JWTClaimsSet claimsSet) {
         final String subject = claimsSet.getSubject();
         boolean hasSubject = subject != null;
-        if (!hasSubject) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT must contain a subject ('sub' claim)");
-            }
+        if (!hasSubject && LOG.isDebugEnabled()) {
+            LOG.debug("JWT must contain a subject ('sub' claim)");
         }
         return hasSubject;
     }

@@ -44,7 +44,7 @@ import java.util.Optional;
 @Singleton
 public class JwtTokenGenerator implements TokenGenerator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JwtTokenValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JwtTokenGenerator.class);
 
     protected final ClaimsGenerator claimsGenerator;
     protected final SignatureGeneratorConfiguration signatureConfiguration;

@@ -69,7 +69,7 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
         }
         if (!expectedIssuer.equals(issuerObject.toString())) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuerObject.toString());
+                LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuerObject);
             }
             return false;
         }

@@ -79,7 +79,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         populateNbf(builder);
         populateWithAuthentication(builder, authentication);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Generated claim set: {}", builder.build().toJSONObject().toString());
+            LOG.debug("Generated claim set: {}", builder.build().toJSONObject());
         }
         return builder.build().getClaims();
     }
@@ -128,7 +128,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      */
     protected void populateExp(JWTClaimsSet.Builder builder, @Nullable Integer expiration) {
         if (expiration != null) {
-            LOG.debug("Setting expiration to {}", expiration.toString());
+            LOG.debug("Setting expiration to {}", expiration);
             builder.expirationTime(Date.from(Instant.now().plus(expiration, ChronoUnit.SECONDS))); // exp
         }
     }

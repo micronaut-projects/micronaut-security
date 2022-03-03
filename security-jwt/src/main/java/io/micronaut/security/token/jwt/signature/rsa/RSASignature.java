@@ -19,6 +19,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jose.crypto.impl.RSASSAProvider;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 
@@ -55,7 +56,7 @@ public class RSASignature extends AbstractSignatureConfiguration {
 
     @Override
     public boolean supports(final JWSAlgorithm algorithm) {
-        return algorithm != null && RSASSAVerifier.SUPPORTED_ALGORITHMS.contains(algorithm);
+        return algorithm != null && RSASSAProvider.SUPPORTED_ALGORITHMS.contains(algorithm);
     }
 
     @Override

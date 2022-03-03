@@ -159,7 +159,7 @@ public final class JwtValidator {
 
         for (EncryptionConfiguration config: sortedConfigs) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Using encryption configuration: {}", config.toString());
+                LOG.trace("Using encryption configuration: {}", config);
             }
             try {
                 config.decrypt(jwt);
@@ -173,7 +173,7 @@ public final class JwtValidator {
                 return validate(signedJWT);
             } catch (final JOSEException e) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config.toString());
+                    LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config);
                 }
                 return Optional.empty();
             }
@@ -202,13 +202,11 @@ public final class JwtValidator {
 
         // If any of the signature configurations is a JwksCache, evict the cache and attempt to verify again
         for (SignatureConfiguration c : sortedConfigs) {
-            if (c instanceof JwksCache) {
-                if (((JwksCache) c).isExpired()) {
-                    ((JwksCache) c).clear();
-                    optionalJWT = validate(jwt, c);
-                    if (optionalJWT.isPresent()) {
-                        return optionalJWT;
-                    }
+            if (c instanceof JwksCache && ((JwksCache) c).isExpired()) {
+                ((JwksCache) c).clear();
+                optionalJWT = validate(jwt, c);
+                if (optionalJWT.isPresent()) {
+                    return optionalJWT;
                 }
             }
         }
@@ -258,9 +256,9 @@ public final class JwtValidator {
         if (matchesKeyId.isPresent() && otherMatchesKeyId.isPresent()) {
             return otherMatchesKeyId.get().compareTo(matchesKeyId.get());
         } else if (matchesKeyId.isPresent()) {
-            return matchesKeyId.get() ? 1 : -1;
+            return Boolean.TRUE.equals(matchesKeyId.get()) ? 1 : -1;
         } else if (otherMatchesKeyId.isPresent()) {
-            return otherMatchesKeyId.get() ? 1 : -1;
+            return Boolean.TRUE.equals(otherMatchesKeyId.get()) ? 1 : -1;
         }
         return 0;
     }
