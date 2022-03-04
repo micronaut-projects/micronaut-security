@@ -15,12 +15,14 @@
  */
 package io.micronaut.security.utils;
 
+import io.micronaut.core.annotation.Internal;
 import org.slf4j.Logger;
 
 /**
  * Utility methods to avoid verbosity of logging statements. Mostly used to help reduce the Cognitive Complexity of
  * some methods.
  */
+@Internal
 public final class LoggingUtils {
 
     private LoggingUtils() {
