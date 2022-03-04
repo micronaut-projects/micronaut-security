@@ -16,12 +16,12 @@
 package io.micronaut.security.oauth2.client.clientcredentials;
 
 import io.micronaut.context.BeanProvider;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.DisabledBeanException;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;

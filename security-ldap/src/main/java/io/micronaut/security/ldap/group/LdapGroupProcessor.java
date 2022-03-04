@@ -17,11 +17,10 @@ package io.micronaut.security.ldap.group;
 
 import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.SearchProvider;
-
-import javax.naming.NamingException;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import javax.naming.NamingException;
 
 /**
  * Contract to allow the list of groups returned from LDAP to be transformed

@@ -24,6 +24,7 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
@@ -44,17 +45,14 @@ import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoi
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import jakarta.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.Nullable;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.function.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory to create beans related to the configuration of
@@ -114,7 +112,7 @@ class OpenIdClientFactory {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                         }
-                        //TODO this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                        //TODO NOSONAR this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
                         String json = issuerClient.toBlocking().retrieve(configurationUrl.toString(), String.class);
                         return jsonMapper.readValue(json.getBytes(StandardCharsets.UTF_8), Argument.of(DefaultOpenIdProviderMetadata.class));
                     } catch (HttpClientResponseException e) {
@@ -145,6 +143,7 @@ class OpenIdClientFactory {
      */
     @EachBean(OpenIdClientConfiguration.class)
     @Requires(condition = OpenIdClientCondition.class)
+    @SuppressWarnings("java:S107")
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
                                      @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,

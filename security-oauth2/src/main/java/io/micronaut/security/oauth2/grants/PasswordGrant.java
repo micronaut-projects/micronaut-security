@@ -15,15 +15,14 @@
  */
 package io.micronaut.security.oauth2.grants;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -35,7 +34,7 @@ import java.util.Map;
  * @since 1.2.0
  */
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PasswordGrant implements SecureGrant, AsMap {
 
     private static final String KEY_GRANT_TYPE = "grant_type";

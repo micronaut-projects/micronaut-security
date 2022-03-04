@@ -22,9 +22,9 @@ import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jose.JWEEncrypter;
 import com.nimbusds.jose.crypto.ECDHDecrypter;
 import com.nimbusds.jose.crypto.ECDHEncrypter;
-import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
-
+import com.nimbusds.jose.crypto.impl.ECDHCryptoProvider;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 
@@ -54,7 +54,7 @@ public class ECEncryption extends AbstractEncryptionConfiguration {
     @Override
     public boolean supports(final JWEAlgorithm algorithm, final EncryptionMethod method) {
         if (algorithm != null && method != null) {
-            return ECDHDecrypter.SUPPORTED_ALGORITHMS.contains(algorithm) && ECDHDecrypter.SUPPORTED_ENCRYPTION_METHODS.contains(method);
+            return ECDHCryptoProvider.SUPPORTED_ALGORITHMS.contains(algorithm) && ECDHCryptoProvider.SUPPORTED_ENCRYPTION_METHODS.contains(method);
         }
         return false;
     }

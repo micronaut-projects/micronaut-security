@@ -15,10 +15,9 @@
  */
 package io.micronaut.security.oauth2.grants;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 
@@ -30,19 +29,12 @@ import io.micronaut.core.annotation.Nullable;
  * @since 1.2.0
  */
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class JwtBearerAssertionGrant {
 
     private String grantType = GrantType.JWT_BEARER_ASSERTION_GRANT.toString();
     private String assertion;
     private String scope;
-
-    /**
-     * Default Constructor.
-     */
-    public JwtBearerAssertionGrant() {
-
-    }
 
     /**
      *

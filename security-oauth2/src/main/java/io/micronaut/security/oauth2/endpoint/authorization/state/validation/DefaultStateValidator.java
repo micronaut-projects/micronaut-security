@@ -15,13 +15,12 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
 
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
-
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 

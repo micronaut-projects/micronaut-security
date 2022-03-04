@@ -16,11 +16,10 @@
 package io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.http.cookie.CookieConfiguration;
-import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.cookie.CookieConfiguration;
+import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;

@@ -30,7 +30,6 @@ import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpoin
 import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.grants.GrantType;
-
 import java.util.Optional;
 
 /**
@@ -47,36 +46,34 @@ public class OpenIdClientCondition implements Condition {
         AnnotationMetadataProvider component = context.getComponent();
         BeanContext beanContext = context.getBeanContext();
 
-        if (beanContext instanceof ApplicationContext) {
-            if (component instanceof ValueResolver) {
-                Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-                if (optional.isPresent()) {
-                    String name = optional.get();
+        if (beanContext instanceof ApplicationContext && component instanceof ValueResolver) {
+            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
+            if (optional.isPresent()) {
+                String name = optional.get();
 
-                    OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-                    OpenIdClientConfiguration openIdClientConfiguration = clientConfiguration.getOpenid().get();
+                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+                OpenIdClientConfiguration openIdClientConfiguration = clientConfiguration.getOpenid().get();
 
-                    if (clientConfiguration.isEnabled()) {
-
-                        if (openIdClientConfiguration.getIssuer().isPresent() || endpointsManuallyConfigured(openIdClientConfiguration)) {
-                            if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                                Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
-                                if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
-                                    return true;
-                                } else {
-                                    context.fail("Skipped OpenID client creation for provider [" + name + "] because the response type is not 'code'");
-                                }
+                String failureMessagePrefix = "Skipped OpenID client creation for provider [" + name;
+                if (clientConfiguration.isEnabled()) {
+                    if (openIdClientConfiguration.getIssuer().isPresent() || endpointsManuallyConfigured(openIdClientConfiguration)) {
+                        if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
+                            Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
+                            if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
+                                return true;
                             } else {
-                                context.fail("Skipped OpenID client creation for provider [" + name + "] because the grant type is not 'authorization-code'");
+                                context.fail(failureMessagePrefix + "] because the response type is not 'code'");
                             }
                         } else {
-                            context.fail("Skipped OpenID client creation for provider [" + name + "] because no issuer is configured");
+                            context.fail(failureMessagePrefix + "] because the grant type is not 'authorization-code'");
                         }
                     } else {
-                        context.fail("Skipped OpenID client creation for provider [" + name + "] because the configuration is disabled");
+                        context.fail(failureMessagePrefix  + "] because no issuer is configured");
                     }
-                    return false;
+                } else {
+                    context.fail(failureMessagePrefix + "] because the configuration is disabled");
                 }
+                return false;
             }
         }
         return true;

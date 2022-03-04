@@ -16,12 +16,11 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
 
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 
 /**
  * Validates a state parameter.

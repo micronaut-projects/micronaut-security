@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.token.generator;
 
-import io.micronaut.security.authentication.Authentication;
-
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.authentication.Authentication;
 import java.util.Map;
 import java.util.Optional;
 

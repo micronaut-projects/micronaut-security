@@ -29,7 +29,7 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 public interface JwtClaimsValidator {
 
     /**
-     * Use {@link JwtClaimsValidatorConfigurationProperties#PREFIX} instead.
+     * @deprecated use {@link JwtClaimsValidatorConfigurationProperties#PREFIX} instead.
      */
     @Deprecated
     String PREFIX = JwtClaimsValidatorConfigurationProperties.PREFIX;

@@ -1,11 +1,7 @@
 package io.micronaut.security.token.jwt.signature.jwks
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.nimbusds.jose.JWSAlgorithm
-import com.nimbusds.jose.JWSHeader
-import com.nimbusds.jose.JWSObject
-import com.nimbusds.jose.JWSSigner
-import com.nimbusds.jose.Payload
+import com.nimbusds.jose.*
 import com.nimbusds.jose.crypto.MACSigner
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
@@ -36,14 +32,11 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
-import io.micronaut.security.token.generator.TokenGenerator
-import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.endpoints.KeysController
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
-import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named

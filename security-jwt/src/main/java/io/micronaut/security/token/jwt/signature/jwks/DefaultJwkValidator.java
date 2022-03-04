@@ -25,11 +25,10 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.util.functional.ThrowingFunction;
 import io.micronaut.core.util.functional.ThrowingSupplier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link JwkValidator} which uses a JSON Web Signature (JWS) verifier.

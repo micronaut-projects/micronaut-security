@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

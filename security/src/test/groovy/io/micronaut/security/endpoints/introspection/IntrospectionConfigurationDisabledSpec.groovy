@@ -1,9 +1,9 @@
 package io.micronaut.security.endpoints.introspection
 
-import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.endpoints.introspection.IntrospectionConfiguration
 import io.micronaut.security.endpoints.introspection.IntrospectionController
 import io.micronaut.security.endpoints.introspection.IntrospectionProcessor
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class IntrospectionConfigurationDisabledSpec extends ApplicationContextSpecification {
 

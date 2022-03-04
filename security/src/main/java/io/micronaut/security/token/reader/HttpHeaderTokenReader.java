@@ -17,11 +17,10 @@ package io.micronaut.security.token.reader;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Locale;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reads a token from an HTTP request and removes prefix from HTTP Header Value.

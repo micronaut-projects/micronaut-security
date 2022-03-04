@@ -29,6 +29,7 @@ public interface BearerTokenConfiguration extends Toggleable {
      *
      * @return a boolean flag indicating whether BearerTokenReader bean should be enabled or not
      */
+    @Override
     boolean isEnabled();
 
     /**

@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
-import io.micronaut.http.MutableHttpResponse;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.MutableHttpResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +51,7 @@ public interface AuthorizationRequest {
      * @param response authorization redirect response
      * @return Opaque value used to maintain state between the request and the callback.
      */
-    Optional<String> getState(MutableHttpResponse response);
+    Optional<String> getState(MutableHttpResponse<?> response);
 
     /**
      * @return OAuth 2.0 Response Type value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used.

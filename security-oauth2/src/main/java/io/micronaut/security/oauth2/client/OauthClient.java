@@ -18,9 +18,8 @@ package io.micronaut.security.oauth2.client;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import org.reactivestreams.Publisher;
-
 import java.util.Map;
+import org.reactivestreams.Publisher;
 
 /**
  * A contract for an OAuth 2.0 client. This interface is the

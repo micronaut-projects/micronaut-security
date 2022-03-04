@@ -27,9 +27,7 @@ import reactor.core.scheduler.Schedulers
 import java.time.Duration
 import java.util.concurrent.ExecutorService
 
-import static io.micronaut.security.rules.SecurityRuleResult.ALLOWED
-import static io.micronaut.security.rules.SecurityRuleResult.REJECTED
-import static io.micronaut.security.rules.SecurityRuleResult.UNKNOWN
+import static io.micronaut.security.rules.SecurityRuleResult.*
 
 @MicronautTest(rebuildContext = true)
 class SecurityFilterSpec extends EmbeddedServerSpecification {

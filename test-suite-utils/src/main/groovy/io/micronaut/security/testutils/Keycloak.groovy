@@ -16,11 +16,9 @@
 package io.micronaut.security.testutils
 
 import org.testcontainers.Testcontainers
-import org.testcontainers.containers.Container
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import org.testcontainers.images.builder.ImageFromDockerfile
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 import spock.util.environment.OperatingSystem
 
 import java.time.Duration

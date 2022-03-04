@@ -25,7 +25,6 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.grants.PasswordGrant;
-
 import java.util.Map;
 
 /**

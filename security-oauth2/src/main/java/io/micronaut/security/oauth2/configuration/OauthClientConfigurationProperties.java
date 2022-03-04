@@ -19,19 +19,26 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachProperty;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.format.MapFormat;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.*;
-import io.micronaut.security.oauth2.grants.GrantType;
+import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.DefaultEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.IntrospectionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.RevocationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
-
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.oauth2.grants.GrantType;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -62,7 +69,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     private static final List<String> DEFAULT_SCOPES_OPENID = Arrays.asList(OpenIdScope.OPENID.toString(),
             OpenIdScope.EMAIL.toString(),
             OpenIdScope.PROFILE.toString());
-    private List<String> DEFAULT_SCOPES = new ArrayList<>();
+    private List<String> defaultScopes = new ArrayList<>();
 
     private final String name;
     private String clientId;
@@ -131,7 +138,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     @NonNull
     @Override
     public List<String> getScopes() {
-        return scopes == null ? DEFAULT_SCOPES : scopes;
+        return scopes == null ? defaultScopes : scopes;
     }
 
     /**
@@ -221,7 +228,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     public void setOpenid(OpenIdClientConfigurationProperties openid) {
         this.openid = openid;
-        this.DEFAULT_SCOPES = DEFAULT_SCOPES_OPENID;
+        this.defaultScopes = DEFAULT_SCOPES_OPENID;
     }
 
     @Override

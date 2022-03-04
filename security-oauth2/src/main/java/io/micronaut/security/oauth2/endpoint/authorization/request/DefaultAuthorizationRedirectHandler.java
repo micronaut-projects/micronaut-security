@@ -15,20 +15,19 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.uri.UriBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Builds an authorization redirect url.
@@ -49,7 +48,7 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
     @Override
     public MutableHttpResponse redirect(AuthorizationRequest authorizationRequest,
                                         String authorizationEndpoint) {
-        MutableHttpResponse response = HttpResponse.status(HttpStatus.FOUND);
+        MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.FOUND);
         Map<String, Object> arguments = instantiateParameters(authorizationRequest, response);
         String expandedUri = expandedUri(authorizationEndpoint, arguments);
         if (LOG.isTraceEnabled()) {
@@ -66,12 +65,10 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
     protected String expandedUri(@NonNull String baseUrl,
                                  @NonNull Map<String, Object> queryParams) {
         UriBuilder builder = UriBuilder.of(baseUrl);
-        for (String k : queryParams.keySet()) {
-            Object val = queryParams.get(k);
-            if (val != null) {
-                builder.queryParam(k, val);
-            }
-        }
+        queryParams.entrySet().stream()
+                .filter(entry -> entry.getValue() != null)
+                .forEach(entry -> builder.queryParam(entry.getKey(), entry.getValue()));
+
         return builder.toString();
     }
 

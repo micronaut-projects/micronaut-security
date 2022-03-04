@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.endpoints;
 
 import com.nimbusds.jose.jwk.JWK;
-
 import java.util.List;
 
 /**

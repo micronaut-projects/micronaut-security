@@ -33,14 +33,12 @@ import io.micronaut.management.endpoint.threads.ThreadDumpEndpoint;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
+import jakarta.inject.Singleton;
+import java.util.Map;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.inject.Singleton;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 /**
  * Finds any sensitive endpoints and processes requests that match their
@@ -129,7 +127,7 @@ public class SensitiveEndpointRule implements SecurityRule {
                                                   @NonNull ExecutableMethod<?, ?> method) {
 
         Boolean sensitive = endpointMethods.get(method);
-        if (sensitive) {
+        if (Boolean.TRUE.equals(sensitive)) {
             if (authentication == null) {
                 return checkSensitiveAnonymous(request, method);
             }

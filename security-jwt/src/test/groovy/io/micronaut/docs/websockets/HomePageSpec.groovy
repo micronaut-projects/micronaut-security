@@ -17,17 +17,14 @@ import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.reader.TokenReader
 import io.micronaut.websocket.WebSocketBroadcaster
 import io.micronaut.websocket.WebSocketSession
-import io.micronaut.websocket.annotation.ClientWebSocket
-import io.micronaut.websocket.annotation.OnClose
-import io.micronaut.websocket.annotation.OnMessage
-import io.micronaut.websocket.annotation.OnOpen
-import io.micronaut.websocket.annotation.ServerWebSocket
+import io.micronaut.websocket.annotation.*
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.Issue
 import spock.util.concurrent.PollingConditions
+
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.function.Predicate

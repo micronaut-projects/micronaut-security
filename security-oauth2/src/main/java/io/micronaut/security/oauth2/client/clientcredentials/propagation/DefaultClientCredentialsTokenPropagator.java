@@ -16,7 +16,6 @@
 package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
 import io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties;
-
 import jakarta.inject.Singleton;
 
 /**

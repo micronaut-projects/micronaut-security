@@ -4,7 +4,6 @@ import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get

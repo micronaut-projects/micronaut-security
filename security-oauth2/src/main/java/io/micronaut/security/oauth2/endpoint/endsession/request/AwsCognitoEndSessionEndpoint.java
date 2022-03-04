@@ -19,15 +19,13 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -40,7 +38,6 @@ import java.util.function.Supplier;
  */
 public class AwsCognitoEndSessionEndpoint extends AbstractEndSessionRequest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AwsCognitoEndSessionEndpoint.class);
     private static final String PARAM_CLIENT_ID = "client_id";
     private static final String PARAM_LOGOUT_URI = "logout_uri";
 

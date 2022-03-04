@@ -18,7 +18,6 @@ package io.micronaut.security.token.propagation;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
-
 import java.util.Optional;
 
 /**

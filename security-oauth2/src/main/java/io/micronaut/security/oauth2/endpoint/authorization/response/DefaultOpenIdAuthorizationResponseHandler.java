@@ -16,8 +16,8 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import com.nimbusds.jwt.JWT;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
@@ -30,20 +30,19 @@ import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-import reactor.core.publisher.FluxSink;
-import reactor.core.publisher.Flux;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.text.ParseException;
 import java.util.Optional;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
 
 /**
  * Default implementation of {@link OpenIdAuthorizationResponseHandler}.

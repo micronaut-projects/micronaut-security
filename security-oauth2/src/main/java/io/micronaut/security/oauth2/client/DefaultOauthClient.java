@@ -38,12 +38,11 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.Authorizatio
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import reactor.core.publisher.Flux;
+import java.util.Map;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
+import reactor.core.publisher.Flux;
 
 /**
  * The default implementation of {@link OauthClient}.

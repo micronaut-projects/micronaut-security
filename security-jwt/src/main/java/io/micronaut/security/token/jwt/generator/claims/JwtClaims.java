@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.generator.claims;
 
 import io.micronaut.security.token.Claims;
-
 import java.util.Arrays;
 import java.util.List;
 

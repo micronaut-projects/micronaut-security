@@ -15,16 +15,14 @@
  */
 package io.micronaut.security.oauth2.grants;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
-
-import javax.validation.constraints.NotBlank;
 import java.util.Map;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Client Credentials Grant.
@@ -34,7 +32,7 @@ import java.util.Map;
  * @since 1.2.0
  */
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ClientCredentialsGrant implements SecureGrant, AsMap {
 
     public static final String KEY_GRANT_TYPE = "grant_type";
@@ -52,12 +50,6 @@ public class ClientCredentialsGrant implements SecureGrant, AsMap {
 
     @Nullable
     private String clientSecret;
-
-    /**
-     * Default Constructor.
-     */
-    public ClientCredentialsGrant() {
-    }
 
     /**
      * @return client_credentials

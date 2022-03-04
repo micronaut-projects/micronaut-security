@@ -15,10 +15,9 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.annotation.Introspected;
-
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -109,7 +108,7 @@ public class IntrospectionRequest {
     @Nullable
     @SuppressWarnings("MethodName")
     public String getToken_type_hint() {
-        return token_type_hint;
+        return getTokenTypeHint();
     }
 
     /**
@@ -118,7 +117,7 @@ public class IntrospectionRequest {
      */
     @SuppressWarnings("MethodName")
     public void setToken_type_hint(@Nullable String tokenTypeHint) {
-        this.token_type_hint = tokenTypeHint;
+        setTokenTypeHint(tokenTypeHint);
     }
 
     @Override

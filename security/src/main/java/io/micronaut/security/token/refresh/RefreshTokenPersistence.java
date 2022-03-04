@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token.refresh;
 
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.runtime.event.annotation.EventListener;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
 import org.reactivestreams.Publisher;
 

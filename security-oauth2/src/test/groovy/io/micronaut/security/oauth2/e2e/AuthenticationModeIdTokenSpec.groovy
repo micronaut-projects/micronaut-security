@@ -15,18 +15,18 @@ import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfigurat
 import io.micronaut.security.oauth2.endpoint.authorization.request.DefaultAuthorizationRedirectHandler
 import io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakAuthorizationRedirectHandler
-import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakEndSessionEndpoint
+import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakProviderResolver
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
 import io.micronaut.security.token.validator.TokenValidator
-import spock.lang.IgnoreIf
-
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import spock.lang.IgnoreIf
+
 import java.security.Principal
 
 class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {

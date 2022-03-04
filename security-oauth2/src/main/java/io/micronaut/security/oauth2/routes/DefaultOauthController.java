@@ -22,18 +22,17 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.oauth2.client.OauthClient;
-import reactor.core.publisher.Flux;
+import java.util.Map;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
+import reactor.core.publisher.Flux;
 
 /**
  * Default implementation of {@link OauthController}.

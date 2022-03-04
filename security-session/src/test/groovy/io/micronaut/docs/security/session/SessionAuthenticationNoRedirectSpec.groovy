@@ -14,7 +14,6 @@ import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
-import org.yaml.snakeyaml.Yaml
 
 import java.security.Principal
 

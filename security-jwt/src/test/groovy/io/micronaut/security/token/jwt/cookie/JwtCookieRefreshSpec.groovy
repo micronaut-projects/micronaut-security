@@ -3,15 +3,14 @@ package io.micronaut.security.token.jwt.cookie
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpMethod
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.jwt.endpoints.OauthController
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.web.router.RouteMatch
 import io.micronaut.web.router.Router
-import org.reactivestreams.Publisher
-
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
 
 import java.util.concurrent.ConcurrentHashMap

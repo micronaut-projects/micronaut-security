@@ -24,13 +24,12 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides the default behavior for responding to an {@link AuthorizationException}.
@@ -95,7 +94,7 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      * @param exception The exception
      * @return The response to be used when a redirect is not appropriate
      */
-    protected MutableHttpResponse<?> httpResponseWithStatus(HttpRequest request, AuthorizationException exception) {
+    protected MutableHttpResponse<?> httpResponseWithStatus(HttpRequest<?> request, AuthorizationException exception) {
         return HttpResponse.status(exception.isForbidden() ? HttpStatus.FORBIDDEN :
                     HttpStatus.UNAUTHORIZED);
     }
@@ -143,8 +142,6 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      */
     protected MutableHttpResponse<?> httpResponseWithStatus(URI location) {
         return HttpResponse.status(HttpStatus.SEE_OTHER)
-                .headers((headers) ->
-                        headers.location(location)
-                );
+                .headers(headers -> headers.location(location));
     }
 }

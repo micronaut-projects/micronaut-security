@@ -1,7 +1,6 @@
 package io.micronaut.docs.security.securityRule.secured
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient

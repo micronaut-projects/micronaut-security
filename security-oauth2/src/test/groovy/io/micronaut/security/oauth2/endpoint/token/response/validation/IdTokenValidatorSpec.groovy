@@ -1,12 +1,10 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.security.oauth2.client.IdTokenClaimsValidator
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import spock.lang.See
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 

@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.core.util.SupplierUtil;
@@ -40,15 +40,14 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthor
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
-import reactor.core.publisher.Flux;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 /**
  * The default implementation of {@link OpenIdClient}.

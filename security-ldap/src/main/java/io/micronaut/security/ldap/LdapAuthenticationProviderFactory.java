@@ -15,16 +15,15 @@
  */
 package io.micronaut.security.ldap;
 
-import io.micronaut.security.ldap.configuration.LdapConfiguration;
-import io.micronaut.security.ldap.context.ContextBuilder;
-import io.micronaut.security.ldap.context.LdapSearchService;
-import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.scheduling.TaskExecutors;
-
+import io.micronaut.security.ldap.configuration.LdapConfiguration;
+import io.micronaut.security.ldap.context.ContextBuilder;
+import io.micronaut.security.ldap.context.LdapSearchService;
+import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import jakarta.inject.Named;
 import java.util.concurrent.ExecutorService;
 

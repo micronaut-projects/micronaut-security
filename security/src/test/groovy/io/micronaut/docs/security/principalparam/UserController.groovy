@@ -1,13 +1,17 @@
-package io.micronaut.docs.security.principalparam;
+package io.micronaut.docs.security.principalparam
+
+import io.micronaut.context.annotation.Requires;
 
 //tag::imports[]
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.CollectionUtils;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.security.annotation.Secured;
-import io.micronaut.core.annotation.Nullable;
-import java.security.Principal;
+
+import io.micronaut.core.annotation.Nullable
+import io.micronaut.core.util.CollectionUtils
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.security.annotation.Secured
+
+import java.security.Principal
+
 //end::imports[]
 
 // Although this is a Groovy file this is written as close to Java as possible to embedded in the docs

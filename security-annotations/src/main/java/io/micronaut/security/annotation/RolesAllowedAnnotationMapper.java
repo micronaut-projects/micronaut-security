@@ -19,7 +19,6 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.annotation.NamedAnnotationMapper;
 import io.micronaut.inject.visitor.VisitorContext;
-
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;

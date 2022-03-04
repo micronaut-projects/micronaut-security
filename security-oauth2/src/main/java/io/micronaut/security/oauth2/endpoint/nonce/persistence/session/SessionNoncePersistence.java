@@ -23,7 +23,6 @@ import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
-
 import jakarta.inject.Singleton;
 import java.util.Optional;
 

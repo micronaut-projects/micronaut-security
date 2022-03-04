@@ -1,19 +1,20 @@
 package io.micronaut.docs.security.authorization;
 
 //tag::clazz[]
+
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
-import org.reactivestreams.Publisher;
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Mono;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 //end::clazz[]
 @Requires(property = "spec.name", value = "X509AuthorizationSpec")
 //tag::clazz[]

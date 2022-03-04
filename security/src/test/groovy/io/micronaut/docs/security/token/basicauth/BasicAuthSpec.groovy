@@ -1,23 +1,20 @@
 package io.micronaut.docs.security.token.basicauth
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.core.annotation.NonNull
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.client.HttpClient
 import io.micronaut.inject.ExecutableMethod
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor
+import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.rules.SecurityRuleResult
 import io.micronaut.security.rules.SensitiveEndpointRule
 import io.micronaut.security.testutils.YamlAsciidocTagCleaner
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.client.HttpClient
-import io.micronaut.runtime.server.EmbeddedServer
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
-import org.yaml.snakeyaml.Yaml
 import reactor.core.publisher.Mono
 import spock.lang.AutoCleanup
 import spock.lang.Shared

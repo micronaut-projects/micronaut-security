@@ -1,9 +1,9 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation
 
-import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Unroll
 
 class AudienceClaimValidatorSpec extends ApplicationContextSpecification {

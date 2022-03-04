@@ -26,7 +26,6 @@ import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-
 import java.util.Optional;
 
 /**
@@ -40,25 +39,23 @@ public class ClientCredentialsHeaderPropagatorEnabled implements Condition {
         AnnotationMetadataProvider component = context.getComponent();
         BeanContext beanContext = context.getBeanContext();
 
-        if (beanContext instanceof ApplicationContext) {
-            if (component instanceof ValueResolver) {
-                Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-                if (optional.isPresent()) {
-                    String name = optional.get();
-                    OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-                    Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> headerTokenConfiguration = clientConfiguration.getClientCredentials()
-                            .flatMap(ClientCredentialsConfiguration::getHeaderPropagation);
-                    if (headerTokenConfiguration.isPresent()) {
-                        if (headerTokenConfiguration.get().isEnabled()) {
-                            return true;
-                        } else {
-                            context.fail("Client credentials header token handler is disabled");
-                            return false;
-                        }
+        if (beanContext instanceof ApplicationContext && component instanceof ValueResolver) {
+            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
+            if (optional.isPresent()) {
+                String name = optional.get();
+                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+                Optional<ClientCredentialsHeaderTokenPropagatorConfiguration> headerTokenConfiguration = clientConfiguration.getClientCredentials()
+                        .flatMap(ClientCredentialsConfiguration::getHeaderPropagation);
+                if (headerTokenConfiguration.isPresent()) {
+                    if (headerTokenConfiguration.get().isEnabled()) {
+                        return true;
                     } else {
-                        context.fail("Client credentials header token handler disabled due to a lack of configuration");
+                        context.fail("Client credentials header token handler is disabled");
                         return false;
                     }
+                } else {
+                    context.fail("Client credentials header token handler disabled due to a lack of configuration");
+                    return false;
                 }
             }
         }

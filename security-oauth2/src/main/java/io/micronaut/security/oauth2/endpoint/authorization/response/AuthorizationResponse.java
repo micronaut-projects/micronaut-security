@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
-import io.micronaut.http.HttpRequest;
-import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 
 /**
  * OAuth 2.0 Authentication Response.

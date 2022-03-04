@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
-import io.micronaut.http.MediaType;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.MediaType;
 
 /**
  * TokenEndpoint Configuration.

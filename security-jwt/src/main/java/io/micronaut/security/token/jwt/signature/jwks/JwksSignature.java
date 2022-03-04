@@ -26,21 +26,20 @@ import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
@@ -108,23 +107,23 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
         this.jwkValidator = jwkValidator;
     }
 
-    private Optional<JWKSet> getJWKSet() {
-        JWKSet jwkSet = this.jwkSet;
-        if (jwkSet == null) {
+    private Optional<JWKSet> computeJWKSet() {
+        JWKSet jwkSetVariable = this.jwkSet;
+        if (jwkSetVariable == null) {
             synchronized (this) { // double check
-                jwkSet = this.jwkSet;
-                if (jwkSet == null) {
-                    jwkSet = loadJwkSet(this.jwksSignatureConfiguration.getUrl());
-                    this.jwkSet = jwkSet;
+                jwkSetVariable = this.jwkSet;
+                if (jwkSetVariable == null) {
+                    jwkSetVariable = loadJwkSet(this.jwksSignatureConfiguration.getUrl());
+                    this.jwkSet = jwkSetVariable;
                     this.jwkSetCachedAt = Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS);
                 }
             }
         }
-        return Optional.ofNullable(jwkSet);
+        return Optional.ofNullable(jwkSetVariable);
     }
 
     private List<JWK> getJsonWebKeys() {
-        return getJWKSet().map(JWKSet::getKeys).orElse(Collections.emptyList());
+        return computeJWKSet().map(JWKSet::getKeys).orElse(Collections.emptyList());
     }
 
     @Override
@@ -147,22 +146,12 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     @Override
     @NonNull
     public Optional<List<String>> getKeyIds() {
-        JWKSet jwkSet = this.jwkSet;
-        if (jwkSet != null) {
-            List<String> keyIds = new ArrayList<>(jwkSet.getKeys().size());
-            for (JWK key : jwkSet.getKeys()) {
-                String keyId = key.getKeyID();
-                if (keyId != null) {
-                    keyIds.add(keyId);
-                }
-            }
-            if (keyIds.isEmpty()) {
-                return Optional.empty();
-            } else {
-                return Optional.of(keyIds);
-            }
-        }
-        return Optional.empty();
+        return computeJWKSet()
+            .map(JWKSet::getKeys)
+            .map(jwkList -> jwkList.stream()
+                    .map(JWK::getKeyID)
+                    .collect(Collectors.toList())
+            );
     }
 
     /**
@@ -203,7 +192,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Override
     public boolean verify(SignedJWT jwt) throws JOSEException {
-        List<JWK> matches = matches(jwt, getJWKSet().orElse(null));
+        List<JWK> matches = matches(jwt, computeJWKSet().orElse(null));
         if (LOG.isDebugEnabled()) {
             LOG.debug("Found {} matching JWKs", matches.size());
         }

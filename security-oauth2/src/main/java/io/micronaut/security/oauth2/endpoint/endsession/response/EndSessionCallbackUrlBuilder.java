@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.endpoint.endsession.response;
 
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
-
 import java.net.URL;
 
 /**

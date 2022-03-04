@@ -16,13 +16,12 @@
 package io.micronaut.security.token.jwt.generator;
 
 import com.nimbusds.jose.JWSAlgorithm;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 

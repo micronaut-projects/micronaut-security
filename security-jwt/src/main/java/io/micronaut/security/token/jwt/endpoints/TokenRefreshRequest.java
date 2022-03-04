@@ -17,7 +17,6 @@ package io.micronaut.security.token.jwt.endpoints;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
