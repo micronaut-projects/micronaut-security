@@ -21,8 +21,9 @@ import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
-import java.util.Map;
+
 import javax.validation.constraints.NotBlank;
+import java.util.Map;
 
 /**
  * Client Credentials Grant.
@@ -33,39 +34,16 @@ import javax.validation.constraints.NotBlank;
  */
 @Introspected
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ClientCredentialsGrant implements SecureGrant, AsMap {
+public class ClientCredentialsGrant extends AbstractClientSecureGrant implements SecureGrant, AsMap {
 
-    public static final String KEY_GRANT_TYPE = "grant_type";
     public static final String KEY_SCOPES = "scope";
 
     @NonNull
     @NotBlank
-    private String grantType = GrantType.CLIENT_CREDENTIALS.toString();
+    protected String grantType = GrantType.CLIENT_CREDENTIALS.toString();
 
     @Nullable
     private String scope;
-
-    @Nullable
-    private String clientId;
-
-    @Nullable
-    private String clientSecret;
-
-    /**
-     * @return client_credentials
-     */
-    @NonNull
-    public String getGrantType() {
-        return grantType;
-    }
-
-    /**
-     *
-     * @param grantType Grant type
-     */
-    public void setGrantType(@NonNull String grantType) {
-        this.grantType = grantType;
-    }
 
     /**
      * @return Requested scope values for the access token.
@@ -83,53 +61,13 @@ public class ClientCredentialsGrant implements SecureGrant, AsMap {
     }
 
     /**
-     *
-     * @return The application's Client identifier.
-     */
-    @NonNull
-    public String getClientId() {
-        return clientId;
-    }
-
-    /**
-     *
-     * @param clientId Application's Client identifier.
-     */
-    public void setClientId(@NonNull String clientId) {
-        this.clientId = clientId;
-    }
-
-    /**
-     *
-     * @param clientSecret Application's Client clientSecret.
-     */
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    /**
-     *
-     * @return The application's Client clientSecret.
-     */
-    public String getClientSecret() {
-        return this.clientSecret;
-    }
-
-    /**
      * @return this object as a Map
      */
     @Override
     public Map<String, String> toMap() {
-        Map<String, String> m = new SecureGrantMap(2);
-        m.put(KEY_GRANT_TYPE, getGrantType());
+        Map<String, String> m = super.toMap();
         if (StringUtils.isNotEmpty(scope)) {
             m.put(KEY_SCOPES, scope);
-        }
-        if (clientId != null) {
-            m.put(KEY_CLIENT_ID, clientId);
-        }
-        if (clientSecret != null) {
-            m.put(KEY_CLIENT_SECRET, clientSecret);
         }
         return m;
     }

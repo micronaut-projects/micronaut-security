@@ -25,29 +25,17 @@ import io.micronaut.core.convert.format.MapFormat;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.DefaultEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.DefaultSecureEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.IntrospectionEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.RevocationEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.*;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdScope;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.grants.GrantType;
+import io.micronaut.security.token.propagation.AbstractOutgoingRequestProcessorMatcher;
+
 import java.net.URL;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Pattern;
+import java.util.*;
 
 /**
  * Stores configuration of each configured OAuth 2.0 client.
@@ -263,7 +251,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      * Client credentials configuration.
      */
     @ConfigurationProperties("client-credentials")
-    public static class ClientCredentialsConfigurationProperties implements ClientCredentialsConfiguration {
+    public static class ClientCredentialsConfigurationProperties extends AbstractOutgoingRequestProcessorMatcher implements ClientCredentialsConfiguration {
 
         /**
          * The default enable value.
@@ -272,14 +260,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         public static final boolean DEFAULT_ENABLED = true;
 
         private boolean enabled = DEFAULT_ENABLED;
-
-        private String serviceIdRegex;
-
-        private String uriRegex;
-
-        private Pattern serviceIdPattern;
-
-        private Pattern uriPattern;
 
         private String scope;
 
@@ -316,50 +296,6 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
          */
         public void setAdvancedExpiration(@NonNull Duration advancedExpiration) {
             this.advancedExpiration = advancedExpiration;
-        }
-
-        /**
-         * @return a regular expression to match the service.
-         */
-        public String getServiceIdRegex() {
-            return this.serviceIdRegex;
-        }
-
-        /**
-         * @param serviceIdRegex A regular expression to match the service id.
-         */
-        public void setServiceIdRegex(String serviceIdRegex) {
-            this.serviceIdRegex = serviceIdRegex;
-        }
-
-        /**
-         * @return a regular expression to match the uri.
-         */
-        public String getUriRegex() {
-            return this.uriRegex;
-        }
-
-        /**
-         * @param uriRegex A regular expression to match the URI.
-         */
-        public void setUriRegex(String uriRegex) {
-            this.uriRegex = uriRegex;
-        }
-
-        @Override
-        public Pattern getServiceIdPattern() {
-            if (this.serviceIdPattern == null && this.serviceIdRegex != null) {
-                serviceIdPattern = Pattern.compile(this.serviceIdRegex);
-            }
-            return serviceIdPattern;
-        }
-
-        @Override
-        public Pattern getUriPattern() {
-            if (this.uriPattern == null && this.uriRegex != null) {
-                uriPattern = Pattern.compile(this.uriRegex);
-            }
-            return uriPattern;
         }
 
         @NonNull

@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.endpoints.AbstractControllerConfigurationProperties;
 
 /**
  * Configures the {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
@@ -28,7 +29,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  */
 @Requires(property = KeysControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(KeysControllerConfigurationProperties.PREFIX)
-public class KeysControllerConfigurationProperties implements KeysControllerConfiguration {
+public class KeysControllerConfigurationProperties extends AbstractControllerConfigurationProperties implements KeysControllerConfiguration {
 
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".endpoints.keys";
 
@@ -44,21 +45,8 @@ public class KeysControllerConfigurationProperties implements KeysControllerConf
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_PATH = "/keys";
 
-    private boolean enabled = DEFAULT_ENABLED;
-    private String path = DEFAULT_PATH;
-
-    /**
-     * @return true if you want to enable the {@link io.micronaut.security.token.jwt.endpoints.KeysController}.
-     */
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    @Override
-    public String getPath() {
-        return this.path;
-    }
+    protected boolean enabled = DEFAULT_ENABLED;
+    protected String path = DEFAULT_PATH;
 
     /**
      * Enables {@link io.micronaut.security.token.jwt.endpoints.KeysController}. Default value {@value #DEFAULT_ENABLED}.

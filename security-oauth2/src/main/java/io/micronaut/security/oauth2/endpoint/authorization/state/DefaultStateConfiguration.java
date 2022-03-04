@@ -17,8 +17,8 @@ package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
+import io.micronaut.security.oauth2.endpoint.AbstractPersistableConfigurationProperties;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidationConfiguration;
-import java.util.Optional;
 
 /**
  * Configuration properties implementation of state validation configuration.
@@ -27,7 +27,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @ConfigurationProperties(DefaultStateConfiguration.PREFIX)
-public class DefaultStateConfiguration implements StateValidationConfiguration {
+public class DefaultStateConfiguration extends AbstractPersistableConfigurationProperties implements StateValidationConfiguration {
 
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".state";
 
@@ -38,13 +38,8 @@ public class DefaultStateConfiguration implements StateValidationConfiguration {
     public static final boolean DEFAULT_ENABLED = true;
     private static final String DEFAULT_PERSISTENCE = "cookie";
 
-    private String persistence = DEFAULT_PERSISTENCE;
-    private boolean enabled = DEFAULT_ENABLED;
-
-    @Override
-    public Optional<String> getPersistence() {
-        return Optional.ofNullable(persistence);
-    }
+    protected String persistence = DEFAULT_PERSISTENCE;
+    protected boolean enabled = DEFAULT_ENABLED;
 
     /**
      * Sets the mechanism to persist the state for later retrieval for validation.
@@ -54,11 +49,6 @@ public class DefaultStateConfiguration implements StateValidationConfiguration {
      */
     public void setPersistence(String persistence) {
         this.persistence = persistence;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
     }
 
     /**

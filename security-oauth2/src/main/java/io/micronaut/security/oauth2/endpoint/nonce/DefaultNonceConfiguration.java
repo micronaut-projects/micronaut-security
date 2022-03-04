@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.nonce;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties;
-import java.util.Optional;
+import io.micronaut.security.oauth2.endpoint.AbstractPersistableConfigurationProperties;
 
 /**
  * Configuration properties implementation of nonce validation configuration.
@@ -26,7 +26,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @ConfigurationProperties(DefaultNonceConfiguration.PREFIX)
-public class DefaultNonceConfiguration implements NonceConfiguration {
+public class DefaultNonceConfiguration extends AbstractPersistableConfigurationProperties implements NonceConfiguration {
 
     public static final String PREFIX = OpenIdConfigurationProperties.PREFIX + ".nonce";
     public static final String PERSISTENCE_COOKIE = "cookie";
@@ -39,13 +39,8 @@ public class DefaultNonceConfiguration implements NonceConfiguration {
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
 
-    private String persistence = DEFAULT_PERSISTENCE;
-    private boolean enabled = DEFAULT_ENABLED;
-
-    @Override
-    public Optional<String> getPersistence() {
-        return Optional.ofNullable(persistence);
-    }
+    protected String persistence = DEFAULT_PERSISTENCE;
+    protected boolean enabled = DEFAULT_ENABLED;
 
     /**
      * Sets the mechanism to persist the nonce for later retrieval for validation.
@@ -55,11 +50,6 @@ public class DefaultNonceConfiguration implements NonceConfiguration {
      */
     public void setPersistence(String persistence) {
         this.persistence = persistence;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
     }
 
     /**

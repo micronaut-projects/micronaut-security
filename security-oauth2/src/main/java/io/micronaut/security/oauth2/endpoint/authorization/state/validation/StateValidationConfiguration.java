@@ -15,8 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state.validation;
 
-import io.micronaut.core.util.Toggleable;
-import java.util.Optional;
+import io.micronaut.security.oauth2.endpoint.PersistableConfiguration;
 
 /**
  * Configuration options for state validation.
@@ -24,10 +23,5 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface StateValidationConfiguration extends Toggleable {
-
-    /**
-     * @return The state persistence mechanism
-     */
-    Optional<String> getPersistence();
+public interface StateValidationConfiguration extends PersistableConfiguration {
 }

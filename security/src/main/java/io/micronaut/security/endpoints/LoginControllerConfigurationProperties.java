@@ -27,7 +27,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  */
 @Requires(property = LoginControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(LoginControllerConfigurationProperties.PREFIX)
-public class LoginControllerConfigurationProperties implements LoginControllerConfiguration {
+public class LoginControllerConfigurationProperties extends AbstractControllerConfigurationProperties implements LoginControllerConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".endpoints.login";
 
     /**
@@ -42,21 +42,8 @@ public class LoginControllerConfigurationProperties implements LoginControllerCo
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_PATH = "/login";
 
-    private boolean enabled = DEFAULT_ENABLED;
-    private String path = DEFAULT_PATH;
-
-    /**
-     * @return true if you want to enable the {@link LoginController}
-     */
-    @Override
-    public boolean isEnabled() {
-         return this.enabled;
-    }
-
-    @Override
-    public String getPath() {
-        return this.path;
-    }
+    protected boolean enabled = DEFAULT_ENABLED;
+    protected String path = DEFAULT_PATH;
 
     /**
      * Enables {@link io.micronaut.security.endpoints.LoginController}. Default value {@value #DEFAULT_ENABLED}

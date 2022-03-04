@@ -17,11 +17,10 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
+
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * The default implementation of {@link AuthorizationResponse} for
@@ -42,20 +41,4 @@ public class DefaultOauthAuthorizationResponse extends AbstractAuthorizationResp
         super(request, stateSerDes);
     }
 
-    @Override
-    protected String getStateValue() {
-        return responseData.get(AuthorizationResponse.KEY_STATE);
-    }
-
-    @NonNull
-    @Override
-    public String getCode() {
-        return Objects.requireNonNull(responseData.get(AuthorizationResponse.KEY_CODE));
-    }
-
-    @NonNull
-    @Override
-    public HttpRequest<?> getCallbackRequest() {
-        return request;
-    }
 }

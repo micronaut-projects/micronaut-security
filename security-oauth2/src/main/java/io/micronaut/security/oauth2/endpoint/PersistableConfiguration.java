@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.endpoints;
+package io.micronaut.security.oauth2.endpoint;
+
+import io.micronaut.core.util.Toggleable;
+
+import java.util.Optional;
 
 /**
- * Encapsulates the configuration of {@link LogoutController}.
- * @author Sergio del Amo
- * @since 1.0
+ * Base configuration for persistable endpoints.
+ *
+ * @author Álvaro Sánchez-Mariscal
  */
-public interface LogoutControllerConfiguration extends ControllerConfiguration {
+public interface PersistableConfiguration extends Toggleable {
 
     /**
-     *
-     * @return Whether HTTP method GET is allowed to invoke {@link LogoutController}.
+     * @return The nonce persistence mechanism
      */
-    boolean isGetAllowed();
+    Optional<String> getPersistence();
 }

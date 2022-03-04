@@ -15,19 +15,11 @@
  */
 package io.micronaut.security.oauth2.client.condition;
 
-import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.BeanContext;
-import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
-import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.naming.Named;
-import io.micronaut.core.value.ValueResolver;
-import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.grants.GrantType;
-import java.util.Optional;
 
 /**
  * Condition to create an {@link io.micronaut.security.oauth2.client.OauthClient}.
@@ -36,41 +28,29 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Internal
-public class OauthClientCondition implements Condition {
+public class OauthClientCondition extends AbstractCondition {
 
     @Override
-    public boolean matches(ConditionContext context) {
-        AnnotationMetadataProvider component = context.getComponent();
-        BeanContext beanContext = context.getBeanContext();
+    protected String getFailureMessagePrefix(String name) {
+        return "Skipped client creation for provider [" + name;
+    }
 
-        if (beanContext instanceof ApplicationContext && component instanceof ValueResolver) {
-            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-            if (optional.isPresent()) {
-                String name = optional.get();
-
-                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-
-                String failureMsgPrefix = "Skipped client creation for provider [" + name;
-                if (clientConfiguration.isEnabled()) {
-                    if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
-                        if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
-                            if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                                return true;
-                            } else {
-                                context.fail(failureMsgPrefix + "] because grant type is not authorization code");
-                            }
-                        } else {
-                            context.fail(failureMsgPrefix + "] because no token endpoint is configured");
-                        }
-                    } else {
-                        context.fail(failureMsgPrefix + "] because no authorization endpoint is configured");
-                    }
+    @Override
+    protected boolean handleConfigurationEnabled(OauthClientConfiguration clientConfiguration, ConditionContext<?> context, String name) {
+        final String failureMsgPrefix = getFailureMessagePrefix(name);
+        if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
+            if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
+                if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
+                    return true;
                 } else {
-                    context.fail(failureMsgPrefix + "] because the configuration is disabled");
+                    context.fail(failureMsgPrefix + "] because grant type is not authorization code");
                 }
-                return false;
+            } else {
+                context.fail(failureMsgPrefix + "] because no token endpoint is configured");
             }
+        } else {
+            context.fail(failureMsgPrefix + "] because no authorization endpoint is configured");
         }
-        return true;
+        return false;
     }
 }

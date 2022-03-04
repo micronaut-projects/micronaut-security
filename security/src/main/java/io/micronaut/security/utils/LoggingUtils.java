@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 /**
  * Utility methods to avoid verbosity of logging statements. Mostly used to help reduce the Cognitive Complexity of
  * some methods.
+ *
+ * @author Álvaro Sánchez-Mariscal
  */
 @Internal
 public final class LoggingUtils {

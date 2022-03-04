@@ -15,23 +15,18 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
-import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.BeanContext;
-import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
-import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.naming.Named;
-import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.condition.AbstractCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.grants.GrantType;
-import java.util.Optional;
 
 /**
  * Condition to enable the password grant authentication flow for an OAuth provider.
@@ -40,58 +35,48 @@ import java.util.Optional;
  * @since 2.0.0
  */
 @Internal
-public class PasswordGrantCondition implements Condition {
+public class PasswordGrantCondition extends AbstractCondition {
 
     @Override
-    public boolean matches(ConditionContext context) {
-        AnnotationMetadataProvider component = context.getComponent();
+    protected String getFailureMessagePrefix(String name) {
+        return "Skipped password grant flow for provider [" + name;
+    }
+
+    @Override
+    protected boolean handleConfigurationEnabled(OauthClientConfiguration clientConfiguration, ConditionContext<?> context, String name) {
         BeanContext beanContext = context.getBeanContext();
+        String failureMsgPrefix = getFailureMessagePrefix(name);
 
-        if (beanContext instanceof ApplicationContext && component instanceof ValueResolver) {
-            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-            if (optional.isPresent()) {
-                String name = optional.get();
+        if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
+            if (clientConfiguration.getToken().isPresent()) {
+                if (beanContext.containsBean(OauthAuthenticationMapper.class, Qualifiers.byName(name))) {
+                    return true;
+                } else {
+                    context.fail(failureMsgPrefix + "] because no user details mapper could be found");
+                }
+            } else if (clientConfiguration.getOpenid().isPresent()) {
+                boolean hasOpenIdProviderMetadata = beanContext.containsBean(OpenIdProviderMetadata.class, Qualifiers.byName(name));
+                boolean hasTokenResponseValidator = beanContext.containsBean(OpenIdTokenResponseValidator.class);
+                if (hasOpenIdProviderMetadata && hasTokenResponseValidator) {
 
-                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-
-                String failureMsgPrefix = "Skipped password grant flow for provider [" + name;
-                if (clientConfiguration.isEnabled()) {
-                    if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
-                        if (clientConfiguration.getToken().isPresent()) {
-                            if (beanContext.containsBean(OauthAuthenticationMapper.class, Qualifiers.byName(name))) {
-                                return true;
-                            } else {
-                                context.fail(failureMsgPrefix + "] because no user details mapper could be found");
-                            }
-                        } else if (clientConfiguration.getOpenid().isPresent()) {
-                            boolean hasOpenIdProviderMetadata = beanContext.containsBean(OpenIdProviderMetadata.class, Qualifiers.byName(name));
-                            boolean hasTokenResponseValidator = beanContext.containsBean(OpenIdTokenResponseValidator.class);
-                            if (hasOpenIdProviderMetadata && hasTokenResponseValidator) {
-
-                                boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(name));
-                                if (!hasAuthenticationMapper) {
-                                    hasAuthenticationMapper = beanContext.containsBean(DefaultOpenIdAuthenticationMapper.class);
-                                }
-                                if (hasAuthenticationMapper) {
-                                    return true;
-                                } else {
-                                    context.fail(failureMsgPrefix + "] because no user details mapper could be found");
-                                }
-                            } else {
-                                context.fail(failureMsgPrefix + "] because no provider metadata and token validator could be found");
-                            }
-                        } else {
-                            context.fail(failureMsgPrefix + "] because no token endpoint or openid configuration was found");
-                        }
+                    boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(name));
+                    if (!hasAuthenticationMapper) {
+                        hasAuthenticationMapper = beanContext.containsBean(DefaultOpenIdAuthenticationMapper.class);
+                    }
+                    if (hasAuthenticationMapper) {
+                        return true;
                     } else {
-                        context.fail(failureMsgPrefix + "] because the grant type is not 'password'");
+                        context.fail(failureMsgPrefix + "] because no user details mapper could be found");
                     }
                 } else {
-                    context.fail(failureMsgPrefix + "] because the configuration is disabled");
+                    context.fail(failureMsgPrefix + "] because no provider metadata and token validator could be found");
                 }
-                return false;
+            } else {
+                context.fail(failureMsgPrefix + "] because no token endpoint or openid configuration was found");
             }
+        } else {
+            context.fail(failureMsgPrefix + "] because the grant type is not 'password'");
         }
-        return true;
+        return false;
     }
 }

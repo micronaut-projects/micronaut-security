@@ -30,14 +30,15 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtValidator;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link OpenIdTokenResponseValidator}.
@@ -162,11 +163,11 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      */
     protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
         final String jwksuri = openIdProviderMetadata.getJwksUri();
-        if (!jwksSignatures.containsKey(jwksuri)) {
+        jwksSignatures.computeIfAbsent(jwksuri, k -> {
             JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties();
             config.setUrl(openIdProviderMetadata.getJwksUri());
-            jwksSignatures.put(jwksuri, new JwksSignature(config, jwkValidator));
-        }
+            return new JwksSignature(config, jwkValidator);
+        });
         return jwksSignatures.get(jwksuri);
     }
 }

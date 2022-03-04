@@ -17,7 +17,6 @@ package io.micronaut.security.token.propagation;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
-import java.util.regex.Pattern;
 
 /**
  * Token Propagation Configuration Properties.
@@ -26,7 +25,7 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 @ConfigurationProperties(TokenPropagationConfigurationProperties.PREFIX)
-public class TokenPropagationConfigurationProperties implements TokenPropagationConfiguration {
+public class TokenPropagationConfigurationProperties extends AbstractOutgoingRequestProcessorMatcher implements TokenPropagationConfiguration {
 
     public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".propagation";
 
@@ -44,46 +43,7 @@ public class TokenPropagationConfigurationProperties implements TokenPropagation
 
     private boolean enabled = DEFAULT_ENABLED;
 
-    private String serviceIdRegex;
-
-    private String uriRegex;
-
-    private Pattern serviceIdPattern;
-
-    private Pattern uriPattern;
-
     private String path = DEFAULT_PATH;
-
-    /**
-     * @return a regular expression to match the service.
-     */
-    public String getServiceIdRegex() {
-        return this.serviceIdRegex;
-    }
-
-    /**
-     * a regular expression to match the service id.
-     * @param serviceIdRegex serviceId regular expression
-     */
-    public void setServiceIdRegex(String serviceIdRegex) {
-        this.serviceIdRegex = serviceIdRegex;
-    }
-
-    /**
-     *
-     * @return a regular expression to match the uri.
-     */
-    public String getUriRegex() {
-        return this.uriRegex;
-    }
-
-    /**
-     * a regular expression to match the uri.
-     * @param uriRegex uri regular expression
-     */
-    public void setUriRegex(String uriRegex) {
-        this.uriRegex = uriRegex;
-    }
 
     @Override
     public boolean isEnabled() {
@@ -115,19 +75,4 @@ public class TokenPropagationConfigurationProperties implements TokenPropagation
         return this.path;
     }
 
-    @Override
-    public Pattern getServiceIdPattern() {
-        if (this.serviceIdPattern == null && this.serviceIdRegex != null) {
-            serviceIdPattern = Pattern.compile(this.serviceIdRegex);
-        }
-        return serviceIdPattern;
-    }
-
-    @Override
-    public Pattern getUriPattern() {
-        if (this.uriPattern == null && this.uriRegex != null) {
-            uriPattern = Pattern.compile(this.uriRegex);
-        }
-        return uriPattern;
-    }
 }

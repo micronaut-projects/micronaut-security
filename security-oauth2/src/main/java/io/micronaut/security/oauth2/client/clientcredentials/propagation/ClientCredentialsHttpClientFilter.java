@@ -32,6 +32,11 @@ import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsCl
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,10 +44,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
 
 /**
  * An {@link HttpClientFilter} to add an access token to outgoing request thanks to a  Client Credentials request.
@@ -155,12 +156,9 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
      * @return An OAuth 2.0 Client configuration which has client credentials configuration set and should process the request
      */
     protected Optional<OauthClientConfiguration> getClientConfiguration(HttpRequest<?> request) {
-        for (OauthClientConfiguration oauthClient : oauthClientConfigurationCollection) {
-            ClientCredentialsConfiguration clientCredentialsConfiguration = oauthClient.getClientCredentials().get();
-            if (outgoingHttpRequestProcessor.shouldProcessRequest(clientCredentialsConfiguration, request)) {
-                return Optional.of(oauthClient);
-            }
-        }
-        return Optional.empty();
+        return oauthClientConfigurationCollection.stream()
+                .filter(occ -> occ.getClientCredentials().isPresent())
+                .filter(occ -> outgoingHttpRequestProcessor.shouldProcessRequest(occ.getClientCredentials().get(), request))
+                .findFirst();
     }
 }
