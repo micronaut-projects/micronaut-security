@@ -1117,14 +1117,11 @@ If you disable redirection configuration with by setting <code>micronaut.securit
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationException;
-import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import org.reactivestreams.Publisher;
-
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 @Singleton
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
@@ -1532,9 +1529,9 @@ and an optional HTTP method.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
@@ -1543,9 +1540,9 @@ import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.security.rules.SensitiveEndpointRule;
 import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Singleton;
+import java.util.Collections;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
-import java.util.Collections;
 
 @Replaces(SensitiveEndpointRule.class)
 @Singleton
@@ -1571,17 +1568,7 @@ public class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import jakarta.inject.Singleton
-import io.micronaut.context.annotation.Replaces
-import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.http.HttpRequest
-import io.micronaut.inject.ExecutableMethod
-import io.micronaut.management.endpoint.EndpointSensitivityProcessor
-import io.micronaut.security.rules.SecurityRuleResult
-import io.micronaut.security.rules.SensitiveEndpointRule
-import io.micronaut.security.token.RolesFinder
-import org.reactivestreams.Publisher
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
 
 
@@ -3238,11 +3225,10 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import jakarta.inject.Singleton;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
-
 import java.util.Collection;
 import java.util.Collections;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 @Singleton
 public class SiteminderAuthenticationFetcher implements AuthenticationFetcher {
 
@@ -3345,7 +3331,6 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
-
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -3482,11 +3467,6 @@ will propagate the security token seamlessly.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.prefix</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Value prefix for Http Header. Default value (HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER).</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.header-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Http Header to be used to propagate the token. Default value (HttpHeaders.AUTHORIZATION)</p></td>
@@ -3495,6 +3475,11 @@ will propagate the security token seamlessly.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable <a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html">HttpHeaderTokenPropagator</a>. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.prefix</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value prefix for Http Header. Default value (HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER).</p></td>
 </tr>
 </tbody>
 </table>
@@ -3990,13 +3975,14 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3O
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.CollectionUtils;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.security.annotation.Secured;
-import io.micronaut.core.annotation.Nullable;
-import java.security.Principal;
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.core.annotation.Nullable
+import io.micronaut.core.util.CollectionUtils
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.security.annotation.Secured
+
+import java.security.Principal
+
 
 @Controller("/user")
 public class UserController {
@@ -4017,13 +4003,12 @@ public class UserController {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.CollectionUtils;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.Authentication;
-import io.micronaut.core.annotation.Nullable
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.core.annotation.Nullable
+import io.micronaut.core.util.CollectionUtils
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.authentication.Authentication
 
 
 @Controller("/user")
@@ -4635,7 +4620,6 @@ class GithubUser {
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import io.micronaut.core.annotation.Introspected
 
@@ -4658,7 +4642,6 @@ class GithubUser {
 import io.micronaut.http.annotation.Header;
 import io.micronaut.http.client.annotation.Client;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
@@ -4671,11 +4654,9 @@ public interface GithubApiClient {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Header
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
 import org.reactivestreams.Publisher
-import reactor.core.publisher.Flux
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
@@ -4692,7 +4673,6 @@ interface GithubApiClient {
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
 import org.reactivestreams.Publisher
-import reactor.core.publisher.Flux
 
 @Header(name = "User-Agent", value = "Micronaut")
 @Client("https://api.github.com")
@@ -4713,14 +4693,12 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import org.reactivestreams.Publisher;
-
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Flux;
-
 import java.util.Collections;
 import java.util.List;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 @Named("github") // <b class="conum">(1)</b>
 @Singleton
@@ -4745,15 +4723,13 @@ class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.core.annotation.Nullable
-import io.micronaut.security.authentication.AuthenticationResponse
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
-import org.reactivestreams.Publisher
-
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 
 @Named("github") // <b class="conum">(1)</b>
@@ -4782,9 +4758,9 @@ class GithubAuthenticationMapper implements OauthAuthenticationMapper {
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
-import org.reactivestreams.Publisher
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 
 @Named("github") // <b class="conum">(1)</b>
@@ -4946,6 +4922,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.issuer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL using the https scheme with no query or fragment component that the
@@ -4960,11 +4941,6 @@ To disable a specific client for any given environment, set <code>enabled: false
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.jwks-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The JWKS signature URI.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -5236,16 +5212,15 @@ Enabling all of the above with cookie JWT storage has been known to cause issues
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.annotation.Nullable;
-import io.micronaut.context.annotation.Replaces;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Replaces;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -5262,16 +5237,12 @@ public class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMap
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Replaces
-import io.micronaut.context.annotation.Requires
-import io.micronaut.security.authentication.AuthenticationResponse
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
-
-import io.micronaut.core.annotation.NonNull
 import jakarta.inject.Singleton
 
 @Singleton
@@ -5292,10 +5263,9 @@ class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
-
 import jakarta.inject.Singleton
 
 @Singleton
@@ -5313,14 +5283,13 @@ class GlobalOpenIdAuthenticationMapper : OpenIdAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.annotation.Nullable;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
@@ -5341,12 +5310,9 @@ public class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.security.oauth2.endpoint.authorization.state.State
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
-
-import io.micronaut.core.annotation.NonNull
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 
@@ -5369,10 +5335,9 @@ class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper
-
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 
@@ -6005,6 +5970,11 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Client Credentials configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a>. Default value true</p></td>
@@ -6033,11 +6003,6 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.additional-request-params</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Additional parameters included in the client-credentials flow.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Client Credentials configuration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -6282,6 +6247,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the introspection endpoint configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
@@ -6290,11 +6260,6 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection.auth-method</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html">AuthenticationMethod</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authentication Method</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the introspection endpoint configuration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -6331,6 +6296,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the revocation endpoint configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
@@ -6339,11 +6309,6 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation.auth-method</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/endpoint/AuthenticationMethod.html">AuthenticationMethod</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authentication Method</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the revocation endpoint configuration.</p></td>
 </tr>
 </tbody>
 </table>
