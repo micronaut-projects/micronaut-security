@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.token.jwt.cookie;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.cookie.SameSite;
+import io.micronaut.security.config.TokenCookieConfiguration;
 
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
@@ -28,7 +28,7 @@ import java.util.Optional;
  *
  * @author Álvaro Sánchez-Mariscal
  */
-public abstract class AbstractAccessTokenCookieConfigurationProperties implements AccessTokenCookieConfiguration {
+public abstract class AbstractAccessTokenCookieConfigurationProperties implements TokenCookieConfiguration {
 
     /**
      * The default http only value.
@@ -37,44 +37,16 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     public static final boolean DEFAULT_HTTPONLY = true;
 
     /**
-     * Default Cookie Path.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_COOKIEPATH = "/";
-
-    /**
      * The default same-site setting for the JWT cookie.
      */
     @SuppressWarnings("WeakerAccess")
     public static final SameSite DEFAULT_COOKIESAMESITE = null;
 
     protected String cookieDomain;
-    protected String cookiePath = DEFAULT_COOKIEPATH;
     protected Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
     protected Boolean cookieSecure;
     protected Duration cookieMaxAge;
     protected SameSite cookieSameSite = DEFAULT_COOKIESAMESITE;
-    protected boolean enabled;
-    protected String cookieName;
-
-    /**
-     *
-     * @return a boolean flag indicating whether the JwtCookieTokenReader should be enabled or not
-     */
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     *
-     * @return a name for the cookie
-     */
-    @NonNull
-    @Override
-    public String getCookieName() {
-        return this.cookieName;
-    }
 
     /**
      *
@@ -83,16 +55,6 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
     @Override
     public Optional<String> getCookieDomain() {
         return Optional.ofNullable(cookieDomain);
-    }
-
-    /**
-     *
-     * @return The path of the cookie.
-     */
-    @Nullable
-    @Override
-    public Optional<String> getCookiePath() {
-        return Optional.ofNullable(cookiePath);
     }
 
     /**
@@ -131,14 +93,6 @@ public abstract class AbstractAccessTokenCookieConfigurationProperties implement
      */
     public void setCookieDomain(@Nullable String cookieDomain) {
         this.cookieDomain = cookieDomain;
-    }
-
-    /**
-     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
-     * @param cookiePath The path of the cookie.
-     */
-    public void setCookiePath(@Nullable String cookiePath) {
-        this.cookiePath = cookiePath;
     }
 
     /**

@@ -18,12 +18,15 @@ package io.micronaut.security.token.jwt.cookie;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 import io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties;
+
+import java.util.Optional;
 
 /**
  *
@@ -33,7 +36,7 @@ import io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationPro
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Requires(property = RefreshTokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(RefreshTokenCookieConfigurationProperties.PREFIX)
-public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTokenCookieConfigurationProperties {
+public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTokenCookieConfigurationProperties implements RefreshTokenCookieConfiguration {
 
     public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".refresh.cookie";
 
@@ -55,15 +58,13 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
      * The default cookie name.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_COOKIENAME = "JWT";
+    public static final String DEFAULT_COOKIENAME = "JWT_REFRESH_TOKEN";
 
     /**
      * Default Cookie Path.
-     *
-     * @deprecated use {@link AbstractAccessTokenCookieConfigurationProperties#DEFAULT_COOKIEPATH}
      */
-    @Deprecated
-    public static final String DEFAULT_COOKIEPATH = AbstractAccessTokenCookieConfigurationProperties.DEFAULT_COOKIEPATH;
+    @SuppressWarnings("WeakerAccess")
+    public static final String DEFAULT_COOKIEPATH = OauthControllerConfigurationProperties.DEFAULT_PATH;
 
     /**
      * The default same-site setting for the JWT cookie.
@@ -73,8 +74,9 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
     @Deprecated
     public static final SameSite DEFAULT_COOKIESAMESITE = AbstractAccessTokenCookieConfigurationProperties.DEFAULT_COOKIESAMESITE;
 
-    protected boolean enabled = DEFAULT_ENABLED;
-    protected String cookieName = DEFAULT_COOKIENAME;
+    private String cookiePath = DEFAULT_COOKIEPATH;
+    private boolean enabled = DEFAULT_ENABLED;
+    private String cookieName = DEFAULT_COOKIENAME;
 
     /**
      * @param oauthControllerPath The path for the oauth controller
@@ -84,6 +86,34 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
         if (oauthControllerPath != null) {
             cookiePath = oauthControllerPath;
         }
+    }
+
+    /**
+     *
+     * @return a boolean flag indicating whether the RefreshTokenCookieConfigurationProperties should be enabled or not
+     */
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     *
+     * @return a name for the cookie
+     */
+    @NonNull
+    @Override
+    public String getCookieName() {
+        return this.cookieName;
+    }
+
+    /**
+     * @return The path of the cookie.
+     */
+    @Nullable
+    @Override
+    public Optional<String> getCookiePath() {
+        return Optional.ofNullable(cookiePath);
     }
 
     /**
@@ -100,6 +130,14 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
      */
     public void setCookieName(String cookieName) {
         this.cookieName = cookieName;
+    }
+
+    /**
+     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
+     * @param cookiePath The path of the cookie.
+     */
+    public void setCookiePath(@Nullable String cookiePath) {
+        this.cookiePath = cookiePath;
     }
 
 }
