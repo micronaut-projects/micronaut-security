@@ -28,7 +28,6 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
 
     private static final String KEY_GRANT_TYPE = "grant_type";
 
-    protected String grantType;
     protected String clientId;
     protected String clientSecret;
 
@@ -37,17 +36,13 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
      * @return OAuth 2.0 Grant Type.
      */
     @NonNull
-    public String getGrantType() {
-        return grantType;
-    }
+    public abstract String getGrantType();
 
     /**
      *
      * @param grantType OAuth 2.0 Grant Type.
      */
-    public void setGrantType(@NonNull String grantType) {
-        this.grantType = grantType;
-    }
+    public abstract void setGrantType(@NonNull String grantType);
 
     /**
      *

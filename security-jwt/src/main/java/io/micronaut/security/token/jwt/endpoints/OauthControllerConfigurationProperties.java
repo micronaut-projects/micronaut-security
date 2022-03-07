@@ -19,7 +19,6 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import io.micronaut.security.endpoints.AbstractControllerConfigurationProperties;
 
 /**
  * Configures the provided {@link OauthController}.
@@ -29,7 +28,7 @@ import io.micronaut.security.endpoints.AbstractControllerConfigurationProperties
  */
 @Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(OauthControllerConfigurationProperties.PREFIX)
-public class OauthControllerConfigurationProperties extends AbstractControllerConfigurationProperties implements OauthControllerConfiguration {
+public class OauthControllerConfigurationProperties implements OauthControllerConfiguration {
 
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".endpoints.oauth";
 
@@ -51,9 +50,22 @@ public class OauthControllerConfigurationProperties extends AbstractControllerCo
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_GETALLOWED = true;
 
-    protected boolean enabled = DEFAULT_ENABLED;
-    protected String path = DEFAULT_PATH;
+    private boolean enabled = DEFAULT_ENABLED;
+    private String path = DEFAULT_PATH;
     private boolean getAllowed = DEFAULT_GETALLOWED;
+
+    /**
+     * @return true if you want to enable the {@link OauthController}
+     */
+    @Override
+    public boolean isEnabled() {
+         return this.enabled;
+    }
+
+    @Override
+    public String getPath() {
+        return this.path;
+    }
 
     /**
      * Sets whether the {@link io.micronaut.security.token.jwt.endpoints.OauthController} is enabled. Default value ({@value #DEFAULT_ENABLED}).

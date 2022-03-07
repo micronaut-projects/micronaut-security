@@ -40,10 +40,29 @@ public class ClientCredentialsGrant extends AbstractClientSecureGrant implements
 
     @NonNull
     @NotBlank
-    protected String grantType = GrantType.CLIENT_CREDENTIALS.toString();
+    private String grantType = GrantType.CLIENT_CREDENTIALS.toString();
 
     @Nullable
     private String scope;
+
+    /**
+     *
+     * @return Grant Type.
+     */
+    @NonNull
+    @Override
+    public String getGrantType() {
+        return grantType;
+    }
+
+    /**
+     *
+     * @param grantType Grant type
+     */
+    @Override
+    public void setGrantType(@NonNull String grantType) {
+        this.grantType = grantType;
+    }
 
     /**
      * @return Requested scope values for the access token.

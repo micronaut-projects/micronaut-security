@@ -42,7 +42,7 @@ public class PasswordGrant extends AbstractClientSecureGrant implements SecureGr
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_SCOPE = "scope";
 
-    protected String grantType = GrantType.PASSWORD.toString();
+    private String grantType = GrantType.PASSWORD.toString();
     private String username;
     private String password;
     private String scope;
@@ -57,6 +57,23 @@ public class PasswordGrant extends AbstractClientSecureGrant implements SecureGr
         scope = clientConfiguration.getScopes().stream()
                 .reduce((a, b) -> a + StringUtils.SPACE + b)
                 .orElse(null);
+    }
+
+    /**
+     *
+     * @return OAuth 2.0 Grant Type.
+     */
+    @NonNull
+    public String getGrantType() {
+        return grantType;
+    }
+
+    /**
+     *
+     * @param grantType OAuth 2.0 Grant Type.
+     */
+    public void setGrantType(@NonNull String grantType) {
+        this.grantType = grantType;
     }
 
     /**

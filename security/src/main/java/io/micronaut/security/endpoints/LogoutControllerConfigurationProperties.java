@@ -28,7 +28,7 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
  */
 @Requires(property = LogoutControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(LogoutControllerConfigurationProperties.PREFIX)
-public class LogoutControllerConfigurationProperties extends AbstractControllerConfigurationProperties implements LogoutControllerConfiguration {
+public class LogoutControllerConfigurationProperties implements LogoutControllerConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".endpoints.logout";
 
     /**
@@ -49,9 +49,22 @@ public class LogoutControllerConfigurationProperties extends AbstractControllerC
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_GETALLOWED = false;
 
-    protected boolean enabled = DEFAULT_ENABLED;
-    protected String path = DEFAULT_PATH;
+    private boolean enabled = DEFAULT_ENABLED;
+    private String path = DEFAULT_PATH;
     private boolean getAllowed = DEFAULT_GETALLOWED;
+
+    /**
+     * @return true if you want to enable the {@link LogoutController}
+     */
+    @Override
+    public boolean isEnabled() {
+         return this.enabled;
+    }
+
+    @Override
+    public String getPath() {
+        return this.path;
+    }
 
     /**
      * Enables {@link io.micronaut.security.endpoints.LogoutController}. Default value {@value #DEFAULT_ENABLED}.

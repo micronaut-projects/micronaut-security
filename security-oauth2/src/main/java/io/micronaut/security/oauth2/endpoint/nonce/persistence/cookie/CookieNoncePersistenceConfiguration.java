@@ -23,6 +23,8 @@ import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 
 import java.time.Duration;
+import java.time.temporal.TemporalAmount;
+import java.util.Optional;
 
 /**
  * @author James Kleeh
@@ -38,10 +40,16 @@ public class CookieNoncePersistenceConfiguration extends AbstractCookieConfigura
     private static final String DEFAULT_COOKIEPATH = "/";
     private static final Duration DEFAULT_MAX_AGE = Duration.ofMinutes(5);
 
-    protected String cookiePath = DEFAULT_COOKIEPATH;
-    protected Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
-    protected Duration cookieMaxAge = DEFAULT_MAX_AGE;
-    protected String cookieName = DEFAULT_COOKIENAME;
+    private String cookiePath = DEFAULT_COOKIEPATH;
+    private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
+    private Duration cookieMaxAge = DEFAULT_MAX_AGE;
+    private String cookieName = DEFAULT_COOKIENAME;
+
+    @NonNull
+    @Override
+    public String getCookieName() {
+        return this.cookieName;
+    }
 
     /**
      * Cookie Name. Default value ({@value #DEFAULT_COOKIENAME}).
@@ -50,6 +58,11 @@ public class CookieNoncePersistenceConfiguration extends AbstractCookieConfigura
      */
     public void setCookieName(@NonNull String cookieName) {
         this.cookieName = cookieName;
+    }
+
+    @Override
+    public Optional<String> getCookiePath() {
+        return Optional.ofNullable(cookiePath);
     }
 
     /**
@@ -61,6 +74,11 @@ public class CookieNoncePersistenceConfiguration extends AbstractCookieConfigura
         this.cookiePath = cookiePath;
     }
 
+    @Override
+    public Optional<Boolean> isCookieHttpOnly() {
+        return Optional.ofNullable(cookieHttpOnly);
+    }
+
     /**
      * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}).
      *
@@ -70,4 +88,17 @@ public class CookieNoncePersistenceConfiguration extends AbstractCookieConfigura
         this.cookieHttpOnly = cookieHttpOnly;
     }
 
+    @Override
+    public Optional<TemporalAmount> getCookieMaxAge() {
+        return Optional.ofNullable(cookieMaxAge);
+    }
+
+    /**
+     * Sets the maximum age of the cookie. Default value (5 minutes).
+     *
+     * @param cookieMaxAge The maximum age of the cookie
+     */
+    public void setCookieMaxAge(Duration cookieMaxAge) {
+        this.cookieMaxAge = cookieMaxAge;
+    }
 }

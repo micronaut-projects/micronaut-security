@@ -15,12 +15,9 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.cookie.CookieConfiguration;
 
-import java.time.Duration;
-import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 /**
@@ -31,17 +28,7 @@ import java.util.Optional;
 public abstract class AbstractCookieConfiguration implements CookieConfiguration {
 
     protected String cookieDomain;
-    protected String cookiePath;
-    protected Boolean cookieHttpOnly;
     protected Boolean cookieSecure;
-    protected Duration cookieMaxAge;
-    protected String cookieName;
-
-    @NonNull
-    @Override
-    public String getCookieName() {
-        return this.cookieName;
-    }
 
     @Override
     public Optional<String> getCookieDomain() {
@@ -58,16 +45,6 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
     }
 
     @Override
-    public Optional<String> getCookiePath() {
-        return Optional.ofNullable(cookiePath);
-    }
-
-    @Override
-    public Optional<Boolean> isCookieHttpOnly() {
-        return Optional.ofNullable(cookieHttpOnly);
-    }
-
-    @Override
     public Optional<Boolean>  isCookieSecure() {
         return Optional.ofNullable(cookieSecure);
     }
@@ -79,20 +56,6 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
      */
     public void setCookieSecure(Boolean cookieSecure) {
         this.cookieSecure = cookieSecure;
-    }
-
-    @Override
-    public Optional<TemporalAmount> getCookieMaxAge() {
-        return Optional.ofNullable(cookieMaxAge);
-    }
-
-    /**
-     * Sets the maximum age of the cookie. Default value (5 minutes).
-     *
-     * @param cookieMaxAge The maximum age of the cookie
-     */
-    public void setCookieMaxAge(Duration cookieMaxAge) {
-        this.cookieMaxAge = cookieMaxAge;
     }
 
 }

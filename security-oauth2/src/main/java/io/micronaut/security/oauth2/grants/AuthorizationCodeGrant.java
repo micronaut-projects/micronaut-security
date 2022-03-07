@@ -36,9 +36,28 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
     private static final String KEY_REDIRECT_URI = "redirect_uri";
     private static final String KEY_CODE = "code";
 
-    protected String grantType = GrantType.AUTHORIZATION_CODE.toString();
+    private String grantType = GrantType.AUTHORIZATION_CODE.toString();
     private String redirectUri;
     private String code;
+
+    /**
+     *
+     * @return OAuth 2.0 Grant Type.
+     */
+    @NonNull
+    @Override
+    public String getGrantType() {
+        return grantType;
+    }
+
+    /**
+     *
+     * @param grantType OAuth 2.0 Grant Type.
+     */
+    @Override
+    public void setGrantType(@NonNull String grantType) {
+        this.grantType = grantType;
+    }
 
     /**
      *
