@@ -50,7 +50,7 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
      *
      * @return The application's Client identifier.
      */
-    @NonNull
+    @Nullable
     public String getClientId() {
         return clientId;
     }
@@ -59,7 +59,7 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
      *
      * @param clientId Application's Client identifier.
      */
-    public void setClientId(@NonNull String clientId) {
+    public void setClientId(@Nullable String clientId) {
         this.clientId = clientId;
     }
 
@@ -88,7 +88,9 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
     public Map<String, String> toMap() {
         Map<String, String> m = new SecureGrantMap();
         m.put(KEY_GRANT_TYPE, getGrantType());
-        m.put(KEY_CLIENT_ID, clientId);
+        if (clientId != null) {
+            m.put(KEY_CLIENT_ID, clientId);
+        }
         if (clientSecret != null) {
             m.put(KEY_CLIENT_SECRET, clientSecret);
         }
