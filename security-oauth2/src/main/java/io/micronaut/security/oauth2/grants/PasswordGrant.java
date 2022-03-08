@@ -131,6 +131,7 @@ public class PasswordGrant extends AbstractClientSecureGrant implements SecureGr
      *
      * @return this object as a Map
      */
+    @NonNull
     public Map<String, String> toMap() {
         Map<String, String> m = super.toMap();
         m.put(KEY_USERNAME, username);

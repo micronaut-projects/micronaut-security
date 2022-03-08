@@ -17,6 +17,7 @@ package io.micronaut.security.endpoints;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 
@@ -54,6 +55,7 @@ public class LoginControllerConfigurationProperties implements LoginControllerCo
     }
 
     @Override
+    @NonNull
     public String getPath() {
         return this.path;
     }

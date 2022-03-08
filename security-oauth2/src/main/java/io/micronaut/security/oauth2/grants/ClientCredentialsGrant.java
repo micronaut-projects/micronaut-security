@@ -83,6 +83,7 @@ public class ClientCredentialsGrant extends AbstractClientSecureGrant implements
      * @return this object as a Map
      */
     @Override
+    @NonNull
     public Map<String, String> toMap() {
         Map<String, String> m = super.toMap();
         if (StringUtils.isNotEmpty(scope)) {

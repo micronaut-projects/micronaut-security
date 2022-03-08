@@ -21,6 +21,7 @@ import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.naming.Named;
 import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
@@ -60,9 +61,11 @@ public abstract class AbstractCondition implements Condition {
         return true;
     }
 
-    protected abstract String getFailureMessagePrefix(String name);
+    @NonNull
+    protected abstract String getFailureMessagePrefix(@NonNull String name);
 
-    protected abstract boolean handleConfigurationEnabled(OauthClientConfiguration clientConfiguration,
-                                                          ConditionContext<?> context, String name);
+    protected abstract boolean handleConfigurationEnabled(@NonNull OauthClientConfiguration clientConfiguration,
+                                                          @NonNull ConditionContext<?> context,
+                                                          @NonNull String failureMsgPrefix);
 
 }

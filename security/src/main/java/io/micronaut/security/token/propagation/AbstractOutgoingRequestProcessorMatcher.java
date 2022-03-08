@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.propagation;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.util.OutgointRequestProcessorMatcher;
 
 import java.util.regex.Pattern;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
  * Base implementation class for {@link OutgointRequestProcessorMatcher}.
  *
  * @author Álvaro Sánchez-Mariscal
+ * @since 3.4.2
  */
 public abstract class AbstractOutgoingRequestProcessorMatcher implements OutgointRequestProcessorMatcher {
 
@@ -37,6 +39,7 @@ public abstract class AbstractOutgoingRequestProcessorMatcher implements Outgoin
     /**
      * @return a regular expression to match the service.
      */
+    @Nullable
     public String getServiceIdRegex() {
         return this.serviceIdRegex;
     }
@@ -45,7 +48,7 @@ public abstract class AbstractOutgoingRequestProcessorMatcher implements Outgoin
      * a regular expression to match the service id.
      * @param serviceIdRegex serviceId regular expression
      */
-    public void setServiceIdRegex(String serviceIdRegex) {
+    public void setServiceIdRegex(@Nullable String serviceIdRegex) {
         this.serviceIdRegex = serviceIdRegex;
     }
 
@@ -53,6 +56,7 @@ public abstract class AbstractOutgoingRequestProcessorMatcher implements Outgoin
      *
      * @return a regular expression to match the uri.
      */
+    @Nullable
     public String getUriRegex() {
         return this.uriRegex;
     }
@@ -61,11 +65,12 @@ public abstract class AbstractOutgoingRequestProcessorMatcher implements Outgoin
      * a regular expression to match the uri.
      * @param uriRegex uri regular expression
      */
-    public void setUriRegex(String uriRegex) {
+    public void setUriRegex(@Nullable String uriRegex) {
         this.uriRegex = uriRegex;
     }
 
     @Override
+    @Nullable
     public Pattern getServiceIdPattern() {
         if (this.serviceIdPattern == null && this.serviceIdRegex != null) {
             serviceIdPattern = Pattern.compile(this.serviceIdRegex);
@@ -74,6 +79,7 @@ public abstract class AbstractOutgoingRequestProcessorMatcher implements Outgoin
     }
 
     @Override
+    @Nullable
     public Pattern getUriPattern() {
         if (this.uriPattern == null && this.uriRegex != null) {
             uriPattern = Pattern.compile(this.uriRegex);

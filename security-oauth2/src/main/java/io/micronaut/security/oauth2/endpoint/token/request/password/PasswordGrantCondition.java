@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.token.request.password;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.condition.AbstractCondition;
@@ -38,28 +39,29 @@ import io.micronaut.security.oauth2.grants.GrantType;
 public class PasswordGrantCondition extends AbstractCondition {
 
     @Override
-    protected String getFailureMessagePrefix(String name) {
+    @NonNull
+    protected String getFailureMessagePrefix(@NonNull final String name) {
         return "Skipped password grant flow for provider [" + name;
     }
 
     @Override
-    protected boolean handleConfigurationEnabled(OauthClientConfiguration clientConfiguration, ConditionContext<?> context, String name) {
+    protected boolean handleConfigurationEnabled(@NonNull final OauthClientConfiguration clientConfiguration,
+                                                 @NonNull final ConditionContext<?> context,
+                                                 @NonNull final String failureMsgPrefix) {
         BeanContext beanContext = context.getBeanContext();
-        String failureMsgPrefix = getFailureMessagePrefix(name);
-
         if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
             if (clientConfiguration.getToken().isPresent()) {
-                if (beanContext.containsBean(OauthAuthenticationMapper.class, Qualifiers.byName(name))) {
+                if (beanContext.containsBean(OauthAuthenticationMapper.class, Qualifiers.byName(failureMsgPrefix))) {
                     return true;
                 } else {
                     context.fail(failureMsgPrefix + "] because no user details mapper could be found");
                 }
             } else if (clientConfiguration.getOpenid().isPresent()) {
-                boolean hasOpenIdProviderMetadata = beanContext.containsBean(OpenIdProviderMetadata.class, Qualifiers.byName(name));
+                boolean hasOpenIdProviderMetadata = beanContext.containsBean(OpenIdProviderMetadata.class, Qualifiers.byName(failureMsgPrefix));
                 boolean hasTokenResponseValidator = beanContext.containsBean(OpenIdTokenResponseValidator.class);
                 if (hasOpenIdProviderMetadata && hasTokenResponseValidator) {
 
-                    boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(name));
+                    boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(failureMsgPrefix));
                     if (!hasAuthenticationMapper) {
                         hasAuthenticationMapper = beanContext.containsBean(DefaultOpenIdAuthenticationMapper.class);
                     }

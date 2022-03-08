@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.client.condition;
 
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.grants.GrantType;
@@ -31,13 +32,15 @@ import io.micronaut.security.oauth2.grants.GrantType;
 public class OauthClientCondition extends AbstractCondition {
 
     @Override
-    protected String getFailureMessagePrefix(String name) {
+    @NonNull
+    protected String getFailureMessagePrefix(@NonNull final String name) {
         return "Skipped client creation for provider [" + name;
     }
 
     @Override
-    protected boolean handleConfigurationEnabled(OauthClientConfiguration clientConfiguration, ConditionContext<?> context, String name) {
-        final String failureMsgPrefix = getFailureMessagePrefix(name);
+    protected boolean handleConfigurationEnabled(@NonNull final OauthClientConfiguration clientConfiguration,
+                                                 @NonNull final ConditionContext<?> context,
+                                                 @NonNull final String failureMsgPrefix) {
         if (clientConfiguration.getAuthorization().flatMap(EndpointConfiguration::getUrl).isPresent()) {
             if (clientConfiguration.getToken().flatMap(EndpointConfiguration::getUrl).isPresent()) {
                 if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {

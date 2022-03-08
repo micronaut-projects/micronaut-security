@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 import java.util.Optional;
@@ -23,11 +24,14 @@ import java.util.Optional;
  * Base configuration for persistable endpoints.
  *
  * @author Álvaro Sánchez-Mariscal
+ * @since 3.4.2
  */
+@FunctionalInterface
 public interface PersistableConfiguration extends Toggleable {
 
     /**
      * @return The nonce persistence mechanism
      */
+    @NonNull
     Optional<String> getPersistence();
 }

@@ -25,6 +25,7 @@ import java.util.Map;
  * Utility methods for clients.
  *
  * @author Álvaro Sánchez-Mariscal
+ * @since 3.4.2
  */
 final class ClientUtils {
 

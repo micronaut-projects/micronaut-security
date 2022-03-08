@@ -15,18 +15,22 @@
  */
 package io.micronaut.security.endpoints;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
 
 /**
  * Base configuration for all controllers.
  *
  * @author Álvaro Sánchez-Mariscal
+ * @since 3.4.2
  */
+@FunctionalInterface
 public interface ControllerConfiguration extends Toggleable {
 
     /**
      * @return the path where the controller is enabled.
      */
+    @NonNull
     String getPath();
 
 }

@@ -27,6 +27,7 @@ import java.util.Optional;
  * Base class for cookie configuration properties classes.
  *
  * @author Álvaro Sánchez-Mariscal
+ * @since 3.4.2
  */
 public abstract class AbstractAccessTokenCookieConfigurationProperties implements TokenCookieConfiguration {
 

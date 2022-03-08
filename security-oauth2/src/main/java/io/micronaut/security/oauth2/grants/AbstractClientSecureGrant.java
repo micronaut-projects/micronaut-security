@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.grants;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import java.util.Map;
  * Base class for {@link SecureGrant} implementations.
  *
  * @author Álvaro Sánchez-Mariscal
+ * @since 3.4.2
  */
 public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
 
@@ -65,7 +67,7 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
      *
      * @param clientSecret Application's Client clientSecret.
      */
-    public void setClientSecret(String clientSecret) {
+    public void setClientSecret(@Nullable String clientSecret) {
         this.clientSecret = clientSecret;
     }
 
@@ -73,6 +75,7 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
      *
      * @return The application's Client clientSecret.
      */
+    @Nullable
     public String getClientSecret() {
         return this.clientSecret;
     }
@@ -81,17 +84,15 @@ public abstract class AbstractClientSecureGrant implements SecureGrant, AsMap {
      * @return this object as a Map
      */
     @Override
+    @NonNull
     public Map<String, String> toMap() {
         Map<String, String> m = new SecureGrantMap();
         m.put(KEY_GRANT_TYPE, getGrantType());
-        if (clientId != null) {
-            m.put(KEY_CLIENT_ID, clientId);
-        }
+        m.put(KEY_CLIENT_ID, clientId);
         if (clientSecret != null) {
             m.put(KEY_CLIENT_SECRET, clientSecret);
         }
         return m;
     }
-
 
 }

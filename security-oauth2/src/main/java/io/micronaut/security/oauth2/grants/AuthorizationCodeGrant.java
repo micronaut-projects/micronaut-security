@@ -98,6 +98,7 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
      * @return this object as a Map
      */
     @Override
+    @NonNull
     public Map<String, String> toMap() {
         Map<String, String> m = super.toMap();
         m.put(KEY_CODE, getCode());
