@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -98,7 +98,12 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties</a></li>
+<li>
+<ul class="inheritance">
 <li>io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -114,7 +119,7 @@ var activeTableTab = "activeTableTab";
 <pre>@Requires(condition=<a href="../../../../../../io/micronaut/security/authentication/CookieBasedAuthenticationModeCondition.html" title="class in io.micronaut.security.authentication">CookieBasedAuthenticationModeCondition.class</a>) @Requires(property="micronaut.security.token.jwt.cookie.enabled",notEquals="false",defaultValue="true")
  @ConfigurationProperties(value="micronaut.security.token.jwt.cookie")
 public class <span class="typeNameLabel">JwtCookieConfigurationProperties</span>
-extends java.lang.Object
+extends <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a>
 implements <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AccessTokenCookieConfiguration.html" title="interface in io.micronaut.security.token.jwt.cookie">AccessTokenCookieConfiguration</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -155,7 +160,9 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Acc
 <tr class="altColor">
 <td class="colFirst"><code>static io.micronaut.http.cookie.SameSite</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_COOKIESAMESITE">DEFAULT_COOKIESAMESITE</a></span></code>
-<div class="block">The default same-site setting for the JWT cookie.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#DEFAULT_COOKIESAMESITE"><code>AbstractAccessTokenCookieConfigurationProperties.DEFAULT_COOKIESAMESITE</code></a></span></div>
+</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -167,7 +174,9 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Acc
 <tr class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_HTTPONLY">DEFAULT_HTTPONLY</a></span></code>
-<div class="block">The default http only value.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#DEFAULT_HTTPONLY"><code>AbstractAccessTokenCookieConfigurationProperties.DEFAULT_HTTPONLY</code></a></span></div>
+</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -175,6 +184,13 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Acc
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#PREFIX">PREFIX</a></span></code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="fields.inherited.from.class.io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;io.micronaut.security.token.jwt.cookie.<a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></h3>
+<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieDomain">cookieDomain</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieHttpOnly">cookieHttpOnly</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieMaxAge">cookieMaxAge</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieSameSite">cookieSameSite</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieSecure">cookieSecure</a></code></li>
+</ul>
 </li>
 </ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -207,80 +223,30 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Acc
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookieDomain--">getCookieDomain</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>java.util.Optional&lt;java.time.temporal.TemporalAmount&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookieMaxAge--">getCookieMaxAge</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookieName--">getCookieName</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookiePath--">getCookiePath</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>java.util.Optional&lt;io.micronaut.http.cookie.SameSite&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookieSameSite--">getCookieSameSite</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>java.util.Optional&lt;java.lang.Boolean&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#isCookieHttpOnly--">isCookieHttpOnly</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>java.util.Optional&lt;java.lang.Boolean&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#isCookieSecure--">isCookieSecure</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i7" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#isEnabled--">isEnabled</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieDomain-java.lang.String-">setCookieDomain</a></span>(java.lang.String&nbsp;cookieDomain)</code>
-<div class="block">Sets the domain name of this Cookie.</div>
-</td>
-</tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieHttpOnly-java.lang.Boolean-">setCookieHttpOnly</a></span>(java.lang.Boolean&nbsp;cookieHttpOnly)</code>
-<div class="block">Whether the Cookie can only be accessed via HTTP.</div>
-</td>
-</tr>
-<tr id="i10" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieMaxAge-java.time.Duration-">setCookieMaxAge</a></span>(java.time.Duration&nbsp;cookieMaxAge)</code>
-<div class="block">Sets the maximum age of the cookie.</div>
-</td>
-</tr>
-<tr id="i11" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieName-java.lang.String-">setCookieName</a></span>(java.lang.String&nbsp;cookieName)</code>
 <div class="block">Cookie Name.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookiePath-java.lang.String-">setCookiePath</a></span>(java.lang.String&nbsp;cookiePath)</code>
 <div class="block">Sets the path of the cookie.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieSameSite-io.micronaut.http.cookie.SameSite-">setCookieSameSite</a></span>(io.micronaut.http.cookie.SameSite&nbsp;cookieSameSite)</code>
-<div class="block">Sets the same-site setting of the cookie.</div>
-</td>
-</tr>
-<tr id="i14" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setCookieSecure-java.lang.Boolean-">setCookieSecure</a></span>(java.lang.Boolean&nbsp;cookieSecure)</code>
-<div class="block">Sets whether the cookie is secured.</div>
-</td>
-</tr>
-<tr id="i15" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#setEnabled-boolean-">setEnabled</a></span>(boolean&nbsp;enabled)</code>
 <div class="block">Sets whether JWT cookie configuration is enabled.</div>
@@ -288,11 +254,25 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Acc
 </tr>
 </table>
 <ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;io.micronaut.security.token.jwt.cookie.<a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></h3>
+<code><a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#getCookieDomain--">getCookieDomain</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#getCookieMaxAge--">getCookieMaxAge</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#getCookieSameSite--">getCookieSameSite</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#isCookieHttpOnly--">isCookieHttpOnly</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#isCookieSecure--">isCookieSecure</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#setCookieDomain-java.lang.String-">setCookieDomain</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#setCookieHttpOnly-java.lang.Boolean-">setCookieHttpOnly</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#setCookieMaxAge-java.time.Duration-">setCookieMaxAge</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#setCookieSameSite-io.micronaut.http.cookie.SameSite-">setCookieSameSite</a>, <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#setCookieSecure-java.lang.Boolean-">setCookieSecure</a></code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
 <code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.io.micronaut.http.cookie.CookieConfiguration">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;io.micronaut.http.cookie.CookieConfiguration</h3>
+<code>getCookieDomain, getCookieMaxAge, getCookieSameSite, isCookieHttpOnly, isCookieSecure</code></li>
 </ul>
 </li>
 </ul>
@@ -341,7 +321,9 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Acc
 <ul class="blockList">
 <li class="blockList">
 <h4>DEFAULT_HTTPONLY</h4>
-<pre>public static final&nbsp;boolean DEFAULT_HTTPONLY</pre>
+<pre>@Deprecated
+public static final&nbsp;boolean DEFAULT_HTTPONLY</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#DEFAULT_HTTPONLY"><code>AbstractAccessTokenCookieConfigurationProperties.DEFAULT_HTTPONLY</code></a></span></div>
 <div class="block">The default http only value.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -383,7 +365,9 @@ implements <a href="../../../../../../io/micronaut/security/token/jwt/cookie/Acc
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DEFAULT_COOKIESAMESITE</h4>
-<pre>public static final&nbsp;io.micronaut.http.cookie.SameSite DEFAULT_COOKIESAMESITE</pre>
+<pre>@Deprecated
+public static final&nbsp;io.micronaut.http.cookie.SameSite DEFAULT_COOKIESAMESITE</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use <a href="../../../../../../io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#DEFAULT_COOKIESAMESITE"><code>AbstractAccessTokenCookieConfigurationProperties.DEFAULT_COOKIESAMESITE</code></a></span></div>
 <div class="block">The default same-site setting for the JWT cookie.</div>
 </li>
 </ul>
@@ -471,21 +455,6 @@ public&nbsp;java.lang.String&nbsp;getCookieName()</pre>
 </dl>
 </li>
 </ul>
-<a name="getCookieDomain--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getCookieDomain</h4>
-<pre>public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getCookieDomain()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getCookieDomain</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the domain name of this Cookie</dd>
-</dl>
-</li>
-</ul>
 <a name="getCookiePath--">
 <!--   -->
 </a>
@@ -502,83 +471,10 @@ public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getCookiePath()</pre
 </dl>
 </li>
 </ul>
-<a name="isCookieHttpOnly--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isCookieHttpOnly</h4>
-<pre>public&nbsp;java.util.Optional&lt;java.lang.Boolean&gt;&nbsp;isCookieHttpOnly()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>isCookieHttpOnly</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>Whether the Cookie can only be accessed via HTTP.</dd>
-</dl>
-</li>
-</ul>
-<a name="isCookieSecure--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isCookieSecure</h4>
-<pre>public&nbsp;java.util.Optional&lt;java.lang.Boolean&gt;&nbsp;isCookieSecure()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>isCookieSecure</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>True if the cookie is secure</dd>
-</dl>
-</li>
-</ul>
-<a name="getCookieMaxAge--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getCookieMaxAge</h4>
-<pre>public&nbsp;java.util.Optional&lt;java.time.temporal.TemporalAmount&gt;&nbsp;getCookieMaxAge()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getCookieMaxAge</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>The max age to use for the cookie</dd>
-</dl>
-</li>
-</ul>
-<a name="getCookieSameSite--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getCookieSameSite</h4>
-<pre>public&nbsp;java.util.Optional&lt;io.micronaut.http.cookie.SameSite&gt;&nbsp;getCookieSameSite()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getCookieSameSite</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
-</dl>
-</li>
-</ul>
-<a name="setCookieDomain-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setCookieDomain</h4>
-<pre>public&nbsp;void&nbsp;setCookieDomain(@Nullable
-                            java.lang.String&nbsp;cookieDomain)</pre>
-<div class="block">Sets the domain name of this Cookie.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>cookieDomain</code> - the domain name of this Cookie</dd>
-</dl>
-</li>
-</ul>
 <a name="setCookiePath-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>setCookiePath</h4>
 <pre>public&nbsp;void&nbsp;setCookiePath(@Nullable
@@ -587,63 +483,6 @@ public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getCookiePath()</pre
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>cookiePath</code> - The path of the cookie.</dd>
-</dl>
-</li>
-</ul>
-<a name="setCookieHttpOnly-java.lang.Boolean-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setCookieHttpOnly</h4>
-<pre>public&nbsp;void&nbsp;setCookieHttpOnly(java.lang.Boolean&nbsp;cookieHttpOnly)</pre>
-<div class="block">Whether the Cookie can only be accessed via HTTP. Default value (<a href="../../../../../../io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#DEFAULT_HTTPONLY">true</a>).</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>cookieHttpOnly</code> - Whether the Cookie can only be accessed via HTTP</dd>
-</dl>
-</li>
-</ul>
-<a name="setCookieSecure-java.lang.Boolean-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setCookieSecure</h4>
-<pre>public&nbsp;void&nbsp;setCookieSecure(java.lang.Boolean&nbsp;cookieSecure)</pre>
-<div class="block">Sets whether the cookie is secured. Defaults to the secure status of the request.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>cookieSecure</code> - True if the cookie is secure</dd>
-</dl>
-</li>
-</ul>
-<a name="setCookieMaxAge-java.time.Duration-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setCookieMaxAge</h4>
-<pre>public&nbsp;void&nbsp;setCookieMaxAge(java.time.Duration&nbsp;cookieMaxAge)</pre>
-<div class="block">Sets the maximum age of the cookie.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>cookieMaxAge</code> - The maximum age of the cookie</dd>
-</dl>
-</li>
-</ul>
-<a name="setCookieSameSite-io.micronaut.http.cookie.SameSite-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>setCookieSameSite</h4>
-<pre>public&nbsp;void&nbsp;setCookieSameSite(@Nullable
-                              io.micronaut.http.cookie.SameSite&nbsp;cookieSameSite)</pre>
-<div class="block">Sets the same-site setting of the cookie. Default value null. Value is case sensitive. Allowed values: `Strict`, `Lax` or `None`.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>cookieSameSite</code> - The same-site setting of the cookie.</dd>
 </dl>
 </li>
 </ul>
