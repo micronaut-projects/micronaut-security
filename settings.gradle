@@ -9,7 +9,7 @@ plugins {
     id 'io.micronaut.build.shared.settings' version '5.2.2'
 }
 
-rootProject.name = 'micronaut-security'
+rootProject.name = 'security-parent'
 
 include "security-bom"
 include "security"
