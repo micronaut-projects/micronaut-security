@@ -24,18 +24,19 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Signal;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Abstract class to create a Client for client credentials grant.
@@ -110,7 +111,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         return expirationDate(tokenResponse).map(expDate -> {
             boolean isExpired = isExpired(expDate);
             if (isExpired && LOG.isTraceEnabled()) {
-                LOG.trace("token: {} is expired" + tokenResponse.getAccessToken());
+                LOG.trace("token: {} is expired", tokenResponse.getAccessToken());
             }
             return isExpired;
         }).orElse(true);

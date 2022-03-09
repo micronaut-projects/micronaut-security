@@ -22,25 +22,22 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Consumes;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
 import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @see <a href="https://tools.ietf.org/html/rfc7662">OAuth 2.0 Token Introspection</a>.
@@ -69,6 +66,7 @@ public class IntrospectionController {
     /**
      *
      * @param processor Introspection Processor
+     * @param jsonMapper the JSON mapper
      * @since 3.3
      */
     @Inject

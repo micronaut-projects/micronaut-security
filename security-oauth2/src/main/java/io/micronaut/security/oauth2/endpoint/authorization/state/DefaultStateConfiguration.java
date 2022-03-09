@@ -18,6 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.state;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidationConfiguration;
+
 import java.util.Optional;
 
 /**

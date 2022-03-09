@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,22 @@
  */
 package io.micronaut.security.endpoints;
 
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.util.Toggleable;
+
 /**
- * Encapsulates the configuration of {@link LogoutController}.
- * @author Sergio del Amo
- * @since 1.0
+ * Base configuration for all controllers.
+ *
+ * @author Álvaro Sánchez-Mariscal
+ * @since 3.4.2
  */
-public interface LogoutControllerConfiguration extends ControllerConfiguration {
+@FunctionalInterface
+public interface ControllerConfiguration extends Toggleable {
 
     /**
-     *
-     * @return Whether HTTP method GET is allowed to invoke {@link LogoutController}.
+     * @return the path where the controller is enabled.
      */
-    boolean isGetAllowed();
+    @NonNull
+    String getPath();
+
 }

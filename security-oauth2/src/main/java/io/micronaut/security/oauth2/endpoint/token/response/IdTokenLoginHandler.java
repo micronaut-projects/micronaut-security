@@ -31,15 +31,12 @@ import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
 import jakarta.inject.Singleton;
-import java.text.ParseException;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.*;
 
 /**
  * Sets {@link CookieLoginHandler}`s cookie value to the idtoken received from an authentication provider.
@@ -91,14 +88,14 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
         Map<String, Object> attributes = authentication.getAttributes();
         if (!attributes.containsKey(OpenIdAuthenticationMapper.OPENID_TOKEN_KEY)) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("{} should be present in user details attributes to use {}:{}", OpenIdAuthenticationMapper.OPENID_TOKEN_KEY, SecurityConfigurationProperties.PREFIX + ".authentication", AuthenticationMode.IDTOKEN.toString());
+                LOG.warn("{} should be present in user details attributes to use {}:{}", OpenIdAuthenticationMapper.OPENID_TOKEN_KEY, SecurityConfigurationProperties.PREFIX + ".authentication", AuthenticationMode.IDTOKEN);
             }
             return Optional.empty();
         }
         Object idTokenObjet = attributes.get(OpenIdAuthenticationMapper.OPENID_TOKEN_KEY);
         if (!(idTokenObjet instanceof String)) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("{} present in user details attributes should be of type String to use {}:{}", OpenIdAuthenticationMapper.OPENID_TOKEN_KEY, SecurityConfigurationProperties.PREFIX + ".authentication", AuthenticationMode.IDTOKEN.toString());
+                LOG.warn("{} present in user details attributes should be of type String to use {}:{}", OpenIdAuthenticationMapper.OPENID_TOKEN_KEY, SecurityConfigurationProperties.PREFIX + ".authentication", AuthenticationMode.IDTOKEN);
             }
             return Optional.empty();
         }

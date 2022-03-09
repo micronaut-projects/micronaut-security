@@ -38,7 +38,7 @@ public class JwtBearerAssertionGrant {
 
     /**
      *
-     * @return urn:ietf:params:oauth:grant-type:saml2-bearer.
+     * @return urn:ietf:params:oauth:grant-type:jwt-bearer.
      */
     @NonNull
     public String getGrantType() {

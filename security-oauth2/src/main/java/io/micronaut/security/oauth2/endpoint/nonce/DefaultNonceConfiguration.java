@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.endpoint.nonce;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties;
+
 import java.util.Optional;
 
 /**

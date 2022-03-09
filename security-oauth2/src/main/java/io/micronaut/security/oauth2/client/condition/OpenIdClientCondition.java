@@ -30,6 +30,7 @@ import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpoin
 import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
 import io.micronaut.security.oauth2.grants.GrantType;
+
 import java.util.Optional;
 
 /**
@@ -52,23 +53,26 @@ public class OpenIdClientCondition implements Condition {
                 String name = optional.get();
 
                 OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-                OpenIdClientConfiguration openIdClientConfiguration = clientConfiguration.getOpenid().get();
 
                 String failureMessagePrefix = "Skipped OpenID client creation for provider [" + name;
                 if (clientConfiguration.isEnabled()) {
-                    if (openIdClientConfiguration.getIssuer().isPresent() || endpointsManuallyConfigured(openIdClientConfiguration)) {
-                        if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
-                            Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
-                            if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
-                                return true;
+                    Optional<OpenIdClientConfiguration> openid = clientConfiguration.getOpenid();
+                    if (openid.isPresent()) {
+                        OpenIdClientConfiguration openIdClientConfiguration = openid.get();
+                        if (openIdClientConfiguration.getIssuer().isPresent() || endpointsManuallyConfigured(openIdClientConfiguration)) {
+                            if (clientConfiguration.getGrantType() == GrantType.AUTHORIZATION_CODE) {
+                                Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
+                                if (!authorization.isPresent() || authorization.get().getResponseType() == ResponseType.CODE) {
+                                    return true;
+                                } else {
+                                    context.fail(failureMessagePrefix + "] because the response type is not 'code'");
+                                }
                             } else {
-                                context.fail(failureMessagePrefix + "] because the response type is not 'code'");
+                                context.fail(failureMessagePrefix + "] because the grant type is not 'authorization-code'");
                             }
                         } else {
-                            context.fail(failureMessagePrefix + "] because the grant type is not 'authorization-code'");
+                            context.fail(failureMessagePrefix  + "] because no issuer is configured");
                         }
-                    } else {
-                        context.fail(failureMessagePrefix  + "] because no issuer is configured");
                     }
                 } else {
                     context.fail(failureMessagePrefix + "] because the configuration is disabled");
