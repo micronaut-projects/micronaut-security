@@ -23,8 +23,8 @@ import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.MockAuthenticationProvider
 import io.micronaut.security.SuccessAuthenticationScenario
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.handlers.LoginHandler
 import io.micronaut.security.testutils.EmbeddedServerSpecification

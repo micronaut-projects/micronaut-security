@@ -1,7 +1,6 @@
 package io.micronaut.security.propagation
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.core.annotation.AnnotationMetadataResolver
 import io.micronaut.core.annotation.AnnotationValue
 import io.micronaut.core.util.PathMatcher

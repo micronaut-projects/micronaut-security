@@ -20,7 +20,6 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader;
 import io.micronaut.security.token.reader.HttpHeaderTokenReader;
 import io.micronaut.security.token.reader.TokenReader;
-
 import jakarta.inject.Singleton;
 
 /**

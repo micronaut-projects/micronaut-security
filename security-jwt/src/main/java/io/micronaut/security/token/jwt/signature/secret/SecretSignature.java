@@ -15,23 +15,23 @@
  */
 package io.micronaut.security.token.jwt.signature.secret;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jose.crypto.impl.MACProvider;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
-
 import java.util.Base64;
 import java.util.Objects;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  *
@@ -64,7 +64,7 @@ public class SecretSignature extends AbstractSignatureConfiguration implements S
 
     @Override
     public boolean supports(final JWSAlgorithm algorithm) {
-        return algorithm != null && MACVerifier.SUPPORTED_ALGORITHMS.contains(algorithm);
+        return algorithm != null && MACProvider.SUPPORTED_ALGORITHMS.contains(algorithm);
     }
 
     @Override

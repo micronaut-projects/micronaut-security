@@ -15,17 +15,16 @@
  */
 package io.micronaut.security.ldap.context;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link ContextBuilder}.
@@ -74,7 +73,7 @@ public class DefaultContextBuilder implements ContextBuilder {
         if (context != null) {
             try {
                 context.close();
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Exception occurred while closing an LDAP context", e);
                 }

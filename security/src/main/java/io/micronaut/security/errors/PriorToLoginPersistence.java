@@ -17,7 +17,6 @@ package io.micronaut.security.errors;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-
 import java.net.URI;
 import java.util.Optional;
 

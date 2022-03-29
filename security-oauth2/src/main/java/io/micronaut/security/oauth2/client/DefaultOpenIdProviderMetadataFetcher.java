@@ -22,12 +22,16 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -48,7 +52,6 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
     private final OpenIdClientConfiguration openIdClientConfiguration;
 
     /**
-     *
      * @param openIdClientConfiguration OpenID Client Configuration
      * @param jsonMapper JSON Mapper
      * @param client HTTP Client
@@ -79,22 +82,17 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
                                 if (LOG.isDebugEnabled()) {
                                     LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
                                 }
-                                //TODO this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+                                //TODO NOSONAR this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
                                 String json = client.toBlocking().retrieve(configurationUrl.toString(), String.class);
-                                return jsonMapper.readValue(json, Argument.of(DefaultOpenIdProviderMetadata.class));
-
-                            /*} catch (MalformedURLException e) {
-                                throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
+                                return jsonMapper.readValue(json.getBytes(StandardCharsets.UTF_8), Argument.of(DefaultOpenIdProviderMetadata.class));
                             } catch (HttpClientResponseException e) {
                                 throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
-
-                            } catch (JsonProcessingException e) {
-                                throw new BeanInstantiationException("JSON Processing Exception parsing issuer URL returned JSON " + issuer.toString(), e);*/
+                            } catch (MalformedURLException e) {
+                                throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
                             } catch (IOException e) {
-                                throw new BeanInstantiationException("IOException parsing issuer URL returned JSON " + issuer.toString(), e);
+                                throw new BeanInstantiationException("JSON Processing Exception parsing issuer URL returned JSON " + issuer.toString(), e);
                             }
-                        }).orElse(new DefaultOpenIdProviderMetadata())
-                );
+                        }).orElse(new DefaultOpenIdProviderMetadata()));
     }
 
     /**
@@ -104,7 +102,6 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
         private final Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers;
 
         /**
-         *
          * @param suppliers Map with key being the OpenID Name qualifier and
          */
         public Optimizations(Map<String, Supplier<DefaultOpenIdProviderMetadata>> suppliers) {
@@ -112,7 +109,6 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
         }
 
         /**
-         *
          * @param name name qualifier
          * @return {@link DefaultOpenIdProviderMetadata} supplier or empty optional if not found for the given name qualifier.
          */

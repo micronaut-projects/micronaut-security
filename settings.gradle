@@ -6,11 +6,12 @@ pluginManagement {
 }
 
 plugins {
-    id 'io.micronaut.build.shared.settings' version '5.1.0'
+    id 'io.micronaut.build.shared.settings' version '5.2.3'
 }
 
-rootProject.name = 'micronaut-security'
+rootProject.name = 'security-parent'
 
+include "security-bom"
 include "security"
 include "security-aot"
 include "security-annotations"

@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
-
-import io.micronaut.core.annotation.NonNull;
 import java.util.List;
 import java.util.Optional;
 

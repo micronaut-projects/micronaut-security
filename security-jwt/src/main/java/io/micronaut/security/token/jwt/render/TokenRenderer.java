@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.token.jwt.render;
 
-import io.micronaut.security.authentication.Authentication;
-
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.authentication.Authentication;
 
 /**
  * Responsible for converting token information to an {@link AccessRefreshToken}.

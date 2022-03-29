@@ -22,7 +22,6 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -37,6 +36,8 @@ import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallb
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.micronaut.core.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.function.Supplier;
@@ -96,6 +97,7 @@ class OpenIdClientFactory {
      */
     @EachBean(OpenIdClientConfiguration.class)
     @Requires(condition = OpenIdClientCondition.class)
+    @SuppressWarnings("java:S107")
     DefaultOpenIdClient openIdClient(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
                                      @Parameter OauthClientConfiguration clientConfiguration,
                                      @Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,

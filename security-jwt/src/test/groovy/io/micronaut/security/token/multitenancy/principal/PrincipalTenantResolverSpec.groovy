@@ -1,7 +1,6 @@
 package io.micronaut.security.token.multitenancy.principal
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest

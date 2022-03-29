@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.token.jwt.endpoints;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -39,10 +39,9 @@ import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.validation.Validated;
+import java.util.Optional;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 /**
  *

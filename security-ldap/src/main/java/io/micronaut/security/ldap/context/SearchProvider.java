@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.ldap.context;
 
-import javax.naming.NamingException;
 import java.util.List;
+import javax.naming.NamingException;
 
 /**
  * Generic functional interface that returns a list of search

@@ -16,11 +16,10 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
-
-import io.micronaut.core.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**

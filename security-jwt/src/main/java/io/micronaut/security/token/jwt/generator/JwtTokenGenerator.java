@@ -19,21 +19,19 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.generator.TokenGenerator;
+import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
-import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
-import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JWT Token Generation.
@@ -44,7 +42,7 @@ import java.util.Optional;
 @Singleton
 public class JwtTokenGenerator implements TokenGenerator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JwtTokenValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JwtTokenGenerator.class);
 
     protected final ClaimsGenerator claimsGenerator;
     protected final SignatureGeneratorConfiguration signatureConfiguration;

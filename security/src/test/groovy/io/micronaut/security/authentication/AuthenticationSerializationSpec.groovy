@@ -3,7 +3,6 @@ package io.micronaut.security.authentication
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.core.serialize.JdkSerializer
 import io.micronaut.jackson.serialize.JacksonObjectSerializer
-import io.micronaut.security.authentication.jackson.SecurityJacksonModule
 import spock.lang.Specification
 
 class AuthenticationSerializationSpec extends Specification {
@@ -27,7 +26,6 @@ class AuthenticationSerializationSpec extends Specification {
 
     void "test authentication is serializable to json"() {
         ObjectMapper objectMapper = new ObjectMapper()
-        objectMapper.registerModule(new SecurityJacksonModule())
         JacksonObjectSerializer serializer = new JacksonObjectSerializer(objectMapper)
 
         when:

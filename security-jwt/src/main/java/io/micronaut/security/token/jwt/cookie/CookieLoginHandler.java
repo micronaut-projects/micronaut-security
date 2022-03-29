@@ -22,8 +22,8 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RefreshRedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
@@ -44,8 +44,13 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
 
     protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
     protected final PriorToLoginPersistence priorToLoginPersistence;
+    @Nullable
     protected final String loginFailure;
+
+    @Nullable
     protected final String loginSuccess;
+
+    @Nullable
     protected final String refresh;
 
     /**
@@ -56,10 +61,10 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
     public CookieLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                               RedirectConfiguration redirectConfiguration,
                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this.loginFailure = redirectConfiguration.getLoginFailure();
-        this.loginSuccess = redirectConfiguration.getLoginSuccess();
+        this.loginFailure = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginFailure() : null;
+        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginSuccess() : null;
         RefreshRedirectConfiguration refreshConfig = redirectConfiguration.getRefresh();
-        this.refresh = refreshConfig.isEnabled() ? refreshConfig.getUrl() : null;
+        this.refresh = redirectConfiguration.isEnabled() && refreshConfig.isEnabled() ? refreshConfig.getUrl() : null;
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
     }
@@ -90,9 +95,17 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
         return applyCookies(createSuccessResponse(request), getCookies(authentication, request));
     }
 
+    /**
+     * @param authenticationFailed Object encapsulates the Login failure
+     * @param request The {@link HttpRequest} being executed
+     * @return A 303 HTTP Response or 200 HTTP Response if {@link CookieLoginHandler#loginFailure} is null, for example if {@link RedirectConfiguration} is disabled.
+     */
     @Override
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         try {
+            if (loginFailure == null) {
+                return HttpResponse.ok();
+            }
             URI location = new URI(loginFailure);
             return HttpResponse.seeOther(location);
         } catch (URISyntaxException e) {
@@ -107,10 +120,13 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
 
     /**
      * @param request The request
-     * @return A 303 HTTP Response
+     * @return A 303 HTTP Response or 200 HTTP Response if {@link CookieLoginHandler#loginSuccess} is null, for example if {@link RedirectConfiguration} is disabled.
      */
     protected MutableHttpResponse<?> createSuccessResponse(HttpRequest<?> request) {
         try {
+            if (loginSuccess == null) {
+                return HttpResponse.ok();
+            }
             MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
             ThrowingSupplier<URI, URISyntaxException> uriSupplier = () -> new URI(loginSuccess);
             if (priorToLoginPersistence != null) {
@@ -128,7 +144,7 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
 
     /**
      * @param request The request
-     * @return A 303 HTTP Response
+     * @return A 303 HTTP Response or 200 HTTP Response if {@link CookieLoginHandler#refresh} is null.
      */
     protected MutableHttpResponse<?> createRefreshResponse(HttpRequest<?> request) {
         try {

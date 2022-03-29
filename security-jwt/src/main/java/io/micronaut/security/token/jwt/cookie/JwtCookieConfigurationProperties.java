@@ -17,14 +17,13 @@ package io.micronaut.security.token.jwt.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
-import java.time.Duration;
-import java.time.temporal.TemporalAmount;
+
 import java.util.Optional;
 
 /**
@@ -35,7 +34,7 @@ import java.util.Optional;
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Requires(property = JwtCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(JwtCookieConfigurationProperties.PREFIX)
-public class JwtCookieConfigurationProperties implements AccessTokenCookieConfiguration {
+public class JwtCookieConfigurationProperties extends AbstractAccessTokenCookieConfigurationProperties implements AccessTokenCookieConfiguration {
 
     public static final String PREFIX = JwtConfigurationProperties.PREFIX + ".cookie";
 
@@ -47,9 +46,11 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
 
     /**
      * The default http only value.
+     *
+     * @deprecated use {@link AbstractAccessTokenCookieConfigurationProperties#DEFAULT_HTTPONLY}
      */
-    @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_HTTPONLY = true;
+    @Deprecated
+    public static final boolean DEFAULT_HTTPONLY = AbstractAccessTokenCookieConfigurationProperties.DEFAULT_HTTPONLY;
 
     /**
      * The default cookie name.
@@ -65,16 +66,13 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
 
     /**
      * The default same-site setting for the JWT cookie.
+     *
+     * @deprecated use {@link AbstractAccessTokenCookieConfigurationProperties#DEFAULT_COOKIESAMESITE}
      */
-    @SuppressWarnings("WeakerAccess")
-    public static final SameSite DEFAULT_COOKIESAMESITE = null;
+    @Deprecated
+    public static final SameSite DEFAULT_COOKIESAMESITE = AbstractAccessTokenCookieConfigurationProperties.DEFAULT_COOKIESAMESITE;
 
-    private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
-    private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
-    private Boolean cookieSecure;
-    private Duration cookieMaxAge;
-    private SameSite cookieSameSite = DEFAULT_COOKIESAMESITE;
     private boolean enabled = DEFAULT_ENABLED;
     private String cookieName = DEFAULT_COOKIENAME;
 
@@ -115,15 +113,6 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
 
     /**
      *
-     * @return the domain name of this Cookie
-     */
-    @Override
-    public Optional<String> getCookieDomain() {
-        return Optional.ofNullable(cookieDomain);
-    }
-
-    /**
-     *
      * @return The path of the cookie.
      */
     @Nullable
@@ -133,80 +122,10 @@ public class JwtCookieConfigurationProperties implements AccessTokenCookieConfig
     }
 
     /**
-     * @return Whether the Cookie can only be accessed via HTTP.
-     */
-    @Override
-    public Optional<Boolean> isCookieHttpOnly() {
-        return Optional.ofNullable(cookieHttpOnly);
-    }
-
-    /**
-     *
-     * @return True if the cookie is secure
-     */
-    @Override
-    public Optional<Boolean>  isCookieSecure() {
-        return Optional.ofNullable(cookieSecure);
-    }
-
-    /**
-     * @return The max age to use for the cookie
-     */
-    @Override
-    public Optional<TemporalAmount> getCookieMaxAge() {
-        return Optional.ofNullable(cookieMaxAge);
-    }
-
-    @Override
-    public Optional<SameSite> getCookieSameSite() {
-        return Optional.ofNullable(cookieSameSite);
-    }
-
-    /**
-     * Sets the domain name of this Cookie.
-     * @param cookieDomain the domain name of this Cookie
-     */
-    public void setCookieDomain(@Nullable String cookieDomain) {
-        this.cookieDomain = cookieDomain;
-    }
-
-    /**
-     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}.
+     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
      * @param cookiePath The path of the cookie.
      */
     public void setCookiePath(@Nullable String cookiePath) {
         this.cookiePath = cookiePath;
-    }
-
-    /**
-     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}.
-     * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
-     */
-    public void setCookieHttpOnly(Boolean cookieHttpOnly) {
-        this.cookieHttpOnly = cookieHttpOnly;
-    }
-
-    /**
-     * Sets whether the cookie is secured. Defaults to the secure status of the request.
-     * @param cookieSecure True if the cookie is secure
-     */
-    public void setCookieSecure(Boolean cookieSecure) {
-        this.cookieSecure = cookieSecure;
-    }
-
-    /**
-     * Sets the maximum age of the cookie.
-     * @param cookieMaxAge The maximum age of the cookie
-     */
-    public void setCookieMaxAge(Duration cookieMaxAge) {
-        this.cookieMaxAge = cookieMaxAge;
-    }
-
-    /**
-     * Sets the same-site setting of the cookie. Default value null. Value is case sensitive. Allowed values: `Strict`, `Lax` or `None`.
-     * @param cookieSameSite The same-site setting of the cookie.
-     */
-    public void setCookieSameSite(@Nullable SameSite cookieSameSite) {
-        this.cookieSameSite = cookieSameSite;
     }
 }

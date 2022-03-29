@@ -21,7 +21,6 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
-
 import jakarta.inject.Singleton;
 import java.util.Optional;
 

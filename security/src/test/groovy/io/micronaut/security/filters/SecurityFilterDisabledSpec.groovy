@@ -1,9 +1,8 @@
 package io.micronaut.security.filters
 
-import io.micronaut.context.ApplicationContext
+
 import io.micronaut.core.util.StringUtils
 import io.micronaut.security.testutils.ApplicationContextSpecification
-import spock.lang.Specification
 
 class SecurityFilterDisabledSpec extends ApplicationContextSpecification {
 

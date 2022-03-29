@@ -21,9 +21,8 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.ECDSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import java.security.interfaces.ECPrivateKey;
 
 /**

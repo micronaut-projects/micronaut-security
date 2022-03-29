@@ -17,15 +17,14 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ID Token Audience validator.
@@ -50,19 +49,21 @@ public class AudienceClaimValidator implements OpenIdClaimsValidator {
 
         //The Client MUST validate that the aud (audience) Claim contains its client_id value registered at the Issuer identified by the iss (issuer) Claim as an audience.
         boolean condition = audienceList.stream().anyMatch(audience -> audience.equals(clientConfiguration.getClientId()));
-        if (!condition && LOG.isTraceEnabled()) {
-            LOG.trace("JWT validation failed for provider [{}]. Audience claims does not contain [{}]", clientConfiguration.getName(), clientConfiguration.getClientId());
+        if (!condition) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("JWT validation failed for provider [{}]. Audience claims does not contain [{}]", clientConfiguration.getName(), clientConfiguration.getClientId());
+            }
+            return false;
         }
 
         //If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is present.
-        if (audienceList.size() > 1) {
-            condition = claims.getAuthorizedParty() != null;
-            if (!condition && LOG.isTraceEnabled()) {
+        if (audienceList.size() > 1 && claims.getAuthorizedParty() == null) {
+            if (LOG.isTraceEnabled()) {
                 LOG.trace("JWT validation failed for provider [{}]. Multiple audience claims present but no authorized party", clientConfiguration.getName());
             }
+            return false;
         }
-
-        return condition;
+        return true;
     }
 
 }

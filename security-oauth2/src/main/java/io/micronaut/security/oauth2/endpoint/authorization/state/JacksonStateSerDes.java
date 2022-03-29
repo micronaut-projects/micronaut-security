@@ -15,14 +15,16 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import io.micronaut.core.type.Argument;
+import io.micronaut.jackson.databind.JacksonDatabindMapper;
+import io.micronaut.json.JsonMapper;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Jackson based implementation for state serdes.
@@ -35,21 +37,31 @@ public class JacksonStateSerDes implements StateSerDes {
 
     private static final Logger LOG = LoggerFactory.getLogger(JacksonStateSerDes.class);
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     /**
      * @param objectMapper To serialize/de-serialize the state
+     * @deprecated Use {@link #JacksonStateSerDes(JsonMapper)} instead
      */
+    @Deprecated
     public JacksonStateSerDes(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+        this.jsonMapper = new JacksonDatabindMapper(objectMapper);
+    }
+
+    /**
+     * @param jsonMapper To serialize/de-serialize the state
+     * @since 3.3
+     */
+    @Inject
+    public JacksonStateSerDes(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
     }
 
     @Override
     public State deserialize(String base64State) {
         try {
             byte[] decodedBytes = Base64.getUrlDecoder().decode(base64State);
-            String state = new String(decodedBytes);
-            return objectMapper.readValue(state, DefaultState.class);
+            return jsonMapper.readValue(decodedBytes, Argument.of(DefaultState.class));
         } catch (IOException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Failed to deserialize the authorization request state", e);
@@ -61,9 +73,8 @@ public class JacksonStateSerDes implements StateSerDes {
     @Override
     public String serialize(State state) {
         try {
-            String originalInput = objectMapper.writeValueAsString(state);
-            return Base64.getEncoder().encodeToString(originalInput.getBytes());
-        } catch (JsonProcessingException e) {
+            return Base64.getEncoder().encodeToString(jsonMapper.writeValueAsBytes(state));
+        } catch (IOException e) {
             if (LOG.isErrorEnabled()) {
                 LOG.error("Failed to serialize the authorization request state to JSON", e);
             }

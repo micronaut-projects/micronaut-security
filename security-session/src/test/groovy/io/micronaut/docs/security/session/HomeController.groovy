@@ -1,13 +1,13 @@
 package io.micronaut.docs.security.session
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.security.annotation.Secured
 
-import io.micronaut.core.annotation.Nullable
 import java.security.Principal
 
 @Requires(property = "spec.name", value = "securitysession")

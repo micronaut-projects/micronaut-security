@@ -55,6 +55,7 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
     void "token and refresh token cookie are getting cleared on logout"() {
         given:
         RedirectConfiguration redirectConfiguration = Mock() {
+            1 * isEnabled() >> "true"
             1 * getLogout() >> "logout"
         }
         AccessTokenCookieConfiguration accessTokenCookieConfiguration = Mock() {

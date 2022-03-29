@@ -22,9 +22,8 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.rules.SecurityRule;
-import org.reactivestreams.Publisher;
-
 import java.util.Map;
+import org.reactivestreams.Publisher;
 
 /**
  * Responsible for OAuth 2.0 authorization redirect, authorization

@@ -16,7 +16,6 @@
 package io.micronaut.security.token;
 
 import io.micronaut.security.authentication.Authentication;
-
 import java.util.Optional;
 
 /**

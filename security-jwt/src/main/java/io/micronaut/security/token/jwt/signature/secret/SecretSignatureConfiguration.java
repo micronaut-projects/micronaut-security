@@ -17,10 +17,9 @@ package io.micronaut.security.token.jwt.signature.secret;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import io.micronaut.context.annotation.Context;
-import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.EachProperty;
+import io.micronaut.context.annotation.Parameter;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
-
 import javax.validation.constraints.NotNull;
 
 /**

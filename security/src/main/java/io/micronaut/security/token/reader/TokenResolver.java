@@ -17,7 +17,6 @@ package io.micronaut.security.token.reader;
 
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.http.HttpRequest;
-
 import java.util.Optional;
 
 /**

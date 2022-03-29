@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.authentication;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Collection;
@@ -30,6 +30,7 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.0
  */
+@JsonDeserialize(as = ClientAuthentication.class)
 public interface Authentication extends Principal, Serializable {
 
     /**

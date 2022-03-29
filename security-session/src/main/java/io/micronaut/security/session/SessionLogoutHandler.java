@@ -16,6 +16,7 @@
 package io.micronaut.security.session;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -39,6 +40,7 @@ import java.util.Optional;
 @Singleton
 public class SessionLogoutHandler implements LogoutHandler {
 
+    @Nullable
     protected final String logout;
 
     /**
@@ -46,22 +48,25 @@ public class SessionLogoutHandler implements LogoutHandler {
      * @param redirectConfiguration Redirect Configuration
      */
     public SessionLogoutHandler(RedirectConfiguration redirectConfiguration) {
-        this.logout = redirectConfiguration.getLogout();
+        this.logout = redirectConfiguration.isEnabled() ? redirectConfiguration.getLogout() : null;
     }
 
     @Override
     public MutableHttpResponse<?> logout(HttpRequest<?> request) {
+        removeAuthenticationFromSession(request);
+        try {
+            return logout == null ? HttpResponse.ok() : HttpResponse.seeOther(new URI(logout));
+        } catch (URISyntaxException e) {
+            return HttpResponse.serverError();
+        }
+    }
+
+    private void removeAuthenticationFromSession(HttpRequest<?> request) {
         MutableConvertibleValues<Object> attrs = request.getAttributes();
         Optional<Session> existing = attrs.get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class);
         if (existing.isPresent()) {
             Session session = existing.get();
             session.remove(SecurityFilter.AUTHENTICATION);
-        }
-        try {
-            URI location = new URI(logout);
-            return HttpResponse.seeOther(location);
-        } catch (URISyntaxException e) {
-            return HttpResponse.serverError();
         }
     }
 }

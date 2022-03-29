@@ -16,7 +16,6 @@
 package io.micronaut.security.token.validator;
 
 import io.micronaut.core.annotation.NonNull;
-
 import java.util.Optional;
 
 /**

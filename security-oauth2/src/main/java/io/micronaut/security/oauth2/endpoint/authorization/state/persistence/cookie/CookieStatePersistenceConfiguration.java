@@ -16,11 +16,12 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import io.micronaut.http.cookie.CookieConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.cookie.CookieConfiguration;
+import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;
+
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
@@ -30,7 +31,7 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @ConfigurationProperties(CookieStatePersistenceConfiguration.PREFIX)
-public class CookieStatePersistenceConfiguration implements CookieConfiguration {
+public class CookieStatePersistenceConfiguration extends AbstractCookieConfiguration implements CookieConfiguration {
 
     public static final String PREFIX = DefaultStateConfiguration.PREFIX + ".cookie";
 
@@ -39,10 +40,8 @@ public class CookieStatePersistenceConfiguration implements CookieConfiguration 
     private static final String DEFAULT_COOKIEPATH = "/";
     private static final Duration DEFAULT_MAX_AGE = Duration.ofMinutes(5);
 
-    private String cookieDomain;
     private String cookiePath = DEFAULT_COOKIEPATH;
     private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
-    private Boolean cookieSecure;
     private Duration cookieMaxAge = DEFAULT_MAX_AGE;
     private String cookieName = DEFAULT_COOKIENAME;
 
@@ -59,20 +58,6 @@ public class CookieStatePersistenceConfiguration implements CookieConfiguration 
      */
     public void setCookieName(@NonNull String cookieName) {
         this.cookieName = cookieName;
-    }
-
-    @Override
-    public Optional<String> getCookieDomain() {
-        return Optional.ofNullable(cookieDomain);
-    }
-
-    /**
-     * Sets the domain name of this Cookie. Default value (null).
-     *
-     * @param cookieDomain the domain name of this Cookie
-     */
-    public void setCookieDomain(@Nullable String cookieDomain) {
-        this.cookieDomain = cookieDomain;
     }
 
     @Override
@@ -101,20 +86,6 @@ public class CookieStatePersistenceConfiguration implements CookieConfiguration 
      */
     public void setCookieHttpOnly(Boolean cookieHttpOnly) {
         this.cookieHttpOnly = cookieHttpOnly;
-    }
-
-    @Override
-    public Optional<Boolean>  isCookieSecure() {
-        return Optional.ofNullable(cookieSecure);
-    }
-
-    /**
-     * Sets whether the cookie is secured. Defaults to the secure status of the request.
-     *
-     * @param cookieSecure True if the cookie is secure
-     */
-    public void setCookieSecure(Boolean cookieSecure) {
-        this.cookieSecure = cookieSecure;
     }
 
     @Override

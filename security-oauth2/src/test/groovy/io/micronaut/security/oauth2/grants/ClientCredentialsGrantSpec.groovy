@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Shared
+
 import javax.validation.Validator
 
 class ClientCredentialsGrantSpec extends ApplicationContextSpecification {

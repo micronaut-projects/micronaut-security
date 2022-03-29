@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -26,15 +26,14 @@ import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtClaimsValidatorConfigurationProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * For {@link io.micronaut.security.authentication.AuthenticationMode#IDTOKEN} authentication mode performs the following verification as described in the OpenID Connect Spec.
@@ -239,10 +238,8 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
         }
         String azp = azpOptional.get();
         boolean result = azp.equalsIgnoreCase(clientId);
-        if (!result) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
-            }
+        if (!result && LOG.isTraceEnabled()) {
+            LOG.trace("{} claim does not match client id {}", AUTHORIZED_PARTY, clientId);
         }
         return result;
     }

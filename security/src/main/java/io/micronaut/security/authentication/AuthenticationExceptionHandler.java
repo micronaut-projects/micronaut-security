@@ -24,7 +24,6 @@ import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.hateoas.JsonError;
 import io.micronaut.http.hateoas.Link;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
-
 import jakarta.inject.Singleton;
 
 
@@ -38,9 +37,9 @@ import jakarta.inject.Singleton;
 @Primary
 @Produces
 public class AuthenticationExceptionHandler implements ExceptionHandler<AuthenticationException, MutableHttpResponse<?>> {
-    protected final ApplicationEventPublisher eventPublisher;
+    protected final ApplicationEventPublisher<?> eventPublisher;
 
-    public AuthenticationExceptionHandler(ApplicationEventPublisher eventPublisher) {
+    public AuthenticationExceptionHandler(ApplicationEventPublisher<?> eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
 

@@ -15,27 +15,28 @@
  */
 package io.micronaut.security.token.jwt.generator;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.generator.RefreshTokenGenerator;
-import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.security.token.event.AccessTokenGeneratedEvent;
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent;
+import io.micronaut.security.token.generator.RefreshTokenGenerator;
+import io.micronaut.security.token.generator.TokenGenerator;
 import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import io.micronaut.security.token.jwt.render.TokenRenderer;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static io.micronaut.security.utils.LoggingUtils.debug;
 
 /**
  * Generates http responses with access and refresh token.
@@ -46,7 +47,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGenerator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccessRefreshTokenGenerator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultAccessRefreshTokenGenerator.class);
 
     protected final BeanContext beanContext;
     protected final RefreshTokenGenerator refreshTokenGenerator;
@@ -103,6 +104,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
     @NonNull
     public Optional<String> generateRefreshToken(@NonNull Authentication authentication) {
         Optional<String> refreshToken = Optional.empty();
+        String msg = "Skipped refresh token generation because no {} implementation is present";
         if (beanContext.containsBean(RefreshTokenValidator.class)) {
             if (beanContext.containsBean(RefreshTokenPersistence.class)) {
                 if (refreshTokenGenerator != null) {
@@ -110,19 +112,13 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
                     refreshToken = refreshTokenGenerator.generate(authentication, key);
                     refreshToken.ifPresent(t -> eventPublisher.publishEvent(new RefreshTokenGeneratedEvent(authentication, key)));
                 } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenGenerator.class.getName());
-                    }
+                    debug(LOG, msg, RefreshTokenGenerator.class.getName());
                 }
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenPersistence.class.getName());
-                }
+                debug(LOG, msg, RefreshTokenPersistence.class.getName());
             }
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Skipped refresh token generation because no {} implementation is present", RefreshTokenValidator.class.getName());
-            }
+            debug(LOG, msg, RefreshTokenValidator.class.getName());
         }
 
         return refreshToken;
@@ -142,12 +138,10 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
 
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(claims);
         if (!optionalAccessToken.isPresent()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("tokenGenerator failed to generate access token claims: {}", claims.entrySet()
+                debug(LOG, "tokenGenerator failed to generate access token claims: {}", claims.entrySet()
                         .stream()
-                        .map((entry) -> entry.getKey() + "=>" + entry.getValue().toString())
+                        .map(entry -> entry.getKey() + "=>" + entry.getValue().toString())
                         .collect(Collectors.joining(", ")));
-            }
             return Optional.empty();
         }
         String accessToken = optionalAccessToken.get();
@@ -167,9 +161,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
     public Optional<AccessRefreshToken> generate(@Nullable String refreshToken, @NonNull Authentication authentication) {
         Optional<String> optionalAccessToken = tokenGenerator.generateToken(authentication, accessTokenExpiration(authentication));
         if (!optionalAccessToken.isPresent()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Failed to generate access token for user {}", authentication.getName());
-            }
+            debug(LOG, "Failed to generate access token for user {}", authentication.getName());
             return Optional.empty();
         }
 

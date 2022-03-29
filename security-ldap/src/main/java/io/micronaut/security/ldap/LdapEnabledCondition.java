@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.ldap;
 
-import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
@@ -23,7 +22,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.naming.Named;
 import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
-
+import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import java.util.Optional;
 
 /**

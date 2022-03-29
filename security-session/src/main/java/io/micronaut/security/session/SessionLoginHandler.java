@@ -15,15 +15,16 @@
  */
 package io.micronaut.security.session;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.functional.ThrowingSupplier;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.filters.SecurityFilter;
@@ -46,10 +47,16 @@ import java.util.Optional;
 @Singleton
 public class SessionLoginHandler implements RedirectingLoginHandler {
 
+    @Nullable
     protected final String loginSuccess;
+
+    @Nullable
     protected final String loginFailure;
+
     protected final RedirectConfiguration redirectConfiguration;
+
     protected final SessionStore<Session> sessionStore;
+
     private final PriorToLoginPersistence priorToLoginPersistence;
 
     /**
@@ -61,8 +68,8 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
                                @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this.loginFailure = redirectConfiguration.getLoginFailure();
-        this.loginSuccess = redirectConfiguration.getLoginSuccess();
+        this.loginFailure = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginFailure() : null;
+        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginSuccess() : null;
         this.redirectConfiguration = redirectConfiguration;
         this.sessionStore = sessionStore;
         this.priorToLoginPersistence = priorToLoginPersistence;
@@ -70,22 +77,8 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
 
     @Override
     public MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {
-        Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
-        session.put(SecurityFilter.AUTHENTICATION, authentication);
-        try {
-            MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
-            ThrowingSupplier<URI, URISyntaxException> uriSupplier = () -> new URI(loginSuccess);
-            if (priorToLoginPersistence != null) {
-                Optional<URI> originalUri = priorToLoginPersistence.getOriginalUri(request, response);
-                if (originalUri.isPresent()) {
-                    uriSupplier = originalUri::get;
-                }
-            }
-            response.getHeaders().location(uriSupplier.get());
-            return response;
-        } catch (URISyntaxException e) {
-            return HttpResponse.serverError();
-        }
+        saveAuthenticationInSession(authentication, request);
+        return loginSuccessResponse(request);
     }
 
     @Override
@@ -95,11 +88,47 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
 
     @Override
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
+        if (loginFailure == null) {
+            return HttpResponse.ok();
+        }
         try {
             URI location = new URI(loginFailure);
             return HttpResponse.seeOther(location);
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();
         }
+    }
+
+    @NonNull
+    private MutableHttpResponse<?> loginSuccessResponse(HttpRequest<?> request) {
+        if (loginSuccess == null) {
+            return HttpResponse.ok();
+        }
+        try {
+            MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
+            response.getHeaders().location(loginSuccessUriSupplier(loginSuccess, request, response).get());
+            return response;
+        } catch (URISyntaxException e) {
+            return HttpResponse.serverError();
+        }
+    }
+
+    @NonNull
+    private ThrowingSupplier<URI, URISyntaxException> loginSuccessUriSupplier(@NonNull String loginSuccess,
+                                                                              HttpRequest<?> request,
+                                                                              @NonNull MutableHttpResponse<?> response) {
+        ThrowingSupplier<URI, URISyntaxException> uriSupplier = () -> new URI(loginSuccess);
+        if (priorToLoginPersistence != null) {
+            Optional<URI> originalUri = priorToLoginPersistence.getOriginalUri(request, response);
+            if (originalUri.isPresent()) {
+                uriSupplier = originalUri::get;
+            }
+        }
+        return uriSupplier;
+    }
+
+    private void saveAuthenticationInSession(Authentication authentication, HttpRequest<?> request) {
+        Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
+        session.put(SecurityFilter.AUTHENTICATION, authentication);
     }
 }

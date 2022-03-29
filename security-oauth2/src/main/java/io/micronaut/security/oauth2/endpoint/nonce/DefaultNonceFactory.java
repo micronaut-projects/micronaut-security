@@ -16,11 +16,10 @@
 package io.micronaut.security.oauth2.endpoint.nonce;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.NoncePersistence;
-
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 import java.util.UUID;
 

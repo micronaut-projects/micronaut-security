@@ -7,12 +7,12 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.routes.OauthController
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.testutils.Keycloak
 import spock.lang.IgnoreIf
 
 import java.nio.charset.StandardCharsets

@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
-import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import java.util.Optional;
 
 /**

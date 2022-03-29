@@ -15,10 +15,9 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
@@ -33,7 +32,7 @@ import java.util.List;
  */
 @ReflectiveAccess
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
 
     private String authorizationEndpoint;
@@ -76,12 +75,6 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     private List<String> requestObjectEncryptionAlgValuesSupported;
     private List<String> requestObjectEncryptionEncValuesSupported;
     private String checkSessionIframe;
-
-    /**
-     * Empty Constructor.
-     */
-    public DefaultOpenIdProviderMetadata() {
-    }
 
     /**
      *

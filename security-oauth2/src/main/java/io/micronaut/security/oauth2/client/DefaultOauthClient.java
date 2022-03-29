@@ -21,7 +21,6 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
-import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -32,18 +31,16 @@ import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.request.OauthAuthorizationRequest;
-import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponse;
-import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException;
-import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse;
-import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponse;
-import io.micronaut.security.oauth2.endpoint.authorization.response.OauthAuthorizationResponseHandler;
+import io.micronaut.security.oauth2.endpoint.authorization.response.*;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
+
+import static io.micronaut.security.oauth2.client.ClientUtils.getResponseData;
 
 /**
  * The default implementation of {@link OauthClient}.
@@ -104,12 +101,7 @@ public class DefaultOauthClient implements OauthClient {
 
     @Override
     public Publisher<AuthenticationResponse> onCallback(HttpRequest<Map<String, Object>> request) {
-        ConvertibleMultiValues<String> responseData = request.getBody()
-                .map(body -> {
-                    MutableConvertibleMultiValuesMap<String> map = new MutableConvertibleMultiValuesMap<>();
-                    body.forEach((key, value) -> map.add(key, value.toString()));
-                    return (ConvertibleMultiValues<String>) map;
-                }).orElseGet(request::getParameters);
+        ConvertibleMultiValues<String> responseData = getResponseData(request);
 
         if (isErrorCallback(responseData)) {
             AuthorizationErrorResponse errorResponse = beanContext.createBean(AuthorizationErrorResponse.class, request);

@@ -1,7 +1,6 @@
 package io.micronaut.docs.validator
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.jwt.validator.ExpirationJwtClaimsValidator

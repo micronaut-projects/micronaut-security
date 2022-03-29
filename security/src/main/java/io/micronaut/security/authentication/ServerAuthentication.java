@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +41,12 @@ public class ServerAuthentication implements Authentication {
     private final Collection<String> roles;
     private final Map<String, Object> attributes;
 
+    /**
+     *
+     * @param name The name of this principal name
+     * @param roles Roles of the authenticated user
+     * @param attributes Attributes of the authenticated user
+     */
     public ServerAuthentication(@NonNull String name,
                                 @Nullable Collection<String> roles,
                                 @Nullable Map<String, Object> attributes) {

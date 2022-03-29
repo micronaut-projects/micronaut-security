@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.oauth2.grants;
 
+import io.micronaut.core.annotation.NonNull;
+
 import java.util.Map;
 
 /**
@@ -28,5 +30,6 @@ public interface AsMap {
     /**
      * @return This object as a Map
      */
+    @NonNull
     Map<String, String> toMap();
 }

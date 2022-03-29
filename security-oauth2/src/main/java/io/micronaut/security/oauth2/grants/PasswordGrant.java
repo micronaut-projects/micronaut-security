@@ -15,15 +15,15 @@
  */
 package io.micronaut.security.oauth2.grants;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -35,26 +35,17 @@ import java.util.Map;
  * @since 1.2.0
  */
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class PasswordGrant implements SecureGrant, AsMap {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class PasswordGrant extends AbstractClientSecureGrant implements SecureGrant, AsMap {
 
-    private static final String KEY_GRANT_TYPE = "grant_type";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_SCOPE = "scope";
 
     private String grantType = GrantType.PASSWORD.toString();
-    private String clientId;
-    private String clientSecret;
     private String username;
     private String password;
     private String scope;
-
-    /**
-     * Default constructor.
-     */
-    public PasswordGrant() {
-    }
 
     /**
      * @param authenticationRequest The authentication request
@@ -83,39 +74,6 @@ public class PasswordGrant implements SecureGrant, AsMap {
      */
     public void setGrantType(@NonNull String grantType) {
         this.grantType = grantType;
-    }
-
-    /**
-     *
-     * @return The application's Client identifier.
-     */
-    @NonNull
-    public String getClientId() {
-        return clientId;
-    }
-
-    /**
-     *
-     * @param clientId Application's Client identifier.
-     */
-    public void setClientId(@NonNull String clientId) {
-        this.clientId = clientId;
-    }
-
-    /**
-     *
-     * @param clientSecret Application's Client clientSecret.
-     */
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    /**
-     *
-     * @return The application's Client clientSecret.
-     */
-    public String getClientSecret() {
-        return this.clientSecret;
     }
 
     /**
@@ -173,19 +131,13 @@ public class PasswordGrant implements SecureGrant, AsMap {
      *
      * @return this object as a Map
      */
+    @NonNull
     public Map<String, String> toMap() {
-        Map<String, String> m = new SecureGrantMap();
-        m.put(KEY_GRANT_TYPE, grantType);
+        Map<String, String> m = super.toMap();
         m.put(KEY_USERNAME, username);
         m.put(KEY_PASSWORD, password);
         if (StringUtils.isNotEmpty(scope)) {
             m.put(KEY_SCOPE, scope);
-        }
-        if (clientId != null) {
-            m.put(KEY_CLIENT_ID, clientId);
-        }
-        if (clientSecret != null) {
-            m.put(KEY_CLIENT_SECRET, clientSecret);
         }
         return m;
     }

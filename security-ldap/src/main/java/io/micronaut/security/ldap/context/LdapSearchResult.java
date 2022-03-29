@@ -16,7 +16,6 @@
 package io.micronaut.security.ldap.context;
 
 import io.micronaut.core.convert.value.ConvertibleValues;
-
 import javax.naming.directory.Attributes;
 
 /**

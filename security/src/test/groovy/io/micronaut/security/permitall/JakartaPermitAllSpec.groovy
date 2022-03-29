@@ -5,7 +5,6 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-
 import jakarta.annotation.security.PermitAll
 
 class JakartaPermitAllSpec extends PermitAllSpec {

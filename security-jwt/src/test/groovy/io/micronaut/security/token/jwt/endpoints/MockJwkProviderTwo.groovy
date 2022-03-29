@@ -2,7 +2,6 @@ package io.micronaut.security.token.jwt.endpoints
 
 import com.nimbusds.jose.jwk.JWK
 import io.micronaut.context.annotation.Requires
-
 import jakarta.inject.Singleton
 
 @Requires(property = "spec.name", value = "keyscontrollerwithmultiplekeys")

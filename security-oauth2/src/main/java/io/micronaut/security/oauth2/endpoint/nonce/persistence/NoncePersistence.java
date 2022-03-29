@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.endpoint.nonce.persistence;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-
 import java.util.Optional;
 
 /**

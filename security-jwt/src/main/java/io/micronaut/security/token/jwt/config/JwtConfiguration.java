@@ -29,5 +29,6 @@ public interface JwtConfiguration extends Toggleable {
      *
      * @return a boolean flag indicating whether JWT beans should be enabled or not
      */
+    @Override
     boolean isEnabled();
 }

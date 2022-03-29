@@ -18,7 +18,6 @@ package io.micronaut.security.oauth2.client;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
-
 import java.util.Optional;
 
 /**

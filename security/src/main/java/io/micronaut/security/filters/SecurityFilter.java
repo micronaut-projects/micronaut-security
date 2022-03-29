@@ -35,15 +35,14 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Security Filter.
@@ -120,6 +119,8 @@ public class SecurityFilter implements HttpServerFilter {
 
     /**
      * Remove once {@link io.micronaut.http.filter.OncePerRequestHttpServerFilter} is deleted.
+     *
+     * @deprecated see {@link io.micronaut.http.filter.OncePerRequestHttpServerFilter}.
      */
     @Deprecated
     private void populateWithOldKey(HttpRequest<?> request) {
@@ -167,8 +168,8 @@ public class SecurityFilter implements HttpServerFilter {
                 .concatMap(rule -> Mono.from(rule.check(request, routeMatch, authentication))
                                         .defaultIfEmpty(SecurityRuleResult.UNKNOWN)
                                         // Ideally should return just empty but filter the unknowns
-                                        .filter((result) -> result != SecurityRuleResult.UNKNOWN)
-                                        .doOnSuccess((result) -> logResult(result, method, path, rule)))
+                                        .filter(result -> result != SecurityRuleResult.UNKNOWN)
+                                        .doOnSuccess(result -> logResult(result, method, path, rule)))
                 .next()
                 .flatMapMany(result -> {
                     if (result == SecurityRuleResult.REJECTED) {
