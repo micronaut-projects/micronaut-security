@@ -8,18 +8,18 @@ repositories {
 }
 
 dependencies {
-    api "org.gebish:geb-spock:$gebVersion"
-    compileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    implementation "io.micronaut.test:micronaut-test-spock"
-    implementation "io.micronaut:micronaut-http-server-netty"
-    implementation "io.micronaut:micronaut-http-client"
-    implementation "org.testcontainers:selenium"
-    implementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
-    implementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
-    implementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
-    runtimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
-    runtimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+    api(libs.geb.spock)
+    compileOnly(libs.micronaut.inject.groovy)
+    implementation(platform(libs.boms.micronaut))
+    implementation(libs.micronaut.test.spock)
+    implementation(libs.micronaut.http.server.netty)
+    implementation(libs.micronaut.http.client)
+    implementation(libs.testcontainers.selenium)
+    implementation(libs.selenium.remote.driver)
+    implementation(libs.selenium.api)
+    implementation(libs.selenium.support)
+    runtimeOnly(libs.selenium.firefox.driver)
+    runtimeOnly(libs.selenium.chrome.driver)
 }
 
 java {

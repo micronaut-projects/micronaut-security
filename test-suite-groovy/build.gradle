@@ -6,24 +6,24 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    testCompileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
+    testCompileOnly(libs.micronaut.inject.groovy)
 
     testImplementation("org.spockframework:spock-core:${spockVersion}") {
         exclude module:'groovy-all'
     }
-    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
+    testImplementation(libs.micronaut.test.spock)
 
-    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly(libs.logback.classic)
 
-    testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    testImplementation "io.micronaut:micronaut-management"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation "io.micronaut:micronaut-http-client"
+    testImplementation(platform(libs.boms.micronaut))
+    testImplementation(libs.micronaut.management)
+    testImplementation(libs.micronaut.http.server.netty)
+    testImplementation(libs.micronaut.http.client)
     testImplementation project(":security-jwt")
     testImplementation project(":security-oauth2")
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
-    testImplementation "io.projectreactor:reactor-core"
+    testImplementation(libs.reactor.core)
 }
 
 tasks.named('test') {

@@ -3,6 +3,6 @@ plugins {
 }
 dependencies {
     constraints {
-        api("com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion")
+        api(libs.nimbus.jose.jwt)
     }
 }

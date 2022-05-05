@@ -3,23 +3,23 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-graal"
-    annotationProcessor "io.micronaut.serde:micronaut-serde-processor:$serdeVersion"
+    annotationProcessor(libs.micronaut.graal)
+    annotationProcessor(libs.micronaut.serde.processor)
 
-    api "io.micronaut:micronaut-http"
-    api "io.micronaut:micronaut-http-server"
-    api "io.micronaut:micronaut-validation"
+    api(libs.micronaut.http)
+    api(libs.micronaut.http.server)
+    api(libs.micronaut.validation)
     api project(":security-annotations")
 
-    implementation "io.projectreactor:reactor-core"
+    implementation(libs.reactor.core)
 
-    compileOnly "io.micronaut:micronaut-management"
+    compileOnly(libs.micronaut.management)
 
-    testImplementation "io.micronaut:micronaut-management"
-    testImplementation "io.micronaut:micronaut-http-client"
+    testImplementation(libs.micronaut.management)
+    testImplementation(libs.micronaut.http.client)
     testAnnotationProcessor project(":security-annotations")
-    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
+    testAnnotationProcessor(libs.micronaut.inject.java)
+    testImplementation(libs.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
 }
 

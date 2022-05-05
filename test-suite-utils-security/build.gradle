@@ -8,12 +8,12 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    annotationProcessor "io.micronaut:micronaut-inject-java"
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    api "io.micronaut:micronaut-inject"
+    annotationProcessor(platform(libs.boms.micronaut))
+    annotationProcessor(libs.micronaut.inject.java)
+    implementation(platform(libs.boms.micronaut))
+    api(libs.micronaut.inject)
     implementation project(":security")
-    implementation "io.projectreactor:reactor-core"
+    implementation(libs.reactor.core)
 }
 
 java {
