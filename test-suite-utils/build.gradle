@@ -10,7 +10,7 @@ repositories {
 dependencies {
     api(libs.geb.spock)
     compileOnly(libs.micronaut.inject.groovy)
-    implementation(platform(libs.boms.micronaut))
+    implementation(platform(libs.micronaut.bom))
     implementation(libs.micronaut.test.spock)
     implementation(libs.micronaut.http.server.netty)
     implementation(libs.micronaut.http.client)

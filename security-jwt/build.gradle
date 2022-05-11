@@ -11,7 +11,7 @@ dependencies {
     api(libs.micronaut.http)
     api(libs.micronaut.http.server)
     api project(":security")
-    api(libs.nimbus.jose.jwt)
+    api(libs.managed.nimbus.jose.jwt)
 
     implementation(libs.reactor.core)
 

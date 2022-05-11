@@ -8,9 +8,9 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor(platform(libs.boms.micronaut))
+    annotationProcessor(platform(libs.micronaut.bom))
     annotationProcessor(libs.micronaut.inject.java)
-    implementation(platform(libs.boms.micronaut))
+    implementation(platform(libs.micronaut.bom))
     api(libs.micronaut.inject)
     implementation project(":security")
     implementation(libs.reactor.core)

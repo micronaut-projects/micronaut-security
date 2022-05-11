@@ -1,7 +1,8 @@
 [versions]
+managed-nimbus-jose-jwt = "9.21"
+
 geb = "4.1"
 groovy = "3.0.10"
-nimbus-jose-jwt = "9.21"
 reactor-test = "3.4.17"
 selenium = "3.141.59"
 serde = "1.0.1"
@@ -15,10 +16,10 @@ micronaut-test = "3.1.1"
 
 
 [libraries]
-# BOMs
-boms-micronaut = { module = "io.micronaut:micronaut-bom", version.ref = "micronaut" }
+managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
 
 # Micronaut
+micronaut-bom = { module = "io.micronaut:micronaut-bom", version.ref = "micronaut" }
 micronaut-graal = { module = "io.micronaut:micronaut-graal" }
 micronaut-http = { module = "io.micronaut:micronaut-http" }
 micronaut-http-client = { module = "io.micronaut:micronaut-http-client" }
@@ -41,7 +42,6 @@ groovy-json = { module = "org.codehaus.groovy:groovy-json", version.ref = "groov
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 logback-classic = { module = "ch.qos.logback:logback-classic" }
-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "nimbus-jose-jwt" }
 reactor-core = { module = "io.projectreactor:reactor-core" }
 reactor-test = { module = "io.projectreactor:reactor-test", version.ref = "reactor-test" }
 selenium-api = { module = "org.seleniumhq.selenium:selenium-api", version.ref = "selenium" }
