@@ -9,6 +9,10 @@ serde = "1.0.1"
 testcontainers = "1.17.1"
 unboundid-ldapsdk = "6.0.4"
 velocity-engine-core = "2.3"
+bouncycastle = "1.70"
+javax-activation = "1.2.0"
+spock = "2.0-groovy-3.0"
+kotlin = "1.6.20"
 
 # Micronaut
 micronaut = "3.4.3"
@@ -53,3 +57,12 @@ testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "
 testcontainers-selenium = { module = "org.testcontainers:selenium" }
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
 velocity-engine-core = { module = "org.apache.velocity:velocity-engine-core", version.ref = "velocity-engine-core" }
+bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }
+bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
+javax-activation = { module = "com.sun.activation:javax.activation", version.ref = "javax-activation" }
+spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
+kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }

@@ -2,10 +2,6 @@ plugins {
     id "io.micronaut.build.internal.module"
 }
 
-ext {
-    bouncyCastleVersion = '1.70'
-}
-
 dependencies {
     annotationProcessor(libs.micronaut.graal)
     api(libs.micronaut.http)
@@ -15,8 +11,8 @@ dependencies {
 
     implementation(libs.reactor.core)
 
-    testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
-    testImplementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
+    testImplementation(libs.bcpkix.jdk15on)
+    testImplementation(libs.bcprov.jdk15on)
 
     testImplementation(libs.micronaut.management)
     testImplementation(libs.micronaut.http.client)

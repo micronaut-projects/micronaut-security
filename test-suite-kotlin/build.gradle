@@ -1,6 +1,6 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.6.20"
-    id("org.jetbrains.kotlin.kapt") version "1.6.20"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 repositories {
@@ -24,7 +24,7 @@ dependencies {
     testImplementation project(":security-oauth2")
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.20"
+    testImplementation(libs.kotlin.stdlib.jdk8)
     testImplementation(libs.reactor.core)
 }
 
