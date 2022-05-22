@@ -8,11 +8,11 @@ dependencies {
     api project(":security")
 
     implementation "io.projectreactor:reactor-core"
-    testImplementation "io.projectreactor:reactor-test:3.4.17"
+    testImplementation "io.projectreactor:reactor-test:3.4.18"
 
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation "com.unboundid:unboundid-ldapsdk:6.0.4"
+    testImplementation "com.unboundid:unboundid-ldapsdk:6.0.5"
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
