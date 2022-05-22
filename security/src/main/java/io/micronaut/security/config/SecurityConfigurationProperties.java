@@ -134,8 +134,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     /**
-     * @param rejectNotFound Set to true if the server should respond with 404 for requests that do not
-     *      * match any routes on the server. Default value ({#DEFAULT_REJECT_NOT_FOUND}).
+     * @param rejectNotFound Whether the server should respond with 404 for requests that do not match any routes on the server. Default value ({#DEFAULT_REJECT_NOT_FOUND}).
      */
     public void setRejectNotFound(boolean rejectNotFound) {
         this.rejectNotFound = rejectNotFound;
