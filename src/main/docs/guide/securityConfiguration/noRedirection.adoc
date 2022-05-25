@@ -1,2 +1,2 @@
 Some built-in handlers respond with a 303 (See other) response to the urls defined in the <<redirection, Redirection Configuration>>
-If you disable redirection configuration with by setting `micronaut.security.redirection.enabled` to `false`, these handlers respond with 200 responses instead.
+If you disable redirection configuration with by setting `micronaut.security.redirect.enabled` to `false`, these handlers respond with 200 responses instead.
