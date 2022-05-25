@@ -15,7 +15,7 @@ spock = "2.0-groovy-3.0"
 kotlin = "1.6.21g"
 
 # Micronaut
-micronaut = "3.4.3"
+micronaut = "3.4.4"
 micronaut-test = "3.1.1"
 
 
