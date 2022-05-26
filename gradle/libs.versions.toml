@@ -1,5 +1,5 @@
 [versions]
-managed-nimbus-jose-jwt = "9.21"
+managed-nimbus-jose-jwt = "9.22"
 
 geb = "4.1"
 groovy = "3.0.10"
