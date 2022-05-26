@@ -14,32 +14,8 @@ javax-activation = "1.2.0"
 spock = "2.0-groovy-3.0"
 kotlin = "1.6.21"
 
-# Micronaut
-micronaut = "3.4.4"
-micronaut-test = "3.1.1"
-
-
 [libraries]
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
-
-# Micronaut
-micronaut-bom = { module = "io.micronaut:micronaut-bom", version.ref = "micronaut" }
-micronaut-graal = { module = "io.micronaut:micronaut-graal" }
-micronaut-http = { module = "io.micronaut:micronaut-http" }
-micronaut-http-client = { module = "io.micronaut:micronaut-http-client" }
-micronaut-http-server = { module = "io.micronaut:micronaut-http-server" }
-micronaut-http-server-netty = { module = "io.micronaut:micronaut-http-server-netty" }
-micronaut-inject = { module = "io.micronaut:micronaut-inject" }
-micronaut-inject-groovy = { module = "io.micronaut:micronaut-inject-groovy", version.ref = "micronaut" }
-micronaut-inject-java = { module = "io.micronaut:micronaut-inject-java" }
-micronaut-management = { module = "io.micronaut:micronaut-management" }
-micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy" }
-micronaut-serde-processor = { module = "io.micronaut.serde:micronaut-serde-processor", version.ref = "serde" }
-micronaut-session = { module = "io.micronaut:micronaut-session" }
-micronaut-test-junit5 = { module = "io.micronaut.test:micronaut-test-junit5" }
-micronaut-test-spock = { module = "io.micronaut.test:micronaut-test-spock" }
-micronaut-validation = { module = "io.micronaut:micronaut-validation" }
-micronaut-views-velocity = { module = "io.micronaut.views:micronaut-views-velocity" }
 
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
 groovy-json = { module = "org.codehaus.groovy:groovy-json", version.ref = "groovy" }

@@ -9,11 +9,11 @@ repositories {
 
 dependencies {
     api(libs.geb.spock)
-    compileOnly(libs.micronaut.inject.groovy)
-    implementation(platform(libs.micronaut.bom))
-    implementation(libs.micronaut.test.spock)
-    implementation(libs.micronaut.http.server.netty)
-    implementation(libs.micronaut.http.client)
+    compileOnly(mn.micronaut.inject.groovy)
+    implementation(platform(mn.micronaut.bom))
+    implementation(mn.micronaut.test.spock)
+    implementation(mn.micronaut.http.server.netty)
+    implementation(mn.micronaut.http.client)
     implementation(libs.testcontainers.selenium)
     implementation(libs.selenium.remote.driver)
     implementation(libs.selenium.api)

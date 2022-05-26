@@ -6,19 +6,20 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    testCompileOnly(libs.micronaut.inject.groovy)
+    implementation(platform(mn.micronaut.bom))
+
+    testCompileOnly(mn.micronaut.inject.groovy)
 
     testImplementation(libs.spock.core) {
         exclude module:'groovy-all'
     }
-    testImplementation(libs.micronaut.test.spock)
+    testImplementation(mn.micronaut.test.spock)
 
     runtimeOnly(libs.logback.classic)
 
-    testImplementation(platform(libs.micronaut.bom))
-    testImplementation(libs.micronaut.management)
-    testImplementation(libs.micronaut.http.server.netty)
-    testImplementation(libs.micronaut.http.client)
+    testImplementation(mn.micronaut.management)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
     testImplementation project(":security-jwt")
     testImplementation project(":security-oauth2")
     testImplementation project(":test-suite-utils")

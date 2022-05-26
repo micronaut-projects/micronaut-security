@@ -3,15 +3,15 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(libs.micronaut.graal)
+    annotationProcessor(mn.micronaut.graal)
 
     api project(":security")
 
     implementation(libs.reactor.core)
     testImplementation(libs.reactor.test)
 
-    testImplementation(libs.micronaut.http.client)
-    testImplementation(libs.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.http.server.netty)
     testImplementation(libs.unboundid.ldapsdk)
 }
 

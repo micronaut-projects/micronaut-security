@@ -2,17 +2,17 @@ plugins {
     id "io.micronaut.build.internal.module"
 }
 dependencies {
-    annotationProcessor(libs.micronaut.graal)
+    annotationProcessor(mn.micronaut.graal)
 
-    api(libs.micronaut.http)
-    api(libs.micronaut.session)
+    api(mn.micronaut.http)
+    api(mn.micronaut.session)
     api project(":security")
-    api(libs.micronaut.http.server)
+    api(mn.micronaut.http.server)
     implementation(libs.reactor.core)
 
-    testImplementation(libs.micronaut.http.client)
-    testImplementation(libs.micronaut.inject.groovy)
-    testImplementation(libs.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.inject.groovy)
+    testImplementation(mn.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
 }

@@ -3,9 +3,9 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(libs.micronaut.graal)
-    api(libs.micronaut.http)
-    api(libs.micronaut.http.server)
+    annotationProcessor(mn.micronaut.graal)
+    api(mn.micronaut.http)
+    api(mn.micronaut.http.server)
     api project(":security")
     api(libs.managed.nimbus.jose.jwt)
 
@@ -14,15 +14,15 @@ dependencies {
     testImplementation(libs.bcpkix.jdk15on)
     testImplementation(libs.bcprov.jdk15on)
 
-    testImplementation(libs.micronaut.management)
-    testImplementation(libs.micronaut.http.client)
-    testAnnotationProcessor(libs.micronaut.inject.java)
-    testImplementation(libs.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.management)
+    testImplementation(mn.micronaut.http.client)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
-    testImplementation(libs.micronaut.multitenancy)
+    testImplementation(mn.micronaut.multitenancy)
 
-    testImplementation(libs.micronaut.views.velocity)
+    testImplementation(mn.micronaut.views.velocity)
     testRuntimeOnly(libs.velocity.engine.core)
 }
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

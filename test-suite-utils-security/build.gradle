@@ -8,10 +8,10 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor(platform(libs.micronaut.bom))
-    annotationProcessor(libs.micronaut.inject.java)
-    implementation(platform(libs.micronaut.bom))
-    api(libs.micronaut.inject)
+    annotationProcessor(platform(mn.micronaut.bom))
+    annotationProcessor(mn.micronaut.inject.java)
+    implementation(platform(mn.micronaut.bom))
+    api(mn.micronaut.inject)
     implementation project(":security")
     implementation(libs.reactor.core)
 }
