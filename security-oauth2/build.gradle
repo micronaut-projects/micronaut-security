@@ -3,23 +3,23 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-graal"
-    annotationProcessor "io.micronaut.serde:micronaut-serde-processor:$serdeVersion"
+    annotationProcessor(mn.micronaut.graal)
+    annotationProcessor(mn.micronaut.serde.processor)
     annotationProcessor project(":security-annotations")
 
-    compileOnly "io.micronaut:micronaut-inject-java"
+    compileOnly(mn.micronaut.inject.java)
     compileOnly project(":security-jwt")
     api project(":security")
-    implementation "io.micronaut:micronaut-http-client"
-    compileOnly "io.micronaut:micronaut-session"
+    implementation(mn.micronaut.http.client)
+    compileOnly(mn.micronaut.session)
 
-    implementation "io.projectreactor:reactor-core"
+    implementation(libs.reactor.core)
     testImplementation project(":security-session")
-    testImplementation "io.micronaut:micronaut-http-client"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation 'com.sun.activation:javax.activation:1.2.0' // Java 11
-    testImplementation "org.testcontainers:testcontainers:1.17.2"
-    testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(libs.javax.activation) // Java 11
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.groovy.json)
     testImplementation project(":security-jwt")
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
