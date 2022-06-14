@@ -5,6 +5,8 @@ import io.micronaut.core.serialize.JdkSerializer
 import io.micronaut.jackson.serialize.JacksonObjectSerializer
 import spock.lang.Specification
 
+import java.nio.charset.StandardCharsets
+
 class AuthenticationSerializationSpec extends Specification {
 
     void "test authentication is serializable"() {
@@ -41,5 +43,17 @@ class AuthenticationSerializationSpec extends Specification {
         deserialized.roles.size() == 2
         deserialized.roles.contains("X")
         deserialized.roles.contains("Y")
+    }
+
+    void "deserialization without attributes"() {
+        ObjectMapper objectMapper = new ObjectMapper()
+        JacksonObjectSerializer serializer = new JacksonObjectSerializer(objectMapper)
+
+        when:
+        Authentication deserialized = serializer.deserialize('{\"name\":\"foo\"}'.getBytes(StandardCharsets.UTF_8), Authentication).get()
+
+        then:
+        deserialized.name == "foo"
+        deserialized.attributes.isEmpty()
     }
 }
