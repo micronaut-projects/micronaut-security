@@ -147,7 +147,7 @@ public class EndSessionEndpointResolver {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Resolved the KeycloakEndSessionEndpoint for provider [{}]", providerName);
                 }
-                return Optional.of(new KeycloakEndSessionEndpoint(endSessionCallbackUrlBuilder, oauthClientConfiguration, openIdProviderMetadata));
+                return keycloakEndSessionEndpoint(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder);
             default:
                 return Optional.empty();
         }
@@ -155,6 +155,19 @@ public class EndSessionEndpointResolver {
 
     @NonNull
     private Optional<EndSessionEndpoint> oktaEndSessionEndpoint(OauthClientConfiguration oauthClientConfiguration,
+                                                                Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
+                                                                EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
+        SecurityConfiguration securityConfiguration = beanContext.getBean(SecurityConfiguration.class);
+        TokenResolver tokenResolver = beanContext.getBean(TokenResolver.class);
+        return Optional.of(new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder,
+                oauthClientConfiguration,
+                openIdProviderMetadata,
+                securityConfiguration,
+                tokenResolver));
+    }
+
+    @NonNull
+    private Optional<EndSessionEndpoint> keycloakEndSessionEndpoint(OauthClientConfiguration oauthClientConfiguration,
                                                                 Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
                                                                 EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
         SecurityConfiguration securityConfiguration = beanContext.getBean(SecurityConfiguration.class);

@@ -15,6 +15,7 @@ dependencies {
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.micronaut.http.client)
     implementation(libs.testcontainers.selenium)
+    implementation(libs.testcontainers.keycloak)
     implementation(libs.selenium.remote.driver)
     implementation(libs.selenium.api)
     implementation(libs.selenium.support)

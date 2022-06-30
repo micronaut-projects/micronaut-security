@@ -33,6 +33,7 @@ public enum AuthorizationServer {
     private static final String ISSUER_PART_COGNITO = "cognito";
     private static final String ISSUER_PART_AUTH0 = "auth0";
     private static final String ISSUER_PART_KEYCLOAK = "/auth/realms/";
+    private static final String ISSUER_PART_KEYCLOAK17 = "/realms/";
 
     /**
      * @param issuer Issuer url
@@ -50,6 +51,9 @@ public enum AuthorizationServer {
             return Optional.of(AuthorizationServer.AUTH0);
         }
         if (issuer.contains(ISSUER_PART_KEYCLOAK)) {
+            return Optional.of(AuthorizationServer.KEYCLOAK);
+        }
+        if (issuer.contains(ISSUER_PART_KEYCLOAK17)) {
             return Optional.of(AuthorizationServer.KEYCLOAK);
         }
         return Optional.empty();
