@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.testutils
 
-import org.spockframework.runtime.extension.AbstractGlobalExtension
+import org.spockframework.runtime.extension.IGlobalExtension
 
-class KeycloakCleanup extends AbstractGlobalExtension {
+class KeycloakCleanup implements IGlobalExtension {
 
     @Override
     void stop() {

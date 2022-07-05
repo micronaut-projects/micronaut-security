@@ -172,7 +172,7 @@ public class EndSessionEndpointResolver {
                                                                 EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
         SecurityConfiguration securityConfiguration = beanContext.getBean(SecurityConfiguration.class);
         TokenResolver tokenResolver = beanContext.getBean(TokenResolver.class);
-        return Optional.of(new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder,
+        return Optional.of(new KeycloakEndSessionEndpoint(endSessionCallbackUrlBuilder,
                 oauthClientConfiguration,
                 openIdProviderMetadata,
                 securityConfiguration,
