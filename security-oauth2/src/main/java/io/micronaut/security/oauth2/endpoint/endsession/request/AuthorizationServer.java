@@ -27,16 +27,18 @@ public enum AuthorizationServer {
     OKTA,
     COGNITO,
     KEYCLOAK,
+    KEYCLOAK_17,
     AUTH0;
 
     private static final String ISSUER_PART_OKTA = "okta";
     private static final String ISSUER_PART_COGNITO = "cognito";
     private static final String ISSUER_PART_AUTH0 = "auth0";
     private static final String ISSUER_PART_KEYCLOAK = "/auth/realms/";
+    private static final String ISSUER_PART_KEYCLOAK_17 = "/realms/";
 
     /**
      * @param issuer Issuer url
-     * @return An Authorization Server if it could be infered based on the contents of the issuer or empty if not
+     * @return An Authorization Server if it could be inferred based on the contents of the issuer or empty if not
      */
     @NonNull
     public static Optional<AuthorizationServer> infer(@NonNull String issuer) {
@@ -51,6 +53,9 @@ public enum AuthorizationServer {
         }
         if (issuer.contains(ISSUER_PART_KEYCLOAK)) {
             return Optional.of(AuthorizationServer.KEYCLOAK);
+        }
+        if (issuer.contains(ISSUER_PART_KEYCLOAK_17)) {
+            return Optional.of(AuthorizationServer.KEYCLOAK_17);
         }
         return Optional.empty();
     }

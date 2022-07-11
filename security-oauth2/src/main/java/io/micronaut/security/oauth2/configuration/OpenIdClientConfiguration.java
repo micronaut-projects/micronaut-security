@@ -33,6 +33,13 @@ import java.util.Optional;
 public interface OpenIdClientConfiguration extends Named {
 
     /**
+     *
+     *
+     * @return a string that identifies the OpenId vendor.
+     */
+    Optional<String> getVendor();
+
+    /**
      * @return URL that the OpenID provider asserts as its issuer identifier.
      */
     Optional<URL> getIssuer();

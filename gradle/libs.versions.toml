@@ -7,6 +7,7 @@ reactor-test = "3.4.18"
 selenium = "3.141.59"
 serde = "1.0.1"
 testcontainers = "1.17.2"
+testcontainers-keycloak = "2.2.2"
 unboundid-ldapsdk = "6.0.5"
 velocity-engine-core = "2.3"
 bouncycastle = "1.70"
@@ -30,6 +31,8 @@ selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-d
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "selenium" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
+testcontainers-spock = { module = "org.testcontainers:spock", version.ref = "testcontainers" }
+testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version.ref = "testcontainers-keycloak"}
 testcontainers-selenium = { module = "org.testcontainers:selenium" }
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
 velocity-engine-core = { module = "org.apache.velocity:velocity-engine-core", version.ref = "velocity-engine-core" }

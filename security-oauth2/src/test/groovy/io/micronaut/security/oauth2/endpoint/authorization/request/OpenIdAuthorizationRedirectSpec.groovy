@@ -23,9 +23,11 @@ import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 import reactor.core.publisher.FluxSink
 import spock.lang.IgnoreIf
+import spock.util.environment.Jvm
 
 import java.nio.charset.StandardCharsets
 
+@IgnoreIf(value = { Jvm.getCurrent().isJava8() }, reason = "testcontainers-keycloak requires Java 11+")
 class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
     @Override

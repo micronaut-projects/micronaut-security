@@ -129,10 +129,11 @@ public class EndSessionEndpointResolver {
         }
         switch (inferOptional.get()) {
             case OKTA:
+            case KEYCLOAK_17:
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Resolved the OktaEndSessionEndpoint for provider [{}]", providerName);
+                    LOG.debug("Resolved the OpenIdEndSessionEndpoint for provider [{}]", providerName);
                 }
-                return oktaEndSessionEndpoint(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder);
+                return openIdEndSessionEndpoint(oauthClientConfiguration, openIdProviderMetadata, endSessionCallbackUrlBuilder);
             case COGNITO:
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Resolved the AwsCognitoEndSessionEndpoint for provider [{}]", providerName);
@@ -154,12 +155,12 @@ public class EndSessionEndpointResolver {
     }
 
     @NonNull
-    private Optional<EndSessionEndpoint> oktaEndSessionEndpoint(OauthClientConfiguration oauthClientConfiguration,
+    private Optional<EndSessionEndpoint> openIdEndSessionEndpoint(OauthClientConfiguration oauthClientConfiguration,
                                                                 Supplier<OpenIdProviderMetadata> openIdProviderMetadata,
                                                                 EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder) {
         SecurityConfiguration securityConfiguration = beanContext.getBean(SecurityConfiguration.class);
         TokenResolver tokenResolver = beanContext.getBean(TokenResolver.class);
-        return Optional.of(new OktaEndSessionEndpoint(endSessionCallbackUrlBuilder,
+        return Optional.of(new OpenIdEndSessionEndpoint(endSessionCallbackUrlBuilder,
                 oauthClientConfiguration,
                 openIdProviderMetadata,
                 securityConfiguration,

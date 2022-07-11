@@ -28,6 +28,7 @@ class EndSessionEndpointResolverSpec extends ApplicationContextSpecification {
     Map<String, Object> getConfiguration() {
         super.configuration + [
                 'micronaut.security.authentication': 'idtoken',
+                "micronaut.security.oauth2.clients.okta.openid.vendor" : "okta"
         ]
     }
 
@@ -55,7 +56,7 @@ class EndSessionEndpointResolverSpec extends ApplicationContextSpecification {
         EndSessionEndpoint endSessionEndpoint = endSessionEndpointOptional.get()
 
         then:
-        endSessionEndpoint instanceof OktaEndSessionEndpoint
+        endSessionEndpoint instanceof OpenIdEndSessionEndpoint
 
         when:
         def cookies = Stub(Cookies) {
@@ -112,6 +113,11 @@ class EndSessionEndpointResolverSpec extends ApplicationContextSpecification {
 
     @AutoImplement
     static class CustomOpenIdClientConfiguration implements OpenIdClientConfiguration {
+
+        @Override
+        Optional<String> getVendor() {
+            return Optional.of("okta")
+        }
 
         @Override
         Optional<URL> getIssuer() {

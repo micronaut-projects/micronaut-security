@@ -21,6 +21,7 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -44,7 +45,8 @@ public class KeycloakEndSessionEndpoint extends AbstractEndSessionRequest {
      */
     public KeycloakEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                       OauthClientConfiguration clientConfiguration,
-                                      Supplier<OpenIdProviderMetadata> providerMetadata) {
+                                      Supplier<OpenIdProviderMetadata> providerMetadata
+    ) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
     }
 

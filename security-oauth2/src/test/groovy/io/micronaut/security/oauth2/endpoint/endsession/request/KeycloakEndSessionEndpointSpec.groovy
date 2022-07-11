@@ -9,7 +9,10 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
+import spock.lang.IgnoreIf
+import spock.util.environment.Jvm
 
+@IgnoreIf(value = { Jvm.getCurrent().isJava8() }, reason = "testcontainers-keycloak requires Java 11+")
 class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
 
     @Override
@@ -24,9 +27,10 @@ class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
                 "micronaut.security.endpoints.logout.get-allowed": true,
         ] as Map<String, Object>
         if ((System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null) || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
-            m.putAll([    "micronaut.security.oauth2.clients.keycloak.openid.issuer" : Keycloak.issuer,
+            m.putAll([    "micronaut.security.oauth2.clients.keycloak.openid.vendor" : Keycloak.VENDOR,
+                          "micronaut.security.oauth2.clients.keycloak.openid.issuer" : Keycloak.issuer,
                           "micronaut.security.oauth2.clients.keycloak.client-id" : Keycloak.CLIENT_ID,
-                          "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret,
+                          "micronaut.security.oauth2.clients.keycloak.client-secret" : Keycloak.clientSecret
             ] as Map<String, Object>)
         }
         m
@@ -38,15 +42,16 @@ class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
 
         HttpRequest<?> request = new SimpleHttpRequest<>(HttpMethod.GET,
                 "http://localhost:" + embeddedServer.port + "/oauth/logout", null)
+        def defaultOpenIdClient = applicationContext.getBean(DefaultOpenIdClient, Qualifiers.byName(name))
 
         expect:
-        applicationContext.containsBean(DefaultOpenIdClient, Qualifiers.byName(name))
-        applicationContext.getBean(DefaultOpenIdClient, Qualifiers.byName(name)).supportsEndSession()
-        applicationContext.getBean(DefaultOpenIdClient, Qualifiers.byName(name))
-                .endSessionRedirect(request, Authentication.build("sherlock")).isPresent()
+        defaultOpenIdClient
+        defaultOpenIdClient.supportsEndSession()
+
+        defaultOpenIdClient.endSessionRedirect(request, Authentication.build("sherlock")).isPresent()
 
         when:
-        String redirect = applicationContext.getBean(DefaultOpenIdClient, Qualifiers.byName(name))
+        String redirect = defaultOpenIdClient
                 .endSessionRedirect(request, Authentication.build("sherlock"))
                 .get()
                 .getHeaders()
@@ -54,6 +59,6 @@ class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
                 .toString()
 
         then:
-        "http://localhost:" + Keycloak.port + "/auth/realms/master/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A" + embeddedServer.port + "%2Flogout" == redirect
+        redirect == "http://localhost:" + Keycloak.port + "/realms/master/protocol/openid-connect/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A" + embeddedServer.port + "%2Flogout"
     }
 }
