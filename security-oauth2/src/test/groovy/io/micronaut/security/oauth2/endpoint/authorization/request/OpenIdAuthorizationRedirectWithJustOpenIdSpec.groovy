@@ -14,9 +14,11 @@ import io.micronaut.security.oauth2.routes.OauthController
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
 import spock.lang.IgnoreIf
+import spock.util.environment.Jvm
 
 import java.nio.charset.StandardCharsets
 
+@IgnoreIf(value = { Jvm.getCurrent().isJava8() }, reason = "testcontainers-keycloak requires Java 11+")
 class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecification {
 
     @Override

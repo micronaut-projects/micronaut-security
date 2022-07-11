@@ -26,9 +26,11 @@ import io.micronaut.security.token.validator.TokenValidator
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import spock.lang.IgnoreIf
+import spock.util.environment.Jvm
 
 import java.security.Principal
 
+@IgnoreIf(value = { Jvm.getCurrent().isJava8() }, reason = "testcontainers-keycloak requires Java 11+")
 class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
 
     @Override

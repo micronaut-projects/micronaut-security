@@ -18,20 +18,13 @@ package io.micronaut.security.oauth2.endpoint.endsession.request;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.authentication.AuthenticationMode;
-import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
-import io.micronaut.security.token.reader.TokenResolver;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Supplier;
-
-// FIXME: revisit API if this all works to eliminate duplication between Keycloak and Okta implementations
 
 /**
  * Provides specific configuration to logout from Keycloak.
@@ -45,27 +38,16 @@ public class KeycloakEndSessionEndpoint extends AbstractEndSessionRequest {
     private static final String PARAM_REDIRECT_URI = "redirect_uri";
     private static final String LOGOUT_URI = "/protocol/openid-connect/logout";
 
-    private static final String PARAM_POST_LOGOUT_REDIRECT_URI = "post_logout_redirect_uri";
-    private static final String PARAM_ID_TOKEN_HINT = "id_token_hint";
-
-    private final SecurityConfiguration securityConfiguration;
-    private final TokenResolver tokenResolver;
-
     /**
      * @param endSessionCallbackUrlBuilder The end session callback URL builder
      * @param clientConfiguration The client configuration
      * @param providerMetadata The provider metadata supplier
-     * @param securityConfiguration Security configuration
-     * @param tokenResolver Token Resolver
      */
     public KeycloakEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
                                       OauthClientConfiguration clientConfiguration,
-                                      Supplier<OpenIdProviderMetadata> providerMetadata,
-                                      SecurityConfiguration securityConfiguration,
-                                      TokenResolver tokenResolver) {
+                                      Supplier<OpenIdProviderMetadata> providerMetadata
+    ) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
-        this.securityConfiguration = securityConfiguration;
-        this.tokenResolver = tokenResolver;
     }
 
     @Override
@@ -80,28 +62,7 @@ public class KeycloakEndSessionEndpoint extends AbstractEndSessionRequest {
     protected Map<String, Object> getArguments(HttpRequest<?> originating,
                                                Authentication authentication) {
         Map<String, Object> arguments = new HashMap<>();
-        Optional<String> idToken = parseIdToken(originating, authentication);
-        idToken.ifPresent(token -> arguments.put(PARAM_ID_TOKEN_HINT, token));
-        arguments.put(PARAM_POST_LOGOUT_REDIRECT_URI, getRedirectUri(originating));
         arguments.put(PARAM_REDIRECT_URI, getRedirectUri(originating));
         return arguments;
-    }
-
-    /**
-     *
-     /**
-     * @param request The HTTP Request
-     * @param authentication The authentication
-     * @return An ID token if it could be resolved
-     */
-    protected Optional<String> parseIdToken(HttpRequest<?> request, Authentication authentication) {
-        Map<String, Object> attributes = authentication.getAttributes();
-        if (attributes.containsKey(OpenIdAuthenticationMapper.OPENID_TOKEN_KEY)) {
-            return Optional.of(attributes.get(OpenIdAuthenticationMapper.OPENID_TOKEN_KEY).toString());
-        }
-        if (securityConfiguration.getAuthentication() == AuthenticationMode.IDTOKEN) {
-            return tokenResolver.resolveToken(request);
-        }
-        return Optional.empty();
     }
 }

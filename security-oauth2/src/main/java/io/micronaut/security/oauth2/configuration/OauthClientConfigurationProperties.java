@@ -440,6 +440,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         private static final String DEFAULT_CONFIG_PATH = "/.well-known/openid-configuration";
         private final String name;
 
+        private String vendor;
         private URL issuer;
         private String configurationPath = DEFAULT_CONFIG_PATH;
         private String jwksUri;
@@ -460,6 +461,20 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
         @Override
         public String getName() {
             return name;
+        }
+
+        @Override
+        public Optional<String> getVendor() {
+            return Optional.ofNullable(vendor);
+        }
+
+        /**
+         * A string that identifies the OpenId vendor.
+         *
+         * @param vendor The vendor
+         */
+        public void setVendor(@Nullable String vendor) {
+            this.vendor = vendor;
         }
 
         @Override

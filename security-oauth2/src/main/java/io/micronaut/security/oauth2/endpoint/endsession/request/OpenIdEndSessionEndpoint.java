@@ -30,14 +30,15 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * Provides specific configuration to logout from Okta.
+ * Provides specific configuration to logout from vendors supporting OpenID Connect RP-Initiated Logout .
  *
+ * @see <a href="https://github.com/keycloak/keycloak-documentation/blob/master/securing_apps/topics/oidc/java/logout.adoc">Keycloak Logout Endpoint</a>
  * @see <a href="https://developer.okta.com/docs/api/resources/oidc/#logout">Okta Logout Endpont</a>
  *
- * @author Sergio del Amo
+ * @author Sergio del Amo, Dean Wette
  * @since 1.2.0
  */
-public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
+public class OpenIdEndSessionEndpoint extends AbstractEndSessionRequest {
 
     private static final String PARAM_POST_LOGOUT_REDIRECT_URI = "post_logout_redirect_uri";
     private static final String PARAM_ID_TOKEN_HINT = "id_token_hint";
@@ -52,11 +53,11 @@ public class OktaEndSessionEndpoint extends AbstractEndSessionRequest {
      * @param securityConfiguration Security configuration
      * @param tokenResolver Token Resolver
      */
-    public OktaEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
-                                  OauthClientConfiguration clientConfiguration,
-                                  Supplier<OpenIdProviderMetadata> providerMetadata,
-                                  SecurityConfiguration securityConfiguration,
-                                  TokenResolver tokenResolver) {
+    public OpenIdEndSessionEndpoint(EndSessionCallbackUrlBuilder endSessionCallbackUrlBuilder,
+                                    OauthClientConfiguration clientConfiguration,
+                                    Supplier<OpenIdProviderMetadata> providerMetadata,
+                                    SecurityConfiguration securityConfiguration,
+                                    TokenResolver tokenResolver) {
         super(endSessionCallbackUrlBuilder, clientConfiguration, providerMetadata);
         this.securityConfiguration = securityConfiguration;
         this.tokenResolver = tokenResolver;
