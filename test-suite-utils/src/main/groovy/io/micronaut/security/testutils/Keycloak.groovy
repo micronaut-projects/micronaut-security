@@ -46,14 +46,13 @@ class Keycloak {
                     .withAdminUsername("admin")
                     .withAdminPassword("admin")
                     .withExposedPorts(8080)
-                    .withContextPath("/auth")
                     .withEnv(DB_VENDOR: "H2")
 
             keycloak.start()
             // Login
             exec("/opt/keycloak/bin/kcadm.sh",
                     "config", "credentials",
-                    "--server", "http://localhost:8080/auth",
+                    "--server", "http://localhost:8080",
                     "--realm", "master",
                     "--user", "admin",
                     "--password", "admin")
@@ -72,7 +71,7 @@ class Keycloak {
             // Add client
             exec("/opt/keycloak/bin/kcreg.sh",
                     "create",
-                    "--server", "http://localhost:8080/auth",
+                    "--server", "http://localhost:8080",
                     "--realm", "master",
                     "--user", "admin",
                     "--password", "admin",
@@ -81,7 +80,7 @@ class Keycloak {
                     "-s", "secret=$clientSecret")
             int port = keycloak.getMappedPort(8080)
             Testcontainers.exposeHostPorts(port)
-            issuer = "http://$host:$port/auth/realms/master"
+            issuer = "http://$host:$port/realms/master"
         }
     }
 
