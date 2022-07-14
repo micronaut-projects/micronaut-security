@@ -55,6 +55,7 @@ class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test a full login"() {
+
         when:
         browser.go "/oauth/login/keycloak"
 
