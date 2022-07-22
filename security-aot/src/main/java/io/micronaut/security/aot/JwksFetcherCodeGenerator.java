@@ -25,7 +25,6 @@ import com.squareup.javapoet.TypeSpec;
 import io.micronaut.aot.core.AOTContext;
 import io.micronaut.aot.core.AOTModule;
 import io.micronaut.aot.core.codegen.AbstractCodeGenerator;
-import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
@@ -35,11 +34,11 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -77,43 +76,47 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
 
     @NonNull
     private Set<String> jwksUrls(@NonNull AOTContext context) {
-        ApplicationContext ctx = context.getAnalyzer()
-                .getApplicationContext();
-        Collection<JwksSignatureConfiguration> jwksSignatureConfigurations = ctx
-                .getBeansOfType(JwksSignatureConfiguration.class);
-
         Set<String> urls = new HashSet<>();
-        for (JwksSignatureConfiguration jwksSignatureConfiguration : jwksSignatureConfigurations) {
-            urls.add(jwksSignatureConfiguration.getUrl());
-        }
-        Collection<OpenIdProviderMetadata> openIdProviderMetadataCollection = ctx
-                .getBeansOfType(OpenIdProviderMetadata.class);
-        for (OpenIdProviderMetadata metadata : openIdProviderMetadataCollection) {
-            if (metadata.getJwksUri() != null) {
-                urls.add(metadata.getJwksUri());
-            }
-        }
+        AOTContextUtils.getBeansOfType(JwksSignatureConfiguration.class, context).stream()
+            .map(JwksSignatureConfiguration::getUrl)
+            .forEach(urls::add);
+        AOTContextUtils.getBeansOfType(OpenIdProviderMetadata.class, context).stream()
+            .map(OpenIdProviderMetadata::getJwksUri)
+            .filter(Objects::nonNull)
+            .forEach(urls::add);
         return urls;
     }
 
     private List<GeneratedFile> generateJavaFiles(@NonNull AOTContext context) {
         Set<String> urls = jwksUrls(context);
-        JwkSetFetcher<JWKSet> jwkSetFetcher = context.getAnalyzer()
-                .getApplicationContext()
-                .getBean(DefaultJwkSetFetcher.class);
+        JwkSetFetcher<?> jwkSetFetcher = AOTContextUtils.getBean(JwkSetFetcher.class, context);
         int count = 0;
         List<GeneratedFile> result = new ArrayList<>();
         for (String url : urls) {
-            Optional<JWKSet> jwkSetOptional = jwkSetFetcher.fetch(url);
-            if (jwkSetOptional.isPresent()) {
-                JWKSet jwkSet = jwkSetOptional.get();
-                String json = jwkSet.toString(false);
-                String simpleName = "Aot" + DefaultJwkSetFetcher.class.getSimpleName() + count;
+            Optional<GeneratedFile> generatedFile = generatedFile(context, jwkSetFetcher, url, count);
+            if (generatedFile.isPresent()) {
+                result.add(generatedFile.get());
                 count++;
-                result.add(new GeneratedFile(url, simpleName, generateJavaFile(context, simpleName, json)));
             }
         }
         return result;
+    }
+
+    private Optional<GeneratedFile> generatedFile(AOTContext aotContext,
+                                        JwkSetFetcher<?> jwkSetFetcher,
+                                        String url,
+                                        int count) {
+        Optional<?> jwkSetOptional = jwkSetFetcher.fetch(url);
+        if (jwkSetOptional.isPresent()) {
+            Object obj = jwkSetOptional.get();
+            if (obj instanceof JWKSet) {
+                JWKSet jwkSet = (JWKSet) obj;
+                String json = jwkSet.toString(false);
+                String simpleName = "Aot" + JwkSetFetcher.class.getSimpleName() + count;
+                return Optional.of(new GeneratedFile(url, simpleName, generateJavaFile(aotContext, simpleName, json)));
+            }
+        }
+        return Optional.empty();
     }
 
     private JavaFile generateJavaFile(@NonNull AOTContext context,

@@ -24,7 +24,6 @@ import com.squareup.javapoet.TypeSpec;
 import io.micronaut.aot.core.AOTContext;
 import io.micronaut.aot.core.AOTModule;
 import io.micronaut.aot.core.codegen.AbstractCodeGenerator;
-import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.Qualifier;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -75,16 +74,13 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
     }
 
     private List<GeneratedFile> generateJavaFiles(@NonNull AOTContext context) {
-        ApplicationContext ctx = context.getAnalyzer()
-                .getApplicationContext();
-        Collection<OpenIdClientConfiguration> clientConfigurations = ctx
-                .getBeansOfType(OpenIdClientConfiguration.class);
+        Collection<OpenIdClientConfiguration> clientConfigurations = AOTContextUtils.getBeansOfType(OpenIdClientConfiguration.class, context);
 
         List<GeneratedFile> files = new ArrayList<>();
         for (OpenIdClientConfiguration clientConfig : clientConfigurations) {
             final Qualifier<OpenIdProviderMetadataFetcher> nameQualifier = Qualifiers.byName(clientConfig.getName());
-            if (clientConfig.getIssuer().isPresent() && ctx.containsBean(OpenIdProviderMetadataFetcher.class, nameQualifier)) {
-                OpenIdProviderMetadataFetcher fetcher = ctx.getBean(OpenIdProviderMetadataFetcher.class, nameQualifier);
+            if (clientConfig.getIssuer().isPresent() && AOTContextUtils.containsBean(OpenIdProviderMetadataFetcher.class, nameQualifier, context)) {
+                OpenIdProviderMetadataFetcher fetcher = AOTContextUtils.getBean(OpenIdProviderMetadataFetcher.class, nameQualifier, context);
                 DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = fetcher.fetch();
                 final String simpleName = generatedClassSimpleName(clientConfig);
                 files.add(new GeneratedFile(clientConfig.getName(),

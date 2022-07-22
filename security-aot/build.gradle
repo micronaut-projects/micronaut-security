@@ -8,6 +8,12 @@ micronautBuild {
     }
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled.set(false)
+    }
+}
+
 dependencies {
     compileOnly platform("io.micronaut:micronaut-bom:$micronautVersion")
     compileOnly(project(":security-oauth2"))
