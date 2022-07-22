@@ -41,7 +41,7 @@ import java.util.function.Supplier;
  * Default implementation of {@link OpenIdProviderMetadataFetcher}.
  *
  * @author Sergio del Amo
- * @since 3.3.0
+ * @since 3.7.0
  */
 public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetadataFetcher {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdProviderMetadataFetcher.class);

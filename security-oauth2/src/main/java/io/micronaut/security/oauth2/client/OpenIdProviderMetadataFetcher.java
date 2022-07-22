@@ -22,7 +22,7 @@ import io.micronaut.core.naming.Named;
 /**
  * Fetches OpenIdProviderMetadata for a {@link io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration}.
  * @author Sergio del Amo
- * @since 3.3.0
+ * @since 3.7.0
  */
 @DefaultImplementation(DefaultOpenIdProviderMetadataFetcher.class)
 public interface OpenIdProviderMetadataFetcher extends Named {

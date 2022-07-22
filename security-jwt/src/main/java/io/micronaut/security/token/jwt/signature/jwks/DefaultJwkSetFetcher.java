@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 /**
  * Default implementation of {@link JwkSetFetcher} for {@link JWKSet}.
  * @author Sergio del Amo
- * @since 3.3.0
+ * @since 3.7.0
  */
 @Singleton
 public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {

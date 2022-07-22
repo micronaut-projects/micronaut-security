@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * Fetch a Json Web Key Set by a given url.
  * @author Sergio del Amo
- * @since 3.3.0
+ * @since 3.7.0
  * @param <T> Json Web Key Set type
  */
 @DefaultImplementation(DefaultJwkSetFetcher.class)
