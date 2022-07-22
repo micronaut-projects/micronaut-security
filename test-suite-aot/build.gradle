@@ -27,5 +27,5 @@ micronaut {
 
 dependencies {
     implementation project(':security-oauth2')
-    aotOptimizerRuntimeClasspath project(':security-aot')
+    aotPlugins(project(':security-aot'))
 }

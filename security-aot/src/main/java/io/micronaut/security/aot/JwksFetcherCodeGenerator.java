@@ -33,6 +33,7 @@ import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
 
 import javax.lang.model.element.Modifier;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -131,9 +132,13 @@ public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {
     @NonNull
     private MethodSpec generateMethod(@NonNull String json) {
         return MethodSpec.methodBuilder("create")
-                .returns(DefaultOpenIdProviderMetadata.class)
+                .returns(JWKSet.class)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .beginControlFlow("try")
                 .addStatement("return JWKSet.parse($S)", json)
+                .nextControlFlow("catch ($T e)", ParseException.class)
+                .addStatement("throw new $T(e)", RuntimeException.class)
+                .endControlFlow()
                 .build();
     }
 }
