@@ -37,27 +37,18 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration
 @Factory
 @Internal
 public class JwksUriSignatureFactory {
-
-    private final JwkSetFetcher<JWKSet> jwkSetFetcher;
-
-    /**
-     *
-     * @param jwkSetFetcher Json Web Key Set Fetcher
-     */
-    public JwksUriSignatureFactory(JwkSetFetcher<JWKSet> jwkSetFetcher) {
-        this.jwkSetFetcher = jwkSetFetcher;
-    }
-
     /**
      *
      * @param openIdProviderMetadata The open id provider metadata
      * @param jwkValidator JWK Validator
+     * @param jwkSetFetcher Json Web Key Set Fetcher
      * @return a {@link JwksSignature} pointed to the jwks_uri exposed via OpenID configuration
      */
     @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
     @EachBean(DefaultOpenIdProviderMetadata.class)
     public JwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
-                                                JwkValidator jwkValidator) {
+                                                JwkValidator jwkValidator,
+                                                JwkSetFetcher<JWKSet> jwkSetFetcher) {
         JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties();
         jwksSignatureConfiguration.setUrl(openIdProviderMetadata.get().getJwksUri());
         return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
