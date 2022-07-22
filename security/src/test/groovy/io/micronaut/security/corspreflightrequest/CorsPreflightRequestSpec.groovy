@@ -47,7 +47,7 @@ class CorsPreflightRequestSpec extends EmbeddedServerSpecification {
         @Secured(SecurityRule.IS_AUTHENTICATED)
         @Delete
         @Produces(MediaType.TEXT_PLAIN)
-        def register() {
+        String register() {
             "Hello"
         }
     }
