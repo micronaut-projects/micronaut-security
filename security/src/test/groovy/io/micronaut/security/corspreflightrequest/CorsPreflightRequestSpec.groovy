@@ -1,6 +1,5 @@
 package io.micronaut.security.corspreflightrequest
 
-
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus

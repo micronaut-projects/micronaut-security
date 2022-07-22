@@ -3,16 +3,16 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-graal"
+    annotationProcessor(mn.micronaut.graal)
 
     api project(":security")
 
-    implementation "io.projectreactor:reactor-core"
-    testImplementation "io.projectreactor:reactor-test:3.4.16"
+    implementation(libs.reactor.core)
+    testImplementation(libs.reactor.test)
 
-    testImplementation "io.micronaut:micronaut-http-client"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation "com.unboundid:unboundid-ldapsdk:6.0.4"
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(libs.unboundid.ldapsdk)
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

@@ -98,7 +98,7 @@ public class AccessRefreshToken {
     }
 
     /**
-     * token type getter.
+     * lifetime in seconds of the access token getter.
      * @return expiration time
      */
     public Integer getExpiresIn() {
