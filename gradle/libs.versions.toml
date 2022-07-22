@@ -11,7 +11,7 @@ unboundid-ldapsdk = "6.0.5"
 velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
-spock = "2.0-groovy-3.0"
+spock = "2.1-groovy-3.0"
 kotlin = "1.7.10"
 
 [libraries]
