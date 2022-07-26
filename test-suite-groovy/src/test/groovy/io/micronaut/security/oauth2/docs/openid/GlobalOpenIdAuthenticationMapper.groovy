@@ -14,6 +14,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthentication
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Singleton
 @Replaces(DefaultOpenIdAuthenticationMapper.class)
@@ -24,8 +26,8 @@ class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
-    AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        AuthenticationResponse.success("name")
+    Publisher<AuthenticationResponse> createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
+        return Flux.just(AuthenticationResponse.success("name"));
     }
 }
 //end::clazz[]

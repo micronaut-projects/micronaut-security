@@ -1,0 +1,22 @@
+[
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper",
+    "member": "Class io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper",
+    "reason": "createAuthenticationResponse now returns a Publisher"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper",
+    "member": "Method io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper.createAuthenticationResponse(java.lang.String,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims,io.micronaut.security.oauth2.endpoint.authorization.state.State)",
+    "reason": "createAuthenticationResponse now returns a Publisher"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper",
+    "member": "Class io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper",
+    "reason": "createAuthenticationResponse now returns a Publisher"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper",
+    "member": "Method io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper.createAuthenticationResponse(java.lang.String,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims,io.micronaut.security.oauth2.endpoint.authorization.state.State)",
+    "reason": "Make this method Reactive similar to the OauthAuthenticationMapper interface. This allows you to make non-blocking API calls in the OIDC authentication mapper."
+  }
+]

@@ -9,6 +9,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Singleton
 @Named("okta") // <1>
@@ -18,8 +20,8 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
                                               tokenResponse: OpenIdTokenResponse, // <3>
                                               openIdClaims: OpenIdClaims, // <4>
                                               state: State?) // <5>
-            : AuthenticationResponse {
-        return AuthenticationResponse.success("name") // <6>
+            : Publisher<AuthenticationResponse> {
+        return Flux.just(AuthenticationResponse.success("name")) // <6>
     }
 }
 //end::clazz[]
