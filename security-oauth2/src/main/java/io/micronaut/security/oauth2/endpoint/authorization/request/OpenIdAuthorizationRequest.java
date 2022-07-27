@@ -66,7 +66,7 @@ public interface OpenIdAuthorizationRequest extends AuthorizationRequest {
     Optional<Display> getDisplay();
 
     /**
-     * @return Space delimited, case sensitive list of ASCII string values that specifies whether the Authorization Server prompts the End-User for reauthentication and consent.
+     * @return Space delimited, case-sensitive list of ASCII string values that specifies whether the Authorization Server prompts the End-User for reauthentication and consent.
      */
     Optional<Prompt> getPrompt();
 

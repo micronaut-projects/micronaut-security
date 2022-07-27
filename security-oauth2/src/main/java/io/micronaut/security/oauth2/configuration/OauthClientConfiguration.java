@@ -71,6 +71,12 @@ public interface OauthClientConfiguration extends Toggleable {
     List<String> getScopes();
 
     /**
+     * @return The scopes requested
+     */
+    @NonNull
+    List<String> getClaims();
+
+    /**
      * @return The grant type
      */
     @NonNull

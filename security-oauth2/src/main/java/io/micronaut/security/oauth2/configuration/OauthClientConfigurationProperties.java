@@ -58,11 +58,13 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             OpenIdScope.EMAIL.toString(),
             OpenIdScope.PROFILE.toString());
     private List<String> defaultScopes = new ArrayList<>();
+    private List<String> defaultClaims = new ArrayList<>();
 
     private final String name;
     private String clientId;
     private String clientSecret;
     private List<String> scopes;
+    private List<String> claims;
     private boolean enabled = DEFAULT_ENABLED;
     private GrantType grantType = GrantType.AUTHORIZATION_CODE;
     private AuthorizationEndpointConfigurationProperties authorization;
@@ -136,6 +138,21 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      */
     public void setScopes(List<String> scopes) {
         this.scopes = scopes;
+    }
+
+    @NonNull
+    @Override
+    public List<String> getClaims() {
+        return claims == null ? defaultClaims : claims;
+    }
+
+    /**
+     * Additional claims to request.
+     *
+     * @param claims The claims
+     */
+    public void setClaims(List<String> claims) {
+        this.claims = claims;
     }
 
     @NonNull

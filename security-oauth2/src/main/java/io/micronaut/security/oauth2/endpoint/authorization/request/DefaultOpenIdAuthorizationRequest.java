@@ -104,6 +104,12 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
         return oauthConfiguration.getScopes();
     }
 
+    @Override
+    @NonNull
+    public List<String> getClaims() {
+        return oauthConfiguration.getClaims();
+    }
+
     @NonNull
     @Override
     public String getResponseType() {

@@ -77,6 +77,12 @@ class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
         return oauthClientConfiguration.getScopes();
     }
 
+    @Override
+    @NonNull
+    public List<String> getClaims() {
+        return oauthClientConfiguration.getClaims();
+    }
+
     @NonNull
     @Override
     public String getResponseType() {

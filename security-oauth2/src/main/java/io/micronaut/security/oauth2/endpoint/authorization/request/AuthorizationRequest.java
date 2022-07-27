@@ -42,6 +42,13 @@ public interface AuthorizationRequest {
 
     /**
      *
+     * @return OAuth 2.0 claims.
+     */
+    @NonNull
+    List<String> getClaims();
+
+    /**
+     *
      * @return OAuth 2.0 Client Identifier valid at the Authorization Server.
      */
     @NonNull

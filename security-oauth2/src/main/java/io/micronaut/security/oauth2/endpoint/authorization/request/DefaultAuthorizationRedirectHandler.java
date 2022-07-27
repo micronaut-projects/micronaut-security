@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
+import com.nimbusds.jose.shaded.json.JSONObject;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpHeaders;
@@ -24,6 +25,7 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.uri.UriBuilder;
 import jakarta.inject.Singleton;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -80,6 +82,7 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
     protected Map<String, Object> instantiateParameters(AuthorizationRequest authorizationRequest, MutableHttpResponse response) {
         Map<String, Object> parameters = new HashMap<>();
         populateScope(authorizationRequest, parameters);
+        populateClaims(authorizationRequest, parameters);
         populateResponseType(authorizationRequest, parameters);
         populateClientId(authorizationRequest, parameters);
         populateRedirectUri(authorizationRequest, parameters);
@@ -111,6 +114,26 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
         String scope = optionalScope.orElse(defaultScope);
         if (scope != null) {
             parameters.put(AuthorizationRequest.PARAMETER_SCOPE, scope);
+        }
+    }
+
+    /**
+     *
+     * @param authorizationRequest Authentication Request
+     * @param parameters Authentication Request Parameters
+     */
+    protected void populateClaims(@NonNull AuthorizationRequest authorizationRequest,
+                                 @NonNull Map<String, Object> parameters) {
+
+        JSONObject claimsObject = new JSONObject();
+        JSONObject idTokenObject = new JSONObject();
+
+        List<String> claims = authorizationRequest.getClaims();
+
+        if (!claims.isEmpty()) {
+            claims.forEach((claim) -> idTokenObject.put(claim, null));
+            claimsObject.put("id_token", idTokenObject);
+            parameters.put("claims", claimsObject);
         }
     }
 
