@@ -22,16 +22,38 @@ class SerdeSpec extends Specification {
                 "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBsb2NhbC5jb20iLCJjb250ZW50LWxlbmd0aCI6IjEwNSIsInByb2R1Y3QiOiJwcm9kdWN0IiwibmJmIjoxNjU5MDc4ODcwLCJyb2xlcyI6W10sImlzcyI6InRlc3RhcHBsaWNhdGlvbiIsImhvc3QiOiJsb2NhbGhvc3Q6NTQ3MjUiLCJjb25uZWN0aW9uIjoiY2xvc2UiLCJjb250ZW50LXR5cGUiOiJhcHBsaWNhdGlvblwvanNvbiIsImV4cCI6MTY1OTA4MjQ3MCwiaWF0IjoxNjU5MDc4ODcwfQ.ugdU-pYUgwU44Skd2jmP4x_aNLAVhrIuSYwyW21ngAg",
                 null,
                 "Bearer");
-        String result = objectMapper.writeValueAsString(bearerAccessRefreshToken);
+        String result = objectMapper.writeValueAsString(bearerAccessRefreshToken)
 
         then:
         json == result
 
         when:
-        bearerAccessRefreshToken = objectMapper.readValue(json, BearerAccessRefreshToken.class);
+        bearerAccessRefreshToken = objectMapper.readValue(json, BearerAccessRefreshToken)
 
         then:
         bearerAccessRefreshToken
         bearerAccessRefreshToken.accessToken
+    }
+
+    void "AccessRefreshToken should be Serializable and Deserializable with Serde"() {
+        given:
+        String json = "{\"access_token\":\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBsb2NhbC5jb20iLCJjb250ZW50LWxlbmd0aCI6IjEwNSIsInByb2R1Y3QiOiJwcm9kdWN0IiwibmJmIjoxNjU5MDc4ODcwLCJyb2xlcyI6W10sImlzcyI6InRlc3RhcHBsaWNhdGlvbiIsImhvc3QiOiJsb2NhbGhvc3Q6NTQ3MjUiLCJjb25uZWN0aW9uIjoiY2xvc2UiLCJjb250ZW50LXR5cGUiOiJhcHBsaWNhdGlvblwvanNvbiIsImV4cCI6MTY1OTA4MjQ3MCwiaWF0IjoxNjU5MDc4ODcwfQ.ugdU-pYUgwU44Skd2jmP4x_aNLAVhrIuSYwyW21ngAg\",\"token_type\":\"Bearer\"}"
+
+        when:
+        AccessRefreshToken accessRefreshToken = new AccessRefreshToken(
+                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBsb2NhbC5jb20iLCJjb250ZW50LWxlbmd0aCI6IjEwNSIsInByb2R1Y3QiOiJwcm9kdWN0IiwibmJmIjoxNjU5MDc4ODcwLCJyb2xlcyI6W10sImlzcyI6InRlc3RhcHBsaWNhdGlvbiIsImhvc3QiOiJsb2NhbGhvc3Q6NTQ3MjUiLCJjb25uZWN0aW9uIjoiY2xvc2UiLCJjb250ZW50LXR5cGUiOiJhcHBsaWNhdGlvblwvanNvbiIsImV4cCI6MTY1OTA4MjQ3MCwiaWF0IjoxNjU5MDc4ODcwfQ.ugdU-pYUgwU44Skd2jmP4x_aNLAVhrIuSYwyW21ngAg",
+                null,
+                "Bearer")
+        String result = objectMapper.writeValueAsString(accessRefreshToken)
+
+        then:
+        json == result
+
+        when:
+        accessRefreshToken = objectMapper.readValue(json, AccessRefreshToken)
+
+        then:
+        accessRefreshToken
+        accessRefreshToken.accessToken
     }
 }

@@ -1,0 +1,38 @@
+plugins {
+    id 'groovy'
+    id 'java-library'
+}
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation(platform(mn.micronaut.bom))
+    testCompileOnly(mn.micronaut.inject.groovy)
+    testImplementation(libs.spock.core) {
+        exclude module:'groovy-all'
+    }
+    testImplementation(mn.micronaut.test.spock)
+
+    runtimeOnly(libs.logback.classic)
+
+    testImplementation(mn.micronaut.management)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.serde.jackson)
+    testImplementation project(":security-jwt")
+    testImplementation project(":security-oauth2")
+    testImplementation project(":test-suite-utils")
+    testImplementation project(":test-suite-utils-security")
+    testImplementation(libs.reactor.core)
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}

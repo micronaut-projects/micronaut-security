@@ -21,7 +21,6 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
     testImplementation(mn.micronaut.multitenancy)
-    testImplementation(mn.micronaut.serde.jackson)
     testImplementation(mn.micronaut.views.velocity)
     testRuntimeOnly(libs.velocity.engine.core)
 }
