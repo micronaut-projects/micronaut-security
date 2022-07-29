@@ -6,14 +6,14 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation(platform(mn.micronaut.bom))
+    testImplementation(platform(mn.micronaut.bom))
     testCompileOnly(mn.micronaut.inject.groovy)
     testImplementation(libs.spock.core) {
         exclude module:'groovy-all'
     }
     testImplementation(mn.micronaut.test.spock)
 
-    runtimeOnly(libs.logback.classic)
+    testRuntimeOnly(libs.logback.classic)
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.server.netty)
