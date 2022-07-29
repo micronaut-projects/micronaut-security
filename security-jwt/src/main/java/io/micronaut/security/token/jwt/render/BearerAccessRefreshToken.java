@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 package io.micronaut.security.token.jwt.render;
+
+import io.micronaut.core.annotation.Creator;
+import io.micronaut.core.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,11 +46,12 @@ public class BearerAccessRefreshToken extends AccessRefreshToken {
      * @param refreshToken  JWT token
      * @param tokenType Type of token
      */
+    @Creator
     public BearerAccessRefreshToken(String username,
-                                    Collection<String> roles,
-                                    Integer expiresIn,
+                                    @Nullable Collection<String> roles,
+                                    @Nullable Integer expiresIn,
                                     String accessToken,
-                                    String refreshToken,
+                                    @Nullable String refreshToken,
                                     String tokenType
     ) {
         super(accessToken, refreshToken, tokenType, expiresIn);
