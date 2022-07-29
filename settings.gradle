@@ -24,6 +24,7 @@ include "test-suite"
 include "test-suite-utils"
 include "test-suite-utils-security"
 include "test-suite-kotlin"
+include "test-suite-serde"
 
 micronautBuild {
     importMicronautCatalog()
