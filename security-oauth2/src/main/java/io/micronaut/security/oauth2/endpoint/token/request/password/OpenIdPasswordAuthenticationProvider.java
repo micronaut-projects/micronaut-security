@@ -74,11 +74,6 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
         this.openIdProviderMetadata = openIdProviderMetadata;
         this.openIdAuthenticationMapper = openIdAuthenticationMapper;
         this.tokenResponseValidator = tokenResponseValidator;
-
-        Optional<TokenEndpointConfiguration> tokenEndpointConfiguration = clientConfiguration.getOpenid().flatMap(OpenIdClientConfiguration::getToken);
-        if (!tokenEndpointConfiguration.isPresent()) {
-            throw new IllegalArgumentException("Missing token endpoint configuration");
-        }
         this.secureEndpoint = getTokenEndpoint(openIdProviderMetadata);
     }
 
