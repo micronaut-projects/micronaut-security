@@ -16,11 +16,13 @@ import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.endpoints.LogoutController
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import jakarta.inject.Singleton
+import spock.lang.IgnoreIf
 
 import java.security.Principal
 
@@ -108,6 +110,7 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
         rsp.body().contains('sherlock')
     }
 
+    @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     def "verify jwt cookie authentication works"() {
         when:
         to HomePage
