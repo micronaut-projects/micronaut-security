@@ -10,6 +10,7 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.generator.TokenGenerator
@@ -22,6 +23,7 @@ import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import spock.lang.IgnoreIf
 import spock.lang.Issue
 import spock.util.concurrent.PollingConditions
 
@@ -64,6 +66,7 @@ class HomePageSpec extends GebEmbeddedServerSpecification {
         tokenGenerator.generateToken(claims)
     }
 
+    @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5618")
     def "check websocket connects"() {
         expect:

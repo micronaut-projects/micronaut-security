@@ -9,6 +9,7 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
+import spock.lang.IgnoreIf
 
 class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
 
@@ -32,6 +33,7 @@ class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
         m
     }
 
+    @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "keycloak configuration supports endSession"() {
         given:
         String name = "keycloak"
