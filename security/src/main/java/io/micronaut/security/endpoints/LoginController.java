@@ -40,6 +40,7 @@ import io.micronaut.validation.Validated;
 import javax.validation.Valid;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Handles login requests.
@@ -93,6 +94,6 @@ public class LoginController {
                         eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
                         return loginHandler.loginFailed(authenticationResponse, request);
                     }
-                }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
+                }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
     }
 }
