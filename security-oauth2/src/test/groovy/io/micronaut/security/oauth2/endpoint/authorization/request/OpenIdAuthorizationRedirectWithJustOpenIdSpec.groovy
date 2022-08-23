@@ -7,6 +7,7 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.oauth2.PKCEUtils
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
@@ -16,6 +17,7 @@ import io.micronaut.security.testutils.Keycloak
 import spock.lang.IgnoreIf
 
 import java.nio.charset.StandardCharsets
+import java.util.regex.Pattern
 
 class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecification {
 
@@ -37,6 +39,7 @@ class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecif
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     void "test authorization redirect with just openid"() {
         given:
+        Pattern VALID_CODE_CHALLENGE_PATTERN = Pattern.compile('^[0-9a-zA-Z\\-\\.~_]+$')
         HttpClient client = applicationContext.createBean(HttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
 
         expect:
@@ -56,14 +59,20 @@ class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecif
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
         location.contains("client_id=$Keycloak.CLIENT_ID")
+        response.getCookie("OAUTH2_PKCE").isPresent()
 
         when:
         Map<String, String> queryValues = StateUtils.queryValuesAsMap(location)
         String state = StateUtils.decodeState(queryValues)
+        String codeChallenge = PKCEUtils.getCodeChallenge(queryValues)
+        String codeChallengeMethod = PKCEUtils.getCodeChallengeMethod(queryValues)
 
         then:
         state.contains('"nonce":"')
-        state.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
+        state.contains('"redirectUri":"http://localhost:' + embeddedServer.getPort() + '/oauth/callback/keycloak"')
+        !codeChallenge.isEmpty()
+        VALID_CODE_CHALLENGE_PATTERN.matcher(codeChallenge)
+        codeChallengeMethod == "S256"
 
         when:
         client.toBlocking().exchange("/oauth/login/twitter")

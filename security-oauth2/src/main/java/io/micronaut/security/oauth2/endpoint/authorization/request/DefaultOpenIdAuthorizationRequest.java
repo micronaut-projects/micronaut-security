@@ -26,9 +26,12 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCE;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCEFactory;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.endpoint.nonce.NonceFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -51,15 +54,17 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
     private IdTokenHintResolver idTokenHintResolver;
     private AuthorizationEndpointConfiguration endpointConfiguration;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
+    private final PKCEFactory pkceFactory;
 
     /**
-     * @param request The original request prior redirect.
-     * @param oauthConfiguration The OAuth 2.0 configuration
+     * @param request              The original request prior redirect.
+     * @param oauthConfiguration   The OAuth 2.0 configuration
      * @param oauthRouteUrlBuilder The oauth route URL builder
-     * @param stateFactory The state provider
-     * @param nonceFactory The nonce provider
-     * @param loginHintResolver The login hint provider
-     * @param idTokenHintResolver The id token hint provider
+     * @param stateFactory         The state provider
+     * @param nonceFactory         The nonce provider
+     * @param loginHintResolver    The login hint provider
+     * @param idTokenHintResolver  The id token hint provider
+     * @param pkceFactory          The PKCE factory
      */
     public DefaultOpenIdAuthorizationRequest(@Parameter HttpRequest<?> request,
                                              @Parameter OauthClientConfiguration oauthConfiguration,
@@ -67,16 +72,18 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
                                              @Nullable StateFactory stateFactory,
                                              @Nullable NonceFactory nonceFactory,
                                              @Nullable LoginHintResolver loginHintResolver,
-                                             @Nullable IdTokenHintResolver idTokenHintResolver) {
+                                             @Nullable IdTokenHintResolver idTokenHintResolver,
+                                             @Nullable PKCEFactory pkceFactory) {
         this.request = request;
         this.oauthConfiguration = oauthConfiguration;
         this.endpointConfiguration = oauthConfiguration.getOpenid()
-                .flatMap(OpenIdClientConfiguration::getAuthorization).orElse(null);
+            .flatMap(OpenIdClientConfiguration::getAuthorization).orElse(null);
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateFactory = stateFactory;
         this.nonceFactory = nonceFactory;
         this.loginHintResolver = loginHintResolver;
         this.idTokenHintResolver = idTokenHintResolver;
+        this.pkceFactory = pkceFactory;
     }
 
     @Override
@@ -119,9 +126,15 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
     }
 
     @Override
+    public Optional<PKCE> getPKCE(MutableHttpResponse response) {
+        return Optional.ofNullable(pkceFactory)
+            .map(sf -> sf.buildPKCE(request, response, this));
+    }
+
+    @Override
     public Optional<String> getResponseMode() {
         return Optional.ofNullable(endpointConfiguration)
-                .flatMap(AuthorizationEndpointConfiguration::getResponseMode);
+            .flatMap(AuthorizationEndpointConfiguration::getResponseMode);
     }
 
     @Override

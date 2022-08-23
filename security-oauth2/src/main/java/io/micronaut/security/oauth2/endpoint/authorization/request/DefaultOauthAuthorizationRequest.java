@@ -23,8 +23,11 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCE;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCEFactory;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -42,21 +45,25 @@ class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
     private final OauthClientConfiguration oauthClientConfiguration;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
     private final StateFactory stateFactory;
+    private final PKCEFactory pkceFactory;
 
     /**
-     * @param request The callback request
+     * @param request                  The callback request
      * @param oauthClientConfiguration The client configuration
-     * @param oauthRouteUrlBuilder The oauth route URL builder
-     * @param stateFactory The state factory
+     * @param oauthRouteUrlBuilder     The oauth route URL builder
+     * @param stateFactory             The state factory
+     * @param pkceFactory              The PKCE factory
      */
     DefaultOauthAuthorizationRequest(@Parameter HttpRequest<?> request,
                                      @Parameter OauthClientConfiguration oauthClientConfiguration,
                                      OauthRouteUrlBuilder oauthRouteUrlBuilder,
-                                     @Nullable StateFactory stateFactory) {
+                                     @Nullable StateFactory stateFactory,
+                                     @Nullable PKCEFactory pkceFactory) {
         this.request = request;
         this.oauthClientConfiguration = oauthClientConfiguration;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateFactory = stateFactory;
+        this.pkceFactory = pkceFactory;
     }
 
     @Override
@@ -68,7 +75,13 @@ class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
     @Override
     public Optional<String> getState(MutableHttpResponse response) {
         return Optional.ofNullable(stateFactory)
-                .map(sf -> sf.buildState(request, response, this));
+            .map(sf -> sf.buildState(request, response, this));
+    }
+
+    @Override
+    public Optional<PKCE> getPKCE(MutableHttpResponse response) {
+        return Optional.ofNullable(pkceFactory)
+            .map(sf -> sf.buildPKCE(request, response, this));
     }
 
     @Override

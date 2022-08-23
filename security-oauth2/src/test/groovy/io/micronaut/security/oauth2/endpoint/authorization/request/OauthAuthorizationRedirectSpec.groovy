@@ -8,6 +8,7 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.oauth2.PKCEUtils
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
@@ -22,6 +23,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.FluxSink
 
 import java.nio.charset.StandardCharsets
+import java.util.regex.Pattern
 
 class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
@@ -43,6 +45,7 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
     void "test authorization redirect with just oauth"() {
         given:
+        Pattern VALID_CODE_CHALLENGE_PATTERN = Pattern.compile('^[0-9a-zA-Z\\-\\.~_]+$')
         HttpClient client = applicationContext.createBean(HttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
 
         expect:
@@ -54,20 +57,27 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
         String location = URLDecoder.decode(response.header(HttpHeaders.LOCATION), StandardCharsets.UTF_8.toString())
 
         then:
+
         response.status == HttpStatus.FOUND
         location.startsWith("https://twitter.com/authorize")
         !location.contains("scope=")
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
         location.contains("client_id=myclient")
+        response.getCookie("OAUTH2_PKCE").isPresent()
 
         when:
         Map<String, String> queryValues = StateUtils.queryValuesAsMap(location)
         String state = StateUtils.decodeState(queryValues)
+        String codeChallenge = PKCEUtils.getCodeChallenge(queryValues)
+        String codeChallengeMethod = PKCEUtils.getCodeChallengeMethod(queryValues)
 
         then:
         state.contains('"nonce":"')
-        state.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/twitter"')
+        state.contains('"redirectUri":"http://localhost:' + embeddedServer.getPort() + '/oauth/callback/twitter"')
+        !codeChallenge.isEmpty()
+        VALID_CODE_CHALLENGE_PATTERN.matcher(codeChallenge)
+        codeChallengeMethod == "S256"
     }
 
     @Singleton

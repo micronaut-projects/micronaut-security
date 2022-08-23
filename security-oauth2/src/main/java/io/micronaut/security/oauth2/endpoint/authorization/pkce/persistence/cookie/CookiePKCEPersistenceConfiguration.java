@@ -1,0 +1,104 @@
+/*
+ * Copyright 2017-2022 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie;
+
+import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.cookie.CookieConfiguration;
+import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;
+
+import java.time.Duration;
+import java.time.temporal.TemporalAmount;
+import java.util.Optional;
+
+/**
+ * @author Nemanja Mikic
+ * @since 3.8.0
+ */
+@ConfigurationProperties(CookiePKCEPersistenceConfiguration.PREFIX)
+public class CookiePKCEPersistenceConfiguration extends AbstractCookieConfiguration implements CookieConfiguration {
+
+    public static final String PREFIX = DefaultStateConfiguration.PREFIX + ".cookie";
+
+    private static final boolean DEFAULT_HTTPONLY = true;
+    private static final String DEFAULT_COOKIE_NAME = "OAUTH2_PKCE";
+    private static final String DEFAULT_COOKIE_PATH = "/";
+    private static final Duration DEFAULT_MAX_AGE = Duration.ofMinutes(5);
+
+    private String cookiePath = DEFAULT_COOKIE_PATH;
+    private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
+    private Duration cookieMaxAge = DEFAULT_MAX_AGE;
+    private String cookieName = DEFAULT_COOKIE_NAME;
+
+    @NonNull
+    @Override
+    public String getCookieName() {
+        return this.cookieName;
+    }
+
+    /**
+     * Cookie Name. Default value ({@value #DEFAULT_COOKIE_NAME}).
+     *
+     * @param cookieName Cookie name
+     */
+    public void setCookieName(@NonNull String cookieName) {
+        this.cookieName = cookieName;
+    }
+
+    @Override
+    public Optional<String> getCookiePath() {
+        return Optional.ofNullable(cookiePath);
+    }
+
+    /**
+     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIE_PATH}).
+     *
+     * @param cookiePath The path of the cookie.
+     */
+    public void setCookiePath(@Nullable String cookiePath) {
+        this.cookiePath = cookiePath;
+    }
+
+    @Override
+    public Optional<Boolean> isCookieHttpOnly() {
+        return Optional.ofNullable(cookieHttpOnly);
+    }
+
+    /**
+     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}).
+     *
+     * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
+     */
+    public void setCookieHttpOnly(Boolean cookieHttpOnly) {
+        this.cookieHttpOnly = cookieHttpOnly;
+    }
+
+    @Override
+    public Optional<TemporalAmount> getCookieMaxAge() {
+        return Optional.ofNullable(cookieMaxAge);
+    }
+
+    /**
+     * Sets the maximum age of the cookie. Default value (5 minutes).
+     *
+     * @param cookieMaxAge The maximum age of the cookie
+     */
+    public void setCookieMaxAge(Duration cookieMaxAge) {
+        this.cookieMaxAge = cookieMaxAge;
+    }
+}

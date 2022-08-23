@@ -17,6 +17,8 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCE;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +34,10 @@ public interface AuthorizationRequest {
     String PARAMETER_CLIENT_ID = "client_id";
     String PARAMETER_REDIRECT_URI = "redirect_uri";
     String PARAMETER_STATE = "state";
+    String PARAMETER_PKCE_CODE_CHALLENGE = "code_challenge";
+    String PARAMETER_PKCE_CODE_CHALLENGE_METHOD = "code_challenge_method";
 
     /**
-     *
      * @return OAuth 2.0 scopes.
      */
     @NonNull
@@ -63,5 +66,12 @@ public interface AuthorizationRequest {
      * @return Redirection URI to which the response will be sent.
      */
     Optional<String> getRedirectUri();
+
+
+    /**
+     * @param response authorization redirect response
+     * @return Proof of Key Exchange (PKCE).
+     */
+    Optional<PKCE> getPKCE(MutableHttpResponse response);
 
 }

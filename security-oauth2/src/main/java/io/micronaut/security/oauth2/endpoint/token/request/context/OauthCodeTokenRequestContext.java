@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.context;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -24,6 +25,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
+
 import java.util.Map;
 
 /**
@@ -36,17 +38,21 @@ import java.util.Map;
 public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, TokenResponse> {
 
     private final AuthorizationResponse authorizationResponse;
+    private final String codeVerify;
 
     /**
      * @param authorizationResponse The authorization response
-     * @param tokenEndpoint The token endpoint
-     * @param clientConfiguration The client configuration
+     * @param tokenEndpoint         The token endpoint
+     * @param clientConfiguration   The client configuration
+     * @param codeVerify            The PKCE code_verify
      */
     public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                         SecureEndpoint tokenEndpoint,
-                                        OauthClientConfiguration clientConfiguration) {
+                                        OauthClientConfiguration clientConfiguration,
+                                        @Nullable String codeVerify) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
+        this.codeVerify = codeVerify;
     }
 
     @Override
@@ -54,6 +60,7 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
         State state = authorizationResponse.getState();
+        codeGrant.setCodeVerifier(getPKCECodeVerifier());
         if (state != null && state.getRedirectUri() != null) {
             codeGrant.setRedirectUri(authorizationResponse.getState().getRedirectUri().toString());
         }
@@ -68,5 +75,14 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
     @Override
     public Argument<?> getErrorResponseType() {
         return Argument.of(TokenErrorResponse.class);
+    }
+
+    /**
+     * Resolves the media type for the request body.
+     *
+     * @return The media type
+     */
+    public String getPKCECodeVerifier() {
+        return codeVerify;
     }
 }

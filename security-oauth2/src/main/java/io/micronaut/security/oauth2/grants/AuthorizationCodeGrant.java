@@ -35,10 +35,12 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
 
     private static final String KEY_REDIRECT_URI = "redirect_uri";
     private static final String KEY_CODE = "code";
+    private static final String KEY_CODE_VERIFIER = "code_verifier";
 
     private String grantType = GrantType.AUTHORIZATION_CODE.toString();
     private String redirectUri;
     private String code;
+    private String codeVerifier;
 
     /**
      *
@@ -86,7 +88,6 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
     }
 
     /**
-     *
      * @param code An authorization code.
      */
     public void setCode(@NonNull String code) {
@@ -94,7 +95,20 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
     }
 
     /**
-     *
+     * @return A PKCE code verifier.
+     */
+    public String getCodeVerifier() {
+        return codeVerifier;
+    }
+
+    /**
+     * @param codeVerifier A PKCE code verifier.
+     */
+    public void setCodeVerifier(String codeVerifier) {
+        this.codeVerifier = codeVerifier;
+    }
+
+    /**
      * @return this object as a Map
      */
     @Override
@@ -104,6 +118,9 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
         m.put(KEY_CODE, getCode());
         if (redirectUri != null) {
             m.put(KEY_REDIRECT_URI, getRedirectUri());
+        }
+        if (codeVerifier != null) {
+            m.put(KEY_CODE_VERIFIER, codeVerifier);
         }
         return m;
     }

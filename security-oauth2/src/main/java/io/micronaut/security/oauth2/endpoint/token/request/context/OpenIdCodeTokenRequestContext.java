@@ -26,6 +26,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
+
 import java.util.Map;
 
 /**
@@ -39,20 +40,24 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
 
     private final AuthorizationResponse authorizationResponse;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
+    private final String codeVerify;
 
     /**
      * @param authorizationResponse The authorization response
-     * @param oauthRouteUrlBuilder The oauth route URL builder
-     * @param tokenEndpoint The token endpoint
-     * @param clientConfiguration The client configuration
+     * @param oauthRouteUrlBuilder  The oauth route URL builder
+     * @param tokenEndpoint         The token endpoint
+     * @param clientConfiguration   The client configuration
+     * @param codeVerify            The PKCE code_verify
      */
     public OpenIdCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                          OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                          SecureEndpoint tokenEndpoint,
-                                         OauthClientConfiguration clientConfiguration) {
+                                         OauthClientConfiguration clientConfiguration,
+                                         String codeVerify) {
         super(getMediaType(clientConfiguration), tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
+        this.codeVerify = codeVerify;
     }
 
     /**
@@ -72,8 +77,9 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     public Map<String, String> getGrant() {
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
+        codeGrant.setCodeVerifier(getPKCECodeVerifier());
         codeGrant.setRedirectUri(oauthRouteUrlBuilder
-                .buildCallbackUrl(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()).toString());
+            .buildCallbackUrl(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()).toString());
         return codeGrant.toMap();
     }
 
@@ -85,5 +91,14 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     @Override
     public Argument<?> getErrorResponseType() {
         return Argument.of(TokenErrorResponse.class);
+    }
+
+    /**
+     * Resolves the media type for the request body.
+     *
+     * @return The media type
+     */
+    public String getPKCECodeVerifier() {
+        return codeVerify;
     }
 }
