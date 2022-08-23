@@ -35,13 +35,13 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
 
     private static final Duration DEFAULT_MAX_AGE = Duration.ofMinutes(5);
 
-    private String cookiePath = DEFAULT_COOKIEPATH;
-    private Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
-    private Duration cookieMaxAge = DEFAULT_MAX_AGE;
-    private String cookieName = null;
     protected String cookieDomain;
     protected Boolean cookieSecure;
 
+    protected String cookiePath = DEFAULT_COOKIEPATH;
+    protected Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
+    protected Duration cookieMaxAge = DEFAULT_MAX_AGE;
+    protected String cookieName = null;
 
     @Override
     public Optional<String> getCookieDomain() {
