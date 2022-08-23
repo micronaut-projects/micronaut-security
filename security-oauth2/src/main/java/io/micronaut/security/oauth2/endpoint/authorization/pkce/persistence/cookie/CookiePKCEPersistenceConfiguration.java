@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.coo
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultPKCEConfiguration;
 
 /**
  * @author Nemanja Mikic
@@ -26,7 +26,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateCon
 @ConfigurationProperties(CookiePKCEPersistenceConfiguration.PREFIX)
 public class CookiePKCEPersistenceConfiguration extends AbstractCookieConfiguration {
 
-    public static final String PREFIX = DefaultStateConfiguration.PREFIX + ".cookie";
+    public static final String PREFIX = DefaultPKCEConfiguration.PREFIX + ".cookie";
 
     private static final String DEFAULT_COOKIE_NAME = "OAUTH2_PKCE";
 

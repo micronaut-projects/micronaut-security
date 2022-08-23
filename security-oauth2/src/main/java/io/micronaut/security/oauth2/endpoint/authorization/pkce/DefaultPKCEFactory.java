@@ -25,7 +25,7 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -110,15 +110,12 @@ public class DefaultPKCEFactory implements PKCEFactory {
     public static String deriveCodeVerifierChallenge(String codeVerifier) {
         try {
             MessageDigest sha256Digester = MessageDigest.getInstance("SHA-256");
-            sha256Digester.update(codeVerifier.getBytes("ISO_8859_1"));
+            sha256Digester.update(codeVerifier.getBytes(StandardCharsets.ISO_8859_1));
             byte[] digestBytes = sha256Digester.digest();
             return Base64.getUrlEncoder().withoutPadding().encodeToString(digestBytes);
         } catch (NoSuchAlgorithmException e) {
             LOG.warn("SHA-256 is not supported on this device! Using plain challenge", e);
             return codeVerifier;
-        } catch (UnsupportedEncodingException e) {
-            LOG.error("ISO-8859-1 encoding not supported on this device!", e);
-            throw new IllegalStateException("ISO-8859-1 encoding not supported", e);
         }
     }
 

@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
-import io.micronaut.security.oauth2.endpoint.PersistableConfiguration;
 import reactor.util.annotation.NonNull;
 
 import java.util.Optional;
@@ -29,7 +28,7 @@ import java.util.Optional;
  * @since 3.8.0
  */
 @ConfigurationProperties(DefaultPKCEConfiguration.PREFIX)
-public class DefaultPKCEConfiguration implements PersistableConfiguration {
+public class DefaultPKCEConfiguration implements PKCEConfiguration {
 
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".pkce";
 
