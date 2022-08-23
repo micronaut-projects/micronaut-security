@@ -142,7 +142,7 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
         String codeVerifier = null;
 
         if (pkcePersistence != null) {
-            codeVerifier = pkcePersistence.retrieve(authorizationResponse.getCallbackRequest()).get();
+            codeVerifier = pkcePersistence.retrieve(authorizationResponse.getCallbackRequest()).orElse(null);
         }
 
         OpenIdCodeTokenRequestContext requestContext = new OpenIdCodeTokenRequestContext(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration, codeVerifier);

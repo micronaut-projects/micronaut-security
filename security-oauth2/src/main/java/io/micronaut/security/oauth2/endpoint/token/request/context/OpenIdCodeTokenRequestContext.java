@@ -26,6 +26,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
+import reactor.util.annotation.Nullable;
 
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
                                          OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                          SecureEndpoint tokenEndpoint,
                                          OauthClientConfiguration clientConfiguration,
-                                         String codeVerify) {
+                                         @Nullable String codeVerify) {
         super(getMediaType(clientConfiguration), tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
