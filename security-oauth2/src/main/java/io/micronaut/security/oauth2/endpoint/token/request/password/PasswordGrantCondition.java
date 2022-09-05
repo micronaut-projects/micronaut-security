@@ -51,17 +51,18 @@ public class PasswordGrantCondition extends AbstractCondition {
         BeanContext beanContext = context.getBeanContext();
         if (clientConfiguration.getGrantType() == GrantType.PASSWORD) {
             if (clientConfiguration.getToken().isPresent()) {
-                if (beanContext.containsBean(OauthAuthenticationMapper.class, Qualifiers.byName(failureMsgPrefix))) {
+                if (beanContext.containsBean(OauthAuthenticationMapper.class, Qualifiers.byName(clientConfiguration.getName()))) {
                     return true;
                 } else {
                     context.fail(failureMsgPrefix + "] because no user details mapper could be found");
                 }
             } else if (clientConfiguration.getOpenid().isPresent()) {
-                boolean hasOpenIdProviderMetadata = beanContext.containsBean(OpenIdProviderMetadata.class, Qualifiers.byName(failureMsgPrefix));
+                String clientConfigurationName = clientConfiguration.getName();
+                boolean hasOpenIdProviderMetadata = beanContext.containsBean(OpenIdProviderMetadata.class, Qualifiers.byName(clientConfigurationName));
                 boolean hasTokenResponseValidator = beanContext.containsBean(OpenIdTokenResponseValidator.class);
                 if (hasOpenIdProviderMetadata && hasTokenResponseValidator) {
 
-                    boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(failureMsgPrefix));
+                    boolean hasAuthenticationMapper = beanContext.containsBean(OpenIdAuthenticationMapper.class, Qualifiers.byName(clientConfigurationName));
                     if (!hasAuthenticationMapper) {
                         hasAuthenticationMapper = beanContext.containsBean(DefaultOpenIdAuthenticationMapper.class);
                     }
