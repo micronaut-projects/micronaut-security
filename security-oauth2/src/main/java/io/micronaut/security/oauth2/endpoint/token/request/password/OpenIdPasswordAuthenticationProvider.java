@@ -22,8 +22,6 @@ import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
