@@ -2,7 +2,7 @@
 managed-nimbus-jose-jwt = "9.24.3"
 
 geb = "4.1"
-groovy = "3.0.11"
+groovy = "3.0.12"
 reactor-test = "3.4.22"
 selenium = "3.141.59"
 serde = "1.0.1"
