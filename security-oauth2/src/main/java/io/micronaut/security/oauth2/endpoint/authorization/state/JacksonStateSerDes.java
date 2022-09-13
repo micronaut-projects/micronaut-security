@@ -15,16 +15,14 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.core.type.Argument;
-import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.io.IOException;
-import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Base64;
 
 /**
  * Jackson based implementation for state serdes.
