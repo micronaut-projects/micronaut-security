@@ -22,13 +22,14 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKMatcher;
 import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
-import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
@@ -38,8 +39,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
@@ -52,9 +51,6 @@ import org.slf4j.LoggerFactory;
 @EachBean(JwksSignatureConfiguration.class)
 public class JwksSignature implements JwksCache, SignatureConfiguration {
 
-    @Deprecated
-    public static final int DEFAULT_REFRESH_JWKS_ATTEMPTS = 1;
-
     private static final Logger LOG = LoggerFactory.getLogger(JwksSignature.class);
     private final JwkValidator jwkValidator;
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
@@ -66,44 +62,9 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * @param jwksSignatureConfiguration JSON Web Key Set configuration.
      * @param jwkValidator JWK Validator to be used.
      */
-    @Inject
     public JwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
                          JwkValidator jwkValidator) {
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
-        this.jwkValidator = jwkValidator;
-    }
-
-    /**
-     * @param url The JWK url
-     * @param keyType The JWK key type
-     * @param jwkValidator JWK Validator to be used.
-     * @deprecated Use {@link #JwksSignature(JwksSignatureConfiguration, JwkValidator)} instead.
-     */
-    @Deprecated
-    public JwksSignature(String url,
-                         @Nullable KeyType keyType,
-                         JwkValidator jwkValidator) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("JWT validation URL: {}", url);
-        }
-        this.jwksSignatureConfiguration = new JwksSignatureConfiguration() {
-            @Override
-            @NonNull
-            public String getUrl() {
-                return url;
-            }
-
-            @Override
-            public KeyType getKeyType() {
-                return keyType;
-            }
-
-            @Override
-            @NonNull
-            public Integer getCacheExpiration() {
-                return JwksSignatureConfigurationProperties.DEFAULT_CACHE_EXPIRATION;
-            }
-        };
         this.jwkValidator = jwkValidator;
     }
 
@@ -225,21 +186,6 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     /**
      * Calculates a list of JWK matches for a JWT.
      *
-     *
-     * @param jwt A Signed JWT
-     * @param jwkSet A JSON Web Key Set
-     * @param refreshKeysAttempts Number of times to attempt refreshing the JWK Set
-     * @deprecated Use {@link JwksSignature#matches(SignedJWT, JWKSet)} instead
-     * @return a List of JSON Web Keys
-     */
-    @Deprecated
-    protected List<JWK> matches(SignedJWT jwt, @Nullable JWKSet jwkSet, int refreshKeysAttempts) {
-        return matches(jwt, jwkSet);
-    }
-
-    /**
-     * Calculates a list of JWK matches for a JWT.
-     *
      * @param jwt A Signed JWT
      * @param jwkSet A JSON Web Key Set
      * @return a List of JSON Web Keys
@@ -279,50 +225,5 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     protected boolean verify(List<JWK> matches, SignedJWT jwt) {
         return matches.stream().anyMatch(jwk -> jwkValidator.validate(jwt, jwk));
-    }
-
-    /**
-     * Returns the number of attempts to refresh the cached JWKS.
-     * @return Number of attempts to refresh the cached JWKS.
-     */
-    @Deprecated
-    public int getRefreshJwksAttempts() {
-        return DEFAULT_REFRESH_JWKS_ATTEMPTS;
-    }
-
-    /**
-     *
-     * @return A JSON Web Key Validator.
-     */
-    @Deprecated
-    public JwkValidator getJwkValidator() {
-        return jwkValidator;
-    }
-
-    /**
-     *
-     * @return a JSON Web Key Set.
-     */
-    @Deprecated
-    public JWKSet getJwkSet() {
-        return jwkSet;
-    }
-
-    /**
-     *
-     * @return the Key Type.
-     */
-    @Deprecated
-    public KeyType getKeyType() {
-        return jwksSignatureConfiguration.getKeyType();
-    }
-
-    /**
-     *
-     * @return The JSON Web Key Set (JWKS) URL.
-     */
-    @Deprecated
-    public String getUrl() {
-        return jwksSignatureConfiguration.getUrl();
     }
 }

@@ -18,10 +18,9 @@ package io.micronaut.security.token;
 import io.micronaut.context.annotation.DefaultImplementation;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.security.authentication.Authentication;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,47 +32,6 @@ import java.util.Map;
  */
 @DefaultImplementation(DefaultRolesFinder.class)
 public interface RolesFinder {
-
-    /**
-     * Retrieves the list of roles from the provided claims.
-     *
-     * @param claims The claims of the token.
-     * @return The granted roles.
-     * @deprecated use {@link RolesFinder#resolveRoles(Map)} instead.
-     */
-    @Deprecated
-    @NonNull
-    default List<String> findInClaims(@NonNull Claims claims) {
-        Map<String, Object> atttributes = new HashMap<>();
-        for (String k : claims.names()) {
-            atttributes.put(k, claims.get(k));
-        }
-        return resolveRoles(atttributes);
-    }
-
-    /**
-     *
-     * @param requiredRoles The list of roles required to be authorized
-     * @param authentication The authentication
-     * @return true if any of the Authentication's roles is in the required roles list.
-     * @deprecated Use {@link RolesFinder#hasAnyRequiredRoles(List, Map)} instead.
-     */
-    @Deprecated
-    default boolean hasAnyRequiredRoles(@NonNull List<String> requiredRoles, @NonNull Authentication authentication) {
-        return hasAnyRequiredRoles(requiredRoles, authentication.getRoles());
-    }
-
-    /**
-     *
-     * @param requiredRoles The list of roles required to be authorized
-     * @param claims The claims of the token.
-     * @return true if any the roles specified in the claims is in the required roles list.
-     * @deprecated Use {@link RolesFinder#hasAnyRequiredRoles(List, Map)} instead.
-     */
-    @Deprecated
-    default boolean hasAnyRequiredRoles(@NonNull List<String> requiredRoles, @NonNull Claims claims) {
-        return hasAnyRequiredRoles(requiredRoles, findInClaims(claims));
-    }
 
     /**
      *

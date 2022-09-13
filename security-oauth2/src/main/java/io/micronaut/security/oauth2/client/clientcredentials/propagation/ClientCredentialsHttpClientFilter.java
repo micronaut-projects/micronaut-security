@@ -76,7 +76,7 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
                                              BeanContext beanContext) {
         this.outgoingHttpRequestProcessor = outgoingHttpRequestProcessor;
         this.oauthClientConfigurationCollection = oauthClientConfigurationStream
-                .filter(config -> config.getClientCredentials().map(ClientCredentialsConfiguration::isEnabled).orElse(false))
+                .filter(config -> false)
                 .collect(Collectors.toList());
         this.beanContext = beanContext;
         this.clientFunction = key -> beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName(key));

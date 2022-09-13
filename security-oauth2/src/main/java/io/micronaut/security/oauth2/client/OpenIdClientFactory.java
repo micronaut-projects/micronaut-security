@@ -74,20 +74,8 @@ class OpenIdClientFactory {
 
     /**
      * @param beanContext The bean context
-     * @param objectMapper Object Mapper
-     * @deprecated Use {@link #OpenIdClientFactory(BeanContext, JsonMapper)} instead
-     */
-    @Deprecated
-    OpenIdClientFactory(BeanContext beanContext, ObjectMapper objectMapper) {
-        this.beanContext = beanContext;
-        this.jsonMapper = new JacksonDatabindMapper(objectMapper);
-    }
-
-    /**
-     * @param beanContext The bean context
      * @param jsonMapper Object Mapper
      */
-    @Inject
     OpenIdClientFactory(BeanContext beanContext, JsonMapper jsonMapper) {
         this.beanContext = beanContext;
         this.jsonMapper = jsonMapper;

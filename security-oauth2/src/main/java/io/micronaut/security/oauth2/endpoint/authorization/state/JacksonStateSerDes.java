@@ -40,19 +40,9 @@ public class JacksonStateSerDes implements StateSerDes {
     private final JsonMapper jsonMapper;
 
     /**
-     * @param objectMapper To serialize/de-serialize the state
-     * @deprecated Use {@link #JacksonStateSerDes(JsonMapper)} instead
-     */
-    @Deprecated
-    public JacksonStateSerDes(ObjectMapper objectMapper) {
-        this.jsonMapper = new JacksonDatabindMapper(objectMapper);
-    }
-
-    /**
      * @param jsonMapper To serialize/de-serialize the state
      * @since 3.3
      */
-    @Inject
     public JacksonStateSerDes(JsonMapper jsonMapper) {
         this.jsonMapper = jsonMapper;
     }
