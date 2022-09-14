@@ -1,7 +1,11 @@
 package io.micronaut.security.token.jwt.signature.jwks
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.nimbusds.jose.*
+import com.nimbusds.jose.JWSAlgorithm
+import com.nimbusds.jose.JWSHeader
+import com.nimbusds.jose.JWSObject
+import com.nimbusds.jose.JWSSigner
+import com.nimbusds.jose.Payload
 import com.nimbusds.jose.crypto.MACSigner
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.KeyUse
@@ -26,6 +30,7 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.json.JsonMapper
 import io.micronaut.runtime.context.scope.Refreshable
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
@@ -290,8 +295,8 @@ class JwksCacheSpec extends Specification {
     @Replaces(KeysController.class)
     static class GoogleKeysController extends KeysController {
         int invocations = 0
-        GoogleKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        GoogleKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
         @Get
         @SingleResult
@@ -307,8 +312,8 @@ class JwksCacheSpec extends Specification {
     @Replaces(KeysController.class)
     static class AppleKeysController extends KeysController {
         int invocations = 0
-        AppleKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        AppleKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
         @Get
         @SingleResult
@@ -324,8 +329,8 @@ class JwksCacheSpec extends Specification {
     @Replaces(KeysController.class)
     static class CognitoKeysController extends KeysController {
         int invocations = 0
-        CognitoKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        CognitoKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
         @Get
         @SingleResult
