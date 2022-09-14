@@ -1,5 +1,5 @@
 plugins {
-    id "io.micronaut.build.internal.module"
+    id "io.micronaut.build.internal.security-module"
 }
 
 dependencies {
@@ -22,5 +22,3 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
 }
-
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
