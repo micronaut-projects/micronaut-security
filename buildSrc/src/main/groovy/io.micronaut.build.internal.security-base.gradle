@@ -1,3 +1,7 @@
+repositories {
+    mavenCentral()
+}
+
 tasks.withType(Test) {
     systemProperty "geb.env", System.getProperty('geb.env') ?: ""
     systemProperty "testcontainers", System.getProperty('testcontainers') ?: true

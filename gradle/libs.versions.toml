@@ -1,8 +1,13 @@
 [versions]
 managed-nimbus-jose-jwt = "9.24.3"
 
-geb = "4.1"
+micronaut = "3.6.3"
+micronaut-docs = "2.0.0"
+micronaut-test = "3.5.0"
 groovy = "3.0.12"
+spock = "2.1-groovy-3.0"
+
+geb = "4.1"
 reactor-test = "3.4.22"
 selenium = "3.141.59"
 serde = "1.0.1"
@@ -11,7 +16,6 @@ unboundid-ldapsdk = "6.0.5"
 velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
-spock = "2.1-groovy-3.0"
 kotlin = "1.7.10"
 
 [libraries]
