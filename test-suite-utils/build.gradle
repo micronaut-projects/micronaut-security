@@ -1,10 +1,7 @@
 plugins {
     id 'java-library'
     id 'groovy'
-}
-
-repositories {
-    mavenCentral()
+    id "io.micronaut.build.internal.security-tests"
 }
 
 dependencies {

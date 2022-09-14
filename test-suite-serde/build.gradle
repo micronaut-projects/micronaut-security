@@ -1,10 +1,9 @@
 plugins {
     id 'groovy'
     id 'java-library'
+    id "io.micronaut.build.internal.security-tests"
 }
-repositories {
-    mavenCentral()
-}
+
 dependencies {
     testImplementation(platform(mn.micronaut.bom))
     testCompileOnly(mn.micronaut.inject.groovy)

@@ -1,0 +1,32 @@
+[
+  {
+    "type": "io.micronaut.security.authentication.jackson.SecurityJacksonModule",
+    "member": "Constructor io.micronaut.security.authentication.jackson.SecurityJacksonModule()",
+    "reason": "Removed deprecated constructor for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.IntrospectionController",
+    "member": "Constructor io.micronaut.security.endpoints.introspection.IntrospectionController(io.micronaut.security.endpoints.introspection.IntrospectionProcessor)",
+    "reason": "Removed deprecated constructor for Micronaut 4"
+  },
+  {
+  "type": "io.micronaut.security.token.jwt.endpoints.KeysController",
+  "member": "Constructor io.micronaut.security.token.jwt.endpoints.KeysController(java.util.Collection,com.fasterxml.jackson.databind.ObjectMapper)",
+  "reason": "Removed deprecated constructor for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.jwks.JwksSignature",
+    "member": "Field DEFAULT_REFRESH_JWKS_ATTEMPTS",
+    "reason": "Removed deprecated constant for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.jwks.JwksSignature",
+    "member": "Constructor io.micronaut.security.token.jwt.signature.jwks.JwksSignature(java.lang.String,com.nimbusds.jose.jwk.KeyType,io.micronaut.security.token.jwt.signature.jwks.JwkValidator)",
+    "reason": "Removed deprecated constructor for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.validator.JwtClaimsValidator",
+    "member": "Field PREFIX",
+    "reason": "Removed deprecated constant for Micronaut 4"
+  }
+]

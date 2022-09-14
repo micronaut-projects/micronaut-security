@@ -23,6 +23,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
+import io.micronaut.json.JsonMapper
 import io.micronaut.runtime.ApplicationConfiguration
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
@@ -329,8 +330,8 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerBKeysController extends KeysController {
         int invocations = 0
 
-        AuthServerBKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        AuthServerBKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
 
         @Override
@@ -349,8 +350,8 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerAKeysController extends KeysController {
         int invocations = 0
 
-        AuthServerAKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        AuthServerAKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
 
         @Override

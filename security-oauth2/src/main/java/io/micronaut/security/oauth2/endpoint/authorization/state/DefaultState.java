@@ -36,13 +36,6 @@ public class DefaultState implements MutableState {
     private URI redirectUri;
     private String nonce = UUID.randomUUID().toString();
 
-    @Override
-    @Nullable
-    @Deprecated
-    public URI getOriginalUri() {
-        return originalUri;
-    }
-
     @NonNull
     @Override
     public String getNonce() {

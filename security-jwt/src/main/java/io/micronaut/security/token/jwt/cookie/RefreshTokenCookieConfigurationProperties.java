@@ -21,7 +21,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.cookie.SameSite;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 import io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties;
@@ -47,14 +46,6 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
     public static final boolean DEFAULT_ENABLED = true;
 
     /**
-     * The default http only value.
-     *
-     * @deprecated use {@link AbstractAccessTokenCookieConfigurationProperties#DEFAULT_HTTPONLY}
-     */
-    @Deprecated
-    public static final boolean DEFAULT_HTTPONLY = AbstractAccessTokenCookieConfigurationProperties.DEFAULT_HTTPONLY;
-
-    /**
      * The default cookie name.
      */
     @SuppressWarnings("WeakerAccess")
@@ -65,14 +56,6 @@ public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTok
      */
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_COOKIEPATH = OauthControllerConfigurationProperties.DEFAULT_PATH;
-
-    /**
-     * The default same-site setting for the JWT cookie.
-     *
-     * @deprecated use {@link AbstractAccessTokenCookieConfigurationProperties#DEFAULT_COOKIESAMESITE}
-     */
-    @Deprecated
-    public static final SameSite DEFAULT_COOKIESAMESITE = AbstractAccessTokenCookieConfigurationProperties.DEFAULT_COOKIESAMESITE;
 
     private String cookiePath = DEFAULT_COOKIEPATH;
     private boolean enabled = DEFAULT_ENABLED;
