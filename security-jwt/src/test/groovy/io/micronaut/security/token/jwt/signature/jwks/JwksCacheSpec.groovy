@@ -1,6 +1,5 @@
 package io.micronaut.security.token.jwt.signature.jwks
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.JWSHeader
 import com.nimbusds.jose.JWSObject
