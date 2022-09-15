@@ -10,8 +10,8 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.views.model.security.SecurityViewModelProcessor
-import spock.lang.Specification
 import jakarta.inject.Singleton
+import spock.lang.Specification
 
 class SecurityViewModelProcessorSpec extends Specification {
 

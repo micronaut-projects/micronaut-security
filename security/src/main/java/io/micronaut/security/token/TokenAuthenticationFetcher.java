@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.token;
 
+import static io.micronaut.security.filters.SecurityFilter.TOKEN;
+
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
@@ -22,16 +24,12 @@ import io.micronaut.security.event.TokenValidatedEvent;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.reader.TokenResolver;
 import io.micronaut.security.token.validator.TokenValidator;
-import org.reactivestreams.Publisher;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Flux;
-
 import java.util.Collection;
 import java.util.Optional;
-
-import static io.micronaut.security.filters.SecurityFilter.TOKEN;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 /**
  * Attempts to retrieve a token form the {@link HttpRequest} and if existing validated.

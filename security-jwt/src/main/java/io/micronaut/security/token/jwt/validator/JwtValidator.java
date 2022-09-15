@@ -15,8 +15,16 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import com.nimbusds.jose.*;
-import com.nimbusds.jwt.*;
+import com.nimbusds.jose.EncryptionMethod;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jwt.EncryptedJWT;
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.jwt.PlainJWT;
+import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -25,9 +33,6 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksCache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +40,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A builder style class for validating JWT tokens against any number of provided
@@ -159,7 +166,7 @@ public final class JwtValidator {
 
         for (EncryptionConfiguration config: sortedConfigs) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Using encryption configuration: {}", config.toString());
+                LOG.trace("Using encryption configuration: {}", config);
             }
             try {
                 config.decrypt(jwt);
@@ -173,7 +180,7 @@ public final class JwtValidator {
                 return validate(signedJWT);
             } catch (final JOSEException e) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config.toString());
+                    LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config);
                 }
                 return Optional.empty();
             }
@@ -202,13 +209,11 @@ public final class JwtValidator {
 
         // If any of the signature configurations is a JwksCache, evict the cache and attempt to verify again
         for (SignatureConfiguration c : sortedConfigs) {
-            if (c instanceof JwksCache) {
-                if (((JwksCache) c).isExpired()) {
-                    ((JwksCache) c).clear();
-                    optionalJWT = validate(jwt, c);
-                    if (optionalJWT.isPresent()) {
-                        return optionalJWT;
-                    }
+            if (c instanceof JwksCache && ((JwksCache) c).isExpired()) {
+                ((JwksCache) c).clear();
+                optionalJWT = validate(jwt, c);
+                if (optionalJWT.isPresent()) {
+                    return optionalJWT;
                 }
             }
         }
@@ -258,9 +263,9 @@ public final class JwtValidator {
         if (matchesKeyId.isPresent() && otherMatchesKeyId.isPresent()) {
             return otherMatchesKeyId.get().compareTo(matchesKeyId.get());
         } else if (matchesKeyId.isPresent()) {
-            return matchesKeyId.get() ? 1 : -1;
+            return Boolean.TRUE.equals(matchesKeyId.get()) ? 1 : -1;
         } else if (otherMatchesKeyId.isPresent()) {
-            return otherMatchesKeyId.get() ? 1 : -1;
+            return Boolean.TRUE.equals(otherMatchesKeyId.get()) ? 1 : -1;
         }
         return 0;
     }

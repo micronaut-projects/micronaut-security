@@ -19,10 +19,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.config.TokenConfiguration;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,7 +50,7 @@ public class ClientAuthentication implements Authentication {
     public ClientAuthentication(@JsonProperty("name") String name,
                                 @JsonProperty("attributes") Map<String, Object> attributes) {
         this.name = name;
-        this.attributes = attributes;
+        this.attributes = attributes == null ? Collections.emptyMap() : attributes;
     }
 
     @Override

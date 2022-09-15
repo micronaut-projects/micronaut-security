@@ -18,14 +18,13 @@ package io.micronaut.security.rules;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A base {@link SecurityRule} class to extend from that provides

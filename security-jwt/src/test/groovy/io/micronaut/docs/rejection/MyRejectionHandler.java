@@ -1,6 +1,7 @@
 package io.micronaut.docs.rejection;
 
 //tag::clazz[]
+
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
@@ -9,9 +10,9 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
-
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
+
 import jakarta.inject.Singleton;
 
 //end::clazz[]

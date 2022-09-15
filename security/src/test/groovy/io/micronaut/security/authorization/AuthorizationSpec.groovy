@@ -1,6 +1,8 @@
 package io.micronaut.security.authorization
 
+import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.http.HttpRequest
@@ -9,6 +11,8 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.inject.ExecutableMethod
+import io.micronaut.management.endpoint.EndpointSensitivityProcessor
 import io.micronaut.management.endpoint.annotation.Endpoint
 import io.micronaut.management.endpoint.annotation.Read
 import io.micronaut.security.FailedAuthenticationScenario
@@ -19,6 +23,8 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationFailureReason
 import io.micronaut.security.authentication.PrincipalArgumentBinder
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.rules.SecurityRuleResult
+import io.micronaut.security.rules.SensitiveEndpointRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
@@ -356,6 +362,21 @@ class AuthorizationSpec extends EmbeddedServerSpecification {
         @Read
         String hello(Authentication authentication) {
             "Hello ${authentication.name}"
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'AuthorizationSpec')
+    @Replaces(SensitiveEndpointRule.class)
+    @Singleton
+    static class SensitiveEndpointRuleReplacement extends SensitiveEndpointRule {
+        SensitiveEndpointRuleReplacement(EndpointSensitivityProcessor endpointSensitivityProcessor) {
+            super(endpointSensitivityProcessor)
+        }
+        @Override
+        protected Publisher<SecurityRuleResult> checkSensitiveAuthenticated(@NonNull HttpRequest<?> request,
+                                                                            @NonNull Authentication authentication,
+                                                                            @NonNull ExecutableMethod<?, ?> method) {
+            Mono.just(SecurityRuleResult.ALLOWED)
         }
     }
 }

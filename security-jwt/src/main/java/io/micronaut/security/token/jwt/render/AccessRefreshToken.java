@@ -17,7 +17,9 @@ package io.micronaut.security.token.jwt.render;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * Stores the combination of access and refresh tokens.
@@ -53,7 +55,7 @@ public class AccessRefreshToken {
      * @param refreshToken JWT token
      * @param tokenType Type of token
      */
-    public AccessRefreshToken(String accessToken, String refreshToken, String tokenType) {
+    public AccessRefreshToken(String accessToken, @Nullable String refreshToken, String tokenType) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.tokenType = tokenType;
@@ -66,7 +68,8 @@ public class AccessRefreshToken {
      * @param tokenType Type of token
      * @param expiresIn Seconds until token expiration
      */
-    public AccessRefreshToken(String accessToken, String refreshToken, String tokenType, Integer expiresIn) {
+    @Creator
+    public AccessRefreshToken(String accessToken, @Nullable String refreshToken, String tokenType, @Nullable Integer expiresIn) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.tokenType = tokenType;
@@ -98,7 +101,7 @@ public class AccessRefreshToken {
     }
 
     /**
-     * token type getter.
+     * lifetime in seconds of the access token getter.
      * @return expiration time
      */
     public Integer getExpiresIn() {

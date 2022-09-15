@@ -15,9 +15,8 @@
  */
 package io.micronaut.security.session;
 
-import io.micronaut.security.authentication.AuthenticationModeCondition;
 import io.micronaut.security.authentication.AuthenticationMode;
-
+import io.micronaut.security.authentication.AuthenticationModeCondition;
 import java.util.Arrays;
 
 /**

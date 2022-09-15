@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.signature.rsa;
 
 import com.nimbusds.jose.JWSAlgorithm;
-
 import java.security.interfaces.RSAPrivateKey;
 
 /**

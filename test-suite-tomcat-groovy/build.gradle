@@ -1,0 +1,31 @@
+plugins {
+    id 'groovy'
+    id 'java-library'
+    id "io.micronaut.build.internal.security-tests"
+}
+
+dependencies {
+    implementation(platform(mn.micronaut.bom))
+    testCompileOnly(mn.micronaut.inject.groovy)
+    testImplementation(libs.spock.core) {
+        exclude module:'groovy-all'
+    }
+    testImplementation(mn.micronaut.test.spock)
+    runtimeOnly(libs.logback.classic)
+    testImplementation("io.micronaut.servlet:micronaut-http-server-tomcat")
+    testImplementation(mn.micronaut.http.client)
+    testImplementation project(":security-jwt")
+    testImplementation project(":test-suite-utils-security")
+    testImplementation(libs.reactor.core)
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}

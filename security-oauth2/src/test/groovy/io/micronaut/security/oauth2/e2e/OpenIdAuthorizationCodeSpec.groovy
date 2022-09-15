@@ -12,19 +12,19 @@ import io.micronaut.security.oauth2.DefaultProviderResolver
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration
+import io.micronaut.security.oauth2.endpoint.authorization.request.DefaultAuthorizationRedirectHandler
 import io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakAuthorizationRedirectHandler
-import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakEndSessionEndpoint
+import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakProviderResolver
+import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
-import io.micronaut.security.oauth2.endpoint.authorization.request.DefaultAuthorizationRedirectHandler
-import io.micronaut.security.rules.SecurityRule
-import spock.lang.IgnoreIf
-
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import spock.lang.IgnoreIf
+
 import java.security.Principal
 
 class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {

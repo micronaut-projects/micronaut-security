@@ -16,7 +16,6 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.http.MutableHttpResponse;
-
 import java.util.List;
 import java.util.Optional;
 

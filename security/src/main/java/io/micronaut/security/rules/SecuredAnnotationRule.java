@@ -15,21 +15,20 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
-
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.List;
 
 /**
  * Security rule implementation for the {@link Secured} annotation.
@@ -66,7 +65,7 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
     @Override
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
         if (routeMatch instanceof MethodBasedRouteMatch) {
-            MethodBasedRouteMatch methodRoute = ((MethodBasedRouteMatch) routeMatch);
+            MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
             if (methodRoute.hasAnnotation(Secured.class)) {
                 Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
                 if (optionalValue.isPresent()) {

@@ -26,13 +26,12 @@ import io.micronaut.http.server.exceptions.response.ErrorContext;
 import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides the default behavior for responding to an {@link AuthorizationException}.
@@ -167,9 +166,7 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
     @Deprecated
     protected MutableHttpResponse<?> httpResponseWithStatus(URI location) {
         return HttpResponse.status(HttpStatus.SEE_OTHER)
-                .headers((headers) ->
-                        headers.location(location)
-                );
+                .headers(headers -> headers.location(location));
     }
 
     /**

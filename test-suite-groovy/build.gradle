@@ -1,26 +1,29 @@
 plugins {
     id 'groovy'
     id 'java-library'
+    id "io.micronaut.build.internal.security-tests"
 }
-repositories {
-    mavenCentral()
-}
+
 dependencies {
-    testCompileOnly("io.micronaut:micronaut-inject-groovy:$micronautVersion")
-    testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    testImplementation("org.spockframework:spock-core:${spockVersion}") {
+    implementation(platform(mn.micronaut.bom))
+
+    testCompileOnly(mn.micronaut.inject.groovy)
+
+    testImplementation(libs.spock.core) {
         exclude module:'groovy-all'
     }
-    runtimeOnly("ch.qos.logback:logback-classic")
-    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
-    testImplementation "io.micronaut:micronaut-management"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation "io.micronaut:micronaut-http-client"
+    testImplementation(mn.micronaut.test.spock)
+
+    runtimeOnly(libs.logback.classic)
+
+    testImplementation(mn.micronaut.management)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
     testImplementation project(":security-jwt")
     testImplementation project(":security-oauth2")
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
-    testImplementation "io.projectreactor:reactor-core"
+    testImplementation(libs.reactor.core)
 }
 
 tasks.named('test') {

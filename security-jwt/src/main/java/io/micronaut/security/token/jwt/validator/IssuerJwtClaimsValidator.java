@@ -15,16 +15,14 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import jakarta.inject.Singleton;
-
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 
 /**
  * Validates JWT issuer claim matches a configured value.
@@ -69,7 +67,7 @@ public class IssuerJwtClaimsValidator implements GenericJwtClaimsValidator {
         }
         if (!expectedIssuer.equals(issuerObject.toString())) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuerObject.toString());
+                LOG.trace("Expected JWT issuer claim of '{}', but found '{}' instead.", expectedIssuer, issuerObject);
             }
             return false;
         }

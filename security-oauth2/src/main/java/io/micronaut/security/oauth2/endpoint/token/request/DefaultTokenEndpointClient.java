@@ -16,30 +16,29 @@
 package io.micronaut.security.oauth2.endpoint.token.request;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
+import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.http.client.LoadBalancer;
-import io.micronaut.http.client.HttpClient;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.token.request.context.TokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.SecureGrant;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The default implementation of {@link TokenEndpointClient}.
@@ -114,7 +113,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                 LOG.trace("Using client_secret_post authentication. The client_id and client_secret will be present in the body");
             }
             request.getBody()
-                    .filter(body -> body instanceof SecureGrant)
+                    .filter(SecureGrant.class::isInstance)
                     .map(SecureGrant.class::cast)
                     .ifPresent(body -> {
                         body.setClientId(clientConfiguration.getClientId());
@@ -125,7 +124,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
                 LOG.trace("Unsupported or no authentication method. The client_id will be present in the body");
             }
             request.getBody()
-                    .filter(body -> body instanceof SecureGrant)
+                    .filter(SecureGrant.class::isInstance)
                     .map(SecureGrant.class::cast)
                     .ifPresent(body -> body.setClientId(clientConfiguration.getClientId()));
         }
@@ -138,7 +137,7 @@ public class DefaultTokenEndpointClient implements TokenEndpointClient  {
      * @return An HTTP client to use to send the request
      */
     protected HttpClient getClient(String providerName) {
-        return tokenClients.computeIfAbsent(providerName, (provider) -> {
+        return tokenClients.computeIfAbsent(providerName, provider -> {
             Optional<HttpClient> client = beanContext.findBean(HttpClient.class, Qualifiers.byName(provider));
             return client.orElseGet(defaultTokenClient);
         });

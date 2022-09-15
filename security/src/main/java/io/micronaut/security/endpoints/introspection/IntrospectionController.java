@@ -15,7 +15,6 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.HttpRequest;
@@ -27,12 +26,10 @@ import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
-import jakarta.inject.Inject;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,20 +56,9 @@ public class IntrospectionController {
     /**
      *
      * @param processor Introspection Processor
-     * @deprecated Use {@link #IntrospectionController(IntrospectionProcessor, JsonMapper)} instead
-     */
-    @Deprecated
-    public IntrospectionController(IntrospectionProcessor processor) {
-        this.processor = processor;
-        this.jsonMapper = new JacksonDatabindMapper(new ObjectMapper());
-    }
-
-    /**
-     *
-     * @param processor Introspection Processor
+     * @param jsonMapper the JSON mapper
      * @since 3.3
      */
-    @Inject
     public IntrospectionController(IntrospectionProcessor processor, JsonMapper jsonMapper) {
         this.processor = processor;
         this.jsonMapper = jsonMapper;

@@ -3,10 +3,10 @@ package io.micronaut.docs.base64
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.AuthorizationUtils
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
-import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 

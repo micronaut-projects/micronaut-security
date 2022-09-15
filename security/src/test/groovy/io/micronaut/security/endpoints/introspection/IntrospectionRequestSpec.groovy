@@ -4,15 +4,11 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Consumes
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Post
-import io.micronaut.http.annotation.Produces
-import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.http.annotation.*
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.endpoints.introspection.IntrospectionRequest
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import spock.lang.Shared
 
 import javax.validation.Valid

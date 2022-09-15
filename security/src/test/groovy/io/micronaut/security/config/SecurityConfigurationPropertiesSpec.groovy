@@ -1,7 +1,6 @@
 package io.micronaut.security.config
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.BeanInstantiationException
 import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.http.HttpMethod

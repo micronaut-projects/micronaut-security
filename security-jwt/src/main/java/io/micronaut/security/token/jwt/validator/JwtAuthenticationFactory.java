@@ -18,7 +18,6 @@ package io.micronaut.security.token.jwt.validator;
 import com.nimbusds.jwt.JWT;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.TokenAuthenticationFactory;
-
 import java.util.Optional;
 
 /**

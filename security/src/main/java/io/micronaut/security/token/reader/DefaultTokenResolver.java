@@ -16,12 +16,11 @@
 package io.micronaut.security.token.reader;
 
 import io.micronaut.http.HttpRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.util.Collection;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link io.micronaut.security.token.reader.TokenResolver}.

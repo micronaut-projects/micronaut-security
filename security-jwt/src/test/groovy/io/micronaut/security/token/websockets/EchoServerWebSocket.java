@@ -1,6 +1,7 @@
 package io.micronaut.security.token.websockets;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
@@ -10,11 +11,9 @@ import io.micronaut.websocket.annotation.OnClose;
 import io.micronaut.websocket.annotation.OnMessage;
 import io.micronaut.websocket.annotation.OnOpen;
 import io.micronaut.websocket.annotation.ServerWebSocket;
+import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.Nullable;
-import java.util.function.Predicate;
 
 @Requires(property = "spec.name", value = "websockets-on-open-header")
 @Secured(SecurityRule.IS_AUTHENTICATED)

@@ -7,7 +7,6 @@ import com.nimbusds.jwt.EncryptedJWT
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest

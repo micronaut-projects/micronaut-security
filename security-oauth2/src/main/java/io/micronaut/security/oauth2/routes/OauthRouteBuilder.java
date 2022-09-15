@@ -32,12 +32,13 @@ import io.micronaut.security.oauth2.client.OpenIdClient;
 import io.micronaut.security.oauth2.configuration.OauthConfiguration;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import io.micronaut.web.router.DefaultRouteBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static io.micronaut.security.utils.LoggingUtils.debug;
 
 /**
  * Registers routes dynamically for OAuth 2.0 authorization
@@ -71,13 +72,11 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
         super(executionHandleLocator, uriNamingStrategy, conversionService);
 
         if (controllerList.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No Oauth controllers found. Skipping registration of routes");
-            }
+            debug(LOG, "No Oauth controllers found. Skipping registration of routes");
         } else {
             AtomicBoolean endSessionRegistered = new AtomicBoolean();
 
-            controllerList.forEach((controller) -> {
+            controllerList.forEach(controller -> {
                 OauthClient client = controller.getClient();
                 String name = client.getName();
                 boolean isDefaultProvider = oauthConfiguration.getDefaultProvider().filter(provider -> provider.equals(name)).isPresent();
@@ -86,15 +85,11 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
 
                 bd.findMethod("login", HttpRequest.class).ifPresent(m -> {
                     String loginPath = oauthRouteUrlBuilder.buildLoginUri(name).getPath();
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Registering login route [GET: {}] for oauth configuration [{}]", loginPath, name);
-                    }
+                    debug(LOG, "Registering login route [GET: {}] for oauth configuration [{}]", loginPath, name);
                     buildRoute(HttpMethod.GET, loginPath, ExecutionHandle.of(controller, m));
                     if (isDefaultProvider) {
                         final String defaultLoginPath = oauthRouteUrlBuilder.buildLoginUri(null).getPath();
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Registering default login route [GET: {}] for oauth configuration [{}]", defaultLoginPath, name);
-                        }
+                        debug(LOG, "Registering default login route [GET: {}] for oauth configuration [{}]", defaultLoginPath, name);
                         buildRoute(HttpMethod.GET, defaultLoginPath, ExecutionHandle.of(controller, m));
                     }
                 });
@@ -120,18 +115,13 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
                     }
                 });
 
-                if (client instanceof OpenIdClient) {
+                if (client instanceof OpenIdClient && ((OpenIdClient) client).supportsEndSession() && endSessionRegistered.compareAndSet(false, true)) {
+                    beanContext.findExecutionHandle(EndSessionController.class, "endSession", HttpRequest.class, Authentication.class).ifPresent(executionHandle -> {
+                        String logoutUri = oauthConfiguration.getOpenid().getLogoutUri();
 
-                    if (((OpenIdClient) client).supportsEndSession() && endSessionRegistered.compareAndSet(false, true)) {
-                        beanContext.findExecutionHandle(EndSessionController.class, "endSession", HttpRequest.class, Authentication.class).ifPresent(executionHandle -> {
-                            String logoutUri = oauthConfiguration.getOpenid().getLogoutUri();
-
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("Registering end session route [GET: {}]", logoutUri);
-                            }
-                            buildRoute(HttpMethod.GET, logoutUri, executionHandle);
-                        });
-                    }
+                        debug(LOG, "Registering end session route [GET: {}]", logoutUri);
+                        buildRoute(HttpMethod.GET, logoutUri, executionHandle);
+                    });
                 }
             });
 

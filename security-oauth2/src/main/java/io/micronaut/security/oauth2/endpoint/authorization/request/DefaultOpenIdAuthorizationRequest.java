@@ -19,6 +19,8 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -27,9 +29,6 @@ import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpoin
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.endpoint.nonce.NonceFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 

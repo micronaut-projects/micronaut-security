@@ -15,17 +15,10 @@
  */
 package io.micronaut.security.endpoints;
 
-import io.micronaut.core.util.Toggleable;
-
 /**
  * Encapsulates the configuration of {@link LoginController}.
  * @author Sergio del Amo
  * @since 1.0
  */
-public interface LoginControllerConfiguration extends Toggleable {
-
-    /**
-     * @return path
-     */
-    String getPath();
+public interface LoginControllerConfiguration extends ControllerConfiguration {
 }

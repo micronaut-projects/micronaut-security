@@ -10,12 +10,12 @@ import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
-import reactor.core.publisher.FluxSink
-import reactor.core.publisher.Flux
-import org.reactivestreams.Publisher
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Named
 import jakarta.inject.Singleton
-import io.micronaut.security.testutils.EmbeddedServerSpecification
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
+import reactor.core.publisher.FluxSink
 
 class CsrfFilterSpec extends EmbeddedServerSpecification {
 

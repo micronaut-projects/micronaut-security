@@ -29,18 +29,18 @@ import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.Authenticator;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.Authenticator;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.validation.Validated;
+import javax.validation.Valid;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
-
-import javax.validation.Valid;
+import reactor.core.publisher.Mono;
 
 /**
  * Handles login requests.
@@ -94,6 +94,6 @@ public class LoginController {
                         eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
                         return loginHandler.loginFailed(authenticationResponse, request);
                     }
-                }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
+                }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
     }
 }

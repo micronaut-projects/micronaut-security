@@ -29,12 +29,6 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 public interface JwtClaimsValidator {
 
     /**
-     * Use {@link JwtClaimsValidatorConfigurationProperties#PREFIX} instead.
-     */
-    @Deprecated
-    String PREFIX = JwtClaimsValidatorConfigurationProperties.PREFIX;
-
-    /**
      * @param claims JWT Claims
      * @param request HTTP request
      * @return whether the JWT claims pass validation.

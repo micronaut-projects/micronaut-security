@@ -17,11 +17,10 @@ package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
 import com.nimbusds.jwt.JWT;
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
-
-import io.micronaut.core.annotation.Nullable;
 import java.util.Optional;
 
 /**

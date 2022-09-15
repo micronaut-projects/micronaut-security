@@ -15,10 +15,9 @@
  */
 package io.micronaut.security.token.jwt.render;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.security.authentication.Authentication;
-
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 /**

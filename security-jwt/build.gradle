@@ -1,33 +1,28 @@
 plugins {
-    id "io.micronaut.build.internal.module"
-}
-
-ext {
-    bouncyCastleVersion = '1.70'
+    id "io.micronaut.build.internal.security-module"
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-graal"
-    api "io.micronaut:micronaut-http"
-    api "io.micronaut:micronaut-http-server"
+    annotationProcessor(mn.micronaut.graal)
+    api(mn.micronaut.http)
+    api(mn.micronaut.http.server)
     api project(":security")
-    api "com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"
+    api(libs.managed.nimbus.jose.jwt)
 
-    implementation "io.projectreactor:reactor-core"
+    implementation(libs.reactor.core)
 
-    testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
-    testImplementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
+    testImplementation(libs.bcpkix.jdk15on)
+    testImplementation(libs.bcprov.jdk15on)
 
-    testImplementation "io.micronaut:micronaut-management"
-    testImplementation "io.micronaut:micronaut-http-client"
-    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
+    testImplementation(mn.micronaut.management)
+    testImplementation(mn.micronaut.http.client)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
-    testImplementation "io.micronaut.multitenancy:micronaut-multitenancy"
-
-    testImplementation "io.micronaut.views:micronaut-views-velocity"
-    testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.3"
+    testImplementation(mn.micronaut.multitenancy)
+    testImplementation(mn.micronaut.views.velocity)
+    testRuntimeOnly(libs.velocity.engine.core)
 }
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 

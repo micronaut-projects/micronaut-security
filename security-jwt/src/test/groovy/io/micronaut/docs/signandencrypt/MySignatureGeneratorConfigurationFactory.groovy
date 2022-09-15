@@ -7,7 +7,6 @@ import io.micronaut.context.env.Environment
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-
 import jakarta.inject.Named
 
 @Requires(notEnv = Environment.TEST)

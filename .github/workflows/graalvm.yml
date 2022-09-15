@@ -20,6 +20,7 @@ jobs:
     strategy:
       matrix:
         java: ['11', '17']
+        graalvm: ['latest', 'dev']
     steps:
        # https://github.com/actions/virtual-environments/issues/709
       - name: Free disk space
@@ -28,8 +29,8 @@ jobs:
          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
          sudo apt-get clean
          df -h
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2.1.7
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
@@ -38,7 +39,7 @@ jobs:
       - name: Setup GraalVM CE
         uses: graalvm/setup-graalvm@v1
         with:
-          version: '22.0.0.2'
+          version: ${{ matrix.graalvm }}
           java-version: ${{ matrix.java }}
           components: 'native-image'
       - name: Build with Gradle
@@ -54,9 +55,11 @@ jobs:
            GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
            GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USERNAME }}
            GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
+           PREDICTIVE_TEST_SELECTION: "${{ github.event_name == 'pull_request' && 'true' || 'false' }}"
       - name: Publish Test Report
         if: always()
-        uses: mikepenz/action-junit-report@v2
+        uses: mikepenz/action-junit-report@v3.3.3
         with:
           check_name: GraalVM CE CI / Test Report (Java ${{ matrix.java }})
           report_paths: '**/build/test-results/test/TEST-*.xml'
+          check_retries: 'true'

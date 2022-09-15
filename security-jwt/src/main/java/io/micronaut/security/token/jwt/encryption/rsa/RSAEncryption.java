@@ -21,9 +21,9 @@ import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jose.JWEEncrypter;
 import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jose.crypto.RSAEncrypter;
-import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
-
+import com.nimbusds.jose.crypto.impl.RSACryptoProvider;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.jwt.encryption.AbstractEncryptionConfiguration;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
@@ -53,7 +53,7 @@ public class RSAEncryption extends AbstractEncryptionConfiguration {
     @Override
     public boolean supports(final JWEAlgorithm algorithm, final EncryptionMethod method) {
         if (algorithm != null && method != null) {
-            return RSADecrypter.SUPPORTED_ALGORITHMS.contains(algorithm) && RSADecrypter.SUPPORTED_ENCRYPTION_METHODS.contains(method);
+            return RSACryptoProvider.SUPPORTED_ALGORITHMS.contains(algorithm) && RSACryptoProvider.SUPPORTED_ENCRYPTION_METHODS.contains(method);
         }
         return false;
     }

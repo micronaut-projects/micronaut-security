@@ -1,17 +1,17 @@
 package io.micronaut.docs.security.authorization;
 
 //tag::clazz[]
+
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import jakarta.inject.Singleton;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
-
 import java.util.Collection;
 import java.util.Collections;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 //end::clazz[]
 
 @Requires(property = "spec.name", value = "SiteminderAuthorizationSpec")

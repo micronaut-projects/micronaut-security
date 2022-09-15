@@ -16,10 +16,9 @@
 package io.micronaut.security.oauth2.endpoint.nonce;
 
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-
-import io.micronaut.core.annotation.NonNull;
 
 /**
  * Generates a nonce. A String value used to associate a Client session with an ID Token, and to mitigate replay attacks.

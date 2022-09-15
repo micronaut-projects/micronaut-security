@@ -10,6 +10,7 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.Keycloak
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.generator.TokenGenerator
@@ -17,17 +18,15 @@ import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.reader.TokenReader
 import io.micronaut.websocket.WebSocketBroadcaster
 import io.micronaut.websocket.WebSocketSession
-import io.micronaut.websocket.annotation.ClientWebSocket
-import io.micronaut.websocket.annotation.OnClose
-import io.micronaut.websocket.annotation.OnMessage
-import io.micronaut.websocket.annotation.OnOpen
-import io.micronaut.websocket.annotation.ServerWebSocket
+import io.micronaut.websocket.annotation.*
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import spock.lang.IgnoreIf
 import spock.lang.Issue
 import spock.util.concurrent.PollingConditions
+
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.function.Predicate
@@ -67,6 +66,7 @@ class HomePageSpec extends GebEmbeddedServerSpecification {
         tokenGenerator.generateToken(claims)
     }
 
+    @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5618")
     def "check websocket connects"() {
         expect:

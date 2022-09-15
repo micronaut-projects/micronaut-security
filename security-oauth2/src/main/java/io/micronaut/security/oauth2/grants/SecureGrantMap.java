@@ -41,11 +41,11 @@ public class SecureGrantMap extends HashMap<String, String> implements SecureGra
 
     @Override
     public void setClientId(String clientId) {
-        put("client_id", clientId);
+        put(KEY_CLIENT_ID, clientId);
     }
 
     @Override
     public void setClientSecret(String clientSecret) {
-        put("client_secret", clientSecret);
+        put(KEY_CLIENT_SECRET, clientSecret);
     }
 }

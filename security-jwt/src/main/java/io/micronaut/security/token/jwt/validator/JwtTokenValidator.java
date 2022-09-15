@@ -21,13 +21,11 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.validator.TokenValidator;
-import org.reactivestreams.Publisher;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Flux;
-
 import java.util.Collection;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 /**
  * @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/validating-jwt-access-tokens">Validating JWT Access Tokens</a>

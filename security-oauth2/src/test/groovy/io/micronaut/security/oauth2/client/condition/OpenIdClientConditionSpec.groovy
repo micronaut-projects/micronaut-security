@@ -1,7 +1,7 @@
 package io.micronaut.security.oauth2.client.condition
 
-import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class OpenIdClientConditionSpec extends ApplicationContextSpecification {
 

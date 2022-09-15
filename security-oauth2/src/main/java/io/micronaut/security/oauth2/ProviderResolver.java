@@ -16,7 +16,6 @@
 package io.micronaut.security.oauth2;
 
 import io.micronaut.security.authentication.Authentication;
-
 import java.util.Optional;
 
 /**

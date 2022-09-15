@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
@@ -23,8 +24,6 @@ import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
-
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 

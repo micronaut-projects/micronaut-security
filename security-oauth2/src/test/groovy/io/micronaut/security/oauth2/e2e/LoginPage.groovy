@@ -4,7 +4,7 @@ import geb.Page
 
 class LoginPage extends Page {
 
-    static at = { title == 'Log in to Keycloak' }
+    static at = { title == 'Sign in to Keycloak' }
 
     static content = {
         usernameInput { $('#username') }

@@ -19,18 +19,17 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.config.SecurityConfiguration;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.reader.TokenResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Singleton;
 import java.net.URL;
 import java.util.Optional;
 import java.util.function.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Responsible for resolving which end session request to use for a given OpenID client configuration.

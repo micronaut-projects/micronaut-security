@@ -45,14 +45,14 @@ public enum Display {
      */
     WAP("wap");
 
-    private String display;
+    private String displayName;
 
     /**
      * Instantiates the OpenID connect Display parameter.
-     * @param display Display parameter.
+     * @param displayName Display parameter.
      */
-    Display(String display) {
-        this.display = display;
+    Display(String displayName) {
+        this.displayName = displayName;
     }
 
     /**
@@ -60,11 +60,11 @@ public enum Display {
      * @return OpenID connect Display parameter
      */
     public String getDisplay() {
-        return display;
+        return displayName;
     }
 
     @Override
     public String toString() {
-        return display;
+        return displayName;
     }
 }

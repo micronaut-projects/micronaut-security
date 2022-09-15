@@ -28,14 +28,14 @@ public enum ResponseType {
     ID_TOKEN("id_token"),
     TOKEN("token");
 
-    private String responseType;
+    private String responseTypeName;
 
     /**
      * Instantiates Response Type.
-     * @param responseType Response type
+     * @param responseTypeName Response type
      */
-    ResponseType(String responseType) {
-        this.responseType = responseType;
+    ResponseType(String responseTypeName) {
+        this.responseTypeName = responseTypeName;
     }
 
     /**
@@ -44,6 +44,6 @@ public enum ResponseType {
      */
     @Override
     public String toString() {
-        return responseType;
+        return responseTypeName;
     }
 }

@@ -17,14 +17,10 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
-import io.micronaut.core.convert.value.ConvertibleMultiValues;
-import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 
-import io.micronaut.core.annotation.NonNull;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * The default implementation of {@link AuthorizationResponse} for
@@ -36,9 +32,6 @@ import java.util.Objects;
 @Prototype
 public class DefaultOauthAuthorizationResponse extends AbstractAuthorizationResponse implements OauthAuthorizationResponse {
 
-    private final ConvertibleMultiValues<String> responseData;
-    private final HttpRequest<Map<String, Object>> request;
-
     /**
      * @param request The request
      * @param stateSerDes State Serdes
@@ -46,29 +39,6 @@ public class DefaultOauthAuthorizationResponse extends AbstractAuthorizationResp
     public DefaultOauthAuthorizationResponse(@Parameter HttpRequest<Map<String, Object>> request,
                                              StateSerDes stateSerDes) {
         super(request, stateSerDes);
-        this.responseData = request.getBody()
-                .map(body -> {
-                    MutableConvertibleMultiValuesMap<String> map = new MutableConvertibleMultiValuesMap<>();
-                    body.forEach((key, value) -> map.add(key, value.toString()));
-                    return (ConvertibleMultiValues<String>) map;
-                }).orElseGet(request::getParameters);
-        this.request = request;
     }
 
-    @Override
-    protected String getStateValue() {
-        return responseData.get(AuthorizationResponse.KEY_STATE);
-    }
-
-    @NonNull
-    @Override
-    public String getCode() {
-        return Objects.requireNonNull(responseData.get(AuthorizationResponse.KEY_CODE));
-    }
-
-    @NonNull
-    @Override
-    public HttpRequest<?> getCallbackRequest() {
-        return request;
-    }
 }

@@ -1,7 +1,7 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
-== Micronaut Security 3.2 breaking changes
+== Micronaut Security 4.0 breaking changes
 
 `ExceptionHandler` responses are now passed through the current `ErrorResponseProcessor`.
 Classes that extend the affected APIs should switch to use the new constructor.
@@ -11,6 +11,16 @@ Classes that extend the affected APIs should switch to use the new constructor.
 - api:security.authentication.AuthenticationExceptionHandler[]
 - api:security.authentication.DefaultAuthorizationExceptionHandler[]
 - api:security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseExceptionHandler[]
+
+== Micronaut Security 3.4 breaking changes
+
+Sensitive endpoints will now respond with an error unless a replacement for the api:security.rules.SensitiveEndpointRule[] is bound.
+
+The following code snippet illustrates how to restore the previous functionality:
+
+NOTE: The previous functionality allows any authenticated user, no matter their role to view sensitive endpoints.
+
+snippet::io.micronaut.security.docs.sensitiveendpointrule.SensitiveEndpointRuleReplacement[tags="imports,clazz"]
 
 == Micronaut Security 3.1 breaking changes
 

@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.config;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.security.authentication.AuthenticationMode;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +45,11 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final AuthenticationStrategy DEFAULT_AUTHENTICATION_STRATEGY = AuthenticationStrategy.ANY;
+
+    /**
+     * The default reject-not-found value.
+     */
+    @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_REJECT_NOT_FOUND = true;
 
     private boolean enabled = DEFAULT_ENABLED;
@@ -64,7 +68,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     /**
-     * Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie. Should
+     * Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie, idtoken. Should
      * only be supplied if the service handles login and logout requests.
      * @param authentication Login Handler Mode
      */
@@ -135,8 +139,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     /**
-     * @param rejectNotFound Set to true if the server should respond with 404 for requests that do not
-     *      * match any routes on the server. Default value ({#DEFAULT_REJECT_NOT_FOUND}).
+     * @param rejectNotFound Whether the server should respond with 401 for requests that do not match any routes on the server, if you set it to false, it will return 404 for requests that do not match any routes on the server. Default value ({@value #DEFAULT_REJECT_NOT_FOUND}).
      */
     public void setRejectNotFound(boolean rejectNotFound) {
         this.rejectNotFound = rejectNotFound;

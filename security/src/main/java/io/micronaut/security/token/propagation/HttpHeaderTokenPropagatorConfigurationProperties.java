@@ -42,7 +42,7 @@ public class HttpHeaderTokenPropagatorConfigurationProperties implements HttpHea
     private static final String DEFAULT_PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
     private static final String DEFAULT_HEADER_NAME = HttpHeaders.AUTHORIZATION;
 
-    private String prefix = DEFAULT_PREFIX;
+    private String headerPrefix = DEFAULT_PREFIX;
     private String headerName = DEFAULT_HEADER_NAME;
     private boolean enabled = DEFAULT_ENABLED;
 
@@ -61,10 +61,10 @@ public class HttpHeaderTokenPropagatorConfigurationProperties implements HttpHea
 
     /**
      * Value prefix for Http Header. Default value ({@value #DEFAULT_PREFIX}).
-     * @param prefix preffix before the header value
+     * @param headerPrefix preffix before the header value
      */
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
+    public void setPrefix(String headerPrefix) {
+        this.headerPrefix = headerPrefix;
     }
 
     /**
@@ -73,7 +73,7 @@ public class HttpHeaderTokenPropagatorConfigurationProperties implements HttpHea
      */
     @Override
     public String getPrefix() {
-        return this.prefix;
+        return this.headerPrefix;
     }
 
     /**

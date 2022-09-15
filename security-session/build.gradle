@@ -1,18 +1,18 @@
 plugins {
-    id "io.micronaut.build.internal.module"
+    id "io.micronaut.build.internal.security-module"
 }
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-graal"
+    annotationProcessor(mn.micronaut.graal)
 
-    api "io.micronaut:micronaut-http"
-    api "io.micronaut:micronaut-session"
+    api(mn.micronaut.http)
+    api(mn.micronaut.session)
     api project(":security")
-    api "io.micronaut:micronaut-http-server"
-    implementation "io.projectreactor:reactor-core"
+    api(mn.micronaut.http.server)
+    implementation(libs.reactor.core)
 
-    testImplementation "io.micronaut:micronaut-http-client"
-    testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.inject.groovy)
+    testImplementation(mn.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
 }

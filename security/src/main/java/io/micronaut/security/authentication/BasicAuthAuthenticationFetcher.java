@@ -20,13 +20,12 @@ import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.filters.AuthenticationFetcher;
+import jakarta.inject.Singleton;
+import java.util.Optional;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jakarta.inject.Singleton;
 import reactor.core.publisher.Flux;
-
-import java.util.Optional;
 
 /**
  * An implementation of {@link AuthenticationFetcher} that decodes a username

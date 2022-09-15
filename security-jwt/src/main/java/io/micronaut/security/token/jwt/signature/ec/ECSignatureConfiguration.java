@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.signature.ec;
 
 import com.nimbusds.jose.JWSAlgorithm;
-
 import java.security.interfaces.ECPublicKey;
 
 /**

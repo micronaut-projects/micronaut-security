@@ -6,12 +6,11 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import reactor.core.publisher.FluxSink;
-import reactor.core.publisher.Flux;
-import org.reactivestreams.Publisher;
-
 import jakarta.inject.Singleton;
 import java.util.Collections;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
 
 @Requires(property = "spec.name", value = "jwtclaimsoverride")
 //tag::clazz[]

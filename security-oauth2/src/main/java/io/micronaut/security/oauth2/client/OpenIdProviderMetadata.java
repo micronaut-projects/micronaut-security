@@ -18,7 +18,6 @@ package io.micronaut.security.oauth2.client;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

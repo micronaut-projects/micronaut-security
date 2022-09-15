@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
 
 /**
