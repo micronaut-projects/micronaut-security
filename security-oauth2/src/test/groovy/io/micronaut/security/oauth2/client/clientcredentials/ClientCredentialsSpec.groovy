@@ -5,6 +5,7 @@ import com.nimbusds.jose.JOSEException
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.RSAKey
+import groovy.json.JsonSlurper
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Property
@@ -63,13 +64,13 @@ import java.text.ParseException
      |         |<--(B)---- Access Token ---------<|               |
      |         |                                  |               |
      +---------+                                  +---------------+
-     
+
      +---------+                                  +-----------------+
      |         |                                  |                 |
      |         |>--(C)- Bearer Access Token ----->| Resource Server |
      | Client  |                                  |     Server      |
      |         |                                  |                 |
-     |         |<--(D)---- Protected Resource ---<|                 |     
+     |         |<--(D)---- Protected Resource ---<|                 |
      +---------+                                  +-----------------+
 ''')
 class ClientCredentialsSpec extends Specification {
@@ -387,7 +388,10 @@ class ClientCredentialsSpec extends Specification {
         then:
         HttpClientResponseException resourceResp = thrown()
         resourceResp.status == HttpStatus.UNAUTHORIZED
-
+        with(new JsonSlurper().parseText(resourceResp.response.getBody(String).get())) {
+            message == 'Unauthorized'
+            _links.self.href == '/father'
+        }
         when: 'calling client credentials returns the new token because the previous token is detected as expired'
         tokenResponse = Flux.from(clientCredentialsClient.requestToken()).blockFirst()
 
