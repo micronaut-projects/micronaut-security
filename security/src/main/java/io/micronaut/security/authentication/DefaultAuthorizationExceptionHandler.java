@@ -181,7 +181,7 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
         return processResponse(
                 request,
                 exception,
-                HttpResponse.status(HttpStatus.SEE_OTHER).headers((headers) ->
+                HttpResponse.status(HttpStatus.SEE_OTHER).headers(headers ->
                         headers.location(location)
                 )
         );
