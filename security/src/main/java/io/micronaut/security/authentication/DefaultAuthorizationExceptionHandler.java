@@ -26,7 +26,6 @@ import io.micronaut.http.server.exceptions.response.ErrorContext;
 import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -49,32 +48,10 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
     private final ErrorResponseProcessor<?> responseProcessor;
 
     /**
-     * Default constructor.
-     *
-     * @deprecated Please use {@link #DefaultAuthorizationExceptionHandler(RedirectConfiguration, PriorToLoginPersistence, ErrorResponseProcessor)}
-     */
-    @Deprecated
-    public DefaultAuthorizationExceptionHandler() {
-        this(null, null, null);
-    }
-
-    /**
-     * @param redirectConfiguration Redirect configuration
-     * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
-     *
-     * @deprecated Please use {@link #DefaultAuthorizationExceptionHandler(RedirectConfiguration, PriorToLoginPersistence, ErrorResponseProcessor)}
-     */
-    @Deprecated
-    public DefaultAuthorizationExceptionHandler(RedirectConfiguration redirectConfiguration, @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this(redirectConfiguration, priorToLoginPersistence, null);
-    }
-
-    /**
      * @param redirectConfiguration Redirect configuration
      * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
      * @param responseProcessor Error Response Processor
      */
-    @Inject
     public DefaultAuthorizationExceptionHandler(RedirectConfiguration redirectConfiguration, @Nullable PriorToLoginPersistence priorToLoginPersistence, @Nullable ErrorResponseProcessor<?> responseProcessor) {
         this.redirectConfiguration = redirectConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
@@ -153,20 +130,6 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
             LOG.debug("redirect uri: {}", uri);
         }
         return uri;
-    }
-
-    /**
-     * Builds a HTTP Response redirection to the supplied location.
-     *
-     * @param location The Uri to redirect to
-     * @return an HTTP response with the Uri as location
-     *
-     * @deprecated see {@link #httpResponseWithStatus(HttpRequest, URI, AuthorizationException)}
-     */
-    @Deprecated
-    protected MutableHttpResponse<?> httpResponseWithStatus(URI location) {
-        return HttpResponse.status(HttpStatus.SEE_OTHER)
-                .headers(headers -> headers.location(location));
     }
 
     /**
