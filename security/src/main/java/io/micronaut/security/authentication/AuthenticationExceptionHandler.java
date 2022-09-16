@@ -27,10 +27,7 @@ import io.micronaut.http.hateoas.Link;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.http.server.exceptions.response.ErrorContext;
 import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
-
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
 
 /**
  * Handles the server response when an {@link AuthenticationException} is thrown.
@@ -47,20 +44,9 @@ public class AuthenticationExceptionHandler implements ExceptionHandler<Authenti
     private final ErrorResponseProcessor<?> responseProcessor;
 
     /**
-     * @param eventPublisher The event publisher.
-     *
-     * @deprecated {@link #AuthenticationExceptionHandler(ApplicationEventPublisher, ErrorResponseProcessor)}
-     */
-    @Deprecated
-    public AuthenticationExceptionHandler(ApplicationEventPublisher eventPublisher) {
-        this(eventPublisher, null);
-    }
-
-    /**
      * @param eventPublisher The event publisher
      * @param responseProcessor Error Response Processor
      */
-    @Inject
     public AuthenticationExceptionHandler(ApplicationEventPublisher eventPublisher, @Nullable ErrorResponseProcessor<?> responseProcessor) {
         this.eventPublisher = eventPublisher;
         this.responseProcessor = responseProcessor;

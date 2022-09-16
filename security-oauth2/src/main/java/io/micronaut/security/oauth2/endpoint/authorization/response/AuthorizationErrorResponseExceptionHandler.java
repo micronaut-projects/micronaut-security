@@ -21,8 +21,6 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import io.micronaut.http.server.exceptions.response.ErrorContext;
 import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
-
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -38,18 +36,9 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
 
     /**
      * Default constructor.
-     *
-     * @deprecated See @{link #AuthorizationErrorResponseExceptionHandler(ErrorResponseProcessor)}.
-     */
-    @Deprecated
-    public AuthorizationErrorResponseExceptionHandler() {
-        this(null);
-    }
 
-    /**
      * @param responseProcessor Error Response Processor
      */
-    @Inject
     public AuthorizationErrorResponseExceptionHandler(ErrorResponseProcessor<?> responseProcessor) {
         this.responseProcessor = responseProcessor;
     }
