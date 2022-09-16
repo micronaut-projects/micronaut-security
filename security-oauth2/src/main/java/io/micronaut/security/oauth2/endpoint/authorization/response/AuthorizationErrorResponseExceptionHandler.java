@@ -30,6 +30,15 @@ import jakarta.inject.Singleton;
 @Singleton
 public class AuthorizationErrorResponseExceptionHandler implements ExceptionHandler<AuthorizationErrorResponseException, MutableHttpResponse<?>> {
 
+    /**
+     * Default constructor.
+     *
+     * @deprecated This will be removed in the next major version.
+     */
+    @Deprecated
+    public AuthorizationErrorResponseExceptionHandler() {
+    }
+
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationErrorResponseException exception) {
         return HttpResponse.badRequest(exception.getAuthorizationErrorResponse());
