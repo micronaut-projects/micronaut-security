@@ -37,6 +37,7 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
      */
     @Deprecated
     public AuthorizationErrorResponseExceptionHandler() {
+        // Default constructor added so we can deprecate it
     }
 
     @Override
