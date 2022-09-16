@@ -47,7 +47,10 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
 
     /**
      * Default constructor.
+     *
+     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
      */
+    @Deprecated
     public DefaultAuthorizationExceptionHandler() {
         this.redirectConfiguration = null;
         this.priorToLoginPersistence = null;
@@ -56,8 +59,10 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
     /**
      * @param redirectConfiguration Redirect configuration
      * @param priorToLoginPersistence Persistence mechanism to redirect to prior login url
+     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
      */
     @Inject
+    @Deprecated
     public DefaultAuthorizationExceptionHandler(RedirectConfiguration redirectConfiguration, @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         this.redirectConfiguration = redirectConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
@@ -139,7 +144,9 @@ public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<Au
      *
      * @param location The Uri to redirect to
      * @return an HTTP response with the Uri as location
+     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
      */
+    @Deprecated
     protected MutableHttpResponse<?> httpResponseWithStatus(URI location) {
         return HttpResponse.status(HttpStatus.SEE_OTHER)
                 .headers(headers -> headers.location(location));

@@ -41,7 +41,7 @@ public class AuthenticationExceptionHandler implements ExceptionHandler<Authenti
 
     /**
      * @param eventPublisher The event publisher
-     * @deprecated This will be removed in the next major version.
+     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
      */
     @Deprecated
     public AuthenticationExceptionHandler(ApplicationEventPublisher<?> eventPublisher) {

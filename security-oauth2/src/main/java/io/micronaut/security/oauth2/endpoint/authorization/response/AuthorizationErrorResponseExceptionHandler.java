@@ -33,7 +33,7 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
     /**
      * Default constructor.
      *
-     * @deprecated This will be removed in the next major version.
+     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
      */
     @Deprecated
     public AuthorizationErrorResponseExceptionHandler() {
