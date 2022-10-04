@@ -9,6 +9,8 @@ All of the above is configurable through `micronaut.security.oauth2.openid`:
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties.adoc[]
 include::{includedir}configurationProperties/io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties.adoc[]
 
+IMPORTANT: `OpenIdClientFactory` will block the event loop while it fetches the metadata from the configured OpenId providers configuration endpoints, which can cause runtime issues in certain cases. If you want to avoid these, you can set `micronaut.security.oauth2.openid.eager-provider-init` to `true`, which will force these calls to happen before the application starts.
+
 To enable the usage of the `/logout` endpoint, see the section on the <<logout, Logout Endpoint>>.
 
 IMPORTANT: The `get-allowed` configuration option must be set to `true` because the OpenID provider will issue a redirect which is a GET request.

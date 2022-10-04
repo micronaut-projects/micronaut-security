@@ -32,6 +32,12 @@ public interface OpenIdConfiguration {
     String getLogoutUri();
 
     /**
+     *
+     * @return True if OpenId providers should be initialized eagerly
+     */
+    Boolean isEagerProviderInit();
+
+    /**
      * @return Optional end session configuration
      */
     Optional<EndSessionConfiguration> getEndSession();

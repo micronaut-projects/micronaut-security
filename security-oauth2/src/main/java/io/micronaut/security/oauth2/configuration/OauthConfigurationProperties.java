@@ -134,7 +134,10 @@ public class OauthConfigurationProperties implements OauthConfiguration {
 
         private static final String DEFAULT_LOGOUT = "/oauth/logout";
 
+        private static final Boolean DEFAULT_EAGER_PROVIDER_INIT = false;
+
         private String logoutUri = DEFAULT_LOGOUT;
+        private Boolean eagerProviderInit = DEFAULT_EAGER_PROVIDER_INIT;
         private EndSessionConfigurationProperties endSession = new EndSessionConfigurationProperties();
         private ClaimsValidationConfigurationProperties claimsValidation = new ClaimsValidationConfigurationProperties();
         private AdditionalClaimsConfigurationProperties additionalClaims = new AdditionalClaimsConfigurationProperties();
@@ -191,6 +194,20 @@ public class OauthConfigurationProperties implements OauthConfiguration {
          */
         public void setAdditionalClaims(AdditionalClaimsConfigurationProperties claims) {
             this.additionalClaims = claims;
+        }
+
+        @Override
+        public Boolean isEagerProviderInit() {
+            return eagerProviderInit;
+        }
+
+        /**
+         * Whether the providers should be initialized eagerly to prevent blocking HTTP calls
+         * after the context has been set up.
+         * @param eagerProviderInit Default value ({@value #DEFAULT_EAGER_PROVIDER_INIT}).
+         */
+        public void setEagerProviderInit(Boolean eagerProviderInit) {
+            this.eagerProviderInit = eagerProviderInit;
         }
 
         /**
