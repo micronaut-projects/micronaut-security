@@ -8,6 +8,8 @@ groovy = "4.0.5"
 spock = "2.2-groovy-4.0"
 
 geb = "4.1"
+geb-groovy = "3.0.12"
+geb-spock = "2.2-groovy-3.0"
 reactor-test = "3.4.23"
 selenium = "3.141.59"
 serde = "1.0.1"
@@ -22,6 +24,8 @@ kotlin = "1.7.20"
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
 
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
+spock-for-geb = { module = "org.spockframework:spock-core", version.ref = "geb-spock" }
+geb-groovy-test = { module = "org.codehaus.groovy:groovy-test", version.ref = "geb-groovy" }
 groovy-json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
