@@ -38,3 +38,7 @@ configurations {
         }
     }
 }
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
