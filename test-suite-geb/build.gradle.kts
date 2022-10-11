@@ -28,6 +28,9 @@ dependencies {
     testImplementation(libs.testcontainers.selenium)
     testImplementation(libs.selenium.remote.driver)
     testImplementation(libs.selenium.api)
+    testImplementation(mn.micronaut.inject.groovy) {
+        exclude(group = "org.apache.groovy")
+    }
     testImplementation(libs.selenium.support)
     testRuntimeOnly(libs.selenium.firefox.driver)
     testRuntimeOnly(libs.logback.classic)
