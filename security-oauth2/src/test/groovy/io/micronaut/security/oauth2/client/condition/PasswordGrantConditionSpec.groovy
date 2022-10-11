@@ -2,6 +2,7 @@ package io.micronaut.security.oauth2.client.condition
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.security.authentication.AuthenticationProvider
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
@@ -15,7 +16,6 @@ import spock.lang.Specification
 import reactor.core.publisher.Flux
 import spock.lang.Unroll
 
-import javax.annotation.Nullable
 
 class PasswordGrantConditionSpec extends Specification {
 
