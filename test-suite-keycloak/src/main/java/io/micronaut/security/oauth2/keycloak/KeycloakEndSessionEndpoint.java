@@ -12,7 +12,7 @@ import io.micronaut.security.testutils.TestContainersUtils;
 
 import java.util.Optional;
 
-class KeycloakEndSessionEndpoint implements EndSessionEndpoint {
+public class KeycloakEndSessionEndpoint implements EndSessionEndpoint {
 
     public static final String PARAM_REDIRECT_URI = "redirect_uri";
     private final OpenIdProviderMetadata openIdProviderMetadata;
