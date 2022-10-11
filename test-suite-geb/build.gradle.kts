@@ -30,3 +30,11 @@ dependencies {
     testRuntimeOnly(libs.selenium.firefox.driver)
     testRuntimeOnly(libs.logback.classic)
 }
+configurations {
+    testRuntimeClasspath {
+        exclude(group = "org.apache.groovy")
+        this.resolutionStrategy {
+            force("org.spockframework:spock-core:${libs.versions.geb.spock.get()}")
+        }
+    }
+}
