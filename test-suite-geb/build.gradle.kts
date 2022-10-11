@@ -1,14 +1,16 @@
 plugins {
-    id("io.micronaut.build.internal.base")
+    id("io.micronaut.build.internal.security-tests")
     groovy
     `java-library`
 }
+
 repositories {
     mavenCentral()
     maven {
         setUrl("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
 }
+
 dependencies {
     testImplementation(mn.snakeyaml)
     testImplementation(mn.reactor)
@@ -30,6 +32,7 @@ dependencies {
     testRuntimeOnly(libs.selenium.firefox.driver)
     testRuntimeOnly(libs.logback.classic)
 }
+
 configurations {
     testRuntimeClasspath {
         exclude(group = "org.apache.groovy")
