@@ -1,6 +1,7 @@
 plugins {
     id "io.micronaut.build.internal.security-module"
 }
+
 dependencies {
     annotationProcessor(mn.micronaut.graal)
 
@@ -16,5 +17,3 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
 }
-
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

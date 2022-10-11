@@ -24,5 +24,3 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
 }
-
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

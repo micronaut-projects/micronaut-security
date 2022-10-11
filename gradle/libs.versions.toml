@@ -1,17 +1,21 @@
 [versions]
-managed-nimbus-jose-jwt = "9.24.3"
+managed-nimbus-jose-jwt = "9.25"
+
+micronaut = "4.0.0-SNAPSHOT"
+micronaut-docs = "2.0.0"
+micronaut-test = "3.7.0"
+groovy = "3.0.13"
+spock = "2.1-groovy-3.0"
 
 geb = "4.1"
-groovy = "3.0.12"
-reactor-test = "3.4.22"
+reactor-test = "3.4.23"
 selenium = "3.141.59"
 serde = "1.0.1"
 testcontainers = "1.17.3"
-unboundid-ldapsdk = "6.0.5"
+unboundid-ldapsdk = "6.0.6"
 velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
-spock = "2.1-groovy-3.0"
 kotlin = "1.7.10"
 
 [libraries]

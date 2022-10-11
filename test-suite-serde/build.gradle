@@ -29,8 +29,6 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
-
 java {
     sourceCompatibility = JavaVersion.toVersion("1.8")
     targetCompatibility = JavaVersion.toVersion("1.8")

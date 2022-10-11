@@ -24,7 +24,6 @@ dependencies {
     testImplementation(mn.micronaut.views.velocity)
     testRuntimeOnly(libs.velocity.engine.core)
 }
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
 test {
     testLogging.showStandardStreams = true
