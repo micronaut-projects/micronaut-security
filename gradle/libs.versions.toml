@@ -12,8 +12,8 @@ geb-groovy = "3.0.12"
 geb-spock = "2.2-groovy-3.0"
 reactor-test = "3.4.23"
 serde = "1.0.1"
-testcontainers = "1.17.3"
 selenium = "4.2.2"
+testcontainers = "1.17.5"
 unboundid-ldapsdk = "6.0.6"
 velocity-engine-core = "2.3"
 bouncycastle = "1.70"
@@ -37,8 +37,8 @@ selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-dri
 selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-driver", version.ref = "selenium" }
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "selenium" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }
-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
-testcontainers-selenium = { module = "org.testcontainers:selenium" }
+testcontainers = { module = "org.testcontainers:testcontainers" }
+testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref ="testcontainers" }
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
 velocity-engine-core = { module = "org.apache.velocity:velocity-engine-core", version.ref = "velocity-engine-core" }
 bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }
