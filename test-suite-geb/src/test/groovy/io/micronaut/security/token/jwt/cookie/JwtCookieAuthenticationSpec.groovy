@@ -3,6 +3,7 @@ package io.micronaut.security.token.jwt.cookie
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.annotation.Nullable
+import io.micronaut.docs.security.session.LoginForm
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType

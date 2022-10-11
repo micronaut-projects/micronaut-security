@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.testutils
+package io.micronaut.security.testutils;
 
-final class TestContainersUtils {
-    static boolean isGebUsingTestContainers() {
-        !System.getProperty("geb.env") || System.getProperty("geb.env").contains('docker')
+public final class TestContainersUtils {
+    public static boolean isGebUsingTestContainers() {
+        return System.getProperty("geb.env") == null || System.getProperty("geb.env").contains("docker");
     }
 
-    static String getHost() {
-        isGebUsingTestContainers() ? "host.testcontainers.internal" : "localhost"
+    public static String getHost() {
+        return isGebUsingTestContainers() ? "host.testcontainers.internal" : "localhost";
     }
 }
