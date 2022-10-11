@@ -27,4 +27,6 @@ dependencies {
     testImplementation(libs.selenium.remote.driver)
     testImplementation(libs.selenium.api)
     testImplementation(libs.selenium.support)
+    testRuntimeOnly(libs.selenium.firefox.driver)
+    testRuntimeOnly(libs.logback.classic)
 }
