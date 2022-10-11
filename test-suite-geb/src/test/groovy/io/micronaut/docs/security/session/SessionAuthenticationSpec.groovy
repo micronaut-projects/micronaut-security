@@ -4,6 +4,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.cookie.Cookie
+import io.micronaut.security.session.SessionPriorLoginSpec
 import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
@@ -93,9 +94,9 @@ micronaut:
 
     def "verify session based authentication works without a real browser"() {
         given:
-        applicationContext.getBean(HomeController.class)
-        applicationContext.getBean(LoginAuthController.class)
-        applicationContext.getBean(AuthenticationProviderUserPassword.class)
+        applicationContext.getBean(HomeController)
+        applicationContext.getBean(LoginAuthController)
+        applicationContext.getBean(AuthenticationProviderUserPassword)
 
         when:
         Map m = new Yaml().load(cleanYamlAsciidocTag(yamlConfig))
