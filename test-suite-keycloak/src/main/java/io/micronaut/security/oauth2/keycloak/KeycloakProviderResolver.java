@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class KeycloakProviderResolver extends DefaultProviderResolver {
-    KeycloakProviderResolver(List<OpenIdClientConfiguration> openIdClientConfigurations) {
+    protected KeycloakProviderResolver(List<OpenIdClientConfiguration> openIdClientConfigurations) {
         super(openIdClientConfigurations);
     }
 

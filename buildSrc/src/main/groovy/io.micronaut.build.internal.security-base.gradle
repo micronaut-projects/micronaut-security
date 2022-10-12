@@ -4,7 +4,6 @@ repositories {
 }
 
 tasks.withType(Test) {
-    systemProperty "geb.env", System.getProperty('geb.env') ?: ""
     systemProperty "testcontainers", System.getProperty('testcontainers') ?: true
     afterTest { desc, result ->
         //logger.quiet " -- Executed test ${desc.name} [${desc.className}] with result: ${result.resultType}"

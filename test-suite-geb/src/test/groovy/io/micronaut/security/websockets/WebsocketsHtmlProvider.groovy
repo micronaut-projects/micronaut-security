@@ -1,4 +1,4 @@
-package io.micronaut.docs.websockets
+package io.micronaut.security.websockets
 
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable;
@@ -32,7 +32,7 @@ class WebsocketsHtmlProvider {
                 </div>
 	<script type="application/javascript">
         var serverUrl = "${serverUrl}";
-        var jwt = "${jwt}"; 
+        var jwt = "${jwt}";
         </script>
 	<script src="/assets/app.js"></script>
         </body>

@@ -1,5 +1,8 @@
-package io.micronaut.docs.websockets
+package io.micronaut.security.websockets
 
+import geb.Browser
+import geb.spock.GebSpec
+import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
@@ -7,15 +10,20 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
+import io.micronaut.http.client.BlockingHttpClient
+import io.micronaut.http.client.HttpClient
+import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.testutils.GebEmbeddedServerSpecification
-import io.micronaut.security.testutils.Keycloak
+import io.micronaut.security.oauth2.keycloack.v16.Keycloak
+import io.micronaut.security.testutils.ConfigurationFixture
+import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.reader.TokenReader
+import io.micronaut.security.utils.BaseUrlUtils
 import io.micronaut.websocket.WebSocketBroadcaster
 import io.micronaut.websocket.WebSocketSession
 import io.micronaut.websocket.annotation.*
@@ -23,24 +31,33 @@ import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import spock.lang.AutoCleanup
 import spock.lang.IgnoreIf
 import spock.lang.Issue
+import spock.lang.Shared
 import spock.util.concurrent.PollingConditions
 
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.function.Predicate
 
-class HomePageSpec extends GebEmbeddedServerSpecification {
+class HomePageSpec extends GebSpec {
+
+    @AutoCleanup
+    @Shared
+    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
     @Override
-    String getSpecName() {
-        'HomePageSpec'
+    Browser getBrowser() {
+        Browser browser = super.getBrowser()
+        if (embeddedServer) {
+            browser.baseUrl = BaseUrlUtils.getBaseUrl(embeddedServer)
+        }
+        browser
     }
 
-    @Override
     Map<String, Object> getConfiguration() {
-        super.configuration + [
+        ConfigurationUtils.getConfiguration('HomePageSpec') + [
                 'micronaut.security.intercept-url-map'                           : [
                         [
                                 pattern        : '/assets/*',

@@ -1,4 +1,4 @@
-package io.micronaut.security.token.jwt.cookie
+package io.micronaut.security.pages
 
 import geb.Page
 

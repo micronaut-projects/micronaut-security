@@ -1,4 +1,4 @@
-package io.micronaut.security.token.jwt.cookie
+package io.micronaut.security.pages
 
 import geb.Page
 
@@ -12,6 +12,11 @@ class HomePage extends Page {
         loginLink { $('a', text: 'Login') }
         logoutButton { $('input', type: 'submit', value: 'Logout') }
         usernameElement(required: false) { $('h1 span', 0) }
+        body { $('body') }
+    }
+
+    String getMessage() {
+        body.text().trim()
     }
 
     String username() {

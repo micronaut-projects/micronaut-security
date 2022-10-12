@@ -1,3 +1,5 @@
+import java.util.Optional
+
 plugins {
     id("io.micronaut.build.internal.security-tests")
     groovy
@@ -16,6 +18,7 @@ dependencies {
     testImplementation(mn.reactor)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(project(":test-suite-keycloak"))
+    testImplementation(project(":test-suite-keycloak-16"))
     testImplementation(project(":test-suite-utils"))
     testImplementation(project(":test-suite-utils-security"))
     testImplementation(project(":security-oauth2"))
@@ -44,7 +47,9 @@ configurations {
         }
     }
 }
-
+val gebEnv = Optional.ofNullable(System.getProperty("geb.env")).orElse("dockerFirefox")
 tasks.withType<Test> {
     useJUnitPlatform()
+    systemProperty("geb.env", gebEnv)
+    systemProperty("webdriver.gecko.driver", System.getProperty("webdriver.gecko.driver"))
 }

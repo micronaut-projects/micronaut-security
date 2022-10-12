@@ -1,4 +1,4 @@
-package io.micronaut.docs.security.session
+package io.micronaut.security.session
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.MediaType

@@ -1,15 +1,37 @@
-package io.micronaut.docs.security.session
+package io.micronaut.security.session
 
+import geb.Browser
+import geb.spock.GebSpec
+import io.micronaut.context.ApplicationContext
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
+import io.micronaut.http.client.BlockingHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.cookie.Cookie
-import io.micronaut.security.session.SessionPriorLoginSpec
-import io.micronaut.security.testutils.GebEmbeddedServerSpecification
+import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.pages.HomePage
+import io.micronaut.security.pages.LoginPage
+import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.YamlAsciidocTagCleaner
+import io.micronaut.security.utils.BaseUrlUtils
 import org.yaml.snakeyaml.Yaml
+import spock.lang.AutoCleanup
+import spock.lang.Shared
 
-class SessionAuthenticationSpec extends GebEmbeddedServerSpecification implements YamlAsciidocTagCleaner {
+class SessionAuthenticationSpec extends GebSpec implements YamlAsciidocTagCleaner {
+    @AutoCleanup
+    @Shared
+    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
+
+    @Shared
+    ApplicationContext applicationContext = embeddedServer.applicationContext
+
+    @Shared
+    HttpClient httpClient = applicationContext.createBean(HttpClient, embeddedServer.URL)
+
+    @Shared
+    BlockingHttpClient client = httpClient.toBlocking()
 
     String yamlConfig = '''\
 //tag::yamlconfig[]
@@ -30,8 +52,18 @@ micronaut:
         ]
     ]
 
+
     @Override
+    Browser getBrowser() {
+        Browser browser = super.getBrowser()
+        if (embeddedServer) {
+            browser.baseUrl = BaseUrlUtils.getBaseUrl(embeddedServer)
+        }
+        browser
+    }
+
     Map<String, Object> getConfiguration() {
+        ConfigurationUtils.getConfiguration('SessionAuthenticationSpec') +
         [
                 'spec.name': 'securitysession',
                 'micronaut.http.client.followRedirects': false,

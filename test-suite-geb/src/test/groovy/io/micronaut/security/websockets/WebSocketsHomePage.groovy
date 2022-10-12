@@ -1,4 +1,4 @@
-package io.micronaut.docs.websockets
+package io.micronaut.security.websockets
 
 import geb.Page
 import geb.module.Textarea
