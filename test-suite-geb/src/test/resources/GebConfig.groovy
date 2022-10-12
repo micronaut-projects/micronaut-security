@@ -19,7 +19,6 @@ Closure firefoxDriver = { ->
     }
     new FirefoxDriver()
 }
-atCheckWaiting = 1
 driver = {
     firefoxDriver()
 }
