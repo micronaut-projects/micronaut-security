@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.testutils;
-
+package io.micronaut.security.oauth2.keycloack.v16;
 public final class TestContainersUtils {
-    private TestContainersUtils() {
-
-    }
-
     public static boolean isGebUsingTestContainers() {
         return System.getProperty("geb.env") == null || System.getProperty("geb.env").contains("docker");
     }

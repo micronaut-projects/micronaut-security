@@ -1,9 +1,15 @@
 package io.micronaut.security.token.jwt.cookie
 
+import geb.Browser
+import geb.spock.GebSpec
+import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.annotation.Nullable
-import io.micronaut.docs.security.session.LoginForm
+import io.micronaut.http.client.BlockingHttpClient
+import io.micronaut.http.client.HttpClient
+import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.session.LoginForm
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -12,31 +18,52 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.cookie.Cookie
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.pages.HomePage
+import io.micronaut.security.pages.LoginPage
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.endpoints.LoginController
 import io.micronaut.security.endpoints.LogoutController
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.testutils.GebEmbeddedServerSpecification
-import io.micronaut.security.testutils.Keycloak
+import io.micronaut.security.oauth2.keycloack.v16.Keycloak
+import io.micronaut.security.testutils.ConfigurationFixture
+import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
+import io.micronaut.security.utils.BaseUrlUtils
+import io.micronaut.security.utils.HtmlUtils
 import jakarta.inject.Singleton
+import spock.lang.AutoCleanup
 import spock.lang.IgnoreIf
+import spock.lang.Shared
 
 import java.security.Principal
 
-class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
+class JwtCookieAuthenticationSpec extends GebSpec {
+
+    @AutoCleanup
+    @Shared
+    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
+
+    @Shared
+    ApplicationContext applicationContext = embeddedServer.applicationContext
+
+    HttpClient httpClient = applicationContext.createBean(HttpClient, embeddedServer.URL)
+
+    BlockingHttpClient client = httpClient.toBlocking()
 
     @Override
-    String getSpecName() {
-        'JwtCookieAuthenticationSpec'
+    Browser getBrowser() {
+        Browser browser = super.getBrowser()
+        if (embeddedServer) {
+            browser.baseUrl = BaseUrlUtils.getBaseUrl(embeddedServer)
+        }
+        browser
     }
 
-    @Override
     Map<String, Object> getConfiguration() {
-        super.configuration + [
+        ConfigurationUtils.getConfiguration('JwtCookieAuthenticationSpec') + [
                 'micronaut.http.client.followRedirects': false,
                 'micronaut.security.authentication': 'cookie',
                 'micronaut.security.redirect.login-failure': '/login/authFailed',
@@ -189,41 +216,11 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
         @Get("/secured")
         @Secured(SecurityRule.IS_AUTHENTICATED)
         String securedPage() {
-            StringBuilder sb = new StringBuilder()
-            sb.append("<!DOCTYPE html>")
-            sb.append("<html>")
-            sb.append("<head>")
-            sb.append("<title>Secured Page</title>")
-            sb.append("</head>")
-            sb.append("<body>")
-            sb.append("</body>")
-            sb.append("</html>")
-            return sb.toString()
+            HtmlUtils.securedPage()
         }
 
         private String html(boolean loggedIn, String username) {
-            StringBuilder sb = new StringBuilder()
-            sb.append("<!DOCTYPE html>")
-            sb.append("<html>")
-            sb.append("<head>")
-            sb.append("<title>Home</title>")
-            sb.append("</head>")
-            sb.append("<body>")
-            if( loggedIn ) {
-                sb.append("<h1>username: <span> "+username+"</span></h1>")
-            } else {
-                sb.append("<h1>You are not logged in</h1>")
-            }
-            if( loggedIn ) {
-                sb.append("<form action=\"logout\" method=\"POST\">")
-                sb.append("<input type=\"submit\" value=\"Logout\" />")
-                sb.append("</form>")
-            } else {
-                sb.append("<p><a href=\"/login/auth\">Login</a></p>")
-            }
-            sb.append("</body>")
-            sb.append("</html>")
-            return sb.toString()
+            HtmlUtils.homePage(loggedIn, username)
         }
     }
 
@@ -231,56 +228,17 @@ class JwtCookieAuthenticationSpec extends GebEmbeddedServerSpecification {
     @Secured("isAnonymous()")
     @Controller("/login")
     static class LoginAuthController {
-
         @Produces(MediaType.TEXT_HTML)
         @Get("/auth")
         String auth() {
-            return html(false)
+            HtmlUtils.login(false)
         }
 
         @Produces(MediaType.TEXT_HTML)
         @Get("/authFailed")
         String authFailed() {
-            return html(true)
-        }
-
-        private String html(boolean errors) {
-            StringBuilder sb = new StringBuilder()
-            sb.append("<!DOCTYPE html>")
-            sb.append("<html>")
-            sb.append("<head>")
-            if( errors ) {
-                sb.append("<title>Login Failed</title>")
-            } else {
-                sb.append("<title>Login</title>")
-            }
-            sb.append("</head>")
-            sb.append("<body>")
-            sb.append("<form action=\"/login\" method=\"POST\">")
-            sb.append("<ol>")
-            sb.append("<li>")
-            sb.append("<label for=\"username\">Username</label>")
-            sb.append("<input type=\"text\" name=\"username\" id=\"username\"/>")
-            sb.append("</li>")
-            sb.append("<li>")
-            sb.append("<label for=\"password\">Password</label>")
-            sb.append("<input type=\"text\" name=\"password\" id=\"password\"/>")
-            sb.append("</li>")
-            sb.append("<li>")
-            sb.append("<input type=\"submit\" value=\"Login\"/>")
-            sb.append("</li>")
-            if( errors ) {
-                sb.append("<li id=\"errors\">")
-                sb.append("<span style=\"color:red\">Login Failed</span>")
-                sb.append("</li>")
-            }
-            sb.append("</ol>")
-            sb.append("</form>")
-            sb.append("</body>")
-            sb.append("</html>")
-            return sb.toString()
+            HtmlUtils.login(true)
         }
     }
-
 }
 

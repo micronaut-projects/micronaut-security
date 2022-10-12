@@ -9,8 +9,8 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import java.util.List;
 import java.util.Optional;
 
-abstract class KeycloakProviderResolver extends DefaultProviderResolver {
-    KeycloakProviderResolver(List<OpenIdClientConfiguration> openIdClientConfigurations) {
+public abstract class KeycloakProviderResolver extends DefaultProviderResolver {
+    protected KeycloakProviderResolver(List<OpenIdClientConfiguration> openIdClientConfigurations) {
         super(openIdClientConfigurations);
     }
 

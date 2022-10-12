@@ -1,28 +1,41 @@
 package io.micronaut.security.session
 
+import geb.Browser
+import geb.spock.GebSpec
+import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import io.micronaut.docs.security.session.LoginPage
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
+import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.pages.LoginPage
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.testutils.GebEmbeddedServerSpecification
+import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.utils.BaseUrlUtils
 import jakarta.inject.Singleton
+import spock.lang.AutoCleanup
+import spock.lang.Shared
 
-class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
+class SessionPriorLoginSpec extends GebSpec {
+    @AutoCleanup
+    @Shared
+    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
     @Override
-    String getSpecName() {
-        'SessionPriorLoginSpec'
+    Browser getBrowser() {
+        Browser browser = super.getBrowser()
+        if (embeddedServer) {
+            browser.baseUrl = BaseUrlUtils.getBaseUrl(embeddedServer)
+        }
+        browser
     }
 
-    @Override
     Map<String, Object> getConfiguration() {
-        super.configuration + [
+        ConfigurationUtils.getConfiguration('SessionPriorLoginSpec') + [
                 'micronaut.security.authentication'           : 'session',
                 'micronaut.security.redirect.prior-to-login'  : true,
                 'micronaut.security.redirect.unauthorized.url': '/login/auth'

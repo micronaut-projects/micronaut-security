@@ -8,7 +8,7 @@ import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.testutils.Keycloak
+import io.micronaut.security.oauth2.keycloack.v16.Keycloak
 import spock.lang.IgnoreIf
 
 class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {

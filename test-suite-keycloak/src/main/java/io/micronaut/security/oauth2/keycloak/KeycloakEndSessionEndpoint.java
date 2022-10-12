@@ -9,19 +9,18 @@ import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionConfiguration;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.testutils.TestContainersUtils;
-
 import java.util.Optional;
 
-class KeycloakEndSessionEndpoint implements EndSessionEndpoint {
+public class KeycloakEndSessionEndpoint implements EndSessionEndpoint {
 
     public static final String PARAM_REDIRECT_URI = "redirect_uri";
     private final OpenIdProviderMetadata openIdProviderMetadata;
     private final EndSessionConfiguration endSessionConfiguration;
     private final HttpHostResolver httpHostResolver;
 
-    KeycloakEndSessionEndpoint(OpenIdProviderMetadata openIdProviderMetadata,
-                               EndSessionConfiguration endSessionConfiguration,
-                               HttpHostResolver httpHostResolver) {
+    public KeycloakEndSessionEndpoint(OpenIdProviderMetadata openIdProviderMetadata,
+                                      EndSessionConfiguration endSessionConfiguration,
+                                      HttpHostResolver httpHostResolver) {
         this.openIdProviderMetadata = openIdProviderMetadata;
         this.endSessionConfiguration = endSessionConfiguration;
         this.httpHostResolver = httpHostResolver;

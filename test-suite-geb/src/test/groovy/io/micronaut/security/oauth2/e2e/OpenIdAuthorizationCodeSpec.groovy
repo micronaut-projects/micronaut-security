@@ -1,5 +1,8 @@
 package io.micronaut.security.oauth2.e2e
 
+import geb.Browser
+import geb.spock.GebSpec
+import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
@@ -7,6 +10,8 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.server.util.HttpHostResolver
+import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.pages.HomePage
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.oauth2.DefaultProviderResolver
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
@@ -19,24 +24,34 @@ import io.micronaut.security.oauth2.keycloak.KeycloakEndSessionEndpoint
 import io.micronaut.security.oauth2.keycloak.KeycloakIssuerClaimValidator
 import io.micronaut.security.oauth2.keycloak.KeycloakProviderResolver
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.testutils.GebEmbeddedServerSpecification
-import io.micronaut.security.testutils.Keycloak
+import io.micronaut.security.oauth2.keycloack.v16.Keycloak
+import io.micronaut.security.testutils.ConfigurationUtils
+import io.micronaut.security.utils.BaseUrlUtils
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import spock.lang.AutoCleanup
 import spock.lang.IgnoreIf
+import spock.lang.Shared
 
 import java.security.Principal
 
-class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
+class OpenIdAuthorizationCodeSpec extends GebSpec {
+
+    @AutoCleanup
+    @Shared
+    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, configuration)
 
     @Override
-    String getSpecName() {
-        'OpenIdAuthorizationCodeSpec'
+    Browser getBrowser() {
+        Browser browser = super.getBrowser()
+        if (embeddedServer) {
+            browser.baseUrl = BaseUrlUtils.getBaseUrl(embeddedServer)
+        }
+        browser
     }
 
-    @Override
     Map<String, Object> getConfiguration() {
-        Map<String, Object> m = super.configuration + [
+        Map<String, Object> m = ConfigurationUtils.getConfiguration('OpenIdAuthorizationCodeSpec') + [
                 'micronaut.security.authentication': 'cookie',
                 "micronaut.security.token.jwt.signatures.secret.generator.secret" : 'pleaseChangeThisSecretForANewOne',
                 "micronaut.security.endpoints.logout.get-allowed": true,
