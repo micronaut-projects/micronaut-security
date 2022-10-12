@@ -26,11 +26,14 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Keycloak {
+    private Keycloak() {
+
+    }
     public static final String SYS_TESTCONTAINERS = "testcontainers";
     public static final String CLIENT_ID = "myclient";
     private static String clientSecret = UUID.randomUUID().toString();
     private static String issuer;
-    private static GenericContainer keycloak;
+    private static GenericContainer container;
 
     public static String getClientSecret() throws IOException, InterruptedException {
         if (clientSecret == null) {
@@ -52,26 +55,26 @@ public class Keycloak {
     }
 
     static void init() throws IOException, InterruptedException {
-        if (keycloak == null) {
+        if (container == null) {
             if (OperatingSystem.getCurrent().isMacOs() && System.getProperty("os.arch") != null && System.getProperty("os.arch").equals("aarch64")) {
-                keycloak = new GenericContainer(new ImageFromDockerfile("keycloak-m1", false).withFileFromClasspath("Dockerfile", "/Dockerfile.keycloak"));
+                container = new GenericContainer(new ImageFromDockerfile("keycloak-m1", false).withFileFromClasspath("Dockerfile", "/Dockerfile.keycloak"));
             } else {
-                keycloak = new GenericContainer("jboss/keycloak:16.1.1");
+                container = new GenericContainer("jboss/keycloak:16.1.1");
             }
 
-            keycloak = keycloak.withExposedPorts(8080)
+            container = container.withExposedPorts(8080)
                     .withEnv(Map.of(
                             "KEYCLOAK_USER", "user",
                             "KEYCLOAK_PASSWORD", "password",
                             "DB_VENDOR", "H2"
                     ))
                     .waitingFor(new LogMessageWaitStrategy().withRegEx(".*Deployed \"keycloak-server.war\".*").withStartupTimeout(Duration.ofMinutes(5)));
-            keycloak.start();
-            keycloak.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "));
-            keycloak.execInContainer(("/opt/jboss/keycloak/bin/kcreg.sh create -s clientId=" + CLIENT_ID + " -s redirectUris=[\"http://" + getRedirectUriHost() + "*\"] -s secret=" + clientSecret).split(" "));
-            int port = keycloak.getMappedPort(8080);
+            container.start();
+            container.execInContainer("/opt/jboss/keycloak/bin/kcreg.sh config credentials --server http://localhost:8080/auth --realm master --user user --password password".split(" "));
+            container.execInContainer(("/opt/jboss/keycloak/bin/kcreg.sh create -s clientId=" + CLIENT_ID + " -s redirectUris=[\"http://" + getRedirectUriHost() + "*\"] -s secret=" + clientSecret).split(" "));
+            int port = container.getMappedPort(8080);
             Testcontainers.exposeHostPorts(port);
-            issuer = "http://" + getHost() + ":" + port  + "/auth/realms/master";
+            issuer = "http://localhost:" + port  + "/auth/realms/master";
         }
     }
 
@@ -79,15 +82,11 @@ public class Keycloak {
         return TestContainersUtils.getHost();
     }
 
-    public static String getHost() {
-        return "localhost";
-    }
-
     public static void destroy() {
-        if (keycloak != null) {
-            keycloak.stop();
+        if (container != null) {
+            container.stop();
         }
-        keycloak = null;
+        container = null;
         clientSecret = null;
         issuer = null;
     }
