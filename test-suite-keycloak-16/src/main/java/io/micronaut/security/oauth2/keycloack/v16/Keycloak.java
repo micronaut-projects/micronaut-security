@@ -53,7 +53,6 @@ public class Keycloak {
         String issuer = getIssuer();
         return Integer.valueOf(issuer.substring(issuer.indexOf("localhost:") + "localhost:".length(),  issuer.indexOf("/auth/realms")));
     }
-
     static void init() throws IOException, InterruptedException {
         if (container == null) {
             if (OperatingSystem.getCurrent().isMacOs() && System.getProperty("os.arch") != null && System.getProperty("os.arch").equals("aarch64")) {
@@ -77,7 +76,6 @@ public class Keycloak {
             issuer = "http://localhost:" + port  + "/auth/realms/master";
         }
     }
-
     public static String getRedirectUriHost() {
         return TestContainersUtils.getHost();
     }
