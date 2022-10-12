@@ -16,6 +16,10 @@
 package io.micronaut.security.testutils;
 
 public final class TestContainersUtils {
+    private TestContainersUtils() {
+
+    }
+
     public static boolean isGebUsingTestContainers() {
         return System.getProperty("geb.env") == null || System.getProperty("geb.env").contains("docker");
     }
