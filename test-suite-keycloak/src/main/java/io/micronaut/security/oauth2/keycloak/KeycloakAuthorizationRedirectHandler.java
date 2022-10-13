@@ -6,7 +6,7 @@ import io.micronaut.security.testutils.TestContainersUtils;
 
 import java.util.Map;
 
-abstract class KeycloakAuthorizationRedirectHandler extends DefaultAuthorizationRedirectHandler {
+public abstract class KeycloakAuthorizationRedirectHandler extends DefaultAuthorizationRedirectHandler {
     @Override
     protected String expandedUri(@NonNull String baseUrl, @NonNull Map<String, Object> queryParams) {
         String uri = super.expandedUri(baseUrl, queryParams);

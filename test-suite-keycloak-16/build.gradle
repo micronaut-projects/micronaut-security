@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+    id "io.micronaut.build.internal.security-tests"
+}
+
+dependencies {
+    implementation(platform(mn.micronaut.bom))
+    implementation(libs.testcontainers)
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}

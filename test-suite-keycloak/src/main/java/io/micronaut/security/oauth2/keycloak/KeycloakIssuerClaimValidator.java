@@ -6,7 +6,7 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.IssuerClaimValidator;
 import io.micronaut.security.testutils.TestContainersUtils;
 
-abstract class KeycloakIssuerClaimValidator extends IssuerClaimValidator {
+public abstract class KeycloakIssuerClaimValidator extends IssuerClaimValidator {
     @Override
     public boolean validate(OpenIdClaims claims,
                      OauthClientConfiguration clientConfiguration,
