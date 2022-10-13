@@ -21,6 +21,6 @@ dependencies {
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
-}
+    testImplementation(mn.snakeyaml)
 
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+}

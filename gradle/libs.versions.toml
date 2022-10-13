@@ -1,24 +1,31 @@
 [versions]
-managed-nimbus-jose-jwt = "9.24.3"
+managed-nimbus-jose-jwt = "9.25"
 
-geb = "4.1"
-groovy = "3.0.12"
-reactor-test = "3.4.22"
-selenium = "3.141.59"
-serde = "1.0.1"
-testcontainers = "1.17.3"
-unboundid-ldapsdk = "6.0.5"
+micronaut = "4.0.0-SNAPSHOT"
+micronaut-docs = "2.0.0"
+micronaut-test = "3.7.0"
+groovy = "4.0.5"
+spock = "2.2-groovy-4.0"
+
+geb = "6.0"
+geb-groovy = "3.0.12"
+geb-spock = "2.2-groovy-3.0"
+reactor-test = "3.4.23"
+selenium = "4.2.2"
+testcontainers = "1.17.5"
+unboundid-ldapsdk = "6.0.6"
 velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
-spock = "2.1-groovy-3.0"
-kotlin = "1.7.10"
+kotlin = "1.7.20"
 
 [libraries]
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
 
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
-groovy-json = { module = "org.codehaus.groovy:groovy-json", version.ref = "groovy" }
+spock-geb = { module = "org.spockframework:spock-core", version.ref = "geb-spock" }
+geb-groovy-test = { module = "org.codehaus.groovy:groovy-test", version.ref = "geb-groovy" }
+groovy-json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 logback-classic = { module = "ch.qos.logback:logback-classic" }
@@ -29,8 +36,8 @@ selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-dri
 selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-driver", version.ref = "selenium" }
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "selenium" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }
-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
-testcontainers-selenium = { module = "org.testcontainers:selenium" }
+testcontainers = { module = "org.testcontainers:testcontainers" }
+testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref ="testcontainers" }
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
 velocity-engine-core = { module = "org.apache.velocity:velocity-engine-core", version.ref = "velocity-engine-core" }
 bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }

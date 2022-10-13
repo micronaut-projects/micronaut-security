@@ -23,8 +23,8 @@ dependencies {
     testImplementation(mn.micronaut.multitenancy)
     testImplementation(mn.micronaut.views.velocity)
     testRuntimeOnly(libs.velocity.engine.core)
+    testImplementation(mn.snakeyaml)
 }
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
 test {
     testLogging.showStandardStreams = true

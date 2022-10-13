@@ -6,8 +6,8 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 
-import javax.annotation.security.PermitAll
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.PermitAll
+import jakarta.annotation.security.RolesAllowed
 
 class PermitAllOverridesRolesAllowedSpec extends EmbeddedServerSpecification {
 

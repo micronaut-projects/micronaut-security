@@ -5,6 +5,21 @@
     "reason": "Removed deprecated constructor for Micronaut 4"
   },
   {
+    "type": "io.micronaut.security.authentication.jackson.SecurityJacksonModule",
+    "member": "Implemented interface com.fasterxml.jackson.core.Versioned",
+    "reason": "class removed for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.authentication.jackson.SecurityJacksonModule",
+    "member": "Implemented interface java.io.Serializable",
+    "reason": "class removed for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.authorization.state.JacksonStateSerDes",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.authorization.state.JacksonStateSerDes(com.fasterxml.jackson.databind.ObjectMapper)",
+    "reason": "Removed deprecated constructor for Micronaut 4"
+  },
+  {
     "type": "io.micronaut.security.endpoints.introspection.IntrospectionController",
     "member": "Constructor io.micronaut.security.endpoints.introspection.IntrospectionController(io.micronaut.security.endpoints.introspection.IntrospectionProcessor)",
     "reason": "Removed deprecated constructor for Micronaut 4"
