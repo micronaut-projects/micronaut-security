@@ -5,7 +5,7 @@ micronaut = "4.0.0-SNAPSHOT"
 micronaut-docs = "2.0.0"
 micronaut-test = "3.7.0"
 groovy = "4.0.6"
-spock = "2.2-groovy-4.0"
+spock = "2.3-groovy-4.0"
 
 geb = "6.0"
 geb-groovy = "3.0.13"
