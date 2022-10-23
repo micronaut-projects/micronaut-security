@@ -9,7 +9,7 @@ spock = "2.2-groovy-4.0"
 
 geb = "6.0"
 geb-groovy = "3.0.12"
-geb-spock = "2.2-groovy-3.0"
+geb-spock = "2.3-groovy-4.0"
 reactor-test = "3.4.23"
 selenium = "4.2.2"
 testcontainers = "1.17.5"
