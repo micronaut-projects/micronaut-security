@@ -67,7 +67,7 @@ jobs:
           check_retries: 'true'
       - name: "📜 Upload binary compatibility check results"
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: binary-compatibility-reports
           path: "**/build/reports/binary-compatibility-*.html"
