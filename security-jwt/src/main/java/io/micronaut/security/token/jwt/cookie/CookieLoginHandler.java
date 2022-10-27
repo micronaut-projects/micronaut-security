@@ -24,7 +24,9 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.config.DefaultRedirectService;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.config.RefreshRedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
@@ -57,14 +59,29 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
      * @param accessTokenCookieConfiguration Access token cookie configuration
      * @param redirectConfiguration Redirect configuration
      * @param priorToLoginPersistence The prior to login persistence strategy
+     * @deprecated Use {@link CookieLoginHandler(AccessTokenCookieConfiguration,RedirectConfiguration, RedirectService ,PriorToLoginPersistence)} instead.
      */
+    @Deprecated
     public CookieLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                               RedirectConfiguration redirectConfiguration,
                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this.loginFailure = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginFailure() : null;
-        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginSuccess() : null;
+        this(accessTokenCookieConfiguration, redirectConfiguration, new DefaultRedirectService(redirectConfiguration, () -> null), priorToLoginPersistence);
+    }
+
+    /**
+     * @param accessTokenCookieConfiguration Access token cookie configuration
+     * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirect service
+     * @param priorToLoginPersistence The prior to login persistence strategy
+     */
+    protected CookieLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                              RedirectConfiguration redirectConfiguration,
+                              RedirectService redirectService,
+                              @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        this.loginFailure = redirectConfiguration.isEnabled() ? redirectService.loginFailureUrl() : null;
+        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectService.loginSuccessUrl() : null;
         RefreshRedirectConfiguration refreshConfig = redirectConfiguration.getRefresh();
-        this.refresh = redirectConfiguration.isEnabled() && refreshConfig.isEnabled() ? refreshConfig.getUrl() : null;
+        this.refresh = redirectConfiguration.isEnabled() && refreshConfig.isEnabled() ? redirectService.refreshUrl() : null;
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
     }
