@@ -23,8 +23,11 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
+import io.micronaut.security.config.DefaultRedirectService;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.handlers.LogoutHandler;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -47,14 +50,29 @@ public class JwtCookieClearerLogoutHandler implements LogoutHandler {
      * @param accessTokenCookieConfiguration JWT Cookie Configuration
      * @param refreshTokenCookieConfiguration Refresh token cookie configuration
      * @param redirectConfiguration Redirect configuration
+     * @deprecated Use {@link JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration,RefreshTokenCookieConfiguration,RedirectConfiguration, RedirectService )} instead.
      */
+    @Deprecated
     public JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                          RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
                                          RedirectConfiguration redirectConfiguration) {
+        this(accessTokenCookieConfiguration, refreshTokenCookieConfiguration, redirectConfiguration, new DefaultRedirectService(redirectConfiguration, () -> null));
+    }
+
+    /**
+     * @param accessTokenCookieConfiguration JWT Cookie Configuration
+     * @param refreshTokenCookieConfiguration Refresh token cookie configuration
+     * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirection Service
+     */
+    @Inject
+    public JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                                         RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
+                                         RedirectConfiguration redirectConfiguration,
+                                         RedirectService redirectService) {
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
-
-        this.logout = redirectConfiguration.isEnabled() ? redirectConfiguration.getLogout() : null;
+        this.logout = redirectConfiguration.isEnabled() ? redirectService.logoutUrl() : null;
     }
 
     @Override
