@@ -25,13 +25,16 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.config.DefaultRedirectService;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -64,12 +67,29 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
      * @param redirectConfiguration Redirect configuration
      * @param sessionStore The session store
      * @param priorToLoginPersistence The persistence to store the original url
+     * @deprecated Use {@link SessionLoginHandler(RedirectConfiguration,SessionStore,PriorToLoginPersistence, RedirectService )}.
      */
+    @Deprecated
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
                                @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this.loginFailure = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginFailure() : null;
-        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginSuccess() : null;
+        this(redirectConfiguration, sessionStore, priorToLoginPersistence, new DefaultRedirectService(redirectConfiguration, () -> null));
+    }
+
+    /**
+     * Constructor.
+     * @param redirectConfiguration Redirect configuration
+     * @param sessionStore The session store
+     * @param priorToLoginPersistence The persistence to store the original url
+     * @param redirectService Redirection Service
+     */
+    @Inject
+    public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
+                               SessionStore<Session> sessionStore,
+                               @Nullable PriorToLoginPersistence priorToLoginPersistence,
+                               RedirectService redirectService) {
+        this.loginFailure = redirectConfiguration.isEnabled() ? redirectService.loginFailureUrl() : null;
+        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectService.loginSuccessUrl() : null;
         this.redirectConfiguration = redirectConfiguration;
         this.sessionStore = sessionStore;
         this.priorToLoginPersistence = priorToLoginPersistence;

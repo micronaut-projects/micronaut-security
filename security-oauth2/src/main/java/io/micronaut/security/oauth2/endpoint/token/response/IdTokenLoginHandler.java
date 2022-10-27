@@ -24,12 +24,14 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration;
 import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +53,31 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdTokenLoginHandler.class);
 
+    /**
+     * @param accessTokenCookieConfiguration Access token cookie configuration
+     * @param redirectConfiguration Redirect configuration
+     * @param priorToLoginPersistence The prior to login persistence strategy
+     * @deprecated Use {@link IdTokenLoginHandler(AccessTokenCookieConfiguration,RedirectConfiguration, RedirectService ,PriorToLoginPersistence)} instead.
+     */
+    @Deprecated
     public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
                                @Nullable PriorToLoginPersistence priorToLoginPersistence) {
         super(accessTokenCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
+    }
+
+    /**
+     * @param accessTokenCookieConfiguration Access token cookie configuration
+     * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirect service
+     * @param priorToLoginPersistence The prior to login persistence strategy
+     */
+    @Inject
+    public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                               RedirectConfiguration redirectConfiguration,
+                               RedirectService redirectService,
+                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
     }
 
     /**

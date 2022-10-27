@@ -15,13 +15,17 @@
  */
 package io.micronaut.security.config;
 
+import io.micronaut.context.annotation.Value;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.convert.ConversionContext;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.TypeConverter;
 import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.http.HttpMethod;
+import io.micronaut.http.context.ServerContextPathProvider;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +44,45 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
     private static final String HTTP_METHOD = "http-method";
 
     private final ConversionService conversionService;
+    private final ServerContextPathProvider serverContextPathProvider;
+
+    private final boolean interceptUrlMapPrependPatternWithContextPath;
 
     /**
-     * @param conversionService The conversion service
+     * @param conversionService     The conversion service
+     * @deprecated Use {@link InterceptUrlMapConverter(ConversionService,ServerContextPathProvider)} instead.
      */
+    @Deprecated
     InterceptUrlMapConverter(ConversionService conversionService) {
+        this(conversionService, () -> null, false);
+    }
+
+    /**
+     * @param conversionService     The conversion service
+     * @param serverContextPathProviders context path providers
+     * @param interceptUrlMapPrependPatternWithContextPath Whether the intercept URL patterns should be prepended with context path if defined.
+     */
+    @Inject
+    InterceptUrlMapConverter(ConversionService conversionService,
+                             List<ServerContextPathProvider> serverContextPathProviders, // Inject list because when using Tomcat there is a multiple beans exception
+                             @Value("${" + SecurityConfigurationProperties.PREFIX + ".intercept-url-map-prepend-pattern-with-context-path:" + SecurityConfigurationProperties.DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH + "}") boolean interceptUrlMapPrependPatternWithContextPath) {
+        this(conversionService, serverContextPathProviders.isEmpty() ? null : serverContextPathProviders.get(0), interceptUrlMapPrependPatternWithContextPath);
+    }
+
+    /**
+     * @param conversionService     The conversion service
+     * @param serverContextPathProvider context path provider
+     * @param interceptUrlMapPrependPatternWithContextPath Whether the intercept URL patterns should be prepended with context path if defined.
+     */
+    InterceptUrlMapConverter(ConversionService conversionService,
+                             ServerContextPathProvider serverContextPathProvider,
+                             boolean interceptUrlMapPrependPatternWithContextPath) {
+        if (serverContextPathProvider == null) {
+            throw new ConfigurationException("no server context path providers available");
+        }
         this.conversionService = conversionService;
+        this.serverContextPathProvider = serverContextPathProvider;
+        this.interceptUrlMapPrependPatternWithContextPath = interceptUrlMapPrependPatternWithContextPath;
     }
 
     /**
@@ -79,8 +116,10 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
                 } else {
                     httpMethod = Optional.empty();
                 }
-
-                return Optional.of(new InterceptUrlMapPattern(optionalPattern.get(), optionalAccessList.get(), httpMethod.orElse(null)));
+                List<String> accessList = optionalAccessList.get();
+                return optionalPattern
+                    .map(pattern -> interceptUrlMapPrependPatternWithContextPath ? ServerContextPathProviderUtils.prependContextPath(pattern, serverContextPathProvider) : pattern)
+                    .map(pattern -> new InterceptUrlMapPattern(pattern, accessList, httpMethod.orElse(null)));
             } else {
                 throw new ConfigurationException(String.format("interceptUrlMap configuration record %s rejected due to missing or empty %s key.", m.toString(), ACCESS));
             }
