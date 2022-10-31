@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.reactor.core)
     implementation(mn.micronaut.json.core)
     compileOnly(mn.micronaut.management)
+    compileOnly(mn.jackson.databind)
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)
