@@ -10,7 +10,7 @@ dependencies {
     api(libs.managed.nimbus.jose.jwt)
 
     implementation(libs.reactor.core)
-
+    implementation(mn.micronaut.json.core)
     testImplementation(libs.bcpkix.jdk15on)
     testImplementation(libs.bcprov.jdk15on)
 

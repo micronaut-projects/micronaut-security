@@ -12,7 +12,7 @@ dependencies {
     api project(":security-annotations")
 
     implementation(libs.reactor.core)
-
+    implementation(mn.micronaut.json.core)
     compileOnly(mn.micronaut.management)
 
     testImplementation(mn.micronaut.management)
