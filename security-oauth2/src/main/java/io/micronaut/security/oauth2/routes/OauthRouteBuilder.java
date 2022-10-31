@@ -64,7 +64,7 @@ class OauthRouteBuilder extends DefaultRouteBuilder {
      */
     OauthRouteBuilder(ExecutionHandleLocator executionHandleLocator,
                       UriNamingStrategy uriNamingStrategy,
-                      ConversionService<?> conversionService,
+                      ConversionService conversionService,
                       BeanContext beanContext,
                       OauthConfiguration oauthConfiguration,
                       OauthRouteUrlBuilder oauthRouteUrlBuilder,
