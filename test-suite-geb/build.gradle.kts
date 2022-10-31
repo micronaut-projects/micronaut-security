@@ -37,6 +37,7 @@ dependencies {
     testImplementation(libs.selenium.support)
     testRuntimeOnly(libs.selenium.firefox.driver)
     testRuntimeOnly(libs.logback.classic)
+    testImplementation(mn.micronaut.websocket)
     testImplementation(mn.micronaut.jackson.databind)
 }
 
