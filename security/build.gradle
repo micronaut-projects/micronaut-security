@@ -15,7 +15,7 @@ dependencies {
     implementation(mn.micronaut.json.core)
     compileOnly(mn.micronaut.management)
     compileOnly(mn.jackson.databind)
-    testImplementation(mn.jackson.annotations)
+    testImplementation(mn.micronaut.jackson.databind)
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)

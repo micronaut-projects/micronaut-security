@@ -14,6 +14,8 @@ dependencies {
     testImplementation(libs.bcpkix.jdk15on)
     testImplementation(libs.bcprov.jdk15on)
     implementation(mn.jackson.annotations)
+    testImplementation(mn.micronaut.jackson.databind)
+
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)
