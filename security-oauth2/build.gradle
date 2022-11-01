@@ -4,7 +4,9 @@ plugins {
 
 dependencies {
     annotationProcessor(mn.micronaut.graal)
+
     annotationProcessor(mn.micronaut.serde.processor)
+    implementation(mn.micronaut.serde.jackson)
     annotationProcessor project(":security-annotations")
 
     compileOnly(mn.micronaut.inject.java)
@@ -14,7 +16,7 @@ dependencies {
     compileOnly(mn.jackson.databind)
     compileOnly(mn.micronaut.session)
     implementation(libs.reactor.core)
-    testImplementation(mn.micronaut.jackson.databind)
+
     testImplementation project(":security-session")
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)

@@ -43,5 +43,81 @@
     "type": "io.micronaut.security.token.jwt.validator.JwtClaimsValidator",
     "member": "Field PREFIX",
     "reason": "Removed deprecated constant for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Provide a human readable reason for the change"
+  },
+  {
+    "type": "io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference",
+    "member": "Constructor io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference()",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$AbstractSecurityRule$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$AbstractSecurityRule$Definition$Reference",
+    "member": "Constructor io.micronaut.security.rules.$AbstractSecurityRule$Definition$Reference()",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$AbstractSecurityRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$AbstractSecurityRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$AbstractSecurityRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$AbstractSecurityRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.$AbstractSecurityRule$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.rules.AbstractSecurityRule",
+    "member": "Constructor io.micronaut.security.rules.AbstractSecurityRule(io.micronaut.security.token.RolesFinder)",
+    "reason": "Changed in Micronaut 4"
   }
+
 ]

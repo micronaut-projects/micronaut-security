@@ -4,18 +4,21 @@ plugins {
 
 dependencies {
     annotationProcessor(mn.micronaut.graal)
+    annotationProcessor(mn.micronaut.serde.processor)
+    implementation(mn.micronaut.serde.jackson)
     api(mn.micronaut.http)
     api(mn.micronaut.http.server)
     api project(":security")
     api(libs.managed.nimbus.jose.jwt)
 
+
     implementation(libs.reactor.core)
     implementation(mn.micronaut.json.core)
     testImplementation(libs.bcpkix.jdk15on)
     testImplementation(libs.bcprov.jdk15on)
-    implementation(mn.jackson.annotations)
-    testImplementation(mn.micronaut.jackson.databind)
 
+    testImplementation(libs.json.unit)
+    testImplementation(libs.moshi)
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)
@@ -27,6 +30,7 @@ dependencies {
     testImplementation(mn.micronaut.views.velocity)
     testRuntimeOnly(libs.velocity.engine.core)
     testImplementation(mn.snakeyaml)
+    testImplementation(mn.micronaut.websocket)
 }
 
 test {

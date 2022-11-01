@@ -29,7 +29,7 @@ public enum TokenError {
     UNSUPPORTED_GRANT_TYPE("unsupported_grant_type"),
     INVALID_SCOPE("invalid_scope");
 
-    private String errorCode;
+    private final String errorCode;
 
     /**
      * @param errorCode The error code

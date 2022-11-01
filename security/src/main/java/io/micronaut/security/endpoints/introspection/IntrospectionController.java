@@ -18,27 +18,19 @@ package io.micronaut.security.endpoints.introspection;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
-import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.json.JsonMapper;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @see <a href="https://tools.ietf.org/html/rfc7662">OAuth 2.0 Token Introspection</a>.
@@ -48,21 +40,15 @@ import java.nio.charset.StandardCharsets;
 @Controller("${" + IntrospectionConfigurationProperties.PREFIX + ".path:/token_info}")
 @Secured(SecurityRule.IS_AUTHENTICATED)
 public class IntrospectionController {
-    private static final Logger LOG = LoggerFactory.getLogger(IntrospectionController.class);
-
     protected final IntrospectionProcessor processor;
-    private final JsonMapper jsonMapper;
 
     /**
      *
      * @param processor Introspection Processor
-     * @param jsonMapper the JSON mapper
      * @since 3.3
      */
-    public IntrospectionController(IntrospectionProcessor processor, JsonMapper jsonMapper) {
-        this.processor = processor;
-        this.jsonMapper = jsonMapper;
-    }
+    public IntrospectionController(IntrospectionProcessor processor) {
+        this.processor = processor;}
 
     /**
      *
@@ -73,12 +59,9 @@ public class IntrospectionController {
     @Post
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @SingleResult
-    public Publisher<MutableHttpResponse<?>> tokenInfo(@NonNull @Body @Valid @NotNull IntrospectionRequest introspectionRequest,
-                                                       @NonNull HttpRequest<?> request) {
-        return Flux.from(processor.introspect(introspectionRequest, request))
-                .map(this::introspectionResponseAsJsonString)
-                .defaultIfEmpty(introspectionResponseAsJsonString(new IntrospectionResponse(false)))
-                .map(HttpResponse::ok);
+    public Publisher<IntrospectionResponse> tokenInfo(@NonNull @Body @Valid @NotNull IntrospectionRequest introspectionRequest,
+                                                      @NonNull HttpRequest<?> request) {
+        return processor.introspect(introspectionRequest, request);
     }
 
     /**
@@ -89,24 +72,8 @@ public class IntrospectionController {
      */
     @Get
     @SingleResult
-    public Publisher<MutableHttpResponse<?>> echo(@NonNull Authentication authentication,
-                                               @NonNull HttpRequest<?> request) {
-        return Flux.from(processor.introspect(authentication, request))
-                .map(this::introspectionResponseAsJsonString)
-                .defaultIfEmpty(introspectionResponseAsJsonString(new IntrospectionResponse(false)))
-                .map(HttpResponse::ok);
-    }
-
-    /**
-     * This is necessary due to https://github.com/micronaut-projects/micronaut-core/issues/4179 .
-     */
-    @NonNull
-    private String introspectionResponseAsJsonString(@NonNull IntrospectionResponse introspectionResponse) {
-        try {
-            return new String(jsonMapper.writeValueAsBytes(introspectionResponse), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            LOG.warn("{}", e.getMessage());
-            return "{\"active:\" false}";
-        }
+    public Publisher<IntrospectionResponse> echo(@NonNull Authentication authentication,
+                                                 @NonNull HttpRequest<?> request) {
+        return processor.introspect(authentication, request);
     }
 }

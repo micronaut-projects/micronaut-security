@@ -63,13 +63,13 @@ import java.text.ParseException
      |         |<--(B)---- Access Token ---------<|               |
      |         |                                  |               |
      +---------+                                  +---------------+
-     
+
      +---------+                                  +-----------------+
      |         |                                  |                 |
      |         |>--(C)- Bearer Access Token ----->| Resource Server |
      | Client  |                                  |     Server      |
      |         |                                  |                 |
-     |         |<--(D)---- Protected Resource ---<|                 |     
+     |         |<--(D)---- Protected Resource ---<|                 |
      +---------+                                  +-----------------+
 ''')
 class ClientCredentialsSpec extends Specification {
@@ -442,14 +442,17 @@ class ClientCredentialsSpec extends Specification {
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Get("/openid-configuration")
         Map<String, Object> index() {
-            Map<String, Object> conf = [
+            [
+                    "issuer": "${url}",
+                    "authorization_endpoint": "${url}/authorize",
+                    "jwks_uri" : "${url}/keys",
                     "token_endpoint": "${url}/token".toString(),
                     "token_endpoint_auth_methods_supported": authenticationMethods.collect {it.toString()},
-                    "grant_types_supported": [
-                            "client_credentials"
-                    ]
+                    "grant_types_supported": ["client_credentials"],
+                    "response_types_supported": ["code", "code id_token", "id_token", "token id_token"],
+                    "subject_types_supported": ["public", "pairwise"],
+                    "id_token_signing_alg_values_supported": ["RS256", "ES256", "HS256"],
             ]
-            conf
         }
     }
 
@@ -481,14 +484,17 @@ class ClientCredentialsSpec extends Specification {
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Get("/openid-configuration")
         Map<String, Object> index() {
-            Map<String, Object> conf = [
-            "token_endpoint": "${url}/token".toString(),
-            "token_endpoint_auth_methods_supported": authenticationMethods.collect {it.toString()},
-            "grant_types_supported": [
-                    "client_credentials"
+            [
+                    "issuer": "${url}",
+                    "authorization_endpoint": "${url}/authorize",
+                    "jwks_uri" : "${url}/keys",
+                    "token_endpoint": "${url}/token".toString(),
+                    "response_types_supported": ["code", "code id_token", "id_token", "token id_token"],
+                    "subject_types_supported": ["public", "pairwise"],
+                    "id_token_signing_alg_values_supported": ["RS256", "ES256", "HS256"],
+                    "token_endpoint_auth_methods_supported": authenticationMethods.collect {it.toString()},
+                    "grant_types_supported": ["client_credentials"],
             ]
-            ]
-            conf
         }
     }
 

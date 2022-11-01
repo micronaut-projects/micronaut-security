@@ -75,6 +75,18 @@ class MyController {
                 });
     }
 
+    @Get("/flux/singleresult")
+    @SingleResult
+    Flux<Message> fluxSingleresult() {
+        return Flux.just("foo")
+            .flatMap(name -> {
+                if (ServerRequestContext.currentRequest().isPresent()) {
+                    return Flux.just(new Message("Sergio"));
+                }
+                return Flux.just(new Message("Anonymous"));
+            });
+    }
+
     @Get("/flux-subscribeon")
     Flux<Message> fluxSubscribeOn() {
         return Flux.just("foo")

@@ -1,6 +1,5 @@
 package io.micronaut.security.oauth2.client
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nimbusds.jose.JOSEException
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK

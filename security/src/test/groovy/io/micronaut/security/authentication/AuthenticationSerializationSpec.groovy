@@ -1,11 +1,8 @@
 package io.micronaut.security.authentication
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.core.serialize.JdkSerializer
-import io.micronaut.jackson.serialize.JacksonObjectSerializer
+import io.micronaut.serde.ObjectMapper
 import spock.lang.Specification
-
-import java.nio.charset.StandardCharsets
 
 class AuthenticationSerializationSpec extends Specification {
 
@@ -27,14 +24,14 @@ class AuthenticationSerializationSpec extends Specification {
     }
 
     void "test authentication is serializable to json"() {
-        ObjectMapper objectMapper = new ObjectMapper()
-        JacksonObjectSerializer serializer = new JacksonObjectSerializer(objectMapper)
+        given:
+        ObjectMapper objectMapper = ObjectMapper.getDefault()
 
         when:
         //this represents the claims that will be set by the server
         Authentication authentication = new ClientAuthentication("john", [attr1: 1, attr2: 2, rolesKey: "roles", "roles": ["X", "Y"]])
-        byte[] data = serializer.serialize(authentication).get()
-        Authentication deserialized = serializer.deserialize(data, Authentication).get()
+        String json = objectMapper.writeValueAsString(authentication)
+        Authentication deserialized = objectMapper.readValue(json, Authentication)
 
         then:
         deserialized.name == "john"
@@ -46,11 +43,11 @@ class AuthenticationSerializationSpec extends Specification {
     }
 
     void "deserialization without attributes"() {
-        ObjectMapper objectMapper = new ObjectMapper()
-        JacksonObjectSerializer serializer = new JacksonObjectSerializer(objectMapper)
+        given:
+        ObjectMapper objectMapper = ObjectMapper.getDefault()
 
         when:
-        Authentication deserialized = serializer.deserialize('{\"name\":\"foo\"}'.getBytes(StandardCharsets.UTF_8), Authentication).get()
+        Authentication deserialized = objectMapper.readValue('{\"name\":\"foo\"}', Authentication)
 
         then:
         deserialized.name == "foo"

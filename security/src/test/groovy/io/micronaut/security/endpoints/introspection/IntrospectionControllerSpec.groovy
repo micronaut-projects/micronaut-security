@@ -25,7 +25,7 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
 
     void "post /token_info is secured"() {
         when: 'invalid introspection request'
-        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest("2YotnFZFEjr1zCsicMWpAA"))
+        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest("2YotnFZFEjr1zCsicMWpAA", null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         client.exchange(request, Map)
 
@@ -39,7 +39,7 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
         applicationContext.containsBean(TokenValidator)
 
         when: 'invalid introspection request'
-        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest())
+        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest(null, null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .basicAuth('user', 'password')
         client.exchange(request, Map)
@@ -49,7 +49,7 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
         e.status == HttpStatus.BAD_REQUEST
 
         when:
-        request = HttpRequest.POST("/token_info", new IntrospectionRequest("XXX"))
+        request = HttpRequest.POST("/token_info", new IntrospectionRequest("XXX", null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .basicAuth('user', 'password')
         HttpResponse<Map> response = client.exchange(request, Map)
@@ -66,7 +66,7 @@ class IntrospectionControllerSpec extends EmbeddedServerSpecification {
         m['active'] == false
 
         when:
-        request = HttpRequest.POST("/token_info", new IntrospectionRequest("2YotnFZFEjr1zCsicMWpAA"))
+        request = HttpRequest.POST("/token_info", new IntrospectionRequest("2YotnFZFEjr1zCsicMWpAA", null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .basicAuth('user', 'password')
         response = client.exchange(request, Map)

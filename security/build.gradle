@@ -5,6 +5,7 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mn.micronaut.serde.processor)
+    implementation(mn.micronaut.serde.jackson)
 
     api(mn.micronaut.http)
     api(mn.micronaut.http.server)
@@ -15,7 +16,6 @@ dependencies {
     implementation(mn.micronaut.json.core)
     compileOnly(mn.micronaut.management)
     compileOnly(mn.jackson.databind)
-    testImplementation(mn.micronaut.jackson.databind)
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)

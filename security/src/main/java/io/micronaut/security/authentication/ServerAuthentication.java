@@ -19,6 +19,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.serde.annotation.Serdeable;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,12 +37,21 @@ import java.util.Map;
  * @author James Kleeh
  * @since 3.0.0
  */
+@Serdeable
 public class ServerAuthentication implements Authentication {
 
     private static final String JSON_KEY_NAME = "name";
     private static final String JSON_KEY_ATTRIBUTES = "attributes";
+    @NonNull
+    @NotBlank
     private final String name;
+
+    @NonNull
+    @NotNull
     private final Collection<String> roles;
+
+    @NonNull
+    @NotNull
     private final Map<String, Object> attributes;
 
     /**
@@ -66,8 +79,8 @@ public class ServerAuthentication implements Authentication {
         return Collections.unmodifiableMap(attributes);
     }
 
-    @NonNull
     @Override
+    @NonNull
     public Collection<String> getRoles() {
         return Collections.unmodifiableCollection(roles);
     }

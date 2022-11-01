@@ -1,11 +1,11 @@
 package io.micronaut.security.oauth2.endpoint.token.response
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.json.JsonSlurper
 import groovy.time.TimeCategory
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.security.testutils.ApplicationContextSpecification
+import io.micronaut.serde.ObjectMapper
 import spock.lang.Shared
 
 class TokenResponseSpec extends ApplicationContextSpecification {
@@ -25,7 +25,7 @@ class TokenResponseSpec extends ApplicationContextSpecification {
         expect:
         TokenResponse.class.isAnnotationPresent(ReflectiveAccess)
     }
-    
+
     void "There is a constructor in TokenResponse for required fields"() {
         when:
         TokenResponse tokenResponse = new TokenResponse("MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3", 'bearer')

@@ -10,6 +10,7 @@ spock = "2.3-groovy-4.0"
 geb = "6.0"
 geb-groovy = "3.0.13"
 geb-spock = "2.2-groovy-3.0"
+micronaut-reactor-core = "3.0.0-SNAPSHOT"
 reactor-test = "3.4.24"
 selenium = "4.5.2"
 testcontainers = "1.17.5"
@@ -18,10 +19,13 @@ velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
 kotlin = "1.7.20"
+jsonunit = "2.36.0"
+moshi = "1.14.0"
 
 [libraries]
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
-
+json-unit = { module = "net.javacrumbs.json-unit:json-unit", version.ref = "jsonunit" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
 spock-geb = { module = "org.spockframework:spock-core", version.ref = "geb-spock" }
 geb-groovy-test = { module = "org.codehaus.groovy:groovy-test", version.ref = "geb-groovy" }
@@ -29,7 +33,7 @@ groovy-json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy"
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 logback-classic = { module = "ch.qos.logback:logback-classic" }
-reactor-core = { module = "io.projectreactor:reactor-core" }
+reactor-core = { module = "io.micronaut.reactor:micronaut-reactor", version.ref = "micronaut-reactor-core" }
 reactor-test = { module = "io.projectreactor:reactor-test", version.ref = "reactor-test" }
 selenium-api = { module = "org.seleniumhq.selenium:selenium-api", version.ref = "selenium" }
 selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-driver", version.ref = "selenium" }
