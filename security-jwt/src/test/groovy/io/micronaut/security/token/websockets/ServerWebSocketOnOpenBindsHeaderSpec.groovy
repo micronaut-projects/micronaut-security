@@ -8,6 +8,7 @@ import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.websocket.WebSocketClient
 import reactor.core.publisher.Flux
 import spock.lang.AutoCleanup
+import spock.lang.PendingFeature
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
@@ -42,6 +43,7 @@ class ServerWebSocketOnOpenBindsHeaderSpec extends Specification {
         tokenGenerator.generateToken(claims)
     }
 
+    @PendingFeature(reason = "https://github.com/micronaut-projects/micronaut-core/pull/8285")
     def "ServerWebSocket OnOpen method can bind a @Header"() {
 
         when:
