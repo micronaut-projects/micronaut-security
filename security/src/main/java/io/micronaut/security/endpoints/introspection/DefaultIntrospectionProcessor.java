@@ -165,10 +165,9 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      * @param authentication Authentication
      */
     protected Optional<String> resolveScope(@NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(SCOPE)) {
-            return Optional.of(authentication.getAttributes().get(SCOPE).toString());
-        }
-        return Optional.empty();
+        return (authentication.getAttributes().containsKey(SCOPE)) ?
+            Optional.of(authentication.getAttributes().get(SCOPE).toString()) :
+            Optional.empty();
     }
 
     /**
@@ -177,10 +176,9 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      */
     @NonNull
     protected Optional<String> resolveTokenType(@NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(TOKEN_TYPE)) {
-            return Optional.of(authentication.getAttributes().get(TOKEN_TYPE).toString());
-        }
-        return Optional.empty();
+        return (authentication.getAttributes().containsKey(TOKEN_TYPE)) ?
+            Optional.of(authentication.getAttributes().get(TOKEN_TYPE).toString()) :
+            Optional.empty();
     }
 
     /**
@@ -189,10 +187,9 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      */
     @NonNull
     protected Optional<String> resolveClientId(@NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(CLIENT_ID)) {
-            return Optional.of(authentication.getAttributes().get(CLIENT_ID).toString());
-        }
-        return Optional.empty();
+        return (authentication.getAttributes().containsKey(CLIENT_ID)) ?
+            Optional.of(authentication.getAttributes().get(CLIENT_ID).toString()) :
+            Optional.empty();
     }
 
     /**
@@ -201,10 +198,9 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      */
     @NonNull
     protected Optional<String> resolveAud(@NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(AUDIENCE)) {
-            return Optional.of(authentication.getAttributes().get(AUDIENCE).toString());
-        }
-        return Optional.empty();
+        return (authentication.getAttributes().containsKey(AUDIENCE)) ?
+            Optional.of(authentication.getAttributes().get(AUDIENCE).toString()) :
+            Optional.empty();
     }
 
     /**
@@ -213,10 +209,9 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      */
     @NonNull
     protected String resolveSub(@NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(SUBJECT)) {
-            return authentication.getAttributes().get(SUBJECT).toString();
-        }
-        return authentication.getName();
+        return (authentication.getAttributes().containsKey(SUBJECT)) ?
+            authentication.getAttributes().get(SUBJECT).toString() :
+            authentication.getName();
     }
 
     /**
@@ -225,10 +220,9 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      */
     @NonNull
     protected Optional<String> resolveIssuer(@NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(ISSUER)) {
-            Optional.of(authentication.getAttributes().get(ISSUER).toString());
-        }
-        return Optional.empty();
+        return (authentication.getAttributes().containsKey(ISSUER)) ?
+            Optional.of(authentication.getAttributes().get(ISSUER).toString()) :
+            Optional.empty();
     }
 
     /**
@@ -237,10 +231,9 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      */
     @NonNull
     protected Optional<String> resolveJwtId(@NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(JWT_ID)) {
-            return Optional.of(authentication.getAttributes().get(JWT_ID).toString());
-        }
-        return Optional.empty();
+        return (authentication.getAttributes().containsKey(JWT_ID)) ?
+            Optional.of(authentication.getAttributes().get(JWT_ID).toString()) :
+            Optional.empty();
 
     }
 
@@ -250,10 +243,9 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      */
     @NonNull
     protected Optional<String> resolveUsername(@NonNull Authentication authentication) {
-        if (authentication.getAttributes().containsKey(USERNAME)) {
-            return Optional.of(authentication.getAttributes().get(USERNAME).toString());
-        }
-        return Optional.empty();
+        return (authentication.getAttributes().containsKey(USERNAME)) ?
+            Optional.of(authentication.getAttributes().get(USERNAME).toString()) :
+            Optional.empty();
     }
 
     /**
