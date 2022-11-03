@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.endpoints;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.serde.annotation.Serdeable;
 
@@ -47,6 +46,7 @@ public class TokenRefreshRequest {
 
     /**
      *
+     * @param grantType Grant type
      * @param refreshToken Refresh token
      */
     public TokenRefreshRequest(@NonNull String grantType,

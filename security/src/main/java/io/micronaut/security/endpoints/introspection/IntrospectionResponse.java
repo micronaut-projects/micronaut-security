@@ -109,7 +109,6 @@ public class IntrospectionResponse {
     @NonNull
     private final Map<String, Object> extensions = new HashMap<>();
 
-
     /**
      *
      * @param active Boolean indicator of whether or not the presented token is currently active.
@@ -126,6 +125,7 @@ public class IntrospectionResponse {
      * @param jti String identifier for the token, as defined in JWT.
      * @param extensions Extensions
      */
+    @SuppressWarnings("ParameterNumber")
     public IntrospectionResponse(boolean active,
                                  @Nullable String tokenType,
                                  @Nullable String scope,
@@ -263,6 +263,7 @@ public class IntrospectionResponse {
     public String getAud() {
         return aud;
     }
+
     /**
      *
      * @return Long timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was originally issued, as defined in JWT.

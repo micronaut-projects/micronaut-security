@@ -97,6 +97,12 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
                 .flux();
     }
 
+    /**
+     *
+     * Empty response for introspection response.
+     * @param token Token
+     * @return Introspection Response
+     */
     @NonNull
     protected IntrospectionResponse emptyIntrospectionResponse(@NonNull String token) {
         return new IntrospectionResponse(refreshTokenValidator != null && refreshTokenValidator.validate(token).isPresent(),
@@ -145,6 +151,11 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
             resolveExtensions(authentication));
     }
 
+    /**
+     *
+     * @param authentication Authentication
+     * @return Introspection response extensions
+     */
     @NonNull
     protected Map<String, Object> resolveExtensions(@NonNull Authentication authentication) {
         Map<String, Object> extensions = new HashMap<>();
@@ -163,6 +174,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response scope.
      * @param authentication Authentication
+     * @return the scope
      */
     protected Optional<String> resolveScope(@NonNull Authentication authentication) {
         return (authentication.getAttributes().containsKey(SCOPE)) ?
@@ -173,6 +185,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response token type.
      * @param authentication Authentication
+     * @return the Token type
      */
     @NonNull
     protected Optional<String> resolveTokenType(@NonNull Authentication authentication) {
@@ -184,6 +197,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response client_id.
      * @param authentication Authentication
+     * @return client_id value
      */
     @NonNull
     protected Optional<String> resolveClientId(@NonNull Authentication authentication) {
@@ -195,6 +209,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response with aud claim.
      * @param authentication Authentication
+     * @return value of aud claim
      */
     @NonNull
     protected Optional<String> resolveAud(@NonNull Authentication authentication) {
@@ -206,6 +221,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response with sub claim.
      * @param authentication Authentication
+     * @return value of sub claim
      */
     @NonNull
     protected String resolveSub(@NonNull Authentication authentication) {
@@ -217,6 +233,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response with iss claim.
      * @param authentication Authentication
+     * @return value of iss claim
      */
     @NonNull
     protected Optional<String> resolveIssuer(@NonNull Authentication authentication) {
@@ -228,6 +245,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response with jti username.
      * @param authentication Authentication
+     * @return the jti claim value
      */
     @NonNull
     protected Optional<String> resolveJwtId(@NonNull Authentication authentication) {
@@ -240,6 +258,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response with the username.
      * @param authentication Authentication
+     * @return the username
      */
     @NonNull
     protected Optional<String> resolveUsername(@NonNull Authentication authentication) {
@@ -251,6 +270,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response with the exp claim of authentication.
      * @param authentication Authentication
+     * @return the exp claim
      */
     protected Optional<Long> resolveExpiration(@NonNull Authentication authentication) {
         return secondsSinceEpochOfAttribute(EXP, authentication);
@@ -286,6 +306,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response with the nbf claim of authentication.
      * @param authentication Authentication
+     * @return value for nbf claim
      */
     @NonNull
     protected Optional<Long> resolveNotBefore(@NonNull Authentication authentication) {
@@ -295,6 +316,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     /**
      * Populates the introspection response with the iat claim of authentication.
      * @param authentication Authentication
+     * @return value for iat claim
      */
     @NonNull
     protected Optional<Long> resolveIssuedAt(@NonNull Authentication authentication) {

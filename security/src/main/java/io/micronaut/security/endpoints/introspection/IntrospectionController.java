@@ -48,7 +48,8 @@ public class IntrospectionController {
      * @since 3.3
      */
     public IntrospectionController(IntrospectionProcessor processor) {
-        this.processor = processor;}
+        this.processor = processor;
+    }
 
     /**
      *

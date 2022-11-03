@@ -156,6 +156,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     @Nullable
     private final String checkSessionIframe;
 
+    @SuppressWarnings("ParameterNumber")
     public DefaultOpenIdProviderMetadata(@Nullable String authorizationEndpoint,
                                          @NonNull List<String> idTokenSigningAlgValuesSupported,
                                          @NonNull String issuer,
@@ -253,7 +254,6 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     public Boolean getDefaultRequireRequestUriRegistration() {
         return Boolean.FALSE;
     }
-
 
     @Nullable
     @Override

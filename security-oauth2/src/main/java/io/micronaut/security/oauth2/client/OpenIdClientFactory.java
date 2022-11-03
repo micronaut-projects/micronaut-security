@@ -30,7 +30,6 @@ import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import io.micronaut.json.JsonMapper;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -66,7 +65,6 @@ class OpenIdClientFactory {
     private static final Logger LOG = LoggerFactory.getLogger(OpenIdClientFactory.class);
 
     private final BeanContext beanContext;
-
 
     /**
      * @param beanContext The bean context

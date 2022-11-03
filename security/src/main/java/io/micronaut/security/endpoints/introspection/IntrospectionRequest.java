@@ -43,6 +43,7 @@ public class IntrospectionRequest {
      */
     @Nullable
     private final String token_type_hint;
+
     /**
      *
      * @param token The string value of the token
