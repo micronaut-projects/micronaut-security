@@ -37,26 +37,25 @@ import java.util.Map;
 @Produces
 @Singleton
 public class OauthErrorResponseExceptionHandler implements ExceptionHandler<OauthErrorResponseException, MutableHttpResponse<?>> {
+    @Override
+    public MutableHttpResponse<?> handle(HttpRequest request, OauthErrorResponseException exception) {
+        return HttpResponse.badRequest(responseBody(exception));
+    }
 
-        @Override
-        public MutableHttpResponse<?> handle(HttpRequest request, OauthErrorResponseException exception) {
-                return HttpResponse.badRequest(responseBody(exception));
+    /**
+     *
+     * @param errorResponse Error Response
+     * @return A Map which will be serialized as the body of the HTTP response
+     */
+    protected Map<String, Object> responseBody(ErrorResponse errorResponse) {
+        Map<String, Object> m = new HashMap<>();
+        m.put(ErrorResponse.JSON_KEY_ERROR, errorResponse.getError().toString());
+        if (errorResponse.getErrorDescription() != null) {
+            m.put(ErrorResponse.JSON_KEY_ERROR_DESCRIPTION, errorResponse.getErrorDescription());
         }
-
-        /**
-         *
-         * @param errorResponse Error Response
-         * @return A Map which will be serialized as the body of the HTTP response
-         */
-        protected Map<String, Object> responseBody(ErrorResponse errorResponse) {
-                Map<String, Object> m = new HashMap<>();
-                m.put(ErrorResponse.JSON_KEY_ERROR, errorResponse.getError().toString());
-                if (errorResponse.getErrorDescription() != null) {
-                        m.put(ErrorResponse.JSON_KEY_ERROR_DESCRIPTION, errorResponse.getErrorDescription());
-                }
-                if (errorResponse.getErrorUri() != null) {
-                        m.put(ErrorResponse.JSON_KEY_ERROR_URI, errorResponse.getErrorUri());
-                }
-                return m;
+        if (errorResponse.getErrorUri() != null) {
+            m.put(ErrorResponse.JSON_KEY_ERROR_URI, errorResponse.getErrorUri());
         }
+        return m;
+    }
 }

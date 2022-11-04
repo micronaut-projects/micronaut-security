@@ -173,5 +173,90 @@
     "type": "io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata",
     "member": "Constructor io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata()",
     "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.cookie.CookieLoginHandler",
+    "member": "Constructor io.micronaut.security.token.jwt.cookie.CookieLoginHandler(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.errors.PriorToLoginPersistence)",
+    "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.cookie.JwtCookieClearerLogoutHandler",
+    "member": "Constructor io.micronaut.security.token.jwt.cookie.JwtCookieClearerLogoutHandler(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration)",
+    "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.cookie.JwtCookieLoginHandler",
+    "member": "Constructor io.micronaut.security.token.jwt.cookie.JwtCookieLoginHandler(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator,io.micronaut.security.errors.PriorToLoginPersistence)",
+    "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.IdTokenLoginHandler",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.token.response.IdTokenLoginHandler(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.errors.PriorToLoginPersistence)",
+    "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.session.SessionLoginHandler",
+    "member": "Constructor io.micronaut.security.session.SessionLoginHandler(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence)",
+    "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.session.SessionLogoutHandler",
+    "member": "Constructor io.micronaut.security.session.SessionLogoutHandler(io.micronaut.security.config.RedirectConfiguration)",
+    "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.authentication.AuthenticationExceptionHandler",
+    "member": "Field eventPublisher",
+     "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.authentication.AuthenticationExceptionHandler",
+    "member": "Constructor io.micronaut.security.authentication.AuthenticationExceptionHandler(io.micronaut.context.event.ApplicationEventPublisher)",
+     "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler",
+    "member": "Constructor io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.errors.PriorToLoginPersistence)",
+     "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler",
+    "member": "Constructor io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler()",
+     "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler",
+    "member": "Constructor io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)",
+    "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseExceptionHandler",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseExceptionHandler()",
+    "reason": "Remove deprecated code in mayor version"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.LoginController",
+    "member": "Constructor io.micronaut.security.endpoints.LoginController(io.micronaut.security.authentication.Authenticator,io.micronaut.security.handlers.LoginHandler,io.micronaut.context.event.ApplicationEventPublisher)",
+    "reason": "Use event types in Application Publisher"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.LoginController",
+    "member": "Field eventPublisher",
+    "reason": "Use event types in Application Publisher"
+  },
+  {
+    "type": "io.micronaut.security.token.TokenAuthenticationFetcher",
+    "member": "Field eventPublisher",
+    "reason": "Use event types in Application Publisher"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
+    "member": "Field eventPublisher",
+    "reason": "Use event types in Application Publisher"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
+    "member": "Constructor io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator(io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.render.TokenRenderer,io.micronaut.security.token.generator.TokenGenerator,io.micronaut.context.BeanContext,io.micronaut.security.token.generator.RefreshTokenGenerator,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator,io.micronaut.context.event.ApplicationEventPublisher)",
+    "reason": "Use event types in Application Publisher"
   }
 ]

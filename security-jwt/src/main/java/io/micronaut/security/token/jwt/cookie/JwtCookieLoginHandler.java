@@ -21,7 +21,6 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.config.DefaultRedirectService;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.config.SecurityConfigurationProperties;
@@ -31,7 +30,6 @@ import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
@@ -52,25 +50,6 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
     protected final AccessTokenConfiguration accessTokenConfiguration;
 
     /**
-     * @param redirectConfiguration Redirect configuration
-     * @param accessTokenCookieConfiguration JWT Access Token Cookie Configuration
-     * @param refreshTokenCookieConfiguration Refresh Token Cookie Configuration
-     * @param accessTokenConfiguration JWT Generator Configuration
-     * @param accessRefreshTokenGenerator Access Refresh Token Generator
-     * @param priorToLoginPersistence Prior To Login Persistence Mechanism
-     * @deprecated Use {@link JwtCookieLoginHandler(RedirectService ,RedirectConfiguration,AccessTokenCookieConfiguration,RefreshTokenCookieConfiguration,AccessTokenConfiguration,PriorToLoginPersistence)} instead.
-     */
-    @Deprecated
-    public JwtCookieLoginHandler(RedirectConfiguration redirectConfiguration,
-                                 AccessTokenCookieConfiguration accessTokenCookieConfiguration,
-                                 RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
-                                 AccessTokenConfiguration accessTokenConfiguration,
-                                 AccessRefreshTokenGenerator accessRefreshTokenGenerator,
-                                 @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this(new DefaultRedirectService(redirectConfiguration, () -> null), redirectConfiguration, accessTokenCookieConfiguration, refreshTokenCookieConfiguration, accessTokenConfiguration, accessRefreshTokenGenerator, priorToLoginPersistence);
-    }
-
-    /**
      * @param redirectService Redirection Service
      * @param redirectConfiguration Redirect configuration
      * @param accessTokenCookieConfiguration JWT Access Token Cookie Configuration
@@ -79,7 +58,6 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
      * @param priorToLoginPersistence Prior To Login Persistence Mechanism
      */
-    @Inject
     public JwtCookieLoginHandler(RedirectService redirectService,
                                  RedirectConfiguration redirectConfiguration,
                                  AccessTokenCookieConfiguration accessTokenCookieConfiguration,

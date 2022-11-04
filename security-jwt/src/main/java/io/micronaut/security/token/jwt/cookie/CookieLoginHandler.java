@@ -24,7 +24,6 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.micronaut.security.config.DefaultRedirectService;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.config.RefreshRedirectConfiguration;
@@ -54,19 +53,6 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
 
     @Nullable
     protected final String refresh;
-
-    /**
-     * @param accessTokenCookieConfiguration Access token cookie configuration
-     * @param redirectConfiguration Redirect configuration
-     * @param priorToLoginPersistence The prior to login persistence strategy
-     * @deprecated Use {@link CookieLoginHandler(AccessTokenCookieConfiguration,RedirectConfiguration, RedirectService ,PriorToLoginPersistence)} instead.
-     */
-    @Deprecated
-    public CookieLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
-                              RedirectConfiguration redirectConfiguration,
-                              @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this(accessTokenCookieConfiguration, redirectConfiguration, new DefaultRedirectService(redirectConfiguration, () -> null), priorToLoginPersistence);
-    }
 
     /**
      * @param accessTokenCookieConfiguration Access token cookie configuration

@@ -16,16 +16,15 @@
 package io.micronaut.security.authentication;
 
 import io.micronaut.context.annotation.Primary;
-import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Produces;
-import io.micronaut.http.hateoas.JsonError;
-import io.micronaut.http.hateoas.Link;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
+import io.micronaut.http.server.exceptions.response.ErrorContext;
+import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import jakarta.inject.Singleton;
-
 
 /**
  * Handles the server response when an {@link AuthenticationException} is thrown.
@@ -37,22 +36,19 @@ import jakarta.inject.Singleton;
 @Primary
 @Produces
 public class AuthenticationExceptionHandler implements ExceptionHandler<AuthenticationException, MutableHttpResponse<?>> {
-    protected final ApplicationEventPublisher<?> eventPublisher;
 
-    /**
-     * @param eventPublisher The event publisher
-     * @deprecated This will be removed in the next major version, so that this class uses the ErrorProcessor API
-     */
-    @Deprecated
-    public AuthenticationExceptionHandler(ApplicationEventPublisher<?> eventPublisher) {
-        this.eventPublisher = eventPublisher;
+    private final ErrorResponseProcessor<?> errorResponseProcessor;
+
+    public AuthenticationExceptionHandler(ErrorResponseProcessor<?> errorResponseProcessor) {
+        this.errorResponseProcessor = errorResponseProcessor;
     }
 
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthenticationException exception) {
-        JsonError error = new JsonError(exception.getMessage());
-        error.link(Link.SELF, Link.of(request.getUri()));
-        return HttpResponse.unauthorized().body(error);
+        return errorResponseProcessor.processResponse(ErrorContext.builder(request)
+            .cause(exception)
+            .errorMessage(exception.getMessage())
+            .build(), HttpResponse.status(HttpStatus.UNAUTHORIZED, exception.getMessage()));
     }
 }
 

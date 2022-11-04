@@ -2,8 +2,10 @@ package io.micronaut.security.token.jwt.cookie
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.security.authentication.AuthenticationMode
 import io.micronaut.security.config.RedirectConfiguration
+import io.micronaut.security.config.RedirectService
 import io.micronaut.security.handlers.LogoutHandler
 import spock.lang.Specification
 
@@ -56,7 +58,9 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
         given:
         RedirectConfiguration redirectConfiguration = Mock() {
             1 * isEnabled() >> "true"
-            1 * getLogout() >> "logout"
+        }
+        RedirectService redirectService = Mock() {
+            1 * logoutUrl() >> "logout"
         }
         AccessTokenCookieConfiguration accessTokenCookieConfiguration = Mock() {
             1 * getCookieDomain() >> Optional.of("domain")
@@ -70,9 +74,9 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
         }
         HttpRequest<?> request = Mock()
 
-        def handler = new JwtCookieClearerLogoutHandler(accessTokenCookieConfiguration, refreshTokenCookieConfiguration, redirectConfiguration);
-        def response = handler.logout(request)
-        def cookieHeaders = response.getHeaders().getAll("Set-Cookie")
+        LogoutHandler handler = new JwtCookieClearerLogoutHandler(accessTokenCookieConfiguration, refreshTokenCookieConfiguration, redirectConfiguration, redirectService)
+        MutableHttpResponse<?> response = handler.logout(request)
+        List<String> cookieHeaders = response.getHeaders().getAll("Set-Cookie")
 
         expect:
         cookieHeaders.size() == 2
