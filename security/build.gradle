@@ -15,7 +15,7 @@ dependencies {
     implementation(libs.reactor.core)
     compileOnly(mn.micronaut.management)
     compileOnly(mn.jackson.databind)
-
+    testImplementation(mn.micronaut.reactor)
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)
     testAnnotationProcessor project(":security-annotations")
