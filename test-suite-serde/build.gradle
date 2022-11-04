@@ -23,6 +23,7 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
     testImplementation(libs.reactor.core)
+    testImplementation(mn.groovy.json)
 }
 
 tasks.named('test') {

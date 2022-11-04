@@ -21,7 +21,6 @@ kotlin = "1.7.20"
 
 [libraries]
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
-
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
 spock-geb = { module = "org.spockframework:spock-core", version.ref = "geb-spock" }
 geb-groovy-test = { module = "org.codehaus.groovy:groovy-test", version.ref = "geb-groovy" }

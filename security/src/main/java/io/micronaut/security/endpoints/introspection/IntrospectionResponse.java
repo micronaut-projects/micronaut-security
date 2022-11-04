@@ -19,8 +19,9 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.serde.annotation.Serdeable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,95 +30,130 @@ import java.util.Map;
  * @author Sergio del Amo
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Introspected
+@Serdeable
 public class IntrospectionResponse {
 
     /**
      * Boolean indicator of whether or not the presented token is currently active.
      */
-    private boolean active;
+    private final boolean active;
 
     /**
-     *  A JSON string containing a space-separated list of scopes associated with this token.
+     * A JSON string containing a space-separated list of scopes associated with this token.
      */
     @Nullable
-    private String scope;
+    private final String scope;
 
     /**
      * Client identifier for the OAuth 2.0 client that requested this token.
      */
     @JsonProperty("client_id")
     @Nullable
-    private String clientId;
+    private final String clientId;
 
     /**
      * Human-readable identifier for the resource owner who authorized this token.
      */
     @Nullable
-    private String username;
+    private final String username;
 
     /**
      * Type of token.
      */
     @JsonProperty("token_type")
-    private String tokenType;
+    @Nullable
+    private final String tokenType;
 
     /**
      * Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token will expire as defined in JWT.
      */
     @Nullable
-    private Long exp;
+    private final Long exp;
 
     /**
      * Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was originally issued, as defined in JWT.
      */
     @Nullable
-    private Long iat;
+    private final Long iat;
 
     /**
      * Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token is not to be used before, as defined in JWT.
      */
     @Nullable
-    private Long nbf;
+    private final Long nbf;
 
     /**
      * Subject of the token, as defined in JWT [RFC7519]. Usually a machine-readable identifier of the resource owner who authorized this token.
      */
     @Nullable
-    private String sub;
+    private final String sub;
 
     /**
      * Service-specific string identifier or list of string identifiers representing the intended audience for this token, as defined in JWT.
      */
     @Nullable
-    private String aud;
+    private final String aud;
 
     /**
      * String representing the issuer of this token, as defined in JWT.
      */
     @Nullable
-    private String iss;
+    private final String iss;
 
     /**
      * String identifier for the token, as defined in JWT.
      */
     @Nullable
-    private String jti;
+    private final String jti;
 
-    private Map<String, Object> extensions = new HashMap<>();
-
-    /**
-     * Constructor.
-     */
-    public IntrospectionResponse() {
-    }
+    @NonNull
+    private final Map<String, Object> extensions = new HashMap<>();
 
     /**
      *
      * @param active Boolean indicator of whether or not the presented token is currently active.
+     * @param tokenType Type of token.
+     * @param scope A JSON string containing a space-separated list of scopes associated with this token.
+     * @param clientId Client identifier for the OAuth 2.0 client that requested this token.
+     * @param username Human-readable identifier for the resource owner who authorized this token.
+     * @param exp Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token will expire as defined in JWT.
+     * @param iat Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was originally issued, as defined in JWT.
+     * @param nbf Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token is not to be used before, as defined in JWT.
+     * @param sub Subject of the token, as defined in JWT [RFC7519]. Usually a machine-readable identifier of the resource owner who authorized this token.
+     * @param aud Service-specific string identifier or list of string identifiers representing the intended audience for this token, as defined in JWT.
+     * @param iss String representing the issuer of this token, as defined in JWT.
+     * @param jti String identifier for the token, as defined in JWT.
+     * @param extensions Extensions
      */
-    public IntrospectionResponse(boolean active) {
+    @SuppressWarnings("ParameterNumber")
+    public IntrospectionResponse(boolean active,
+                                 @Nullable String tokenType,
+                                 @Nullable String scope,
+                                 @Nullable String clientId,
+                                 @Nullable String username,
+                                 @Nullable Long exp,
+                                 @Nullable Long iat,
+                                 @Nullable Long nbf,
+                                 @Nullable String sub,
+                                 @Nullable String aud,
+                                 @Nullable String iss,
+                                 @Nullable String jti,
+                                 @Nullable Map<String, Object> extensions) {
         this.active = active;
+        this.tokenType = tokenType;
+        this.scope = scope;
+        this.clientId = clientId;
+        this.username = username;
+        this.exp = exp;
+        this.iat = iat;
+        this.nbf = nbf;
+        this.sub = sub;
+        this.aud = aud;
+        this.iss = iss;
+        this.jti = jti;
+        if (extensions != null) {
+            this.extensions.putAll(extensions);
+        }
     }
 
     /**
@@ -128,14 +164,6 @@ public class IntrospectionResponse {
     @JsonAnySetter
     public void addExtension(String key, Object value) {
         this.extensions.put(key, value);
-    }
-
-    /**
-     *
-     * @param extensions Extensions
-     */
-    public void setExtensions(Map<String, Object> extensions) {
-        this.extensions = extensions;
     }
 
     /**
@@ -157,27 +185,11 @@ public class IntrospectionResponse {
 
     /**
      *
-     * @param active Boolean indicator of whether or not the presented token is currently active.
-     */
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    /**
-     *
      * @return A JSON string containing a space-separated list of scopes associated with this token.
      */
     @Nullable
     public String getScope() {
         return scope;
-    }
-
-    /**
-     *
-     * @param scope A JSON string containing a space-separated list of scopes associated with this token.
-     */
-    public void setScope(@Nullable String scope) {
-        this.scope = scope;
     }
 
     /**
@@ -191,14 +203,6 @@ public class IntrospectionResponse {
 
     /**
      *
-     * @param clientId Client identifier for the OAuth 2.0 client that requested this token.
-     */
-    public void setClientId(@Nullable String clientId) {
-        this.clientId = clientId;
-    }
-
-    /**
-     *
      * @return Human-readable identifier for the resource owner who authorized this token.
      */
     @Nullable
@@ -208,26 +212,11 @@ public class IntrospectionResponse {
 
     /**
      *
-     * @param username Human-readable identifier for the resource owner who authorized this token.
-     */
-    public void setUsername(@Nullable String username) {
-        this.username = username;
-    }
-
-    /**
-     *
      * @return Type of token.
      */
+    @Nullable
     public String getTokenType() {
         return tokenType;
-    }
-
-    /**
-     *
-     * @param tokenType Type of token.
-     */
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
     }
 
     /**
@@ -241,27 +230,11 @@ public class IntrospectionResponse {
 
     /**
      *
-     * @param exp Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token will expire as defined in JWT.
-     */
-    public void setExp(@Nullable Long exp) {
-        this.exp = exp;
-    }
-
-    /**
-     *
      * @return Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was originally issued, as defined in JWT.
      */
     @Nullable
     public Long getIat() {
         return iat;
-    }
-
-    /**
-     *
-     * @param iat Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was originally issued, as defined in JWT.
-     */
-    public void setIat(@Nullable Long iat) {
-        this.iat = iat;
     }
 
     /**
@@ -275,27 +248,11 @@ public class IntrospectionResponse {
 
     /**
      *
-     * @param nbf Long timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token is not to be used before, as defined in JWT.
-     */
-    public void setNbf(@Nullable Long nbf) {
-        this.nbf = nbf;
-    }
-
-    /**
-     *
      * @return Subject of the token, as defined in JWT [RFC7519]. Usually a machine-readable identifier of the resource owner who authorized this token.
      */
     @Nullable
     public String getSub() {
         return sub;
-    }
-
-    /**
-     *
-     * @param sub Subject of the token, as defined in JWT [RFC7519]. Usually a machine-readable identifier of the resource owner who authorized this token.
-     */
-    public void setSub(@Nullable String sub) {
-        this.sub = sub;
     }
 
     /**
@@ -309,14 +266,6 @@ public class IntrospectionResponse {
 
     /**
      *
-     * @param aud Service-specific string identifier or list of string identifiers representing the intended audience for this token, as defined in JWT
-     */
-    public void setAud(@Nullable String aud) {
-        this.aud = aud;
-    }
-
-    /**
-     *
      * @return Long timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was originally issued, as defined in JWT.
      */
     @Nullable
@@ -326,26 +275,10 @@ public class IntrospectionResponse {
 
     /**
      *
-     * @param iss Long timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was originally issued, as defined in JWT.
-     */
-    public void setIss(@Nullable String iss) {
-        this.iss = iss;
-    }
-
-    /**
-     *
      * @return String identifier for the token, as defined in JWT.
      */
     @Nullable
     public String getJti() {
         return jti;
-    }
-
-    /**
-     *
-     * @param jti String identifier for the token, as defined in JWT.
-     */
-    public void setJti(@Nullable String jti) {
-        this.jti = jti;
     }
 }

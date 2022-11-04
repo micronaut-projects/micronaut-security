@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Allows using the {@link javax.annotation.security.DenyAll} annotation in Micronaut.
+ * Allows using the `javax.annotation.security.DenyAll` annotation in Micronaut.
  *
  * @author Sergio del Amo
  * @since 1.0

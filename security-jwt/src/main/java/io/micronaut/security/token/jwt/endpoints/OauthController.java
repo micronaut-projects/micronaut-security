@@ -136,6 +136,8 @@ public class OauthController {
             refreshToken = tokenRefreshRequest.getRefreshToken();
         } else if (cookieRefreshToken != null) {
             refreshToken = cookieRefreshToken;
+        } else {
+            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token and grant_type are required", null);
         }
         if (StringUtils.isEmpty(refreshToken)) {
             throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token is required", null);

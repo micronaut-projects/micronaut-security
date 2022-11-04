@@ -23,6 +23,9 @@ dependencies {
     testImplementation project(":test-suite-utils-security")
     testImplementation(libs.kotlin.stdlib.jdk8)
     testImplementation(libs.reactor.core)
+
+    testImplementation(mn.jackson.databind)
+    testAnnotationProcessor(mn.micronaut.serde.processor)
 }
 
 tasks.named('test') {

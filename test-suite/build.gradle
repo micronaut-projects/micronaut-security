@@ -21,6 +21,10 @@ dependencies {
     testImplementation project(":security-oauth2")
     testImplementation project(":test-suite-utils-security")
     testImplementation(libs.reactor.core)
+
+    testAnnotationProcessor(mn.micronaut.serde.processor)
+    testCompileOnly(mn.jackson.databind)
+    testImplementation(mn.micronaut.serde.jackson)
 }
 
 tasks.named('test') {

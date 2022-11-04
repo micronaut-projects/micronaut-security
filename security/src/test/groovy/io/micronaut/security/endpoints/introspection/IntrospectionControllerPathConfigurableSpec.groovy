@@ -29,7 +29,7 @@ class IntrospectionControllerPathConfigurableSpec extends EmbeddedServerSpecific
 
     def "the path of the introspection endpoint can be changed with micronaut.security.endpoints.introspection.path"() {
         when:
-        HttpRequest request = HttpRequest.POST("/introspection", new IntrospectionRequest("XXX"))
+        HttpRequest request = HttpRequest.POST("/introspection", new IntrospectionRequest("XXX", null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .basicAuth('user', 'password')
         HttpResponse<Map> response = client.exchange(request, Map)

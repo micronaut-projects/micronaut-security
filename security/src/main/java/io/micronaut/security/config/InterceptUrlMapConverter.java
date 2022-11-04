@@ -26,11 +26,11 @@ import io.micronaut.http.context.ServerContextPathProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Sergio del Amo
@@ -99,14 +99,13 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
         m = transform(m);
         Optional<String> optionalPattern = conversionService.convert(m.get(PATTERN), String.class);
         if (optionalPattern.isPresent()) {
-            Optional<List<String>> optionalAccessList = conversionService.convert(m.get(ACCESS), List.class);
-            optionalAccessList = optionalAccessList.map(list -> list.stream()
-                .map(o -> conversionService.convert(o, String.class))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(String.class::cast)
-                .collect(Collectors.toList()));
+            Optional<List> optionalAccessList = conversionService.convert(m.get(ACCESS), List.class);
             if (optionalAccessList.isPresent()) {
+                List<String> accessList = new ArrayList<>();
+                for (Object obj : optionalAccessList.get()) {
+                    conversionService.convert(obj, String.class)
+                        .ifPresent(accessList::add);
+                }
                 Optional<HttpMethod> httpMethod;
                 if (m.containsKey(HTTP_METHOD)) {
                     httpMethod = conversionService.convert(m.get(HTTP_METHOD), HttpMethod.class);
@@ -116,7 +115,7 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
                 } else {
                     httpMethod = Optional.empty();
                 }
-                List<String> accessList = optionalAccessList.get();
+
                 return optionalPattern
                     .map(pattern -> interceptUrlMapPrependPatternWithContextPath ? ServerContextPathProviderUtils.prependContextPath(pattern, serverContextPathProvider) : pattern)
                     .map(pattern -> new InterceptUrlMapPattern(pattern, accessList, httpMethod.orElse(null)));

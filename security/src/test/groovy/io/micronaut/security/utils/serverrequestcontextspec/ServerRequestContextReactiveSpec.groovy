@@ -1,12 +1,12 @@
 package io.micronaut.security.utils.serverrequestcontextspec
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.*
 
-@Stepwise
 class ServerRequestContextReactiveSpec extends Specification {
 
     @Shared @AutoCleanup EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
@@ -58,7 +58,22 @@ class ServerRequestContextReactiveSpec extends Specification {
 
     def "verify flux"() {
         when:
-        Message message = httpClient.toBlocking().retrieve(HttpRequest.GET("/test/request-context/flux"), Message)
+        List<Message> messages = httpClient.toBlocking().retrieve(HttpRequest.GET("/test/request-context/flux"), Argument.listOf(Message))
+
+        then:
+        messages
+
+        when:
+        Message message = messages[0]
+
+        then:
+        message
+        message.message == 'Sergio'
+    }
+
+    def "verify flux single result"() {
+        when:
+        Message message = httpClient.toBlocking().retrieve(HttpRequest.GET("/test/request-context/flux/singleresult"), Message)
 
         then:
         message
