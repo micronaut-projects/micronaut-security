@@ -28,7 +28,7 @@ Check the <<redirection, Redirection configuration>> to customize session based 
 
 [source, yaml]
 ----
-include::{testssecuritysession}/security/session/SessionAuthenticationSpec.groovy[tag=yamlconfig,indent=0]
+include::{testsuitegeb}/security/session/SessionAuthenticationSpec.groovy[tag=yamlconfig,indent=0]
 ----
 
 TIP: Read the https://guides.micronaut.io/latest/micronaut-security-session.html[Session-Based Authentication Micronaut Guide] to learn more.
