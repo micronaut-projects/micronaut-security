@@ -23,6 +23,9 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
     testImplementation(libs.reactor.core)
+
+    testImplementation(libs.json.unit)
+    testImplementation(libs.moshi)
 }
 
 tasks.named('test') {
