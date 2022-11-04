@@ -118,6 +118,30 @@
     "type": "io.micronaut.security.rules.AbstractSecurityRule",
     "member": "Constructor io.micronaut.security.rules.AbstractSecurityRule(io.micronaut.security.token.RolesFinder)",
     "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.IntrospectionRequest",
+    "member": "Constructor io.micronaut.security.endpoints.introspection.IntrospectionRequest()",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.IntrospectionRequest",
+    "member": "Constructor io.micronaut.security.endpoints.introspection.IntrospectionRequest(java.lang.String)",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.IntrospectionResponse",
+    "member": "Constructor io.micronaut.security.endpoints.introspection.IntrospectionResponse()",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.IntrospectionResponse",
+    "member": "Constructor io.micronaut.security.endpoints.introspection.IntrospectionResponse(boolean)",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.IntrospectionController",
+    "member": "Constructor io.micronaut.security.endpoints.introspection.IntrospectionController(io.micronaut.security.endpoints.introspection.IntrospectionProcessor,io.micronaut.json.JsonMapper)",
+    "reason": "Changed in Micronaut 4"
   }
-
 ]
