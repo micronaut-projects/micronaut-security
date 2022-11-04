@@ -18,13 +18,9 @@ velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
 kotlin = "1.7.20"
-jsonunit = "2.36.0"
-moshi = "1.14.0"
 
 [libraries]
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
-json-unit = { module = "net.javacrumbs.json-unit:json-unit", version.ref = "jsonunit" }
-moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
 spock-geb = { module = "org.spockframework:spock-core", version.ref = "geb-spock" }
 geb-groovy-test = { module = "org.codehaus.groovy:groovy-test", version.ref = "geb-groovy" }

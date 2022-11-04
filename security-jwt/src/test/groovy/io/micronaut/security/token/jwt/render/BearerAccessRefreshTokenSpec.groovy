@@ -1,11 +1,11 @@
 package io.micronaut.security.token.jwt.render
 
+import groovy.json.JsonSlurper
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.core.type.Argument
 import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.serde.ObjectMapper
 import io.micronaut.serde.SerdeIntrospections
-import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
 
 class BearerAccessRefreshTokenSpec extends ApplicationContextSpecification {
     def "token json matches OAuth 2.0 RFC6749 specification"(){
@@ -20,6 +20,10 @@ class BearerAccessRefreshTokenSpec extends ApplicationContextSpecification {
 
         then: "we will get an OAuth 2.0 RFC6749 compliant value"
         assertJsonEquals(rawJsonString, "{\"access_token\":\"1234\",\"expires_in\":3600,\"refresh_token\":\"abcd\",\"roles\":[\"admin\",\"superuser\"],\"token_type\":\"Bearer\",\"username\":\"testing\"}")
+    }
+
+    private static boolean assertJsonEquals(String expected, String json) {
+        new JsonSlurper().parseText(expected) == new JsonSlurper().parseText(json)
     }
 
     void "BearerAccessRefreshToken  is annotated with @Introspected"() {

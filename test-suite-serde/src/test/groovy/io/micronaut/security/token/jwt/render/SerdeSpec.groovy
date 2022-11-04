@@ -4,7 +4,7 @@ import io.micronaut.serde.ObjectMapper
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
-import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
+import groovy.json.JsonSlurper
 
 @MicronautTest(startApplication = false)
 class SerdeSpec extends Specification {
@@ -57,5 +57,9 @@ class SerdeSpec extends Specification {
         then:
         accessRefreshToken
         accessRefreshToken.accessToken
+    }
+
+    private static boolean assertJsonEquals(String expected, String json) {
+        new JsonSlurper().parseText(expected) == new JsonSlurper().parseText(json)
     }
 }
