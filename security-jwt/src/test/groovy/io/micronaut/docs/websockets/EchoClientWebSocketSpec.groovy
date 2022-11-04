@@ -20,7 +20,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import reactor.core.publisher.Flux
 import spock.lang.AutoCleanup
-import spock.lang.PendingFeature
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
@@ -56,7 +55,6 @@ class EchoClientWebSocketSpec extends Specification {
         tokenGenerator.generateToken(claims)
     }
 
-    @PendingFeature(reason = "https://github.com/micronaut-projects/micronaut-core/pull/8285")
     def "check websocket connects"() {
         expect:
         wsClient

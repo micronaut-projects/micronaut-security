@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory
 import spock.lang.AutoCleanup
 import spock.lang.IgnoreIf
 import spock.lang.Issue
-import spock.lang.PendingFeature
 import spock.lang.Shared
 import spock.util.concurrent.PollingConditions
 
@@ -84,7 +83,6 @@ class HomePageSpec extends GebSpec {
         tokenGenerator.generateToken(claims)
     }
 
-    @PendingFeature(reason = "https://github.com/micronaut-projects/micronaut-core/pull/8285")
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5618")
     def "check websocket connects"() {
