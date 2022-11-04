@@ -143,5 +143,35 @@
     "type": "io.micronaut.security.endpoints.introspection.IntrospectionController",
     "member": "Constructor io.micronaut.security.endpoints.introspection.IntrospectionController(io.micronaut.security.endpoints.introspection.IntrospectionProcessor,io.micronaut.json.JsonMapper)",
     "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest",
+    "member": "Constructor io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest(java.lang.String)",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest",
+    "member": "Constructor io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest()",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.BearerAccessRefreshToken",
+    "member": "Constructor io.micronaut.security.token.jwt.render.BearerAccessRefreshToken()",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.AccessRefreshToken",
+    "member": "Constructor io.micronaut.security.token.jwt.render.AccessRefreshToken()",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.AccessRefreshToken",
+    "member": "Constructor io.micronaut.security.token.jwt.render.AccessRefreshToken(java.lang.String,java.lang.String,java.lang.String)",
+    "reason": "Changed in Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata",
+    "member": "Constructor io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata()",
+    "reason": "Changed in Micronaut 4"
   }
 ]
