@@ -47,7 +47,7 @@
   {
     "type": "io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference",
     "member": "Implemented interface io.micronaut.inject.BeanType",
-    "reason": "Provide a human readable reason for the change"
+    "reason": "Changed in Micronaut 4"
   },
   {
     "type": "io.micronaut.security.rules.$InterceptUrlMapRule$Definition$Reference",
