@@ -31,7 +31,6 @@ loadScripts(document, 'script');</script>
 <li>Package</li>
 <li>Class</li>
 <li><a href="overview-tree.html">Tree</a></li>
-<li><a href="deprecated-list.html">Deprecated</a></li>
 <li class="nav-bar-cell1-rev">Index</li>
 <li><a href="help-doc.html#index">Help</a></li>
 </ul>
@@ -200,6 +199,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Triggered when a JWT access token is generated.</div>
 </dd>
+<dt><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#accessTokenGeneratedEventPublisher" class="member-name-link">accessTokenGeneratedEventPublisher</a> - Variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailureReason.html#ACCOUNT_EXPIRED" class="member-name-link">ACCOUNT_EXPIRED</a> - Enum constant in enum class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailureReason.html" title="enum class in io.micronaut.security.authentication">AuthenticationFailureReason</a></dt>
 <dd>
 <div class="block">Failure when the cause is the user account expired.</div>
@@ -332,12 +333,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Handles the server response when an <a href="io/micronaut/security/authentication/AuthenticationException.html" title="class in io.micronaut.security.authentication"><code>AuthenticationException</code></a> is thrown.</div>
 </dd>
-<dt><a href="io/micronaut/security/authentication/AuthenticationExceptionHandler.html#%3Cinit%3E(io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">AuthenticationExceptionHandler(ApplicationEventPublisher&lt;?&gt;)</a> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationExceptionHandler.html" title="class in io.micronaut.security.authentication">AuthenticationExceptionHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">This will be removed in the next major version, so that this class uses the ErrorProcessor API</div>
-</div>
-</dd>
+<dt><a href="io/micronaut/security/authentication/AuthenticationExceptionHandler.html#%3Cinit%3E(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor)" class="member-name-link">AuthenticationExceptionHandler(ErrorResponseProcessor&lt;?&gt;)</a> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationExceptionHandler.html" title="class in io.micronaut.security.authentication">AuthenticationExceptionHandler</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailed.html" class="type-name-link" title="class in io.micronaut.security.authentication">AuthenticationFailed</a> - Class in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>
 <div class="block">Signalises an authentication failure and stores the failure reason.</div>
@@ -450,7 +447,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">An exception handler for <a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorResponseException.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response"><code>AuthorizationErrorResponseException</code></a>.</div>
 </dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorResponseExceptionHandler.html#%3Cinit%3E()" class="member-name-link">AuthorizationErrorResponseExceptionHandler()</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.response.<a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorResponseExceptionHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseExceptionHandler</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorResponseExceptionHandler.html#%3Cinit%3E(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor)" class="member-name-link">AuthorizationErrorResponseExceptionHandler(ErrorResponseProcessor&lt;?&gt;)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.response.<a href="io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationErrorResponseExceptionHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationErrorResponseExceptionHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthorizationException.html" class="type-name-link" title="class in io.micronaut.security.authentication">AuthorizationException</a> - Exception in <a href="io/micronaut/security/authentication/package-summary.html">io.micronaut.security.authentication</a></dt>
 <dd>
@@ -970,12 +967,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use <a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)"><code>CookieLoginHandler(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)</code></a> instead.</div>
-</div>
-</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieMaxAge" class="member-name-link">cookieMaxAge</a> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistence.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistence</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/package-summary.html">io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie</a></dt>
@@ -1365,7 +1356,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generates http responses with access and refresh token.</div>
 </dd>
-<dt><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#%3Cinit%3E(io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.render.TokenRenderer,io.micronaut.security.token.generator.TokenGenerator,io.micronaut.context.BeanContext,io.micronaut.security.token.generator.RefreshTokenGenerator,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration, TokenRenderer, TokenGenerator, BeanContext, RefreshTokenGenerator, ClaimsGenerator, ApplicationEventPublisher)</a> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
+<dt><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#%3Cinit%3E(io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.render.TokenRenderer,io.micronaut.security.token.generator.TokenGenerator,io.micronaut.context.BeanContext,io.micronaut.security.token.generator.RefreshTokenGenerator,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration, TokenRenderer, TokenGenerator, BeanContext, RefreshTokenGenerator, ClaimsGenerator, ApplicationEventPublisher&lt;RefreshTokenGeneratedEvent&gt;, ApplicationEventPublisher&lt;AccessTokenGeneratedEvent&gt;)</a> - Constructor for class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultAuthorizationErrorResponse.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">DefaultAuthorizationErrorResponse</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/response/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.response</a></dt>
 <dd>
@@ -1377,24 +1368,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Provides the default behavior for responding to an <a href="io/micronaut/security/authentication/AuthorizationException.html" title="class in io.micronaut.security.authentication"><code>AuthorizationException</code></a>.</div>
 </dd>
-<dt><a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html#%3Cinit%3E()" class="member-name-link">DefaultAuthorizationExceptionHandler()</a> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html" title="class in io.micronaut.security.authentication">DefaultAuthorizationExceptionHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">This will be removed in the next major version, so that this class uses the ErrorProcessor API</div>
-</div>
-</dd>
-<dt><a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">DefaultAuthorizationExceptionHandler(RedirectConfiguration, RedirectService, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html" title="class in io.micronaut.security.authentication">DefaultAuthorizationExceptionHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">This will be removed in the next major version, so that this class uses the ErrorProcessor API</div>
-</div>
-</dd>
-<dt><a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">DefaultAuthorizationExceptionHandler(RedirectConfiguration, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html" title="class in io.micronaut.security.authentication">DefaultAuthorizationExceptionHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">This will be removed in the next major version, so that this class uses the ErrorProcessor API</div>
-</div>
-</dd>
+<dt><a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html#%3Cinit%3E(io.micronaut.http.server.exceptions.response.ErrorResponseProcessor,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">DefaultAuthorizationExceptionHandler(ErrorResponseProcessor&lt;?&gt;, RedirectConfiguration, RedirectService, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html" title="class in io.micronaut.security.authentication">DefaultAuthorizationExceptionHandler</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/request/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.request</a></dt>
 <dd>
 <div class="block">Builds an authorization redirect url.</div>
@@ -1824,14 +1799,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">OAuth 2.0 Error Response.</div>
 </dd>
-<dt><a href="io/micronaut/security/authentication/AuthenticationExceptionHandler.html#eventPublisher" class="member-name-link">eventPublisher</a> - Variable in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationExceptionHandler.html" title="class in io.micronaut.security.authentication">AuthenticationExceptionHandler</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/endpoints/LoginController.html#eventPublisher" class="member-name-link">eventPublisher</a> - Variable in class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LoginController.html" title="class in io.micronaut.security.endpoints">LoginController</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#eventPublisher" class="member-name-link">eventPublisher</a> - Variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#eventPublisher" class="member-name-link">eventPublisher</a> - Variable in class io.micronaut.security.token.<a href="io/micronaut/security/token/TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationResponse.html#exception()" class="member-name-link">exception()</a> - Static method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationResponse.html#exception(io.micronaut.security.authentication.AuthenticationFailureReason)" class="member-name-link">exception(AuthenticationFailureReason)</a> - Static method in interface io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication">AuthenticationResponse</a></dt>
@@ -3583,9 +3550,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html#httpResponseWithStatus(java.net.URI)" class="member-name-link">httpResponseWithStatus(URI)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html" title="class in io.micronaut.security.authentication">DefaultAuthorizationExceptionHandler</a></dt>
 <dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">This will be removed in the next major version, so that this class uses the ErrorProcessor API</div>
-</div>
+<div class="block">Builds a HTTP Response redirection to the supplied location.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
@@ -3610,12 +3575,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">IdTokenLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use <a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)"><code>IdTokenLoginHandler(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)</code></a> instead.</div>
-</div>
-</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/GrantType.html#IMPLICIT" class="member-name-link">IMPLICIT</a> - Enum constant in enum class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/GrantType.html" title="enum class in io.micronaut.security.oauth2.grants">GrantType</a></dt>
 <dd>
 <div class="block">The implicit grant is a simplified authorization code flow optimized
@@ -4386,12 +4345,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Clears the cookie configured via <a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie"><code>CookieLoginHandler</code></a>.</div>
 </dd>
-<dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration)" class="member-name-link">JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, RedirectConfiguration)</a> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use <a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService)"><code>JwtCookieClearerLogoutHandler(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService)</code></a> instead.</div>
-</div>
-</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService)" class="member-name-link">JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, RedirectConfiguration, RedirectService)</a> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieClearerLogoutHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieClearerLogoutHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" class="type-name-link" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a> - Class in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
@@ -4400,12 +4353,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" class="type-name-link" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a> - Class in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">JwtCookieLoginHandler(RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use <code>JwtCookieLoginHandler(RedirectService,RedirectConfiguration,AccessTokenCookieConfiguration,RefreshTokenCookieConfiguration,AccessTokenConfiguration,PriorToLoginPersistence)</code> instead.</div>
-</div>
-</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectService,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration,io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">JwtCookieLoginHandler(RedirectService, RedirectConfiguration, AccessTokenCookieConfiguration, RefreshTokenCookieConfiguration, AccessTokenConfiguration, AccessRefreshTokenGenerator, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieLoginHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieTokenReader.html" class="type-name-link" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieTokenReader</a> - Class in <a href="io/micronaut/security/token/jwt/cookie/package-summary.html">io.micronaut.security.token.jwt.cookie</a></dt>
@@ -4581,7 +4528,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Handles login requests.</div>
 </dd>
-<dt><a href="io/micronaut/security/endpoints/LoginController.html#%3Cinit%3E(io.micronaut.security.authentication.Authenticator,io.micronaut.security.handlers.LoginHandler,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">LoginController(Authenticator, LoginHandler, ApplicationEventPublisher)</a> - Constructor for class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LoginController.html" title="class in io.micronaut.security.endpoints">LoginController</a></dt>
+<dt><a href="io/micronaut/security/endpoints/LoginController.html#%3Cinit%3E(io.micronaut.security.authentication.Authenticator,io.micronaut.security.handlers.LoginHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">LoginController(Authenticator, LoginHandler, ApplicationEventPublisher&lt;LoginSuccessfulEvent&gt;, ApplicationEventPublisher&lt;LoginFailedEvent&gt;)</a> - Constructor for class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LoginController.html" title="class in io.micronaut.security.endpoints">LoginController</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/LoginControllerConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.endpoints">LoginControllerConfiguration</a> - Interface in <a href="io/micronaut/security/endpoints/package-summary.html">io.micronaut.security.endpoints</a></dt>
 <dd>
@@ -4607,6 +4554,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Event triggered when an unsuccessful login takes place.</div>
 </dd>
+<dt><a href="io/micronaut/security/endpoints/LoginController.html#loginFailedEventPublisher" class="member-name-link">loginFailedEventPublisher</a> - Variable in class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LoginController.html" title="class in io.micronaut.security.endpoints">LoginController</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/session/SessionLoginHandler.html#loginFailure" class="member-name-link">loginFailure</a> - Variable in class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#loginFailure" class="member-name-link">loginFailure</a> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
@@ -4653,6 +4602,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Event triggered when a successful login takes place.</div>
 </dd>
+<dt><a href="io/micronaut/security/endpoints/LoginController.html#loginSuccessfulEventPublisher" class="member-name-link">loginSuccessfulEventPublisher</a> - Variable in class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LoginController.html" title="class in io.micronaut.security.endpoints">LoginController</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/DefaultRedirectService.html#loginSuccessUrl()" class="member-name-link">loginSuccessUrl()</a> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/DefaultRedirectService.html" title="class in io.micronaut.security.config">DefaultRedirectService</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/RedirectService.html#loginSuccessUrl()" class="member-name-link">loginSuccessUrl()</a> - Method in interface io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectService.html" title="interface in io.micronaut.security.config">RedirectService</a></dt>
@@ -4669,7 +4620,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/LogoutController.html" class="type-name-link" title="class in io.micronaut.security.endpoints">LogoutController</a> - Class in <a href="io/micronaut/security/endpoints/package-summary.html">io.micronaut.security.endpoints</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/endpoints/LogoutController.html#%3Cinit%3E(io.micronaut.security.handlers.LogoutHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.security.endpoints.LogoutControllerConfiguration)" class="member-name-link">LogoutController(LogoutHandler, ApplicationEventPublisher, LogoutControllerConfiguration)</a> - Constructor for class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LogoutController.html" title="class in io.micronaut.security.endpoints">LogoutController</a></dt>
+<dt><a href="io/micronaut/security/endpoints/LogoutController.html#%3Cinit%3E(io.micronaut.security.handlers.LogoutHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.security.endpoints.LogoutControllerConfiguration)" class="member-name-link">LogoutController(LogoutHandler, ApplicationEventPublisher&lt;LogoutEvent&gt;, LogoutControllerConfiguration)</a> - Constructor for class io.micronaut.security.endpoints.<a href="io/micronaut/security/endpoints/LogoutController.html" title="class in io.micronaut.security.endpoints">LogoutController</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/LogoutControllerConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.endpoints">LogoutControllerConfiguration</a> - Interface in <a href="io/micronaut/security/endpoints/package-summary.html">io.micronaut.security.endpoints</a></dt>
 <dd>
@@ -5524,6 +5475,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Triggered when a refresh token is generated.</div>
 </dd>
+<dt><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#refreshTokenGeneratedEventPublisher" class="member-name-link">refreshTokenGeneratedEventPublisher</a> - Variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#refreshTokenGenerator" class="member-name-link">refreshTokenGenerator</a> - Variable in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/generator/RefreshTokenGenerator.html" class="type-name-link" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a> - Interface in <a href="io/micronaut/security/token/generator/package-summary.html">io.micronaut.security.token.generator</a></dt>
@@ -5987,12 +5940,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A <a href="io/micronaut/security/handlers/RedirectingLoginHandler.html" title="interface in io.micronaut.security.handlers"><code>RedirectingLoginHandler</code></a> implementation for session based authentication.</div>
 </dd>
-<dt><a href="io/micronaut/security/session/SessionLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">SessionLoginHandler(RedirectConfiguration, SessionStore&lt;Session&gt;, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use <a href="io/micronaut/security/session/SessionLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService)"><code>SessionLoginHandler(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore&lt;io.micronaut.session.Session&gt;,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService)</code></a>.</div>
-</div>
-</dd>
 <dt><a href="io/micronaut/security/session/SessionLoginHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.session.SessionStore,io.micronaut.security.errors.PriorToLoginPersistence,io.micronaut.security.config.RedirectService)" class="member-name-link">SessionLoginHandler(RedirectConfiguration, SessionStore&lt;Session&gt;, PriorToLoginPersistence, RedirectService)</a> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLoginHandler.html" title="class in io.micronaut.security.session">SessionLoginHandler</a></dt>
 <dd>
 <div class="block">Constructor.</div>
@@ -6000,12 +5947,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/session/SessionLogoutHandler.html" class="type-name-link" title="class in io.micronaut.security.session">SessionLogoutHandler</a> - Class in <a href="io/micronaut/security/session/package-summary.html">io.micronaut.security.session</a></dt>
 <dd>
 <div class="block"><a href="io/micronaut/security/handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers"><code>LogoutHandler</code></a> implementation for Session-Based Authentication.</div>
-</dd>
-<dt><a href="io/micronaut/security/session/SessionLogoutHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration)" class="member-name-link">SessionLogoutHandler(RedirectConfiguration)</a> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLogoutHandler.html" title="class in io.micronaut.security.session">SessionLogoutHandler</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use <a href="io/micronaut/security/session/SessionLogoutHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService)"><code>SessionLogoutHandler(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService)</code></a> instead.</div>
-</div>
 </dd>
 <dt><a href="io/micronaut/security/session/SessionLogoutHandler.html#%3Cinit%3E(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService)" class="member-name-link">SessionLogoutHandler(RedirectConfiguration, RedirectService)</a> - Constructor for class io.micronaut.security.session.<a href="io/micronaut/security/session/SessionLogoutHandler.html" title="class in io.micronaut.security.session">SessionLogoutHandler</a></dt>
 <dd>
@@ -6996,7 +6937,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Attempts to retrieve a token form the <code>HttpRequest</code> and if existing validated.</div>
 </dd>
-<dt><a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#%3Cinit%3E(java.util.Collection,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">TokenAuthenticationFetcher(Collection&lt;TokenValidator&gt;, TokenResolver, ApplicationEventPublisher)</a> - Constructor for class io.micronaut.security.token.<a href="io/micronaut/security/token/TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></dt>
+<dt><a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#%3Cinit%3E(java.util.Collection,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">TokenAuthenticationFetcher(Collection&lt;TokenValidator&gt;, TokenResolver, ApplicationEventPublisher&lt;TokenValidatedEvent&gt;)</a> - Constructor for class io.micronaut.security.token.<a href="io/micronaut/security/token/TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#tokenConfiguration" class="member-name-link">tokenConfiguration</a> - Variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>&nbsp;</dd>
@@ -7115,6 +7056,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Triggered when a token is validated.</div>
 </dd>
+<dt><a href="io/micronaut/security/token/TokenAuthenticationFetcher.html#tokenValidatedEventPublisher" class="member-name-link">tokenValidatedEventPublisher</a> - Variable in class io.micronaut.security.token.<a href="io/micronaut/security/token/TokenAuthenticationFetcher.html" title="class in io.micronaut.security.token">TokenAuthenticationFetcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/validator/TokenValidator.html" class="type-name-link" title="interface in io.micronaut.security.token.validator">TokenValidator</a> - Interface in <a href="io/micronaut/security/token/validator/package-summary.html">io.micronaut.security.token.validator</a></dt>
 <dd>
 <div class="block">Responsible for token validation and claims retrieval.</div>

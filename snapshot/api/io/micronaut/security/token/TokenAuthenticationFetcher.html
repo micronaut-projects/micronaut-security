@@ -35,7 +35,6 @@ loadScripts(document, 'script');</script>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
 <li><a href="../../../../help-doc.html#class">Help</a></li>
 </ul>
@@ -104,14 +103,14 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected final io.micronaut.context.event.ApplicationEventPublisher</code></div>
-<div class="col-second even-row-color"><code><a href="#eventPublisher" class="member-name-link">eventPublisher</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#ORDER" class="member-name-link">ORDER</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-second even-row-color"><code><a href="#ORDER" class="member-name-link">ORDER</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">The order of the fetcher.</div>
 </div>
+<div class="col-first odd-row-color"><code>protected final io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#tokenValidatedEventPublisher" class="member-name-link">tokenValidatedEventPublisher</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#tokenValidators" class="member-name-link">tokenValidators</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -131,7 +130,7 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Collection,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">TokenAuthenticationFetcher</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&gt;&nbsp;tokenValidators,
  <a href="reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a>&nbsp;tokenResolver,
- io.micronaut.context.event.ApplicationEventPublisher&nbsp;eventPublisher)</code></div>
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a>&gt;&nbsp;tokenValidatedEventPublisher)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -186,9 +185,9 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 </section>
 </li>
 <li>
-<section class="detail" id="eventPublisher">
-<h3>eventPublisher</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">io.micronaut.context.event.ApplicationEventPublisher</span>&nbsp;<span class="element-name">eventPublisher</span></div>
+<section class="detail" id="tokenValidatedEventPublisher">
+<h3>tokenValidatedEventPublisher</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a>&gt;</span>&nbsp;<span class="element-name">tokenValidatedEventPublisher</span></div>
 </section>
 </li>
 </ul>
@@ -202,15 +201,14 @@ implements <a href="../filters/AuthenticationFetcher.html" title="interface in i
 <li>
 <section class="detail" id="&lt;init&gt;(java.util.Collection,io.micronaut.security.token.reader.TokenResolver,io.micronaut.context.event.ApplicationEventPublisher)">
 <h3>TokenAuthenticationFetcher</h3>
-<div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">TokenAuthenticationFetcher</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&gt;&nbsp;tokenValidators,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TokenAuthenticationFetcher</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator">TokenValidator</a>&gt;&nbsp;tokenValidators,
  <a href="reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader">TokenResolver</a>&nbsp;tokenResolver,
- io.micronaut.context.event.ApplicationEventPublisher&nbsp;eventPublisher)</span></div>
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event">TokenValidatedEvent</a>&gt;&nbsp;tokenValidatedEventPublisher)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>tokenValidators</code> - The list of <a href="validator/TokenValidator.html" title="interface in io.micronaut.security.token.validator"><code>TokenValidator</code></a> which attempt to validate the request</dd>
 <dd><code>tokenResolver</code> - The <a href="reader/TokenResolver.html" title="interface in io.micronaut.security.token.reader"><code>TokenResolver</code></a> which returns the first found token in the request.</dd>
-<dd><code>eventPublisher</code> - The Application event publisher</dd>
+<dd><code>tokenValidatedEventPublisher</code> - Application event publisher for <a href="../event/TokenValidatedEvent.html" title="class in io.micronaut.security.event"><code>TokenValidatedEvent</code></a>.</dd>
 </dl>
 </section>
 </li>

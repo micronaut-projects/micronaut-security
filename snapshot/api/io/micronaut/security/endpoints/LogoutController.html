@@ -35,7 +35,6 @@ loadScripts(document, 'script');</script>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
 <li><a href="../../../../help-doc.html#class">Help</a></li>
 </ul>
@@ -99,7 +98,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.handlers.LogoutHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.security.endpoints.LogoutControllerConfiguration)" class="member-name-link">LogoutController</a><wbr>(<a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a>&nbsp;logoutHandler,
- io.micronaut.context.event.ApplicationEventPublisher&nbsp;eventPublisher,
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/LogoutEvent.html" title="class in io.micronaut.security.event">LogoutEvent</a>&gt;&nbsp;logoutEventPublisher,
  <a href="LogoutControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">LogoutControllerConfiguration</a>&nbsp;logoutControllerConfiguration)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -152,14 +151,13 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="&lt;init&gt;(io.micronaut.security.handlers.LogoutHandler,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.security.endpoints.LogoutControllerConfiguration)">
 <h3>LogoutController</h3>
-<div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">LogoutController</span><wbr><span class="parameters">(<a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a>&nbsp;logoutHandler,
- io.micronaut.context.event.ApplicationEventPublisher&nbsp;eventPublisher,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">LogoutController</span><wbr><span class="parameters">(<a href="../handlers/LogoutHandler.html" title="interface in io.micronaut.security.handlers">LogoutHandler</a>&nbsp;logoutHandler,
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../event/LogoutEvent.html" title="class in io.micronaut.security.event">LogoutEvent</a>&gt;&nbsp;logoutEventPublisher,
  <a href="LogoutControllerConfiguration.html" title="interface in io.micronaut.security.endpoints">LogoutControllerConfiguration</a>&nbsp;logoutControllerConfiguration)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>logoutHandler</code> - A collaborator which helps to build HTTP response if user logout.</dd>
-<dd><code>eventPublisher</code> - The application event publisher</dd>
+<dd><code>logoutEventPublisher</code> - The application event publisher</dd>
 <dd><code>logoutControllerConfiguration</code> - Configuration for the Logout controller</dd>
 </dl>
 </section>

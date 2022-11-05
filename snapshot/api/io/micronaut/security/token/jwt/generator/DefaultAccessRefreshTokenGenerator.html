@@ -35,7 +35,6 @@ loadScripts(document, 'script');</script>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../../index-all.html">Index</a></li>
 <li><a href="../../../../../../help-doc.html#class">Help</a></li>
 </ul>
@@ -106,24 +105,27 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <div class="col-first even-row-color"><code>protected final <a href="AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a></code></div>
 <div class="col-second even-row-color"><code><a href="#accessTokenConfiguration" class="member-name-link">accessTokenConfiguration</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final io.micronaut.context.BeanContext</code></div>
-<div class="col-second odd-row-color"><code><a href="#beanContext" class="member-name-link">beanContext</a></code></div>
+<div class="col-first odd-row-color"><code>protected final io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../../event/AccessTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">AccessTokenGeneratedEvent</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#accessTokenGeneratedEventPublisher" class="member-name-link">accessTokenGeneratedEventPublisher</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a></code></div>
-<div class="col-second even-row-color"><code><a href="#claimsGenerator" class="member-name-link">claimsGenerator</a></code></div>
+<div class="col-first even-row-color"><code>protected final io.micronaut.context.BeanContext</code></div>
+<div class="col-second even-row-color"><code><a href="#beanContext" class="member-name-link">beanContext</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final io.micronaut.context.event.ApplicationEventPublisher</code></div>
-<div class="col-second odd-row-color"><code><a href="#eventPublisher" class="member-name-link">eventPublisher</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#claimsGenerator" class="member-name-link">claimsGenerator</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="../../generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a></code></div>
-<div class="col-second even-row-color"><code><a href="#refreshTokenGenerator" class="member-name-link">refreshTokenGenerator</a></code></div>
+<div class="col-first even-row-color"><code>protected final io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../../event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#refreshTokenGeneratedEventPublisher" class="member-name-link">refreshTokenGeneratedEventPublisher</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="../../generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#tokenGenerator" class="member-name-link">tokenGenerator</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="../../generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#refreshTokenGenerator" class="member-name-link">refreshTokenGenerator</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="../render/TokenRenderer.html" title="interface in io.micronaut.security.token.jwt.render">TokenRenderer</a></code></div>
-<div class="col-second even-row-color"><code><a href="#tokenRenderer" class="member-name-link">tokenRenderer</a></code></div>
+<div class="col-first even-row-color"><code>protected final <a href="../../generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a></code></div>
+<div class="col-second even-row-color"><code><a href="#tokenGenerator" class="member-name-link">tokenGenerator</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected final <a href="../render/TokenRenderer.html" title="interface in io.micronaut.security.token.jwt.render">TokenRenderer</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#tokenRenderer" class="member-name-link">tokenRenderer</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -135,13 +137,14 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.render.TokenRenderer,io.micronaut.security.token.generator.TokenGenerator,io.micronaut.context.BeanContext,io.micronaut.security.token.generator.RefreshTokenGenerator,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">DefaultAccessRefreshTokenGenerator</a><wbr>(<a href="AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.render.TokenRenderer,io.micronaut.security.token.generator.TokenGenerator,io.micronaut.context.BeanContext,io.micronaut.security.token.generator.RefreshTokenGenerator,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.context.event.ApplicationEventPublisher)" class="member-name-link">DefaultAccessRefreshTokenGenerator</a><wbr>(<a href="AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
  <a href="../render/TokenRenderer.html" title="interface in io.micronaut.security.token.jwt.render">TokenRenderer</a>&nbsp;tokenRenderer,
  <a href="../../generator/TokenGenerator.html" title="interface in io.micronaut.security.token.generator">TokenGenerator</a>&nbsp;tokenGenerator,
  io.micronaut.context.BeanContext&nbsp;beanContext,
  <a href="../../generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a>&nbsp;refreshTokenGenerator,
  <a href="claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a>&nbsp;claimsGenerator,
- io.micronaut.context.event.ApplicationEventPublisher&nbsp;eventPublisher)</code></div>
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../../event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&gt;&nbsp;refreshTokenGeneratedEventPublisher,
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../../event/AccessTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">AccessTokenGeneratedEvent</a>&gt;&nbsp;accessTokenGeneratedEventPublisher)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -241,9 +244,15 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 </section>
 </li>
 <li>
-<section class="detail" id="eventPublisher">
-<h3>eventPublisher</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">io.micronaut.context.event.ApplicationEventPublisher</span>&nbsp;<span class="element-name">eventPublisher</span></div>
+<section class="detail" id="refreshTokenGeneratedEventPublisher">
+<h3>refreshTokenGeneratedEventPublisher</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../../event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&gt;</span>&nbsp;<span class="element-name">refreshTokenGeneratedEventPublisher</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="accessTokenGeneratedEventPublisher">
+<h3>accessTokenGeneratedEventPublisher</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../../event/AccessTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">AccessTokenGeneratedEvent</a>&gt;</span>&nbsp;<span class="element-name">accessTokenGeneratedEventPublisher</span></div>
 </section>
 </li>
 </ul>
@@ -255,7 +264,7 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.render.TokenRenderer,io.micronaut.security.token.generator.TokenGenerator,io.micronaut.context.BeanContext,io.micronaut.security.token.generator.RefreshTokenGenerator,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator,io.micronaut.context.event.ApplicationEventPublisher)">
+<section class="detail" id="&lt;init&gt;(io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.render.TokenRenderer,io.micronaut.security.token.generator.TokenGenerator,io.micronaut.context.BeanContext,io.micronaut.security.token.generator.RefreshTokenGenerator,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.context.event.ApplicationEventPublisher)">
 <h3>DefaultAccessRefreshTokenGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DefaultAccessRefreshTokenGenerator</span><wbr><span class="parameters">(<a href="AccessTokenConfiguration.html" title="interface in io.micronaut.security.token.jwt.generator">AccessTokenConfiguration</a>&nbsp;accessTokenConfiguration,
  <a href="../render/TokenRenderer.html" title="interface in io.micronaut.security.token.jwt.render">TokenRenderer</a>&nbsp;tokenRenderer,
@@ -264,7 +273,8 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
  @Nullable
  <a href="../../generator/RefreshTokenGenerator.html" title="interface in io.micronaut.security.token.generator">RefreshTokenGenerator</a>&nbsp;refreshTokenGenerator,
  <a href="claims/ClaimsGenerator.html" title="interface in io.micronaut.security.token.jwt.generator.claims">ClaimsGenerator</a>&nbsp;claimsGenerator,
- io.micronaut.context.event.ApplicationEventPublisher&nbsp;eventPublisher)</span></div>
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../../event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">RefreshTokenGeneratedEvent</a>&gt;&nbsp;refreshTokenGeneratedEventPublisher,
+ io.micronaut.context.event.ApplicationEventPublisher&lt;<a href="../../event/AccessTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event">AccessTokenGeneratedEvent</a>&gt;&nbsp;accessTokenGeneratedEventPublisher)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>accessTokenConfiguration</code> - The access token generator config</dd>
@@ -273,7 +283,8 @@ implements <a href="AccessRefreshTokenGenerator.html" title="interface in io.mic
 <dd><code>beanContext</code> - Bean Context</dd>
 <dd><code>refreshTokenGenerator</code> - The refresh token generator</dd>
 <dd><code>claimsGenerator</code> - Claims generator</dd>
-<dd><code>eventPublisher</code> - The Application event publisher</dd>
+<dd><code>refreshTokenGeneratedEventPublisher</code> - The Application event publisher for <a href="../../event/RefreshTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><code>RefreshTokenGeneratedEvent</code></a>.</dd>
+<dd><code>accessTokenGeneratedEventPublisher</code> - The Application event publisher for <a href="../../event/AccessTokenGeneratedEvent.html" title="class in io.micronaut.security.token.event"><code>AccessTokenGeneratedEvent</code></a>.</dd>
 </dl>
 </section>
 </li>
