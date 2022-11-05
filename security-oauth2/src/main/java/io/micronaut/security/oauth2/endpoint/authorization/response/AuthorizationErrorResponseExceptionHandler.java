@@ -19,6 +19,8 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
+import io.micronaut.http.server.exceptions.response.ErrorContext;
+import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import jakarta.inject.Singleton;
 
 /**
@@ -30,8 +32,16 @@ import jakarta.inject.Singleton;
 @Singleton
 public class AuthorizationErrorResponseExceptionHandler implements ExceptionHandler<AuthorizationErrorResponseException, MutableHttpResponse<?>> {
 
+    private final ErrorResponseProcessor<?> errorResponseProcessor;
+
+    public AuthorizationErrorResponseExceptionHandler(ErrorResponseProcessor<?> errorResponseProcessor) {
+        this.errorResponseProcessor = errorResponseProcessor;
+    }
+
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationErrorResponseException exception) {
-        return HttpResponse.badRequest(exception.getAuthorizationErrorResponse());
+        return errorResponseProcessor.processResponse(ErrorContext.builder(request)
+            .cause(exception)
+            .build(), HttpResponse.badRequest(exception.getAuthorizationErrorResponse()));
     }
 }

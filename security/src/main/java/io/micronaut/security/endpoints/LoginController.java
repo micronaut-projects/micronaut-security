@@ -59,19 +59,23 @@ public class LoginController {
 
     protected final Authenticator authenticator;
     protected final LoginHandler loginHandler;
-    protected final ApplicationEventPublisher eventPublisher;
+    protected final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
+    protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
 
     /**
-     * @param authenticator  {@link Authenticator} collaborator
-     * @param loginHandler   A collaborator which helps to build HTTP response depending on success or failure.
-     * @param eventPublisher The application event publisher
+     * @param authenticator                 {@link Authenticator} collaborator
+     * @param loginHandler                  A collaborator which helps to build HTTP response depending on success or failure.
+     * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
+     * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      */
     public LoginController(Authenticator authenticator,
                            LoginHandler loginHandler,
-                           ApplicationEventPublisher eventPublisher) {
+                           ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
+                           ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
         this.authenticator = authenticator;
         this.loginHandler = loginHandler;
-        this.eventPublisher = eventPublisher;
+        this.loginSuccessfulEventPublisher = loginSuccessfulEventPublisher;
+        this.loginFailedEventPublisher = loginFailedEventPublisher;
     }
 
     /**
@@ -83,15 +87,14 @@ public class LoginController {
     @Post
     @SingleResult
     public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
-
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
                 .map(authenticationResponse -> {
                     if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
                         Authentication authentication = authenticationResponse.getAuthentication().get();
-                        eventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
+                        loginSuccessfulEventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
                         return loginHandler.loginSuccess(authentication, request);
                     } else {
-                        eventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
+                        loginFailedEventPublisher.publishEvent(new LoginFailedEvent(authenticationResponse));
                         return loginHandler.loginFailed(authenticationResponse, request);
                     }
                 }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));

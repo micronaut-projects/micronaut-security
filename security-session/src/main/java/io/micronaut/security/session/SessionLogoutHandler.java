@@ -21,14 +21,12 @@ import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.config.DefaultRedirectService;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -49,19 +47,8 @@ public class SessionLogoutHandler implements LogoutHandler {
     /**
      * Constructor.
      * @param redirectConfiguration Redirect Configuration
-     * @deprecated Use {@link SessionLogoutHandler(RedirectConfiguration, RedirectService )} instead.
-     */
-    @Deprecated
-    public SessionLogoutHandler(RedirectConfiguration redirectConfiguration) {
-        this(redirectConfiguration, new DefaultRedirectService(redirectConfiguration, () -> null));
-    }
-
-    /**
-     * Constructor.
-     * @param redirectConfiguration Redirect Configuration
      * @param redirectService Redirection Service
      */
-    @Inject
     public SessionLogoutHandler(RedirectConfiguration redirectConfiguration, RedirectService redirectService) {
         this.logout = redirectConfiguration.isEnabled() ? redirectService.logoutUrl() : null;
     }
