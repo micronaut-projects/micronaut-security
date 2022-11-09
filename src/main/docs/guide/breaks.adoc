@@ -1,6 +1,10 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 4.0 breaking changes
+
+`micronaut.security.intercept-url-map-prepend-pattern-with-context-path` defaults to `true`. Thus intercept url patterns are be prepended with the server context path if it is set.
+
 == Micronaut Security 3.4 breaking changes
 
 Sensitive endpoints will now respond with an error unless a replacement for the api:security.rules.SensitiveEndpointRule[] is bound.

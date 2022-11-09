@@ -258,5 +258,10 @@
     "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
     "member": "Constructor io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator(io.micronaut.security.token.jwt.generator.AccessTokenConfiguration,io.micronaut.security.token.jwt.render.TokenRenderer,io.micronaut.security.token.generator.TokenGenerator,io.micronaut.context.BeanContext,io.micronaut.security.token.generator.RefreshTokenGenerator,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator,io.micronaut.context.event.ApplicationEventPublisher)",
     "reason": "Use event types in Application Publisher"
+  },
+  {
+    "type": "io.micronaut.security.rules.ConfigurationInterceptUrlMapRule",
+    "member": "Constructor io.micronaut.security.rules.ConfigurationInterceptUrlMapRule(io.micronaut.security.token.RolesFinder,io.micronaut.security.config.SecurityConfiguration)",
+    "reason": "Removed deprecated code"
   }
 ]

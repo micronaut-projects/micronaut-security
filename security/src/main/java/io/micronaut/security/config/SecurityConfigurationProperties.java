@@ -45,7 +45,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      * The default value whether intercept url patterns should be prepended with the context path.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH = false;
+    public static final boolean DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH = true;
     /**
      * The default enable value.
      */

@@ -58,7 +58,5 @@ public interface SecurityConfiguration extends Toggleable, AuthenticationModeCon
      * @since 3.7.2
      * @return Whether the intercept URL patterns should be prepended with context path if defined.
      */
-    default boolean isInterceptUrlMapPrependPatternWithContextPath() {
-        return false;
-    }
+    boolean isInterceptUrlMapPrependPatternWithContextPath();
 }
