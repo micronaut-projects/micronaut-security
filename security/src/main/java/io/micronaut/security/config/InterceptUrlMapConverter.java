@@ -46,7 +46,6 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
 
     /**
      * @param conversionService     The conversion service
-     * @deprecated Use {@link InterceptUrlMapConverter(ConversionService,ServerContextPathProvider)} instead.
      */
     @Inject
     InterceptUrlMapConverter(ConversionService conversionService) {
