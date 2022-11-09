@@ -1,6 +1,7 @@
 package io.micronaut.security.config
 
 import io.micronaut.core.util.StringUtils
+import io.micronaut.security.rules.ConfigurationInterceptUrlMapRule
 import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class InterceptUrlMapConverterContextPathByDefaultSpec extends ApplicationContextSpecification {
@@ -16,8 +17,8 @@ class InterceptUrlMapConverterContextPathByDefaultSpec extends ApplicationContex
 
     void "intercept-url-patterns are prepended with the context path"() {
         expect:
-        applicationContext.getBean(SecurityConfiguration)
-                .interceptUrlMap.stream()
+        applicationContext.getBean(ConfigurationInterceptUrlMapRule)
+                .getPatternList().stream()
                 .map(InterceptUrlMapPattern::getPattern)
                 .allMatch(p -> p.startsWith("/foo"))
     }
