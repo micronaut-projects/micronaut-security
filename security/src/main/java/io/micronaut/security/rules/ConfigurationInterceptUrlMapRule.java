@@ -16,10 +16,12 @@
 package io.micronaut.security.rules;
 
 import io.micronaut.security.config.InterceptUrlMapPattern;
+import io.micronaut.security.config.InterceptUrlPatternModifier;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.token.RolesFinder;
 import jakarta.inject.Singleton;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A security rule implementation backed by the {@link SecurityConfiguration#getInterceptUrlMap()}.
@@ -41,11 +43,28 @@ public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
      *
      * @param rolesFinder Roles Parser
      * @param securityConfiguration The Security Configuration
+     * @param interceptUrlPatternModifier InterceptURLMap modifier
      */
     public ConfigurationInterceptUrlMapRule(RolesFinder rolesFinder,
-                                            SecurityConfiguration securityConfiguration) {
+                                            SecurityConfiguration securityConfiguration,
+                                            InterceptUrlPatternModifier interceptUrlPatternModifier) {
         super(rolesFinder);
-        this.patternList = securityConfiguration.getInterceptUrlMap();
+        this.patternList = securityConfiguration.getInterceptUrlMap() == null ? null :
+            securityConfiguration.getInterceptUrlMap().stream()
+            .map(interceptUrlPatternModifier::modify)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     *
+     * @param rolesFinder Roles Parser
+     * @param securityConfiguration The Security Configuration
+     * @deprecated Use {@link ConfigurationInterceptUrlMapRule(RolesFinder,SecurityConfiguration,InterceptUrlPatternModifier)} instead.
+     */
+    @Deprecated
+    public ConfigurationInterceptUrlMapRule(RolesFinder rolesFinder,
+                                            SecurityConfiguration securityConfiguration) {
+        this(rolesFinder, securityConfiguration, interceptUrlMapPattern -> interceptUrlMapPattern);
     }
 
     @Override
