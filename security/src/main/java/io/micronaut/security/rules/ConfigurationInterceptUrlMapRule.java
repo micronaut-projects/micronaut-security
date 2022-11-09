@@ -51,8 +51,7 @@ public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
                                             SecurityConfiguration securityConfiguration,
                                             InterceptUrlPatternModifier interceptUrlPatternModifier) {
         super(rolesFinder);
-        this.patternList = securityConfiguration.getInterceptUrlMap() == null ? null :
-            securityConfiguration.getInterceptUrlMap().stream()
+        this.patternList = securityConfiguration.getInterceptUrlMap().stream()
             .map(interceptUrlPatternModifier::modify)
             .collect(Collectors.toList());
     }
