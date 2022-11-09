@@ -30,11 +30,3 @@ java {
     targetCompatibility = JavaVersion.toVersion("1.8")
 }
 
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'io.micronaut.servlet') {
-            details.useVersion "3.3.2"
-            details.because "https://github.com/micronaut-projects/micronaut-servlet/pull/354"
-        }
-    }
-}
