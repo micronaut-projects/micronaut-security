@@ -26,7 +26,6 @@ import io.micronaut.aot.core.AOTContext;
 import io.micronaut.aot.core.AOTModule;
 import io.micronaut.aot.core.codegen.AbstractCodeGenerator;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;

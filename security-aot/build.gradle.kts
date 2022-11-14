@@ -15,7 +15,7 @@ dependencies {
     compileOnly(platform(mn.micronaut.bom))
     compileOnly(projects.securityOauth2)
     compileOnly(projects.securityJwt)
-    compileOnly(projects.securityJwt)
+
     testImplementation(mn.spock) {
         exclude("org.codehaus.groovy", "groovy-all")
     }

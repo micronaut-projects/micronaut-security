@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import java.util.Optional;
@@ -35,6 +36,7 @@ public interface JwkSetFetcher<T> {
      * @return The Json Web Key Set representation or an empty optional if it could not be loaded
      */
     @NonNull
+    @Blocking
     Optional<T> fetch(@Nullable String url);
 
     /**

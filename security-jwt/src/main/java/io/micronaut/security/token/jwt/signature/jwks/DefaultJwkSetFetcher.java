@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.JWKSet;
+import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.optim.StaticOptimizations;
@@ -33,7 +34,7 @@ import java.util.function.Supplier;
 /**
  * Default implementation of {@link JwkSetFetcher} for {@link JWKSet}.
  * @author Sergio del Amo
- * @since 3.7.0
+ * @since 3.9.0
  */
 @Singleton
 public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
@@ -42,6 +43,7 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
 
     @Override
     @NonNull
+    @Blocking
     public Optional<JWKSet> fetch(@Nullable String url) {
         if (url == null) {
             return Optional.empty();

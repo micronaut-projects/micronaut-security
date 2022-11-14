@@ -26,6 +26,7 @@ micronaut {
 }
 
 dependencies {
+    implementation project(':security-jwt')
     implementation project(':security-oauth2')
     aotPlugins(project(':security-aot'))
 }

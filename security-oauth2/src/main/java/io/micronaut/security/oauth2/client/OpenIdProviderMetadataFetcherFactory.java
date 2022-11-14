@@ -22,26 +22,16 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.json.JsonMapper;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import jakarta.inject.Singleton;
 
 /**
  * @author Sergio del Amo
- * @since 3.3.0
+ * @since 3.9.0
  */
 @Factory
 @Internal
 public class OpenIdProviderMetadataFetcherFactory {
-    private final JsonMapper jsonMapper;
-
-    /**
-     *
-     * @param jsonMapper JSON Mapper.
-     */
-    public OpenIdProviderMetadataFetcherFactory(JsonMapper jsonMapper) {
-        this.jsonMapper = jsonMapper;
-    }
-
     /**
      * Retrieves OpenID configuration from the provided issuer.
      *
@@ -50,9 +40,10 @@ public class OpenIdProviderMetadataFetcherFactory {
      * @return The OpenID configuration
      */
     @EachBean(OpenIdClientConfiguration.class)
+    @Singleton
     @NonNull
-    public OpenIdProviderMetadataFetcher openIdConfiguration(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
-                                                             @Client HttpClient issuerClient) {
-        return new DefaultOpenIdProviderMetadataFetcher(openIdClientConfiguration, jsonMapper, issuerClient);
+    public OpenIdProviderMetadataFetcher createOpenIdProviderMetadataFetcher(@Parameter OpenIdClientConfiguration openIdClientConfiguration,
+                                                                             @Client HttpClient issuerClient) {
+        return new DefaultOpenIdProviderMetadataFetcher(openIdClientConfiguration, issuerClient);
     }
 }

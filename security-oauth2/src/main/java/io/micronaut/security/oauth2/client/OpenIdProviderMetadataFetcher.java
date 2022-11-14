@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.naming.Named;
 
@@ -24,12 +25,12 @@ import io.micronaut.core.naming.Named;
  * @author Sergio del Amo
  * @since 3.7.0
  */
-@DefaultImplementation(DefaultOpenIdProviderMetadataFetcher.class)
 public interface OpenIdProviderMetadataFetcher extends Named {
     /**
-     *
+     * It fetches Authorization Server OpenID metadata from a remote server.
      * @return OpenID Provider Metadata
      */
+    @Blocking
     @NonNull
     DefaultOpenIdProviderMetadata fetch();
 }
