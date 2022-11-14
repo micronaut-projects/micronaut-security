@@ -21,6 +21,7 @@ import io.micronaut.core.naming.Named;
 
 /**
  * A generated file.
+ * @author Sergio del Amo
  * @since 3.9.0
  */
 public class GeneratedFile implements Named {
