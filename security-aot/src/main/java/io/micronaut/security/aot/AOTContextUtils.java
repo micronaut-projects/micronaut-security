@@ -26,7 +26,7 @@ import java.util.Collection;
 /**
  * Utility to retrieve beans from the Application Context associated to the AOT Context.
  * @author Sergio del Amo
- * @since 3.7.0
+ * @since 3.9.0
  */
 @Internal
 public final class AOTContextUtils {

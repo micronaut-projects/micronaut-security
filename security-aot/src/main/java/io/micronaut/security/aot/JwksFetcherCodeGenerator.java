@@ -47,7 +47,7 @@ import java.util.function.Supplier;
 /**
  * Optimization to fetch Json Web Key Set at build time.
  * @author Sergio del Amo
- * @since 3.3.0
+ * @since 3.9.0
  */
 @AOTModule(id = JwksFetcherCodeGenerator.SECURITY_AOT_JWKS_MODULE_ID)
 public class JwksFetcherCodeGenerator extends AbstractCodeGenerator {

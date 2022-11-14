@@ -45,7 +45,7 @@ import java.util.function.Supplier;
 /**
  * Optimization to fetch OpenID Configuration at build time.
  * @author Sergio del Amo
- * @since 3.3.0
+ * @since 3.9.0
  */
 @AOTModule(id = OpenIdProviderMetadataFetcherCodeGenerator.SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID)
 public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGenerator {
