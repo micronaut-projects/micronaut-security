@@ -29,6 +29,8 @@ include "test-suite-kotlin"
 include "test-suite-aot"
 include "test-suite-serde"
 
+enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
+
 micronautBuild {
     importMicronautCatalog()
 }
