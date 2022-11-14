@@ -8,7 +8,7 @@ repositories {
 }
 
 application {
-    mainClass = 'io.micronaut.security.test.aot.Application'
+    mainClass = 'io.micronaut.security.oauth2.docs.app.Application'
 }
 
 micronaut {

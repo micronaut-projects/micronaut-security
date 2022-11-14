@@ -37,7 +37,7 @@ public class OpenIdProviderMetadataFetcherFactory {
      *
      * @param openIdClientConfiguration The openid client configuration
      * @param issuerClient The client to request the metadata
-     * @return The OpenID configuration
+     * @return The OpenID Provider Metadata Fetcher
      */
     @EachBean(OpenIdClientConfiguration.class)
     @Singleton

@@ -1,0 +1,25 @@
+plugins {
+    id 'io.micronaut.application' version "$micronautGradlePluginVersion"
+}
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'io.micronaut.security.test.aot.authserver.a.Application'
+}
+
+micronaut {
+    version = micronautVersion
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("io.micronaut.security.test.aot.authserver.a.app")
+    }
+}
+
+dependencies {
+    implementation("io.micronaut:micronaut-http-client")
+}

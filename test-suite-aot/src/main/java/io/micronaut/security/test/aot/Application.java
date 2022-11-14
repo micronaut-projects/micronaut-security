@@ -13,22 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.oauth2.docs.app;
+package io.micronaut.security.test.aot;
 
-import io.micronaut.context.ApplicationContextBuilder;
-import io.micronaut.context.ApplicationContextConfigurer;
-import io.micronaut.context.annotation.ContextConfigurer;
 import io.micronaut.runtime.Micronaut;
 
 public class Application {
-    @ContextConfigurer
-    public static class Configurer implements ApplicationContextConfigurer {
-        @Override
-        public void configure(ApplicationContextBuilder builder) {
-            builder.defaultEnvironments("test");
-        }
-    }
-
     public static void main(String[] args) {
         Micronaut.run(Application.class);
     }

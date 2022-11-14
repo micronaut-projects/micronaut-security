@@ -33,6 +33,9 @@ import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import jdk.internal.org.jline.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -49,6 +52,8 @@ import java.util.function.Supplier;
  */
 @AOTModule(id = OpenIdProviderMetadataFetcherCodeGenerator.SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID)
 public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGenerator {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OpenIdProviderMetadataFetcherCodeGenerator.class);
     /**
      * AOT Module ID.
      */
@@ -81,11 +86,15 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
             final Qualifier<OpenIdProviderMetadataFetcher> nameQualifier = Qualifiers.byName(clientConfig.getName());
             if (clientConfig.getIssuer().isPresent() && AOTContextUtils.containsBean(OpenIdProviderMetadataFetcher.class, nameQualifier, context)) {
                 OpenIdProviderMetadataFetcher fetcher = AOTContextUtils.getBean(OpenIdProviderMetadataFetcher.class, nameQualifier, context);
-                DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = fetcher.fetch();
-                final String simpleName = generatedClassSimpleName(clientConfig);
-                files.add(new GeneratedFile(clientConfig.getName(),
+                try {
+                    DefaultOpenIdProviderMetadata defaultOpenIdProviderMetadata = fetcher.fetch();
+                    final String simpleName = generatedClassSimpleName(clientConfig);
+                    files.add(new GeneratedFile(clientConfig.getName(),
                         simpleName,
                         generateJavaFile(context, simpleName, defaultOpenIdProviderMetadata)));
+                } catch (Exception e) {
+                    LOG.error("Could not generate " + SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID + " optimizations for OAuth 2.0 Client with qualifier " + nameQualifier);
+                }
             }
         }
         return files;

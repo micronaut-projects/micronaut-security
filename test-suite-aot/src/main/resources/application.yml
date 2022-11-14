@@ -1,11 +1,11 @@
 micronaut:
   application:
-    name: 'Test application'
+    name: 'Test AOT'
   security:
     oauth2:
       clients:
-        cognito:
+        autha:
           client-id: 'XXX'
           client-secret: 'YYY'
           openid:
-            issuer: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ/'
+            issuer: 'http://localhost:8081/us-east-1_4OqDoWVrZ/'

@@ -43,10 +43,9 @@ import java.util.function.Supplier;
  */
 public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetadataFetcher {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdProviderMetadataFetcher.class);
-    private static final Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
-
     private final HttpClient client;
     private final OpenIdClientConfiguration openIdClientConfiguration;
+    public static final Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
 
     /**
      * @param openIdClientConfiguration OpenID Client Configuration
@@ -62,11 +61,6 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
     @NonNull
     public String getName() {
         return openIdClientConfiguration.getName();
-    }
-
-    @NonNull
-    public static Optimizations getOptimizations() {
-        return OPTIMIZATIONS;
     }
 
     @Override
