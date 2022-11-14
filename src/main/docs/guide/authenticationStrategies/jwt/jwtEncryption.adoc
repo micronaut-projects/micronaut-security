@@ -1,6 +1,6 @@
-Signed claims prevents an attacker to tamper its contents to introduce malicious data or try a privilege escalation by adding more roles. However, the claims can be decoded just by using Base 64.
+Signed claims prevent an attacker from tampering with its contents to introduce malicious data or try a privilege escalation by adding more roles. However, the claims can be decoded just by using Base 64.
 
-If the claims contains sensitive information, you can use a JSON Web Encryption algorithm to prevent them to be decoded.
+If the claims contain sensitive information, you can use a JSON Web Encryption algorithm to prevent them from being decoded.
 
 Micronaut's JWT validation supports multiple encryption configurations.
 

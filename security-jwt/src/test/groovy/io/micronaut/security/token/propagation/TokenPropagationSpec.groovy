@@ -26,8 +26,6 @@ import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import spock.lang.Ignore
-import spock.lang.Issue
 import spock.lang.Specification
 
 import java.time.Duration
@@ -36,8 +34,6 @@ class TokenPropagationSpec extends Specification {
 
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
-    @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5625")
-    @Ignore // Flaky due to above issue
     void "test token propagation"() {
         Map<String, Object> inventoryConfig = [
                 'micronaut.application.name': 'inventory',

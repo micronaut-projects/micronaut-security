@@ -21,7 +21,10 @@ import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.TypeConverter;
 import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.http.HttpMethod;
+import io.micronaut.http.context.ServerContextPathProvider;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +45,38 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
     private final ConversionService conversionService;
 
     /**
-     * @param conversionService The conversion service
+     * @param conversionService     The conversion service
+     * @deprecated Use {@link InterceptUrlMapConverter(ConversionService,ServerContextPathProvider)} instead.
      */
+    @Inject
     InterceptUrlMapConverter(ConversionService conversionService) {
         this.conversionService = conversionService;
+    }
+
+    /**
+     * @param conversionService     The conversion service
+     * @param serverContextPathProviders context path providers
+     * @param interceptUrlMapPrependPatternWithContextPath Whether the intercept URL patterns should be prepended with context path if defined.
+     * @deprecated Use {@link InterceptUrlMapConverter(ConversionService)}  instead.
+     */
+    @Deprecated
+    InterceptUrlMapConverter(ConversionService conversionService,
+                             List<ServerContextPathProvider> serverContextPathProviders, // Inject list because when using Tomcat there is a multiple beans exception
+                             boolean interceptUrlMapPrependPatternWithContextPath) {
+        this(conversionService);
+    }
+
+    /**
+     * @param conversionService     The conversion service
+     * @param serverContextPathProvider context path provider
+     * @param interceptUrlMapPrependPatternWithContextPath Whether the intercept URL patterns should be prepended with context path if defined.
+     * @deprecated Use {@link InterceptUrlMapConverter(ConversionService)}  instead.
+     */
+    @Deprecated
+    InterceptUrlMapConverter(ConversionService conversionService,
+                             ServerContextPathProvider serverContextPathProvider,
+                             boolean interceptUrlMapPrependPatternWithContextPath) {
+        this(conversionService);
     }
 
     /**
@@ -79,8 +110,9 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
                 } else {
                     httpMethod = Optional.empty();
                 }
-
-                return Optional.of(new InterceptUrlMapPattern(optionalPattern.get(), optionalAccessList.get(), httpMethod.orElse(null)));
+                List<String> accessList = optionalAccessList.get();
+                return optionalPattern
+                    .map(pattern -> new InterceptUrlMapPattern(pattern, accessList, httpMethod.orElse(null)));
             } else {
                 throw new ConfigurationException(String.format("interceptUrlMap configuration record %s rejected due to missing or empty %s key.", m.toString(), ACCESS));
             }

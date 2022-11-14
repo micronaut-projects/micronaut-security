@@ -1,8 +1,15 @@
 package io.micronaut.security.corspreflightrequest
 
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Delete
+import io.micronaut.http.annotation.Produces
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 
 class CorsPreflightRequestSpec extends EmbeddedServerSpecification {
@@ -30,5 +37,17 @@ class CorsPreflightRequestSpec extends EmbeddedServerSpecification {
         then:
         noExceptionThrown()
         rsp.status() == HttpStatus.OK
+    }
+
+    @Requires(property = 'spec.name', value = 'CorsPreflightRequestSpec')
+    @Controller("/register")
+    static class RegisterController {
+
+        @Secured(SecurityRule.IS_AUTHENTICATED)
+        @Delete
+        @Produces(MediaType.TEXT_PLAIN)
+        String register() {
+            "Hello"
+        }
     }
 }
