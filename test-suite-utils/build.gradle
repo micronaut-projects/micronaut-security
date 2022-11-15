@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'groovy'
-    id "io.micronaut.build.internal.security-module"
+    id "io.micronaut.build.internal.security-tests"
 }
 
 dependencies {
