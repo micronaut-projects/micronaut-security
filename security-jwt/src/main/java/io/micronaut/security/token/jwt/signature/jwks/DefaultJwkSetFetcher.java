@@ -42,7 +42,6 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultJwkSetFetcher.class);
 
-
     @Override
     @NonNull
     @Blocking
