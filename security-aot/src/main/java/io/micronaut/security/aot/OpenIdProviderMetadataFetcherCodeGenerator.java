@@ -57,6 +57,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
     public static final String SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID = "micronaut.security.openid-configuration";
     private static final Logger LOG = LoggerFactory.getLogger(OpenIdProviderMetadataFetcherCodeGenerator.class);
     private static final ParameterizedTypeName SUPPLIER_OF_METADATA = ParameterizedTypeName.get(Supplier.class, DefaultOpenIdProviderMetadata.class);
+    private static final String METADATA = "metadata.";
 
     @Override
     public void generate(@NonNull AOTContext context) {
@@ -163,7 +164,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                                           @NonNull String setter,
                                           @Nullable String value) {
         if (value != null) {
-            methodBuilder.addStatement("metadata." + setter + "($S)", value);
+            methodBuilder.addStatement(METADATA + setter + "($S)", value);
         }
     }
 
@@ -171,7 +172,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                                            @NonNull String setter,
                                            @Nullable Boolean value) {
         if (value != null) {
-            methodBuilder.addStatement("metadata." + setter + "($L)", value);
+            methodBuilder.addStatement(METADATA + setter + "($L)", value);
         }
     }
 
@@ -184,7 +185,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
             for (String value : values) {
                 methodBuilder.addStatement(listVariableName + ".add($S)", value);
             }
-            methodBuilder.addStatement("metadata." + setter + "(" + listVariableName + ")");
+            methodBuilder.addStatement(METADATA + setter + "(" + listVariableName + ")");
         }
     }
 }
