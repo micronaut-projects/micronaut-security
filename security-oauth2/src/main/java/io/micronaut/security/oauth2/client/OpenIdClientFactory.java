@@ -54,8 +54,6 @@ import java.util.function.Supplier;
 @Requires(configuration = "io.micronaut.security.token.jwt")
 class OpenIdClientFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OpenIdClientFactory.class);
-
     private final BeanContext beanContext;
 
     /**
