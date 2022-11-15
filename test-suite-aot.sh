@@ -28,10 +28,16 @@ done
 ./gradlew :test-suite-aot:clean > /dev/null || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
+  killall -9 java
   exit $EXIT_STATUS
 fi
 
-./gradlew :test-suite-aot:optimizedJitJarAll > /dev/null
+./gradlew :test-suite-aot:optimizedJitJarAll > /dev/null || EXIT_STATUS=$?
+
+if [ $EXIT_STATUS -ne 0 ]; then
+  killall -9 java
+  exit $EXIT_STATUS
+fi
 
 # kill auth server. Optimized JAR will work even if auth server is down
 killall -9 java

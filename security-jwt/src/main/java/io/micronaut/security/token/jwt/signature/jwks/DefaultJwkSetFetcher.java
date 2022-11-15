@@ -38,8 +38,10 @@ import java.util.function.Supplier;
  */
 @Singleton
 public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
+    public static final Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
+
     private static final Logger LOG = LoggerFactory.getLogger(DefaultJwkSetFetcher.class);
-    private static final Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
+
 
     @Override
     @NonNull
