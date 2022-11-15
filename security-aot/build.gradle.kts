@@ -13,8 +13,8 @@ micronautBuild {
 }
 dependencies {
     compileOnly(platform(mn.micronaut.bom))
-    compileOnly(projects.securityOauth2)
-    compileOnly(projects.securityJwt)
+    implementation(projects.securityOauth2)
+    implementation(projects.securityJwt)
 
     testImplementation(mn.spock) {
         exclude("org.codehaus.groovy", "groovy-all")
