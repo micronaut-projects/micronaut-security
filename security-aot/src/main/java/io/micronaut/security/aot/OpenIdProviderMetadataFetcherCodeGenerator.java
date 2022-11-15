@@ -91,7 +91,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                         simpleName,
                         generateJavaFile(context, simpleName, defaultOpenIdProviderMetadata)));
                 } catch (Exception e) {
-                    LOG.error("Could not generate " + SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID + " optimizations for OAuth 2.0 Client with qualifier " + nameQualifier);
+                    LOG.error("Could not generate {} optimizations for OAuth 2.0 Client with qualifier {}", SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID, nameQualifier);
                 }
             }
         }
