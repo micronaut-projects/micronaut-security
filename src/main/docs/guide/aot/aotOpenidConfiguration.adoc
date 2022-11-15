@@ -1,0 +1,11 @@
+When you use <<oauth,OpenID Connect>> in a Micronaut application, the application constructs a URL by appending `.well-known/openid-configuration` to the value you specify for each OAuth 2.0 client via
+`micronaut.security.oauth2.clients.*.openid.issuer`. It visits the URL to fetch OpenID Connect metadata related to the specified authorization server and configure itself.
+
+However, this is a network request which may be slow. Moreover, the application will probably need to execute this network request to serve the first request.
+
+You can use Micronaut Security ahead-of-time build optimizations to do the request at build-time.
+
+To enable this optimization, add
+`micronaut.security.openid-configuration.enabled=true` to `aot.properties`.
+
+Learn about https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration[Micronaut Maven Plugin AOT configuration] and https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration[Micronaut Gradle Plugin AOT Configuration].

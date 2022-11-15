@@ -1,0 +1,8 @@
+Micronaut security supports JWKS (JSON Web Key Sets) either specifying them <<jwks, directly>> or via the `jwks_uri` obtained when fetching the OpenID Connect metadata. Micronaut security uses JWKS to validate the signature of tokens issued by another application or an authorization server.
+
+Micronaut applications need to make a network request To fetch JWKS.   You can use Micronaut Security ahead-of-time build optimizations to make the request at build-time.
+
+To enable this optimization, add
+`micronaut.security.jwks.enabled.enabled=true` to `aot.properties`.
+
+Learn about https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration[Micronaut Maven Plugin AOT configuration] and https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration[Micronaut Gradle Plugin AOT Configuration].
