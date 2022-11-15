@@ -1,53 +1,57 @@
 #!/usr/bin/env bash
 
-#set -xe
-#set -e
+set -e
+
 EXIT_STATUS=0
 
-DELAY=30
+attempt_counter=0
+max_attempts=5
 
-#exiting() {
-#  kill -9 $AUTH_PID
-#  kill -9 $OPTIMIZED_RUN_PID
-#}
-#trap exiting EXIT
-
-execute() {
-  local END=$((SECONDS+DELAY))
-  CURLCMD=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8080")
-  echo "curling $CURLCMD"
-  while [ "$CURLCMD" != "200" ]; do
-    echo "curling $CURLCMD"
-    if [ $SECONDS -gt $END ]; then
-      echo "No response from the app in $DELAY seconds" >&2
-      exit 1
-    fi
-    sleep 0.001;
-    CURLCMD=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8080")
-  done
-}
+# generate Auth server ShadowJAR
+./gradlew test-suite-aot-authserver-a:shadowJar> /dev/null
 
 # run this in the background
-./gradlew test-suite-aot-auth-a:run > /dev/null &
+java -jar test-suite-aot-authserver-a/build/libs/authserver.jar > /dev/null &
 AUTH_PID=$!
 
+until $(curl --output /dev/null --silent --head --fail http://localhost:8081/health); do
+    if [ ${attempt_counter} -eq ${max_attempts} ];then
+      echo "Max attempts reached"
+       killall -9 java
+      exit 1
+    fi
+    attempt_counter=$(($attempt_counter+1))
+    sleep 5
+done
+
 # run this to avoid any gradle caching of the optimizations
-./gradlew :test-suite-aot:clean || EXIT_STATUS=$?
+./gradlew :test-suite-aot:clean > /dev/null || EXIT_STATUS=$?
 
-# run this to in the background
-./gradlew :test-suite-aot:optimizedRun > /dev/null &
-OPTIMIZED_RUN_PID=$!
-
-# stop the auth server
-kill -9 $AUTH_PID
-
-execute || EXIT_STATUS=$?
 if [ $EXIT_STATUS -ne 0 ]; then
   exit $EXIT_STATUS
 fi
 
-# stop the optimized run
-kill -9 $OPTIMIZED_RUN_PID
+./gradlew :test-suite-aot:optimizedJitJarAll > /dev/null
+
+# kill auth server. Optimized JAR will work even if auth server is down
+killall -9 java
+
+java -jar test-suite-aot/build/libs/test-suite-aot-0.1-all-optimized.jar > /dev/null &
+OPTIMIZED_RUN_PID=$!
+
+echo "optimized JIT JAR pid $OPTIMIZED_RUN_PID"
+
+until $(curl --output /dev/null --silent --head --fail http://localhost:8080); do
+    if [ ${attempt_counter} -eq ${max_attempts} ];then
+      echo "Max attempts reached"
+      killall -9 java
+      exit 1
+    fi
+    attempt_counter=$(($attempt_counter+1))
+    sleep 5
+done
+
+killall -9 java
 
 exit $EXIT_STATUS
 

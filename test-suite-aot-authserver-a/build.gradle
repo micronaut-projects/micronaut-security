@@ -1,5 +1,6 @@
 plugins {
     id 'io.micronaut.application' version "$micronautGradlePluginVersion"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 repositories {
@@ -22,4 +23,11 @@ micronaut {
 
 dependencies {
     implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-management")
+}
+
+shadowJar {
+    archiveBaseName.set('authserver')
+    archiveClassifier.set('')
+    archiveVersion.set('')
 }

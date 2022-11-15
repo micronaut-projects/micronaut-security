@@ -1,6 +1,8 @@
 plugins {
     id 'io.micronaut.application' version "$micronautGradlePluginVersion"
     id 'io.micronaut.aot' version "$micronautGradlePluginVersion"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+
 }
 
 repositories {
@@ -30,3 +32,6 @@ dependencies {
     implementation project(':security-oauth2')
     aotPlugins(project(':security-aot'))
 }
+
+version = '0.1'
+

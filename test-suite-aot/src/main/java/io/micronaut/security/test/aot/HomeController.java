@@ -43,7 +43,6 @@ class HomeController {
     @PermitAll
     @Get
     HttpResponse<?> index() {
-
         if (DefaultOpenIdProviderMetadataFetcher.OPTIMIZATIONS.findMetadata("foo").isPresent()) {
             return HttpResponse.serverError("Optimizations for foo should not be present");
         }
