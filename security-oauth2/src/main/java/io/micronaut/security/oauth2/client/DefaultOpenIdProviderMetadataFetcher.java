@@ -72,21 +72,26 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
                 .orElseGet(fetch(openIdClientConfiguration));
     }
 
+    @NonNull
     private Supplier<DefaultOpenIdProviderMetadata> fetch(@NonNull OpenIdClientConfiguration openIdClientConfiguration) {
         return () -> openIdClientConfiguration.getIssuer()
-            .map(issuer -> {
-                try {
-                    URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
-                    }
-                    return client.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
-                } catch (HttpClientResponseException e) {
-                    throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
-                } catch (MalformedURLException e) {
-                    throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
-                }
-            }).orElse(new DefaultOpenIdProviderMetadata());
+            .map(this::fetch)
+            .orElse(new DefaultOpenIdProviderMetadata());
+    }
+
+    @NonNull
+    private DefaultOpenIdProviderMetadata fetch(@NonNull URL issuer) {
+        try {
+            URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
+            }
+            return client.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
+        } catch (HttpClientResponseException e) {
+            throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
+        } catch (MalformedURLException e) {
+            throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
+        }
     }
 
     /**
