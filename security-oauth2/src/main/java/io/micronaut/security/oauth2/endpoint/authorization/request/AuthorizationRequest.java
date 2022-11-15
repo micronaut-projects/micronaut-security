@@ -72,6 +72,6 @@ public interface AuthorizationRequest {
      * @param response authorization redirect response
      * @return Proof of Key Exchange (PKCE).
      */
-    Optional<PKCE> getPKCE(MutableHttpResponse response);
+    Optional<PKCE> getPKCE(MutableHttpResponse<?> response);
 
 }

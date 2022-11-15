@@ -78,10 +78,10 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
     }
 
     /**
-     * Resolves the media type for the request body.
-     *
-     * @return The media type
+     * @since 3.9
+     * @return The PKCE code verifier
      */
+    @Nullable
     public String getPKCECodeVerifier() {
         return codeVerify;
     }

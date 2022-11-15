@@ -79,7 +79,7 @@ class DefaultOauthAuthorizationRequest implements OauthAuthorizationRequest {
     }
 
     @Override
-    public Optional<PKCE> getPKCE(MutableHttpResponse response) {
+    public Optional<PKCE> getPKCE(MutableHttpResponse<?> response) {
         return Optional.ofNullable(pkceFactory)
             .map(sf -> sf.buildPKCE(request, response, this));
     }

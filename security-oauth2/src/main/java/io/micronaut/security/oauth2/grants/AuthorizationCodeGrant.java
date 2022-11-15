@@ -95,16 +95,19 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
     }
 
     /**
+     * @since 3.9
      * @return A PKCE code verifier.
      */
+    @NonNull
     public String getCodeVerifier() {
         return codeVerifier;
     }
 
     /**
      * @param codeVerifier A PKCE code verifier.
+     * @since 3.9
      */
-    public void setCodeVerifier(String codeVerifier) {
+    public void setCodeVerifier(@NonNull String codeVerifier) {
         this.codeVerifier = codeVerifier;
     }
 

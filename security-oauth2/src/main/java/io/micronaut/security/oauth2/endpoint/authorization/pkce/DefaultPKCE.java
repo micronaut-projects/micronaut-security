@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.ReflectiveAccess;
 
 /**
@@ -32,15 +33,18 @@ public final class DefaultPKCE implements PKCE {
     private String codeMethod;
     private String codeChallenge;
 
+    @NonNull
     @Override
     public String getCodeVerifier() {
         return codeVerifier;
     }
 
-    public void setCodeVerifier(String codeVerifier) {
+    public void setCodeVerifier(@NonNull String codeVerifier) {
         this.codeVerifier = codeVerifier;
     }
 
+    @NonNull
+    @Override
     public String getCodeMethod() {
         return codeMethod;
     }
@@ -49,6 +53,8 @@ public final class DefaultPKCE implements PKCE {
         this.codeMethod = codeMethod;
     }
 
+
+    @NonNull
     @Override
     public String getCodeChallenge() {
         return codeChallenge;
