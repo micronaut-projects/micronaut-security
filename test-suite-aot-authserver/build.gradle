@@ -8,7 +8,7 @@ repositories {
 }
 
 application {
-    mainClass = 'io.micronaut.security.test.aot.authserver.a.Application'
+    mainClass = 'io.micronaut.security.test.aot.authserver.Application'
 }
 
 micronaut {
@@ -17,7 +17,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("io.micronaut.security.test.aot.authserver.a.app")
+        annotations("io.micronaut.security.test.aot.authserver")
     }
 }
 

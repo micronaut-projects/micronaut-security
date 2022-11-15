@@ -45,8 +45,6 @@ killall -9 java
 java -jar test-suite-aot/build/libs/test-suite-aot-0.1-all-optimized.jar > /dev/null &
 OPTIMIZED_RUN_PID=$!
 
-echo "optimized JIT JAR pid $OPTIMIZED_RUN_PID"
-
 until $(curl --output /dev/null --silent --head --fail http://localhost:8080); do
     if [ ${attempt_counter} -eq ${max_attempts} ];then
       echo "Max attempts reached"
@@ -59,6 +57,11 @@ done
 
 killall -9 java
 
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "TEST AOT Failure"
+else
+  echo "TEST AOT Success"
+fi
 exit $EXIT_STATUS
 
 
