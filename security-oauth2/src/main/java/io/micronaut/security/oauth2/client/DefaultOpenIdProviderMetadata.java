@@ -690,87 +690,132 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         DefaultOpenIdProviderMetadata that = (DefaultOpenIdProviderMetadata) o;
 
-        if (authorizationEndpoint != null ? !authorizationEndpoint.equals(that.authorizationEndpoint) : that.authorizationEndpoint != null)
+        if (authorizationEndpoint != null ? !authorizationEndpoint.equals(that.authorizationEndpoint) : that.authorizationEndpoint != null) {
             return false;
-        if (idTokenSigningAlgValuesSupported != null ? !idTokenSigningAlgValuesSupported.equals(that.idTokenSigningAlgValuesSupported) : that.idTokenSigningAlgValuesSupported != null)
+        }
+        if (idTokenSigningAlgValuesSupported != null ? !idTokenSigningAlgValuesSupported.equals(that.idTokenSigningAlgValuesSupported) : that.idTokenSigningAlgValuesSupported != null) {
             return false;
-        if (issuer != null ? !issuer.equals(that.issuer) : that.issuer != null) return false;
-        if (jwksUri != null ? !jwksUri.equals(that.jwksUri) : that.jwksUri != null) return false;
-        if (acrValuesSupported != null ? !acrValuesSupported.equals(that.acrValuesSupported) : that.acrValuesSupported != null)
+        }
+        if (issuer != null ? !issuer.equals(that.issuer) : that.issuer != null) {
             return false;
-        if (responseTypesSupported != null ? !responseTypesSupported.equals(that.responseTypesSupported) : that.responseTypesSupported != null)
+        }
+        if (jwksUri != null ? !jwksUri.equals(that.jwksUri) : that.jwksUri != null) {
             return false;
-        if (responseModesSupported != null ? !responseModesSupported.equals(that.responseModesSupported) : that.responseModesSupported != null)
+        }
+        if (acrValuesSupported != null ? !acrValuesSupported.equals(that.acrValuesSupported) : that.acrValuesSupported != null) {
             return false;
-        if (scopesSupported != null ? !scopesSupported.equals(that.scopesSupported) : that.scopesSupported != null)
+        }
+        if (responseTypesSupported != null ? !responseTypesSupported.equals(that.responseTypesSupported) : that.responseTypesSupported != null) {
             return false;
-        if (grantTypesSupported != null ? !grantTypesSupported.equals(that.grantTypesSupported) : that.grantTypesSupported != null)
+        }
+        if (responseModesSupported != null ? !responseModesSupported.equals(that.responseModesSupported) : that.responseModesSupported != null) {
             return false;
-        if (subjectTypesSupported != null ? !subjectTypesSupported.equals(that.subjectTypesSupported) : that.subjectTypesSupported != null)
+        }
+        if (scopesSupported != null ? !scopesSupported.equals(that.scopesSupported) : that.scopesSupported != null) {
             return false;
-        if (tokenEndpoint != null ? !tokenEndpoint.equals(that.tokenEndpoint) : that.tokenEndpoint != null)
+        }
+        if (grantTypesSupported != null ? !grantTypesSupported.equals(that.grantTypesSupported) : that.grantTypesSupported != null) {
             return false;
-        if (tokenEndpointAuthMethodsSupported != null ? !tokenEndpointAuthMethodsSupported.equals(that.tokenEndpointAuthMethodsSupported) : that.tokenEndpointAuthMethodsSupported != null)
+        }
+        if (subjectTypesSupported != null ? !subjectTypesSupported.equals(that.subjectTypesSupported) : that.subjectTypesSupported != null) {
             return false;
-        if (userinfoEndpoint != null ? !userinfoEndpoint.equals(that.userinfoEndpoint) : that.userinfoEndpoint != null)
+        }
+        if (tokenEndpoint != null ? !tokenEndpoint.equals(that.tokenEndpoint) : that.tokenEndpoint != null) {
             return false;
-        if (registrationEndpoint != null ? !registrationEndpoint.equals(that.registrationEndpoint) : that.registrationEndpoint != null)
+        }
+        if (tokenEndpointAuthMethodsSupported != null ? !tokenEndpointAuthMethodsSupported.equals(that.tokenEndpointAuthMethodsSupported) : that.tokenEndpointAuthMethodsSupported != null) {
             return false;
-        if (claimsSupported != null ? !claimsSupported.equals(that.claimsSupported) : that.claimsSupported != null)
+        }
+        if (userinfoEndpoint != null ? !userinfoEndpoint.equals(that.userinfoEndpoint) : that.userinfoEndpoint != null) {
             return false;
-        if (codeChallengeMethodsSupported != null ? !codeChallengeMethodsSupported.equals(that.codeChallengeMethodsSupported) : that.codeChallengeMethodsSupported != null)
+        }
+        if (registrationEndpoint != null ? !registrationEndpoint.equals(that.registrationEndpoint) : that.registrationEndpoint != null) {
             return false;
-        if (introspectionEndpoint != null ? !introspectionEndpoint.equals(that.introspectionEndpoint) : that.introspectionEndpoint != null)
+        }
+        if (claimsSupported != null ? !claimsSupported.equals(that.claimsSupported) : that.claimsSupported != null) {
             return false;
-        if (introspectionEndpointAuthMethodsSupported != null ? !introspectionEndpointAuthMethodsSupported.equals(that.introspectionEndpointAuthMethodsSupported) : that.introspectionEndpointAuthMethodsSupported != null)
+        }
+        if (codeChallengeMethodsSupported != null ? !codeChallengeMethodsSupported.equals(that.codeChallengeMethodsSupported) : that.codeChallengeMethodsSupported != null) {
             return false;
-        if (revocationEndpoint != null ? !revocationEndpoint.equals(that.revocationEndpoint) : that.revocationEndpoint != null)
+        }
+        if (introspectionEndpoint != null ? !introspectionEndpoint.equals(that.introspectionEndpoint) : that.introspectionEndpoint != null) {
             return false;
-        if (revocationEndpointAuthMethodsSupported != null ? !revocationEndpointAuthMethodsSupported.equals(that.revocationEndpointAuthMethodsSupported) : that.revocationEndpointAuthMethodsSupported != null)
+        }
+        if (introspectionEndpointAuthMethodsSupported != null ? !introspectionEndpointAuthMethodsSupported.equals(that.introspectionEndpointAuthMethodsSupported) : that.introspectionEndpointAuthMethodsSupported != null) {
             return false;
-        if (endSessionEndpoint != null ? !endSessionEndpoint.equals(that.endSessionEndpoint) : that.endSessionEndpoint != null)
+        }
+        if (revocationEndpoint != null ? !revocationEndpoint.equals(that.revocationEndpoint) : that.revocationEndpoint != null) {
             return false;
-        if (requestParameterSupported != null ? !requestParameterSupported.equals(that.requestParameterSupported) : that.requestParameterSupported != null)
+        }
+        if (revocationEndpointAuthMethodsSupported != null ? !revocationEndpointAuthMethodsSupported.equals(that.revocationEndpointAuthMethodsSupported) : that.revocationEndpointAuthMethodsSupported != null) {
             return false;
-        if (requestUriParameterSupported != null ? !requestUriParameterSupported.equals(that.requestUriParameterSupported) : that.requestUriParameterSupported != null)
+        }
+        if (endSessionEndpoint != null ? !endSessionEndpoint.equals(that.endSessionEndpoint) : that.endSessionEndpoint != null) {
             return false;
-        if (requireRequestUriRegistration != null ? !requireRequestUriRegistration.equals(that.requireRequestUriRegistration) : that.requireRequestUriRegistration != null)
+        }
+        if (requestParameterSupported != null ? !requestParameterSupported.equals(that.requestParameterSupported) : that.requestParameterSupported != null) {
             return false;
-        if (requestObjectSigningAlgValuesSupported != null ? !requestObjectSigningAlgValuesSupported.equals(that.requestObjectSigningAlgValuesSupported) : that.requestObjectSigningAlgValuesSupported != null)
+        }
+        if (requestUriParameterSupported != null ? !requestUriParameterSupported.equals(that.requestUriParameterSupported) : that.requestUriParameterSupported != null) {
             return false;
-        if (serviceDocumentation != null ? !serviceDocumentation.equals(that.serviceDocumentation) : that.serviceDocumentation != null)
+        }
+        if (requireRequestUriRegistration != null ? !requireRequestUriRegistration.equals(that.requireRequestUriRegistration) : that.requireRequestUriRegistration != null) {
             return false;
-        if (idTokenEncryptionEncValuesSupported != null ? !idTokenEncryptionEncValuesSupported.equals(that.idTokenEncryptionEncValuesSupported) : that.idTokenEncryptionEncValuesSupported != null)
+        }
+        if (requestObjectSigningAlgValuesSupported != null ? !requestObjectSigningAlgValuesSupported.equals(that.requestObjectSigningAlgValuesSupported) : that.requestObjectSigningAlgValuesSupported != null) {
             return false;
-        if (displayValuesSupported != null ? !displayValuesSupported.equals(that.displayValuesSupported) : that.displayValuesSupported != null)
+        }
+        if (serviceDocumentation != null ? !serviceDocumentation.equals(that.serviceDocumentation) : that.serviceDocumentation != null) {
             return false;
-        if (claimTypesSupported != null ? !claimTypesSupported.equals(that.claimTypesSupported) : that.claimTypesSupported != null)
+        }
+        if (idTokenEncryptionEncValuesSupported != null ? !idTokenEncryptionEncValuesSupported.equals(that.idTokenEncryptionEncValuesSupported) : that.idTokenEncryptionEncValuesSupported != null) {
             return false;
-        if (claimsParameterSupported != null ? !claimsParameterSupported.equals(that.claimsParameterSupported) : that.claimsParameterSupported != null)
+        }
+        if (displayValuesSupported != null ? !displayValuesSupported.equals(that.displayValuesSupported) : that.displayValuesSupported != null) {
             return false;
-        if (opTosUri != null ? !opTosUri.equals(that.opTosUri) : that.opTosUri != null)
+        }
+        if (claimTypesSupported != null ? !claimTypesSupported.equals(that.claimTypesSupported) : that.claimTypesSupported != null) {
             return false;
-        if (opPolicyUri != null ? !opPolicyUri.equals(that.opPolicyUri) : that.opPolicyUri != null)
+        }
+        if (claimsParameterSupported != null ? !claimsParameterSupported.equals(that.claimsParameterSupported) : that.claimsParameterSupported != null) {
             return false;
-        if (uriLocalesSupported != null ? !uriLocalesSupported.equals(that.uriLocalesSupported) : that.uriLocalesSupported != null)
+        }
+        if (opTosUri != null ? !opTosUri.equals(that.opTosUri) : that.opTosUri != null) {
             return false;
-        if (claimsLocalesSupported != null ? !claimsLocalesSupported.equals(that.claimsLocalesSupported) : that.claimsLocalesSupported != null)
+        }
+        if (opPolicyUri != null ? !opPolicyUri.equals(that.opPolicyUri) : that.opPolicyUri != null) {
             return false;
-        if (userinfoEncryptionAlgValuesSupported != null ? !userinfoEncryptionAlgValuesSupported.equals(that.userinfoEncryptionAlgValuesSupported) : that.userinfoEncryptionAlgValuesSupported != null)
+        }
+        if (uriLocalesSupported != null ? !uriLocalesSupported.equals(that.uriLocalesSupported) : that.uriLocalesSupported != null) {
             return false;
-        if (userinfoEncryptionEncValuesSupported != null ? !userinfoEncryptionEncValuesSupported.equals(that.userinfoEncryptionEncValuesSupported) : that.userinfoEncryptionEncValuesSupported != null)
+        }
+        if (claimsLocalesSupported != null ? !claimsLocalesSupported.equals(that.claimsLocalesSupported) : that.claimsLocalesSupported != null) {
             return false;
-        if (tokenEndpointAuthSigningAlgValuesSupported != null ? !tokenEndpointAuthSigningAlgValuesSupported.equals(that.tokenEndpointAuthSigningAlgValuesSupported) : that.tokenEndpointAuthSigningAlgValuesSupported != null)
+        }
+        if (userinfoEncryptionAlgValuesSupported != null ? !userinfoEncryptionAlgValuesSupported.equals(that.userinfoEncryptionAlgValuesSupported) : that.userinfoEncryptionAlgValuesSupported != null) {
             return false;
-        if (requestObjectEncryptionAlgValuesSupported != null ? !requestObjectEncryptionAlgValuesSupported.equals(that.requestObjectEncryptionAlgValuesSupported) : that.requestObjectEncryptionAlgValuesSupported != null)
+        }
+        if (userinfoEncryptionEncValuesSupported != null ? !userinfoEncryptionEncValuesSupported.equals(that.userinfoEncryptionEncValuesSupported) : that.userinfoEncryptionEncValuesSupported != null) {
             return false;
-        if (requestObjectEncryptionEncValuesSupported != null ? !requestObjectEncryptionEncValuesSupported.equals(that.requestObjectEncryptionEncValuesSupported) : that.requestObjectEncryptionEncValuesSupported != null)
+        }
+        if (tokenEndpointAuthSigningAlgValuesSupported != null ? !tokenEndpointAuthSigningAlgValuesSupported.equals(that.tokenEndpointAuthSigningAlgValuesSupported) : that.tokenEndpointAuthSigningAlgValuesSupported != null) {
             return false;
+        }
+        if (requestObjectEncryptionAlgValuesSupported != null ? !requestObjectEncryptionAlgValuesSupported.equals(that.requestObjectEncryptionAlgValuesSupported) : that.requestObjectEncryptionAlgValuesSupported != null) {
+            return false;
+        }
+        if (requestObjectEncryptionEncValuesSupported != null ? !requestObjectEncryptionEncValuesSupported.equals(that.requestObjectEncryptionEncValuesSupported) : that.requestObjectEncryptionEncValuesSupported != null) {
+            return false;
+        }
         return checkSessionIframe != null ? checkSessionIframe.equals(that.checkSessionIframe) : that.checkSessionIframe == null;
     }
 

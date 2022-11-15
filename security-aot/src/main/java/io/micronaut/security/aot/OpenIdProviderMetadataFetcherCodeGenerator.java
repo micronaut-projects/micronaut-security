@@ -33,7 +33,6 @@ import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
 import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import jdk.internal.org.jline.utils.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,12 +51,11 @@ import java.util.function.Supplier;
  */
 @AOTModule(id = OpenIdProviderMetadataFetcherCodeGenerator.SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID)
 public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGenerator {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OpenIdProviderMetadataFetcherCodeGenerator.class);
     /**
      * AOT Module ID.
      */
     public static final String SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID = "micronaut.security.openid-configuration";
+    private static final Logger LOG = LoggerFactory.getLogger(OpenIdProviderMetadataFetcherCodeGenerator.class);
     private static final ParameterizedTypeName SUPPLIER_OF_METADATA = ParameterizedTypeName.get(Supplier.class, DefaultOpenIdProviderMetadata.class);
 
     @Override
