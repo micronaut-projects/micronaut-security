@@ -27,8 +27,7 @@ include "test-suite-utils"
 include "test-suite-utils-security"
 include "test-suite-kotlin"
 include "test-suite-aot"
-include "test-suite-aot-authserver-a"
-//include "test-suite-aot-authserver-b"
+include "test-suite-aot-authserver"
 include "test-suite-serde"
 
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'

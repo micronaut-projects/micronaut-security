@@ -1,4 +1,4 @@
-package io.micronaut.security.test.aot.authserver.a;
+package io.micronaut.security.test.aot.authserver;
 
 import io.micronaut.runtime.Micronaut;
 

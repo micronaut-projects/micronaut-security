@@ -1,4 +1,4 @@
-package io.micronaut.security.test.aot.authserver.a;
+package io.micronaut.security.test.aot.authserver;
 
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.io.ResourceLoader;
