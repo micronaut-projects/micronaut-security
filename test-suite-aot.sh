@@ -8,7 +8,7 @@ attempt_counter=0
 max_attempts=5
 
 # generate Auth server ShadowJAR
-./gradlew test-suite-aot-authserver:shadowJar> /dev/null
+./gradlew test-suite-aot-authserver:shadowJar > /dev/null
 
 # run this in the background
 java -jar test-suite-aot-authserver/build/libs/authserver.jar > /dev/null &
