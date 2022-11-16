@@ -1,5 +1,4 @@
 io.micronaut.security.annotation
-io.micronaut.security.aot
 io.micronaut.security.authentication
 io.micronaut.security.authentication.jackson
 io.micronaut.security.config
