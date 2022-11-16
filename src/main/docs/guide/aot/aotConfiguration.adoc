@@ -6,7 +6,8 @@ With https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_confi
 dependencies {
 ...
 ..
-aotPlugins("io.micronaut.security:micronaut-security-aot")
+//http://github.com/micronaut-projects/micronaut-security/releases
+aotPlugins("io.micronaut.security:micronaut-security-aot:3.9.0")
 }
 ----
 
