@@ -8,4 +8,6 @@ You can use Micronaut Security ahead-of-time build optimizations to do the reque
 To enable this optimization, add
 `micronaut.security.openid-configuration.enabled=true` to `aot.properties`.
 
+WARNING: The application uses the configuration present at the authorization server at build time. The configuration may be out-of-date if the authorization server changes the configuration between the build time and the application startup.
+
 Learn about https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration[Micronaut Maven Plugin AOT configuration] and https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration[Micronaut Gradle Plugin AOT Configuration].

@@ -5,4 +5,7 @@ Micronaut applications need to make a network request To fetch JWKS.   You can u
 To enable this optimization, add
 `micronaut.security.jwks.enabled.enabled=true` to `aot.properties`.
 
+WARNING: The application uses the JWKS exposed by the authorization server at build time. The JWKS may be out-of-date if the authorization server changes the them between build time and the application startup. You can clear keys with `JwksSignature::clear` or `JwkSetFetcher::clearCache`.
+
+
 Learn about https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html#configuration[Micronaut Maven Plugin AOT configuration] and https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration[Micronaut Gradle Plugin AOT Configuration].
