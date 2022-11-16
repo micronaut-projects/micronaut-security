@@ -19,7 +19,6 @@ import io.micronaut.security.rules.SecurityRule
 import jakarta.annotation.security.PermitAll
 import org.slf4j.LoggerFactory
 import spock.lang.Issue
-import spock.lang.PendingFeature
 import spock.lang.Specification
 
 import java.util.concurrent.BlockingQueue
@@ -27,7 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue
 
 class OpenIdClientFactorySpec extends Specification {
 
-    void "starting an app does not call eagerly .well-known/openid-configuration"() {
+    void "starting an app eagerly calls .well-known/openid-configuration with @Context and @Parallel"() {
         given:
         int authServerPort = SocketUtils.findAvailableTcpPort()
         EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
@@ -44,7 +43,7 @@ class OpenIdClientFactorySpec extends Specification {
         OpenIdConfigurationController openIdConfigurationController = authServer.applicationContext.getBean(OpenIdConfigurationController)
 
         then:
-        openIdConfigurationController.invocations == 0
+        openIdConfigurationController.invocations == 1
 
         cleanup:
         authServer.close()
@@ -52,7 +51,6 @@ class OpenIdClientFactorySpec extends Specification {
     }
 
     @Issue("https://github.com/micronaut-projects/micronaut-security/issues/604")
-    @PendingFeature
     void "OpenID connect metadata fetching should not be done in netty event loop thread"() {
         given:
         MemoryAppender appender = new MemoryAppender()
