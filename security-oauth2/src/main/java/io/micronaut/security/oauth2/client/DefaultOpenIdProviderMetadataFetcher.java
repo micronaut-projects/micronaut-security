@@ -84,7 +84,7 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
         try {
             URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
+                LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}] running in thread {}", openIdClientConfiguration.getName(), configurationUrl, Thread.currentThread().getName());
             }
             return client.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
         } catch (HttpClientResponseException e) {
