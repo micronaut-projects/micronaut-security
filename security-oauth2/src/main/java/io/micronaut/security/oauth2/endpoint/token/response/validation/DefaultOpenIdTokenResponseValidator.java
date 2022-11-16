@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
+import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.core.annotation.NonNull;
@@ -24,6 +25,8 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
+import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
+import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
@@ -56,21 +59,44 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     private final NonceClaimValidator nonceClaimValidator;
     private final JwkValidator jwkValidator;
     private final Map<String, JwksSignature> jwksSignatures = new ConcurrentHashMap<>();
+    private final JwkSetFetcher<JWKSet> jwkSetFetcher;
 
     /**
      * @param idTokenValidators OpenID JWT claim validators
      * @param genericJwtClaimsValidators Generic JWT claim validators
      * @param nonceClaimValidator The nonce claim validator
      * @param jwkValidator The JWK validator
+     * @param jwkSetFetcher Json Web Key Set Fetcher
      */
     public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
                                                Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
                                                @Nullable NonceClaimValidator nonceClaimValidator,
-                                               JwkValidator jwkValidator) {
+                                               JwkValidator jwkValidator,
+                                               JwkSetFetcher<JWKSet> jwkSetFetcher) {
         this.openIdClaimsValidators = idTokenValidators;
         this.genericJwtClaimsValidators = genericJwtClaimsValidators;
         this.nonceClaimValidator = nonceClaimValidator;
         this.jwkValidator = jwkValidator;
+        this.jwkSetFetcher = jwkSetFetcher;
+    }
+
+    /**
+     * @param idTokenValidators OpenID JWT claim validators
+     * @param genericJwtClaimsValidators Generic JWT claim validators
+     * @param nonceClaimValidator The nonce claim validator
+     * @param jwkValidator The JWK validator
+     * @deprecated Use {@link #DefaultOpenIdTokenResponseValidator(Collection, Collection, NonceClaimValidator, JwkValidator, JwkSetFetcher)} instead.
+     */
+    @Deprecated
+    public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
+                                               Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
+                                               @Nullable NonceClaimValidator nonceClaimValidator,
+                                               JwkValidator jwkValidator) {
+        this(idTokenValidators,
+                genericJwtClaimsValidators,
+                nonceClaimValidator,
+                jwkValidator,
+                new DefaultJwkSetFetcher());
     }
 
     @Override
@@ -166,7 +192,7 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         jwksSignatures.computeIfAbsent(jwksuri, k -> {
             JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties();
             config.setUrl(openIdProviderMetadata.getJwksUri());
-            return new JwksSignature(config, jwkValidator);
+            return new JwksSignature(config, jwkValidator, jwkSetFetcher);
         });
         return jwksSignatures.get(jwksuri);
     }

@@ -6,19 +6,19 @@ pluginManagement {
 }
 
 plugins {
-    id("io.micronaut.build.shared.settings") version "5.3.14"
+    id("io.micronaut.build.shared.settings") version "5.3.15"
 }
 
 rootProject.name = 'security-parent'
 
 include "security-bom"
 include "security"
+include "security-aot"
 include "security-annotations"
 include "security-jwt"
 include "security-session"
 include "security-ldap"
 include "security-oauth2"
-
 include "test-suite-groovy"
 include "test-suite"
 include "test-suite-tomcat"
@@ -26,7 +26,11 @@ include "test-suite-tomcat-groovy"
 include "test-suite-utils"
 include "test-suite-utils-security"
 include "test-suite-kotlin"
+include "test-suite-aot"
+include "test-suite-aot-authserver"
 include "test-suite-serde"
+
+enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {
     importMicronautCatalog()
