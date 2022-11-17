@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.context;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -26,7 +27,6 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-import reactor.util.annotation.Nullable;
 
 import java.util.Map;
 
