@@ -98,7 +98,7 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
     }
 
     /**
-     * @since 3.9
+     * @since 3.9.0
      * @return A PKCE code verifier.
      */
     @Nullable
@@ -108,7 +108,7 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
 
     /**
      * @param codeVerifier A PKCE code verifier.
-     * @since 3.9
+     * @since 3.9.0
      */
     public void setCodeVerifier(@Nullable String codeVerifier) {
         this.codeVerifier = codeVerifier;
