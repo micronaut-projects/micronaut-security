@@ -15,14 +15,14 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import io.micronaut.context.exceptions.BeanInstantiationException;
+import io.micronaut.context.exceptions.DisabledBeanException;
 import io.micronaut.core.annotation.Blocking;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.optim.StaticOptimizations;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,10 +87,10 @@ public class DefaultOpenIdProviderMetadataFetcher implements OpenIdProviderMetad
                 LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}] running in thread {}", openIdClientConfiguration.getName(), configurationUrl, Thread.currentThread().getName());
             }
             return client.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
-        } catch (HttpClientResponseException e) {
-            throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
+        } catch (HttpClientException e) {
+            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name quailfier " + openIdClientConfiguration.getName() + " is disabled. Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName());
         } catch (MalformedURLException e) {
-            throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
+            throw new DisabledBeanException("Bean of type " + DefaultOpenIdProviderMetadata.class.getName() + " with name quailfier " + openIdClientConfiguration.getName() + " is disabled. Failure parsing issuer URL " + issuer);
         }
     }
 
