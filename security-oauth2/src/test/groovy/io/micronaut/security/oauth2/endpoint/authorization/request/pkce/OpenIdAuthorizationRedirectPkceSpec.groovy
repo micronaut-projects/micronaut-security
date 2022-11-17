@@ -1,4 +1,4 @@
-package io.micronaut.security.oauth2.endpoint.authorization.request
+package io.micronaut.security.oauth2.endpoint.authorization.request.pkce
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.util.StringUtils
