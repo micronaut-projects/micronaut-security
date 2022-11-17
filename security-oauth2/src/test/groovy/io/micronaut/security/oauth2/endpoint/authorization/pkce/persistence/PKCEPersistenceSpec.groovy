@@ -13,11 +13,11 @@ class PKCEPersistenceSpec extends ApplicationContextSpecification {
         ]
     }
 
-    void "bean of Type PKCEPersistenceSpec exists by default"() {
+    void "when pkce is enabled a bean of Type PKCEPersistenceSpec exists and it defaults to CookiePKCEPersistence"() {
         expect:
         applicationContext.containsBean(PKCEPersistence)
 
-        and:
+        and: 'and it is cookie by default'
         applicationContext.getBean(PKCEPersistence) instanceof CookiePKCEPersistence
     }
 }
