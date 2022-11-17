@@ -121,8 +121,8 @@ class JwksCacheSpec extends Specification {
         HttpClient httpClient = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.URL)
         BlockingHttpClient client = httpClient.toBlocking()
 
-        expect:
-        0 == totalInvocations()
+        expect: 'jwks are eagerly loaded'
+        3 == totalInvocations()
 
         when:
         BearerAccessRefreshToken googleBearerAccessRefreshToken = login(googleClient)
@@ -150,7 +150,7 @@ class JwksCacheSpec extends Specification {
         cognitoBearerAccessRefreshToken.accessToken
 
         and:
-        0 == totalInvocations()
+        3 == totalInvocations()
 
         when:
         int oldInvocations = totalInvocations()
@@ -159,7 +159,7 @@ class JwksCacheSpec extends Specification {
         hello(client, cognitoAccessToken)
 
         then:
-        totalInvocations() >= (oldInvocations + 3)
+        totalInvocations() == oldInvocations
 
         when: 'when you invoke it again all the keys are cached'
         oldInvocations = totalInvocations()

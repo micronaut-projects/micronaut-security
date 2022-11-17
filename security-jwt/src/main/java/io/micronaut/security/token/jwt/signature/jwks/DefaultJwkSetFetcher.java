@@ -23,12 +23,14 @@ import io.micronaut.core.optim.StaticOptimizations;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -39,8 +41,9 @@ import java.util.function.Supplier;
 @Singleton
 public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
     public static final Optimizations OPTIMIZATIONS = StaticOptimizations.get(Optimizations.class).orElse(new Optimizations(Collections.emptyMap()));
-
     private static final Logger LOG = LoggerFactory.getLogger(DefaultJwkSetFetcher.class);
+
+    private final Map<String, JWKSet> jsonWebKeySetsByUrl = new ConcurrentHashMap<>();
 
     @Override
     @NonNull
@@ -51,12 +54,13 @@ public class DefaultJwkSetFetcher implements JwkSetFetcher<JWKSet> {
         }
         return OPTIMIZATIONS.findJwkSet(url)
                 .map(s -> Optional.of(s.get()))
-                .orElseGet(() -> Optional.ofNullable(load(url)));
+                .orElseGet(() -> Optional.ofNullable(jsonWebKeySetsByUrl.computeIfAbsent(url, s -> load(url))));
     }
 
     @Override
     public void clearCache(@NonNull String url) {
         OPTIMIZATIONS.clear(url);
+        jsonWebKeySetsByUrl.remove(url);
     }
 
     @Nullable

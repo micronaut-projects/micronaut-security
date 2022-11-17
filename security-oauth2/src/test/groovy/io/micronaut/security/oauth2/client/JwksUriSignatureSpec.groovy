@@ -131,11 +131,11 @@ class JwksUriSignatureSpec extends Specification {
         jwtB
         JWTParser.parse(jwtB) instanceof SignedJWT
 
-        and:'authorization servers are not contacted until the first request comes in'
-        authServerA.applicationContext.getBean(AuthServerAOpenIdConfigurationController).invocations == 0
-        authServerA.applicationContext.getBean(AuthServerAKeysController).invocations == 0
-        authServerB.applicationContext.getBean(AuthServerBOpenIdConfigurationController).invocations == 0
-        authServerB.applicationContext.getBean(AuthServerBKeysController).invocations == 0
+        and:'authorization servers are not contacted on bean context initialization'
+        authServerA.applicationContext.getBean(AuthServerAOpenIdConfigurationController).invocations == 1
+        authServerA.applicationContext.getBean(AuthServerAKeysController).invocations == 1
+        authServerB.applicationContext.getBean(AuthServerBOpenIdConfigurationController).invocations == 1
+        authServerB.applicationContext.getBean(AuthServerBKeysController).invocations == 1
 
         when: 'authentication should work since the auth server JWKS endpoint is configured automatically'
         BlockingHttpClient client = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.URL).toBlocking()

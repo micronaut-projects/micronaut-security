@@ -29,14 +29,15 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
@@ -46,6 +47,7 @@ import org.slf4j.LoggerFactory;
  * @author Sergio del Amo
  * @since 1.1.0
  */
+
 @EachBean(JwksSignatureConfiguration.class)
 public class JwksSignature implements JwksCache, SignatureConfiguration {
 
@@ -56,7 +58,6 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     private final JwkValidator jwkValidator;
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
     private volatile Instant jwkSetCachedAt;
-    private volatile JWKSet jwkSet;
     private final JwkSetFetcher<JWKSet> jwkSetFetcher;
 
     /**
@@ -120,20 +121,13 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     }
 
     private Optional<JWKSet> computeJWKSet() {
-        JWKSet jwkSetVariable = this.jwkSet;
-        if (jwkSetVariable == null) {
-            synchronized (this) { // double check
-                jwkSetVariable = this.jwkSet;
-                if (jwkSetVariable == null) {
-                    jwkSetVariable = loadJwkSet(this.jwksSignatureConfiguration.getUrl());
-                    this.jwkSet = jwkSetVariable;
-                    this.jwkSetCachedAt = Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS);
-                }
+        if (jwkSetCachedAt == null) {
+            synchronized (this) {
+                this.jwkSetCachedAt = Instant.now().plus(this.jwksSignatureConfiguration.getCacheExpiration(), ChronoUnit.SECONDS);
             }
         }
-        return Optional.ofNullable(jwkSetVariable);
+        return jwkSetFetcher.fetch(jwksSignatureConfiguration.getUrl());
     }
-
     private List<JWK> getJsonWebKeys() {
         return computeJWKSet().map(JWKSet::getKeys).orElse(Collections.emptyList());
     }
@@ -147,13 +141,12 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     @Override
     public void clear() {
         jwkSetFetcher.clearCache(jwksSignatureConfiguration.getUrl());
-        jwkSet = null;
         jwkSetCachedAt = null;
     }
 
     @Override
     public boolean isPresent() {
-        return jwkSet != null;
+        return jwkSetCachedAt != null;
     }
 
     @Override
@@ -309,7 +302,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Deprecated
     public JWKSet getJwkSet() {
-        return jwkSet;
+        return null;
     }
 
     /**
@@ -325,7 +318,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      *
      * @return The JSON Web Key Set (JWKS) URL.
      */
-    @Deprecated
+    @NonNull
     public String getUrl() {
         return jwksSignatureConfiguration.getUrl();
     }
