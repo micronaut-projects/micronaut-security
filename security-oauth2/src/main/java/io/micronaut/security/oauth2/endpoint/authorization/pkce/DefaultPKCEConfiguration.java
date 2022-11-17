@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthConfigurationProperties;
 import reactor.util.annotation.NonNull;
 
+import javax.validation.constraints.Pattern;
 import java.util.Optional;
 
 /**
@@ -39,6 +40,7 @@ public class DefaultPKCEConfiguration implements PKCEConfiguration {
     public static final boolean DEFAULT_ENABLED = true;
     private static final String DEFAULT_PERSISTENCE = "cookie";
 
+    @Pattern(regexp = "cookie|session")
     private String persistence = DEFAULT_PERSISTENCE;
     private boolean enabled = DEFAULT_ENABLED;
 
