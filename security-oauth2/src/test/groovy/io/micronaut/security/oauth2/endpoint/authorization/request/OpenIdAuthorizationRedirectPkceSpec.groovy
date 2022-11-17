@@ -7,7 +7,6 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
-import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.PKCEUtils
@@ -31,85 +30,109 @@ import spock.lang.IgnoreIf
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
-class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecification {
+class OpenIdAuthorizationRedirectPkceSpec extends EmbeddedServerSpecification {
 
     @Override
     String getSpecName() {
-        'OpenIdAuthorizationRedirectOauthDisabledSpec'
+        'OpenIdAuthorizationRedirectPkceSpec'
     }
 
     @Override
     Map<String, Object> getConfiguration() {
         Map<String, Object> m = super.configuration + [
+                'micronaut.security.oauth2.pkce.enabled': StringUtils.TRUE,
                 'micronaut.security.authentication': 'cookie',
                 "micronaut.security.oauth2.clients.twitter.authorization.url": "https://twitter.com/authorize",
-                "micronaut.security.oauth2.clients.twitter.token.url": "https://twitter.com/token",
-                "micronaut.security.oauth2.clients.twitter.client-id": Keycloak.CLIENT_ID,
-                "micronaut.security.oauth2.clients.twitter.client-secret": "mysecret",
-                "micronaut.security.oauth2.clients.twitter.enabled": false,
+                "micronaut.security.oauth2.clients.twitter.token.url"        : "https://twitter.com/token",
+                "micronaut.security.oauth2.clients.twitter.client-id"        : Keycloak.CLIENT_ID,
+                "micronaut.security.oauth2.clients.twitter.client-secret"    : "mysecret",
         ]
         if (System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
             m.putAll([
-                "micronaut.security.oauth2.clients.keycloak.openid.issuer": Keycloak.issuer,
-                "micronaut.security.oauth2.clients.keycloak.client-id": Keycloak.CLIENT_ID,
-                "micronaut.security.oauth2.clients.keycloak.client-secret": Keycloak.clientSecret,
+                    "micronaut.security.oauth2.clients.keycloak.openid.issuer"   : Keycloak.issuer,
+                    "micronaut.security.oauth2.clients.keycloak.client-id"       : Keycloak.CLIENT_ID,
+                    "micronaut.security.oauth2.clients.keycloak.client-secret"   : Keycloak.clientSecret,
             ])
         }
         m
     }
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
-    void "test authorization redirect with openid and oauth disabled"() {
+    void "test authorization redirect for openid and normal oauth"() {
         given:
         Pattern VALID_CODE_CHALLENGE_PATTERN = Pattern.compile('^[0-9a-zA-Z\\-\\.~_]+$')
         HttpClient client = applicationContext.createBean(HttpClient.class, embeddedServer.getURL(), new DefaultHttpClientConfiguration(followRedirects: false))
 
         expect:
         applicationContext.findBean(OpenIdClient, Qualifiers.byName("keycloak")).isPresent()
-        !applicationContext.findBean(OauthClient, Qualifiers.byName("twitter")).isPresent()
+        applicationContext.findBean(OauthClient, Qualifiers.byName("twitter")).isPresent()
         applicationContext.findBean(OauthController, Qualifiers.byName("keycloak")).isPresent()
-        !applicationContext.findBean(OauthController, Qualifiers.byName("twitter")).isPresent()
+        applicationContext.findBean(OauthController, Qualifiers.byName("twitter")).isPresent()
 
         when:
         HttpResponse response = client.toBlocking().exchange("/oauth/login/keycloak")
+
+        then:
+        noExceptionThrown()
+        response.status == HttpStatus.FOUND
+
+        when:
         String location = URLDecoder.decode(response.header(HttpHeaders.LOCATION), StandardCharsets.UTF_8.toString())
 
         then:
-        response.status == HttpStatus.FOUND
         location.startsWith(Keycloak.issuer + "/protocol/openid-connect/auth")
         location.contains("scope=openid email profile")
         location.contains("response_type=code")
-        location.contains("client_id=$Keycloak.CLIENT_ID")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
+        location.contains("client_id=$Keycloak.CLIENT_ID")
 
         and: 'PKCE cookie is present'
-        !response.getCookie("OAUTH2_PKCE").isPresent()
+        response.getCookie("OAUTH2_PKCE").isPresent()
 
         when:
         Map<String, String> queryValues = StateUtils.queryValuesAsMap(location)
         String state = StateUtils.decodeState(queryValues)
+
         then:
         state.contains('"nonce":"')
         state.contains('"redirectUri":"http://localhost:' + embeddedServer.getPort() + '/oauth/callback/keycloak"')
 
-        and:
-        !PKCEUtils.getCodeChallenge(queryValues)
-        !PKCEUtils.getCodeChallengeMethod(queryValues)
-
         when:
-        client.toBlocking().exchange("/oauth/login/twitter")
+        String codeChallenge = PKCEUtils.getCodeChallenge(queryValues)
+        String codeChallengeMethod = PKCEUtils.getCodeChallengeMethod(queryValues)
 
         then:
-        HttpClientResponseException ex = thrown()
-        ex.response.status.code == 401
+        codeChallenge
+        VALID_CODE_CHALLENGE_PATTERN.matcher(codeChallenge)
+        codeChallengeMethod == "S256"
+        DefaultPKCEFactory.deriveCodeVerifierChallenge(response.getCookie("OAUTH2_PKCE").get().getValue()) == codeChallenge
+
+        when:
+        response = client.toBlocking().exchange("/oauth/login/twitter")
+        location = URLDecoder.decode(response.header(HttpHeaders.LOCATION), StandardCharsets.UTF_8.toString())
+
+        then:
+        response.status == HttpStatus.FOUND
+        location.startsWith("https://twitter.com/authorize")
+        !location.contains("scope=")
+        location.contains("response_type=code")
+        location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
+        location.contains("client_id=$Keycloak.CLIENT_ID")
+
+        when:
+        queryValues = StateUtils.queryValuesAsMap(location)
+        state = StateUtils.decodeState(queryValues)
+
+        then:
+        state.contains('"nonce":"')
+        state.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/twitter"')
     }
 
     @Singleton
     @Named("twitter")
-    @Requires(property = "spec.name", value = "OpenIdAuthorizationRedirectOauthDisabledSpec")
+    @Requires(property = "spec.name", value = "OpenIdAuthorizationRedirectPkceSpec")
     @Requires(property = "micronaut.security.oauth2.clients.twitter")
     static class TwitterAuthenticationMapper implements OauthAuthenticationMapper {
-
         @Override
         Publisher<Authentication> createAuthenticationResponse(TokenResponse tokenResponse, State state) {
             Flux.create({ emitter ->
