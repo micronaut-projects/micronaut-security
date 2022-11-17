@@ -40,6 +40,12 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+
+    /**
+     * The default value whether intercept url patterns should be prepended with the context path.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH = false;
     /**
      * The default enable value.
      */
@@ -53,6 +59,9 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     public static final boolean DEFAULT_REJECT_NOT_FOUND = true;
 
     private boolean enabled = DEFAULT_ENABLED;
+
+    private boolean interceptUrlMapPrependPatternWithContextPath = DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH;
+
     private List<InterceptUrlMapPattern> interceptUrlMap = new ArrayList<>();
     private List<String> ipPatterns = Collections.singletonList(ANYWHERE);
     private AuthenticationStrategy authenticationProviderStrategy = DEFAULT_AUTHENTICATION_STRATEGY;
@@ -98,6 +107,19 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public boolean isInterceptUrlMapPrependPatternWithContextPath() {
+        return interceptUrlMapPrependPatternWithContextPath;
+    }
+
+    /**
+     * Whether the intercept URL patterns should be prepended with context path if defined. Defaults to {@value #DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH}.
+     * @param interceptUrlMapPrependPatternWithContextPath Prepend Intercept URL Map pattern with context path
+     */
+    public void setInterceptUrlMapPrependPatternWithContextPath(boolean interceptUrlMapPrependPatternWithContextPath) {
+        this.interceptUrlMapPrependPatternWithContextPath = interceptUrlMapPrependPatternWithContextPath;
     }
 
     /**
