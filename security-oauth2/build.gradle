@@ -26,5 +26,5 @@ dependencies {
     testImplementation project(":security-jwt")
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
-    implementation(project(":test-suite-keycloak-16"))
+    testImplementation(project(":test-suite-keycloak-16"))
 }
