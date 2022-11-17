@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 import io.micronaut.security.oauth2.endpoint.PersistableConfiguration;
 
 /**
- * Configuration options for nonce validation.
+ * Configuration for PKCE.
  *
  * @author Nemanja Mikic
  * @since 3.9.0
