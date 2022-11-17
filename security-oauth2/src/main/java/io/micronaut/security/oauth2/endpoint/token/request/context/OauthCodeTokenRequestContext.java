@@ -38,21 +38,23 @@ import java.util.Map;
 public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Map<String, String>, TokenResponse> {
 
     private final AuthorizationResponse authorizationResponse;
-    private final String codeVerify;
+
+    @Nullable
+    private final String codeVerifier;
 
     /**
      * @param authorizationResponse The authorization response
      * @param tokenEndpoint         The token endpoint
      * @param clientConfiguration   The client configuration
-     * @param codeVerify            The PKCE code_verify
+     * @param codeVerifier         The PKCE code_verifier
      */
     public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                         SecureEndpoint tokenEndpoint,
                                         OauthClientConfiguration clientConfiguration,
-                                        @Nullable String codeVerify) {
+                                        @Nullable String codeVerifier) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
-        this.codeVerify = codeVerify;
+        this.codeVerifier = codeVerifier;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
         State state = authorizationResponse.getState();
-        codeGrant.setCodeVerifier(getPKCECodeVerifier());
+        codeGrant.setCodeVerifier(getCodeVerifier());
         if (state != null && state.getRedirectUri() != null) {
             codeGrant.setRedirectUri(authorizationResponse.getState().getRedirectUri().toString());
         }
@@ -78,11 +80,11 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
     }
 
     /**
-     * @since 3.9
+     * @since 3.9.0
      * @return The PKCE code verifier
      */
     @Nullable
-    public String getPKCECodeVerifier() {
-        return codeVerify;
+    public String getCodeVerifier() {
+        return codeVerifier;
     }
 }
