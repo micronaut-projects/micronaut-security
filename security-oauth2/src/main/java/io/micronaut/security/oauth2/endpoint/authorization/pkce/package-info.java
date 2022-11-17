@@ -16,7 +16,7 @@
 /**
  * Classes related to OAuth 2.0 state management.
  *
- * @author James Kleeh
+ * @author Nemanja Mikic
  * @since 3.9.0
  */
 @Configuration

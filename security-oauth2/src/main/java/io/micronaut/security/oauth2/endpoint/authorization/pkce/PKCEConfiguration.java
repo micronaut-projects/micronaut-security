@@ -20,7 +20,7 @@ import io.micronaut.security.oauth2.endpoint.PersistableConfiguration;
 /**
  * Configuration options for nonce validation.
  *
- * @author James Kleeh
+ * @author Nemanja Mikic
  * @since 3.9.0
  */
 public interface PKCEConfiguration extends PersistableConfiguration {
