@@ -17,7 +17,7 @@
  * Classes related to OAuth 2.0 state management.
  *
  * @author James Kleeh
- * @since 1.2.0
+ * @since 3.9.0
  */
 @Configuration
 @Requires(property = DefaultPKCEConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.FALSE)

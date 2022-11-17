@@ -21,7 +21,7 @@ import io.micronaut.core.annotation.NonNull;
  * Represents the Proof of key Exchange (PKCE) sent in the authorization request and returned in the authorization response.
  *
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 public interface PKCE {
 

@@ -17,6 +17,6 @@
  * Classes related to state persistence.
  *
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence;

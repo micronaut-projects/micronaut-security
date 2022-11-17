@@ -35,7 +35,7 @@ import java.util.Base64;
  * A default PKCE provider that creates and persist the Proof of Key Exchange parameters.
  *
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 @Singleton
 @Requires(beans = PKCEPersistence.class)

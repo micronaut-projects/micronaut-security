@@ -28,7 +28,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.request.Authorization
  * <p>
  *
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 @DefaultImplementation(DefaultPKCEFactory.class)
 public interface PKCEFactory {

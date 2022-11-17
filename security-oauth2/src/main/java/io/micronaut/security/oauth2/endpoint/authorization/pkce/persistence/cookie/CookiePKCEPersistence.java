@@ -28,7 +28,7 @@ import java.util.Optional;
  * Persists the Proof of Key Exchange (PKCE) code_verifier value in a cookie.
  *
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 @Singleton
 public class CookiePKCEPersistence implements PKCEPersistence {

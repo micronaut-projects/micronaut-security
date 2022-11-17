@@ -26,7 +26,7 @@ import java.util.Optional;
  * Configuration properties implementation of PKCE.
  *
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 @ConfigurationProperties(DefaultPKCEConfiguration.PREFIX)
 public class DefaultPKCEConfiguration implements PKCEConfiguration {

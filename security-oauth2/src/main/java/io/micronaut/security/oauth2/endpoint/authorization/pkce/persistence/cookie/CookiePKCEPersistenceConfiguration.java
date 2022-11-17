@@ -21,7 +21,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultPKCEConfi
 
 /**
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 @ConfigurationProperties(CookiePKCEPersistenceConfiguration.PREFIX)
 public class CookiePKCEPersistenceConfiguration extends AbstractCookieConfiguration {

@@ -17,7 +17,7 @@
  * Classes related to the persistence of state in a cookie.
  *
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 @Configuration
 @Requires(property = DefaultPKCEConfiguration.PREFIX + ".persistence", value = "cookie", defaultValue = "cookie")

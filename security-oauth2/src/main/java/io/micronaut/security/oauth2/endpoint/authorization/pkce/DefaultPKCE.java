@@ -23,7 +23,7 @@ import io.micronaut.core.annotation.ReflectiveAccess;
  * Default PKCE implementation.
  *
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 @ReflectiveAccess
 @Introspected

@@ -17,7 +17,7 @@
  * Classes related to storage of the state in a session.
  *
  * @author Nemanja Mikic
- * @since 3.8.0
+ * @since 3.9.0
  */
 @Configuration
 @Requires(property = DefaultPKCEConfiguration.PREFIX + ".persistence", value = "session")
