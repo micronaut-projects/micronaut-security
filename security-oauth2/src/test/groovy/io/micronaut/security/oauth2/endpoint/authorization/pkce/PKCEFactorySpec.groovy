@@ -12,7 +12,7 @@ class PKCEFactorySpec extends ApplicationContextSpecification {
         ]
     }
 
-    void "by default bean of type PKCEFactory exists"() {
+    void "when pkce is enabled a bean of Type PKCEFactory exists"() {
         expect:
         applicationContext.containsBean(PKCEFactory)
     }
