@@ -37,7 +37,7 @@ public class DefaultPKCEConfiguration implements PKCEConfiguration {
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = true;
+    public static final boolean DEFAULT_ENABLED = false;
     private static final String DEFAULT_PERSISTENCE = "cookie";
 
     @Pattern(regexp = "cookie|session")
