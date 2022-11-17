@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 
 import java.util.Map;
 
@@ -40,6 +41,8 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
     private String grantType = GrantType.AUTHORIZATION_CODE.toString();
     private String redirectUri;
     private String code;
+
+    @Nullable
     private String codeVerifier;
 
     /**
@@ -98,7 +101,7 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
      * @since 3.9
      * @return A PKCE code verifier.
      */
-    @NonNull
+    @Nullable
     public String getCodeVerifier() {
         return codeVerifier;
     }
@@ -107,7 +110,7 @@ public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements
      * @param codeVerifier A PKCE code verifier.
      * @since 3.9
      */
-    public void setCodeVerifier(@NonNull String codeVerifier) {
+    public void setCodeVerifier(@Nullable String codeVerifier) {
         this.codeVerifier = codeVerifier;
     }
 
