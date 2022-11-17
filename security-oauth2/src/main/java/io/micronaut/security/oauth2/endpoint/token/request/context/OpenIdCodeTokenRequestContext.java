@@ -41,24 +41,26 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
 
     private final AuthorizationResponse authorizationResponse;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
-    private final String codeVerify;
+
+    @Nullable
+    private final String codeVerifier;
 
     /**
      * @param authorizationResponse The authorization response
      * @param oauthRouteUrlBuilder  The oauth route URL builder
      * @param tokenEndpoint         The token endpoint
      * @param clientConfiguration   The client configuration
-     * @param codeVerify            The PKCE code_verify
+     * @param codeVerifier            The PKCE code_verify
      */
     public OpenIdCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                          OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                          SecureEndpoint tokenEndpoint,
                                          OauthClientConfiguration clientConfiguration,
-                                         @Nullable String codeVerify) {
+                                         @Nullable String codeVerifier) {
         super(getMediaType(clientConfiguration), tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
-        this.codeVerify = codeVerify;
+        this.codeVerifier = codeVerifier;
     }
 
     /**
@@ -78,7 +80,7 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     public Map<String, String> getGrant() {
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
-        codeGrant.setCodeVerifier(getPKCECodeVerifier());
+        codeGrant.setCodeVerifier(getCodeVerifier());
         codeGrant.setRedirectUri(oauthRouteUrlBuilder
             .buildCallbackUrl(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()).toString());
         return codeGrant.toMap();
@@ -95,11 +97,11 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     }
 
     /**
-     * @since 3.9
+     * @since 3.9.0
      * @return The PKCE code verifier
      */
     @Nullable
-    public String getPKCECodeVerifier() {
-        return codeVerify;
+    public String getCodeVerifier() {
+        return codeVerifier;
     }
 }
