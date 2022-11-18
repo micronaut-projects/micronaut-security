@@ -31,16 +31,32 @@ import java.util.Optional;
 public abstract class CookiePersistence {
 
     protected final CookieConfiguration cookieConfiguration;
+
+    /**
+     *
+     * @param cookieConfiguration Cookie Configuration
+     */
     protected CookiePersistence(CookieConfiguration cookieConfiguration) {
         this.cookieConfiguration = cookieConfiguration;
     }
 
+    /**
+     *
+     * @param request Request
+     * @return The value of the cookie specified by {@link CookieConfiguration#getCookieName()}
+     */
     protected Optional<String> retrieveValue(HttpRequest<?> request) {
         Cookie cookie = request.getCookies().get(cookieConfiguration.getCookieName());
         return Optional.ofNullable(cookie)
             .map(Cookie::getValue);
     }
 
+    /**
+     *
+     * @param request HTTP Request
+     * @param response HTTP Response
+     * @param value Saves a cookie with name {@link CookieConfiguration#getCookieName()} with supplied value in the HTTP response.
+     */
     protected void save(@NonNull HttpRequest<?> request,
                         @NonNull MutableHttpResponse<?> response,
                         @Nullable String value) {

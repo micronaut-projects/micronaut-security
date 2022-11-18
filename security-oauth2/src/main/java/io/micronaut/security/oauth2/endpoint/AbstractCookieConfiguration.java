@@ -97,7 +97,7 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
     }
 
     /**
-     * Sets the path of the cookie. Default value ({@value #DEFAULT_COOKIEPATH}).
+     * Sets the path of the cookie. Default value ({@value io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration#DEFAULT_COOKIEPATH}).
      *
      * @param cookiePath The path of the cookie.
      */
@@ -111,7 +111,7 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
     }
 
     /**
-     * Whether the Cookie can only be accessed via HTTP. Default value ({@value #DEFAULT_HTTPONLY}).
+     * Whether the Cookie can only be accessed via HTTP. Default value ({@value io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration#DEFAULT_HTTPONLY}).
      *
      * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
      */

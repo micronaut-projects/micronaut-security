@@ -34,6 +34,7 @@ import java.util.Optional;
 public class CookieStatePersistence extends CookiePersistence implements StatePersistence {
 
     private final StateSerDes stateSerDes;
+
     /**
      * @param stateSerDes The state serializer/deserializer
      * @param configuration The cookie configuration
