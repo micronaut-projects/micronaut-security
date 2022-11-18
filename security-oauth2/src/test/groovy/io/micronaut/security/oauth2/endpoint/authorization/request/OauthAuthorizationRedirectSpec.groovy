@@ -11,7 +11,6 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.PKCEUtils
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerator
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
@@ -41,10 +40,6 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
                 "micronaut.security.oauth2.clients.twitter.token.url": "https://twitter.com/token",
                 "micronaut.security.oauth2.clients.twitter.client-id": "myclient",
                 "micronaut.security.oauth2.clients.twitter.client-secret": "mysecret",
-                "micronaut.security.oauth2.pkce.cookie.cookie-name" :"OAUTH2_PKCE",
-                "micronaut.security.oauth2.pkce.cookie.cookie-path" :"/",
-                "micronaut.security.oauth2.pkce.cookie.cookie-http-only" :"true",
-                "micronaut.security.oauth2.pkce.cookie.cookie-max-age" :"5m",
         ]
     }
 
