@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * API to Build/Persist and retrieve a PKCE (Proof Key for Code Exchange).
+ * API to Build/Persist a PKCE (Proof Key for Code Exchange).
  * @author Sergio del Amo
  * @since 3.9.0
  */

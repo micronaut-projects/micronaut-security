@@ -34,6 +34,10 @@ public interface PkceGenerator extends Ordered, Named {
     @NonNull
     boolean supportsAny(@NonNull List<String> codeChallengeMethods);
 
+    /**
+     *
+     * @return Generates a {@link Pkce}.
+     */
     @NonNull
     Pkce generate();
 }
