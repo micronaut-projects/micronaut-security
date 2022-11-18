@@ -18,7 +18,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.coo
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.http.cookie.Cookie;
+import io.micronaut.security.oauth2.endpoint.authorization.CookiePersistence;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence;
 import jakarta.inject.Singleton;
@@ -32,15 +32,12 @@ import java.util.Optional;
  * @since 3.9.0
  */
 @Singleton
-public class CookiePkcePersistence implements PkcePersistence {
-
-    private final CookiePkcePersistenceConfiguration configuration;
-
+public class CookiePkcePersistence extends CookiePersistence implements PkcePersistence {
     /**
      * @param configuration The cookie configuration
      */
     public CookiePkcePersistence(CookiePkcePersistenceConfiguration configuration) {
-        this.configuration = configuration;
+        super(configuration);
     }
 
     /**
@@ -52,17 +49,13 @@ public class CookiePkcePersistence implements PkcePersistence {
     @Override
     @NonNull
     public Optional<String> retrieveCodeVerifier(@NonNull HttpRequest<?> request) {
-        Cookie cookie = request.getCookies().get(configuration.getCookieName());
-        return Optional.ofNullable(cookie)
-            .map(Cookie::getValue);
+        return retrieveValue(request);
     }
 
     @Override
     public void persistPkce(@NonNull HttpRequest<?> request,
                             @NonNull MutableHttpResponse<?> response,
                             @NonNull Pkce pkce) {
-        Cookie cookie = Cookie.of(configuration.getCookieName(), pkce.getCodeVerifier());
-        cookie.configure(configuration, request.isSecure());
-        response.cookie(cookie);
+        save(request, response, pkce.getCodeVerifier());
     }
 }

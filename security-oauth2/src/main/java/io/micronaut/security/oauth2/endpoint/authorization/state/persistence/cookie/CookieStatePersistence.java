@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.state.persistence.co
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.http.cookie.Cookie;
+import io.micronaut.security.oauth2.endpoint.authorization.CookiePersistence;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
 import io.micronaut.security.oauth2.endpoint.authorization.state.persistence.StatePersistence;
@@ -31,35 +31,26 @@ import java.util.Optional;
  * @since 1.2.0
  */
 @Singleton
-public class CookieStatePersistence implements StatePersistence {
+public class CookieStatePersistence extends CookiePersistence implements StatePersistence {
 
     private final StateSerDes stateSerDes;
-    private final CookieStatePersistenceConfiguration configuration;
-
     /**
      * @param stateSerDes The state serializer/deserializer
      * @param configuration The cookie configuration
      */
     public CookieStatePersistence(StateSerDes stateSerDes,
                                   CookieStatePersistenceConfiguration configuration) {
+        super(configuration);
         this.stateSerDes = stateSerDes;
-        this.configuration = configuration;
     }
 
     @Override
     public Optional<State> retrieveState(HttpRequest<?> request) {
-        Cookie cookie = request.getCookies().get(configuration.getCookieName());
-        return Optional.ofNullable(cookie)
-                .map(c -> stateSerDes.deserialize(c.getValue()));
+        return retrieveValue(request).map(stateSerDes::deserialize);
     }
 
     @Override
     public void persistState(HttpRequest<?> request, MutableHttpResponse response, State state) {
-        String serializedState = stateSerDes.serialize(state);
-        if (serializedState != null) {
-            Cookie cookie = Cookie.of(configuration.getCookieName(), serializedState);
-            cookie.configure(configuration, request.isSecure());
-            response.cookie(cookie);
-        }
+        save(request, response, stateSerDes.serialize(state));
     }
 }
