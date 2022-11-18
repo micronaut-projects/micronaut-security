@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes related to storage of the state in a session.
+ * Classes related to storage of the pkce in a session.
  *
  * @author Nemanja Mikic
  * @since 3.9.0

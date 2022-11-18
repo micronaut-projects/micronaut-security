@@ -71,6 +71,7 @@ public interface AuthorizationRequest {
      * @see <a href="https://www.rfc-editor.org/rfc/rfc7636">RFC 7636</a>
      * @param response HTTP Response
      * @return The PCKE challenge
+     * @since 3.9.0
      */
     @NonNull
     default Optional<PkceChallenge> getPkceChallenge(@NonNull MutableHttpResponse<?> response) {

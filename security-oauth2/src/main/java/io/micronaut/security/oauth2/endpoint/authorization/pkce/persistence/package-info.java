@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes related to state persistence.
+ * Classes related to pkce persistence.
  *
  * @author Nemanja Mikic
  * @since 3.9.0
