@@ -28,9 +28,8 @@ import java.util.Optional;
  * @author Nemanja Mikic
  * @since 3.9.0
  */
-@ConfigurationProperties(DefaultPKCEConfiguration.PREFIX)
-public class DefaultPKCEConfiguration implements PKCEConfiguration {
-
+@ConfigurationProperties(PkceConfigurationProperties.PREFIX)
+public class PkceConfigurationProperties implements PkceConfiguration {
     public static final String PREFIX = OauthConfigurationProperties.PREFIX + ".pkce";
 
     /**
@@ -38,11 +37,32 @@ public class DefaultPKCEConfiguration implements PKCEConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = false;
-    private static final String DEFAULT_PERSISTENCE = "cookie";
+    private static final String PERSISTENCE_COOKIE = "cookie";
+    private static final String PERSISTENCE_SESSION = "session";
+    private static final String DEFAULT_PERSISTENCE = PERSISTENCE_COOKIE;
+
+    /**
+     * The default entropy (in bytes) used for the code verifier.
+     */
+    private static final int DEFAULT_CODE_VERIFIER_ENTROPY = 64;
 
     @Pattern(regexp = "cookie|session")
     private String persistence = DEFAULT_PERSISTENCE;
     private boolean enabled = DEFAULT_ENABLED;
+    private int entropy = DEFAULT_CODE_VERIFIER_ENTROPY;
+
+    @Override
+    public int getEntropy() {
+        return entropy;
+    }
+
+    /**
+     * entropy (in bytes) used for the code verifier generation. Default value {@value #DEFAULT_CODE_VERIFIER_ENTROPY}.
+     * @param entropy entropy (in bytes) used for the code verifier.
+     */
+    public void setEntropy(int entropy) {
+        this.entropy = entropy;
+    }
 
     @Override
     @NonNull

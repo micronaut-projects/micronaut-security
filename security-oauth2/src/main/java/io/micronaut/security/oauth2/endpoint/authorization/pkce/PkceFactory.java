@@ -16,30 +16,29 @@
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Generates a PKCE parameter.
- *
- * <a href="https://www.rfc-editor.org/rfc/rfc7636.html>Proof Key for Code Exchange by OAuth Public Clients</a>
- * <p>
- *
- * @author Nemanja Mikic
+ * API to Build/Persist and retrieve a PKCE (Proof Key for Code Exchange).
+ * @author Sergio del Amo
  * @since 3.9.0
  */
-@DefaultImplementation(DefaultPKCEFactory.class)
-public interface PKCEFactory {
-
+@DefaultImplementation(DefaultPkceFactory.class)
+public interface PkceFactory {
     /**
-     * @param request              The original request prior redirect
-     * @param response             The authorization redirect response
-     * @param authorizationRequest the {@link AuthorizationRequest}
-     * @return A pkce parameter. An opaque value used to maintain state between the request and the callback.
+     * @param request The original request prior redirect
+     * @param response The authorization redirect response
+     * @param supportedChallengeMethods Challenge methods supported by the authorization server
+     * @return A state parameter. An opaque value used to maintain state between the request and the callback.
      */
-    @SuppressWarnings("rawtypes")
-    PKCE buildPKCE(HttpRequest<?> request, MutableHttpResponse response, @Nullable AuthorizationRequest authorizationRequest);
-
+    @NonNull
+    Optional<PkceChallenge> buildChallenge(@NonNull HttpRequest<?> request,
+                                           @NonNull MutableHttpResponse<?> response,
+                                           @Nullable List<String> supportedChallengeMethods);
 }

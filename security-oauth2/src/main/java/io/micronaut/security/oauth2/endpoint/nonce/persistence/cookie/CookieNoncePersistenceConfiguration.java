@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration;
 
@@ -29,6 +30,16 @@ public class CookieNoncePersistenceConfiguration extends AbstractCookieConfigura
     public static final String PREFIX = DefaultNonceConfiguration.PREFIX + ".cookie";
 
     private static final String DEFAULT_COOKIENAME = "OPENID_NONCE";
+
+    /**
+     * Cookie Name. Default value `{@link #DEFAULT_COOKIENAME}`.
+     *
+     * @param cookieName Cookie name
+     */
+    @Override
+    public void setCookieName(@NonNull String cookieName) {
+        this.cookieName = cookieName;
+    }
 
     @Override
     public String defaultCookieName() {

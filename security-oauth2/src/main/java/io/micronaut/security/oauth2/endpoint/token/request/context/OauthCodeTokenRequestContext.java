@@ -25,6 +25,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
+import jakarta.inject.Inject;
 
 import java.util.Map;
 
@@ -48,6 +49,7 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
      * @param clientConfiguration   The client configuration
      * @param codeVerifier         The PKCE code_verifier
      */
+    @Inject
     public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                         SecureEndpoint tokenEndpoint,
                                         OauthClientConfiguration clientConfiguration,
@@ -55,6 +57,19 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
         this.codeVerifier = codeVerifier;
+    }
+
+    /**
+     * @param authorizationResponse The authorization response
+     * @param tokenEndpoint         The token endpoint
+     * @param clientConfiguration   The client configuration
+     * @deprecated use {@link OauthCodeTokenRequestContext(AuthorizationResponse, SecureEndpoint, OauthClientConfiguration, String)} instead.
+     */
+    @Deprecated
+    public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
+                                        SecureEndpoint tokenEndpoint,
+                                        OauthClientConfiguration clientConfiguration) {
+        this(authorizationResponse, tokenEndpoint, clientConfiguration, null);
     }
 
     @Override

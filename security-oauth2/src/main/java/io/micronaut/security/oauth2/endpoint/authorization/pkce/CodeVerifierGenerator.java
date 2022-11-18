@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Classes related to OAuth 2.0 state management.
- *
- * @author Nemanja Mikic
- * @since 3.9.0
- */
-@Configuration
-@Requires(property = PkceConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.FALSE)
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
+import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.NonNull;
+
+/**
+ * Generates a Code Verifier for PKCE.
+ * @author Sergio del Amo
+ * @since 3.9.0
+ */
+@FunctionalInterface
+@DefaultImplementation(DefaultCodeVerifierGenerator.class)
+public interface CodeVerifierGenerator {
+    @NonNull
+    String generate();
+}

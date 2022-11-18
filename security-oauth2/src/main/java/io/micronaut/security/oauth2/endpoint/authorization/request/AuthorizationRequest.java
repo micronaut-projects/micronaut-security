@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.endpoint.authorization.request;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCE;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceChallenge;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,11 +67,13 @@ public interface AuthorizationRequest {
      */
     Optional<String> getRedirectUri();
 
-
     /**
-     * @param response authorization redirect response
-     * @return Proof of Key Exchange (PKCE).
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7636">RFC 7636</a>
+     * @param response HTTP Response
+     * @return The PCKE challenge
      */
-    Optional<PKCE> getPKCE(MutableHttpResponse<?> response);
-
+    @NonNull
+    default Optional<PkceChallenge> getPkceChallenge(@NonNull MutableHttpResponse<?> response) {
+        return Optional.empty();
+    }
 }

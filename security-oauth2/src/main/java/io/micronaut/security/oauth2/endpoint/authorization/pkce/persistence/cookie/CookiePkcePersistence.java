@@ -15,11 +15,12 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCE;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PKCEPersistence;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence;
 import jakarta.inject.Singleton;
 
 import java.util.Optional;
@@ -31,26 +32,35 @@ import java.util.Optional;
  * @since 3.9.0
  */
 @Singleton
-public class CookiePKCEPersistence implements PKCEPersistence {
+public class CookiePkcePersistence implements PkcePersistence {
 
-    private final CookiePKCEPersistenceConfiguration configuration;
+    private final CookiePkcePersistenceConfiguration configuration;
 
     /**
      * @param configuration The cookie configuration
      */
-    public CookiePKCEPersistence(CookiePKCEPersistenceConfiguration configuration) {
+    public CookiePkcePersistence(CookiePkcePersistenceConfiguration configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * Retrieve the code verifier and removes it from the session if present.
+     *
+     * @param request The request
+     * @return The optional PKCE code verifier
+     */
     @Override
-    public Optional<String> retrieve(HttpRequest<?> request) {
+    @NonNull
+    public Optional<String> retrieveCodeVerifier(@NonNull HttpRequest<?> request) {
         Cookie cookie = request.getCookies().get(configuration.getCookieName());
         return Optional.ofNullable(cookie)
             .map(Cookie::getValue);
     }
 
     @Override
-    public void persistPKCE(HttpRequest<?> request, MutableHttpResponse<?> response, PKCE pkce) {
+    public void persistPkce(@NonNull HttpRequest<?> request,
+                            @NonNull MutableHttpResponse<?> response,
+                            @NonNull Pkce pkce) {
         Cookie cookie = Cookie.of(configuration.getCookieName(), pkce.getCodeVerifier());
         cookie.configure(configuration, request.isSecure());
         response.cookie(cookie);

@@ -17,50 +17,49 @@ package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.ReflectiveAccess;
 
 /**
- * Default PKCE implementation.
- *
- * @author Nemanja Mikic
- * @since 3.9.0
+ * Proof Key for Code Exchange.
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc7636">RFC 7636</a>
  */
-@ReflectiveAccess
 @Introspected
-public final class DefaultPKCE implements PKCE {
-
-    private String codeVerifier;
-    private String codeMethod;
-    private String codeChallenge;
+public class Pkce implements PkceChallenge {
 
     @NonNull
-    @Override
-    public String getCodeVerifier() {
-        return codeVerifier;
-    }
+    private final String codeChallengeMethod;
 
-    public void setCodeVerifier(@NonNull String codeVerifier) {
+    @NonNull
+    private final String codeChallenge;
+
+    @NonNull
+    private final String codeVerifier;
+
+    public Pkce(@NonNull String codeChallengeMethod,
+                @NonNull String codeChallenge,
+                @NonNull String codeVerifier) {
         this.codeVerifier = codeVerifier;
+        this.codeChallenge = codeChallenge;
+        this.codeChallengeMethod = codeChallengeMethod;
     }
 
-    @NonNull
     @Override
-    public String getCodeMethod() {
-        return codeMethod;
-    }
-
-    public void setCodeMethod(String codeMethod) {
-        this.codeMethod = codeMethod;
-    }
-
-
     @NonNull
+    public String getCodeChallengeMethod() {
+        return codeChallengeMethod;
+    }
+
     @Override
+    @NonNull
     public String getCodeChallenge() {
         return codeChallenge;
     }
 
-    public void setCodeChallenge(String codeChallenge) {
-        this.codeChallenge = codeChallenge;
+    /**
+     *
+     * @return A cryptographically random string that is used to correlate the authorization request to the token request.
+     */
+    @NonNull
+    public String getCodeVerifier() {
+        return codeVerifier;
     }
 }

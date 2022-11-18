@@ -13,7 +13,7 @@ import io.micronaut.security.oauth2.PKCEUtils
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultPKCEFactory
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerator
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
@@ -105,7 +105,7 @@ class OpenIdAuthorizationRedirectPkceSpec extends EmbeddedServerSpecification {
         codeChallenge
         VALID_CODE_CHALLENGE_PATTERN.matcher(codeChallenge)
         codeChallengeMethod == "S256"
-        DefaultPKCEFactory.deriveCodeVerifierChallenge(response.getCookie("OAUTH2_PKCE").get().getValue()) == codeChallenge
+        S256PkceGenerator.hash(response.getCookie("OAUTH2_PKCE").get().getValue()) == codeChallenge
 
         when:
         response = client.toBlocking().exchange("/oauth/login/twitter")

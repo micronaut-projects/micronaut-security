@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.DefaultStateConfiguration;
 
@@ -29,6 +30,16 @@ public class CookieStatePersistenceConfiguration extends AbstractCookieConfigura
     public static final String PREFIX = DefaultStateConfiguration.PREFIX + ".cookie";
 
     private static final String DEFAULT_COOKIENAME = "OAUTH2_STATE";
+
+    /**
+     * Cookie Name. Default value `{@link #DEFAULT_COOKIENAME}`.
+     *
+     * @param cookieName Cookie name
+     */
+    @Override
+    public void setCookieName(@NonNull String cookieName) {
+        this.cookieName = cookieName;
+    }
 
     @Override
     public String defaultCookieName() {

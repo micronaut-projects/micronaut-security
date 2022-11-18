@@ -15,9 +15,10 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCE;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce;
 
 import java.util.Optional;
 
@@ -27,15 +28,16 @@ import java.util.Optional;
  * @author Nemanja Mikic
  * @since 3.9.0
  */
-public interface PKCEPersistence {
+public interface PkcePersistence {
 
     /**
-     * Retrieves and removes the pkce from persistence.
+     * Retreive the code verifier.
      *
      * @param request The request
-     * @return The optional PKCE code_verifier
+     * @return The optional PKCE code verifier
      */
-    Optional<String> retrieve(HttpRequest<?> request);
+    @NonNull
+    Optional<String> retrieveCodeVerifier(@NonNull HttpRequest<?> request);
 
     /**
      * Persists the PKCE for later retrieval.
@@ -44,5 +46,7 @@ public interface PKCEPersistence {
      * @param response The authorization redirect response
      * @param pkce     The PKCE to persist
      */
-    void persistPKCE(HttpRequest<?> request, MutableHttpResponse<?> response, PKCE pkce);
+    void persistPkce(@NonNull HttpRequest<?> request,
+                     @NonNull MutableHttpResponse<?> response,
+                     @NonNull Pkce pkce);
 }

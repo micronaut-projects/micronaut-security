@@ -1,10 +1,10 @@
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session
 
 import io.micronaut.core.util.StringUtils
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PKCEPersistence
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence
 import io.micronaut.security.testutils.ApplicationContextSpecification
 
-class SessionPKCEPersistenceSpec extends ApplicationContextSpecification {
+class SessionPkcePersistenceSpec extends ApplicationContextSpecification {
 
     @Override
     Map<String, Object> getConfiguration() {
@@ -17,7 +17,7 @@ class SessionPKCEPersistenceSpec extends ApplicationContextSpecification {
 
     void "PKCEPersistence is an instance of SessionPKCEPersistence"() {
         expect:
-        applicationContext.containsBean(PKCEPersistence)
-        applicationContext.getBean(PKCEPersistence) instanceof SessionPKCEPersistence
+        applicationContext.containsBean(PkcePersistence)
+        applicationContext.getBean(PkcePersistence) instanceof SessionPkcePersistence
     }
 }

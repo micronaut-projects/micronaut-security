@@ -10,7 +10,7 @@ import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.oauth2.PKCEUtils
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OpenIdClient
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultPKCEFactory
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerator
 import io.micronaut.security.oauth2.routes.OauthController
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
@@ -19,7 +19,7 @@ import spock.lang.IgnoreIf
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
-class OpenIdAuthorizationPKCESpec extends EmbeddedServerSpecification {
+class OpenIdAuthorizationPkceSpec extends EmbeddedServerSpecification {
 
     @Override
     String getSpecName() {
@@ -81,6 +81,6 @@ class OpenIdAuthorizationPKCESpec extends EmbeddedServerSpecification {
         codeChallenge
         Pattern.compile('^[0-9a-zA-Z\\-\\.~_]+$').matcher(codeChallenge).matches()
         codeChallengeMethod == "S256"
-        DefaultPKCEFactory.deriveCodeVerifierChallenge(response.getCookie("OAUTH2_PKCE").get().getValue()) == codeChallenge
+        S256PkceGenerator.hash(response.getCookie("OAUTH2_PKCE").get().getValue()) == codeChallenge
     }
 }

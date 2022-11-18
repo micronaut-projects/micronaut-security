@@ -3,18 +3,15 @@ package io.micronaut.security.oauth2.endpoint.authorization.pkce
 import io.micronaut.core.util.StringUtils
 import io.micronaut.security.testutils.ApplicationContextSpecification
 
-class PKCEConfigurationSpec extends ApplicationContextSpecification {
-
+class PkceConfigurationSpec extends ApplicationContextSpecification {
     @Override
     Map<String, Object> getConfiguration() {
-        super.configuration + [
-                'micronaut.security.oauth2.pkce.enabled': StringUtils.TRUE
-        ]
+        super.configuration + ['micronaut.security.oauth2.pkce.enabled': StringUtils.TRUE]
     }
 
-    void "PKCEConfiguration defaults to cookie when enabled"() {
+    void "PkceConfiguration defaults to cookie when enabled"() {
         when:
-        PKCEConfiguration pKCEConfiguration = applicationContext.getBean(PKCEConfiguration.class)
+        PkceConfiguration pKCEConfiguration = applicationContext.getBean(PkceConfiguration.class)
 
         then:
         noExceptionThrown()

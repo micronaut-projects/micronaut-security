@@ -20,9 +20,11 @@
  * @since 3.9.0
  */
 @Configuration
-@Requires(property = DefaultPKCEConfiguration.PREFIX + ".persistence", value = "cookie", defaultValue = "cookie")
+@Requires(property = PkceConfigurationProperties.PREFIX + ".persistence", value = PERSISTENCE_COOKIE, defaultValue = PERSISTENCE_COOKIE)
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie;
 
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultPKCEConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties;
+
+import static io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration.PERSISTENCE_COOKIE;

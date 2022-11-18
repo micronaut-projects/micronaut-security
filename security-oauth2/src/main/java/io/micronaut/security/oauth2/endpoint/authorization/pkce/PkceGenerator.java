@@ -15,13 +15,25 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
-import io.micronaut.security.oauth2.endpoint.PersistableConfiguration;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.naming.Named;
+import io.micronaut.core.order.Ordered;
+
+import java.util.List;
 
 /**
- * Configuration for PKCE.
- *
- * @author Nemanja Mikic
+ * @author Sergio del Amo
  * @since 3.9.0
  */
-public interface PKCEConfiguration extends PersistableConfiguration {
+public interface PkceGenerator extends Ordered, Named {
+    /**
+     *
+     * @param codeChallengeMethods Code Challenge methods
+     * @return Whether the PKCE Generator supports any of the supplied code challenge methods.
+     */
+    @NonNull
+    boolean supportsAny(@NonNull List<String> codeChallengeMethods);
+
+    @NonNull
+    Pkce generate();
 }

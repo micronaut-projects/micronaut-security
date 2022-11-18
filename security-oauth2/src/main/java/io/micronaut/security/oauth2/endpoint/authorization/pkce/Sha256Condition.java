@@ -15,22 +15,25 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
-import io.micronaut.core.annotation.NonNull;
+import io.micronaut.context.condition.Condition;
+import io.micronaut.context.condition.ConditionContext;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
- * Represents the Proof of key Exchange (PKCE) sent in the authorization request and returned in the authorization response.
- *
- * @author Nemanja Mikic
+ * {@link Condition} which evaluates to {@literal true} if SHA-256 algorithm is supported.
+ * @author Sergio del Amo
  * @since 3.9.0
  */
-public interface PKCE {
-
-    @NonNull
-    String getCodeVerifier();
-
-    @NonNull
-    String getCodeMethod();
-
-    @NonNull
-    String getCodeChallenge();
+public class Sha256Condition implements Condition {
+    @Override
+    public boolean matches(ConditionContext context) {
+        try {
+            MessageDigest sha256Digester = MessageDigest.getInstance("SHA-256");
+            return true;
+        } catch (NoSuchAlgorithmException e) {
+            return false;
+        }
+    }
 }

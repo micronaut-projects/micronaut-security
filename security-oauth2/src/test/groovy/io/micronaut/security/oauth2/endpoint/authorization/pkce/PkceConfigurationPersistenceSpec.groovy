@@ -4,7 +4,7 @@ import io.micronaut.context.exceptions.BeanInstantiationException
 import io.micronaut.core.util.StringUtils
 import io.micronaut.security.testutils.ApplicationContextSpecification
 
-class PKCEConfigurationPersistenceSpec extends ApplicationContextSpecification {
+class PkceConfigurationPersistenceSpec extends ApplicationContextSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
@@ -15,7 +15,7 @@ class PKCEConfigurationPersistenceSpec extends ApplicationContextSpecification {
 
     void "PKCEConfiguration persistence accepts only session and cookie"() {
         when:
-        applicationContext.getBean(PKCEConfiguration.class)
+        applicationContext.getBean(PkceConfiguration.class)
 
         then:
         BeanInstantiationException e = thrown()

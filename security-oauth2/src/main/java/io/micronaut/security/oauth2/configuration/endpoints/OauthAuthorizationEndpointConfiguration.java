@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 original authors
+ * Copyright 2017-2020 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.security.oauth2.configuration.endpoints;
+
+import io.micronaut.core.annotation.NonNull;
+
+import java.util.Optional;
+
 /**
- * Classes related to OAuth 2.0 state management.
+ * Configuration for Authorization Endpoint Configuration.
  *
- * @author Nemanja Mikic
+ * @author Sergio del Amo
  * @since 3.9.0
  */
-@Configuration
-@Requires(property = PkceConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.FALSE)
-package io.micronaut.security.oauth2.endpoint.authorization.pkce;
+public interface OauthAuthorizationEndpointConfiguration extends EndpointConfiguration {
 
-import io.micronaut.context.annotation.Configuration;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
+    /**
+     * @since 3.9.0
+     * @return Code challenge method to use for PKCE.
+     */
+    @NonNull
+    default Optional<String> getCodeChallengeMethod() {
+        return Optional.empty();
+    }
+}

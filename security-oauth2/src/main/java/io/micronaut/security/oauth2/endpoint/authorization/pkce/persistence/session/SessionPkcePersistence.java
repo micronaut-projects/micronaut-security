@@ -16,10 +16,11 @@
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCE;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PKCEPersistence;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence;
 import io.micronaut.session.Session;
 import io.micronaut.session.SessionStore;
 import io.micronaut.session.http.SessionForRequest;
@@ -35,7 +36,7 @@ import java.util.Optional;
  */
 @Requires(beans = SessionStore.class)
 @Singleton
-public class SessionPKCEPersistence implements PKCEPersistence {
+public class SessionPkcePersistence implements PkcePersistence {
 
     private static final String SESSION_KEY = "oauth2pkce";
 
@@ -44,12 +45,19 @@ public class SessionPKCEPersistence implements PKCEPersistence {
     /**
      * @param sessionStore The session store
      */
-    public SessionPKCEPersistence(SessionStore<Session> sessionStore) {
+    public SessionPkcePersistence(SessionStore<Session> sessionStore) {
         this.sessionStore = sessionStore;
     }
 
+    /**
+     * Retrieve the code verifier and removes it from the session if present.
+     *
+     * @param request The request
+     * @return The optional PKCE code verifier
+     */
     @Override
-    public Optional<String> retrieve(HttpRequest<?> request) {
+    @NonNull
+    public Optional<String> retrieveCodeVerifier(@NonNull HttpRequest<?> request) {
         return SessionForRequest.find(request)
             .flatMap(session -> {
                 Optional<String> state = session.get(SESSION_KEY, String.class);
@@ -61,8 +69,11 @@ public class SessionPKCEPersistence implements PKCEPersistence {
     }
 
     @Override
-    public void persistPKCE(HttpRequest<?> request, MutableHttpResponse<?> response, PKCE pkce) {
-        Session session = SessionForRequest.find(request).orElseGet(() -> SessionForRequest.create(sessionStore, request));
+    public void persistPkce(@NonNull HttpRequest<?> request,
+                            @NonNull MutableHttpResponse<?> response,
+                            @NonNull Pkce pkce) {
+        Session session = SessionForRequest.find(request)
+            .orElseGet(() -> SessionForRequest.create(sessionStore, request));
         session.put(SESSION_KEY, pkce);
     }
 }

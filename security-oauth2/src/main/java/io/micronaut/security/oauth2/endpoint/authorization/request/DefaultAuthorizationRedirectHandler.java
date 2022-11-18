@@ -167,10 +167,10 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
      */
     protected void populatePKCE(@NonNull AuthorizationRequest authorizationRequest,
                                 @NonNull Map<String, Object> parameters,
-                                @NonNull MutableHttpResponse response) {
-        authorizationRequest.getPKCE(response).ifPresent(pkce -> {
+                                @NonNull MutableHttpResponse<?> response) {
+        authorizationRequest.getPkceChallenge(response).ifPresent(pkce -> {
             parameters.put(AuthorizationRequest.PARAMETER_PKCE_CODE_CHALLENGE, pkce.getCodeChallenge());
-            parameters.put(AuthorizationRequest.PARAMETER_PKCE_CODE_CHALLENGE_METHOD, pkce.getCodeMethod());
+            parameters.put(AuthorizationRequest.PARAMETER_PKCE_CODE_CHALLENGE_METHOD, pkce.getCodeChallengeMethod());
         });
     }
 

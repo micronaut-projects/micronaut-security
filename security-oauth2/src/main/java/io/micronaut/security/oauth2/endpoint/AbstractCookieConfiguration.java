@@ -81,7 +81,7 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
     }
 
     /**
-     * Cookie Name. Default value ({@link defaultCookieName()}).
+     * Cookie Name.
      *
      * @param cookieName Cookie name
      */

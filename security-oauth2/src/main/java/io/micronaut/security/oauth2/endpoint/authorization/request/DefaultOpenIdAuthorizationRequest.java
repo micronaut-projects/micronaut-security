@@ -23,15 +23,26 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadata;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCE;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.PKCEFactory;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultCodeVerifierGenerator;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultPkceFactory;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceChallenge;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceFactory;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PlainPkceGenerator;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerator;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.CookiePkcePersistence;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.CookiePkcePersistenceConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.endpoint.nonce.NonceFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
+import jakarta.inject.Inject;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,13 +59,48 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
 
     private final HttpRequest<?> request;
     private OauthClientConfiguration oauthConfiguration;
+    private OpenIdProviderMetadata openIdProviderMetadata;
     private final StateFactory stateFactory;
     private final NonceFactory nonceFactory;
     private LoginHintResolver loginHintResolver;
     private IdTokenHintResolver idTokenHintResolver;
     private AuthorizationEndpointConfiguration endpointConfiguration;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
-    private final PKCEFactory pkceFactory;
+    private final PkceFactory pkceFactory;
+
+    /**
+     * @param request              The original request prior redirect.
+     * @param oauthConfiguration   The OAuth 2.0 configuration
+     * @param openIdProviderMetadata OpenID Provider Metadata
+     * @param oauthRouteUrlBuilder The oauth route URL builder
+     * @param stateFactory         The state provider
+     * @param nonceFactory         The nonce provider
+     * @param loginHintResolver    The login hint provider
+     * @param idTokenHintResolver  The id token hint provider
+     * @param pkceFactory          PKCE Factory
+     */
+    @Inject
+    public DefaultOpenIdAuthorizationRequest(@Parameter HttpRequest<?> request,
+                                             @Parameter OauthClientConfiguration oauthConfiguration,
+                                             @Parameter OpenIdProviderMetadata openIdProviderMetadata,
+                                             OauthRouteUrlBuilder oauthRouteUrlBuilder,
+                                             @Nullable StateFactory stateFactory,
+                                             @Nullable NonceFactory nonceFactory,
+                                             @Nullable LoginHintResolver loginHintResolver,
+                                             @Nullable IdTokenHintResolver idTokenHintResolver,
+                                             @Nullable PkceFactory pkceFactory) {
+        this.request = request;
+        this.oauthConfiguration = oauthConfiguration;
+        this.openIdProviderMetadata = openIdProviderMetadata;
+        this.endpointConfiguration = oauthConfiguration.getOpenid()
+            .flatMap(OpenIdClientConfiguration::getAuthorization).orElse(null);
+        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
+        this.stateFactory = stateFactory;
+        this.nonceFactory = nonceFactory;
+        this.loginHintResolver = loginHintResolver;
+        this.idTokenHintResolver = idTokenHintResolver;
+        this.pkceFactory = pkceFactory;
+    }
 
     /**
      * @param request              The original request prior redirect.
@@ -64,26 +110,57 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
      * @param nonceFactory         The nonce provider
      * @param loginHintResolver    The login hint provider
      * @param idTokenHintResolver  The id token hint provider
-     * @param pkceFactory          The PKCE factory
+     * @deprecated use {@link DefaultOpenIdAuthorizationRequest(HttpRequest, OauthClientConfiguration, OpenIdProviderMetadata, OauthRouteUrlBuilder, StateFactory, NonceFactory, LoginHintResolver, IdTokenHintResolver, PkceFactory)} instead.
      */
+    @Deprecated
     public DefaultOpenIdAuthorizationRequest(@Parameter HttpRequest<?> request,
                                              @Parameter OauthClientConfiguration oauthConfiguration,
                                              OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                              @Nullable StateFactory stateFactory,
                                              @Nullable NonceFactory nonceFactory,
                                              @Nullable LoginHintResolver loginHintResolver,
-                                             @Nullable IdTokenHintResolver idTokenHintResolver,
-                                             @Nullable PKCEFactory pkceFactory) {
-        this.request = request;
-        this.oauthConfiguration = oauthConfiguration;
-        this.endpointConfiguration = oauthConfiguration.getOpenid()
-            .flatMap(OpenIdClientConfiguration::getAuthorization).orElse(null);
-        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
-        this.stateFactory = stateFactory;
-        this.nonceFactory = nonceFactory;
-        this.loginHintResolver = loginHintResolver;
-        this.idTokenHintResolver = idTokenHintResolver;
-        this.pkceFactory = pkceFactory;
+                                             @Nullable IdTokenHintResolver idTokenHintResolver) {
+        this(request,
+            oauthConfiguration,
+            new DefaultOpenIdProviderMetadata(),
+            oauthRouteUrlBuilder,
+            stateFactory,
+            nonceFactory,
+            loginHintResolver,
+            idTokenHintResolver,
+            defaultDefaultPkceFactory());
+    }
+
+    /**
+     * @deprecated Used by deprecated constructor.
+     * @return default PkceFactory
+     */
+    @Deprecated
+    private static PkceFactory defaultDefaultPkceFactory() {
+        return new DefaultPkceFactory(Arrays.asList(
+            new S256PkceGenerator(new DefaultCodeVerifierGenerator(defaultPkceConfiguration())),
+            new PlainPkceGenerator(new DefaultCodeVerifierGenerator(defaultPkceConfiguration()))
+        ), new CookiePkcePersistence(new CookiePkcePersistenceConfiguration()));
+    }
+
+    /**
+     * @deprecated Used by deprecated constructor.
+     * @return default PkceConfigurations
+     */
+    @Deprecated
+    private static PkceConfiguration defaultPkceConfiguration() {
+        return new PkceConfiguration() {
+            @Override
+            public int getEntropy() {
+                return 64;
+            }
+
+            @Override
+            @NonNull
+            public Optional<String> getPersistence() {
+                return Optional.of("cookie");
+            }
+        };
     }
 
     @Override
@@ -126,9 +203,10 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
     }
 
     @Override
-    public Optional<PKCE> getPKCE(MutableHttpResponse<?> response) {
+    @NonNull
+    public Optional<PkceChallenge> getPkceChallenge(@NonNull MutableHttpResponse<?> response) {
         return Optional.ofNullable(pkceFactory)
-            .map(sf -> sf.buildPKCE(request, response, this));
+            .flatMap(sf -> sf.buildChallenge(request, response, openIdProviderMetadata.getCodeChallengeMethodsSupported()));
     }
 
     @Override

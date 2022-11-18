@@ -20,7 +20,7 @@ import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PKCEPersistence;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence;
 import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
@@ -50,7 +50,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
     private final StateValidator stateValidator;
 
     @Nullable
-    private final PKCEPersistence pkcePersistence;
+    private final PkcePersistence pkcePersistence;
 
     /**
      * @param tokenEndpointClient The token endpoint client
@@ -59,7 +59,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
      */
     DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
                                              @Nullable StateValidator stateValidator,
-                                             @Nullable PKCEPersistence pkcePersistence) {
+                                             @Nullable PkcePersistence pkcePersistence) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.stateValidator = stateValidator;
         this.pkcePersistence = pkcePersistence;
@@ -94,7 +94,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
         String codeVerifier = null;
 
         if (pkcePersistence != null) {
-            codeVerifier = pkcePersistence.retrieve(authorizationResponse.getCallbackRequest()).orElse(null);
+            codeVerifier = pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest()).orElse(null);
         }
 
         OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration, codeVerifier);

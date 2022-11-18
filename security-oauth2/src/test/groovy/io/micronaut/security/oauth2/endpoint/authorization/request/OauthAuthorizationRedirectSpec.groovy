@@ -11,7 +11,7 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.PKCEUtils
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultPKCEFactory
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerator
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
@@ -69,21 +69,23 @@ class OauthAuthorizationRedirectSpec extends EmbeddedServerSpecification {
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/twitter")
         location.contains("client_id=myclient")
-        response.getCookie("OAUTH2_PKCE").isPresent()
+        !response.getCookie("OAUTH2_PKCE").isPresent()
 
         when:
         Map<String, String> queryValues = StateUtils.queryValuesAsMap(location)
         String state = StateUtils.decodeState(queryValues)
-        String codeChallenge = PKCEUtils.getCodeChallenge(queryValues)
-        String codeChallengeMethod = PKCEUtils.getCodeChallengeMethod(queryValues)
 
         then:
         state.contains('"nonce":"')
         state.contains('"redirectUri":"http://localhost:' + embeddedServer.getPort() + '/oauth/callback/twitter"')
-        !codeChallenge.isEmpty()
-        VALID_CODE_CHALLENGE_PATTERN.matcher(codeChallenge)
-        codeChallengeMethod == "S256"
-        DefaultPKCEFactory.deriveCodeVerifierChallenge(response.getCookie("OAUTH2_PKCE").get().getValue()) == codeChallenge
+
+        when:
+        String codeChallenge = PKCEUtils.getCodeChallenge(queryValues)
+        String codeChallengeMethod = PKCEUtils.getCodeChallengeMethod(queryValues)
+
+        then:
+        !codeChallenge
+        !codeChallengeMethod
     }
 
     @Singleton

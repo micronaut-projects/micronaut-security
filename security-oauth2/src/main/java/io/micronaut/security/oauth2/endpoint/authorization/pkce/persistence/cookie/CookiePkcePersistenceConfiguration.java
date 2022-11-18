@@ -15,20 +15,30 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie;
 
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration;
-import io.micronaut.security.oauth2.endpoint.authorization.pkce.DefaultPKCEConfiguration;
 
 /**
  * @author Nemanja Mikic
  * @since 3.9.0
  */
-@ConfigurationProperties(CookiePKCEPersistenceConfiguration.PREFIX)
-public class CookiePKCEPersistenceConfiguration extends AbstractCookieConfiguration {
-
-    public static final String PREFIX = DefaultPKCEConfiguration.PREFIX + ".cookie";
+@ConfigurationProperties(CookiePkcePersistenceConfiguration.PREFIX)
+public class CookiePkcePersistenceConfiguration extends AbstractCookieConfiguration {
+    public static final String PREFIX = PkceConfigurationProperties.PREFIX + ".cookie";
 
     private static final String DEFAULT_COOKIE_NAME = "OAUTH2_PKCE";
+
+    /**
+     * Cookie Name. Default value `{@link #DEFAULT_COOKIE_NAME}`.
+     *
+     * @param cookieName Cookie name
+     */
+    @Override
+    public void setCookieName(@NonNull String cookieName) {
+        this.cookieName = cookieName;
+    }
 
     @Override
     public String defaultCookieName() {
