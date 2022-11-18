@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Classes related to the persistence of state in a cookie.
+ * Classes related to the persistence of PKCE in a cookie.
  *
  * @author Nemanja Mikic
  * @since 3.8.0
