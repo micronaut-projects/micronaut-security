@@ -64,7 +64,7 @@ public class S256PkceGenerator implements PkceGenerator {
     }
 
     @Override
-    public boolean supportsAny(List<String> codeChallengeMethods) {
+    public boolean supportsAny(@NonNull List<String> codeChallengeMethods) {
         return codeChallengeMethods.stream().anyMatch(m -> m.equalsIgnoreCase(CODE_CHALLENGE_METHOD_S256));
     }
 
