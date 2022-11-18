@@ -27,6 +27,7 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.validation.Stat
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -57,12 +58,24 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
      * @param stateValidator      The state validator
      * @param pkcePersistence     The PKCE Persistence
      */
+    @Inject
     DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
                                              @Nullable StateValidator stateValidator,
                                              @Nullable PkcePersistence pkcePersistence) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.stateValidator = stateValidator;
         this.pkcePersistence = pkcePersistence;
+    }
+
+    /**
+     * @param tokenEndpointClient The token endpoint client
+     * @param stateValidator      The state validator
+     * @deprecated Use {@link DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, StateValidator, PkcePersistence)} instead.
+     */
+    @Deprecated
+    DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
+                                             @Nullable StateValidator stateValidator) {
+        this(tokenEndpointClient, stateValidator, null);
     }
 
     @Override
