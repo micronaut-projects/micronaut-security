@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":6,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -111,7 +111,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../../io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a>, <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dd>
+<dd><a href="../../../../../io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a>, <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistenceConfiguration</a>, <a href="../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dd>
 </dl>
 <hr>
 <br>
@@ -147,6 +147,22 @@ implements io.micronaut.http.cookie.CookieConfiguration</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected java.lang.Boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookieHttpOnly">cookieHttpOnly</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected java.time.Duration</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookieMaxAge">cookieMaxAge</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookieName">cookieName</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookiePath">cookiePath</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected java.lang.Boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookieSecure">cookieSecure</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -176,26 +192,70 @@ implements io.micronaut.http.cookie.CookieConfiguration</pre>
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>abstract java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#defaultCookieName--">defaultCookieName</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#getCookieDomain--">getCookieDomain</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.time.temporal.TemporalAmount&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#getCookieMaxAge--">getCookieMaxAge</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#getCookieName--">getCookieName</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#getCookiePath--">getCookiePath</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.Boolean&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#isCookieHttpOnly--">isCookieHttpOnly</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.Boolean&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#isCookieSecure--">isCookieSecure</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookieDomain-java.lang.String-">setCookieDomain</a></span>(java.lang.String&nbsp;cookieDomain)</code>
 <div class="block">Sets the domain name of this Cookie.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookieHttpOnly-java.lang.Boolean-">setCookieHttpOnly</a></span>(java.lang.Boolean&nbsp;cookieHttpOnly)</code>
+<div class="block">Whether the Cookie can only be accessed via HTTP.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookieMaxAge-java.time.Duration-">setCookieMaxAge</a></span>(java.time.Duration&nbsp;cookieMaxAge)</code>
+<div class="block">Sets the maximum age of the cookie.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookieName-java.lang.String-">setCookieName</a></span>(java.lang.String&nbsp;cookieName)</code>
+<div class="block">Cookie Name.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookiePath-java.lang.String-">setCookiePath</a></span>(java.lang.String&nbsp;cookiePath)</code>
+<div class="block">Sets the path of the cookie.</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookieSecure-java.lang.Boolean-">setCookieSecure</a></span>(java.lang.Boolean&nbsp;cookieSecure)</code>
 <div class="block">Sets whether the cookie is secured.</div>
@@ -214,7 +274,7 @@ implements io.micronaut.http.cookie.CookieConfiguration</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;io.micronaut.http.cookie.CookieConfiguration</h3>
-<code>getCookieMaxAge, getCookieName, getCookiePath, getCookieSameSite, isCookieHttpOnly</code></li>
+<code>getCookieSameSite</code></li>
 </ul>
 </li>
 </ul>
@@ -242,10 +302,46 @@ implements io.micronaut.http.cookie.CookieConfiguration</pre>
 <a name="cookieSecure">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>cookieSecure</h4>
 <pre>protected&nbsp;java.lang.Boolean cookieSecure</pre>
+</li>
+</ul>
+<a name="cookiePath">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>cookiePath</h4>
+<pre>protected&nbsp;java.lang.String cookiePath</pre>
+</li>
+</ul>
+<a name="cookieHttpOnly">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>cookieHttpOnly</h4>
+<pre>protected&nbsp;java.lang.Boolean cookieHttpOnly</pre>
+</li>
+</ul>
+<a name="cookieMaxAge">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>cookieMaxAge</h4>
+<pre>protected&nbsp;java.time.Duration cookieMaxAge</pre>
+</li>
+</ul>
+<a name="cookieName">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>cookieName</h4>
+<pre>protected&nbsp;java.lang.String cookieName</pre>
 </li>
 </ul>
 </li>
@@ -317,7 +413,7 @@ implements io.micronaut.http.cookie.CookieConfiguration</pre>
 <a name="setCookieSecure-java.lang.Boolean-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setCookieSecure</h4>
 <pre>public&nbsp;void&nbsp;setCookieSecure(java.lang.Boolean&nbsp;cookieSecure)</pre>
@@ -325,6 +421,126 @@ implements io.micronaut.http.cookie.CookieConfiguration</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>cookieSecure</code> - True if the cookie is secure</dd>
+</dl>
+</li>
+</ul>
+<a name="getCookieName--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCookieName</h4>
+<pre>@NonNull
+public&nbsp;java.lang.String&nbsp;getCookieName()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getCookieName</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
+</dl>
+</li>
+</ul>
+<a name="setCookieName-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setCookieName</h4>
+<pre>public&nbsp;void&nbsp;setCookieName(@NonNull
+                          java.lang.String&nbsp;cookieName)</pre>
+<div class="block">Cookie Name.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>cookieName</code> - Cookie name</dd>
+</dl>
+</li>
+</ul>
+<a name="defaultCookieName--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>defaultCookieName</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;defaultCookieName()</pre>
+</li>
+</ul>
+<a name="getCookiePath--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCookiePath</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getCookiePath()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getCookiePath</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
+</dl>
+</li>
+</ul>
+<a name="setCookiePath-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setCookiePath</h4>
+<pre>public&nbsp;void&nbsp;setCookiePath(@Nullable
+                          java.lang.String&nbsp;cookiePath)</pre>
+<div class="block">Sets the path of the cookie. Default value ().</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>cookiePath</code> - The path of the cookie.</dd>
+</dl>
+</li>
+</ul>
+<a name="isCookieHttpOnly--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isCookieHttpOnly</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.lang.Boolean&gt;&nbsp;isCookieHttpOnly()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>isCookieHttpOnly</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
+</dl>
+</li>
+</ul>
+<a name="setCookieHttpOnly-java.lang.Boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setCookieHttpOnly</h4>
+<pre>public&nbsp;void&nbsp;setCookieHttpOnly(java.lang.Boolean&nbsp;cookieHttpOnly)</pre>
+<div class="block">Whether the Cookie can only be accessed via HTTP. Default value ().</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>cookieHttpOnly</code> - Whether the Cookie can only be accessed via HTTP</dd>
+</dl>
+</li>
+</ul>
+<a name="getCookieMaxAge--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCookieMaxAge</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.time.temporal.TemporalAmount&gt;&nbsp;getCookieMaxAge()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getCookieMaxAge</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
+</dl>
+</li>
+</ul>
+<a name="setCookieMaxAge-java.time.Duration-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setCookieMaxAge</h4>
+<pre>public&nbsp;void&nbsp;setCookieMaxAge(java.time.Duration&nbsp;cookieMaxAge)</pre>
+<div class="block">Sets the maximum age of the cookie. Default value (5 minutes).</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>cookieMaxAge</code> - The maximum age of the cookie</dd>
 </dl>
 </li>
 </ul>

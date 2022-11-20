@@ -145,7 +145,19 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/a
                                          <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
                                          <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
                                          <a href="../../../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&nbsp;oauthRouteUrlBuilder,
-                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator)</code>&nbsp;</td>
+                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html#DefaultOpenIdAuthorizationResponseHandler-io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator-io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper-io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient-io.micronaut.security.oauth2.url.OauthRouteUrlBuilder-io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator-io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence-"><code>DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, DefaultOpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence )</code></a> instead.</span></div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html#DefaultOpenIdAuthorizationResponseHandler-io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator-io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper-io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient-io.micronaut.security.oauth2.url.OauthRouteUrlBuilder-io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator-io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence-">DefaultOpenIdAuthorizationResponseHandler</a></span>(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
+                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
+                                         <a href="../../../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&nbsp;oauthRouteUrlBuilder,
+                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
+                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -195,18 +207,46 @@ implements <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/a
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
+<a name="DefaultOpenIdAuthorizationResponseHandler-io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator-io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper-io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient-io.micronaut.security.oauth2.url.OauthRouteUrlBuilder-io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator-io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DefaultOpenIdAuthorizationResponseHandler</h4>
+<pre>@Inject
+public&nbsp;DefaultOpenIdAuthorizationResponseHandler(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
+                                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+                                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
+                                                         <a href="../../../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&nbsp;oauthRouteUrlBuilder,
+                                                         @Nullable
+                                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator,
+                                                         @Nullable
+                                                         <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a>&nbsp;pkcePersistence)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>tokenResponseValidator</code> - The token response validator</dd>
+<dd><code>authenticationMapper</code> - Authentication Mapper</dd>
+<dd><code>tokenEndpointClient</code> - The token endpoint client</dd>
+<dd><code>oauthRouteUrlBuilder</code> - The oauth route url builder</dd>
+<dd><code>stateValidator</code> - The state validator</dd>
+<dd><code>pkcePersistence</code> - The PKCE persistence</dd>
+</dl>
+</li>
+</ul>
 <a name="DefaultOpenIdAuthorizationResponseHandler-io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator-io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper-io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient-io.micronaut.security.oauth2.url.OauthRouteUrlBuilder-io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DefaultOpenIdAuthorizationResponseHandler</h4>
-<pre>public&nbsp;DefaultOpenIdAuthorizationResponseHandler(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
-                                                 <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
-                                                 <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
-                                                 <a href="../../../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&nbsp;oauthRouteUrlBuilder,
-                                                 @Nullable
-                                                 <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator)</pre>
+<pre>@Deprecated
+public&nbsp;DefaultOpenIdAuthorizationResponseHandler(<a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation">OpenIdTokenResponseValidator</a>&nbsp;tokenResponseValidator,
+                                                             <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/DefaultOpenIdAuthenticationMapper.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">DefaultOpenIdAuthenticationMapper</a>&nbsp;authenticationMapper,
+                                                             <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/TokenEndpointClient.html" title="interface in io.micronaut.security.oauth2.endpoint.token.request">TokenEndpointClient</a>&nbsp;tokenEndpointClient,
+                                                             <a href="../../../../../../../io/micronaut/security/oauth2/url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&nbsp;oauthRouteUrlBuilder,
+                                                             @Nullable
+                                                             <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/state/validation/StateValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.validation">StateValidator</a>&nbsp;stateValidator)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">Use <a href="../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html#DefaultOpenIdAuthorizationResponseHandler-io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator-io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper-io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient-io.micronaut.security.oauth2.url.OauthRouteUrlBuilder-io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator-io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence-"><code>DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, DefaultOpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence )</code></a> instead.</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tokenResponseValidator</code> - The token response validator</dd>

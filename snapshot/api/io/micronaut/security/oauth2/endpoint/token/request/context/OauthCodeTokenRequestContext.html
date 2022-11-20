@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -161,7 +161,17 @@ extends <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/t
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#OauthCodeTokenRequestContext-io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse-io.micronaut.security.oauth2.endpoint.SecureEndpoint-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-">OauthCodeTokenRequestContext</a></span>(<a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationResponse</a>&nbsp;authorizationResponse,
                             <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a>&nbsp;tokenEndpoint,
-                            <a href="../../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration)</code>&nbsp;</td>
+                            <a href="../../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">use <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#OauthCodeTokenRequestContext-io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse-io.micronaut.security.oauth2.endpoint.SecureEndpoint-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.lang.String-"><code>OauthCodeTokenRequestContext(AuthorizationResponse, SecureEndpoint, OauthClientConfiguration, String)</code></a> instead.</span></div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#OauthCodeTokenRequestContext-io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse-io.micronaut.security.oauth2.endpoint.SecureEndpoint-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.lang.String-">OauthCodeTokenRequestContext</a></span>(<a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationResponse</a>&nbsp;authorizationResponse,
+                            <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a>&nbsp;tokenEndpoint,
+                            <a href="../../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+                            java.lang.String&nbsp;codeVerifier)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -179,14 +189,18 @@ extends <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/t
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#getCodeVerifier--">getCodeVerifier</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>io.micronaut.core.type.Argument&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#getErrorResponseType--">getErrorResponseType</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#getGrant--">getGrant</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>io.micronaut.core.type.Argument&lt;<a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/token/response/TokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenResponse</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#getResponseType--">getResponseType</a></span>()</code>&nbsp;</td>
 </tr>
@@ -219,15 +233,38 @@ extends <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/t
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
+<a name="OauthCodeTokenRequestContext-io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse-io.micronaut.security.oauth2.endpoint.SecureEndpoint-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>OauthCodeTokenRequestContext</h4>
+<pre>@Inject
+public&nbsp;OauthCodeTokenRequestContext(<a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationResponse</a>&nbsp;authorizationResponse,
+                                            <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a>&nbsp;tokenEndpoint,
+                                            <a href="../../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+                                            @Nullable
+                                            java.lang.String&nbsp;codeVerifier)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>authorizationResponse</code> - The authorization response</dd>
+<dd><code>tokenEndpoint</code> - The token endpoint</dd>
+<dd><code>clientConfiguration</code> - The client configuration</dd>
+<dd><code>codeVerifier</code> - The PKCE code_verifier</dd>
+</dl>
+</li>
+</ul>
 <a name="OauthCodeTokenRequestContext-io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse-io.micronaut.security.oauth2.endpoint.SecureEndpoint-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>OauthCodeTokenRequestContext</h4>
-<pre>public&nbsp;OauthCodeTokenRequestContext(<a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationResponse</a>&nbsp;authorizationResponse,
-                                    <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a>&nbsp;tokenEndpoint,
-                                    <a href="../../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration)</pre>
+<pre>@Deprecated
+public&nbsp;OauthCodeTokenRequestContext(<a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/authorization/response/AuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationResponse</a>&nbsp;authorizationResponse,
+                                                <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a>&nbsp;tokenEndpoint,
+                                                <a href="../../../../../../../../io/micronaut/security/oauth2/configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#OauthCodeTokenRequestContext-io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse-io.micronaut.security.oauth2.endpoint.SecureEndpoint-io.micronaut.security.oauth2.configuration.OauthClientConfiguration-java.lang.String-"><code>OauthCodeTokenRequestContext(AuthorizationResponse, SecureEndpoint, OauthClientConfiguration, String)</code></a> instead.</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>authorizationResponse</code> - The authorization response</dd>
@@ -273,13 +310,29 @@ extends <a href="../../../../../../../../io/micronaut/security/oauth2/endpoint/t
 <a name="getErrorResponseType--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getErrorResponseType</h4>
 <pre>public&nbsp;io.micronaut.core.type.Argument&lt;?&gt;&nbsp;getErrorResponseType()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The error response argument</dd>
+</dl>
+</li>
+</ul>
+<a name="getCodeVerifier--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getCodeVerifier</h4>
+<pre>@Nullable
+public&nbsp;java.lang.String&nbsp;getCodeVerifier()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The PKCE code verifier</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.9.0</dd>
 </dl>
 </li>
 </ul>
