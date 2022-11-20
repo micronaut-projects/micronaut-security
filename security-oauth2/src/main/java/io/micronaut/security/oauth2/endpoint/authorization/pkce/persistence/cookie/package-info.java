@@ -26,5 +26,4 @@ package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.coo
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties;
-
-import static io.micronaut.security.oauth2.endpoint.nonce.DefaultNonceConfiguration.PERSISTENCE_COOKIE;
+import static io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties.PERSISTENCE_COOKIE;
