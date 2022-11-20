@@ -293,5 +293,25 @@
     "type": "io.micronaut.security.x509.$X509Authentication$IntrospectionRef",
     "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
     "reason": "Changed for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator)",
+    "reason": "removed deprecated constructor in Micronaut Security 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator)",
+    "reason": "removed deprecated constructor in Micronaut Security 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)",
+    "reason": "removed deprecated constructor in Micronaut Security 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)",
+    "reason": "removed deprecated constructor in Micronaut Security 4"
   }
 ]

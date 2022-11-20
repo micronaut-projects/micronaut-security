@@ -15,9 +15,12 @@
  */
 package io.micronaut.security.oauth2.endpoint;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.cookie.CookieConfiguration;
 
+import java.time.Duration;
+import java.time.temporal.TemporalAmount;
 import java.util.Optional;
 
 /**
@@ -27,8 +30,18 @@ import java.util.Optional;
  */
 public abstract class AbstractCookieConfiguration implements CookieConfiguration {
 
+    private static final boolean DEFAULT_HTTPONLY = true;
+    private static final String DEFAULT_COOKIEPATH = "/";
+
+    private static final Duration DEFAULT_MAX_AGE = Duration.ofMinutes(5);
+
     protected String cookieDomain;
     protected Boolean cookieSecure;
+
+    protected String cookiePath = DEFAULT_COOKIEPATH;
+    protected Boolean cookieHttpOnly = DEFAULT_HTTPONLY;
+    protected Duration cookieMaxAge = DEFAULT_MAX_AGE;
+    protected String cookieName = null;
 
     @Override
     public Optional<String> getCookieDomain() {
@@ -56,6 +69,68 @@ public abstract class AbstractCookieConfiguration implements CookieConfiguration
      */
     public void setCookieSecure(Boolean cookieSecure) {
         this.cookieSecure = cookieSecure;
+    }
+
+    @NonNull
+    @Override
+    public String getCookieName() {
+        if (cookieName != null) {
+            return this.cookieName;
+        }
+        return defaultCookieName();
+    }
+
+    /**
+     * Cookie Name.
+     *
+     * @param cookieName Cookie name
+     */
+    public void setCookieName(@NonNull String cookieName) {
+        this.cookieName = cookieName;
+    }
+
+    public abstract String defaultCookieName();
+
+    @Override
+    public Optional<String> getCookiePath() {
+        return Optional.ofNullable(cookiePath);
+    }
+
+    /**
+     * Sets the path of the cookie. Default value ({@value io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration#DEFAULT_COOKIEPATH}).
+     *
+     * @param cookiePath The path of the cookie.
+     */
+    public void setCookiePath(@Nullable String cookiePath) {
+        this.cookiePath = cookiePath;
+    }
+
+    @Override
+    public Optional<Boolean> isCookieHttpOnly() {
+        return Optional.ofNullable(cookieHttpOnly);
+    }
+
+    /**
+     * Whether the Cookie can only be accessed via HTTP. Default value ({@value io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration#DEFAULT_HTTPONLY}).
+     *
+     * @param cookieHttpOnly Whether the Cookie can only be accessed via HTTP
+     */
+    public void setCookieHttpOnly(Boolean cookieHttpOnly) {
+        this.cookieHttpOnly = cookieHttpOnly;
+    }
+
+    @Override
+    public Optional<TemporalAmount> getCookieMaxAge() {
+        return Optional.ofNullable(cookieMaxAge);
+    }
+
+    /**
+     * Sets the maximum age of the cookie. Default value (5 minutes).
+     *
+     * @param cookieMaxAge The maximum age of the cookie
+     */
+    public void setCookieMaxAge(Duration cookieMaxAge) {
+        this.cookieMaxAge = cookieMaxAge;
     }
 
 }
