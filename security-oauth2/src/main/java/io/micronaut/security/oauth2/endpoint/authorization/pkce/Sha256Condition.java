@@ -30,7 +30,7 @@ public class Sha256Condition implements Condition {
     @Override
     public boolean matches(ConditionContext context) {
         try {
-            MessageDigest sha256Digester = MessageDigest.getInstance("SHA-256");
+            MessageDigest.getInstance("SHA-256");
             return true;
         } catch (NoSuchAlgorithmException e) {
             return false;
