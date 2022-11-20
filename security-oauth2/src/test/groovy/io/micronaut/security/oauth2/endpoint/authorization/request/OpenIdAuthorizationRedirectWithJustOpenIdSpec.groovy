@@ -1,5 +1,6 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request
 
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -23,6 +24,7 @@ class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecif
     @Override
     Map<String, Object> getConfiguration() {
         Map<String, Object> m = super.configuration  + [
+                'micronaut.security.oauth2.pkce.enabled': StringUtils.FALSE,
                 'micronaut.security.authentication': 'cookie',
         ]
         if (System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {

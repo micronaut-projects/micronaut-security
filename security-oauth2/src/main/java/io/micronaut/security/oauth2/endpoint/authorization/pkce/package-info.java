@@ -20,7 +20,7 @@
  * @since 3.9.0
  */
 @Configuration
-@Requires(property = PkceConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.FALSE)
+@Requires(property = PkceConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 package io.micronaut.security.oauth2.endpoint.authorization.pkce;
 
 import io.micronaut.context.annotation.Configuration;

@@ -36,7 +36,7 @@ public class PkceConfigurationProperties implements PkceConfiguration {
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
     private static final String PERSISTENCE_COOKIE = "cookie";
     private static final String PERSISTENCE_SESSION = "session";
     private static final String DEFAULT_PERSISTENCE = PERSISTENCE_COOKIE;

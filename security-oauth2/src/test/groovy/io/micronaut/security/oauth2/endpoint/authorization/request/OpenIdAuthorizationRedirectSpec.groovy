@@ -1,6 +1,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -37,6 +38,7 @@ class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         Map<String, Object> m = super.configuration + [
+                'micronaut.security.oauth2.pkce.enabled': StringUtils.FALSE,
                 'micronaut.security.authentication': 'cookie',
                 "micronaut.security.oauth2.clients.twitter.authorization.url": "https://twitter.com/authorize",
                 "micronaut.security.oauth2.clients.twitter.token.url"        : "https://twitter.com/token",

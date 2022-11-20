@@ -64,8 +64,6 @@ class PkceCookieCodeChallengeNotSupportedSpec extends Specification {
         given: 'create an auth server and server which uses OpenID connect auto-configuration pointint to the auth server'
         EmbeddedServer oauthServer = ApplicationContext.run(EmbeddedServer, [
             "spec.name": "AuthServerPkceCookieCodeChallengeNotSupportedSpec",
-            "micronaut.security.oauth2.pkce.enabled": StringUtils.TRUE,
-            // Enable so that beans in this package (such as the beans in this test) io.micronaut.security.oauth2.endpoint.authorization.pkce are loaded
         ] as Map<String, Object>)
 
         EmbeddedServer server = ApplicationContext.run(EmbeddedServer, [
@@ -73,7 +71,6 @@ class PkceCookieCodeChallengeNotSupportedSpec extends Specification {
             "micronaut.security.authentication": "cookie",
             "micronaut.security.oauth2.pkce.persistence": "cookie",
             'micronaut.http.client.followRedirects': false,
-            "micronaut.security.oauth2.pkce.enabled": StringUtils.TRUE,
             "micronaut.security.oauth2.clients.auth.openid.issuer": "http://localhost:${oauthServer.port}/oauth2/default".toString(),
             "micronaut.security.oauth2.clients.auth.client-id": "xxx",
             "micronaut.security.oauth2.clients.auth.client-secret": "xxx",

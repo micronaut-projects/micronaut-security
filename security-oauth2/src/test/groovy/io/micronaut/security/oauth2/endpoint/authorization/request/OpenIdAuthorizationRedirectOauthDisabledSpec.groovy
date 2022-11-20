@@ -41,6 +41,7 @@ class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecifi
     Map<String, Object> getConfiguration() {
         Map<String, Object> m = super.configuration + [
                 'micronaut.security.authentication': 'cookie',
+                'micronaut.security.oauth2.pkce.enabled': StringUtils.FALSE,
                 "micronaut.security.oauth2.clients.twitter.authorization.url": "https://twitter.com/authorize",
                 "micronaut.security.oauth2.clients.twitter.token.url": "https://twitter.com/token",
                 "micronaut.security.oauth2.clients.twitter.client-id": Keycloak.CLIENT_ID,
@@ -81,7 +82,7 @@ class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecifi
         location.contains("client_id=$Keycloak.CLIENT_ID")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
 
-        and: 'PKCE cookie is present'
+        and: 'PKCE cookie is not present'
         !response.getCookie("OAUTH2_PKCE").isPresent()
 
         when:

@@ -7,7 +7,6 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
 
-@Property(name = "micronaut.security.oauth2.pkce.enabled", value = StringUtils.TRUE)
 @MicronautTest(startApplication = false)
 class S256PkceGeneratorSpec extends Specification {
     @Inject
