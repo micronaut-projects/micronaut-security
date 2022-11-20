@@ -1,5 +1,6 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request
 
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -7,6 +8,7 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.inject.qualifiers.Qualifiers
+import io.micronaut.security.oauth2.PKCEUtils
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
@@ -22,6 +24,7 @@ class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecif
     @Override
     Map<String, Object> getConfiguration() {
         Map<String, Object> m = super.configuration  + [
+                'micronaut.security.oauth2.pkce.enabled': StringUtils.FALSE,
                 'micronaut.security.authentication': 'cookie',
         ]
         if (System.getProperty(Keycloak.SYS_TESTCONTAINERS) == null || Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS))) {
@@ -56,6 +59,8 @@ class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecif
         location.contains("response_type=code")
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
         location.contains("client_id=$Keycloak.CLIENT_ID")
+        and:
+        !response.getCookie("OAUTH2_PKCE").isPresent()
 
         when:
         Map<String, String> queryValues = StateUtils.queryValuesAsMap(location)
@@ -63,13 +68,17 @@ class OpenIdAuthorizationRedirectWithJustOpenIdSpec extends EmbeddedServerSpecif
 
         then:
         state.contains('"nonce":"')
-        state.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
+        state.contains('"redirectUri":"http://localhost:' + embeddedServer.getPort() + '/oauth/callback/keycloak"')
+
+        and:
+        !PKCEUtils.getCodeChallenge(queryValues)
+        !PKCEUtils.getCodeChallengeMethod(queryValues)
 
         when:
         client.toBlocking().exchange("/oauth/login/twitter")
 
         then:
-        def ex = thrown(HttpClientResponseException)
+        HttpClientResponseException ex = thrown(HttpClientResponseException)
         ex.response.status.code == 401
     }
 }

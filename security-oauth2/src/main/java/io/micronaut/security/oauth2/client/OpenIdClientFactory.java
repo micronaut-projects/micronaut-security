@@ -133,13 +133,15 @@ class OpenIdClientFactory {
             revocation.getUrl().ifPresent(configuration::setRevocationEndpoint);
             revocation.getAuthMethod().ifPresent(authMethod -> configuration.setRevocationEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
         });
-
         openIdClientConfiguration.getRegistration()
                 .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setRegistrationEndpoint);
         openIdClientConfiguration.getUserInfo()
                 .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setUserinfoEndpoint);
-        openIdClientConfiguration.getAuthorization()
-                .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setAuthorizationEndpoint);
+        openIdClientConfiguration.getAuthorization().ifPresent(authorizationEndpointConfiguration -> {
+                authorizationEndpointConfiguration.getUrl().ifPresent(configuration::setAuthorizationEndpoint);
+                authorizationEndpointConfiguration.getCodeChallengeMethod()
+                    .ifPresent(codeChallengeMethod -> configuration.setCodeChallengeMethodsSupported(Collections.singletonList(codeChallengeMethod)));
+            });
         openIdClientConfiguration.getToken().ifPresent(token -> {
             token.getUrl().ifPresent(configuration::setTokenEndpoint);
             token.getAuthMethod().ifPresent(authMethod -> configuration.setTokenEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));

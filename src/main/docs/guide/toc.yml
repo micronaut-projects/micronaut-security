@@ -89,6 +89,7 @@ oauth:
           id-token-hint: ID Token Hint
         token-validation: Token Validation
       state: State Parameter
+      pkce: PKCE
     clientcredentials:
       title: Client Credentials
       clientecredentialshttpclient: HTTP Client Filter for Client Credentials
