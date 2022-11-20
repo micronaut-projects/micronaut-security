@@ -1,10 +1,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.pkce
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.annotation.Requires
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.util.CollectionUtils
 import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
@@ -23,40 +20,28 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.handlers.RedirectingLoginHandler
 import io.micronaut.security.oauth2.client.OauthClient
-import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException
-import io.micronaut.security.oauth2.endpoint.authorization.state.State
-import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.BrowserHttpRequest
-import spock.lang.AutoCleanup
-import spock.lang.Shared
 import spock.lang.Specification
 
-class PkceSessionSpec extends Specification {
-
-    @Shared
-    @AutoCleanup
-    EmbeddedServer oauthServer = ApplicationContext.run(EmbeddedServer, [
-            "spec.name": "AuthServerPkceSessionSpec",
+class PkceCookieSpec extends Specification {
+    void "test PKCE with cookie persistence"() {
+        EmbeddedServer oauthServer = ApplicationContext.run(EmbeddedServer, [
+            "spec.name": "AuthServerPkceCookieSpec",
             "micronaut.security.oauth2.pkce.enabled": StringUtils.TRUE,
             // Enable so that beans in this package (such as the beans in this test) io.micronaut.security.oauth2.endpoint.authorization.pkce are loaded
+        ] as Map<String, Object>)
 
-    ] as Map<String, Object>)
-
-    @Shared
-    @AutoCleanup
-    EmbeddedServer server = ApplicationContext.run(EmbeddedServer, [
-            "spec.name": "PkceSessionSpec",
-            "micronaut.security.authentication": "session",
+        EmbeddedServer server = ApplicationContext.run(EmbeddedServer, [
+            "spec.name": "PkceCookieSpec",
+            "micronaut.security.authentication": "cookie",
+            "micronaut.security.oauth2.pkce.persistence": "cookie",
             "micronaut.security.oauth2.pkce.enabled": StringUtils.TRUE,
-            "micronaut.security.oauth2.pkce.persistence": "session",
             "micronaut.security.oauth2.clients.auth.openid.issuer": "http://localhost:${oauthServer.port}/oauth2/default".toString(),
             "micronaut.security.oauth2.clients.auth.client-id": "xxx",
             "micronaut.security.oauth2.clients.auth.client-secret": "xxx",
             "micronaut.security.redirect.unauthorized.url": "/oauth/login/auth",
-    ])
-
-    void "test PKCE with session persistence"() {
+        ])
         expect:
         server
         server.applicationContext.containsBean(HomeController)
@@ -86,18 +71,13 @@ class PkceSessionSpec extends Specification {
 
         then:
         HttpStatus.OK == response.status()
+
+        cleanup:
+        server.close()
+        oauthServer.close()
     }
 
-    @Requires(property = "spec.name", value="PkceSessionSpec")
-    @Replaces(StateValidator.class)
-    static class StateValidatorReplacement implements StateValidator {
-        @Override
-        void validate(@NonNull HttpRequest<?> request,
-                      @Nullable State state) throws InvalidStateException {
-        }
-    }
-
-    @Requires(property = "spec.name", value="PkceSessionSpec")
+    @Requires(property = "spec.name", value="PkceCookieSpec")
     @Controller
     static class HomeController {
         @Secured(SecurityRule.IS_ANONYMOUS)
@@ -112,7 +92,7 @@ class PkceSessionSpec extends Specification {
         }
     }
 
-    @Requires(property = "spec.name", value="AuthServerPkceSessionSpec")
+    @Requires(property = "spec.name", value="AuthServerPkceCookieSpec")
     @Controller
     static class AuthServerController {
         private final HttpHostResolver httpHostResolver
