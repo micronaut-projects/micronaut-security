@@ -32,7 +32,5 @@ public interface OauthAuthorizationEndpointConfiguration extends EndpointConfigu
      * @return Code challenge method to use for PKCE.
      */
     @NonNull
-    default Optional<String> getCodeChallengeMethod() {
-        return Optional.empty();
-    }
+    Optional<String> getCodeChallengeMethod();
 }
