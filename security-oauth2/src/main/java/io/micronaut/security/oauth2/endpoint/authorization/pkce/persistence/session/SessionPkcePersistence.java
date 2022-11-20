@@ -74,6 +74,6 @@ public class SessionPkcePersistence implements PkcePersistence {
                             @NonNull Pkce pkce) {
         Session session = SessionForRequest.find(request)
             .orElseGet(() -> SessionForRequest.create(sessionStore, request));
-        session.put(SESSION_KEY, pkce);
+        session.put(SESSION_KEY, pkce.getCodeVerifier());
     }
 }
