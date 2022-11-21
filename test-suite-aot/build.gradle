@@ -7,6 +7,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 application {
@@ -31,6 +32,7 @@ dependencies {
     implementation project(':security-jwt')
     implementation project(':security-oauth2')
     aotPlugins(project(':security-aot'))
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
 }
 
 version = '0.1'

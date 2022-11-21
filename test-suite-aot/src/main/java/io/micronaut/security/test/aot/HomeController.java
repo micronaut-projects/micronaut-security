@@ -1,6 +1,5 @@
 package io.micronaut.security.test.aot;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.io.ResourceLoader;
@@ -12,6 +11,7 @@ import io.micronaut.security.oauth2.client.DefaultOpenIdProviderMetadataFetcher;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadataFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
+import io.micronaut.serde.ObjectMapper;
 import jakarta.annotation.security.PermitAll;
 
 import java.io.IOException;

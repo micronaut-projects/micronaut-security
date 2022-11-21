@@ -3,7 +3,7 @@ plugins {
 }
 micronautBuild {
     aot {
-        version.set("1.1.1")
+        version.set("2.0.0-SNAPSHOT")
     }
 }
 micronautBuild {

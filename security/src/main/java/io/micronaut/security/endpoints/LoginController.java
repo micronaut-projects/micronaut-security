@@ -36,7 +36,6 @@ import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.validation.Validated;
 import javax.validation.Valid;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
@@ -54,7 +53,6 @@ import reactor.core.publisher.Mono;
 @Requires(beans = Authenticator.class)
 @Controller("${" + LoginControllerConfigurationProperties.PREFIX + ".path:/login}")
 @Secured(SecurityRule.IS_ANONYMOUS)
-@Validated
 public class LoginController {
 
     protected final Authenticator authenticator;
