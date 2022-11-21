@@ -108,7 +108,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     }
 
     /**
-     * If the entry used for the roles in the {@link io.micronaut.security.authentication.Authentication} attributes map is a String, you can use the separator to split its value into multiple roles. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_SEPARATOR}.
+     * If the entry used for the roles in the {@link io.micronaut.security.authentication.Authentication} attributes map is a String, you can use the separator to split its value into multiple roles. Default value {@link io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_SEPARATOR}.
      * @param rolesSeparator separator to split roles by
      */
     public void setRolesSeparator(@Nullable String rolesSeparator) {

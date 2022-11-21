@@ -27,4 +27,5 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
     testImplementation(project(":test-suite-keycloak-16"))
+    testImplementation(mn.logback)
 }

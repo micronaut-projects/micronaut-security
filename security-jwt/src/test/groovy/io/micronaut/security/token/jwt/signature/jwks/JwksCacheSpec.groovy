@@ -97,185 +97,145 @@ class JwksCacheSpec extends Specification {
             'spec.name': 'JwksCacheSpec'
     ])
 
-    void "JWK are cached"() {
-        expect:
-        0 == googleInvocations()
-        0 == appleInvocations()
-        0 == cognitoInvocations()
+    private void hello(BlockingHttpClient client, String token, boolean doAssertion = true) {
+        HttpRequest<?> request = HttpRequest.GET('/hello').bearerAuth(token)
+        if (doAssertion) {
+            String response = client.retrieve(request)
+            assert 'Hello World' == response
+        } else {
+            try {
+                client.retrieve(request)
+            } catch(HttpClientResponseException e) {
+                assert true // token is not valid for cached JWKS
+            }
+        }
+    }
 
-        when:
+    void "JWK are cached"() {
+        given:
         HttpClient googleHttpClient = embeddedServer.applicationContext.createBean(HttpClient, googleEmbeddedServer.URL)
         BlockingHttpClient googleClient = googleHttpClient.toBlocking()
-        BearerAccessRefreshToken googleBearerAccessRefreshToken = googleClient.retrieve(HttpRequest.POST('/login', [username: 'sherlock', password: 'elementary']), BearerAccessRefreshToken)
+
+        HttpClient appleHttpClient = embeddedServer.applicationContext.createBean(HttpClient, appleEmbeddedServer.URL)
+        BlockingHttpClient appleClient = appleHttpClient.toBlocking()
+
+        HttpClient cognitoHttpClient = embeddedServer.applicationContext.createBean(HttpClient, cognitoEmbeddedServer.URL)
+        BlockingHttpClient cognitoClient = cognitoHttpClient.toBlocking()
+
+        HttpClient httpClient = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.URL)
+        BlockingHttpClient client = httpClient.toBlocking()
+
+        expect:
+        0 == totalInvocations()
+
+        when:
+        BearerAccessRefreshToken googleBearerAccessRefreshToken = login(googleClient)
 
         then:
         noExceptionThrown()
-        0 == googleInvocations()
-        0 == appleInvocations()
-        0 == cognitoInvocations()
         googleBearerAccessRefreshToken.accessToken
 
         when:
         String googleAccessToken = googleBearerAccessRefreshToken.accessToken
         JWT googleJWT = JWTParser.parse(googleAccessToken)
-
-        then:
-        googleJWT instanceof SignedJWT
-        ((SignedJWT) googleJWT).getHeader().getKeyID() == 'google'
-
-        when:
-        HttpClient appleHttpClient = embeddedServer.applicationContext.createBean(HttpClient, appleEmbeddedServer.URL)
-        BlockingHttpClient appleClient = appleHttpClient.toBlocking()
-        BearerAccessRefreshToken appleBearerAccessRefreshToken = appleClient.retrieve(HttpRequest.POST('/login', [username: 'sherlock', password: 'elementary']), BearerAccessRefreshToken)
-
-        then:
-        noExceptionThrown()
-        0 == googleInvocations()
-        0 == appleInvocations()
-        0 == cognitoInvocations()
-        appleBearerAccessRefreshToken.accessToken
-
-        when:
+        BearerAccessRefreshToken appleBearerAccessRefreshToken = login(appleClient)
         String appleAccessToken = appleBearerAccessRefreshToken.accessToken
         JWT appleJWT = JWTParser.parse(appleAccessToken)
-
-        then:
-        appleJWT instanceof SignedJWT
-        ((SignedJWT) appleJWT).getHeader().getKeyID() == 'apple'
-
-        when:
-        HttpClient cognitoHttpClient = embeddedServer.applicationContext.createBean(HttpClient, cognitoEmbeddedServer.URL)
-        BlockingHttpClient cognitoClient = cognitoHttpClient.toBlocking()
-        BearerAccessRefreshToken cognitoBearerAccessRefreshToken = cognitoClient.retrieve(HttpRequest.POST('/login', [username: 'sherlock', password: 'elementary']), BearerAccessRefreshToken)
-
-        then:
-        noExceptionThrown()
-        0 == googleInvocations()
-        0 == appleInvocations()
-        0 == cognitoInvocations()
-        cognitoBearerAccessRefreshToken.accessToken
-
-        when:
+        BearerAccessRefreshToken cognitoBearerAccessRefreshToken = login(cognitoClient)
         String cognitoAccessToken = cognitoBearerAccessRefreshToken.accessToken
         JWT cognitoJWT = JWTParser.parse(cognitoAccessToken)
 
         then:
-        cognitoJWT instanceof SignedJWT
-        ((SignedJWT) cognitoJWT).getHeader().getKeyID() == 'cognito'
+        noExceptionThrown()
+        assertKeyId(googleJWT, 'google')
+        assertKeyId(appleJWT, 'apple')
+        appleBearerAccessRefreshToken.accessToken
+        assertKeyId(cognitoJWT, 'cognito')
+        cognitoBearerAccessRefreshToken.accessToken
+
+        and:
+        0 == totalInvocations()
 
         when:
-        HttpClient httpClient = embeddedServer.applicationContext.createBean(HttpClient, embeddedServer.URL)
-        BlockingHttpClient client = httpClient.toBlocking()
-        String response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(googleAccessToken))
+        int oldInvocations = totalInvocations()
+        hello(client, googleAccessToken)
+        hello(client, appleAccessToken)
+        hello(client, cognitoAccessToken)
 
         then:
-        noExceptionThrown()
-        'Hello World' == response
-        1 == googleInvocations()
-        1 >= appleInvocations()
-        1 >= cognitoInvocations()
-
-        when:
-        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(appleAccessToken))
-
-        then:
-        noExceptionThrown()
-        'Hello World' == response
-        1 == googleInvocations()
-        1 == appleInvocations()
-        1 >= cognitoInvocations()
-
-        when:
-        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(cognitoAccessToken))
-
-        then:
-        noExceptionThrown()
-        'Hello World' == response
-        1 == googleInvocations()
-        1 == appleInvocations()
-        1 == cognitoInvocations()
+        totalInvocations() >= (oldInvocations + 3)
 
         when: 'when you invoke it again all the keys are cached'
-        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(appleAccessToken))
+        oldInvocations = totalInvocations()
+        hello(client, appleAccessToken)
 
         then:
-        noExceptionThrown()
-        'Hello World' == response
-        1 == googleInvocations()
-        1 == appleInvocations()
-        1 == cognitoInvocations()
+        totalInvocations() == oldInvocations
 
         when: "generate new keys for cognito but with same id, other JWK sets do not match the ID, for cognito the verification key fails and a new one is fetched from the server"
+        oldInvocations = totalInvocations()
         int invocations = cognitoInvocations()
         refresh(cognitoClient)
         cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations = invocations
-        cognitoAccessToken = login(cognitoClient)
+        cognitoAccessToken = loginAccessToken(cognitoClient)
         sleep(6_000) // sleep for six seconds so JWKS cache expires
-        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(cognitoAccessToken))
+        hello(client, cognitoAccessToken)
 
         then:
-        noExceptionThrown()
-        'Hello World' == response
-        1 == googleInvocations()
-        1 == appleInvocations()
-        2 == cognitoInvocations()
+        totalInvocations() >= (oldInvocations + 1)
 
         when: 'generate a new JWKS with new kid, JWKS attempt to refresh'
+        oldInvocations = totalInvocations()
         CognitoSignatureConfiguration cognitoSignatureConfiguration = cognitoEmbeddedServer.applicationContext.getBean(CognitoSignatureConfiguration)
         invocations = cognitoInvocations()
         refresh(cognitoClient)
         cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations = invocations
         cognitoSignatureConfiguration.rotateKid()
-        cognitoAccessToken = login(cognitoClient)
+        cognitoAccessToken = loginAccessToken(cognitoClient)
         sleep(6_000) // sleep for six seconds so JWKS cache expires
-        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(cognitoAccessToken))
+        hello(client, cognitoAccessToken)
 
         then:
-        noExceptionThrown()
-        'Hello World' == response
-        2 >= googleInvocations()
-        2 >= appleInvocations()
-        3 == cognitoInvocations()
+        totalInvocations() >= (oldInvocations + 1)
 
         when: 'generate a new JWT without kid, JWKS attempt to refresh'
+        oldInvocations = totalInvocations()
         GoogleSignatureConfiguration googleSignatureConfiguration = googleEmbeddedServer.applicationContext.getBean(GoogleSignatureConfiguration)
         invocations = googleInvocations()
         refresh(googleClient)
         googleEmbeddedServer.applicationContext.getBean(GoogleKeysController).invocations = invocations
         googleSignatureConfiguration.clearKid()
-        googleAccessToken = login(googleClient)
+        googleAccessToken = loginAccessToken(googleClient)
         sleep(6_000) // sleep for six seconds so JWKS cache expires
-        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(googleAccessToken))
+        hello(client, googleAccessToken)
 
         then:
-        noExceptionThrown()
-        'Hello World' == response
-        3 >= googleInvocations()
-        3 >= appleInvocations()
-        4 >= cognitoInvocations()
+        totalInvocations() >= (oldInvocations + 1)
 
         when:
+        oldInvocations = totalInvocations()
         String randomSignedJwt = randomSignedJwt()
-        20.times {
-            try {
-                response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(randomSignedJwt))
-            } catch(HttpClientResponseException e) {
-                assert true // token is not valid for cached JWKS
-            }
-        }
+        hello(client, randomSignedJwt, false)
 
         then:
-        'Hello World' == response
-        3 >= googleInvocations()
-        3 >= appleInvocations()
-        4 >= cognitoInvocations()
+        totalInvocations() >= oldInvocations
 
         when:
+        oldInvocations = totalInvocations()
         sleep(6_000) // cache expires the token is still invalid but JWKS attempts to refresh
-        response = client.retrieve(HttpRequest.GET('/hello').bearerAuth(randomSignedJwt))
+        hello(client, randomSignedJwt, false)
 
         then:
-        thrown(HttpClientResponseException)
+        totalInvocations() == (oldInvocations + 3)
+    }
+
+    private int totalInvocations() {
+        googleInvocations() + appleInvocations() + cognitoInvocations()
+    }
+
+    private void assertKeyId(JWT jwt, String keyId) {
+        assert jwt instanceof SignedJWT
+        assert ((SignedJWT) jwt).getHeader().getKeyID() == keyId
     }
 
     @Requires(property = 'spec.name', value = 'JwksCacheSpec')
@@ -570,8 +530,12 @@ class JwksCacheSpec extends Specification {
         cognitoEmbeddedServer.applicationContext.getBean(CognitoKeysController).invocations
     }
 
-    private static String login(BlockingHttpClient client) {
-        BearerAccessRefreshToken bearerAccessRefreshToken = client.retrieve(HttpRequest.POST('/login', [username: 'sherlock', password: 'elementary']), BearerAccessRefreshToken)
+    private static BearerAccessRefreshToken login(BlockingHttpClient client) {
+        return client.retrieve(HttpRequest.POST('/login', [username: 'sherlock', password: 'elementary']), BearerAccessRefreshToken)
+    }
+
+    private static String loginAccessToken(BlockingHttpClient client) {
+        BearerAccessRefreshToken bearerAccessRefreshToken = login(client)
         assert bearerAccessRefreshToken
         assert bearerAccessRefreshToken.accessToken
         bearerAccessRefreshToken.accessToken

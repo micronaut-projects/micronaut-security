@@ -1,0 +1,6 @@
+Using OpenID Connect <<openid-configuration, Discovery>> by setting `micronaut.security.oauth2.clients.*.openid.issuer` and the Authorization server specifies via
+`code_challenge_methods` either `plain`, `S256`, or both, Micronaut security automatically sends a code challenge in the authorization request as specified in https://www.rfc-editor.org/rfc/rfc7636[Proof Key for Code Exchange (PKCE) Spec].
+
+Using manual OAuth 2.0 Client configuration, you can specify the challenge method supported by setting `micronaut.security.oauth2.clients.*.authorization.code-challenge-method`.
+
+If the built-in implementation does not fulfill your needs, you can  provide a https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces[replacement] of bean api:security.oauth2.endpoint.authorization.pkce.CodeVerifierGenerator[] or api:security.oauth2.endpoint.authorization.pkce.PkceGenerator[].

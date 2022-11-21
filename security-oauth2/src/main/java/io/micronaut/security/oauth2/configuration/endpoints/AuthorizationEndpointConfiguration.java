@@ -28,7 +28,7 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface AuthorizationEndpointConfiguration extends EndpointConfiguration {
+public interface AuthorizationEndpointConfiguration extends OauthAuthorizationEndpointConfiguration {
 
     /**
      *
