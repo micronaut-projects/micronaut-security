@@ -20,7 +20,6 @@ dependencies {
     testImplementation project(":security-session")
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(libs.javax.activation) // Java 11
     testImplementation(libs.testcontainers)
     testImplementation(libs.groovy.json)
     testImplementation project(":security-jwt")
