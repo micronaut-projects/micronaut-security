@@ -25,7 +25,6 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.token.jwt.signature.jwks.DefaultJwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
@@ -78,25 +77,6 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
         this.nonceClaimValidator = nonceClaimValidator;
         this.jwkValidator = jwkValidator;
         this.jwkSetFetcher = jwkSetFetcher;
-    }
-
-    /**
-     * @param idTokenValidators OpenID JWT claim validators
-     * @param genericJwtClaimsValidators Generic JWT claim validators
-     * @param nonceClaimValidator The nonce claim validator
-     * @param jwkValidator The JWK validator
-     * @deprecated Use {@link #DefaultOpenIdTokenResponseValidator(Collection, Collection, NonceClaimValidator, JwkValidator, JwkSetFetcher)} instead.
-     */
-    @Deprecated
-    public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
-                                               Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
-                                               @Nullable NonceClaimValidator nonceClaimValidator,
-                                               JwkValidator jwkValidator) {
-        this(idTokenValidators,
-                genericJwtClaimsValidators,
-                nonceClaimValidator,
-                jwkValidator,
-                new DefaultJwkSetFetcher());
     }
 
     @Override

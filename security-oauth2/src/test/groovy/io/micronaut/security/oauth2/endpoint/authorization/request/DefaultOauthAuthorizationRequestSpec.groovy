@@ -18,19 +18,4 @@ class DefaultOauthAuthorizationRequestSpec extends Specification {
         expect:
         !new DefaultOauthAuthorizationRequest(null, oauthClientConfiguration, null, null, null).getPkceChallenge(null).isPresent()
     }
-
-    void "Use deprecated constructor"() {
-        given:
-        def request = Mock(HttpRequest)
-        def response = Mock(MutableHttpResponse)
-        def oauthAuthorizationEndpointConfiguration = Mock(OauthAuthorizationEndpointConfiguration) {
-            getCodeChallengeMethod() >> Optional.of('plain')
-        }
-        def oauthClientConfiguration = Stub(OauthClientConfiguration) {
-            getAuthorization() >> Optional.of(oauthAuthorizationEndpointConfiguration)
-        }
-        expect:
-        new DefaultOauthAuthorizationRequest(request, oauthClientConfiguration, null, null).getPkceChallenge(response).isPresent()
-        'plain' == new DefaultOauthAuthorizationRequest(request, oauthClientConfiguration, null, null).getPkceChallenge(response).get().codeChallengeMethod
-    }
 }

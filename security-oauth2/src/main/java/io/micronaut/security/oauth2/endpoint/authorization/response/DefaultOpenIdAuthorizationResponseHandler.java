@@ -36,7 +36,6 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -75,7 +74,6 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
      * @param stateValidator         The state validator
      * @param pkcePersistence        The PKCE persistence
      */
-    @Inject
     public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
                                                      DefaultOpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,
@@ -88,23 +86,6 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateValidator = stateValidator;
         this.pkcePersistence = pkcePersistence;
-    }
-
-    /**
-     * @param tokenResponseValidator The token response validator
-     * @param authenticationMapper   Authentication Mapper
-     * @param tokenEndpointClient    The token endpoint client
-     * @param oauthRouteUrlBuilder   The oauth route url builder
-     * @param stateValidator         The state validator
-     * @deprecated Use {@link DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, DefaultOpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence )} instead.
-     */
-    @Deprecated
-    public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
-                                                     DefaultOpenIdAuthenticationMapper authenticationMapper,
-                                                     TokenEndpointClient tokenEndpointClient,
-                                                     OauthRouteUrlBuilder oauthRouteUrlBuilder,
-                                                     @Nullable StateValidator stateValidator) {
-        this(tokenResponseValidator, authenticationMapper, tokenEndpointClient, oauthRouteUrlBuilder, stateValidator, null);
     }
 
     @Override
