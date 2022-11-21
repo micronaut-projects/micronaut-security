@@ -1,7 +1,6 @@
 package io.micronaut.security.oauth2.client
 
 import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.AppenderBase
 import io.micronaut.context.ApplicationContext
@@ -17,6 +16,7 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import jakarta.annotation.security.PermitAll
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.Issue
 import spock.lang.Specification
@@ -54,13 +54,7 @@ class OpenIdClientFactorySpec extends Specification {
     void "OpenID connect metadata fetching should not be done in netty event loop thread"() {
         given:
         MemoryAppender appender = new MemoryAppender()
-        Logger fetcherlogger = (Logger) LoggerFactory.getLogger(DefaultOpenIdProviderMetadataFetcher.class)
-        fetcherlogger.addAppender(appender)
-        fetcherlogger.setLevel(Level.TRACE)
-        Logger logger = (Logger) LoggerFactory.getLogger(HomeController.class)
-        logger.addAppender(appender)
-        logger.setLevel(Level.TRACE)
-        appender.start()
+        Logger logger = (Logger) LoggerFactory.getLogger(DefaultOpenIdProviderMetadataFetcher.class)
 
         and: 'auth server'
         int authServerPort = SocketUtils.findAvailableTcpPort()
@@ -76,7 +70,18 @@ class OpenIdClientFactorySpec extends Specification {
                 'micronaut.security.oauth2.clients.okta.openid.issuer': "http://localhost:${authServerPort}/oauth2/default",
         ])
 
+        expect:
+        logger instanceof  ch.qos.logback.classic.Logger
+
         when:
+         ch.qos.logback.classic.Logger fetcherlogger = (ch.qos.logback.classic.Logger) logger
+        fetcherlogger.addAppender(appender)
+        fetcherlogger.setLevel(Level.TRACE)
+        logger = LoggerFactory.getLogger(HomeController.class)
+        ch.qos.logback.classic.Logger homeLogger = (ch.qos.logback.classic.Logger) logger
+        homeLogger.addAppender(appender)
+        homeLogger.setLevel(Level.TRACE)
+        appender.start()
         server.applicationContext.createBean(HttpClient, server.URL).toBlocking().exchange(HttpRequest.GET("/"))
 
         then:
@@ -85,9 +90,9 @@ class OpenIdClientFactorySpec extends Specification {
                 threadName.contains("EventLoop")).count()
 
         cleanup:
-        authServer.close()
-        server.close()
-        appender.stop()
+        authServer?.close()
+        server?.close()
+        appender?.stop()
     }
 
     @Requires(property = 'spec.name', value = 'OpenIdClientFactorySpec')

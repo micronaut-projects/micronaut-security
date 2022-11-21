@@ -16,7 +16,6 @@ import spock.lang.Specification
 import reactor.core.publisher.Flux
 import spock.lang.Unroll
 
-
 class PasswordGrantConditionSpec extends Specification {
 
     private static Map<String, String> PROPS = [
@@ -41,7 +40,7 @@ class PasswordGrantConditionSpec extends Specification {
         noExceptionThrown()
 
         cleanup:
-        ctx.close()
+        ctx?.close()
 
         where:
         properties | description

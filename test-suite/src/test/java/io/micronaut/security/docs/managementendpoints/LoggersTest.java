@@ -16,6 +16,7 @@ import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenari
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -53,6 +54,7 @@ class LoggersTest {
         assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
     }
 
+    @Disabled
     @Test
     void loggersEndpointIsAccessibleForUsersWithRoleROLE_SYSTEM() {
         BlockingHttpClient client = httpClient.toBlocking();

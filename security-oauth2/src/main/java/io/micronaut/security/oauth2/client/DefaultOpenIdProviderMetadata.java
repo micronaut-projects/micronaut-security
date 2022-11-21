@@ -21,6 +21,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.inject.Inject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -157,6 +158,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     private final String checkSessionIframe;
 
     @SuppressWarnings("ParameterNumber")
+    @Inject
     public DefaultOpenIdProviderMetadata(@Nullable String authorizationEndpoint,
                                          @NonNull List<String> idTokenSigningAlgValuesSupported,
                                          @NonNull String issuer,
@@ -235,6 +237,48 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         this.requestObjectEncryptionAlgValuesSupported = requestObjectEncryptionAlgValuesSupported;
         this.requestObjectEncryptionEncValuesSupported = requestObjectEncryptionEncValuesSupported;
         this.checkSessionIframe = checkSessionIframe;
+    }
+
+    public DefaultOpenIdProviderMetadata() {
+        this(null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null);
     }
 
     /**

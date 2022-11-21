@@ -117,6 +117,7 @@ class PkceSessionWithS256Spec extends Specification {
         response = client.exchange(location)
 
         then:
+        noExceptionThrown()
         HttpStatus.FOUND == response.status()
 
         when:

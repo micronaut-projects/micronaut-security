@@ -7,7 +7,7 @@ dependencies {
 ...
 ..
 //http://github.com/micronaut-projects/micronaut-security/releases
-aotPlugins("io.micronaut.security:micronaut-security-aot:3.9.0")
+aotPlugins("io.micronaut.security:micronaut-security-aot:4.0.0")
 }
 ----
 

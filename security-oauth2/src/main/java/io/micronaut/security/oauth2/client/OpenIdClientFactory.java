@@ -30,6 +30,7 @@ import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
@@ -42,6 +43,7 @@ import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallb
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -127,10 +129,9 @@ class OpenIdClientFactory {
     private static DefaultOpenIdProviderMetadata overrideFromConfig(@Nullable DefaultOpenIdProviderMetadata providerMetadata,
                                                              @NonNull OpenIdClientConfiguration openIdClientConfiguration,
                                                              @NonNull OauthClientConfiguration oauthClientConfiguration) {
-
-
         EndSessionEndpointConfiguration endSession = openIdClientConfiguration.getEndSession();
-        return new DefaultOpenIdProviderMetadata(providerMetadata == null ? null : providerMetadata.getAuthorizationEndpoint(),
+        Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
+        return new DefaultOpenIdProviderMetadata(authorization.flatMap(OauthAuthorizationEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getAuthorizationEndpoint()),
             providerMetadata == null ? null : providerMetadata.getIdTokenSigningAlgValuesSupported(),
             providerMetadata == null ? null : providerMetadata.getIssuer(),
             openIdClientConfiguration.getJwksUri().orElseGet(() -> providerMetadata == null ? null : providerMetadata.getJwksUri()),
@@ -145,7 +146,7 @@ class OpenIdClientFactory {
             openIdClientConfiguration.getUserInfo().flatMap(EndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getUserinfoEndpoint()),
             openIdClientConfiguration.getRegistration().flatMap(EndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRegistrationEndpoint()),
             providerMetadata == null ? null : providerMetadata.getClaimsSupported(),
-            openIdClientConfiguration.getAuthorization().flatMap(OauthAuthorizationEndpointConfiguration::getCodeChallengeMethod).map(Collections::singletonList).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getCodeChallengeMethodsSupported()),
+            authorization.flatMap(OauthAuthorizationEndpointConfiguration::getCodeChallengeMethod).map(Collections::singletonList).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getCodeChallengeMethodsSupported()),
             oauthClientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getIntrospectionEndpoint()),
             oauthClientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getIntrospectionEndpointAuthMethodsSupported()),
             oauthClientConfiguration.getRevocation().flatMap(SecureEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRevocationEndpoint()),

@@ -18,6 +18,7 @@ package io.micronaut.security.authentication;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.serde.annotation.Serdeable;
 
@@ -93,7 +94,9 @@ public class ServerAuthentication implements Authentication {
         Map<String, Object> json = new HashMap<>();
         json.put(JSON_KEY_NAME, getName());
         Map<String, Object> jsonAttributes = new HashMap<>(getAttributes());
-        jsonAttributes.putIfAbsent(TokenConfiguration.DEFAULT_ROLES_NAME, getRoles());
+        if (CollectionUtils.isNotEmpty(getRoles())) {
+            jsonAttributes.putIfAbsent(TokenConfiguration.DEFAULT_ROLES_NAME, getRoles());
+        }
         json.put(JSON_KEY_ATTRIBUTES, jsonAttributes);
         return json;
     }
