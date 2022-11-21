@@ -1,30 +1,26 @@
 plugins {
-    id "io.micronaut.build.internal.security-module"
+    id("io.micronaut.build.internal.security-module")
 }
-
 dependencies {
     annotationProcessor(mn.micronaut.graal)
-
     annotationProcessor(mn.micronaut.serde.processor)
     implementation(mn.micronaut.serde.jackson)
-    annotationProcessor project(":security-annotations")
-
+    annotationProcessor(project(":security-annotations"))
     compileOnly(mn.micronaut.inject.java)
-    compileOnly project(":security-jwt")
-    api project(":security")
+    compileOnly(project(":security-jwt"))
+    api(project(":security"))
     implementation(mn.micronaut.http.client)
     compileOnly(mn.jackson.databind)
     compileOnly(mn.micronaut.session)
     implementation(libs.reactor.core)
-
-    testImplementation project(":security-session")
+    testImplementation(project(":security-session"))
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(libs.testcontainers)
     testImplementation(libs.groovy.json)
-    testImplementation project(":security-jwt")
-    testImplementation project(":test-suite-utils")
-    testImplementation project(":test-suite-utils-security")
+    testImplementation(project(":security-jwt"))
+    testImplementation(project(":test-suite-utils"))
+    testImplementation(project(":test-suite-utils-security"))
     testImplementation(project(":test-suite-keycloak-16"))
     testImplementation(mn.logback)
 }
