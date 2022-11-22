@@ -1,7 +1,7 @@
 [versions]
 managed-nimbus-jose-jwt = "9.25.6"
 
-micronaut = "3.7.3"
+micronaut = "3.7.4"
 micronaut-docs = "2.0.0"
 micronaut-test = "3.7.0"
 groovy = "3.0.13"
@@ -17,6 +17,7 @@ velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
 kotlin = "1.7.10"
+bcpkix = "1.70"
 
 [libraries]
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
@@ -42,6 +43,7 @@ bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bo
 javax-activation = { module = "com.sun.activation:javax.activation", version.ref = "javax-activation" }
 spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
