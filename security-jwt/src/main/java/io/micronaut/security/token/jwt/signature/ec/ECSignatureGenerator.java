@@ -60,7 +60,8 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
      */
     protected SignedJWT signWithPrivateKey(JWTClaimsSet claims, @NonNull ECPrivateKey privateKey) throws JOSEException {
         final JWSSigner signer = new ECDSASigner(privateKey);
-        final SignedJWT signedJWT = new SignedJWT(new JWSHeader(algorithm), claims);
+        JWSHeader jwsHeader = new JWSHeader.Builder(algorithm).keyID(keyId).build();
+        final SignedJWT signedJWT = new SignedJWT(jwsHeader, claims);
         signedJWT.sign(signer);
         return signedJWT;
     }
