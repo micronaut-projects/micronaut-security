@@ -35,7 +35,9 @@ import java.security.interfaces.ECPrivateKey;
  */
 public class ECSignatureGenerator extends ECSignature implements SignatureGeneratorConfiguration {
 
-    private ECPrivateKey privateKey;
+    private final ECPrivateKey privateKey;
+
+    private final String kidId;
 
     /**
      *
@@ -44,6 +46,7 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
     public ECSignatureGenerator(ECSignatureGeneratorConfiguration config) {
         super(config);
         this.privateKey = config.getPrivateKey();
+        this.kidId = config.getKid();
     }
 
     @Override
@@ -60,7 +63,8 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
      */
     protected SignedJWT signWithPrivateKey(JWTClaimsSet claims, @NonNull ECPrivateKey privateKey) throws JOSEException {
         final JWSSigner signer = new ECDSASigner(privateKey);
-        final SignedJWT signedJWT = new SignedJWT(new JWSHeader(algorithm), claims);
+        JWSHeader.Builder builder = new JWSHeader.Builder(algorithm).keyID(this.kidId);
+        final SignedJWT signedJWT = new SignedJWT(builder.build(), claims);
         signedJWT.sign(signer);
         return signedJWT;
     }

@@ -16,6 +16,7 @@
 package io.micronaut.security.token.jwt.signature.ec;
 
 import com.nimbusds.jose.JWSAlgorithm;
+
 import java.security.interfaces.ECPublicKey;
 
 /**
@@ -24,6 +25,15 @@ import java.security.interfaces.ECPublicKey;
  * @since 1.0
  */
 public interface ECSignatureConfiguration {
+
+    /**
+     *
+     * @return The Key Id
+     * @since 3.9
+     */
+    default String getKid() {
+        return null;
+    }
 
     /**
      *
