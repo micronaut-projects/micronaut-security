@@ -19,8 +19,6 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
-import java.util.Optional;
-
 /**
  * Signature Generator configuration.
  *

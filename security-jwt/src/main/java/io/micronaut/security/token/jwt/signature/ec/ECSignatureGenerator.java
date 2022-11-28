@@ -19,14 +19,11 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.ECDSASigner;
-import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.security.token.jwt.endpoints.JwkProvider;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import java.security.interfaces.ECPrivateKey;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -41,6 +38,10 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
 
     private ECPrivateKey privateKey;
 
+    /**
+     *
+     * @return the key id
+     */
     public Optional<String> getKid() {
         return Optional.empty();
     }
