@@ -27,6 +27,7 @@ import io.micronaut.security.token.jwt.endpoints.JwkProvider;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import java.security.interfaces.ECPrivateKey;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Elliptic curve signature generator. Extends {@link io.micronaut.security.token.jwt.signature.ec.ECSignature} adding the ability to sign JWT.
@@ -39,7 +40,10 @@ import java.util.Objects;
 public class ECSignatureGenerator extends ECSignature implements SignatureGeneratorConfiguration {
 
     private ECPrivateKey privateKey;
-    private String keyId;
+
+    public Optional<String> getKid() {
+        return Optional.empty();
+    }
 
     /**
      *
@@ -48,13 +52,6 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
     public ECSignatureGenerator(ECSignatureGeneratorConfiguration config) {
         super(config);
         this.privateKey = config.getPrivateKey();
-        if (config instanceof JwkProvider) {
-            ((JwkProvider) config).retrieveJsonWebKeys().stream()
-                .map(JWK::getKeyID)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .ifPresent(keyIdentifier -> this.keyId = keyIdentifier);
-        }
     }
 
     @Override
@@ -71,8 +68,9 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
      */
     protected SignedJWT signWithPrivateKey(JWTClaimsSet claims, @NonNull ECPrivateKey privateKey) throws JOSEException {
         final JWSSigner signer = new ECDSASigner(privateKey);
-        JWSHeader jwsHeader = new JWSHeader.Builder(algorithm).keyID(keyId).build();
-        final SignedJWT signedJWT = new SignedJWT(jwsHeader, claims);
+        JWSHeader.Builder builder = new JWSHeader.Builder(algorithm);
+        getKid().map(builder::keyID);
+        final SignedJWT signedJWT = new SignedJWT(builder.build(), claims);
         signedJWT.sign(signer);
         return signedJWT;
     }

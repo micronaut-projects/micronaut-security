@@ -19,6 +19,8 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
+import java.util.Optional;
+
 /**
  * Signature Generator configuration.
  *
@@ -34,5 +36,9 @@ public interface SignatureGeneratorConfiguration extends SignatureConfiguration 
      * @return the signed JWT
      */
     SignedJWT sign(JWTClaimsSet claims) throws JOSEException;
+
+    default Optional<String> getKid() {
+        return Optional.empty();
+    }
 }
 
