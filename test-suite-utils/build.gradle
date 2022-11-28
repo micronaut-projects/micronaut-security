@@ -6,8 +6,7 @@ plugins {
 
 dependencies {
     compileOnly(mn.micronaut.inject.groovy)
-    implementation(platform(mn.micronaut.bom))
-    implementation(mn.micronaut.test.spock)
+    implementation(mnTest.micronaut.test.spock)
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.micronaut.http.client)
 }

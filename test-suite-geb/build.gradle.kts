@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     testImplementation(mn.snakeyaml)
-    testImplementation(mn.reactor)
+    testImplementation(mnReactor.reactor.core)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(project(":test-suite-keycloak"))
     testImplementation(project(":test-suite-keycloak-16"))
@@ -36,7 +36,7 @@ dependencies {
     }
     testImplementation(libs.selenium.support)
     testRuntimeOnly(libs.selenium.firefox.driver)
-    testRuntimeOnly(libs.logback.classic)
+    testRuntimeOnly(mn.logback.classic)
     testImplementation(mn.micronaut.websocket)
     testImplementation(mn.micronaut.jackson.databind)
 }

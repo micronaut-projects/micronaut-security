@@ -5,10 +5,10 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     api(mn.micronaut.http)
-    api(mn.micronaut.session)
+    api(mnSession.micronaut.session)
     api(project(":security"))
     api(mn.micronaut.http.server)
-    implementation(libs.reactor.core)
+    implementation(mnReactor.reactor.core)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.inject.groovy)
     testImplementation(mn.micronaut.http.server.netty)

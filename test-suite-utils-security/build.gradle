@@ -5,12 +5,10 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(platform(mn.micronaut.bom))
     annotationProcessor(mn.micronaut.inject.java)
-    implementation(platform(mn.micronaut.bom))
     api(mn.micronaut.inject)
     implementation project(":security")
-    implementation(libs.reactor.core)
+    implementation(mnReactor.reactor.core)
 }
 
 java {

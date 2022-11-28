@@ -31,13 +31,13 @@ include "test-suite-utils-security"
 include "test-suite-kotlin"
 include "test-suite-serde"
 
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
-    }
-}
-
 micronautBuild {
+    addSnapshotRepository()
     importMicronautCatalog()
+    importMicronautCatalog("micronaut-multitenancy")
+    importMicronautCatalog("micronaut-reactor")
+    importMicronautCatalog("micronaut-serde")
+    importMicronautCatalog("micronaut-session")
+    importMicronautCatalog("micronaut-test")
+    importMicronautCatalog("micronaut-views")
 }

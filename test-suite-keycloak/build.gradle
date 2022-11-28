@@ -4,9 +4,7 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(platform(mn.micronaut.bom))
     annotationProcessor(mn.micronaut.inject.java)
-    implementation(platform(mn.micronaut.bom))
     implementation(project(":security-jwt"))
     implementation(project(":security-oauth2"))
     implementation(project(":test-suite-utils"))
