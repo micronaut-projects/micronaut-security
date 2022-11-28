@@ -103,8 +103,13 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         thrown(NoSuchBeanException)
 
         when:
+        booksEmbeddedServer.applicationContext.getBean(BooksRsaSignatureConfiguration, Qualifiers.byName("validation"))
+
+        then:
+        noExceptionThrown()
+
+        when:
         for (Class beanClazz : [
-                BooksRsaSignatureConfiguration,
                 BooksController,
                 RSASignatureConfiguration,
                 RSASignatureFactory,
