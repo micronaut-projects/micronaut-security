@@ -24,6 +24,7 @@ import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import java.security.interfaces.ECPrivateKey;
+import java.util.Optional;
 
 /**
  * Elliptic curve signature generator. Extends {@link io.micronaut.security.token.jwt.signature.ec.ECSignature} adding the ability to sign JWT.
@@ -36,6 +37,14 @@ import java.security.interfaces.ECPrivateKey;
 public class ECSignatureGenerator extends ECSignature implements SignatureGeneratorConfiguration {
 
     private ECPrivateKey privateKey;
+
+    /**
+     *
+     * @return the key id
+     */
+    public Optional<String> getKid() {
+        return Optional.empty();
+    }
 
     /**
      *
@@ -60,7 +69,9 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
      */
     protected SignedJWT signWithPrivateKey(JWTClaimsSet claims, @NonNull ECPrivateKey privateKey) throws JOSEException {
         final JWSSigner signer = new ECDSASigner(privateKey);
-        final SignedJWT signedJWT = new SignedJWT(new JWSHeader(algorithm), claims);
+        JWSHeader.Builder builder = new JWSHeader.Builder(algorithm);
+        getKid().map(builder::keyID);
+        final SignedJWT signedJWT = new SignedJWT(builder.build(), claims);
         signedJWT.sign(signer);
         return signedJWT;
     }
