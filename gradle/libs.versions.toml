@@ -3,7 +3,6 @@ managed-nimbus-jose-jwt = "9.25.6"
 
 micronaut = "4.0.0-SNAPSHOT"
 micronaut-docs = "2.0.0"
-micronaut-test = "3.7.0"
 groovy = "4.0.6"
 spock = "2.3-groovy-4.0"
 
@@ -12,14 +11,24 @@ geb-groovy = "3.0.13"
 geb-spock = "2.2-groovy-3.0"
 reactor-test = "3.5.0"
 selenium = "4.6.0"
-testcontainers = "1.17.5"
+testcontainers = "1.17.6"
 unboundid-ldapsdk = "6.0.6"
 velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
 kotlin = "1.7.21"
 
+micronaut-multitenancy = "4.2.0"
+micronaut-reactor = "3.0.0-SNAPSHOT"
+micronaut-serde = "2.0.0-SNAPSHOT"
+micronaut-views = "3.7.1"
+
 [libraries]
+micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
+micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
+micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
+micronaut-views = { module = "io.micronaut.views:micronaut-views-bom", version.ref = "micronaut-views" }
+
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
 spock-geb = { module = "org.spockframework:spock-core", version.ref = "geb-spock" }
@@ -35,8 +44,6 @@ selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-dri
 selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-driver", version.ref = "selenium" }
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "selenium" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }
-testcontainers = { module = "org.testcontainers:testcontainers" }
-testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref ="testcontainers" }
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
 velocity-engine-core = { module = "org.apache.velocity:velocity-engine-core", version.ref = "velocity-engine-core" }
 bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }
@@ -44,6 +51,10 @@ bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bo
 javax-activation = { module = "com.sun.activation:javax.activation", version.ref = "javax-activation" }
 spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+
+testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
+testcontainers = { module = "org.testcontainers:testcontainers" }
+testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref ="testcontainers" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
