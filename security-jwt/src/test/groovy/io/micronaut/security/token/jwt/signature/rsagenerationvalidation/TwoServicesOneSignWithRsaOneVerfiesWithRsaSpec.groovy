@@ -104,7 +104,6 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
 
         when:
         for (Class beanClazz : [
-                BooksRsaSignatureConfiguration,
                 BooksController,
                 RSASignatureConfiguration,
                 RSASignatureFactory,
