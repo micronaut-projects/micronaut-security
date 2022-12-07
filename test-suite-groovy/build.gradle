@@ -5,14 +5,14 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(mn.micronaut.bom))
+    implementation(platform(mn.micronaut.core.bom))
 
     testCompileOnly(mn.micronaut.inject.groovy)
 
     testImplementation(libs.spock.core) {
         exclude module:'groovy-all'
     }
-    testImplementation(mn.micronaut.test.spock)
+    testImplementation(mnTest.micronaut.test.spock)
 
     testImplementation(mn.jackson.databind)
 
@@ -26,15 +26,10 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation project(":test-suite-utils-security")
     testImplementation(libs.reactor.core)
-    testAnnotationProcessor(platform(mn.micronaut.bom))
-    testAnnotationProcessor(mn.micronaut.serde.processor)
-    testImplementation(mn.micronaut.serde.jackson)}
+    testAnnotationProcessor(platform(mn.micronaut.core.bom))
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)}
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-    targetCompatibility = JavaVersion.toVersion("17")
 }

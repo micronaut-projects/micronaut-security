@@ -17,12 +17,13 @@ package io.micronaut.security.oauth2.client.condition;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.Qualifier;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.naming.Named;
-import io.micronaut.core.value.ValueResolver;
+import io.micronaut.inject.QualifiedBeanType;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -47,10 +48,10 @@ public class OpenIdClientCondition implements Condition {
         AnnotationMetadataProvider component = context.getComponent();
         BeanContext beanContext = context.getBeanContext();
 
-        if (beanContext instanceof ApplicationContext && component instanceof ValueResolver) {
-            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-            if (optional.isPresent()) {
-                String name = optional.get();
+        if (beanContext instanceof ApplicationContext && component instanceof QualifiedBeanType<?> qualifiedBeanType) {
+            Qualifier<?> declaredQualifier = qualifiedBeanType.getDeclaredQualifier();
+            if (declaredQualifier instanceof Named named) {
+                String name = named.getName();
 
                 OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
 

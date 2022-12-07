@@ -15,15 +15,15 @@
  */
 package io.micronaut.security.ldap;
 
+import io.micronaut.context.Qualifier;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.naming.Named;
-import io.micronaut.core.value.ValueResolver;
+import io.micronaut.inject.QualifiedBeanType;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.ldap.configuration.LdapConfiguration;
-import java.util.Optional;
 
 /**
  * Condition to enable the LDAP authentication provider.
@@ -38,10 +38,10 @@ public class LdapEnabledCondition implements Condition {
     public boolean matches(ConditionContext context) {
         AnnotationMetadataProvider component = context.getComponent();
 
-        if (component instanceof ValueResolver) {
-            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-            if (optional.isPresent()) {
-                String name = optional.get();
+        if (component instanceof QualifiedBeanType<?> qualifiedBeanType) {
+            Qualifier<?> declaredQualifier = qualifiedBeanType.getDeclaredQualifier();
+            if (declaredQualifier instanceof Named named) {
+                String name = named.getName();
 
                 LdapConfiguration ldapConfiguration = context.getBean(LdapConfiguration.class, Qualifiers.byName(name));
                 return ldapConfiguration.isEnabled();

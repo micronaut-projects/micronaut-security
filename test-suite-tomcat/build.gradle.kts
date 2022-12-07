@@ -1,27 +1,27 @@
 plugins {
-    id("java-library")
-    id("io.micronaut.build.internal.security-tests")
+    id 'java-library'
+    id "io.micronaut.build.internal.security-tests"
 }
+
 dependencies {
     testAnnotationProcessor(platform(mn.micronaut.bom))
     testAnnotationProcessor(mn.micronaut.inject.java)
+
     testImplementation(platform(mn.micronaut.bom))
     testImplementation(libs.junit.jupiter.api)
     testImplementation(mn.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
+
     testRuntimeOnly(libs.logback.classic)
     testImplementation(mn.micronaut.management)
-    testImplementation(mn.micronaut.http.server.tomcat)
+    testImplementation("io.micronaut.servlet:micronaut-http-server-tomcat")
     testImplementation(mn.micronaut.http.client)
-    testImplementation(project(":security-jwt"))
-    testImplementation(project(":test-suite-utils-security"))
+    testImplementation project(":security-jwt")
+    testImplementation project(":test-suite-utils-security")
     testImplementation(libs.reactor.core)
 }
-tasks.withType<Test> {
+
+tasks.named('test') {
     useJUnitPlatform()
-}
-java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-    targetCompatibility = JavaVersion.toVersion("17")
 }
 

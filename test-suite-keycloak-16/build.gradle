@@ -4,11 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(mn.micronaut.bom))
+    implementation(platform(mn.micronaut.core.bom))
+    implementation(platform(libs.testcontainers.bom))
     implementation(libs.testcontainers)
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-    targetCompatibility = JavaVersion.toVersion("17")
 }
