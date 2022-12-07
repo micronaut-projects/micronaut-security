@@ -7,6 +7,8 @@ import io.micronaut.http.context.ServerContextPathProvider
 import io.micronaut.security.config.DefaultInterceptUrlPatternModifier
 import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.config.InterceptUrlPatternModifier
+import io.micronaut.security.config.DefaultInterceptUrlPatternModifier
+import io.micronaut.security.config.InterceptUrlMapPattern
 import io.micronaut.security.config.SecurityConfiguration
 import io.micronaut.security.token.DefaultRolesFinder
 import io.micronaut.security.token.RolesFinder
@@ -45,12 +47,7 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
             getUri() >> new URI('/books')
             getMethod() >> HttpMethod.GET
         }
-        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, new ServerContextPathProvider() {
-            @Override
-            String getContextPath() {
-                return null
-            }
-        }))
+        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null))
 
         expect:
         Mono.from(provider.check(request, null, null)).block() == securityRuleResult
@@ -68,7 +65,8 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
         def securityConfiguration = Stub(SecurityConfiguration) {
             getInterceptUrlMap() >> []
         }
-        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, Mock(InterceptUrlPatternModifier))
+
+        ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null))
 
         expect:
         expected == Mono.from(provider.compareRoles(requiredRoles, grantedRoles)).block()
