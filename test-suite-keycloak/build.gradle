@@ -4,15 +4,10 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(platform(mn.micronaut.bom))
+    annotationProcessor(platform(mn.micronaut.core.bom))
     annotationProcessor(mn.micronaut.inject.java)
-    implementation(platform(mn.micronaut.bom))
+    implementation(platform(mn.micronaut.core.bom))
     implementation(project(":security-jwt"))
     implementation(project(":security-oauth2"))
     implementation(project(":test-suite-utils"))
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-    targetCompatibility = JavaVersion.toVersion("17")
 }

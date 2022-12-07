@@ -5,8 +5,8 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.graal)
 
-    annotationProcessor(mn.micronaut.serde.processor)
-    implementation(mn.micronaut.serde.jackson)
+    annotationProcessor(mnSerde.micronaut.serde.processor)
+    implementation(mnSerde.micronaut.serde.jackson)
     annotationProcessor project(":security-annotations")
 
     compileOnly(mn.micronaut.inject.java)
@@ -21,7 +21,7 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(libs.javax.activation) // Java 11
-    testImplementation(libs.testcontainers)
+    testImplementation(platform(libs.testcontainers.bom))
     testImplementation(libs.groovy.json)
     testImplementation project(":security-jwt")
     testImplementation project(":test-suite-utils")

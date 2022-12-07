@@ -263,5 +263,35 @@
     "type": "io.micronaut.security.rules.ConfigurationInterceptUrlMapRule",
     "member": "Constructor io.micronaut.security.rules.ConfigurationInterceptUrlMapRule(io.micronaut.security.token.RolesFinder,io.micronaut.security.config.SecurityConfiguration)",
     "reason": "Removed deprecated code"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509Authentication$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509Authentication$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.x509.$X509Authentication$IntrospectionRef()",
+    "reason": "Changed for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509Authentication$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509Authentication$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509Authentication$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509Authentication$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed for Micronaut 4"
   }
 ]
