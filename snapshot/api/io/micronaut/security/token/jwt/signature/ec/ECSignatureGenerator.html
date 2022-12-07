@@ -141,8 +141,9 @@ implements <a href="../SignatureGeneratorConfiguration.html" title="interface in
 <div class="block">Generate a signed JWT based on claims.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.nimbusds.jwt.SignedJWT</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#signWithPrivateKey(com.nimbusds.jwt.JWTClaimsSet,java.security.interfaces.ECPrivateKey)" class="member-name-link">signWithPrivateKey</a><wbr>(com.nimbusds.jwt.JWTClaimsSet&nbsp;claims,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/interfaces/ECPrivateKey.html" title="class or interface in java.security.interfaces" class="external-link">ECPrivateKey</a>&nbsp;privateKey)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#signWithPrivateKey(com.nimbusds.jwt.JWTClaimsSet,java.security.interfaces.ECPrivateKey,java.lang.String)" class="member-name-link">signWithPrivateKey</a><wbr>(com.nimbusds.jwt.JWTClaimsSet&nbsp;claims,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/interfaces/ECPrivateKey.html" title="class or interface in java.security.interfaces" class="external-link">ECPrivateKey</a>&nbsp;privateKey,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;kid)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -208,16 +209,19 @@ implements <a href="../SignatureGeneratorConfiguration.html" title="interface in
 </section>
 </li>
 <li>
-<section class="detail" id="signWithPrivateKey(com.nimbusds.jwt.JWTClaimsSet,java.security.interfaces.ECPrivateKey)">
+<section class="detail" id="signWithPrivateKey(com.nimbusds.jwt.JWTClaimsSet,java.security.interfaces.ECPrivateKey,java.lang.String)">
 <h3>signWithPrivateKey</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.nimbusds.jwt.SignedJWT</span>&nbsp;<span class="element-name">signWithPrivateKey</span><wbr><span class="parameters">(com.nimbusds.jwt.JWTClaimsSet&nbsp;claims,
  @NonNull
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/interfaces/ECPrivateKey.html" title="class or interface in java.security.interfaces" class="external-link">ECPrivateKey</a>&nbsp;privateKey)</span>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/interfaces/ECPrivateKey.html" title="class or interface in java.security.interfaces" class="external-link">ECPrivateKey</a>&nbsp;privateKey,
+ @Nullable
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;kid)</span>
                                                  throws <span class="exceptions">com.nimbusds.jose.JOSEException</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>claims</code> - The JWT Claims</dd>
 <dd><code>privateKey</code> - The EC Private Key</dd>
+<dd><code>kid</code> - Key ID</dd>
 <dt>Returns:</dt>
 <dd>A signed JWT</dd>
 <dt>Throws:</dt>
