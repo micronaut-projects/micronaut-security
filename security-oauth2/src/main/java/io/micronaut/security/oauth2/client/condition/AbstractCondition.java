@@ -27,6 +27,9 @@ import io.micronaut.core.naming.Named;
 import io.micronaut.inject.QualifiedBeanType;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.utils.NamedUtils;
+
+import java.util.Optional;
 
 /**
  * Base class for condition implementations.
@@ -40,22 +43,20 @@ public abstract class AbstractCondition implements Condition {
     public boolean matches(ConditionContext context) {
         AnnotationMetadataProvider component = context.getComponent();
         BeanContext beanContext = context.getBeanContext();
-
-        if (beanContext instanceof ApplicationContext && component instanceof QualifiedBeanType<?> qualifiedBeanType) {
-            Qualifier<?> declaredQualifier = qualifiedBeanType.getDeclaredQualifier();
-            if (declaredQualifier instanceof Named named) {
-                String name = named.getName();
-
-                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-
-                String failureMsgPrefix = getFailureMessagePrefix(name);
-                if (clientConfiguration.isEnabled()) {
-                    return handleConfigurationEnabled(clientConfiguration, context, failureMsgPrefix);
-                } else {
-                    context.fail(failureMsgPrefix + "] because the configuration is disabled");
-                }
-                return false;
+        Optional<String> nameOptional = NamedUtils.nameQualifier(component);
+        if (nameOptional.isEmpty()) {
+            return true;
+        }
+        if (beanContext instanceof ApplicationContext) {
+            String name = nameOptional.get();
+            OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+            String failureMsgPrefix = getFailureMessagePrefix(name);
+            if (clientConfiguration.isEnabled()) {
+                return handleConfigurationEnabled(clientConfiguration, context, failureMsgPrefix);
+            } else {
+                context.fail(failureMsgPrefix + "] because the configuration is disabled");
             }
+            return false;
         }
         return true;
     }
