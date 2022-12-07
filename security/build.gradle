@@ -23,5 +23,5 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation project(":test-suite-utils")
     testImplementation(mn.snakeyaml)
-
+    testImplementation(libs.bcpkix)
 }
