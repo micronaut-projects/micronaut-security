@@ -24,7 +24,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.utils.NamedUtils;
+import io.micronaut.security.utils.QualifierUtils;
 
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ public class ClientCredentialsHeaderPropagatorEnabled implements Condition {
         AnnotationMetadataProvider component = context.getComponent();
         BeanContext beanContext = context.getBeanContext();
 
-        Optional<String> nameOptional = NamedUtils.nameQualifier(component);
+        Optional<String> nameOptional = QualifierUtils.nameQualifier(component);
         if (nameOptional.isEmpty()) {
             return true;
         } else {

@@ -30,8 +30,8 @@ import java.util.Optional;
  * @since 4.0.0
  */
 @Internal
-public class NamedUtils {
-    private NamedUtils() {
+public final class QualifierUtils {
+    private QualifierUtils() {
 
     }
 

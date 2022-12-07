@@ -17,16 +17,13 @@ package io.micronaut.security.oauth2.client.clientcredentials;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.BeanContext;
-import io.micronaut.context.Qualifier;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.naming.Named;
-import io.micronaut.inject.QualifiedBeanType;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.utils.NamedUtils;
+import io.micronaut.security.utils.QualifierUtils;
 
 import java.util.Optional;
 
@@ -44,7 +41,7 @@ public class ClientCredentialsEnabled implements Condition {
     public boolean matches(ConditionContext context) {
         AnnotationMetadataProvider component = context.getComponent();
         BeanContext beanContext = context.getBeanContext();
-        Optional<String> nameOptional = NamedUtils.nameQualifier(component);
+        Optional<String> nameOptional = QualifierUtils.nameQualifier(component);
         if (nameOptional.isEmpty()) {
             return true;
         }
