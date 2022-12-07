@@ -111,9 +111,14 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         ]) {
             booksEmbeddedServer.applicationContext.getBean(beanClazz)
         }
-
         then:
         noExceptionThrown()
+
+        when:
+        RSASignatureConfiguration rsaSignatureConfiguration = booksEmbeddedServer.applicationContext.getBean(RSASignatureConfiguration)
+
+        then:
+        rsaSignatureConfiguration instanceof BooksRsaSignatureConfiguration
     }
 
     def "setup gateway server"() {
