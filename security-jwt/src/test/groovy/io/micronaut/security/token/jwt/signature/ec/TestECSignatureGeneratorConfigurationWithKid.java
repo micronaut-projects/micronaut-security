@@ -3,10 +3,12 @@ package io.micronaut.security.token.jwt.signature.ec;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.ECKey;
+import io.micronaut.core.annotation.NonNull;
 
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.text.ParseException;
+import java.util.Optional;
 
 public class TestECSignatureGeneratorConfigurationWithKid extends JwkParser implements ECSignatureGeneratorConfiguration {
 
@@ -27,8 +29,9 @@ public class TestECSignatureGeneratorConfigurationWithKid extends JwkParser impl
     }
 
     @Override
-    public String getKid() {
-        return kid;
+    @NonNull
+    public Optional<String> getKid() {
+        return Optional.of(kid);
     }
 
     @Override

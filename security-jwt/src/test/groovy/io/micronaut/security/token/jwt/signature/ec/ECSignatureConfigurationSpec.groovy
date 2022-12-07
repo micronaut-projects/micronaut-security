@@ -35,7 +35,12 @@ class ECSignatureConfigurationSpec extends Specification {
         SignedJWT signedJWT = generator.sign(JWTClaimsSet.parse(testClaims))
 
         then:
+        testECSigGenConfigWithKid.getKid().isPresent()
+
+        when:
         String headerKid = signedJWT.getHeader().toJSONObject().get("kid")
-        headerKid == testECSigGenConfigWithKid.getKid()
+
+        then:
+        headerKid == testECSigGenConfigWithKid.getKid().get()
     }
 }
