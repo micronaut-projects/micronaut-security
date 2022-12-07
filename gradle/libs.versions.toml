@@ -19,7 +19,7 @@ javax-activation = "1.2.0"
 kotlin = "1.7.21"
 bcpkix = "1.70"
 
-micronaut-multitenancy = "4.2.0"
+micronaut-multitenancy = "5.0.0-SNAPSHOT"
 micronaut-reactor = "3.0.0-SNAPSHOT"
 micronaut-serde = "2.0.0-SNAPSHOT"
 micronaut-views = "3.7.1"
