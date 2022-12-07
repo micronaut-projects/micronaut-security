@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.oauth2.client.condition;
 
-import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.BeanContext;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
@@ -39,23 +37,21 @@ public abstract class AbstractCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context) {
         AnnotationMetadataProvider component = context.getComponent();
-        BeanContext beanContext = context.getBeanContext();
         Optional<String> nameOptional = QualifierUtils.nameQualifier(component);
         if (nameOptional.isEmpty()) {
             return true;
         }
-        if (beanContext instanceof ApplicationContext) {
-            String name = nameOptional.get();
-            OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-            String failureMsgPrefix = getFailureMessagePrefix(name);
-            if (clientConfiguration.isEnabled()) {
-                return handleConfigurationEnabled(clientConfiguration, context, failureMsgPrefix);
-            } else {
-                context.fail(failureMsgPrefix + "] because the configuration is disabled");
-            }
-            return false;
+
+        String name = nameOptional.get();
+
+        OauthClientConfiguration clientConfiguration = context.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+        String failureMsgPrefix = getFailureMessagePrefix(name);
+        if (clientConfiguration.isEnabled()) {
+            return handleConfigurationEnabled(clientConfiguration, context, failureMsgPrefix);
+        } else {
+            context.fail(failureMsgPrefix + "] because the configuration is disabled");
         }
-        return true;
+        return false;
     }
 
     @NonNull

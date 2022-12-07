@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
-import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.BeanContext;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
@@ -40,28 +38,25 @@ public class ClientCredentialsEnabled implements Condition {
     @Override
     public boolean matches(ConditionContext context) {
         AnnotationMetadataProvider component = context.getComponent();
-        BeanContext beanContext = context.getBeanContext();
         Optional<String> nameOptional = QualifierUtils.nameQualifier(component);
         if (nameOptional.isEmpty()) {
             return true;
         }
-        if (beanContext instanceof ApplicationContext) {
-            String name = nameOptional.get();
-            OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-            String failureMessage = "Client credentials is disabled for the client [" + name + "]";
-            if (clientConfiguration.isEnabled()) {
-                Optional<ClientCredentialsConfiguration> clientCredentialsConfiguration = clientConfiguration.getClientCredentials();
-                if (clientCredentialsConfiguration.isEmpty() || clientCredentialsConfiguration.get().isEnabled()) {
-                    return true;
-                } else {
-                    context.fail(failureMessage);
-                    return false;
-                }
+        String name = nameOptional.get();
+        OauthClientConfiguration clientConfiguration = context.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+        String failureMessage = "Client credentials is disabled for the client [" + name + "]";
+        if (clientConfiguration.isEnabled()) {
+            Optional<ClientCredentialsConfiguration> clientCredentialsConfiguration = clientConfiguration.getClientCredentials();
+            if (clientCredentialsConfiguration.isEmpty() || clientCredentialsConfiguration.get().isEnabled()) {
+                return true;
             } else {
                 context.fail(failureMessage);
                 return false;
             }
+        } else {
+            context.fail(failureMessage);
+            return false;
         }
-        return true;
+
     }
 }
