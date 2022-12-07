@@ -62,7 +62,7 @@ public class DefaultState implements MutableState {
         return redirectUri;
     }
 
-    /**w
+    /**
      * @param redirectUri the URI to redirect to
      */
     public void setRedirectUri(URI redirectUri) {
