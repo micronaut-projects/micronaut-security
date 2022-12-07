@@ -83,8 +83,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="annotations">@ConfigurationProperties("micronaut.security.oauth2.openid.nonce.cookie")
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">CookieNoncePersistenceConfiguration</span>
-<span class="extends-implements">extends <a href="../../../AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a>
-implements io.micronaut.http.cookie.CookieConfiguration</span></div>
+<span class="extends-implements">extends <a href="../../../AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></span></div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.2.0</dd>
@@ -109,7 +108,7 @@ implements io.micronaut.http.cookie.CookieConfiguration</span></div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration">Fields inherited from class&nbsp;io.micronaut.security.oauth2.endpoint.<a href="../../../AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></h3>
-<code><a href="../../../AbstractCookieConfiguration.html#cookieDomain">cookieDomain</a>, <a href="../../../AbstractCookieConfiguration.html#cookieSecure">cookieSecure</a></code></div>
+<code><a href="../../../AbstractCookieConfiguration.html#cookieDomain">cookieDomain</a>, <a href="../../../AbstractCookieConfiguration.html#cookieHttpOnly">cookieHttpOnly</a>, <a href="../../../AbstractCookieConfiguration.html#cookieMaxAge">cookieMaxAge</a>, <a href="../../../AbstractCookieConfiguration.html#cookieName">cookieName</a>, <a href="../../../AbstractCookieConfiguration.html#cookiePath">cookiePath</a>, <a href="../../../AbstractCookieConfiguration.html#cookieSecure">cookieSecure</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -136,50 +135,26 @@ implements io.micronaut.http.cookie.CookieConfiguration</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link">TemporalAmount</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCookieMaxAge()" class="member-name-link">getCookieMaxAge</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#defaultCookieName()" class="member-name-link">defaultCookieName</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCookieName()" class="member-name-link">getCookieName</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCookiePath()" class="member-name-link">getCookiePath</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isCookieHttpOnly()" class="member-name-link">isCookieHttpOnly</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookieHttpOnly(java.lang.Boolean)" class="member-name-link">setCookieHttpOnly</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;cookieHttpOnly)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Whether the Cookie can only be accessed via HTTP.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookieMaxAge(java.time.Duration)" class="member-name-link">setCookieMaxAge</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a>&nbsp;cookieMaxAge)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookieName(java.lang.String)" class="member-name-link">setCookieName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the maximum age of the cookie.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookieName(java.lang.String)" class="member-name-link">setCookieName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieName)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Cookie Name.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookiePath(java.lang.String)" class="member-name-link">setCookiePath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookiePath)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the path of the cookie.</div>
 </div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-io.micronaut.security.oauth2.endpoint.AbstractCookieConfiguration">Methods inherited from class&nbsp;io.micronaut.security.oauth2.endpoint.<a href="../../../AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></h3>
-<code><a href="../../../AbstractCookieConfiguration.html#getCookieDomain()">getCookieDomain</a>, <a href="../../../AbstractCookieConfiguration.html#isCookieSecure()">isCookieSecure</a>, <a href="../../../AbstractCookieConfiguration.html#setCookieDomain(java.lang.String)">setCookieDomain</a>, <a href="../../../AbstractCookieConfiguration.html#setCookieSecure(java.lang.Boolean)">setCookieSecure</a></code></div>
+<code><a href="../../../AbstractCookieConfiguration.html#getCookieDomain()">getCookieDomain</a>, <a href="../../../AbstractCookieConfiguration.html#getCookieMaxAge()">getCookieMaxAge</a>, <a href="../../../AbstractCookieConfiguration.html#getCookieName()">getCookieName</a>, <a href="../../../AbstractCookieConfiguration.html#getCookiePath()">getCookiePath</a>, <a href="../../../AbstractCookieConfiguration.html#isCookieHttpOnly()">isCookieHttpOnly</a>, <a href="../../../AbstractCookieConfiguration.html#isCookieSecure()">isCookieSecure</a>, <a href="../../../AbstractCookieConfiguration.html#setCookieDomain(java.lang.String)">setCookieDomain</a>, <a href="../../../AbstractCookieConfiguration.html#setCookieHttpOnly(java.lang.Boolean)">setCookieHttpOnly</a>, <a href="../../../AbstractCookieConfiguration.html#setCookieMaxAge(java.time.Duration)">setCookieMaxAge</a>, <a href="../../../AbstractCookieConfiguration.html#setCookiePath(java.lang.String)">setCookiePath</a>, <a href="../../../AbstractCookieConfiguration.html#setCookieSecure(java.lang.Boolean)">setCookieSecure</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-io.micronaut.http.cookie.CookieConfiguration">Methods inherited from interface&nbsp;io.micronaut.http.cookie.CookieConfiguration</h3>
-<code>getCookieDomain, getCookieSameSite, isCookieSecure</code></div>
+<code>getCookieSameSite</code></div>
 </section>
 </li>
 </ul>
@@ -228,89 +203,26 @@ implements io.micronaut.http.cookie.CookieConfiguration</span></div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getCookieName()">
-<h3>getCookieName</h3>
-<div class="member-signature"><span class="annotations">@NonNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getCookieName</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>getCookieName</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="setCookieName(java.lang.String)">
 <h3>setCookieName</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCookieName</span><wbr><span class="parameters">(@NonNull
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieName)</span></div>
-<div class="block">Cookie Name. Default value ("OPENID_NONCE").</div>
+<div class="block">Cookie Name. Default value `<code>DEFAULT_COOKIENAME</code>`.</div>
 <dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../../../AbstractCookieConfiguration.html#setCookieName(java.lang.String)">setCookieName</a></code>&nbsp;in class&nbsp;<code><a href="../../../AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>cookieName</code> - Cookie name</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getCookiePath()">
-<h3>getCookiePath</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getCookiePath</span>()</div>
+<section class="detail" id="defaultCookieName()">
+<h3>defaultCookieName</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">defaultCookieName</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>getCookiePath</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setCookiePath(java.lang.String)">
-<h3>setCookiePath</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCookiePath</span><wbr><span class="parameters">(@Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookiePath)</span></div>
-<div class="block">Sets the path of the cookie. Default value ("/").</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>cookiePath</code> - The path of the cookie.</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="isCookieHttpOnly()">
-<h3>isCookieHttpOnly</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</span>&nbsp;<span class="element-name">isCookieHttpOnly</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>isCookieHttpOnly</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setCookieHttpOnly(java.lang.Boolean)">
-<h3>setCookieHttpOnly</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCookieHttpOnly</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;cookieHttpOnly)</span></div>
-<div class="block">Whether the Cookie can only be accessed via HTTP. Default value (true).</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>cookieHttpOnly</code> - Whether the Cookie can only be accessed via HTTP</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getCookieMaxAge()">
-<h3>getCookieMaxAge</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link">TemporalAmount</a>&gt;</span>&nbsp;<span class="element-name">getCookieMaxAge</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>getCookieMaxAge</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.cookie.CookieConfiguration</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setCookieMaxAge(java.time.Duration)">
-<h3>setCookieMaxAge</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCookieMaxAge</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a>&nbsp;cookieMaxAge)</span></div>
-<div class="block">Sets the maximum age of the cookie. Default value (5 minutes).</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>cookieMaxAge</code> - The maximum age of the cookie</dd>
+<dd><code><a href="../../../AbstractCookieConfiguration.html#defaultCookieName()">defaultCookieName</a></code>&nbsp;in class&nbsp;<code><a href="../../../AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></code></dd>
 </dl>
 </section>
 </li>

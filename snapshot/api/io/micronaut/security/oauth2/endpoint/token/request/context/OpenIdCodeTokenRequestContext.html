@@ -111,10 +111,11 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)" class="member-name-link">OpenIdCodeTokenRequestContext</a><wbr>(<a href="../../../authorization/response/AuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationResponse</a>&nbsp;authorizationResponse,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,java.lang.String)" class="member-name-link">OpenIdCodeTokenRequestContext</a><wbr>(<a href="../../../authorization/response/AuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationResponse</a>&nbsp;authorizationResponse,
  <a href="../../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&nbsp;oauthRouteUrlBuilder,
  <a href="../../../SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a>&nbsp;tokenEndpoint,
- <a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration)</code></div>
+ <a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;codeVerifier)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -130,20 +131,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>io.micronaut.core.type.Argument&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getErrorResponseType()" class="member-name-link">getErrorResponseType</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCodeVerifier()" class="member-name-link">getCodeVerifier</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGrant()" class="member-name-link">getGrant</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>io.micronaut.core.type.Argument&lt;?&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getErrorResponseType()" class="member-name-link">getErrorResponseType</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static io.micronaut.http.MediaType</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getMediaType(io.micronaut.security.oauth2.configuration.OauthClientConfiguration)" class="member-name-link">getMediaType</a><wbr>(<a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGrant()" class="member-name-link">getGrant</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static io.micronaut.http.MediaType</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getMediaType(io.micronaut.security.oauth2.configuration.OauthClientConfiguration)" class="member-name-link">getMediaType</a><wbr>(<a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Resolves the media type for the request body.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>io.micronaut.core.type.Argument&lt;<a href="../../response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getResponseType()" class="member-name-link">getResponseType</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>io.micronaut.core.type.Argument&lt;<a href="../../response/OpenIdTokenResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">OpenIdTokenResponse</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getResponseType()" class="member-name-link">getResponseType</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -165,18 +169,21 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)">
+<section class="detail" id="&lt;init&gt;(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,java.lang.String)">
 <h3>OpenIdCodeTokenRequestContext</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">OpenIdCodeTokenRequestContext</span><wbr><span class="parameters">(<a href="../../../authorization/response/AuthorizationResponse.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response">AuthorizationResponse</a>&nbsp;authorizationResponse,
  <a href="../../../../url/OauthRouteUrlBuilder.html" title="interface in io.micronaut.security.oauth2.url">OauthRouteUrlBuilder</a>&nbsp;oauthRouteUrlBuilder,
  <a href="../../../SecureEndpoint.html" title="interface in io.micronaut.security.oauth2.endpoint">SecureEndpoint</a>&nbsp;tokenEndpoint,
- <a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration)</span></div>
+ <a href="../../../../configuration/OauthClientConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration">OauthClientConfiguration</a>&nbsp;clientConfiguration,
+ @Nullable
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;codeVerifier)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>authorizationResponse</code> - The authorization response</dd>
 <dd><code>oauthRouteUrlBuilder</code> - The oauth route URL builder</dd>
 <dd><code>tokenEndpoint</code> - The token endpoint</dd>
 <dd><code>clientConfiguration</code> - The client configuration</dd>
+<dd><code>codeVerifier</code> - The PKCE code_verify</dd>
 </dl>
 </section>
 </li>
@@ -228,6 +235,19 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>The error response argument</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCodeVerifier()">
+<h3>getCodeVerifier</h3>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getCodeVerifier</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The PKCE code verifier</dd>
+<dt>Since:</dt>
+<dd>3.9.0</dd>
 </dl>
 </section>
 </li>

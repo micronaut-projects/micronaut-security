@@ -19,6 +19,11 @@ io.micronaut.security.oauth2.client.condition
 io.micronaut.security.oauth2.configuration
 io.micronaut.security.oauth2.configuration.endpoints
 io.micronaut.security.oauth2.endpoint
+io.micronaut.security.oauth2.endpoint.authorization
+io.micronaut.security.oauth2.endpoint.authorization.pkce
+io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence
+io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie
+io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session
 io.micronaut.security.oauth2.endpoint.authorization.request
 io.micronaut.security.oauth2.endpoint.authorization.response
 io.micronaut.security.oauth2.endpoint.authorization.state

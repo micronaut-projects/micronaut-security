@@ -603,6 +603,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Builds the URL to receive the OAuth 2.0 authorization callback request.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultPkceFactory.html#buildChallenge(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.util.List)" class="member-name-link">buildChallenge(HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;, List&lt;String&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultPkceFactory.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">DefaultPkceFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceFactory.html#buildChallenge(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.util.List)" class="member-name-link">buildChallenge(HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;, List&lt;String&gt;)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceFactory.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceFactory</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html#buildDecrypter()" class="member-name-link">buildDecrypter()</a> - Method in class io.micronaut.security.token.jwt.encryption.<a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption">AbstractEncryptionConfiguration</a></dt>
 <dd>
 <div class="block">Build the appropriate decrypter.</div>
@@ -875,6 +879,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/ResponseType.html#CODE" class="member-name-link">CODE</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/ResponseType.html" title="enum class in io.micronaut.security.oauth2.endpoint.authorization.request">ResponseType</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#CODE_CHALLENGE_METHOD_PLAIN" class="member-name-link">CODE_CHALLENGE_METHOD_PLAIN</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#CODE_CHALLENGE_METHOD_S256" class="member-name-link">CODE_CHALLENGE_METHOD_S256</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/CodeVerifierGenerator.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">CodeVerifierGenerator</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block">Generates a Code Verifier for PKCE.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html#COGNITO" class="member-name-link">COGNITO</a> - Enum constant in enum class io.micronaut.security.oauth2.endpoint.endsession.request.<a href="io/micronaut/security/oauth2/endpoint/endsession/request/AuthorizationServer.html" title="enum class in io.micronaut.security.oauth2.endpoint.endsession.request">AuthorizationServer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/rules/AbstractSecurityRule.html#compareRoles(java.util.List,java.util.Collection)" class="member-name-link">compareRoles(List&lt;String&gt;, Collection&lt;String&gt;)</a> - Method in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/AbstractSecurityRule.html" title="class in io.micronaut.security.rules">AbstractSecurityRule</a></dt>
@@ -953,11 +965,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/authentication/CookieBasedAuthenticationModeCondition.html#%3Cinit%3E()" class="member-name-link">CookieBasedAuthenticationModeCondition()</a> - Constructor for class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/CookieBasedAuthenticationModeCondition.html" title="class in io.micronaut.security.authentication">CookieBasedAuthenticationModeCondition</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html#cookieConfiguration" class="member-name-link">cookieConfiguration</a> - Variable in class io.micronaut.security.oauth2.endpoint.authorization.<a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookieDomain" class="member-name-link">cookieDomain</a> - Variable in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieDomain" class="member-name-link">cookieDomain</a> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html#cookieExpiration(io.micronaut.security.authentication.Authentication,io.micronaut.http.HttpRequest)" class="member-name-link">cookieExpiration(Authentication, HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/IdTokenLoginHandler.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">IdTokenLoginHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookieHttpOnly" class="member-name-link">cookieHttpOnly</a> - Variable in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieHttpOnly" class="member-name-link">cookieHttpOnly</a> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -967,7 +983,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html#%3Cinit%3E(io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration,io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.config.RedirectService,io.micronaut.security.errors.PriorToLoginPersistence)" class="member-name-link">CookieLoginHandler(AccessTokenCookieConfiguration, RedirectConfiguration, RedirectService, PriorToLoginPersistence)</a> - Constructor for class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/CookieLoginHandler.html" title="class in io.micronaut.security.token.jwt.cookie">CookieLoginHandler</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookieMaxAge" class="member-name-link">cookieMaxAge</a> - Variable in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#cookieMaxAge" class="member-name-link">cookieMaxAge</a> - Variable in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookieName" class="member-name-link">cookieName</a> - Variable in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistence.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistence</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/package-summary.html">io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie</a></dt>
 <dd>
@@ -978,6 +998,24 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/package-summary.html">io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#%3Cinit%3E()" class="member-name-link">CookieNoncePersistenceConfiguration()</a> - Constructor for class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#cookiePath" class="member-name-link">cookiePath</a> - Variable in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization</a></dt>
+<dd>
+<div class="block">Utility Abstract class for Cookie Persistence.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html#%3Cinit%3E(io.micronaut.http.cookie.CookieConfiguration)" class="member-name-link">CookiePersistence(CookieConfiguration)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.<a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistence.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistence</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie</a></dt>
+<dd>
+<div class="block">Persists the Proof of Key Exchange (PKCE) code_verifier value in a cookie.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistence.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.CookiePkcePersistenceConfiguration)" class="member-name-link">CookiePkcePersistence(CookiePkcePersistenceConfiguration)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistence</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistenceConfiguration</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html#%3Cinit%3E()" class="member-name-link">CookiePkcePersistenceConfiguration()</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/errors/CookiePriorToLoginPersistence.html" class="type-name-link" title="class in io.micronaut.security.errors">CookiePriorToLoginPersistence</a> - Class in <a href="io/micronaut/security/errors/package-summary.html">io.micronaut.security.errors</a></dt>
 <dd>
@@ -1175,6 +1213,10 @@ loadScripts(document, 'script');</script>
 <div class="block">The default enable value.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html#DEFAULT_ENABLED" class="member-name-link">DEFAULT_ENABLED</a> - Static variable in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties</a></dt>
+<dd>
+<div class="block">The default enable value.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#DEFAULT_ENABLED" class="member-name-link">DEFAULT_ENABLED</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
 <dd>
 <div class="block">The default enable value.</div>
 </dd>
@@ -1396,6 +1438,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Default constructor.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultCodeVerifierGenerator.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">DefaultCodeVerifierGenerator</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block"><code>DefaultImplementation</code> of <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/CodeVerifierGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce"><code>CodeVerifierGenerator</code></a> which generates a random code verifier using <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfiguration.html#getEntropy()"><code>PkceConfiguration.getEntropy()</code></a>.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultCodeVerifierGenerator.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfiguration)" class="member-name-link">DefaultCodeVerifierGenerator(PkceConfiguration)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultCodeVerifierGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">DefaultCodeVerifierGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/DefaultContextAuthenticationMapper.html" class="type-name-link" title="class in io.micronaut.security.ldap">DefaultContextAuthenticationMapper</a> - Class in <a href="io/micronaut/security/ldap/package-summary.html">io.micronaut.security.ldap</a></dt>
 <dd>
 <div class="block">The default implementation to create an <a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a> from a successful
@@ -1408,6 +1456,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Default implementation of <a href="io/micronaut/security/ldap/context/ContextBuilder.html" title="interface in io.micronaut.security.ldap.context"><code>ContextBuilder</code></a>.</div>
 </dd>
 <dt><a href="io/micronaut/security/ldap/context/DefaultContextBuilder.html#%3Cinit%3E()" class="member-name-link">DefaultContextBuilder()</a> - Constructor for class io.micronaut.security.ldap.context.<a href="io/micronaut/security/ldap/context/DefaultContextBuilder.html" title="class in io.micronaut.security.ldap.context">DefaultContextBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#defaultCookieName()" class="member-name-link">defaultCookieName()</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html#defaultCookieName()" class="member-name-link">defaultCookieName()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistenceConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#defaultCookieName()" class="member-name-link">defaultCookieName()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#defaultCookieName()" class="member-name-link">defaultCookieName()</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/endpoints/DefaultEndpointConfiguration.html" class="type-name-link" title="class in io.micronaut.security.oauth2.configuration.endpoints">DefaultEndpointConfiguration</a> - Class in <a href="io/micronaut/security/oauth2/configuration/endpoints/package-summary.html">io.micronaut.security.oauth2.configuration.endpoints</a></dt>
 <dd>
@@ -1518,7 +1574,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Default implementation of <a href="io/micronaut/security/oauth2/endpoint/authorization/response/OpenIdAuthorizationResponseHandler.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.response"><code>OpenIdAuthorizationResponseHandler</code></a>.</div>
 </dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator)" class="member-name-link">DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, DefaultOpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.response.<a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">DefaultOpenIdAuthorizationResponseHandler</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)" class="member-name-link">DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator, DefaultOpenIdAuthenticationMapper, TokenEndpointClient, OauthRouteUrlBuilder, StateValidator, PkcePersistence)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.response.<a href="io/micronaut/security/oauth2/endpoint/authorization/response/DefaultOpenIdAuthorizationResponseHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.response">DefaultOpenIdAuthorizationResponseHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html" class="type-name-link" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdClient</a> - Class in <a href="io/micronaut/security/oauth2/client/package-summary.html">io.micronaut.security.oauth2.client</a></dt>
 <dd>
@@ -1535,6 +1591,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Default implementation of <a href="io/micronaut/security/oauth2/endpoint/token/response/validation/OpenIdTokenResponseValidator.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response.validation"><code>OpenIdTokenResponseValidator</code></a>.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/validation/DefaultOpenIdTokenResponseValidator.html#%3Cinit%3E(java.util.Collection,java.util.Collection,io.micronaut.security.oauth2.endpoint.token.response.validation.NonceClaimValidator,io.micronaut.security.token.jwt.signature.jwks.JwkValidator)" class="member-name-link">DefaultOpenIdTokenResponseValidator(Collection&lt;OpenIdClaimsValidator&gt;, Collection&lt;GenericJwtClaimsValidator&gt;, NonceClaimValidator, JwkValidator)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.response.validation.<a href="io/micronaut/security/oauth2/endpoint/token/response/validation/DefaultOpenIdTokenResponseValidator.html" title="class in io.micronaut.security.oauth2.endpoint.token.response.validation">DefaultOpenIdTokenResponseValidator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultPkceFactory.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">DefaultPkceFactory</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block">Generates a Proof Key for Code Exchange and persists.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultPkceFactory.html#%3Cinit%3E(java.util.List,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)" class="member-name-link">DefaultPkceFactory(List&lt;PkceGenerator&gt;, PkcePersistence)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultPkceFactory.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">DefaultPkceFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/DefaultProviderResolver.html" class="type-name-link" title="class in io.micronaut.security.oauth2">DefaultProviderResolver</a> - Class in <a href="io/micronaut/security/oauth2/package-summary.html">io.micronaut.security.oauth2</a></dt>
 <dd>
@@ -1897,6 +1959,16 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/CodeVerifierGenerator.html#generate()" class="member-name-link">generate()</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/CodeVerifierGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">CodeVerifierGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultCodeVerifierGenerator.html#generate()" class="member-name-link">generate()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/DefaultCodeVerifierGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">DefaultCodeVerifierGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html#generate()" class="member-name-link">generate()</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#generate()" class="member-name-link">generate()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#generate()" class="member-name-link">generate()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html#generate(io.micronaut.security.authentication.Authentication)" class="member-name-link">generate(Authentication)</a> - Method in interface io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/AccessRefreshTokenGenerator.html" title="interface in io.micronaut.security.token.jwt.generator">AccessRefreshTokenGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html#generate(io.micronaut.security.authentication.Authentication)" class="member-name-link">generate(Authentication)</a> - Method in class io.micronaut.security.token.jwt.generator.<a href="io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.html" title="class in io.micronaut.security.token.jwt.generator">DefaultAccessRefreshTokenGenerator</a></dt>
@@ -2253,12 +2325,34 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html#getCode()" class="member-name-link">getCode()</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html" title="class in io.micronaut.security.oauth2.grants">AuthorizationCodeGrant</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html#getCodeChallenge()" class="member-name-link">getCodeChallenge()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Pkce</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceChallenge.html#getCodeChallenge()" class="member-name-link">getCodeChallenge()</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceChallenge.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceChallenge</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfiguration.html#getCodeChallengeMethod()" class="member-name-link">getCodeChallengeMethod()</a> - Method in interface io.micronaut.security.oauth2.configuration.endpoints.<a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfiguration.html" title="interface in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html#getCodeChallengeMethod()" class="member-name-link">getCodeChallengeMethod()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html#getCodeChallengeMethod()" class="member-name-link">getCodeChallengeMethod()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html#getCodeChallengeMethod()" class="member-name-link">getCodeChallengeMethod()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Pkce</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceChallenge.html#getCodeChallengeMethod()" class="member-name-link">getCodeChallengeMethod()</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceChallenge.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceChallenge</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html#getCodeChallengeMethodsSupported()" class="member-name-link">getCodeChallengeMethodsSupported()</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdProviderMetadata.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdProviderMetadata</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html#getCodeChallengeMethodsSupported()" class="member-name-link">getCodeChallengeMethodsSupported()</a> - Method in interface io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/OpenIdProviderMetadata.html" title="interface in io.micronaut.security.oauth2.client">OpenIdProviderMetadata</a></dt>
 <dd>
 <div class="block">code_challenge_methods_supported.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html#getCodeVerifier()" class="member-name-link">getCodeVerifier()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Pkce</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#getCodeVerifier()" class="member-name-link">getCodeVerifier()</a> - Method in class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OauthCodeTokenRequestContext</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdCodeTokenRequestContext.html#getCodeVerifier()" class="member-name-link">getCodeVerifier()</a> - Method in class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OpenIdCodeTokenRequestContext</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html#getCodeVerifier()" class="member-name-link">getCodeVerifier()</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html" title="class in io.micronaut.security.oauth2.grants">AuthorizationCodeGrant</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagator.html#getConfiguration()" class="member-name-link">getConfiguration()</a> - Method in class io.micronaut.security.oauth2.client.clientcredentials.propagation.<a href="io/micronaut/security/oauth2/client/clientcredentials/propagation/ClientCredentialsHeaderTokenPropagator.html" title="class in io.micronaut.security.oauth2.client.clientcredentials.propagation">ClientCredentialsHeaderTokenPropagator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html#getConfiguration()" class="member-name-link">getConfiguration()</a> - Method in class io.micronaut.security.token.propagation.<a href="io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html" title="class in io.micronaut.security.token.propagation">HttpHeaderTokenPropagator</a></dt>
@@ -2277,23 +2371,17 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#getCookieDomain()" class="member-name-link">getCookieDomain()</a> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#getCookieMaxAge()" class="member-name-link">getCookieMaxAge()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#getCookieMaxAge()" class="member-name-link">getCookieMaxAge()</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#getCookieMaxAge()" class="member-name-link">getCookieMaxAge()</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#getCookieMaxAge()" class="member-name-link">getCookieMaxAge()</a> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#getCookieName()" class="member-name-link">getCookieName()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#getCookieName()" class="member-name-link">getCookieName()</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#getCookieName()" class="member-name-link">getCookieName()</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookieName()" class="member-name-link">getCookieName()</a> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html#getCookieName()" class="member-name-link">getCookieName()</a> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/RefreshTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">RefreshTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#getCookiePath()" class="member-name-link">getCookiePath()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#getCookiePath()" class="member-name-link">getCookiePath()</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#getCookiePath()" class="member-name-link">getCookiePath()</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html#getCookiePath()" class="member-name-link">getCookiePath()</a> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/JwtCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">JwtCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -2397,6 +2485,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">end_session_endpoint.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfiguration.html#getEntropy()" class="member-name-link">getEntropy()</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfiguration.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#getEntropy()" class="member-name-link">getEntropy()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/errors/ErrorResponse.html#getError()" class="member-name-link">getError()</a> - Method in interface io.micronaut.security.errors.<a href="io/micronaut/security/errors/ErrorResponse.html" title="interface in io.micronaut.security.errors">ErrorResponse</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/errors/OauthErrorResponseException.html#getError()" class="member-name-link">getError()</a> - Method in exception io.micronaut.security.errors.<a href="io/micronaut/security/errors/OauthErrorResponseException.html" title="class in io.micronaut.security.errors">OauthErrorResponseException</a></dt>
@@ -2789,6 +2881,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html#getName()" class="member-name-link">getName()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#getName()" class="member-name-link">getName()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#getName()" class="member-name-link">getName()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html#getName()" class="member-name-link">getName()</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">JWTOpenIdClaims</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#getName()" class="member-name-link">getName()</a> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></dt>
@@ -2851,6 +2947,10 @@ loadScripts(document, 'script');</script>
 <div class="block">op_tos_uri.</div>
 </dd>
 <dt><a href="io/micronaut/security/filters/SecurityFilter.html#getOrder()" class="member-name-link">getOrder()</a> - Method in class io.micronaut.security.filters.<a href="io/micronaut/security/filters/SecurityFilter.html" title="class in io.micronaut.security.filters">SecurityFilter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#getOrder()" class="member-name-link">getOrder()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#getOrder()" class="member-name-link">getOrder()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#getOrder()" class="member-name-link">getOrder()</a> - Method in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></dt>
 <dd>&nbsp;</dd>
@@ -2916,6 +3016,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#getPatternList()" class="member-name-link">getPatternList()</a> - Method in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#getPersistence()" class="member-name-link">getPersistence()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html#getPersistence()" class="member-name-link">getPersistence()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state">DefaultStateConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html#getPersistence()" class="member-name-link">getPersistence()</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.<a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce">DefaultNonceConfiguration</a></dt>
@@ -2929,6 +3031,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html#getPicture()" class="member-name-link">getPicture()</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/JWTOpenIdClaims.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">JWTOpenIdClaims</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html#getPicture()" class="member-name-link">getPicture()</a> - Method in interface io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/OpenIdClaims.html" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OpenIdClaims</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html#getPkceChallenge(io.micronaut.http.MutableHttpResponse)" class="member-name-link">getPkceChallenge(MutableHttpResponse&lt;?&gt;)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/ldap/context/ContextConfigurationContextSettings.html#getPooled()" class="member-name-link">getPooled()</a> - Method in class io.micronaut.security.ldap.context.<a href="io/micronaut/security/ldap/context/ContextConfigurationContextSettings.html" title="class in io.micronaut.security.ldap.context">ContextConfigurationContextSettings</a></dt>
 <dd>&nbsp;</dd>
@@ -3508,6 +3612,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/RolesFinder.html#hasAnyRequiredRoles(java.util.List,java.util.Map)" class="member-name-link">hasAnyRequiredRoles(List&lt;String&gt;, Map&lt;String, Object&gt;)</a> - Method in interface io.micronaut.security.token.<a href="io/micronaut/security/token/RolesFinder.html" title="interface in io.micronaut.security.token">RolesFinder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#hash(java.lang.String)" class="member-name-link">hash(String)</a> - Static method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/AuthenticationFailed.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/AuthenticationFailed.html" title="class in io.micronaut.security.authentication">AuthenticationFailed</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/UsernamePasswordCredentials.html" title="class in io.micronaut.security.authentication">UsernamePasswordCredentials</a></dt>
@@ -3772,6 +3878,26 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Classes related to OAuth2.0 and OpenID endpoints.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization</a> - package io.micronaut.security.oauth2.endpoint.authorization</dt>
+<dd>
+<div class="block">Classes related to OAuth 2.0 authorization endpoint requests and responses.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a> - package io.micronaut.security.oauth2.endpoint.authorization.pkce</dt>
+<dd>
+<div class="block">Classes related to OAuth 2.0 state management.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence</a> - package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence</dt>
+<dd>
+<div class="block">Classes related to pkce persistence.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie</a> - package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie</dt>
+<dd>
+<div class="block">Classes related to the persistence of PKCE in a cookie.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session</a> - package io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session</dt>
+<dd>
+<div class="block">Classes related to storage of the pkce in a session.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.request</a> - package io.micronaut.security.oauth2.endpoint.authorization.request</dt>
 <dd>
 <div class="block">Classes related to an OAuth 2.0 authorization request.</div>
@@ -3818,7 +3944,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/package-summary.html">io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie</a> - package io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie</dt>
 <dd>
-<div class="block">Classes related to the persistence of state in a cookie.</div>
+<div class="block">Classes related to the persistence of nonce in a cookie.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/session/package-summary.html">io.micronaut.security.oauth2.endpoint.nonce.persistence.session</a> - package io.micronaut.security.oauth2.endpoint.nonce.persistence.session</dt>
 <dd>
@@ -4012,9 +4138,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html#isBase64()" class="member-name-link">isBase64()</a> - Method in class io.micronaut.security.token.jwt.signature.secret.<a href="io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html" title="class in io.micronaut.security.token.jwt.signature.secret">SecretSignatureConfiguration</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#isCookieHttpOnly()" class="member-name-link">isCookieHttpOnly()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#isCookieHttpOnly()" class="member-name-link">isCookieHttpOnly()</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#isCookieHttpOnly()" class="member-name-link">isCookieHttpOnly()</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#isCookieHttpOnly()" class="member-name-link">isCookieHttpOnly()</a> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -4059,6 +4183,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state">DefaultStateConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -4696,6 +4822,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/condition/OpenIdClientCondition.html#matches(io.micronaut.context.condition.ConditionContext)" class="member-name-link">matches(ConditionContext)</a> - Method in class io.micronaut.security.oauth2.client.condition.<a href="io/micronaut/security/oauth2/client/condition/OpenIdClientCondition.html" title="class in io.micronaut.security.oauth2.client.condition">OpenIdClientCondition</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Sha256Condition.html#matches(io.micronaut.context.condition.ConditionContext)" class="member-name-link">matches(ConditionContext)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Sha256Condition.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Sha256Condition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html#mediaType" class="member-name-link">mediaType</a> - Variable in class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/AbstractTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">AbstractTokenRequestContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html#method" class="member-name-link">method</a> - Variable in class io.micronaut.security.token.jwt.encryption.<a href="io/micronaut/security/token/jwt/encryption/AbstractEncryptionConfiguration.html" title="class in io.micronaut.security.token.jwt.encryption">AbstractEncryptionConfiguration</a></dt>
@@ -4763,6 +4891,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/OauthAuthenticationMapper.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.token.response">OauthAuthenticationMapper</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/token/response/package-summary.html">io.micronaut.security.oauth2.endpoint.token.response</a></dt>
 <dd>
 <div class="block">A contract for mapping an OAuth 2.0 token endpoint response to a <a href="io/micronaut/security/authentication/AuthenticationResponse.html" title="interface in io.micronaut.security.authentication"><code>AuthenticationResponse</code></a> object.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/endpoints/OauthAuthorizationEndpointConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.configuration.endpoints">OauthAuthorizationEndpointConfiguration</a> - Interface in <a href="io/micronaut/security/oauth2/configuration/endpoints/package-summary.html">io.micronaut.security.oauth2.configuration.endpoints</a></dt>
+<dd>
+<div class="block">Configuration for Authorization Endpoint Configuration.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OauthAuthorizationRequest.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OauthAuthorizationRequest</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/request/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.request</a></dt>
 <dd>
@@ -4857,7 +4989,7 @@ loadScripts(document, 'script');</script>
 <div class="block">A token request context for sending an authorization
  code grant request to an OAuth 2.0 provider.</div>
 </dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)" class="member-name-link">OauthCodeTokenRequestContext(AuthorizationResponse, SecureEndpoint, OauthClientConfiguration)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OauthCodeTokenRequestContext</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,java.lang.String)" class="member-name-link">OauthCodeTokenRequestContext(AuthorizationResponse, SecureEndpoint, OauthClientConfiguration, String)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/OauthCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OauthCodeTokenRequestContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.configuration">OauthConfiguration</a> - Interface in <a href="io/micronaut/security/oauth2/configuration/package-summary.html">io.micronaut.security.oauth2.configuration</a></dt>
 <dd>
@@ -5026,7 +5158,7 @@ loadScripts(document, 'script');</script>
 <div class="block">A token request context for sending an authorization
  code grant request to an OpenID provider.</div>
 </dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdCodeTokenRequestContext.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)" class="member-name-link">OpenIdCodeTokenRequestContext(AuthorizationResponse, OauthRouteUrlBuilder, SecureEndpoint, OauthClientConfiguration)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OpenIdCodeTokenRequestContext</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdCodeTokenRequestContext.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration,java.lang.String)" class="member-name-link">OpenIdCodeTokenRequestContext(AuthorizationResponse, OauthRouteUrlBuilder, SecureEndpoint, OauthClientConfiguration, String)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.token.request.context.<a href="io/micronaut/security/oauth2/endpoint/token/request/context/OpenIdCodeTokenRequestContext.html" title="class in io.micronaut.security.oauth2.endpoint.token.request.context">OpenIdCodeTokenRequestContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OpenIdConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.configuration">OpenIdConfiguration</a> - Interface in <a href="io/micronaut/security/oauth2/configuration/package-summary.html">io.micronaut.security.oauth2.configuration</a></dt>
 <dd>
@@ -5066,6 +5198,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Validates an OpenID token response.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#ORDER" class="member-name-link">ORDER</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#ORDER" class="member-name-link">ORDER</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html#ORDER" class="member-name-link">ORDER</a> - Static variable in class io.micronaut.security.rules.<a href="io/micronaut/security/rules/ConfigurationInterceptUrlMapRule.html" title="class in io.micronaut.security.rules">ConfigurationInterceptUrlMapRule</a></dt>
 <dd>
 <div class="block">The order of the rule.</div>
@@ -5122,6 +5258,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html#PARAMETER_MAX_AGE" class="member-name-link">PARAMETER_MAX_AGE</a> - Static variable in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdAuthorizationRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html#PARAMETER_NONCE" class="member-name-link">PARAMETER_NONCE</a> - Static variable in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdAuthorizationRequest</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html#PARAMETER_PKCE_CODE_CHALLENGE" class="member-name-link">PARAMETER_PKCE_CODE_CHALLENGE</a> - Static variable in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRequest</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html#PARAMETER_PKCE_CODE_CHALLENGE_METHOD" class="member-name-link">PARAMETER_PKCE_CODE_CHALLENGE_METHOD</a> - Static variable in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html#PARAMETER_PROMPT" class="member-name-link">PARAMETER_PROMPT</a> - Static variable in interface io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/OpenIdAuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">OpenIdAuthorizationRequest</a></dt>
 <dd>&nbsp;</dd>
@@ -5189,7 +5329,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Base configuration for persistable endpoints.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#PERSISTENCE_COOKIE" class="member-name-link">PERSISTENCE_COOKIE</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html#PERSISTENCE_COOKIE" class="member-name-link">PERSISTENCE_COOKIE</a> - Static variable in class io.micronaut.security.oauth2.endpoint.nonce.<a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce">DefaultNonceConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#PERSISTENCE_SESSION" class="member-name-link">PERSISTENCE_SESSION</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html#PERSISTENCE_SESSION" class="member-name-link">PERSISTENCE_SESSION</a> - Static variable in class io.micronaut.security.oauth2.endpoint.nonce.<a href="io/micronaut/security/oauth2/endpoint/nonce/DefaultNonceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce">DefaultNonceConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -5200,6 +5344,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Persists the nonce for later retrieval to allow validation.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/session/SessionNoncePersistence.html#persistNonce(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.lang.String)" class="member-name-link">persistNonce(HttpRequest&lt;?&gt;, MutableHttpResponse, String)</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.session.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/session/SessionNoncePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.session">SessionNoncePersistence</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistence.html#persistPkce(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce)" class="member-name-link">persistPkce(HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;, Pkce)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistence</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/PkcePersistence.html#persistPkce(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce)" class="member-name-link">persistPkce(HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;, Pkce)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a></dt>
+<dd>
+<div class="block">Persists the PKCE for later retrieval.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/SessionPkcePersistence.html#persistPkce(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,io.micronaut.security.oauth2.endpoint.authorization.pkce.Pkce)" class="member-name-link">persistPkce(HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;, Pkce)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/SessionPkcePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session">SessionPkcePersistence</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistence.html#persistState(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,io.micronaut.security.oauth2.endpoint.authorization.state.State)" class="member-name-link">persistState(HttpRequest&lt;?&gt;, MutableHttpResponse, State)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistence</a></dt>
 <dd>&nbsp;</dd>
@@ -5217,6 +5369,42 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">This scope value requests access to the phone_number and phone_number_verified Claims.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Pkce</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block">Proof Key for Code Exchange.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">Pkce(String, String, String)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Pkce.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Pkce</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceChallenge.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceChallenge</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block">Proof Key for Code Exchange Challenge.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfiguration</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block">Configuration for PKCE.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block">Configuration properties implementation of PKCE.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#%3Cinit%3E()" class="member-name-link">PkceConfigurationProperties()</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceFactory.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceFactory</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block">API to Build/Persist a PKCE (Proof Key for Code Exchange).</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceGenerator</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/PkcePersistence.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a> - Interface in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence</a></dt>
+<dd>
+<div class="block">Persists the Proof of Key Exchange (PKCE) for later retrieval.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block">Pkce generator for plain challenge method.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.pkce.CodeVerifierGenerator)" class="member-name-link">PlainPkceGenerator(CodeVerifierGenerator)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html#populateAcrValues(io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest,java.util.Map)" class="member-name-link">populateAcrValues(OpenIdAuthorizationRequest, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html#populateAud(com.nimbusds.jwt.JWTClaimsSet.Builder)" class="member-name-link">populateAud(JWTClaimsSet.Builder)</a> - Method in class io.micronaut.security.token.jwt.generator.claims.<a href="io/micronaut/security/token/jwt/generator/claims/JWTClaimsSetGenerator.html" title="class in io.micronaut.security.token.jwt.generator.claims">JWTClaimsSetGenerator</a></dt>
@@ -5254,6 +5442,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Populates nbf claim.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html#populateNonce(io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest,java.util.Map,io.micronaut.http.MutableHttpResponse)" class="member-name-link">populateNonce(OpenIdAuthorizationRequest, Map&lt;String, Object&gt;, MutableHttpResponse)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html#populatePKCE(io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest,java.util.Map,io.micronaut.http.MutableHttpResponse)" class="member-name-link">populatePKCE(AuthorizationRequest, Map&lt;String, Object&gt;, MutableHttpResponse&lt;?&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html#populatePrompt(io.micronaut.security.oauth2.endpoint.authorization.request.OpenIdAuthorizationRequest,java.util.Map)" class="member-name-link">populatePrompt(OpenIdAuthorizationRequest, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/DefaultAuthorizationRedirectHandler.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.request">DefaultAuthorizationRedirectHandler</a></dt>
 <dd>&nbsp;</dd>
@@ -5316,6 +5506,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistenceConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state">DefaultStateConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -5653,6 +5847,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Authentication Flows response types.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistence.html#retrieveCodeVerifier(io.micronaut.http.HttpRequest)" class="member-name-link">retrieveCodeVerifier(HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistence</a></dt>
+<dd>
+<div class="block">Retrieve the code verifier and removes it from the session if present.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/PkcePersistence.html#retrieveCodeVerifier(io.micronaut.http.HttpRequest)" class="member-name-link">retrieveCodeVerifier(HttpRequest&lt;?&gt;)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/PkcePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence">PkcePersistence</a></dt>
+<dd>
+<div class="block">Retreive the code verifier.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/SessionPkcePersistence.html#retrieveCodeVerifier(io.micronaut.http.HttpRequest)" class="member-name-link">retrieveCodeVerifier(HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/SessionPkcePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session">SessionPkcePersistence</a></dt>
+<dd>
+<div class="block">Retrieve the code verifier and removes it from the session if present.</div>
+</dd>
 <dt><a href="io/micronaut/security/token/jwt/endpoints/JwkProvider.html#retrieveJsonWebKeys()" class="member-name-link">retrieveJsonWebKeys()</a> - Method in interface io.micronaut.security.token.jwt.endpoints.<a href="io/micronaut/security/token/jwt/endpoints/JwkProvider.html" title="interface in io.micronaut.security.token.jwt.endpoints">JwkProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistence.html#retrieveNonce(io.micronaut.http.HttpRequest)" class="member-name-link">retrieveNonce(HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistence</a></dt>
@@ -5671,6 +5877,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Retrieves and removes the state from persistence.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html#retrieveValue(io.micronaut.http.HttpRequest)" class="member-name-link">retrieveValue(HttpRequest&lt;?&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.<a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/endpoints/RevocationEndpointConfiguration.html" class="type-name-link" title="interface in io.micronaut.security.oauth2.configuration.endpoints">RevocationEndpointConfiguration</a> - Interface in <a href="io/micronaut/security/oauth2/configuration/endpoints/package-summary.html">io.micronaut.security.oauth2.configuration.endpoints</a></dt>
 <dd>
 <div class="block">Revocation endpoint configuration.</div>
@@ -5736,6 +5944,12 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block">SHA-256 based PKCE Generator.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#%3Cinit%3E(io.micronaut.security.oauth2.endpoint.authorization.pkce.CodeVerifierGenerator)" class="member-name-link">S256PkceGenerator(CodeVerifierGenerator)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/GrantType.html#SAML_2_0_BEARER_ASSERTION_GRANT" class="member-name-link">SAML_2_0_BEARER_ASSERTION_GRANT</a> - Enum constant in enum class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/GrantType.html" title="enum class in io.micronaut.security.oauth2.grants">GrantType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/SamlBearerAssertionGrant.html" class="type-name-link" title="class in io.micronaut.security.oauth2.grants">SamlBearerAssertionGrant</a> - Class in <a href="io/micronaut/security/oauth2/grants/package-summary.html">io.micronaut.security.oauth2.grants</a></dt>
@@ -5743,6 +5957,8 @@ loadScripts(document, 'script');</script>
 <div class="block">SAML 2.0 bearer assertion grant.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/grants/SamlBearerAssertionGrant.html#%3Cinit%3E()" class="member-name-link">SamlBearerAssertionGrant()</a> - Constructor for class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/SamlBearerAssertionGrant.html" title="class in io.micronaut.security.oauth2.grants">SamlBearerAssertionGrant</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html#save(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.lang.String)" class="member-name-link">save(HttpRequest&lt;?&gt;, MutableHttpResponse&lt;?&gt;, String)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.<a href="io/micronaut/security/oauth2/endpoint/authorization/CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html#SCOPE" class="member-name-link">SCOPE</a> - Static variable in class io.micronaut.security.endpoints.introspection.<a href="io/micronaut/security/endpoints/introspection/DefaultIntrospectionProcessor.html" title="class in io.micronaut.security.endpoints.introspection">DefaultIntrospectionProcessor</a></dt>
 <dd>&nbsp;</dd>
@@ -5972,6 +6188,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/session/SessionNoncePersistence.html#%3Cinit%3E(io.micronaut.session.SessionStore)" class="member-name-link">SessionNoncePersistence(SessionStore&lt;Session&gt;)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.nonce.persistence.session.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/session/SessionNoncePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.session">SessionNoncePersistence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/SessionPkcePersistence.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session">SessionPkcePersistence</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session</a></dt>
+<dd>
+<div class="block">Persists the Proof of Key Exchange (PKCE) code_verifier in the session.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/SessionPkcePersistence.html#%3Cinit%3E(io.micronaut.session.SessionStore)" class="member-name-link">SessionPkcePersistence(SessionStore&lt;Session&gt;)</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/session/SessionPkcePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.session">SessionPkcePersistence</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/session/SessionStatePersistence.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.session">SessionStatePersistence</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/session/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.state.persistence.session</a></dt>
 <dd>
 <div class="block">Persists the state in the session.</div>
@@ -6101,6 +6323,16 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html#setCode(java.lang.String)" class="member-name-link">setCode(String)</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html" title="class in io.micronaut.security.oauth2.grants">AuthorizationCodeGrant</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html#setCodeChallengeMethod(java.lang.String)" class="member-name-link">setCodeChallengeMethod(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></dt>
+<dd>
+<div class="block">Code Challenge Method to use for PKCE.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html#setCodeChallengeMethod(java.lang.String)" class="member-name-link">setCodeChallengeMethod(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties</a></dt>
+<dd>
+<div class="block">Code Challenge Method to use for PKCE.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html#setCodeVerifier(java.lang.String)" class="member-name-link">setCodeVerifier(String)</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html" title="class in io.micronaut.security.oauth2.grants">AuthorizationCodeGrant</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html#setConfigurationPath(java.lang.String)" class="member-name-link">setConfigurationPath(String)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthClientConfigurationProperties.OpenIdClientConfigurationProperties</a></dt>
 <dd>
 <div class="block">The configuration path to discover openid configuration.</div>
@@ -6121,11 +6353,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the domain name of this Cookie.</div>
 </dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#setCookieHttpOnly(java.lang.Boolean)" class="member-name-link">setCookieHttpOnly(Boolean)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
-<dd>
-<div class="block">Whether the Cookie can only be accessed via HTTP.</div>
-</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#setCookieHttpOnly(java.lang.Boolean)" class="member-name-link">setCookieHttpOnly(Boolean)</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookieHttpOnly(java.lang.Boolean)" class="member-name-link">setCookieHttpOnly(Boolean)</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>
 <div class="block">Whether the Cookie can only be accessed via HTTP.</div>
 </dd>
@@ -6133,17 +6361,21 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Whether the Cookie can only be accessed via HTTP.</div>
 </dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#setCookieMaxAge(java.time.Duration)" class="member-name-link">setCookieMaxAge(Duration)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
-<dd>
-<div class="block">Sets the maximum age of the cookie.</div>
-</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#setCookieMaxAge(java.time.Duration)" class="member-name-link">setCookieMaxAge(Duration)</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookieMaxAge(java.time.Duration)" class="member-name-link">setCookieMaxAge(Duration)</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>
 <div class="block">Sets the maximum age of the cookie.</div>
 </dd>
 <dt><a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html#setCookieMaxAge(java.time.Duration)" class="member-name-link">setCookieMaxAge(Duration)</a> - Method in class io.micronaut.security.token.jwt.cookie.<a href="io/micronaut/security/token/jwt/cookie/AbstractAccessTokenCookieConfigurationProperties.html" title="class in io.micronaut.security.token.jwt.cookie">AbstractAccessTokenCookieConfigurationProperties</a></dt>
 <dd>
 <div class="block">Sets the maximum age of the cookie.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookieName(java.lang.String)" class="member-name-link">setCookieName(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
+<dd>
+<div class="block">Cookie Name.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html#setCookieName(java.lang.String)" class="member-name-link">setCookieName(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistenceConfiguration</a></dt>
+<dd>
+<div class="block">Cookie Name.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#setCookieName(java.lang.String)" class="member-name-link">setCookieName(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
 <dd>
@@ -6161,11 +6393,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Cookie Name.</div>
 </dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html#setCookiePath(java.lang.String)" class="member-name-link">setCookiePath(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/persistence/cookie/CookieStatePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie">CookieStatePersistenceConfiguration</a></dt>
-<dd>
-<div class="block">Sets the path of the cookie.</div>
-</dd>
-<dt><a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html#setCookiePath(java.lang.String)" class="member-name-link">setCookiePath(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/nonce/persistence/cookie/CookieNoncePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie">CookieNoncePersistenceConfiguration</a></dt>
+<dt><a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html#setCookiePath(java.lang.String)" class="member-name-link">setCookiePath(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.<a href="io/micronaut/security/oauth2/endpoint/AbstractCookieConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint">AbstractCookieConfiguration</a></dt>
 <dd>
 <div class="block">Sets the path of the cookie.</div>
 </dd>
@@ -6271,6 +6499,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets whether the OAuth 2.0 support is enabled.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#setEnabled(boolean)" class="member-name-link">setEnabled(boolean)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets whether a state parameter will be sent.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html#setEnabled(boolean)" class="member-name-link">setEnabled(boolean)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state">DefaultStateConfiguration</a></dt>
 <dd>
 <div class="block">Sets whether a state parameter will be sent.</div>
@@ -6338,6 +6570,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html#setEndSession(io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties)" class="member-name-link">setEndSession(OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties)</a> - Method in class io.micronaut.security.oauth2.configuration.<a href="io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html" title="class in io.micronaut.security.oauth2.configuration">OauthConfigurationProperties.OpenIdConfigurationProperties</a></dt>
 <dd>
 <div class="block">The end session configuration.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#setEntropy(int)" class="member-name-link">setEntropy(int)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
+<dd>
+<div class="block">entropy (in bytes) used for the code verifier generation.</div>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/token/response/TokenErrorResponse.html#setError(io.micronaut.security.oauth2.endpoint.token.response.TokenError)" class="member-name-link">setError(TokenError)</a> - Method in class io.micronaut.security.oauth2.endpoint.token.response.<a href="io/micronaut/security/oauth2/endpoint/token/response/TokenErrorResponse.html" title="class in io.micronaut.security.oauth2.endpoint.token.response">TokenErrorResponse</a></dt>
 <dd>&nbsp;</dd>
@@ -6568,6 +6804,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Configures <a href="io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html" title="class in io.micronaut.security.token.propagation"><code>TokenPropagationHttpClientFilter</code></a> path.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#setPersistence(java.lang.String)" class="member-name-link">setPersistence(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></dt>
+<dd>
+<div class="block">Sets the mechanism to persist the state for later retrieval for validation.</div>
+</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html#setPersistence(java.lang.String)" class="member-name-link">setPersistence(String)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultStateConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state">DefaultStateConfiguration</a></dt>
 <dd>
 <div class="block">Sets the mechanism to persist the state for later retrieval for validation.</div>
@@ -6612,9 +6852,7 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html#setRedirectUri(java.lang.String)" class="member-name-link">setRedirectUri(String)</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/AuthorizationCodeGrant.html" title="class in io.micronaut.security.oauth2.grants">AuthorizationCodeGrant</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultState.html#setRedirectUri(java.net.URI)" class="member-name-link">setRedirectUri(URI)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/DefaultState.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.state">DefaultState</a></dt>
-<dd>
-<div class="block">w</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html#setRedirectUri(java.net.URI)" class="member-name-link">setRedirectUri(URI)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.state.<a href="io/micronaut/security/oauth2/endpoint/authorization/state/MutableState.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state">MutableState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/config/RedirectConfigurationProperties.html#setRefresh(io.micronaut.security.config.RedirectConfigurationProperties.RefreshRedirectConfigurationProperties)" class="member-name-link">setRefresh(RedirectConfigurationProperties.RefreshRedirectConfigurationProperties)</a> - Method in class io.micronaut.security.config.<a href="io/micronaut/security/config/RedirectConfigurationProperties.html" title="class in io.micronaut.security.config">RedirectConfigurationProperties</a></dt>
@@ -6778,6 +7016,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/security/oauth2/grants/PasswordGrant.html#setUsername(java.lang.String)" class="member-name-link">setUsername(String)</a> - Method in class io.micronaut.security.oauth2.grants.<a href="io/micronaut/security/oauth2/grants/PasswordGrant.html" title="class in io.micronaut.security.oauth2.grants">PasswordGrant</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Sha256Condition.html" class="type-name-link" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Sha256Condition</a> - Class in <a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/package-summary.html">io.micronaut.security.oauth2.endpoint.authorization.pkce</a></dt>
+<dd>
+<div class="block"><code>Condition</code> which evaluates to true if SHA-256 algorithm is supported.</div>
+</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Sha256Condition.html#%3Cinit%3E()" class="member-name-link">Sha256Condition()</a> - Constructor for class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/Sha256Condition.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">Sha256Condition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html#shouldRedirect(io.micronaut.http.HttpRequest,io.micronaut.security.authentication.AuthorizationException)" class="member-name-link">shouldRedirect(HttpRequest&lt;?&gt;, AuthorizationException)</a> - Method in class io.micronaut.security.authentication.<a href="io/micronaut/security/authentication/DefaultAuthorizationExceptionHandler.html" title="class in io.micronaut.security.authentication">DefaultAuthorizationExceptionHandler</a></dt>
 <dd>
 <div class="block">Decides whether the request should be handled with a redirect.</div>
@@ -6922,6 +7166,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Whether this signature configuration supports this algorithm.</div>
 </dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html#supportsAny(java.util.List)" class="member-name-link">supportsAny(List&lt;String&gt;)</a> - Method in interface io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#supportsAny(java.util.List)" class="member-name-link">supportsAny(List&lt;String&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#supportsAny(java.util.List)" class="member-name-link">supportsAny(List&lt;String&gt;)</a> - Method in class io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html#supportsEndSession()" class="member-name-link">supportsEndSession()</a> - Method in class io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/DefaultOpenIdClient.html" title="class in io.micronaut.security.oauth2.client">DefaultOpenIdClient</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/security/oauth2/client/OpenIdClient.html#supportsEndSession()" class="member-name-link">supportsEndSession()</a> - Method in interface io.micronaut.security.oauth2.client.<a href="io/micronaut/security/oauth2/client/OpenIdClient.html" title="interface in io.micronaut.security.oauth2.client">OpenIdClient</a></dt>

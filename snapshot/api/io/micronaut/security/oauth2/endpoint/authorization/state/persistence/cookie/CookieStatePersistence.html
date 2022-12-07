@@ -44,7 +44,7 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -71,7 +71,9 @@ loadScripts(document, 'script');</script>
 <h1 title="Class CookieStatePersistence" class="title">Class CookieStatePersistence</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance"><a href="../../../CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">io.micronaut.security.oauth2.endpoint.authorization.CookiePersistence</a>
 <div class="inheritance">io.micronaut.security.oauth2.endpoint.authorization.state.persistence.cookie.CookieStatePersistence</div>
+</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -81,7 +83,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="annotations">@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">CookieStatePersistence</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+<span class="extends-implements">extends <a href="../../../CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a>
 implements <a href="../StatePersistence.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.state.persistence">StatePersistence</a></span></div>
 <div class="block">Persists the state value in a cookie.</div>
 <dl class="notes">
@@ -93,6 +95,15 @@ implements <a href="../StatePersistence.html" title="interface in io.micronaut.s
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-io.micronaut.security.oauth2.endpoint.authorization.CookiePersistence">Fields inherited from class&nbsp;io.micronaut.security.oauth2.endpoint.authorization.<a href="../../../CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></h3>
+<code><a href="../../../CookiePersistence.html#cookieConfiguration">cookieConfiguration</a></code></div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -133,6 +144,9 @@ implements <a href="../StatePersistence.html" title="interface in io.micronaut.s
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-io.micronaut.security.oauth2.endpoint.authorization.CookiePersistence">Methods inherited from class&nbsp;io.micronaut.security.oauth2.endpoint.authorization.<a href="../../../CookiePersistence.html" title="class in io.micronaut.security.oauth2.endpoint.authorization">CookiePersistence</a></h3>
+<code><a href="../../../CookiePersistence.html#retrieveValue(io.micronaut.http.HttpRequest)">retrieveValue</a>, <a href="../../../CookiePersistence.html#save(io.micronaut.http.HttpRequest,io.micronaut.http.MutableHttpResponse,java.lang.String)">save</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>

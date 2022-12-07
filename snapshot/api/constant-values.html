@@ -471,6 +471,63 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="block-list">
 <li>
+<div class="caption"><span>io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PkceConfigurationProperties</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties.DEFAULT_ENABLED">public&nbsp;static&nbsp;final&nbsp;boolean</code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#DEFAULT_ENABLED">DEFAULT_ENABLED</a></code></div>
+<div class="col-last even-row-color"><code>true</code></div>
+<div class="col-first odd-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties.PERSISTENCE_COOKIE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#PERSISTENCE_COOKIE">PERSISTENCE_COOKIE</a></code></div>
+<div class="col-last odd-row-color"><code>"cookie"</code></div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties.PERSISTENCE_SESSION">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#PERSISTENCE_SESSION">PERSISTENCE_SESSION</a></code></div>
+<div class="col-last even-row-color"><code>"session"</code></div>
+<div class="col-first odd-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceConfigurationProperties.PREFIX">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceConfigurationProperties.html#PREFIX">PREFIX</a></code></div>
+<div class="col-last odd-row-color"><code>"micronaut.security.oauth2.pkce"</code></div>
+</div>
+</li>
+<li>
+<div class="caption"><span>io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">PlainPkceGenerator</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.pkce.PlainPkceGenerator.CODE_CHALLENGE_METHOD_PLAIN">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/PlainPkceGenerator.html#CODE_CHALLENGE_METHOD_PLAIN">CODE_CHALLENGE_METHOD_PLAIN</a></code></div>
+<div class="col-last even-row-color"><code>"plain"</code></div>
+</div>
+</li>
+<li>
+<div class="caption"><span>io.micronaut.security.oauth2.endpoint.authorization.pkce.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce">S256PkceGenerator</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerator.CODE_CHALLENGE_METHOD_S256">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/S256PkceGenerator.html#CODE_CHALLENGE_METHOD_S256">CODE_CHALLENGE_METHOD_S256</a></code></div>
+<div class="col-last even-row-color"><code>"S256"</code></div>
+</div>
+</li>
+</ul>
+<ul class="block-list">
+<li>
+<div class="caption"><span>io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.<a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html" title="class in io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie">CookiePkcePersistenceConfiguration</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.cookie.CookiePkcePersistenceConfiguration.PREFIX">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/pkce/persistence/cookie/CookiePkcePersistenceConfiguration.html#PREFIX">PREFIX</a></code></div>
+<div class="col-last even-row-color"><code>"micronaut.security.oauth2.pkce.cookie"</code></div>
+</div>
+</li>
+</ul>
+<ul class="block-list">
+<li>
 <div class="caption"><span>io.micronaut.security.oauth2.endpoint.authorization.request.<a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html" title="interface in io.micronaut.security.oauth2.endpoint.authorization.request">AuthorizationRequest</a></span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -479,6 +536,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest.PARAMETER_CLIENT_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html#PARAMETER_CLIENT_ID">PARAMETER_CLIENT_ID</a></code></div>
 <div class="col-last even-row-color"><code>"client_id"</code></div>
+<div class="col-first odd-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest.PARAMETER_PKCE_CODE_CHALLENGE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html#PARAMETER_PKCE_CODE_CHALLENGE">PARAMETER_PKCE_CODE_CHALLENGE</a></code></div>
+<div class="col-last odd-row-color"><code>"code_challenge"</code></div>
+<div class="col-first even-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest.PARAMETER_PKCE_CODE_CHALLENGE_METHOD">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html#PARAMETER_PKCE_CODE_CHALLENGE_METHOD">PARAMETER_PKCE_CODE_CHALLENGE_METHOD</a></code></div>
+<div class="col-last even-row-color"><code>"code_challenge_method"</code></div>
 <div class="col-first odd-row-color"><code id="io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest.PARAMETER_REDIRECT_URI">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="io/micronaut/security/oauth2/endpoint/authorization/request/AuthorizationRequest.html#PARAMETER_REDIRECT_URI">PARAMETER_REDIRECT_URI</a></code></div>
 <div class="col-last odd-row-color"><code>"redirect_uri"</code></div>

@@ -243,6 +243,8 @@
         
         <div class="toc-item" style="margin-left:30px" id="toc-item-state"><a href="#state"><strong>15.3.1.3</strong><span>State Parameter</span></a></div>
         
+        <div class="toc-item" style="margin-left:30px" id="toc-item-pkce"><a href="#pkce"><strong>15.3.1.4</strong><span>PKCE</span></a></div>
+        
         <div class="toc-item" style="margin-left:20px" id="toc-item-clientcredentials"><a href="#clientcredentials"><strong>15.3.2</strong><span>Client Credentials</span></a></div>
         
         <div class="toc-item" style="margin-left:30px" id="toc-item-clientecredentialshttpclient"><a href="#clientecredentialshttpclient"><strong>15.3.2.1</strong><span>HTTP Client Filter for Client Credentials</span></a></div>
@@ -5017,6 +5019,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authentication class reference values.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.authorization.code-challenge-method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code Challenge Method to use for PKCE.</p></td>
+</tr>
 </tbody>
 </table>
 <a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties">&#128279;</a>
@@ -5442,6 +5449,11 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authentication class reference values.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.authorization.code-challenge-method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code Challenge Method to use for PKCE.</p></td>
+</tr>
 </tbody>
 </table>
 
@@ -5527,7 +5539,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ``.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-path</code></p></td>
@@ -5738,7 +5750,7 @@ If nonce validation fails, the user will not be authenticated.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ``.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-path</code></p></td>
@@ -5840,6 +5852,26 @@ If nonce validation fails, the user will not be authenticated.
 <div class="paragraph">
 <p>To override the behavior of any of those beans, provide an implementation and replace the default one.</p>
 </div>
+</div>
+
+<h2 id="pkce"><a class="anchor" href="#pkce"></a>15.3.1.4 PKCE</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/pkce.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Using OpenID Connect <a href="#openid-configuration">Discovery</a> by setting <code>micronaut.security.oauth2.clients.*.openid.issuer</code> and the Authorization server specifies via
+<code>code_challenge_methods</code> either <code>plain</code>, <code>S256</code>, or both, Micronaut security automatically sends a code challenge in the authorization request as specified in <a href="https://www.rfc-editor.org/rfc/rfc7636">Proof Key for Code Exchange (PKCE) Spec</a>.</p>
+</div>
+<div class="paragraph">
+<p>Using manual OAuth 2.0 Client configuration, you can specify the challenge method supported by setting <code>micronaut.security.oauth2.clients.*.authorization.code-challenge-method</code>.</p>
+</div>
+<div class="paragraph">
+<p>If the built-in implementation does not fulfill your needs, you can  provide a <a href="https://micronaut-projects.github.io/micronaut-core/latest/guide/#replaces">replacement</a> of bean <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/pkce/CodeVerifierGenerator.html">CodeVerifierGenerator</a> or <a href="../api/io/micronaut/security/oauth2/endpoint/authorization/pkce/PkceGenerator.html">PkceGenerator</a>.</p>
 </div>
 
 <h2 id="clientcredentials"><a class="anchor" href="#clientcredentials"></a>15.3.2 Client Credentials</h2>
