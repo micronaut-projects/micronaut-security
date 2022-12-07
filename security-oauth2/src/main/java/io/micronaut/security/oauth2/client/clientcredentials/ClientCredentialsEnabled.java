@@ -15,17 +15,14 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials;
 
-import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.BeanContext;
-import io.micronaut.context.Qualifier;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.naming.Named;
-import io.micronaut.inject.QualifiedBeanType;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.utils.QualifierUtils;
+
 import java.util.Optional;
 
 /**
@@ -41,28 +38,25 @@ public class ClientCredentialsEnabled implements Condition {
     @Override
     public boolean matches(ConditionContext context) {
         AnnotationMetadataProvider component = context.getComponent();
-        BeanContext beanContext = context.getBeanContext();
-
-        if (beanContext instanceof ApplicationContext && component instanceof QualifiedBeanType<?> qualifiedBeanType) {
-            Qualifier<?> declaredQualifier = qualifiedBeanType.getDeclaredQualifier();
-            if (declaredQualifier instanceof Named named) {
-                String name = named.getName();
-                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-                String failureMessage = "Client credentials is disabled for the client [" + name + "]";
-                if (clientConfiguration.isEnabled()) {
-                    Optional<ClientCredentialsConfiguration> clientCredentialsConfiguration = clientConfiguration.getClientCredentials();
-                    if (clientCredentialsConfiguration.isEmpty() || clientCredentialsConfiguration.get().isEnabled()) {
-                        return true;
-                    } else {
-                       context.fail(failureMessage);
-                       return false;
-                    }
-                } else {
-                    context.fail(failureMessage);
-                    return false;
-                }
-            }
+        Optional<String> nameOptional = QualifierUtils.nameQualifier(component);
+        if (nameOptional.isEmpty()) {
+            return true;
         }
-        return true;
+        String name = nameOptional.get();
+        OauthClientConfiguration clientConfiguration = context.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+        String failureMessage = "Client credentials is disabled for the client [" + name + "]";
+        if (clientConfiguration.isEnabled()) {
+            Optional<ClientCredentialsConfiguration> clientCredentialsConfiguration = clientConfiguration.getClientCredentials();
+            if (clientCredentialsConfiguration.isEmpty() || clientCredentialsConfiguration.get().isEnabled()) {
+                return true;
+            } else {
+                context.fail(failureMessage);
+                return false;
+            }
+        } else {
+            context.fail(failureMessage);
+            return false;
+        }
+
     }
 }
