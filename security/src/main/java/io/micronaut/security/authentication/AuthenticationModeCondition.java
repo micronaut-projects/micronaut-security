@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AuthenticationModeCondition implements Condition {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationModeCondition.class);
     private final List<AuthenticationMode> acceptableModes;
 
     public AuthenticationModeCondition(List<AuthenticationMode> acceptableModes) {
@@ -45,23 +44,29 @@ public abstract class AuthenticationModeCondition implements Condition {
 
         final String propertyName = SecurityConfigurationProperties.PREFIX + ".authentication";
         if (!propertyResolver.containsProperty(propertyName)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("{}} is not fulfilled because {} is not set.", getClass().getSimpleName(), propertyName);
+            if (AuthenticationModeConditionLogging.LOG.isDebugEnabled()) {
+                AuthenticationModeConditionLogging.LOG.debug("{}} is not fulfilled because {} is not set.", getClass().getSimpleName(), propertyName);
             }
             return false;
         }
         Optional<String> propertyValueOptional = propertyResolver.get(propertyName, String.class);
-        if (!propertyValueOptional.isPresent()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("{} is not fulfilled because {} property is not a String.", getClass().getSimpleName(), propertyName);
+        if (propertyValueOptional.isPresent()) {
+            final String propertyvalue = propertyValueOptional.get();
+            final boolean result = acceptableModes.stream().map(AuthenticationMode::toString).anyMatch(propertyvalue::equals);
+            if (!result && AuthenticationModeConditionLogging.LOG.isDebugEnabled()) {
+                AuthenticationModeConditionLogging.LOG.debug("{} is not fulfilled because {} is not one of {}.", getClass().getSimpleName(), propertyName, acceptableModes);
+            }
+            return result;
+        } else {
+            if (AuthenticationModeConditionLogging.LOG.isDebugEnabled()) {
+                AuthenticationModeConditionLogging.LOG.debug("{} is not fulfilled because {} property is not a String.", getClass().getSimpleName(), propertyName);
             }
             return false;
         }
-        final String propertyvalue = propertyValueOptional.get();
-        final boolean result = acceptableModes.stream().map(AuthenticationMode::toString).anyMatch(propertyvalue::equals);
-        if (!result && LOG.isDebugEnabled()) {
-            LOG.debug("{} is not fulfilled because {} is not one of {}.", getClass().getSimpleName(), propertyName, acceptableModes);
-        }
-        return result;
+    }
+
+    // GraalVM support: Use an inner class for logging to avoid build time initialization of logger
+    private static final class AuthenticationModeConditionLogging {
+        private static final Logger LOG = LoggerFactory.getLogger(AuthenticationModeCondition.class);
     }
 }
