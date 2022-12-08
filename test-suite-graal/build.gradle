@@ -11,6 +11,7 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(project(":security"))
+    testImplementation(project(":security-jwt"))
     testImplementation(mnTest.micronaut.test.junit5)
 }
 
