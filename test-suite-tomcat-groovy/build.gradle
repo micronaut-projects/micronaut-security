@@ -5,14 +5,14 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(mn.micronaut.bom))
+    implementation(platform(mn.micronaut.core.bom))
     testCompileOnly(mn.micronaut.inject.groovy)
     testImplementation(libs.spock.core) {
         exclude module:'groovy-all'
     }
-    testImplementation(mn.micronaut.test.spock)
+    testImplementation(mnTest.micronaut.test.spock)
     runtimeOnly(libs.logback.classic)
-    testImplementation("io.micronaut.servlet:micronaut-http-server-tomcat")
+    testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
     testImplementation project(":security-jwt")
     testImplementation project(":test-suite-utils-security")

@@ -4,17 +4,17 @@ plugins {
 }
 
 dependencies {
-    testAnnotationProcessor(platform(mn.micronaut.bom))
+    testAnnotationProcessor(platform(mn.micronaut.core.bom))
     testAnnotationProcessor(mn.micronaut.inject.java)
 
-    testImplementation(platform(mn.micronaut.bom))
+    testImplementation(platform(mn.micronaut.core.bom))
     testImplementation(libs.junit.jupiter.api)
-    testImplementation(mn.micronaut.test.junit5)
+    testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
 
     testRuntimeOnly(libs.logback.classic)
     testImplementation(mn.micronaut.management)
-    testImplementation("io.micronaut.servlet:micronaut-http-server-tomcat")
+    testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
     testImplementation project(":security-jwt")
     testImplementation project(":test-suite-utils-security")
