@@ -14,7 +14,7 @@ dependencies {
     api project(":security")
     implementation(mn.micronaut.http.client)
     compileOnly(mn.jackson.databind)
-    compileOnly(mn.micronaut.session)
+    compileOnly(mnSession.micronaut.session)
     implementation(libs.reactor.core)
 
     testImplementation project(":security-session")

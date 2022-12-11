@@ -25,8 +25,8 @@ include "test-suite"
 include "test-suite-geb"
 include "test-suite-keycloak"
 include "test-suite-keycloak-16"
-//include "test-suite-tomcat"
-//include "test-suite-tomcat-groovy"
+include "test-suite-tomcat"
+include "test-suite-tomcat-groovy"
 include "test-suite-utils"
 include "test-suite-utils-security"
 include "test-suite-kotlin"
@@ -38,5 +38,7 @@ micronautBuild {
     importMicronautCatalog("micronaut-multitenancy")
     importMicronautCatalog("micronaut-reactor")
     importMicronautCatalog("micronaut-serde")
+    importMicronautCatalog("micronaut-servlet")
+    importMicronautCatalog("micronaut-session")
     importMicronautCatalog("micronaut-views")
 }
