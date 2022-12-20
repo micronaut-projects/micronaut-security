@@ -9,7 +9,7 @@ spock = "2.3-groovy-4.0"
 geb = "6.0"
 geb-groovy = "3.0.13"
 geb-spock = "2.2-groovy-3.0"
-reactor-test = "3.5.0"
+reactor-test = "3.5.1"
 selenium = "4.7.0"
 testcontainers = "1.17.6"
 unboundid-ldapsdk = "6.0.7"
@@ -24,7 +24,7 @@ micronaut-reactor = "3.0.0-SNAPSHOT"
 micronaut-serde = "2.0.0-SNAPSHOT"
 micronaut-servlet = "4.0.0-SNAPSHOT"
 micronaut-session = "1.0.0-SNAPSHOT"
-micronaut-views = "3.7.1"
+micronaut-views = "3.7.2"
 
 [libraries]
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
