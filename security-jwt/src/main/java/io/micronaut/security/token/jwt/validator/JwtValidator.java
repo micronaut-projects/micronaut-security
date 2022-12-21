@@ -55,15 +55,15 @@ public final class JwtValidator {
     private static final Logger LOG = LoggerFactory.getLogger(JwtValidator.class);
     private static final String DOT = ".";
 
-    private final List<SignatureConfiguration> signatures;
-    private final List<EncryptionConfiguration> encryptions;
+    private final List<SignatureConfiguration> signatureConfigurations;
+    private final List<EncryptionConfiguration> encryptionConfigurations;
     private final List<JwtClaimsValidator> claimsValidators;
 
-    private JwtValidator(List<SignatureConfiguration> signatures,
-                         List<EncryptionConfiguration> encryptions,
+    private JwtValidator(List<SignatureConfiguration> signatureConfigurations,
+                         List<EncryptionConfiguration> encryptionConfigurations,
                          List<JwtClaimsValidator> claimsValidators) {
-        this.signatures = signatures;
-        this.encryptions = encryptions;
+        this.signatureConfigurations = signatureConfigurations;
+        this.encryptionConfigurations = encryptionConfigurations;
         this.claimsValidators = claimsValidators;
     }
 
@@ -98,8 +98,11 @@ public final class JwtValidator {
      * @return {@literal true} if the string has at least two dots. We must have 2 (JWS) or 4 dots (JWE).
      */
     private boolean hasAtLeastTwoDots(String token) {
-        return (token.contains(DOT)) &&
-                (token.indexOf(DOT, token.indexOf(DOT) + 1) != -1);
+        int firstDot = token.indexOf(DOT);
+        if (firstDot == -1) {
+            return false;
+        }
+        return token.indexOf(DOT, firstDot + 1) != -1;
     }
 
     /**
@@ -141,17 +144,16 @@ public final class JwtValidator {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Validating plain JWT");
         }
-        if (signatures.isEmpty()) {
+        if (signatureConfigurations.isEmpty()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("JWT is not signed and no signature configurations -> verified");
             }
             return Optional.of(jwt);
-        } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("A non-signed JWT cannot be accepted as signature configurations have been defined");
-            }
-            return Optional.empty();
         }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("A non-signed JWT cannot be accepted as signature configurations have been defined");
+        }
+        return Optional.empty();
     }
 
     private Optional<JWT> validate(EncryptedJWT jwt) {
@@ -161,7 +163,7 @@ public final class JwtValidator {
 
         final JWEHeader header = jwt.getHeader();
 
-        List<EncryptionConfiguration> sortedConfigs = new ArrayList<>(encryptions);
+        List<EncryptionConfiguration> sortedConfigs = new ArrayList<>(encryptionConfigurations);
         sortedConfigs.sort(comparator(header));
 
         for (EncryptionConfiguration config: sortedConfigs) {
@@ -182,11 +184,10 @@ public final class JwtValidator {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Decryption fails with encryption configuration: {}, passing to the next one", config);
                 }
-                return Optional.empty();
             }
         }
 
-        if (LOG.isDebugEnabled() && encryptions.isEmpty()) {
+        if (LOG.isDebugEnabled() && encryptionConfigurations.isEmpty()) {
             LOG.debug("JWT is encrypted and no encryption configurations -> not verified");
         }
 
@@ -199,26 +200,21 @@ public final class JwtValidator {
         }
 
         final JWSAlgorithm algorithm = jwt.getHeader().getAlgorithm();
-        List<SignatureConfiguration> sortedConfigs = new ArrayList<>(signatures);
+        List<SignatureConfiguration> sortedConfigs = new ArrayList<>(signatureConfigurations);
         sortedConfigs.sort(comparator(algorithm, jwt.getHeader().getKeyID()));
-
-        Optional<JWT> optionalJWT = validate(jwt, sortedConfigs);
-        if (optionalJWT.isPresent()) {
-            return optionalJWT;
-        }
 
         // If any of the signature configurations is a JwksCache, evict the cache and attempt to verify again
         for (SignatureConfiguration c : sortedConfigs) {
             if (c instanceof JwksCache && ((JwksCache) c).isExpired()) {
                 ((JwksCache) c).clear();
-                optionalJWT = validate(jwt, c);
-                if (optionalJWT.isPresent()) {
-                    return optionalJWT;
-                }
+            }
+            Optional<JWT> optionalJWT = validate(jwt, c);
+            if (optionalJWT.isPresent()) {
+                return optionalJWT;
             }
         }
 
-        if (LOG.isDebugEnabled() && signatures.isEmpty()) {
+        if (LOG.isDebugEnabled() && signatureConfigurations.isEmpty()) {
             LOG.debug("JWT is signed and no signature configurations -> not verified");
         }
         return Optional.empty();
@@ -242,32 +238,15 @@ public final class JwtValidator {
         return Optional.empty();
     }
 
-    private Optional<JWT> validate(SignedJWT jwt, List<SignatureConfiguration> signatureConfigurations) {
-        for (SignatureConfiguration config: signatureConfigurations) {
-            Optional<JWT> optionalJWT = validate(jwt, config);
-            if (optionalJWT.isPresent()) {
-                return optionalJWT;
-            }
-        }
-        return Optional.empty();
-    }
-
     private static int compareKeyIds(SignatureConfiguration sig,
                                      SignatureConfiguration otherSig,
                                      @Nullable String keyId) {
         if (keyId == null) {
             return 0;
         }
-        Optional<Boolean> matchesKeyId = signatureConfigurationMatchesKeyId(sig, keyId);
-        Optional<Boolean> otherMatchesKeyId = signatureConfigurationMatchesKeyId(otherSig, keyId);
-        if (matchesKeyId.isPresent() && otherMatchesKeyId.isPresent()) {
-            return otherMatchesKeyId.get().compareTo(matchesKeyId.get());
-        } else if (matchesKeyId.isPresent()) {
-            return Boolean.TRUE.equals(matchesKeyId.get()) ? 1 : -1;
-        } else if (otherMatchesKeyId.isPresent()) {
-            return Boolean.TRUE.equals(otherMatchesKeyId.get()) ? 1 : -1;
-        }
-        return 0;
+        boolean matchesKeyId = signatureConfigurationMatchesKeyId(sig, keyId);
+        boolean otherMatchesKeyId = signatureConfigurationMatchesKeyId(otherSig, keyId);
+        return Boolean.compare(matchesKeyId, otherMatchesKeyId);
     }
 
     private static Comparator<SignatureConfiguration> comparator(JWSAlgorithm algorithm, @Nullable String kid) {
@@ -278,24 +257,17 @@ public final class JwtValidator {
             }
             boolean supports = signatureConfigurationSupportsAlgorithm(sig, algorithm);
             boolean otherSupports = signatureConfigurationSupportsAlgorithm(otherSig, algorithm);
-            if (supports == otherSupports) {
-                return 0;
-            } else if (supports) {
-                return -1;
-            } else {
-                return 1;
-            }
+            return Boolean.compare(supports, otherSupports);
         };
     }
 
-    private static Optional<Boolean> signatureConfigurationMatchesKeyId(@NonNull SignatureConfiguration sig,
+    private static Boolean signatureConfigurationMatchesKeyId(@NonNull SignatureConfiguration sig,
                                                                         @NonNull String keyId) {
-        if (sig instanceof JwksCache) {
-            final Optional<List<String>> keyIds = ((JwksCache) sig).getKeyIds();
-            return keyIds.map(ids -> ids.contains(keyId));
-        } else {
-            return Optional.empty();
-        }
+        return Optional.of(sig)
+            .filter(it -> sig instanceof JwksCache)
+            .flatMap(it -> ((JwksCache) sig).getKeyIds())
+            .map(it -> it.contains(keyId))
+            .orElse(false);
     }
 
     private static boolean signatureConfigurationSupportsAlgorithm(@NonNull SignatureConfiguration sig, @NonNull JWSAlgorithm algorithm) {
@@ -313,13 +285,7 @@ public final class JwtValidator {
         return (sig, otherSig) -> {
             boolean supports = sig.supports(algorithm, method);
             boolean otherSupports = otherSig.supports(algorithm, method);
-            if (supports == otherSupports) {
-                return 0;
-            } else if (supports) {
-                return -1;
-            } else {
-                return 1;
-            }
+            return Boolean.compare(supports, otherSupports);
         };
     }
 
