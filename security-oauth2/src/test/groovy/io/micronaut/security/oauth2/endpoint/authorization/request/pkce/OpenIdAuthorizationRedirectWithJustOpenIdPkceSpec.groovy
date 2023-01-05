@@ -13,9 +13,9 @@ import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerator
-import io.micronaut.security.oauth2.keycloack.v16.Keycloak
 import io.micronaut.security.oauth2.routes.OauthController
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.oauth2.keycloack.v16.Keycloak
 import spock.lang.IgnoreIf
 
 import java.nio.charset.StandardCharsets

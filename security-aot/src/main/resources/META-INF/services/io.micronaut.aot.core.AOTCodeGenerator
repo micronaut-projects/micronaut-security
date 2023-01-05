@@ -1,0 +1,2 @@
+io.micronaut.security.aot.OpenIdProviderMetadataFetcherCodeGenerator
+io.micronaut.security.aot.JwksFetcherCodeGenerator

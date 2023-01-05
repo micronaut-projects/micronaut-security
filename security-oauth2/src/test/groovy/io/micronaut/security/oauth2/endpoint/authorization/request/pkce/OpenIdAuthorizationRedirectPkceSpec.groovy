@@ -17,9 +17,9 @@ import io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerato
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
-import io.micronaut.security.oauth2.keycloack.v16.Keycloak
 import io.micronaut.security.oauth2.routes.OauthController
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.oauth2.keycloack.v16.Keycloak
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher

@@ -1,7 +1,5 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request
 
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.MutableHttpResponse
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration
 import spock.lang.Specification

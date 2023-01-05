@@ -18,7 +18,6 @@ include "security-jwt"
 include "security-session"
 include "security-ldap"
 include "security-oauth2"
-
 include "test-suite-graal"
 include "test-suite-groovy"
 include "test-suite"
@@ -31,6 +30,8 @@ include "test-suite-utils"
 include "test-suite-utils-security"
 include "test-suite-kotlin"
 include "test-suite-serde"
+
+enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {
     addSnapshotRepository()

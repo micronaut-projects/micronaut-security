@@ -55,7 +55,7 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
     public SignedJWT sign(JWTClaimsSet claims) throws JOSEException {
         return signWithPrivateKey(claims, this.privateKey, this.kidId);
     }
-    
+
     /**
      *
      * @param claims The JWT Claims

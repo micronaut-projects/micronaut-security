@@ -37,6 +37,7 @@ import io.micronaut.security.handlers.RedirectingLoginHandler
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
+import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.BrowserHttpRequest
