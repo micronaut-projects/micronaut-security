@@ -101,4 +101,9 @@ oauth:
     revocation: Revocation
     user-info: OpenID User Info
   custom-client: Custom Clients
+aot:
+  title: Ahead-of-time optimizations
+  aotConfiguration: Micronaut Security AOT Configuration
+  aotOpenidConfiguration: OpenID Configuration Optimization
+  aotJwks: JWKS Optimization
 repository: Repository

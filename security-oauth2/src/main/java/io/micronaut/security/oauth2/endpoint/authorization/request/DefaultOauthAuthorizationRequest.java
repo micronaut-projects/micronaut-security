@@ -28,7 +28,6 @@ import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceChallenge;
 import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceFactory;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

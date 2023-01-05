@@ -17,27 +17,23 @@ package io.micronaut.security.oauth2.client;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanProvider;
+import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Parallel;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
-import io.micronaut.http.client.HttpClient;
-import io.micronaut.http.client.annotation.Client;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
-
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
@@ -45,11 +41,7 @@ import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoi
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -66,8 +58,6 @@ import java.util.function.Supplier;
 @Requires(configuration = "io.micronaut.security.token.jwt")
 class OpenIdClientFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OpenIdClientFactory.class);
-
     private final BeanContext beanContext;
 
     /**
@@ -82,29 +72,18 @@ class OpenIdClientFactory {
      *
      * @param oauthClientConfiguration The client configuration
      * @param openIdClientConfiguration The openid client configuration
-     * @param issuerClient The client to request the metadata
+     * @param openIdProviderMetadataFetcher OpenID Provider metadata Fetcher
      * @return The OpenID configuration
      */
+    @Parallel
+    @Context
     @EachBean(OpenIdClientConfiguration.class)
     DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                                       @Parameter OpenIdClientConfiguration openIdClientConfiguration,
-                                                      @Client HttpClient issuerClient) {
-        DefaultOpenIdProviderMetadata providerMetadata = openIdClientConfiguration.getIssuer()
-                .map(issuer -> {
-                    try {
-                        URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
-                        }
-                        return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
-                    } catch (HttpClientResponseException e) {
-                        throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
-                    } catch (MalformedURLException e) {
-                        throw new BeanInstantiationException("Failure parsing issuer URL " + issuer, e);
-                    }
-                }).orElse(null);
-
-        return overrideFromConfig(providerMetadata, openIdClientConfiguration, oauthClientConfiguration);
+                                                      @Parameter OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher) {
+        DefaultOpenIdProviderMetadata providerMetadata = openIdProviderMetadataFetcher.fetch();
+        overrideFromConfig(providerMetadata, openIdClientConfiguration, oauthClientConfiguration);
+        return providerMetadata;
     }
 
     /**
