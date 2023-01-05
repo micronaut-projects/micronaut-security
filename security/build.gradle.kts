@@ -24,4 +24,5 @@ dependencies {
     testImplementation project(":test-suite-utils")
     testImplementation(mn.snakeyaml)
 
+    testImplementation libs.bcpkix
 }

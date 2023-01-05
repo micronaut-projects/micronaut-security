@@ -9,8 +9,9 @@ spock = "2.3-groovy-4.0"
 geb = "6.0"
 geb-groovy = "3.0.13"
 geb-spock = "2.2-groovy-3.0"
-reactor-test = "3.5.0"
+reactor-test = "3.5.1"
 selenium = "4.6.0"
+serde = "1.0.1"
 testcontainers = "1.17.6"
 unboundid-ldapsdk = "6.0.6"
 velocity-engine-core = "2.3"
@@ -51,6 +52,7 @@ bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bo
 javax-activation = { module = "com.sun.activation:javax.activation", version.ref = "javax-activation" }
 spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
