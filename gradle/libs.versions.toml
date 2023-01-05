@@ -23,7 +23,7 @@ micronaut-reactor = "3.0.0-SNAPSHOT"
 micronaut-serde = "2.0.0-SNAPSHOT"
 micronaut-servlet = "4.0.0-SNAPSHOT"
 micronaut-session = "1.0.0-SNAPSHOT"
-micronaut-views = "3.7.2"
+micronaut-views = "3.8.0"
 
 [libraries]
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
