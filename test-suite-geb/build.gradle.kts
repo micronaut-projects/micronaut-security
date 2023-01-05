@@ -1,5 +1,3 @@
-import java.util.Optional
-
 plugins {
     id("io.micronaut.build.internal.security-tests")
     groovy
@@ -24,16 +22,11 @@ dependencies {
     testImplementation(project(":security-oauth2"))
     testImplementation(project(":security-jwt"))
     testImplementation(project(":security-session"))
-    // Geb currently requires Groovy 3, and Spock for Groovy 3
     testImplementation(libs.geb.spock)
-    testImplementation(libs.spock.geb)
-    testImplementation(libs.geb.groovy.test)
     testImplementation(libs.testcontainers.selenium)
     testImplementation(libs.selenium.remote.driver)
     testImplementation(libs.selenium.api)
-    testImplementation(mn.micronaut.inject.groovy) {
-        exclude(group = "org.apache.groovy")
-    }
+    testImplementation(mn.micronaut.inject.groovy)
     testImplementation(libs.selenium.support)
     testRuntimeOnly(libs.selenium.firefox.driver)
     testRuntimeOnly(mn.logback.classic)
@@ -41,17 +34,8 @@ dependencies {
     testImplementation(mn.micronaut.jackson.databind)
 }
 
-configurations {
-    testRuntimeClasspath {
-        exclude(group = "org.apache.groovy")
-        this.resolutionStrategy {
-            force("org.spockframework:spock-core:${libs.versions.geb.spock.get()}")
-        }
-    }
-}
-val gebEnv = Optional.ofNullable(System.getProperty("geb.env")).orElse("dockerFirefox")
 tasks.withType<Test> {
     useJUnitPlatform()
-    systemProperty("geb.env", gebEnv)
+    systemProperty("geb.env", System.getProperty("geb.env") ?: "dockerFirefox")
     systemProperty("webdriver.gecko.driver", System.getProperty("webdriver.gecko.driver"))
 }

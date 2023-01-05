@@ -6,9 +6,7 @@ micronaut-docs = "2.0.0"
 groovy = "4.0.6"
 spock = "2.3-groovy-4.0"
 
-geb = "6.0"
-geb-groovy = "3.0.13"
-geb-spock = "2.2-groovy-3.0"
+geb = "7.0"
 reactor-test = "3.5.1"
 selenium = "4.7.2"
 testcontainers = "1.17.6"
@@ -36,8 +34,6 @@ micronaut-views = { module = "io.micronaut.views:micronaut-views-bom", version.r
 
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
-spock-geb = { module = "org.spockframework:spock-core", version.ref = "geb-spock" }
-geb-groovy-test = { module = "org.codehaus.groovy:groovy-test", version.ref = "geb-groovy" }
 groovy-json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
