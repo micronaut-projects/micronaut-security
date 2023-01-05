@@ -1,0 +1,37 @@
+plugins {
+    id 'io.micronaut.application' version "$micronautGradlePluginVersion"
+    id 'io.micronaut.aot' version "$micronautGradlePluginVersion"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+
+}
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'io.micronaut.security.test.aot.Application'
+}
+
+micronaut {
+    version = micronautVersion
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("io.micronaut.security.oauth2.docs.app")
+    }
+    aot {
+        version = micronautAotVersion
+        configFile = file("aot.properties")
+    }
+}
+
+dependencies {
+    implementation project(':security-jwt')
+    implementation project(':security-oauth2')
+    aotPlugins(project(':security-aot'))
+}
+
+version = '0.1'
+

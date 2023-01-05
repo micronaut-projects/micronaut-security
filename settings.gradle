@@ -13,12 +13,12 @@ rootProject.name = 'security-parent'
 
 include "security-bom"
 include "security"
+include "security-aot"
 include "security-annotations"
 include "security-jwt"
 include "security-session"
 include "security-ldap"
 include "security-oauth2"
-
 include "test-suite-graal"
 include "test-suite-groovy"
 include "test-suite"
@@ -30,7 +30,11 @@ include "test-suite-tomcat-groovy"
 include "test-suite-utils"
 include "test-suite-utils-security"
 include "test-suite-kotlin"
+//include "test-suite-aot"
+//include "test-suite-aot-authserver"
 include "test-suite-serde"
+
+enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {
     addSnapshotRepository()

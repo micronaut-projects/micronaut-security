@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.client;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
@@ -156,7 +157,50 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     @Nullable
     private final String checkSessionIframe;
 
+    public DefaultOpenIdProviderMetadata() {
+        this(null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null);
+    }
+
     @SuppressWarnings("ParameterNumber")
+    @Creator
     public DefaultOpenIdProviderMetadata(@Nullable String authorizationEndpoint,
                                          @NonNull List<String> idTokenSigningAlgValuesSupported,
                                          @NonNull String issuer,

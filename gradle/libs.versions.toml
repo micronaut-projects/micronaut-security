@@ -1,5 +1,5 @@
 [versions]
-managed-nimbus-jose-jwt = "9.25.6"
+managed-nimbus-jose-jwt = "9.28"
 
 micronaut = "4.0.0-SNAPSHOT"
 micronaut-docs = "2.0.0"
@@ -17,6 +17,7 @@ javax-activation = "1.2.0"
 kotlin = "1.7.21"
 bcpkix = "1.70"
 
+micronaut-test = "4.0.0-SNAPSHOT"
 micronaut-multitenancy = "5.0.0-SNAPSHOT"
 micronaut-reactor = "3.0.0-SNAPSHOT"
 micronaut-serde = "2.0.0-SNAPSHOT"

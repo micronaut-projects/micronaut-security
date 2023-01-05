@@ -29,10 +29,6 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.net.URL;
-import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -56,16 +52,20 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
     private final JwksSignatureConfiguration jwksSignatureConfiguration;
     private volatile Instant jwkSetCachedAt;
     private volatile JWKSet jwkSet;
+    private final JwkSetFetcher<JWKSet> jwkSetFetcher;
 
     /**
      *
      * @param jwksSignatureConfiguration JSON Web Key Set configuration.
      * @param jwkValidator JWK Validator to be used.
+     * @param jwkSetFetcher Json Web Key Set fetcher
      */
     public JwksSignature(JwksSignatureConfiguration jwksSignatureConfiguration,
-                         JwkValidator jwkValidator) {
+                         JwkValidator jwkValidator,
+                         JwkSetFetcher<JWKSet> jwkSetFetcher) {
         this.jwksSignatureConfiguration = jwksSignatureConfiguration;
         this.jwkValidator = jwkValidator;
+        this.jwkSetFetcher = jwkSetFetcher;
     }
 
     private Optional<JWKSet> computeJWKSet() {
@@ -95,6 +95,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
 
     @Override
     public void clear() {
+        jwkSetFetcher.clearCache(jwksSignatureConfiguration.getUrl());
         jwkSet = null;
         jwkSetCachedAt = null;
     }
@@ -170,17 +171,8 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Nullable
     protected JWKSet loadJwkSet(String url) {
-        if (url == null) {
-            return null;
-        }
-        try {
-            return JWKSet.load(new URL(url));
-        } catch (IOException | ParseException e) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Exception loading JWK from " + url + ". The JwksSignature will not be used to verify a JWT if further refresh attempts fail", e);
-            }
-        }
-        return null;
+        return jwkSetFetcher.fetch(url)
+                .orElse(null);
     }
 
     /**
