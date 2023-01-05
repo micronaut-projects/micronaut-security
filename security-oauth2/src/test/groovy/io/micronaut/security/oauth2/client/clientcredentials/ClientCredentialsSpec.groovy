@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory
 import reactor.core.publisher.Flux
 import spock.lang.AutoCleanup
 import spock.lang.Narrative
-import spock.lang.PendingFeature
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -291,7 +290,6 @@ class ClientCredentialsSpec extends Specification {
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
     }
 
-    @PendingFeature
     void 'A bean of type ClientCredentialsClient is created for an OAuth 2.0 client which sets both token manually and an open id issuer which providers information about its token endpoint. The manual set token endpoint takes precedence'() {
 
         when:
