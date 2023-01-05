@@ -1,16 +1,20 @@
 plugins {
     id("io.micronaut.build.internal.security-module")
+    id("io.micronaut.build.internal.aot-module")
 }
+
 micronautBuild {
     aot {
         version.set("2.0.0-SNAPSHOT")
     }
 }
+
 micronautBuild {
     binaryCompatibility {
         enabled.set(false)
     }
 }
+
 dependencies {
     compileOnly(platform(mn.micronaut.core.bom))
     implementation(projects.securityOauth2)

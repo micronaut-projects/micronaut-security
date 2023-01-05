@@ -13,7 +13,7 @@ rootProject.name = 'security-parent'
 
 include "security-bom"
 include "security"
-//include "security-aot"
+include "security-aot"
 include "security-annotations"
 include "security-jwt"
 include "security-session"
