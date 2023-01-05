@@ -1,5 +1,85 @@
 [
   {
+    "type": "io.micronaut.security.token.jwt.signature.jwks.JwksSignature",
+    "member": "Constructor io.micronaut.security.token.jwt.signature.jwks.JwksSignature(io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration,io.micronaut.security.token.jwt.signature.jwks.JwkValidator)",
+    "reason": "Removed deprecated constructor for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OauthCodeTokenRequestContext$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OauthCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OauthCodeTokenRequestContext$Definition$Reference",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.token.request.context.$OauthCodeTokenRequestContext$Definition$Reference()",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OauthCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OauthCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OauthCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OauthCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OpenIdCodeTokenRequestContext$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OpenIdCodeTokenRequestContext$Definition$Reference",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.token.request.context.$OpenIdCodeTokenRequestContext$Definition$Reference()",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OpenIdCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OpenIdCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OpenIdCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OpenIdCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.request.context.$OpenIdCodeTokenRequestContext$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Change for Micronaut 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.validation.DefaultOpenIdTokenResponseValidator",
+    "member": "Constructor io.micronaut.security.oauth2.endpoint.token.response.validation.DefaultOpenIdTokenResponseValidator(java.util.Collection,java.util.Collection,io.micronaut.security.oauth2.endpoint.token.response.validation.NonceClaimValidator,io.micronaut.security.token.jwt.signature.jwks.JwkValidator)",
+    "reason": "Removed deprecated constructor for Micronaut 4"
+  },
+  {
     "type": "io.micronaut.security.authentication.jackson.SecurityJacksonModule",
     "member": "Constructor io.micronaut.security.authentication.jackson.SecurityJacksonModule()",
     "reason": "Removed deprecated constructor for Micronaut 4"

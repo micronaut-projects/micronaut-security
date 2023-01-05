@@ -319,7 +319,7 @@ class ClientCredentialsSpec extends Specification {
         resourceServerResp.getBody(String).isPresent()
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
     }
-    
+
     void 'A bean of type ClientCredentialsClient is created for an OAuth 2.0 client which sets an open id issuer which providers information about its token endpoint'() {
 
         when:
