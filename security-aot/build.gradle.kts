@@ -4,9 +4,6 @@ plugins {
 }
 
 micronautBuild {
-    binaryCompatibility {
-        enabled.set(false)
-    }
     aot {
         version.set("2.0.0-SNAPSHOT")
     }
