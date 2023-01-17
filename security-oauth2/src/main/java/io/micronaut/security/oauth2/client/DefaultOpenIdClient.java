@@ -116,8 +116,9 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     @Override
     public Publisher<MutableHttpResponse<?>> authorizationRedirect(HttpRequest<?> originating) {
-        AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration);
-        String endpoint = openIdProviderMetadata.get().getAuthorizationEndpoint();
+        OpenIdProviderMetadata openIdProviderMetadataResolved = openIdProviderMetadata.get();
+        AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration, openIdProviderMetadataResolved);
+        String endpoint = openIdProviderMetadataResolved.getAuthorizationEndpoint();
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), endpoint);
