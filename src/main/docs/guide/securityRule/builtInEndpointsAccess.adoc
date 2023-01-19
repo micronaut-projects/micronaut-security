@@ -1,6 +1,6 @@
 When you turn on security, https://docs.micronaut.io/latest/guide/index.html#providedEndpoints[Built-in endpoints] are secured depending on their sensitive value.
 
-[source, yaml]
+[configuration]
 ----
 include::{testssecurity}/security/securityRule/builtinendpoints/BuiltInEndpointsSpec.groovy[tag=yamlconfig,indent=0]
 ----

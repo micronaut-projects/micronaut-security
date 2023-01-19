@@ -20,9 +20,14 @@ dependency:io.micronaut.security:micronaut-session[]
 +
 . Set the nonce persistence to `session`
 +
-.application.yml
+.application configuration
+[configuration]
 ----
-micronaut.security.oauth2.nonce.persistence: session
+micronaut:
+  security:
+    oauth2:
+      nonce:
+        persistence: session
 ----
 +
 

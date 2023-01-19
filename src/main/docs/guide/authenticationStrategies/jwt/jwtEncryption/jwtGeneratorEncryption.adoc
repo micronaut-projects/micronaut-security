@@ -1,10 +1,10 @@
 Setup a link:{api}/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration] through configuration properties
 
-[source, groovy]
+[configuration]
 ----
 include::{testssecurityjwt}/signandencrypt/SignSecretEncryptRSASpec.groovy[indent=0, tag=yamlconfig]
 pem:
-  path: /home/user/rsa-2048bit-key-pair.pem //<2>
+  path: /home/user/rsa-2048bit-key-pair.pem #<2>
 ----
 
 <1> Name the Signature configuration `generator` to make it participate in JWT token generation.

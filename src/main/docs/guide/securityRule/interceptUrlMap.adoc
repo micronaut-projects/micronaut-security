@@ -1,6 +1,6 @@
 Moreover, you can configure endpoint authentication and authorization access with an Intercept URL Map:
 
-[source, yaml]
+[configuration]
 ----
 include::{testssecurity}/security/securityRule/intercepturlmap/InterceptUrlMapSpec.groovy[tag=yamlconfig,indent=0]
 ----
@@ -16,18 +16,19 @@ If a given request URI matches more than one intercept url map, the one that spe
 
 The example below defines that all HTTP requests to URIs matching the pattern `/v1/myResource/**` and using HTTP method `GET` will be accessible to everyone. Requests matching the same URI pattern but using a different HTTP method than `GET` require fully authenticated access.
 
-[source, yaml]
+[configuration]
 ----
 micronaut:
   security:
     intercept-url-map:
       - pattern: /v1/myResource/**
-        httpMethod: GET // <1>
+        httpMethod: GET # <1>
         access:
           - isAnonymous()
       - pattern: /v1/myResource/**
         access:
-          - isAuthenticated() // <2>
+          - isAuthenticated() # <2>
 ----
+
 <1> Accessing `/v1/myResource/**` with a GET request does not require authentication.
 <2> Accessing `/v1/myResource/**` with a request that isn't GET requires authentication.
