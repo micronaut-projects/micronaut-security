@@ -5,9 +5,9 @@ Moreover, you can configure endpoint authentication and authorization access wit
 include::{testssecurity}/security/securityRule/intercepturlmap/InterceptUrlMapSpec.groovy[tag=yamlconfig,indent=0]
 ----
 
-<1> Enable access to authenticated and not authenticated users
-<2> Enable access for everyone authenticated
-<3> Enable access for users who are granted any of the specified roles.
+- pattern `/images/*` enables access to authenticated and not authenticated users
+- pattern `/books` enables access for everyone authenticated
+- pattern `/books/grails` enables access for users who are granted any of the specified roles.
 
 As you see in the previous code listing, any endpoint is identified by a combination of pattern
 and an optional HTTP method.
@@ -22,13 +22,13 @@ micronaut:
   security:
     intercept-url-map:
       - pattern: /v1/myResource/**
-        httpMethod: GET # <1>
+        httpMethod: GET
         access:
           - isAnonymous()
       - pattern: /v1/myResource/**
         access:
-          - isAuthenticated() # <2>
+          - isAuthenticated()
 ----
 
-<1> Accessing `/v1/myResource/**` with a GET request does not require authentication.
-<2> Accessing `/v1/myResource/**` with a request that isn't GET requires authentication.
+- accessing `/v1/myResource/**` with a GET request does not require authentication
+- accessing `/v1/myResource/**` with a request that isn't GET requires authentication
