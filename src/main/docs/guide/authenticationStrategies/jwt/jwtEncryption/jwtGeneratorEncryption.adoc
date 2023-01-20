@@ -7,8 +7,8 @@ pem:
   path: /home/user/rsa-2048bit-key-pair.pem #<2>
 ----
 
-<1> Name the Signature configuration `generator` to make it participate in JWT token generation.
-<2> Location of PEM file
+<1> `generator.secret` names the Signature configuration `generator` to make it participate in JWT token generation.
+<2> `pem.path` specifies the location of PEM file
 
 Generate a 2048-bit RSA private + public key pair:
 
