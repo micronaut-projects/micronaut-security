@@ -5,6 +5,24 @@ This section will document breaking changes that may happen during milestone or 
 
 `micronaut.security.intercept-url-map-prepend-pattern-with-context-path` defaults to `true`. Thus intercept url patterns are be prepended with the server context path if it is set.
 
+==== Annotation Mappers Removed
+
+The mappers for `javax.annotation.security` annotations – `DenyAll`, `PermitAll`, `RolesAllowed` – have been removed. Use the Jakarta versions for `jakarta.annotation.security` annotations instead.
+
+|===
+|Removed |Retained
+
+| io.micronaut.security.annotation.DenyAllAnnotationMapper
+| io.micronaut.security.annotation.JakartaDenyAllAnnotationMapper
+
+| io.micronaut.security.annotation.PermitAllAnnotationMapper
+| io.micronaut.security.annotation.JakartaPermitAllAnnotationMapper
+
+| io.micronaut.security.annotation.RolesAllowedAnnotationMapper
+| io.micronaut.security.annotation.JakartaRolesAllowedAnnotationMapper
+
+|===
+
 == Micronaut Security 3.4 breaking changes
 
 Sensitive endpoints will now respond with an error unless a replacement for the api:security.rules.SensitiveEndpointRule[] is bound.
