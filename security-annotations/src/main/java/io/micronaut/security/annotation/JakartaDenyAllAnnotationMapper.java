@@ -15,7 +15,14 @@
  */
 package io.micronaut.security.annotation;
 
+import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.inject.annotation.NamedAnnotationMapper;
+import io.micronaut.inject.visitor.VisitorContext;
+
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Allows using the {@link jakarta.annotation.security.DenyAll} annotation in Micronaut.
@@ -23,9 +30,21 @@ import io.micronaut.core.annotation.Internal;
  * @author Fredrik Hov
  */
 @Internal
-public class JakartaDenyAllAnnotationMapper extends DenyAllAnnotationMapper {
+public class JakartaDenyAllAnnotationMapper implements NamedAnnotationMapper {
     @Override
     public String getName() {
         return "jakarta.annotation.security.DenyAll";
     }
+
+    @Override
+    public List<AnnotationValue<?>> map(AnnotationValue<Annotation> annotation, VisitorContext visitorContext) {
+        List<AnnotationValue<?>> annotationValues = new ArrayList<>(1);
+        annotationValues.add(
+            AnnotationValue.builder(Secured.class)
+                .value("denyAll()")
+                .build()
+        );
+        return annotationValues;
+    }
+
 }
