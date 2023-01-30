@@ -14,7 +14,6 @@ dependency:io.micronaut.security:micronaut-session[]
 +
 . Set the state persistence to `session`
 +
-.application configuration
 [configuration]
 ----
 micronaut.security.oauth2.state.persistence: session

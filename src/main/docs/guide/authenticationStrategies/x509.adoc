@@ -18,7 +18,6 @@ In addition to X.509-specific configuration, you must also https://docs.micronau
 
 Here's a sample configuration enabling and configuring HTTPS and X.509:
 
-.application configuration
 [configuration]
 ----
 micronaut:

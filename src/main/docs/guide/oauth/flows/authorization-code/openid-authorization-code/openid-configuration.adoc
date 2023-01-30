@@ -3,7 +3,6 @@ The requirements to allow authorization with an OpenID provider are:
 * Configuration of the client id and secret
 * Configuration of the issuer
 
-.application configuration
 [configuration]
 ----
 micronaut:

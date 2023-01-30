@@ -20,7 +20,6 @@ dependency:io.micronaut.security:micronaut-session[]
 +
 . Set the nonce persistence to `session`
 +
-.application configuration
 [configuration]
 ----
 micronaut:
