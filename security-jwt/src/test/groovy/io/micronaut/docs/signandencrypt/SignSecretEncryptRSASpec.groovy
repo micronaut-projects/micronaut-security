@@ -26,9 +26,9 @@ micronaut:
       jwt:
         signatures:
           secret:
-            generator: 
-              secret: pleaseChangeThisSecretForANewOne #<1>
-              jws-algorithm: HS256 # <2>
+            generator:
+              secret: pleaseChangeThisSecretForANewOne
+              jws-algorithm: HS256
 #end::yamlconfig[]
 """
 
