@@ -24,7 +24,9 @@ import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.errors.ErrorCode;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
-import java.util.Locale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 
 /**
@@ -35,6 +37,8 @@ import java.util.Map;
  */
 @Prototype
 public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCallback implements AuthorizationErrorResponse {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationErrorResponse.class);
 
     private final ConvertibleMultiValues<String> responseData;
 
@@ -56,8 +60,21 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
     @NonNull
     @Override
     public ErrorCode getError() {
-        String name = responseData.get(JSON_KEY_ERROR).toUpperCase(Locale.ENGLISH);
-        return AuthorizationErrorCode.valueOf(name);
+
+        String name = responseData.get(JSON_KEY_ERROR);
+
+        for (AuthorizationErrorCode errorCode : AuthorizationErrorCode.values()) {
+            if (errorCode.getErrorCode().equalsIgnoreCase(name)) {
+                return AuthorizationErrorCode.valueOf(name);
+            }
+        }
+
+        // We received an error code we don't know how to handle. Log it and return a generic SERVER_ERROR
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Received unexpected authorization error. error={} error_description={}", name, getErrorDescription());
+        }
+
+        return AuthorizationErrorCode.SERVER_ERROR;
     }
 
     @Nullable
