@@ -30,6 +30,9 @@ import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
 import io.micronaut.security.oauth2.client.OauthClient;
 import java.util.Map;
+
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,8 +102,31 @@ public class DefaultOauthController implements OauthController {
                 eventPublisher.publishEvent(new LoginFailedEvent(response));
                 return loginHandler.loginFailed(response, request);
             }
-        }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
+        })
+            .onErrorResume(error -> {
+                if (error instanceof AuthorizationErrorResponseException) {
+                    AuthorizationErrorResponseException exception = (AuthorizationErrorResponseException) error;
+                    AuthorizationErrorResponse authError = exception.getAuthorizationErrorResponse();
 
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Authentication failed: {}", authError.getError());
+                    }
+
+                    String errorDescription = authError.getErrorDescription();
+                    if (errorDescription == null) {
+                        errorDescription = authError.getError().getErrorCode();
+                    }
+
+                    AuthenticationResponse response = AuthenticationResponse.failure(errorDescription);
+
+                    eventPublisher.publishEvent(new LoginFailedEvent(response));
+
+                    return Flux.just(loginHandler.loginFailed(response, request));
+                }
+
+                return Flux.error(error);
+            })
+            .defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));
     }
 
 }
