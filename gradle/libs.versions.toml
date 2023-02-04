@@ -14,7 +14,7 @@ unboundid-ldapsdk = "6.0.7"
 velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
-kotlin = "1.8.0"
+kotlin = "1.8.10"
 bcpkix = "1.70"
 
 micronaut-test = "4.0.0-SNAPSHOT"
