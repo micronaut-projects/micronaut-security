@@ -1325,6 +1325,17 @@ micronaut.security.ip-patterns[1]=192.168.1.*</code></pre>
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "ip-patterns": ["127.0.0.1", "192.168.1.*"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -1603,6 +1614,32 @@ micronaut.security.intercept-url-map[3].access[0]=ROLE_ADMIN</code></pre>
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "intercept-url-map": [{
+          "pattern": "/images/*",
+          "http-method": "GET",
+          "access": ["isAnonymous()"]
+        }, {
+          "pattern": "/books",
+          "access": ["isAuthenticated()"]
+        }, {
+          "pattern": "/books/grails",
+          "http-method": "POST",
+          "access": ["ROLE_GRAILS", "ROLE_GROOVY"]
+        }, {
+          "pattern": "/books/grails",
+          "http-method": "PUT",
+          "access": ["ROLE_ADMIN"]
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="ulist">
@@ -1704,6 +1741,24 @@ micronaut.security.intercept-url-map[1].access[0]=isAuthenticated()</code></pre>
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "intercept-url-map": [{
+          "pattern": "/v1/myResource/**",
+          "httpMethod": "GET",
+          "access": ["isAnonymous()"]
+        }, {
+          "pattern": "/v1/myResource/**",
+          "access": ["isAuthenticated()"]
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="ulist">
@@ -1786,6 +1841,22 @@ endpoints.info.sensitive=false</code></pre>
     info {
       enabled = true
       sensitive = false
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "endpoints": {
+    "beans": {
+      "enabled": true,
+      "sensitive": true
+    },
+    "info": {
+      "enabled": true,
+      "sensitive": false
     }
   }
 }</code></pre>
@@ -2116,6 +2187,20 @@ micronaut.security.redirect.login-failure=/login/authFailed</code></pre>
       authentication = "session"
       redirect {
         login-failure = "/login/authFailed"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "authentication": "session",
+      "redirect": {
+        "login-failure": "/login/authFailed"
       }
     }
   }
@@ -2660,6 +2745,27 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "signatures": {
+            "jwks": {
+              "awscognito": {
+                "url": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-XXXX/.well-known/jwks.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -2828,6 +2934,28 @@ micronaut.security.token.jwt.signatures.secret.generator.jws-algorithm=HS256</co
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "signatures": {
+            "secret": {
+              "generator": {
+                "secret": "pleaseChangeThisSecretForANewOne",
+                "jws-algorithm": "HS256"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="ulist">
@@ -2914,6 +3042,29 @@ micronaut.security.token.jwt.signatures.secret.generator.jws-algorithm=HS256</co
                 secret = "cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU="
                 base64 = true
                 jws-algorithm = "HS256"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "signatures": {
+            "secret": {
+              "generator": {
+                "secret": "cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=",
+                "base64": true,
+                "jws-algorithm": "HS256"
               }
             }
           }
@@ -3101,6 +3252,31 @@ pem {
   }
   pem {
     path = "/home/user/rsa-2048bit-key-pair.pem"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "signatures": {
+            "secret": {
+              "generator": {
+                "secret": "pleaseChangeThisSecretForANewOne",
+                "jws-algorithm": "HS256"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "pem": {
+    "path": "/home/user/rsa-2048bit-key-pair.pem"
   }
 }</code></pre>
 </div>
@@ -3877,6 +4053,40 @@ micronaut.server.ssl.trust-store.type=JKS</code></pre>
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "application": {
+      "name": "your_application_name"
+    },
+    "security": {
+      "x509": {
+        "enabled": true
+      }
+    },
+    "ssl": {
+      "enabled": true
+    },
+    "server": {
+      "ssl": {
+        "client-authentication": "want",
+        "key-store": {
+          "path": "classpath:ssl/keystore.p12",
+          "password": "your_keystore_password",
+          "type": "PKCS12"
+        },
+        "trust-store": {
+          "path": "classpath:ssl/truststore.jks",
+          "password": "your_truststore_password",
+          "type": "JKS"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -4180,6 +4390,40 @@ micronaut.security.token.propagation.service-id-regex=http://localhost:(8083|808
           }
           enabled = true
           service-id-regex = "http://localhost:(8083|8081|8082)"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "application": {
+      "name": "gateway"
+    },
+    "security": {
+      "token": {
+        "jwt": {
+          "signatures": {
+            "secret": {
+              "generator": {
+                "secret": "pleaseChangeThisSecretForANewOne",
+                "jws-algorithm": "HS256"
+              }
+            }
+          }
+        },
+        "propagation": {
+          "header": {
+            "enabled": true,
+            "headerName": "Authorization",
+            "prefix": "Bearer "
+          },
+          "enabled": true,
+          "service-id-regex": "http://localhost:(8083|8081|8082)"
         }
       }
     }
@@ -4573,6 +4817,25 @@ The refresh token functionality has changed dramatically starting in Micronaut S
           generator {
             refresh-token {
               secret = "pleaseChangeThisSecretForANewOne"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "token": {
+        "jwt": {
+          "generator": {
+            "refresh-token": {
+              "secret": "pleaseChangeThisSecretForANewOne"
             }
           }
         }
@@ -5052,6 +5315,27 @@ micronaut.security.oauth2.clients.google.openid.issuer=https://accounts.google.c
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "oauth2": {
+        "clients": {
+          "google": {
+            "client-secret": "&lt;&lt;your client secret&gt;&gt;",
+            "client-id": "&lt;&lt;your client id&gt;&gt;",
+            "openid": {
+              "issuer": "https://accounts.google.com"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -5520,6 +5804,32 @@ micronaut.security.oauth2.clients.github.token.auth-method=client-secret-post</c
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "oauth2": {
+        "clients": {
+          "github": {
+            "client-id": "&lt;&lt;my client id&gt;&gt;",
+            "client-secret": "&lt;&lt;my client secret&gt;&gt;",
+            "scopes": ["user:email", "read:user"],
+            "authorization": {
+              "url": "https://github.com/login/oauth/authorize"
+            },
+            "token": {
+              "url": "https://github.com/login/oauth/access_token",
+              "auth-method": "client-secret-post"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="ulist">
@@ -5920,6 +6230,27 @@ micronaut.security.oauth2.clients.okta.openid.issuer=&lt;&lt;my openid issuer&gt
             client-secret = "&lt;&lt;my client secret&gt;&gt;"
             openid {
               issuer = "&lt;&lt;my openid issuer&gt;&gt;"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "oauth2": {
+        "clients": {
+          "okta": {
+            "client-id": "&lt;&lt;my client id&gt;&gt;",
+            "client-secret": "&lt;&lt;my client secret&gt;&gt;",
+            "openid": {
+              "issuer": "&lt;&lt;my openid issuer&gt;&gt;"
             }
           }
         }
@@ -6711,6 +7042,21 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "oauth2": {
+        "nonce": {
+          "persistence": "session"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -6950,6 +7296,13 @@ If nonce validation fails, the user will not be authenticated.
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut.security.oauth2.state.persistence": "session"
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -7144,6 +7497,35 @@ micronaut.security.oauth2.clients.google.openid.issuer=https://accounts.google.c
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "oauth2": {
+        "clients": {
+          "companyauthserver": {
+            "client-id": "XXX",
+            "client-secret": "YYY",
+            "token": {
+              "url": "https://foo.bar/token",
+              "auth-method": "client_secret_basic"
+            }
+          },
+          "google": {
+            "client-id": "ZZZZ",
+            "client-secret": "PPPP",
+            "openid": {
+              "issuer": "https://accounts.google.com"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -7267,6 +7649,31 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
             token {
               url = "https://foo.bar/token"
               auth-method = "client_secret_basic"
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "oauth2": {
+        "clients": {
+          "companyauthserver": {
+            "client-id": "XXX",
+            "client-secret": "YYY",
+            "client-credentials": {
+              "service-id-regex": "inventory"
+            },
+            "token": {
+              "url": "https://foo.bar/token",
+              "auth-method": "client_secret_basic"
             }
           }
         }
@@ -7430,6 +7837,23 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
         clients {
           github {
             grant-type = "password"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "micronaut": {
+    "security": {
+      "oauth2": {
+        "clients": {
+          "github": {
+            "grant-type": "password"
           }
         }
       }
