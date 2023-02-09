@@ -3,7 +3,7 @@ managed-nimbus-jose-jwt = "9.28"
 
 micronaut = "4.0.0-SNAPSHOT"
 micronaut-docs = "2.0.0"
-groovy = "4.0.7"
+groovy = "4.0.9"
 spock = "2.3-groovy-4.0"
 
 geb = "7.0"
