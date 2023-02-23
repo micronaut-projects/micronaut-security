@@ -30,6 +30,7 @@ import spock.util.concurrent.PollingConditions
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.function.Predicate
+import org.testcontainers.DockerClientFactory
 
 class HomePageSpec extends GebEmbeddedServerSpecification {
 
@@ -67,6 +68,7 @@ class HomePageSpec extends GebEmbeddedServerSpecification {
     }
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
+    @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
     @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5618")
     def "check websocket connects"() {
         expect:

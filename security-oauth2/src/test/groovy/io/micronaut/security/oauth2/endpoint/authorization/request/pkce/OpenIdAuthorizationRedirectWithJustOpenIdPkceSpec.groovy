@@ -16,11 +16,14 @@ import io.micronaut.security.oauth2.endpoint.authorization.pkce.S256PkceGenerato
 import io.micronaut.security.oauth2.routes.OauthController
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
+import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
+import spock.lang.Requires
 
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
+@Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OpenIdAuthorizationRedirectWithJustOpenIdPkceSpec extends EmbeddedServerSpecification {
 
     @Override

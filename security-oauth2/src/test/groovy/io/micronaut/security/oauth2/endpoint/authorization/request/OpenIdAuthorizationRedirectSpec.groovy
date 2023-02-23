@@ -22,12 +22,14 @@ import io.micronaut.security.testutils.Keycloak
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Flux
 import reactor.core.publisher.FluxSink
 import spock.lang.IgnoreIf
 
 import java.nio.charset.StandardCharsets
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
     @Override

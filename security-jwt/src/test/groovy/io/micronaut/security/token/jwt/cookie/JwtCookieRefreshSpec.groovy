@@ -12,6 +12,7 @@ import io.micronaut.web.router.RouteMatch
 import io.micronaut.web.router.Router
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Mono
 import spock.lang.IgnoreIf
 
@@ -35,6 +36,7 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
     }
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
+    @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
     void "test the oauthcontroller is enabled"() {
         when:
         applicationContext.getBean(OauthController)
@@ -50,6 +52,7 @@ class JwtCookieRefreshSpec extends GebEmbeddedServerSpecification {
     }
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
+    @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
     void "test refreshing the token"() {
         when:
         to HomePage
