@@ -19,8 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: ['17']
-        graalvm: ['latest']
+        graalvm: [ 'latest' ]
+        java: [ '17' ]
     steps:
        # https://github.com/actions/virtual-environments/issues/709
       - name: Free disk space
