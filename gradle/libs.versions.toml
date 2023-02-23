@@ -8,7 +8,7 @@ groovy = "3.0.13"
 spock = "2.1-groovy-3.0"
 
 geb = "4.1"
-reactor-test = "3.5.1"
+reactor-test = "3.5.3"
 selenium = "3.141.59"
 serde = "1.0.1"
 testcontainers = "1.17.6"
