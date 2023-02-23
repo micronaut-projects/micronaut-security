@@ -1,0 +1,15 @@
+Micronaut Security ships with several built-in https://docs.micronaut.io/latest/guide/#exceptionHandler[Exception Handlers]:
+
+|===
+|Exception|Handler
+| api:security.authentication.AuthenticationException[]
+| api:security.authentication.AuthenticationExceptionHandler[]
+| api:security.authentication.AuthorizationException[]
+| api:security.authentication.DefaultAuthorizationExceptionHandler[]
+| api:security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseException[]
+| api:security.oauth2.endpoint.authorization.response.AuthorizationErrorResponseExceptionHandler[]
+| api:security.errors.OauthErrorResponseException[]
+| api:security.errors.OauthErrorResponseExceptionHandler[]
+|===
+
+You may need to https://docs.micronaut.io/latest/guide/#replaces[replace] some of those beans to customize Micronaut Security exception handling to your needs.
