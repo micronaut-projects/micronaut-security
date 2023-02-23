@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -40,6 +41,7 @@ import reactor.core.publisher.Flux;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = RedirectingLoginHandler.class)
 @EachBean(OauthClient.class)
 public class DefaultOauthController implements OauthController {
 

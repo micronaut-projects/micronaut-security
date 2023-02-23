@@ -25,10 +25,10 @@ class BuiltInEndpointsSpec extends Specification implements YamlAsciidocTagClean
 endpoints:
   beans:
     enabled: true
-    sensitive: true # <1>
+    sensitive: true
   info:
     enabled: true
-    sensitive: false  # <2>
+    sensitive: false
 '''//end::yamlconfig[]
 
     @Shared

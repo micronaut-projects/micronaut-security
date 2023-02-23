@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.context;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -26,6 +27,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
+import jakarta.inject.Inject;
+
 import java.util.Map;
 
 /**
@@ -40,19 +43,41 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     private final AuthorizationResponse authorizationResponse;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
 
+    @Nullable
+    private final String codeVerifier;
+
     /**
      * @param authorizationResponse The authorization response
-     * @param oauthRouteUrlBuilder The oauth route URL builder
-     * @param tokenEndpoint The token endpoint
-     * @param clientConfiguration The client configuration
+     * @param oauthRouteUrlBuilder  The oauth route URL builder
+     * @param tokenEndpoint         The token endpoint
+     * @param clientConfiguration   The client configuration
+     * @param codeVerifier            The PKCE code_verify
      */
+    @Inject
+    public OpenIdCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
+                                         OauthRouteUrlBuilder oauthRouteUrlBuilder,
+                                         SecureEndpoint tokenEndpoint,
+                                         OauthClientConfiguration clientConfiguration,
+                                         @Nullable String codeVerifier) {
+        super(getMediaType(clientConfiguration), tokenEndpoint, clientConfiguration);
+        this.authorizationResponse = authorizationResponse;
+        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
+        this.codeVerifier = codeVerifier;
+    }
+
+    /**
+     * @param authorizationResponse The authorization response
+     * @param oauthRouteUrlBuilder  The oauth route URL builder
+     * @param tokenEndpoint         The token endpoint
+     * @param clientConfiguration   The client configuration
+     * @deprecated Use {@link OpenIdCodeTokenRequestContext(AuthorizationResponse,OauthRouteUrlBuilder, SecureEndpoint,OauthClientConfiguration,String)} instead.
+     */
+    @Deprecated
     public OpenIdCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                          OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                          SecureEndpoint tokenEndpoint,
                                          OauthClientConfiguration clientConfiguration) {
-        super(getMediaType(clientConfiguration), tokenEndpoint, clientConfiguration);
-        this.authorizationResponse = authorizationResponse;
-        this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
+        this(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration, null);
     }
 
     /**
@@ -72,8 +97,9 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     public Map<String, String> getGrant() {
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
+        codeGrant.setCodeVerifier(getCodeVerifier());
         codeGrant.setRedirectUri(oauthRouteUrlBuilder
-                .buildCallbackUrl(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()).toString());
+            .buildCallbackUrl(authorizationResponse.getCallbackRequest(), clientConfiguration.getName()).toString());
         return codeGrant.toMap();
     }
 
@@ -85,5 +111,14 @@ public class OpenIdCodeTokenRequestContext extends AbstractTokenRequestContext<M
     @Override
     public Argument<?> getErrorResponseType() {
         return Argument.of(TokenErrorResponse.class);
+    }
+
+    /**
+     * @since 3.9.0
+     * @return The PKCE code verifier
+     */
+    @Nullable
+    public String getCodeVerifier() {
+        return codeVerifier;
     }
 }

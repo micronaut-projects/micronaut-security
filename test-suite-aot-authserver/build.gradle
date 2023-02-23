@@ -1,0 +1,33 @@
+plugins {
+    id 'io.micronaut.application' version "$micronautGradlePluginVersion"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'io.micronaut.security.test.aot.authserver.Application'
+}
+
+micronaut {
+    version = micronautVersion
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("io.micronaut.security.test.aot.authserver")
+    }
+}
+
+dependencies {
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-management")
+}
+
+shadowJar {
+    archiveBaseName.set('authserver')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+}

@@ -1,0 +1,11 @@
+micronaut:
+  application:
+    name: 'Test AOT'
+  security:
+    oauth2:
+      clients:
+        autha:
+          client-id: 'XXX'
+          client-secret: 'YYY'
+          openid:
+            issuer: 'http://localhost:8081/us-east-1_4OqDoWVrZ/'

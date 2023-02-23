@@ -1,0 +1,5 @@
+micronaut:
+  application:
+    name: 'Test AOT Auth Server 0'
+  server:
+    port: 8081

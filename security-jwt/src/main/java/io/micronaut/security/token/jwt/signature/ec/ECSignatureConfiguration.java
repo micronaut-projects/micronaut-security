@@ -24,7 +24,6 @@ import java.security.interfaces.ECPublicKey;
  * @since 1.0
  */
 public interface ECSignatureConfiguration {
-
     /**
      *
      * @return The EC Public Key

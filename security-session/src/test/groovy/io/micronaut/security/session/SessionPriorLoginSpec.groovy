@@ -12,7 +12,9 @@ import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import jakarta.inject.Singleton
+import org.testcontainers.DockerClientFactory
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class SessionPriorLoginSpec extends GebEmbeddedServerSpecification {
 
     @Override

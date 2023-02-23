@@ -25,10 +25,12 @@ import io.micronaut.security.token.jwt.signature.jwks.JwksSignature
 import io.micronaut.security.token.validator.TokenValidator
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
 
 import java.security.Principal
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class AuthenticationModeIdTokenSpec extends GebEmbeddedServerSpecification {
 
     @Override
