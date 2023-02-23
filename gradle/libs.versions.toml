@@ -5,7 +5,7 @@ micronaut = "3.7.5"
 micronaut-docs = "2.0.0"
 micronaut-test = "3.8.2"
 groovy = "3.0.13"
-spock = "2.1-groovy-3.0"
+spock = "2.3-groovy-3.0"
 
 geb = "6.0"
 reactor-test = "3.5.3"
