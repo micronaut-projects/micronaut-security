@@ -3,7 +3,7 @@ managed-nimbus-jose-jwt = "9.25.6"
 
 micronaut = "3.7.5"
 micronaut-docs = "2.0.0"
-micronaut-test = "3.7.0"
+micronaut-test = "3.8.2"
 groovy = "3.0.13"
 spock = "2.1-groovy-3.0"
 
