@@ -20,12 +20,14 @@ import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence;
 import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OauthCodeTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -48,14 +50,32 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
     @Nullable
     private final StateValidator stateValidator;
 
+    @Nullable
+    private final PkcePersistence pkcePersistence;
+
     /**
      * @param tokenEndpointClient The token endpoint client
-     * @param stateValidator The state validator
+     * @param stateValidator      The state validator
+     * @param pkcePersistence     The PKCE Persistence
      */
+    @Inject
     DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
-                                             @Nullable StateValidator stateValidator) {
+                                             @Nullable StateValidator stateValidator,
+                                             @Nullable PkcePersistence pkcePersistence) {
         this.tokenEndpointClient = tokenEndpointClient;
         this.stateValidator = stateValidator;
+        this.pkcePersistence = pkcePersistence;
+    }
+
+    /**
+     * @param tokenEndpointClient The token endpoint client
+     * @param stateValidator      The state validator
+     * @deprecated Use {@link DefaultOauthAuthorizationResponseHandler(TokenEndpointClient, StateValidator, PkcePersistence)} instead.
+     */
+    @Deprecated
+    DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
+                                             @Nullable StateValidator stateValidator) {
+        this(tokenEndpointClient, stateValidator, null);
     }
 
     @Override
@@ -84,16 +104,22 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
             }
         }
 
-        OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration);
+        String codeVerifier = null;
+
+        if (pkcePersistence != null) {
+            codeVerifier = pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest()).orElse(null);
+        }
+
+        OauthCodeTokenRequestContext context = new OauthCodeTokenRequestContext(authorizationResponse, tokenEndpoint, clientConfiguration, codeVerifier);
 
         return Flux.from(
                 tokenEndpointClient.sendRequest(context))
-                .switchMap(response -> {
-                    if (LOG.isTraceEnabled()) {
-                        LOG.trace("Token endpoint returned a success response. Creating a user details");
-                    }
-                    return Flux.from(authenticationMapper.createAuthenticationResponse(response, state))
-                            .map(AuthenticationResponse.class::cast);
-                });
+            .switchMap(response -> {
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Token endpoint returned a success response. Creating a user details");
+                }
+                return Flux.from(authenticationMapper.createAuthenticationResponse(response, state))
+                    .map(AuthenticationResponse.class::cast);
+            });
     }
 }

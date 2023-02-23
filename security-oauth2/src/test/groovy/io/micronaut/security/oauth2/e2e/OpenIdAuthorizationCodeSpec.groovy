@@ -23,10 +23,12 @@ import io.micronaut.security.testutils.GebEmbeddedServerSpecification
 import io.micronaut.security.testutils.Keycloak
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
 
 import java.security.Principal
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OpenIdAuthorizationCodeSpec extends GebEmbeddedServerSpecification {
 
     @Override

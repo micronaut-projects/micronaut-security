@@ -1,6 +1,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.request
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -8,6 +9,7 @@ import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.oauth2.PKCEUtils
 import io.micronaut.security.oauth2.StateUtils
 import io.micronaut.security.oauth2.client.OauthClient
 import io.micronaut.security.oauth2.client.OpenIdClient
@@ -20,12 +22,14 @@ import io.micronaut.security.testutils.Keycloak
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Flux
 import reactor.core.publisher.FluxSink
 import spock.lang.IgnoreIf
 
 import java.nio.charset.StandardCharsets
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
 
     @Override
@@ -36,6 +40,7 @@ class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         Map<String, Object> m = super.configuration + [
+                'micronaut.security.oauth2.pkce.enabled': StringUtils.FALSE,
                 'micronaut.security.authentication': 'cookie',
                 "micronaut.security.oauth2.clients.twitter.authorization.url": "https://twitter.com/authorize",
                 "micronaut.security.oauth2.clients.twitter.token.url"        : "https://twitter.com/token",
@@ -80,13 +85,20 @@ class OpenIdAuthorizationRedirectSpec extends EmbeddedServerSpecification {
         location.contains("redirect_uri=http://localhost:" + embeddedServer.getPort() + "/oauth/callback/keycloak")
         location.contains("client_id=$Keycloak.CLIENT_ID")
 
+        and:
+        !response.getCookie("OAUTH2_PKCE").isPresent()
+
         when:
         Map<String, String> queryValues = StateUtils.queryValuesAsMap(location)
         String state = StateUtils.decodeState(queryValues)
 
         then:
         state.contains('"nonce":"')
-        state.contains('"redirectUri":"http://localhost:'+ embeddedServer.getPort() + '/oauth/callback/keycloak"')
+        state.contains('"redirectUri":"http://localhost:' + embeddedServer.getPort() + '/oauth/callback/keycloak"')
+
+        and:
+        !PKCEUtils.getCodeChallenge(queryValues)
+        !PKCEUtils.getCodeChallengeMethod(queryValues)
 
         when:
         response = client.toBlocking().exchange("/oauth/login/twitter")

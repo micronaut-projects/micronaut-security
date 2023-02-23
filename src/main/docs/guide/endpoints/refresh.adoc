@@ -10,7 +10,8 @@ include::{includedir}configurationProperties/io.micronaut.security.token.jwt.gen
 
 To enable it, you must provide a secret:
 
-```yaml
+[configuration]
+----
 micronaut:
     security:
         token:
@@ -18,7 +19,7 @@ micronaut:
                 generator:
                     refresh-token:
                         secret: 'pleaseChangeThisSecretForANewOne'
-```
+----
 
 After a token is generated, this library has no knowledge of it. The value is not cached or stored anywhere. It is up to each application to decide how to store the token, support revocation, and retrieve user details when given a token.
 

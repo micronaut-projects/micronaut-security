@@ -22,6 +22,7 @@ import com.nimbusds.jose.crypto.ECDSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
 import java.security.interfaces.ECPrivateKey;
 
@@ -35,7 +36,10 @@ import java.security.interfaces.ECPrivateKey;
  */
 public class ECSignatureGenerator extends ECSignature implements SignatureGeneratorConfiguration {
 
-    private ECPrivateKey privateKey;
+    private final ECPrivateKey privateKey;
+
+    @Nullable
+    private final String kidId;
 
     /**
      *
@@ -44,11 +48,12 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
     public ECSignatureGenerator(ECSignatureGeneratorConfiguration config) {
         super(config);
         this.privateKey = config.getPrivateKey();
+        this.kidId = config.getKid().orElse(null);
     }
 
     @Override
     public SignedJWT sign(JWTClaimsSet claims) throws JOSEException {
-        return signWithPrivateKey(claims, this.privateKey);
+        return signWithPrivateKey(claims, this.privateKey, this.kidId);
     }
 
     /**
@@ -57,11 +62,36 @@ public class ECSignatureGenerator extends ECSignature implements SignatureGenera
      * @param privateKey The EC Private Key
      * @return A signed JWT
      * @throws JOSEException thrown in the JWT signing
+     * @deprecated Unused. Use {@link ECSignatureGenerator#signWithPrivateKey(JWTClaimsSet, ECPrivateKey, String) instead}.
      */
+    @Deprecated
     protected SignedJWT signWithPrivateKey(JWTClaimsSet claims, @NonNull ECPrivateKey privateKey) throws JOSEException {
+        return signWithPrivateKey(claims, privateKey, null);
+    }
+
+    /**
+     *
+     * @param claims The JWT Claims
+     * @param privateKey The EC Private Key
+     * @param kid Key ID
+     * @return A signed JWT
+     * @throws JOSEException thrown in the JWT signing
+     */
+    protected SignedJWT signWithPrivateKey(JWTClaimsSet claims,
+                                           @NonNull ECPrivateKey privateKey,
+                                           @Nullable String kid) throws JOSEException {
         final JWSSigner signer = new ECDSASigner(privateKey);
-        final SignedJWT signedJWT = new SignedJWT(new JWSHeader(algorithm), claims);
+        final SignedJWT signedJWT = new SignedJWT(header(kid), claims);
         signedJWT.sign(signer);
         return signedJWT;
+    }
+
+    @NonNull
+    private JWSHeader header(@Nullable String keyId) {
+        JWSHeader.Builder builder = new JWSHeader.Builder(algorithm);
+        if (keyId != null) {
+            builder = builder.keyID(keyId);
+        }
+        return builder.build();
     }
 }

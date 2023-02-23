@@ -15,24 +15,16 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanProvider;
+import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Parallel;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.type.Argument;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
-import io.micronaut.http.client.HttpClient;
-import io.micronaut.http.client.annotation.Client;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import io.micronaut.jackson.databind.JacksonDatabindMapper;
-import io.micronaut.json.JsonMapper;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -44,15 +36,10 @@ import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoi
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpointResolver;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
-import jakarta.inject.Inject;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import io.micronaut.core.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.function.Supplier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Factory to create beans related to the configuration of
@@ -66,31 +53,13 @@ import org.slf4j.LoggerFactory;
 @Requires(configuration = "io.micronaut.security.token.jwt")
 class OpenIdClientFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OpenIdClientFactory.class);
-
     private final BeanContext beanContext;
 
-    private final JsonMapper jsonMapper;
-
     /**
      * @param beanContext The bean context
-     * @param objectMapper Object Mapper
-     * @deprecated Use {@link #OpenIdClientFactory(BeanContext, JsonMapper)} instead
      */
-    @Deprecated
-    OpenIdClientFactory(BeanContext beanContext, ObjectMapper objectMapper) {
+    OpenIdClientFactory(BeanContext beanContext) {
         this.beanContext = beanContext;
-        this.jsonMapper = new JacksonDatabindMapper(objectMapper);
-    }
-
-    /**
-     * @param beanContext The bean context
-     * @param jsonMapper Object Mapper
-     */
-    @Inject
-    OpenIdClientFactory(BeanContext beanContext, JsonMapper jsonMapper) {
-        this.beanContext = beanContext;
-        this.jsonMapper = jsonMapper;
     }
 
     /**
@@ -98,32 +67,16 @@ class OpenIdClientFactory {
      *
      * @param oauthClientConfiguration The client configuration
      * @param openIdClientConfiguration The openid client configuration
-     * @param issuerClient The client to request the metadata
+     * @param openIdProviderMetadataFetcher OpenID Provider metadata Fetcher
      * @return The OpenID configuration
      */
+    @Parallel
+    @Context
     @EachBean(OpenIdClientConfiguration.class)
     DefaultOpenIdProviderMetadata openIdConfiguration(@Parameter OauthClientConfiguration oauthClientConfiguration,
                                                       @Parameter OpenIdClientConfiguration openIdClientConfiguration,
-                                                      @Client HttpClient issuerClient) {
-        DefaultOpenIdProviderMetadata providerMetadata = openIdClientConfiguration.getIssuer()
-                .map(issuer -> {
-                    try {
-                        URL configurationUrl = new URL(issuer, StringUtils.prependUri(issuer.getPath(), openIdClientConfiguration.getConfigurationPath()));
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Sending request for OpenID configuration for provider [{}] to URL [{}]", openIdClientConfiguration.getName(), configurationUrl);
-                        }
-                        //TODO NOSONAR this returns ReadTimeoutException - return issuerClient.toBlocking().retrieve(configurationUrl.toString(), DefaultOpenIdProviderMetadata.class);
-                        String json = issuerClient.toBlocking().retrieve(configurationUrl.toString(), String.class);
-                        return jsonMapper.readValue(json.getBytes(StandardCharsets.UTF_8), Argument.of(DefaultOpenIdProviderMetadata.class));
-                    } catch (HttpClientResponseException e) {
-                        throw new BeanInstantiationException("Failed to retrieve OpenID configuration for " + openIdClientConfiguration.getName(), e);
-                    } catch (MalformedURLException e) {
-                        throw new BeanInstantiationException("Failure parsing issuer URL " + issuer.toString(), e);
-                    } catch (IOException e) {
-                        throw new BeanInstantiationException("JSON Processing Exception parsing issuer URL returned JSON " + issuer.toString(), e);
-                    }
-                }).orElse(new DefaultOpenIdProviderMetadata());
-
+                                                      @Parameter OpenIdProviderMetadataFetcher openIdProviderMetadataFetcher) {
+        DefaultOpenIdProviderMetadata providerMetadata = openIdProviderMetadataFetcher.fetch();
         overrideFromConfig(providerMetadata, openIdClientConfiguration, oauthClientConfiguration);
         return providerMetadata;
     }
@@ -180,13 +133,15 @@ class OpenIdClientFactory {
             revocation.getUrl().ifPresent(configuration::setRevocationEndpoint);
             revocation.getAuthMethod().ifPresent(authMethod -> configuration.setRevocationEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
         });
-
         openIdClientConfiguration.getRegistration()
                 .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setRegistrationEndpoint);
         openIdClientConfiguration.getUserInfo()
                 .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setUserinfoEndpoint);
-        openIdClientConfiguration.getAuthorization()
-                .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setAuthorizationEndpoint);
+        openIdClientConfiguration.getAuthorization().ifPresent(authorizationEndpointConfiguration -> {
+                authorizationEndpointConfiguration.getUrl().ifPresent(configuration::setAuthorizationEndpoint);
+                authorizationEndpointConfiguration.getCodeChallengeMethod()
+                    .ifPresent(codeChallengeMethod -> configuration.setCodeChallengeMethodsSupported(Collections.singletonList(codeChallengeMethod)));
+            });
         openIdClientConfiguration.getToken().ifPresent(token -> {
             token.getUrl().ifPresent(configuration::setTokenEndpoint);
             token.getAuthMethod().ifPresent(authMethod -> configuration.setTokenEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));

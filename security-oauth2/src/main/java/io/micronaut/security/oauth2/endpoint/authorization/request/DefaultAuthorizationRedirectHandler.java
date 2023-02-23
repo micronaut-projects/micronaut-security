@@ -23,11 +23,12 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.uri.UriBuilder;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Builds an authorization redirect url.
@@ -84,6 +85,7 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
         populateClientId(authorizationRequest, parameters);
         populateRedirectUri(authorizationRequest, parameters);
         populateState(authorizationRequest, parameters, response);
+        populatePKCE(authorizationRequest, parameters, response);
         if (authorizationRequest instanceof OpenIdAuthorizationRequest) {
             OpenIdAuthorizationRequest openIdAuthorizationRequest = (OpenIdAuthorizationRequest) authorizationRequest;
             populateResponseMode(openIdAuthorizationRequest, parameters);
@@ -155,18 +157,31 @@ public class DefaultAuthorizationRedirectHandler implements AuthorizationRedirec
                                  @NonNull Map<String, Object> parameters,
                                  @NonNull MutableHttpResponse response) {
         authorizationRequest.getState(response).ifPresent(state ->
-                parameters.put(AuthorizationRequest.PARAMETER_STATE, state));
+            parameters.put(AuthorizationRequest.PARAMETER_STATE, state));
     }
 
     /**
-     *
      * @param authorizationRequest Authentication Request
-     * @param parameters Authentication Request Parameters
+     * @param parameters           Authentication Request Parameters
+     * @param response             Authorization Redirect Response
+     */
+    protected void populatePKCE(@NonNull AuthorizationRequest authorizationRequest,
+                                @NonNull Map<String, Object> parameters,
+                                @NonNull MutableHttpResponse<?> response) {
+        authorizationRequest.getPkceChallenge(response).ifPresent(pkce -> {
+            parameters.put(AuthorizationRequest.PARAMETER_PKCE_CODE_CHALLENGE, pkce.getCodeChallenge());
+            parameters.put(AuthorizationRequest.PARAMETER_PKCE_CODE_CHALLENGE_METHOD, pkce.getCodeChallengeMethod());
+        });
+    }
+
+    /**
+     * @param authorizationRequest Authentication Request
+     * @param parameters           Authentication Request Parameters
      */
     protected void populateResponseMode(@NonNull OpenIdAuthorizationRequest authorizationRequest,
                                         @NonNull Map<String, Object> parameters) {
         authorizationRequest.getResponseMode().ifPresent(rm ->
-                parameters.put(OpenIdAuthorizationRequest.PARAMETER_RESPONSE_MODE, rm));
+            parameters.put(OpenIdAuthorizationRequest.PARAMETER_RESPONSE_MODE, rm));
     }
 
     /**
