@@ -1,6 +1,8 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response
 
+import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -8,33 +10,31 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
+import io.micronaut.http.client.BlockingHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.errors.ErrorCode
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.testutils.EmbeddedServerSpecification
+import spock.lang.Specification
 
-class AuthorizationErrorResponseExceptionHandlerSpec extends EmbeddedServerSpecification {
-
-    @Override
-    String getSpecName() {
-        return "AuthorizationErrorResponseExceptionHandlerSpec"
-    }
-
-    @Override
-    Map<String, Object> getConfiguration() {
-        super.configuration + [
-                'micronaut.security.redirect.login-failure': '/login/failed'
-        ]
-    }
+class AuthorizationErrorResponseExceptionHandlerSpec extends Specification {
 
     void "OAuth 2.0 cancel redirects to login failed"() {
         given:
-        HttpRequest<?> request = HttpRequest.GET("/throw/html").accept(MediaType.TEXT_HTML)
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
+                'micronaut.security.redirect.login-failure': '/login/failed',
+                'spec.name': "AuthorizationErrorResponseExceptionHandlerSpec"
+        ])
+        ApplicationContext applicationContext = embeddedServer.applicationContext
+        HttpClient httpClient = applicationContext.createBean(HttpClient, embeddedServer.URL)
+        BlockingHttpClient client = httpClient.toBlocking()
 
         when:
-        HttpResponse<String> response = client.exchange(request, String)
+        HttpResponse<String> response = client.exchange(HttpRequest.GET("/throw/html")
+                .accept(MediaType.TEXT_HTML), String)
 
         then:
         HttpStatus.OK == response.status()
@@ -45,19 +45,62 @@ class AuthorizationErrorResponseExceptionHandlerSpec extends EmbeddedServerSpeci
         then:
         html.isPresent()
         html.get().contains("Login Failed")
+
+        cleanup:
+        client.close()
+        httpClient.close()
+        applicationContext.close()
+        embeddedServer.close()
     }
 
-
-    void "does not redirect for non HTML requests"() {
+    void "OAuth 2.0 does not redirect if redirection is disabled"() {
         given:
-        HttpRequest<?> request = HttpRequest.GET("/throw/json")
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
+                'micronaut.security.redirect.login-failure': '/login/failed',
+                'micronaut.security.redirect.enabled'      : StringUtils.FALSE,
+                'spec.name'                                : "AuthorizationErrorResponseExceptionHandlerSpec"
+        ])
+        ApplicationContext applicationContext = embeddedServer.applicationContext
+        HttpClient httpClient = applicationContext.createBean(HttpClient, embeddedServer.URL)
+        BlockingHttpClient client = httpClient.toBlocking()
 
         when:
-        client.exchange(request)
+        client.exchange(HttpRequest.GET("/throw/html").accept(MediaType.TEXT_HTML))
 
         then:
         HttpClientResponseException e = thrown()
         HttpStatus.BAD_REQUEST == e.status
+
+        cleanup:
+        client.close()
+        httpClient.close()
+        applicationContext.close()
+        embeddedServer.close()
+    }
+
+    void "does not redirect for non HTML requests"() {
+        given:
+        EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
+                'micronaut.security.redirect.login-failure': '/login/failed',
+                'spec.name': "AuthorizationErrorResponseExceptionHandlerSpec"
+        ])
+        ApplicationContext applicationContext = embeddedServer.applicationContext
+        HttpClient httpClient = applicationContext.createBean(HttpClient, embeddedServer.URL)
+        BlockingHttpClient client = httpClient.toBlocking()
+
+        when:
+        client.exchange(HttpRequest.GET("/throw/json"))
+
+        then:
+        HttpClientResponseException e = thrown()
+        HttpStatus.BAD_REQUEST == e.status
+
+
+        cleanup:
+        client.close()
+        httpClient.close()
+        applicationContext.close()
+        embeddedServer.close()
     }
 
     @Requires(property = "spec.name", value = "AuthorizationErrorResponseExceptionHandlerSpec")
@@ -87,7 +130,7 @@ class AuthorizationErrorResponseExceptionHandlerSpec extends EmbeddedServerSpeci
             throw createException()
         }
 
-        AuthorizationErrorResponseException createException() {
+        private static AuthorizationErrorResponseException createException() {
             new AuthorizationErrorResponseException(new AuthorizationErrorResponse() {
                 @Override
                 State getState() {
