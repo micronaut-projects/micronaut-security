@@ -24,6 +24,9 @@ import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.errors.ErrorCode;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Locale;
 import java.util.Map;
 
@@ -35,6 +38,7 @@ import java.util.Map;
  */
 @Prototype
 public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCallback implements AuthorizationErrorResponse {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationErrorResponse.class);
 
     private final ConvertibleMultiValues<String> responseData;
 
@@ -56,8 +60,33 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
     @NonNull
     @Override
     public ErrorCode getError() {
-        String name = responseData.get(JSON_KEY_ERROR).toUpperCase(Locale.ENGLISH);
-        return AuthorizationErrorCode.valueOf(name);
+        return getError(responseData);
+    }
+
+    @NonNull
+    static ErrorCode getError(ConvertibleMultiValues<String> responseData) {
+        String name = responseData.get(JSON_KEY_ERROR);
+        if (name != null) {
+            name = name.toUpperCase(Locale.ENGLISH);
+        }
+        try {
+            if (name != null) {
+                return AuthorizationErrorCode.valueOf(name);
+            }
+        } catch (IllegalArgumentException e) {
+            LOG.trace("{} not found in enum AuthorizationErrorCode", name);
+        }
+        return new ErrorCode() {
+            @Override
+            public String getErrorCode() {
+                return responseData.get(JSON_KEY_ERROR);
+            }
+
+            @Override
+            public String getErrorCodeDescription() {
+                return responseData.get(JSON_KEY_ERROR_DESCRIPTION);
+            }
+        };
     }
 
     @Nullable
