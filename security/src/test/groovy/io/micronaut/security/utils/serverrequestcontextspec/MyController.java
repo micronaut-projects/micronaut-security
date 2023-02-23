@@ -83,7 +83,7 @@ class MyController {
                         return Flux.just(new Message("Sergio"));
                     }
                     return Flux.just(new Message("Anonymous"));
-                }).subscribeOn(reactor.core.scheduler.Schedulers.elastic());
+                }).subscribeOn(reactor.core.scheduler.Schedulers.boundedElastic());
     }
 
 }
