@@ -15,11 +15,24 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
+import io.micronaut.http.server.exceptions.response.ErrorContext;
+import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
+import io.micronaut.security.config.DefaultRedirectService;
+import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * An exception handler for {@link AuthorizationErrorResponseException}.
@@ -29,6 +42,25 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 public class AuthorizationErrorResponseExceptionHandler implements ExceptionHandler<AuthorizationErrorResponseException, MutableHttpResponse<?>> {
+    private static final Logger LOG = LoggerFactory.getLogger(AuthorizationErrorResponseExceptionHandler.class);
+    private final RedirectConfiguration redirectConfiguration;
+    private final RedirectService redirectService;
+
+    private final ErrorResponseProcessor<?> errorResponseProcessor;
+
+    /**
+     *
+     * @param redirectConfiguration Redirect Configuration
+     * @param redirectService Redirect Service
+     */
+    @Inject
+    public AuthorizationErrorResponseExceptionHandler(RedirectConfiguration redirectConfiguration,
+                                                      RedirectService redirectService,
+                                                      ErrorResponseProcessor<?> errorResponseProcessor) {
+        this.redirectConfiguration = redirectConfiguration;
+        this.redirectService = redirectService;
+        this.errorResponseProcessor = errorResponseProcessor;
+    }
 
     /**
      * Default constructor.
@@ -37,11 +69,87 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
      */
     @Deprecated
     public AuthorizationErrorResponseExceptionHandler() {
-        // Default constructor added so we can deprecate it
+        this(null,  new DefaultRedirectService(null, () -> null), null);
     }
 
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationErrorResponseException exception) {
-        return HttpResponse.badRequest(exception.getAuthorizationErrorResponse());
+        if (!shouldRedirect(request, exception)) {
+            return httpResponseWithStatus(request, exception);
+        }
+        URI location;
+        try {
+            location = new URI(getRedirectUri(request, exception));
+        } catch (URISyntaxException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error("redirect URL is invalid", e);
+            }
+            return HttpResponse.serverError();
+        }
+        //prevent redirect loop
+        return request.getUri().equals(location) ?
+            httpResponseWithStatus(request, exception) :
+            httpResponseWithStatus(location);
+
+    }
+
+    /**
+     * Builds a HTTP Response redirection to the supplied location.
+     *
+     * @param location The Uri to redirect to
+     * @return an HTTP response with the Uri as location
+     */
+    @NonNull
+    protected MutableHttpResponse<?> httpResponseWithStatus(@NonNull URI location) {
+        return HttpResponse.seeOther(location);
+    }
+
+    /**
+     * @param request The request
+     * @param exception The exception
+     * @return The response to be used when a redirect is not appropriate
+     */
+    @NonNull
+    protected MutableHttpResponse<?> httpResponseWithStatus(@NonNull HttpRequest<?> request,
+                                                            @NonNull AuthorizationErrorResponseException exception) {
+        return errorResponseProcessor.processResponse(ErrorContext.builder(request)
+            .cause(exception)
+            .build(), HttpResponse.badRequest(exception.getAuthorizationErrorResponse()));
+    }
+
+    /**
+     * @param request The request
+     * @param exception The exception
+     * @return The URI to redirect to
+     */
+    @NonNull
+    protected String getRedirectUri(@NonNull HttpRequest<?> request,
+                                    @NonNull AuthorizationErrorResponseException exception) {
+        String uri = redirectService.loginFailureUrl();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("redirect uri: {}", uri);
+        }
+        return uri;
+    }
+
+    /**
+     * Decides whether the request should be handled with a redirect.
+     *
+     * @param request The HTTP Request
+     * @param exception The authorization exception
+     * @return true if the request accepts text/html
+     */
+    protected boolean shouldRedirect(@NonNull HttpRequest<?> request,
+                                     @NonNull AuthorizationErrorResponseException exception) {
+        return redirectConfiguration != null &&
+            redirectConfiguration.isEnabled() &&
+            acceptsHtml(request);
+    }
+
+    private static boolean acceptsHtml(@NonNull HttpRequest<?> request) {
+        return request.getHeaders()
+            .accept()
+            .stream()
+            .anyMatch(mediaType -> mediaType.equals(MediaType.TEXT_HTML_TYPE));
     }
 }
