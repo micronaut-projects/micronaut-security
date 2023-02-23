@@ -46,9 +46,7 @@ abstract class GebEmbeddedServerSpecification extends GebSpec implements Configu
     @Override
     Browser getBrowser() {
         Browser b = super.getBrowser()
-        if (embeddedServer && !b.baseUrl) {
-            b.baseUrl = baseUrl
-        }
+        b.baseUrl = baseUrl
         b
     }
 
