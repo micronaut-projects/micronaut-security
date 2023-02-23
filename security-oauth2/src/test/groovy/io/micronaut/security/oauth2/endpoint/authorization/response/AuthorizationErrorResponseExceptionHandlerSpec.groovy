@@ -2,10 +2,13 @@ package io.micronaut.security.oauth2.endpoint.authorization.response
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.errors.ErrorCode
 import io.micronaut.security.oauth2.endpoint.authorization.state.State
@@ -28,13 +31,33 @@ class AuthorizationErrorResponseExceptionHandlerSpec extends EmbeddedServerSpeci
 
     void "OAuth 2.0 cancel redirects to login failed"() {
         given:
-        HttpRequest<?> request = HttpRequest.GET("/throw").accept(MediaType.TEXT_HTML)
+        HttpRequest<?> request = HttpRequest.GET("/throw/html").accept(MediaType.TEXT_HTML)
 
         when:
-        String html = client.retrieve(request)
+        HttpResponse<String> response = client.exchange(request, String)
 
         then:
-        html.contains("Login Failed")
+        HttpStatus.OK == response.status()
+
+        when:
+        Optional<String> html = response.getBody()
+
+        then:
+        html.isPresent()
+        html.get().contains("Login Failed")
+    }
+
+
+    void "does not redirect for non HTML requests"() {
+        given:
+        HttpRequest<?> request = HttpRequest.GET("/throw/json")
+
+        when:
+        client.exchange(request)
+
+        then:
+        HttpClientResponseException e = thrown()
+        HttpStatus.BAD_REQUEST == e.status
     }
 
     @Requires(property = "spec.name", value = "AuthorizationErrorResponseExceptionHandlerSpec")
@@ -52,10 +75,20 @@ class AuthorizationErrorResponseExceptionHandlerSpec extends EmbeddedServerSpeci
     @Controller("/throw")
     static class ThrowingController {
         @Secured(SecurityRule.IS_ANONYMOUS)
+        @Get("/json")
+        String json() {
+            throw createException()
+        }
+
+        @Secured(SecurityRule.IS_ANONYMOUS)
         @Produces(MediaType.TEXT_HTML)
-        @Get
-        String index() {
-            throw new AuthorizationErrorResponseException(new AuthorizationErrorResponse() {
+        @Get("/html")
+        String html() {
+            throw createException()
+        }
+
+        AuthorizationErrorResponseException createException() {
+            new AuthorizationErrorResponseException(new AuthorizationErrorResponse() {
                 @Override
                 State getState() {
                     return null
