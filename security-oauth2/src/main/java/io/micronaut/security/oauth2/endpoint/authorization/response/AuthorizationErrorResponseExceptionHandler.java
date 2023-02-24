@@ -52,6 +52,7 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
      *
      * @param redirectConfiguration Redirect Configuration
      * @param redirectService Redirect Service
+     * @param errorResponseProcessor Error Response Processor
      */
     @Inject
     public AuthorizationErrorResponseExceptionHandler(RedirectConfiguration redirectConfiguration,
