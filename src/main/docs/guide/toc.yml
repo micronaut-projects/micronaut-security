@@ -5,6 +5,7 @@ whatsNew: What's New
 breaks: Breaking Changes
 gettingStarted:
   title: Getting Started
+exceptionHandlers: 'Exception Handlers'
 securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
