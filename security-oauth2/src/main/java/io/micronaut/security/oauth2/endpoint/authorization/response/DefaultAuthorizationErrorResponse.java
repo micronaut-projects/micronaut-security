@@ -66,12 +66,9 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
     @NonNull
     static ErrorCode getError(ConvertibleMultiValues<String> responseData) {
         String name = responseData.get(JSON_KEY_ERROR);
-        if (name != null) {
-            name = name.toUpperCase(Locale.ENGLISH);
-        }
         try {
             if (name != null) {
-                return AuthorizationErrorCode.valueOf(name);
+                return AuthorizationErrorCode.valueOf(name.toUpperCase(Locale.ENGLISH));
             }
         } catch (IllegalArgumentException e) {
             LOG.trace("{} not found in enum AuthorizationErrorCode", name);
