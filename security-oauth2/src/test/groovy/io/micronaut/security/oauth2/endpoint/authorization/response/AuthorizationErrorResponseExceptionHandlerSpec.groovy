@@ -7,6 +7,7 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
@@ -21,6 +22,19 @@ import io.micronaut.security.rules.SecurityRule
 import spock.lang.Specification
 
 class AuthorizationErrorResponseExceptionHandlerSpec extends Specification {
+
+    void "deprecated constructor does not crash"() {
+        given:
+        def request = Mock(HttpRequest)
+        def authorizationErrorResponse = Mock(AuthorizationErrorResponse)
+        AuthorizationErrorResponseException ex = new AuthorizationErrorResponseException(authorizationErrorResponse)
+
+        when:
+        MutableHttpResponse response = new AuthorizationErrorResponseExceptionHandler().handle(request, ex)
+
+        then:
+        HttpStatus.BAD_REQUEST == response.getStatus()
+    }
 
     void "OAuth 2.0 cancel redirects to login failed"() {
         given:

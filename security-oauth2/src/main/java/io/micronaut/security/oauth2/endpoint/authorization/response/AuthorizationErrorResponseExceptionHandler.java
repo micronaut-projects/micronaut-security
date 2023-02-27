@@ -16,6 +16,7 @@
 package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -43,9 +44,14 @@ import java.net.URISyntaxException;
 @Singleton
 public class AuthorizationErrorResponseExceptionHandler implements ExceptionHandler<AuthorizationErrorResponseException, MutableHttpResponse<?>> {
     private static final Logger LOG = LoggerFactory.getLogger(AuthorizationErrorResponseExceptionHandler.class);
+
+    @Nullable
     private final RedirectConfiguration redirectConfiguration;
+
+    @Nullable
     private final RedirectService redirectService;
 
+    @Nullable
     private final ErrorResponseProcessor<?> errorResponseProcessor;
 
     /**
@@ -55,9 +61,9 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
      * @param errorResponseProcessor Error Response Processor
      */
     @Inject
-    public AuthorizationErrorResponseExceptionHandler(RedirectConfiguration redirectConfiguration,
-                                                      RedirectService redirectService,
-                                                      ErrorResponseProcessor<?> errorResponseProcessor) {
+    public AuthorizationErrorResponseExceptionHandler(@Nullable RedirectConfiguration redirectConfiguration,
+                                                      @Nullable RedirectService redirectService,
+                                                      @Nullable ErrorResponseProcessor<?> errorResponseProcessor) {
         this.redirectConfiguration = redirectConfiguration;
         this.redirectService = redirectService;
         this.errorResponseProcessor = errorResponseProcessor;
@@ -70,11 +76,17 @@ public class AuthorizationErrorResponseExceptionHandler implements ExceptionHand
      */
     @Deprecated
     public AuthorizationErrorResponseExceptionHandler() {
-        this(null,  new DefaultRedirectService(null, () -> null), null);
+        this(null,  null, null);
     }
 
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthorizationErrorResponseException exception) {
+        if (this.redirectConfiguration == null ||
+            this.redirectService == null ||
+            this.errorResponseProcessor == null) {
+            return HttpResponse.badRequest(exception.getAuthorizationErrorResponse());
+        }
+
         if (!shouldRedirect(request, exception)) {
             return httpResponseWithStatus(request, exception);
         }
