@@ -24,9 +24,13 @@ dependencies {
     testImplementation(mnMultitenancy.micronaut.multitenancy)
     testImplementation(mnViews.micronaut.views.velocity)
     testRuntimeOnly(libs.velocity.engine.core)
+
     testImplementation(mn.snakeyaml)
     testImplementation(mn.micronaut.websocket)
     testImplementation(mn.groovy.json)
+
+    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.testcontainers)
 }
 
 test {

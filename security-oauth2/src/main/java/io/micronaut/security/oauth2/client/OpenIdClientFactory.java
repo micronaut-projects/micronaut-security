@@ -171,5 +171,4 @@ class OpenIdClientFactory {
             providerMetadata == null ? null : providerMetadata.getRequestObjectEncryptionEncValuesSupported(),
             providerMetadata == null ? null : providerMetadata.getCheckSessionIframe());
     }
-
 }

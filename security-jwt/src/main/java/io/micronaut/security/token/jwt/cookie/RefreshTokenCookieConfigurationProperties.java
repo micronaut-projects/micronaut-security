@@ -18,6 +18,7 @@ package io.micronaut.security.token.jwt.cookie;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.Secondary;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
@@ -35,6 +36,7 @@ import java.util.Optional;
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Requires(property = RefreshTokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @ConfigurationProperties(RefreshTokenCookieConfigurationProperties.PREFIX)
+@Secondary
 public class RefreshTokenCookieConfigurationProperties extends AbstractAccessTokenCookieConfigurationProperties implements RefreshTokenCookieConfiguration {
 
     public static final String PREFIX = TokenConfigurationProperties.PREFIX + ".refresh.cookie";

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.micronaut.core.annotation.ReflectiveAccess;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import java.util.Map;
  * @see <a href="https://tools.ietf.org/html/rfc7662#section-2.2">RFC7622 Introspection Response</a>
  * @author Sergio del Amo
  */
+@ReflectiveAccess
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Serdeable
 public class IntrospectionResponse {

@@ -21,12 +21,14 @@ import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenari
 import io.micronaut.security.utils.BaseUrlUtils
 import io.micronaut.security.utils.HtmlUtils
 import jakarta.inject.Singleton
+import org.testcontainers.DockerClientFactory
 import spock.lang.AutoCleanup
 import spock.lang.IgnoreIf
 import spock.lang.Shared
 
 import java.security.Principal
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class JwtCookiePriorLoginSpec extends GebSpec {
     @AutoCleanup
     @Shared

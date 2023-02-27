@@ -57,7 +57,7 @@ public class DefaultOauthAuthorizationResponseHandler implements OauthAuthorizat
      * @param stateValidator      The state validator
      * @param pkcePersistence     The PKCE Persistence
      */
-    DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
+    public DefaultOauthAuthorizationResponseHandler(TokenEndpointClient tokenEndpointClient,
                                              @Nullable StateValidator stateValidator,
                                              @Nullable PkcePersistence pkcePersistence) {
         this.tokenEndpointClient = tokenEndpointClient;

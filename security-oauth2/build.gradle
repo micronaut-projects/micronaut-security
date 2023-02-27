@@ -22,6 +22,7 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(libs.javax.activation) // Java 11
     testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.testcontainers)
     testImplementation(libs.groovy.json)
     testImplementation project(":security-jwt")
     testImplementation project(":test-suite-utils")

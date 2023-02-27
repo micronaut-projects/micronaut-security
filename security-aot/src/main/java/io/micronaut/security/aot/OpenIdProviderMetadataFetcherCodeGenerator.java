@@ -16,6 +16,7 @@
 package io.micronaut.security.aot;
 
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -116,48 +117,48 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("create")
                 .returns(DefaultOpenIdProviderMetadata.class)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addStatement("$T metadata = new $T()", DefaultOpenIdProviderMetadata.class, DefaultOpenIdProviderMetadata.class);
-        addStringSetterStatement(methodBuilder, "setUserinfoEndpoint", defaultOpenIdProviderMetadata.getUserinfoEndpoint());
-        addBooleanSetterStatement(methodBuilder, "setRequireRequestUriRegistration", defaultOpenIdProviderMetadata.getRequireRequestUriRegistration());
-        addStringSetterStatement(methodBuilder, "setAuthorizationEndpoint", defaultOpenIdProviderMetadata.getAuthorizationEndpoint());
-        addListStringSetterStatement(methodBuilder, "userinfoEncryptionEncValuesSupported", "setUserinfoEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getUserinfoEncryptionEncValuesSupported());
-        addListStringSetterStatement(methodBuilder, "idTokenEncryptionEncValuesSupported", "setIdTokenEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getIdTokenEncryptionEncValuesSupported());
-        addListStringSetterStatement(methodBuilder, "userinfoEncryptionAlgValuesSupported", "setUserinfoEncryptionAlgValuesSupported", defaultOpenIdProviderMetadata.getUserInfoEncryptionAlgValuesSupported());
-        addListStringSetterStatement(methodBuilder, "idTokenSigningAlgValuesSupported", "setIdTokenSigningAlgValuesSupported", defaultOpenIdProviderMetadata.getIdTokenSigningAlgValuesSupported());
-        addStringSetterStatement(methodBuilder, "setIssuer", defaultOpenIdProviderMetadata.getIssuer());
-        addStringSetterStatement(methodBuilder, "setJwksUri", defaultOpenIdProviderMetadata.getJwksUri());
-        addListStringSetterStatement(methodBuilder, "responseTypesSupported", "setResponseTypesSupported", defaultOpenIdProviderMetadata.getResponseTypesSupported());
-        addListStringSetterStatement(methodBuilder, "scopesSupported", "setScopesSupported", defaultOpenIdProviderMetadata.getScopesSupported());
-        addListStringSetterStatement(methodBuilder, "subjectTypesSupported", "setSubjectTypesSupported", defaultOpenIdProviderMetadata.getSubjectTypesSupported());
-        addStringSetterStatement(methodBuilder, "setTokenEndpoint", defaultOpenIdProviderMetadata.getTokenEndpoint());
-        addListStringSetterStatement(methodBuilder, "tokenEndpointAuthSigningAlgValuesSupported", "setTokenEndpointAuthSigningAlgValuesSupported", defaultOpenIdProviderMetadata.getTokenEndpointAuthSigningAlgValuesSupported());
-        addListStringSetterStatement(methodBuilder, "displayValuesSupported", "setDisplayValuesSupported", defaultOpenIdProviderMetadata.getDisplayValuesSupported());
-        addListStringSetterStatement(methodBuilder, "claimTypesSupported", "setClaimTypesSupported", defaultOpenIdProviderMetadata.getClaimTypesSupported());
-        addListStringSetterStatement(methodBuilder, "tokenEndpointAuthMethodsSupported", "setTokenEndpointAuthMethodsSupported", defaultOpenIdProviderMetadata.getTokenEndpointAuthMethodsSupported());
-        addListStringSetterStatement(methodBuilder, "responseModesSupported", "setResponseModesSupported", defaultOpenIdProviderMetadata.getResponseModesSupported());
-        addListStringSetterStatement(methodBuilder, "acrValuesSupported", "setAcrValuesSupported", defaultOpenIdProviderMetadata.getAcrValuesSupported());
-        addListStringSetterStatement(methodBuilder, "grantTypesSupported", "setGrantTypesSupported", defaultOpenIdProviderMetadata.getGrantTypesSupported());
-        addStringSetterStatement(methodBuilder, "setRegistrationEndpoint", defaultOpenIdProviderMetadata.getRegistrationEndpoint());
-        addStringSetterStatement(methodBuilder, "setServiceDocumentation", defaultOpenIdProviderMetadata.getServiceDocumentation());
-        addListStringSetterStatement(methodBuilder, "claimsLocalesSupported", "setClaimsLocalesSupported", defaultOpenIdProviderMetadata.getClaimsLocalesSupported());
-        addListStringSetterStatement(methodBuilder, "uriLocalesSupported", "setUriLocalesSupported", defaultOpenIdProviderMetadata.getUriLocalesSupported());
-        addBooleanSetterStatement(methodBuilder, "setClaimsParameterSupported", defaultOpenIdProviderMetadata.getClaimsParameterSupported());
-        addListStringSetterStatement(methodBuilder, "claimsSupported", "setClaimsSupported", defaultOpenIdProviderMetadata.getClaimsSupported());
-        addListStringSetterStatement(methodBuilder, "codeChallengeMethodsSupported", "setCodeChallengeMethodsSupported", defaultOpenIdProviderMetadata.getCodeChallengeMethodsSupported());
-        addStringSetterStatement(methodBuilder, "setIntrospectionEndpoint", defaultOpenIdProviderMetadata.getIntrospectionEndpoint());
-        addListStringSetterStatement(methodBuilder, "introspectionEndpointAuthMethodsSupported", "setIntrospectionEndpointAuthMethodsSupported", defaultOpenIdProviderMetadata.getIntrospectionEndpointAuthMethodsSupported());
-        addStringSetterStatement(methodBuilder, "setRevocationEndpoint", defaultOpenIdProviderMetadata.getRevocationEndpoint());
-        addListStringSetterStatement(methodBuilder, "revocationEndpointAuthMethodsSupported", "setRevocationEndpointAuthMethodsSupported", defaultOpenIdProviderMetadata.getRevocationEndpointAuthMethodsSupported());
-        addStringSetterStatement(methodBuilder, "setCheckSessionIframe", defaultOpenIdProviderMetadata.getCheckSessionIframe());
-        addStringSetterStatement(methodBuilder, "setEndSessionEndpoint", defaultOpenIdProviderMetadata.getEndSessionEndpoint());
-        addBooleanSetterStatement(methodBuilder, "setRequestUriParameterSupported", defaultOpenIdProviderMetadata.getRequestUriParameterSupported());
-        addStringSetterStatement(methodBuilder, "setOpPolicyUri", defaultOpenIdProviderMetadata.getOpPolicyUri());
-        addStringSetterStatement(methodBuilder, "setOpTosUri", defaultOpenIdProviderMetadata.getOpTosUri());
-        addBooleanSetterStatement(methodBuilder, "setRequestParameterSupported", defaultOpenIdProviderMetadata.getRequestParameterSupported());
-        addListStringSetterStatement(methodBuilder, "requestObjectEncryptionAlgValuesSupported", "setRequestObjectEncryptionAlgValuesSupported", defaultOpenIdProviderMetadata.getRequestObjectEncryptionAlgValuesSupported());
-        addListStringSetterStatement(methodBuilder, "requestObjectEncryptionEncValuesSupported", "setRequestObjectEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getRequestObjectEncryptionEncValuesSupported());
-        addListStringSetterStatement(methodBuilder, "requestObjectSigningAlgValuesSupported", "setRequestObjectSigningAlgValuesSupported", defaultOpenIdProviderMetadata.getRequestObjectSigningAlgValuesSupported());
-        return methodBuilder.addStatement("return metadata").build();
+                .addStatement("$T builder = $T().builder()", DefaultOpenIdProviderMetadata.Builder.class, DefaultOpenIdProviderMetadata.class);
+        addStringSetterStatement(methodBuilder, "userinfoEndpoint", defaultOpenIdProviderMetadata.getUserinfoEndpoint());
+        addBooleanSetterStatement(methodBuilder, "requireRequestUriRegistration", defaultOpenIdProviderMetadata.getRequireRequestUriRegistration());
+        addStringSetterStatement(methodBuilder, "authorizationEndpoint", defaultOpenIdProviderMetadata.getAuthorizationEndpoint());
+        addListStringSetterStatement(methodBuilder, "userinfoEncryptionEncValuesSupported", "userinfoEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getUserinfoEncryptionEncValuesSupported());
+        addListStringSetterStatement(methodBuilder, "idTokenEncryptionEncValuesSupported", "idTokenEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getIdTokenEncryptionEncValuesSupported());
+        addListStringSetterStatement(methodBuilder, "userinfoEncryptionAlgValuesSupported", "userinfoEncryptionAlgValuesSupported", defaultOpenIdProviderMetadata.getUserInfoEncryptionAlgValuesSupported());
+        addListStringSetterStatement(methodBuilder, "idTokenSigningAlgValuesSupported", "idTokenSigningAlgValuesSupported", defaultOpenIdProviderMetadata.getIdTokenSigningAlgValuesSupported());
+        addStringSetterStatement(methodBuilder, "issuer", defaultOpenIdProviderMetadata.getIssuer());
+        addStringSetterStatement(methodBuilder, "jwksUri", defaultOpenIdProviderMetadata.getJwksUri());
+        addListStringSetterStatement(methodBuilder, "responseTypesSupported", "responseTypesSupported", defaultOpenIdProviderMetadata.getResponseTypesSupported());
+        addListStringSetterStatement(methodBuilder, "scopesSupported", "scopesSupported", defaultOpenIdProviderMetadata.getScopesSupported());
+        addListStringSetterStatement(methodBuilder, "subjectTypesSupported", "subjectTypesSupported", defaultOpenIdProviderMetadata.getSubjectTypesSupported());
+        addStringSetterStatement(methodBuilder, "tokenEndpoint", defaultOpenIdProviderMetadata.getTokenEndpoint());
+        addListStringSetterStatement(methodBuilder, "tokenEndpointAuthSigningAlgValuesSupported", "tokenEndpointAuthSigningAlgValuesSupported", defaultOpenIdProviderMetadata.getTokenEndpointAuthSigningAlgValuesSupported());
+        addListStringSetterStatement(methodBuilder, "displayValuesSupported", "displayValuesSupported", defaultOpenIdProviderMetadata.getDisplayValuesSupported());
+        addListStringSetterStatement(methodBuilder, "claimTypesSupported", "claimTypesSupported", defaultOpenIdProviderMetadata.getClaimTypesSupported());
+        addListStringSetterStatement(methodBuilder, "tokenEndpointAuthMethodsSupported", "tokenEndpointAuthMethodsSupported", defaultOpenIdProviderMetadata.getTokenEndpointAuthMethodsSupported());
+        addListStringSetterStatement(methodBuilder, "responseModesSupported", "responseModesSupported", defaultOpenIdProviderMetadata.getResponseModesSupported());
+        addListStringSetterStatement(methodBuilder, "acrValuesSupported", "acrValuesSupported", defaultOpenIdProviderMetadata.getAcrValuesSupported());
+        addListStringSetterStatement(methodBuilder, "grantTypesSupported", "grantTypesSupported", defaultOpenIdProviderMetadata.getGrantTypesSupported());
+        addStringSetterStatement(methodBuilder, "registrationEndpoint", defaultOpenIdProviderMetadata.getRegistrationEndpoint());
+        addStringSetterStatement(methodBuilder, "serviceDocumentation", defaultOpenIdProviderMetadata.getServiceDocumentation());
+        addListStringSetterStatement(methodBuilder, "claimsLocalesSupported", "claimsLocalesSupported", defaultOpenIdProviderMetadata.getClaimsLocalesSupported());
+        addListStringSetterStatement(methodBuilder, "uriLocalesSupported", "uriLocalesSupported", defaultOpenIdProviderMetadata.getUriLocalesSupported());
+        addBooleanSetterStatement(methodBuilder, "claimsParameterSupported", defaultOpenIdProviderMetadata.getClaimsParameterSupported());
+        addListStringSetterStatement(methodBuilder, "claimsSupported", "claimsSupported", defaultOpenIdProviderMetadata.getClaimsSupported());
+        addListStringSetterStatement(methodBuilder, "codeChallengeMethodsSupported", "codeChallengeMethodsSupported", defaultOpenIdProviderMetadata.getCodeChallengeMethodsSupported());
+        addStringSetterStatement(methodBuilder, "introspectionEndpoint", defaultOpenIdProviderMetadata.getIntrospectionEndpoint());
+        addListStringSetterStatement(methodBuilder, "introspectionEndpointAuthMethodsSupported", "introspectionEndpointAuthMethodsSupported", defaultOpenIdProviderMetadata.getIntrospectionEndpointAuthMethodsSupported());
+        addStringSetterStatement(methodBuilder, "revocationEndpoint", defaultOpenIdProviderMetadata.getRevocationEndpoint());
+        addListStringSetterStatement(methodBuilder, "revocationEndpointAuthMethodsSupported", "revocationEndpointAuthMethodsSupported", defaultOpenIdProviderMetadata.getRevocationEndpointAuthMethodsSupported());
+        addStringSetterStatement(methodBuilder, "checkSessionIframe", defaultOpenIdProviderMetadata.getCheckSessionIframe());
+        addStringSetterStatement(methodBuilder, "endSessionEndpoint", defaultOpenIdProviderMetadata.getEndSessionEndpoint());
+        addBooleanSetterStatement(methodBuilder, "requestUriParameterSupported", defaultOpenIdProviderMetadata.getRequestUriParameterSupported());
+        addStringSetterStatement(methodBuilder, "opPolicyUri", defaultOpenIdProviderMetadata.getOpPolicyUri());
+        addStringSetterStatement(methodBuilder, "opTosUri", defaultOpenIdProviderMetadata.getOpTosUri());
+        addBooleanSetterStatement(methodBuilder, "requestParameterSupported", defaultOpenIdProviderMetadata.getRequestParameterSupported());
+        addListStringSetterStatement(methodBuilder, "requestObjectEncryptionAlgValuesSupported", "requestObjectEncryptionAlgValuesSupported", defaultOpenIdProviderMetadata.getRequestObjectEncryptionAlgValuesSupported());
+        addListStringSetterStatement(methodBuilder, "requestObjectEncryptionEncValuesSupported", "requestObjectEncryptionEncValuesSupported", defaultOpenIdProviderMetadata.getRequestObjectEncryptionEncValuesSupported());
+        addListStringSetterStatement(methodBuilder, "requestObjectSigningAlgValuesSupported", "requestObjectSigningAlgValuesSupported", defaultOpenIdProviderMetadata.getRequestObjectSigningAlgValuesSupported());
+        return methodBuilder.addStatement("return builder.build()").build();
     }
 
     private void addStringSetterStatement(@NonNull MethodSpec.Builder methodBuilder,

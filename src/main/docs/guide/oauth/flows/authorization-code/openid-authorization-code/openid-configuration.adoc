@@ -3,24 +3,22 @@ The requirements to allow authorization with an OpenID provider are:
 * Configuration of the client id and secret
 * Configuration of the issuer
 
-[source,yaml]
-.src/main/resources/application.yml
+[configuration]
 ----
 micronaut:
     security:
         oauth2:
             clients:
-                okta: // <1>
-                    client-id: <<my client id>> // <2>
-                    client-secret: <<my client secret>>  // <3>
+                okta:
+                    client-id: <<my client id>>
+                    client-secret: <<my client secret>>
                     openid:
-                        issuer: <<my openid issuer>> // <4>
+                        issuer: <<my openid issuer>>
 ----
 
-<1> Configure a client. The name here is arbitrary
-<2> The client id
-<3> The client secret
-<4> The OpenID provider issuer
+- Configure a client. The name `okta` is arbitrary
+- Provide values for `client-id` and `client-secret`
+- Specify an OpenID provider issuer url
 
 The issuer URL will be used to discover the endpoints exposed by the provider.
 

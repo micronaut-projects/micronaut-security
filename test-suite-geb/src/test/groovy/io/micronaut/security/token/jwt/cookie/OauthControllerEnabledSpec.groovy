@@ -20,6 +20,7 @@ import io.micronaut.web.router.RouteMatch
 import io.micronaut.web.router.Router
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Mono
 import spock.lang.AutoCleanup
 import spock.lang.IgnoreIf
@@ -27,6 +28,7 @@ import spock.lang.Shared
 
 import java.util.concurrent.ConcurrentHashMap
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OauthControllerEnabledSpec extends GebSpec {
     @AutoCleanup
     @Shared

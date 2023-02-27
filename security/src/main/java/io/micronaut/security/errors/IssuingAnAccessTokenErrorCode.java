@@ -32,7 +32,6 @@ public enum  IssuingAnAccessTokenErrorCode implements ErrorCode {
     UNAUTHORIZED_CLIENT("unauthorized_client", "The authenticated client is not authorized to use this authorization grant type."),
     UNSUPPORTED_GRANT_TYPE("unsupported_grant_type", "The authorization grant type is not supported by the authorization server.");
 
-
     private String errorCode;
     private String errorCodeDescription;
 

@@ -18,7 +18,10 @@ import io.micronaut.security.utils.BaseUrlUtils
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
 import spock.lang.Shared
+import spock.lang.Requires
+import org.testcontainers.DockerClientFactory
 
+@Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class SessionAuthenticationSpec extends GebSpec implements YamlAsciidocTagCleaner {
     @AutoCleanup
     @Shared
