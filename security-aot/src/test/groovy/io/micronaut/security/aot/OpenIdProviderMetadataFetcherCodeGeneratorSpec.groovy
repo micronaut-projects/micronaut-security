@@ -80,34 +80,34 @@ import java.util.List;
 
 public class AotOpenIdProviderMetadataFetcherCognito {
   public static DefaultOpenIdProviderMetadata create() {
-    DefaultOpenIdProviderMetadata metadata = new DefaultOpenIdProviderMetadata();
-    metadata.setUserinfoEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/userInfo");
-    metadata.setAuthorizationEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/authorize");
+    DefaultOpenIdProviderMetadata.Builder builder = DefaultOpenIdProviderMetadata.builder();
+    builder.userinfoEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/userInfo");
+    builder.authorizationEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/authorize");
     List<String> idTokenSigningAlgValuesSupported = new ArrayList<>();
     idTokenSigningAlgValuesSupported.add("RS256");
-    metadata.setIdTokenSigningAlgValuesSupported(idTokenSigningAlgValuesSupported);
-    metadata.setIssuer("https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ");
-    metadata.setJwksUri("https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ/.well-known/jwks.json");
+    builder.idTokenSigningAlgValuesSupported(idTokenSigningAlgValuesSupported);
+    builder.issuer("https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ");
+    builder.jwksUri("https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4OqDoWVrZ/.well-known/jwks.json");
     List<String> responseTypesSupported = new ArrayList<>();
     responseTypesSupported.add("code");
     responseTypesSupported.add("token");
-    metadata.setResponseTypesSupported(responseTypesSupported);
+    builder.responseTypesSupported(responseTypesSupported);
     List<String> scopesSupported = new ArrayList<>();
     scopesSupported.add("openid");
     scopesSupported.add("email");
     scopesSupported.add("phone");
     scopesSupported.add("profile");
-    metadata.setScopesSupported(scopesSupported);
+    builder.scopesSupported(scopesSupported);
     List<String> subjectTypesSupported = new ArrayList<>();
     subjectTypesSupported.add("public");
-    metadata.setSubjectTypesSupported(subjectTypesSupported);
-    metadata.setTokenEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/token");
+    builder.subjectTypesSupported(subjectTypesSupported);
+    builder.tokenEndpoint("https://auth-groovycalamari.auth.us-east-1.amazoncognito.com/oauth2/token");
     List<String> tokenEndpointAuthMethodsSupported = new ArrayList<>();
     tokenEndpointAuthMethodsSupported.add("client_secret_basic");
     tokenEndpointAuthMethodsSupported.add("client_secret_post");
-    metadata.setTokenEndpointAuthMethodsSupported(tokenEndpointAuthMethodsSupported);
-    metadata.setClaimsParameterSupported(false);
-    return metadata;
+    builder.tokenEndpointAuthMethodsSupported(tokenEndpointAuthMethodsSupported);
+    builder.claimsParameterSupported(false);
+    return builder.build();
   }
 }"""
                 compiles()
