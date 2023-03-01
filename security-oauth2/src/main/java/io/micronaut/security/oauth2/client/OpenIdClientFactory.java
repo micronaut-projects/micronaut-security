@@ -160,6 +160,7 @@ class OpenIdClientFactory {
             providerMetadata == null ? null : providerMetadata.getIdTokenEncryptionEncValuesSupported(),
             providerMetadata == null ? null : providerMetadata.getDisplayValuesSupported(),
             providerMetadata == null ? null : providerMetadata.getClaimTypesSupported(),
+            providerMetadata == null ? null : providerMetadata.getClaimsParameterSupported(),
             providerMetadata == null ? null : providerMetadata.getOpTosUri(),
             providerMetadata == null ? null : providerMetadata.getOpPolicyUri(),
             providerMetadata == null ? null : providerMetadata.getUriLocalesSupported(),

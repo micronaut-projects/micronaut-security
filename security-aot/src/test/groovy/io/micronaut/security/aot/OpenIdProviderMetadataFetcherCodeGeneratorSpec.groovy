@@ -107,7 +107,7 @@ public class AotOpenIdProviderMetadataFetcherCognito {
     tokenEndpointAuthMethodsSupported.add("client_secret_post");
     builder.tokenEndpointAuthMethodsSupported(tokenEndpointAuthMethodsSupported);
     builder.claimsParameterSupported(false);
-    return metadata;
+    return builder.build();
   }
 }"""
                 compiles()

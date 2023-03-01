@@ -17,14 +17,13 @@ package io.micronaut.security.oauth2.client;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
 import io.micronaut.serde.annotation.Serdeable;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @see <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OpenID connect Discovery Spec</a>
@@ -125,7 +124,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     private final List<String> claimTypesSupported;
 
     @Nullable
-    private final Boolean claimsParameterSupported = Boolean.FALSE;
+    private final Boolean claimsParameterSupported;
 
     @Nullable
     private final String opTosUri;
@@ -157,6 +156,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     @Nullable
     private final String checkSessionIframe;
 
+    @SuppressWarnings("ParameterNumber")
     public DefaultOpenIdProviderMetadata(@Nullable String authorizationEndpoint,
                                          @NonNull List<String> idTokenSigningAlgValuesSupported,
                                          @NonNull String issuer,
@@ -186,6 +186,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
                                          @Nullable List<String> idTokenEncryptionEncValuesSupported,
                                          @Nullable List<String> displayValuesSupported,
                                          @Nullable List<String> claimTypesSupported,
+                                         @Nullable Boolean claimsParameterSupported,
                                          @Nullable String opTosUri,
                                          @Nullable String opPolicyUri,
                                          @Nullable List<String> uriLocalesSupported,
@@ -225,6 +226,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         this.idTokenEncryptionEncValuesSupported = idTokenEncryptionEncValuesSupported;
         this.displayValuesSupported = displayValuesSupported;
         this.claimTypesSupported = claimTypesSupported;
+        this.claimsParameterSupported = claimsParameterSupported  != null ? claimsParameterSupported : Boolean.FALSE;
         this.opTosUri = opTosUri;
         this.opPolicyUri = opPolicyUri;
         this.uriLocalesSupported = uriLocalesSupported;
@@ -607,6 +609,10 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         private List<String> displayValuesSupported;
         @Nullable
         private List<String> claimTypesSupported;
+
+        @NonNull
+        private Boolean claimsParameterSupported = Boolean.FALSE;
+
         @Nullable
         private String opTosUri;
         @Nullable
@@ -950,6 +956,19 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
 
         /**
          *
+         * @param claimsParameterSupported Boolean value specifying whether the OP supports use of the claims parameter.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder claimsParameterSupported(@NonNull Boolean claimsParameterSupported) {
+            this.claimsParameterSupported = claimsParameterSupported;
+            return this;
+        }
+
+
+
+        /**
+         *
          * @param opTosUri URL that the OpenID Provider provides to the person registering the Client to read about OpenID Provider's terms of service.
          * @return The Builder
          */
@@ -1065,16 +1084,16 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         @NonNull
         public DefaultOpenIdProviderMetadata build() {
             return new DefaultOpenIdProviderMetadata(authorizationEndpoint,
-                Objects.requireNonNull(idTokenSigningAlgValuesSupported),
-                Objects.requireNonNull(issuer),
-                Objects.requireNonNull(jwksUri),
+                idTokenSigningAlgValuesSupported,
+                issuer,
+                jwksUri,
                 acrValuesSupported,
                 responseTypesSupported,
                 responseModesSupported,
                 scopesSupported,
                 grantTypesSupported,
-                Objects.requireNonNull(subjectTypesSupported),
-                Objects.requireNonNull(tokenEndpoint),
+                subjectTypesSupported,
+                tokenEndpoint,
                 tokenEndpointAuthMethodsSupported,
                 userinfoEndpoint,
                 registrationEndpoint,
@@ -1093,6 +1112,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
                 idTokenEncryptionEncValuesSupported,
                 displayValuesSupported,
                 claimTypesSupported,
+                claimsParameterSupported,
                 opTosUri,
                 opPolicyUri,
                 uriLocalesSupported,

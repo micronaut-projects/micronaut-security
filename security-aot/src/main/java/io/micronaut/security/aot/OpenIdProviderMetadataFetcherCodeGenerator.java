@@ -16,7 +16,6 @@
 package io.micronaut.security.aot;
 
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -58,7 +57,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
     public static final String SECURITY_AOT_OPENID_CONFIGURATION_MODULE_ID = "micronaut.security.openid-configuration";
     private static final Logger LOG = LoggerFactory.getLogger(OpenIdProviderMetadataFetcherCodeGenerator.class);
     private static final ParameterizedTypeName SUPPLIER_OF_METADATA = ParameterizedTypeName.get(Supplier.class, DefaultOpenIdProviderMetadata.class);
-    private static final String METADATA = "metadata.";
+    private static final String BUILDER = "builder.";
 
     @Override
     public void generate(@NonNull AOTContext context) {
@@ -117,7 +116,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("create")
                 .returns(DefaultOpenIdProviderMetadata.class)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addStatement("$T builder = $T().builder()", DefaultOpenIdProviderMetadata.Builder.class, DefaultOpenIdProviderMetadata.class);
+                .addStatement("$T builder = $T.builder()", DefaultOpenIdProviderMetadata.Builder.class, DefaultOpenIdProviderMetadata.class);
         addStringSetterStatement(methodBuilder, "userinfoEndpoint", defaultOpenIdProviderMetadata.getUserinfoEndpoint());
         addBooleanSetterStatement(methodBuilder, "requireRequestUriRegistration", defaultOpenIdProviderMetadata.getRequireRequestUriRegistration());
         addStringSetterStatement(methodBuilder, "authorizationEndpoint", defaultOpenIdProviderMetadata.getAuthorizationEndpoint());
@@ -165,7 +164,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                                           @NonNull String setter,
                                           @Nullable String value) {
         if (value != null) {
-            methodBuilder.addStatement(METADATA + setter + "($S)", value);
+            methodBuilder.addStatement(BUILDER + setter + "($S)", value);
         }
     }
 
@@ -173,7 +172,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
                                            @NonNull String setter,
                                            @Nullable Boolean value) {
         if (value != null) {
-            methodBuilder.addStatement(METADATA + setter + "($L)", value);
+            methodBuilder.addStatement(BUILDER + setter + "($L)", value);
         }
     }
 
@@ -186,7 +185,7 @@ public class OpenIdProviderMetadataFetcherCodeGenerator extends AbstractCodeGene
             for (String value : values) {
                 methodBuilder.addStatement(listVariableName + ".add($S)", value);
             }
-            methodBuilder.addStatement(METADATA + setter + "(" + listVariableName + ")");
+            methodBuilder.addStatement(BUILDER + setter + "(" + listVariableName + ")");
         }
     }
 }
