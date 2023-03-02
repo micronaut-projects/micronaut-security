@@ -8,7 +8,7 @@ dependencies {
     implementation(mnSerde.micronaut.serde.jackson)
     api(mn.micronaut.http)
     api(mn.micronaut.http.server)
-    api(projects.security)
+    api(projects.micronautSecurity)
     api(libs.managed.nimbus.jose.jwt)
 
     implementation(mnReactor.micronaut.reactor)

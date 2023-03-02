@@ -7,7 +7,7 @@ dependencies {
     annotationProcessor(platform(mn.micronaut.core.bom))
     annotationProcessor(mn.micronaut.inject.java)
     implementation(platform(mn.micronaut.core.bom))
-    implementation(projects.securityJwt)
-    implementation(projects.securityOauth2)
+    implementation(projects.micronautSecurityJwt)
+    implementation(projects.micronautSecurityOauth2)
     implementation(projects.testSuiteUtils)
 }

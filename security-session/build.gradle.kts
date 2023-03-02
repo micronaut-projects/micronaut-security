@@ -6,7 +6,7 @@ dependencies {
     annotationProcessor(mn.micronaut.graal)
     api(mn.micronaut.http)
     api(mnSession.micronaut.session)
-    api(projects.security)
+    api(projects.micronautSecurity)
     api(mn.micronaut.http.server)
     implementation(libs.reactor.core)
     testImplementation(platform(libs.testcontainers.bom))

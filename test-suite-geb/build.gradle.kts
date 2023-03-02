@@ -19,9 +19,9 @@ dependencies {
     testImplementation(projects.testSuiteKeycloak16)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(projects.securityOauth2)
-    testImplementation(projects.securityJwt)
-    testImplementation(projects.securitySession)
+    testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.micronautSecuritySession)
     testImplementation(libs.geb.spock)
 
     testImplementation(platform(libs.testcontainers.bom))

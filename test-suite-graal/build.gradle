@@ -10,8 +10,8 @@ dependencies {
     testImplementation(mn.micronaut.json.core)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(projects.security)
-    testImplementation(projects.securityJwt)
+    testImplementation(projects.micronautSecurity)
+    testImplementation(projects.micronautSecurityJwt)
     testImplementation(mnTest.micronaut.test.junit5)
 }
 

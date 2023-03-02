@@ -28,9 +28,9 @@ micronaut {
 }
 
 dependencies {
-    implementation(projects.securityJwt)
-    implementation(projects.securityOauth2)
-    aotPlugins(projects.securityAot)
+    implementation(projects.micronautSecurityJwt)
+    implementation(projects.micronautSecurityOauth2)
+    aotPlugins(projects.micronautSecurityAot)
 }
 
 version = '0.1'

@@ -9,6 +9,6 @@ dependencies {
     annotationProcessor(mn.micronaut.inject.java)
     implementation(platform(mn.micronaut.core.bom))
     api(mn.micronaut.inject)
-    implementation(projects.security)
+    implementation(projects.micronautSecurity)
     implementation(mnReactor.micronaut.reactor)
 }
