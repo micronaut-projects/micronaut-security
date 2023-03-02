@@ -613,5 +613,35 @@
     "type": "io.micronaut.security.x509.$X509ConfigurationProperties$IntrospectionRef",
     "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
     "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
   }
 ]
