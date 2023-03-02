@@ -3,10 +3,8 @@ package io.micronaut.security.oauth2.endpoint.authorization.pkce
 import io.micronaut.context.exceptions.BeanInstantiationException
 import io.micronaut.core.util.StringUtils
 import io.micronaut.security.testutils.ApplicationContextSpecification
-import spock.lang.Ignore
 
 class PkceConfigurationPersistenceSpec extends ApplicationContextSpecification {
-
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
@@ -15,7 +13,6 @@ class PkceConfigurationPersistenceSpec extends ApplicationContextSpecification {
         ]
     }
 
-    @Ignore
     void "PKCEConfiguration persistence accepts only session and cookie"() {
         when:
         applicationContext.getBean(PkceConfiguration.class)
