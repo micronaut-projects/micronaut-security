@@ -99,18 +99,12 @@ class ClientCredentialsConcurrentSpec extends Specification {
 
     void "no exception for concurrent requests using client credentials"() {
         when:
-        CompletableFuture<Void> run1 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run2 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run3 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run4 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run5 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run6 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run7 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run8 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run9 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run10 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture.allOf(run1, run2, run3, run4, run5, run6, run7, run8, run9, run10)
-                .get()
+        int numberOfFutures = Runtime.getRuntime().availableProcessors() - 1
+        CompletableFuture<Void>[] futures = new CompletableFuture<Void>[numberOfFutures]
+        numberOfFutures.times {counter ->
+            futures[counter] = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
+        }
+        CompletableFuture.allOf(futures).get()
 
         then:
         noExceptionThrown()
