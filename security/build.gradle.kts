@@ -5,10 +5,10 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
-    annotationProcessor(mnValidation.micronaut.validation.processor)
     implementation(mnSerde.micronaut.serde.jackson)
     api(mn.micronaut.http)
     api(mn.micronaut.http.server)
+    annotationProcessor(mnValidation.micronaut.validation.processor)
     api(mnValidation.micronaut.validation)
     api(projects.securityAnnotations)
     implementation(libs.reactor.core)
