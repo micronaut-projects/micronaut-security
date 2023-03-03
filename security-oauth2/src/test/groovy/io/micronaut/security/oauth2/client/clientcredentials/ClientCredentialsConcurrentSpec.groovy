@@ -100,11 +100,10 @@ class ClientCredentialsConcurrentSpec extends Specification {
     void "no exception for concurrent requests using client credentials"() {
         when:
         int numberOfFutures = Runtime.getRuntime().availableProcessors() - 1
-        CompletableFuture<Void>[] futures = new CompletableFuture<Void>[numberOfFutures]
-        numberOfFutures.times {counter ->
-            futures[counter] = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
+        List<CompletableFuture<Void>> futures = (1..numberOfFutures).collect {
+            CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
         }
-        CompletableFuture.allOf(futures).get()
+        CompletableFuture.allOf(*futures).get()
 
         then:
         noExceptionThrown()
