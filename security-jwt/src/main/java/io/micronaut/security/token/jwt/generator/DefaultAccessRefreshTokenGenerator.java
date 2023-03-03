@@ -51,7 +51,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAccessRefreshTokenGenerator.class);
 
     /**
-     * Not used anymore.
+     * @deprecated Not used anymore.
      */
     @Deprecated
     protected final BeanContext beanContext;
@@ -65,7 +65,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
     protected final TokenGenerator tokenGenerator;
 
     /**
-     * Not used any more.
+     * @deprecated Not used any more.
      */
     @Deprecated
     protected final ApplicationEventPublisher<RefreshTokenGeneratedEvent> eventPublisher;
@@ -82,6 +82,7 @@ public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGen
      * @param refreshTokenGenerator The refresh token generator
      * @param claimsGenerator Claims generator
      * @param eventPublisher The Application event publisher
+     * @deprecated Use {@link DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration, TokenRenderer, TokenGenerator, RefreshTokenGenerator, RefreshTokenPersistence, RefreshTokenValidator, ClaimsGenerator, ApplicationEventPublisher, ApplicationEventPublisher)} instead.
      */
     @Deprecated
     public DefaultAccessRefreshTokenGenerator(AccessTokenConfiguration accessTokenConfiguration,
