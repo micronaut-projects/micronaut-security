@@ -6,6 +6,8 @@ dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
     implementation(mnSerde.micronaut.serde.jackson)
+    annotationProcessor(mnValidation.micronaut.validation.processor)
+    api(mnValidation.micronaut.validation)
     api(mn.micronaut.http)
     api(mn.micronaut.http.server)
     api project(":security")

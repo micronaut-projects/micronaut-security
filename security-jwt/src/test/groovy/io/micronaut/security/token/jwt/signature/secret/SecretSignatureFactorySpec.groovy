@@ -4,7 +4,6 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.exceptions.BeanInstantiationException
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration
-import spock.lang.Ignore
 import spock.lang.Specification
 
 class SecretSignatureFactorySpec extends Specification {
@@ -39,17 +38,13 @@ class SecretSignatureFactorySpec extends Specification {
         applicationContext.close()
     }
 
-    @Ignore
     void "test failing to provide a secret"() {
         when:
-        ApplicationContext context = ApplicationContext.run([
-                'micronaut.security.token.jwt.signatures.secret.generator.jws-algorithm': 'HS256'
+        ApplicationContext.run([
+                'micronaut.security.token.jwt.signatures.secret.generator.jwsAlgorithm': 'HS256'
         ])
 
         then:
         thrown(BeanInstantiationException)
-
-        cleanup:
-        context.close()
     }
 }
