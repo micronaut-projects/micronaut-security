@@ -14,8 +14,8 @@ dependencies {
     runtimeOnly(libs.logback.classic)
     testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
-    testImplementation project(":security-jwt")
-    testImplementation project(":test-suite-utils-security")
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(libs.reactor.core)
 }
 

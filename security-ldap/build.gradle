@@ -5,7 +5,7 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.graal)
 
-    api project(":security")
+    api(projects.micronautSecurity)
 
     implementation(libs.reactor.core)
     testImplementation(libs.reactor.test)
