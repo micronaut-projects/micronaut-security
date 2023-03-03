@@ -97,7 +97,6 @@ class ClientCredentialsConcurrentSpec extends Specification {
     @AutoCleanup
     BlockingHttpClient client = httpClient.toBlocking()
 
-    @IgnoreIf({ env['GITHUB_RUN_ID'] != null }) // No idea why it fails in Github Actions
     void "no exception for concurrent requests using client credentials"() {
         when:
         CompletableFuture<Void> run1 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
