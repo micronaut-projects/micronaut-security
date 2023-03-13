@@ -9,7 +9,6 @@ dependencies {
     api(projects.micronautSecurity)
     api(mn.micronaut.http.server)
     implementation(mnReactor.micronaut.reactor)
-    testImplementation(platform(libs.testcontainers.bom))
     testImplementation(libs.testcontainers)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.inject.groovy)

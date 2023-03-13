@@ -32,7 +32,6 @@ dependencies {
     testImplementation(mn.micronaut.websocket)
     testImplementation(mn.groovy.json)
 
-    testImplementation(platform(libs.testcontainers.bom))
     testImplementation(libs.testcontainers)
 }
 

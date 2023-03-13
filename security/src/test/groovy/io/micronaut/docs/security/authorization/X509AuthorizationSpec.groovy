@@ -13,6 +13,7 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.rules.SecurityRule
 import io.netty.handler.ssl.util.SelfSignedCertificate
 import spock.lang.Specification
+import spock.util.environment.OperatingSystem
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -42,16 +43,21 @@ class X509AuthorizationSpec extends Specification {
             ts.store(os, "123456".toCharArray())
         }
 
+        def filePathPrefix = 'file://'
+        if (OperatingSystem.current.family == OperatingSystem.Family.WINDOWS) {
+            filePathPrefix = 'file:'
+        }
+
         EmbeddedServer server = ApplicationContext.run(EmbeddedServer, [
                 'spec.name': X509AuthorizationSpec.simpleName,
                 'micronaut.ssl.enabled': true,
                 'micronaut.server.ssl.port': -1,
                 'micronaut.server.ssl.build-self-signed': false,
                 'micronaut.ssl.client-authentication': "need",
-                'micronaut.ssl.key-store.path': 'file://' + keyStorePath.toString(),
+                'micronaut.ssl.key-store.path': filePathPrefix + keyStorePath.toString().replaceAll("\\\\", "/"),
                 'micronaut.ssl.key-store.type': 'PKCS12',
                 'micronaut.ssl.key-store.password': '',
-                'micronaut.ssl.trust-store.path': 'file://' + trustStorePath.toString(),
+                'micronaut.ssl.trust-store.path': filePathPrefix + trustStorePath.toString().replaceAll("\\\\", "/"),
                 'micronaut.ssl.trust-store.type': 'JKS',
                 'micronaut.ssl.trust-store.password': '123456'])
 
