@@ -50,10 +50,10 @@ import java.util.concurrent.CompletableFuture
 class ClientCredentialsConcurrentSpec extends Specification {
 
     @Shared
-    int authServerPort = SocketUtils.findAvailableTcpPort()
+    int authServerPort = SocketUtils.findAvailableTcpPort(60000, 65535)
 
     @Shared
-    int resourceServerPort = SocketUtils.findAvailableTcpPort()
+    int resourceServerPort = SocketUtils.findAvailableTcpPort(60000, 65535)
 
     @Shared
     @AutoCleanup

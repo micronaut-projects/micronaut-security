@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.kapt)
@@ -8,12 +10,11 @@ dependencies {
     kaptTest(platform(mn.micronaut.core.bom))
     kaptTest(mn.micronaut.inject.java)
 
-    testImplementation(platform(mn.micronaut.core.bom))
-    testImplementation(libs.junit.jupiter.api)
-    testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
-
     testRuntimeOnly(mn.logback.classic)
+
+    testImplementation(platform(mn.micronaut.core.bom))
+    testImplementation(mnTest.micronaut.test.junit5)
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
@@ -22,9 +23,9 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(libs.kotlin.stdlib.jdk8)
-    testImplementation(libs.reactor.core)
-
+    testImplementation(mn.reactor)
     testImplementation(mn.jackson.databind)
+
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
 }
 
@@ -33,8 +34,8 @@ tasks.named('test') {
 }
 
 compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = '17'
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
         javaParameters = true
     }
 }

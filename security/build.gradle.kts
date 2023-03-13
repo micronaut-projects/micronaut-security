@@ -11,7 +11,7 @@ dependencies {
     annotationProcessor(mnValidation.micronaut.validation.processor)
     api(mnValidation.micronaut.validation)
     api(projects.micronautSecurityAnnotations)
-    implementation(libs.reactor.core)
+    implementation(mn.reactor)
     compileOnly(mn.micronaut.management)
     compileOnly(mn.jackson.databind)
     testImplementation(mnReactor.micronaut.reactor)

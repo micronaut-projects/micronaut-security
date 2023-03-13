@@ -16,15 +16,14 @@ dependencies {
     implementation(mn.micronaut.http.client)
     compileOnly(mn.jackson.databind)
     compileOnly(mnSession.micronaut.session)
-    implementation(libs.reactor.core)
+    implementation(mn.reactor)
 
     testImplementation(projects.micronautSecuritySession)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(libs.javax.activation) // Java 11
-    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.angus.activation)
     testImplementation(libs.testcontainers)
-    testImplementation(libs.groovy.json)
+    testImplementation(mn.groovy.json)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)

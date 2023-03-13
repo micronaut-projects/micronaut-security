@@ -9,15 +9,10 @@ dependencies {
 
     testCompileOnly(mn.micronaut.inject.groovy)
 
-    testImplementation(libs.spock.core) {
-        exclude module:'groovy-all'
-    }
+    runtimeOnly(mn.logback.classic)
+
     testImplementation(mnTest.micronaut.test.spock)
-
     testImplementation(mn.jackson.databind)
-
-    runtimeOnly(libs.logback.classic)
-
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
@@ -25,7 +20,7 @@ dependencies {
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(libs.reactor.core)
+    testImplementation(mn.reactor)
     testAnnotationProcessor(platform(mn.micronaut.core.bom))
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)}

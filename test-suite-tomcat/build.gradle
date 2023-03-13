@@ -7,18 +7,17 @@ dependencies {
     testAnnotationProcessor(platform(mn.micronaut.core.bom))
     testAnnotationProcessor(mn.micronaut.inject.java)
 
-    testImplementation(platform(mn.micronaut.core.bom))
-    testImplementation(libs.junit.jupiter.api)
-    testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mn.logback.classic)
 
-    testRuntimeOnly(libs.logback.classic)
+    testImplementation(platform(mn.micronaut.core.bom))
+    testImplementation(mnTest.micronaut.test.junit5)
     testImplementation(mn.micronaut.management)
     testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(libs.reactor.core)
+    testImplementation(mn.reactor)
 }
 
 tasks.named('test') {

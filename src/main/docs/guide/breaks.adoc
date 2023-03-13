@@ -5,7 +5,7 @@ This section will document breaking changes that may happen during milestone or 
 
 `micronaut.security.intercept-url-map-prepend-pattern-with-context-path` defaults to `true`. Thus intercept url patterns are be prepended with the server context path if it is set.
 
-==== Annotation Mappers Removed
+=== Annotation Mappers Removed
 
 The mappers for `javax.annotation.security` annotations – `DenyAll`, `PermitAll`, `RolesAllowed` – have been removed. Use the Jakarta versions for `jakarta.annotation.security` annotations instead.
 
