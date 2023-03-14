@@ -20,7 +20,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link SecurityFilterConfiguration}.
