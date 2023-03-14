@@ -22,8 +22,8 @@ import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.token.jwt.config.JwtConfigurationProperties;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link RefreshTokenConfiguration} to configure {@link SignedRefreshTokenGenerator}.

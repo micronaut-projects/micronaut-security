@@ -37,7 +37,7 @@ import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.validation.Validated;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
