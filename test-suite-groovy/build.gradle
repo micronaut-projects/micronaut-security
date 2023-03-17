@@ -25,7 +25,7 @@ dependencies {
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(libs.reactor.core)
+    testImplementation(mnReactor.micronaut.reactor)
     testAnnotationProcessor(platform(mn.micronaut.core.bom))
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)}

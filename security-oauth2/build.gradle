@@ -16,7 +16,7 @@ dependencies {
     implementation(mn.micronaut.http.client)
     compileOnly(mn.jackson.databind)
     compileOnly(mnSession.micronaut.session)
-    implementation(libs.reactor.core)
+    implementation(mnReactor.micronaut.reactor)
 
     testImplementation(projects.micronautSecuritySession)
     testImplementation(mn.micronaut.http.client)

@@ -22,7 +22,7 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(libs.kotlin.stdlib.jdk8)
-    testImplementation(libs.reactor.core)
+    testImplementation(mnReactor.micronaut.reactor)
 
     testImplementation(mn.jackson.databind)
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
