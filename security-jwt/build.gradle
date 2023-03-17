@@ -25,7 +25,8 @@ dependencies {
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(mnMultitenancy.micronaut.multitenancy)
     testImplementation(mnViews.micronaut.views.velocity)
-    testRuntimeOnly(libs.velocity.engine.core)
+    testRuntimeOnly(mnViews.velocity.engine.core)
+
 
     testImplementation(mn.snakeyaml)
     testImplementation(mn.micronaut.websocket)

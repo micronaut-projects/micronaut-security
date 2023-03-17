@@ -11,7 +11,6 @@ reactor-test = "3.5.3"
 selenium = "4.8.1"
 testcontainers = "1.17.6"
 unboundid-ldapsdk = "6.0.8"
-velocity-engine-core = "2.3"
 bouncycastle = "1.70"
 javax-activation = "1.2.0"
 kotlin = "1.8.10"
@@ -23,7 +22,7 @@ micronaut-reactor = "3.0.0-SNAPSHOT"
 micronaut-serde = "2.0.0-SNAPSHOT"
 micronaut-servlet = "4.0.0-SNAPSHOT"
 micronaut-session = "1.0.0-SNAPSHOT"
-micronaut-views = "3.8.1"
+micronaut-views = "4.0.0-SNAPSHOT"
 micronaut-validation = "4.0.0-SNAPSHOT"
 
 [libraries]
@@ -49,7 +48,6 @@ selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-d
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "selenium" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
-velocity-engine-core = { module = "org.apache.velocity:velocity-engine-core", version.ref = "velocity-engine-core" }
 bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
 javax-activation = { module = "com.sun.activation:javax.activation", version.ref = "javax-activation" }
