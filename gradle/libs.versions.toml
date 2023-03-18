@@ -7,7 +7,7 @@ groovy = "4.0.10"
 spock = "2.3-groovy-4.0"
 
 geb = "7.0"
-reactor-test = "3.5.3"
+reactor-test = "3.5.4"
 selenium = "4.8.1"
 testcontainers = "1.17.6"
 unboundid-ldapsdk = "6.0.8"
