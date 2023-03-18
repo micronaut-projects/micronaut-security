@@ -4,7 +4,6 @@ managed-nimbus-jose-jwt = "9.31"
 micronaut = "4.0.0-SNAPSHOT"
 micronaut-docs = "2.0.0"
 groovy = "4.0.10"
-spock = "2.3-groovy-4.0"
 
 geb = "7.0"
 selenium = "4.8.1"
@@ -48,7 +47,6 @@ unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = 
 bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
 javax-activation = { module = "com.sun.activation:javax.activation", version.ref = "javax-activation" }
-spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 

@@ -9,9 +9,6 @@ dependencies {
 
     testCompileOnly(mn.micronaut.inject.groovy)
 
-    testImplementation(libs.spock.core) {
-        exclude module:'groovy-all'
-    }
     testImplementation(mnTest.micronaut.test.spock)
 
     testImplementation(mn.jackson.databind)
