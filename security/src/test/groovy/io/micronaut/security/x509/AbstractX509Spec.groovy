@@ -7,7 +7,7 @@ abstract class AbstractX509Spec extends EmbeddedServerSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.http.client.ssl.insecureTrustAllCertificates': 'true',
+                'micronaut.http.client.ssl.insecure-trust-all-certificates': 'true',
                 'micronaut.http.client.ssl.key-store.password'          : 'secret',
                 'micronaut.http.client.ssl.key-store.path'              : 'classpath:ssl/x509/client.p12',
                 'micronaut.http.client.ssl.key-store.type'              : 'PKCS12',
