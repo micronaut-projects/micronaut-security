@@ -16,7 +16,7 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(libs.reactor.core)
+    testImplementation(mnReactor.micronaut.reactor)
 }
 
 tasks.named('test') {

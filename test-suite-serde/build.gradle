@@ -22,7 +22,7 @@ dependencies {
     testImplementation(projects.micronautSecurityOauth2)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
-    testImplementation(libs.reactor.core)
+    testImplementation(mnReactor.micronaut.reactor)
     testImplementation(mn.groovy.json)
 }
 
