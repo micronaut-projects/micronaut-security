@@ -12,7 +12,7 @@ dependencies {
     testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
 
-    testRuntimeOnly(libs.logback.classic)
+    testRuntimeOnly(mn.logback.classic)
     testImplementation(mn.micronaut.management)
     testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)

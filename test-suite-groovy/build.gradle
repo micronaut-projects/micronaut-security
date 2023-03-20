@@ -13,7 +13,7 @@ dependencies {
 
     testImplementation(mn.jackson.databind)
 
-    runtimeOnly(libs.logback.classic)
+    runtimeOnly(mn.logback.classic)
 
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.server.netty)
