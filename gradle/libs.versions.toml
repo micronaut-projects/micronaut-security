@@ -10,7 +10,6 @@ selenium = "4.8.1"
 testcontainers = "1.17.6"
 unboundid-ldapsdk = "6.0.8"
 bouncycastle = "1.70"
-javax-activation = "1.2.0"
 kotlin = "1.8.10"
 bcpkix = "1.70"
 
@@ -45,7 +44,6 @@ selenium-support = { module = "org.seleniumhq.selenium:selenium-support", versio
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
 bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
-javax-activation = { module = "com.sun.activation:javax.activation", version.ref = "javax-activation" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 
