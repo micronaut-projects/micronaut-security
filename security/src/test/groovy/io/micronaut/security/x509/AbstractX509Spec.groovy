@@ -19,9 +19,9 @@ abstract class AbstractX509Spec extends EmbeddedServerSpecification {
                 'micronaut.server.ssl.trust-store.password'             : 'secret',
                 'micronaut.server.ssl.trust-store.path'                 : 'classpath:ssl/x509/truststore.jks',
                 'micronaut.server.ssl.trust-store.type'                 : 'JKS',
-                'micronaut.ssl.build-self-signed'                       : false,
+                'micronaut.server.ssl.build-self-signed'                       : false,
                 'micronaut.ssl.enabled'                                 : true,
-                'micronaut.ssl.port'                                    : -1
+                'micronaut.server.ssl.port'                             : -1
         ]
     }
 }

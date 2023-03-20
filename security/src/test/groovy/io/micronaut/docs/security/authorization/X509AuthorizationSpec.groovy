@@ -46,7 +46,7 @@ class X509AuthorizationSpec extends Specification {
                 'spec.name': X509AuthorizationSpec.simpleName,
                 'micronaut.ssl.enabled': true,
                 'micronaut.server.ssl.port': -1,
-                'micronaut.ssl.build-self-signed': false,
+                'micronaut.server.ssl.build-self-signed': false,
                 'micronaut.ssl.client-authentication': "need",
                 'micronaut.ssl.key-store.path': 'file://' + keyStorePath.toString(),
                 'micronaut.ssl.key-store.type': 'PKCS12',
