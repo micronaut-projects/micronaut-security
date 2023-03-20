@@ -21,7 +21,6 @@ dependencies {
     testImplementation(projects.micronautSecuritySession)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(libs.javax.activation) // Java 11
     testImplementation(platform(libs.testcontainers.bom))
     testImplementation(libs.testcontainers)
     testImplementation(libs.groovy.json)
