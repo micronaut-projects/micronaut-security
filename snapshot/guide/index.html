@@ -386,8 +386,8 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <div class="paragraph">
 <p><code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code> defaults to <code>true</code>. Thus intercept url patterns are be prepended with the server context path if it is set.</p>
 </div>
-<div class="sect3">
-<h4 id="_annotation_mappers_removed">Annotation Mappers Removed</h4>
+<div class="sect2">
+<h3 id="_annotation_mappers_removed">Annotation Mappers Removed</h3>
 <div class="paragraph">
 <p>The mappers for <code>javax.annotation.security</code> annotations – <code>DenyAll</code>, <code>PermitAll</code>, <code>RolesAllowed</code> – have been removed. Use the Jakarta versions for <code>jakarta.annotation.security</code> annotations instead.</p>
 </div>
@@ -5961,12 +5961,12 @@ To disable a specific client for any given environment, set <code>enabled: false
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GithubUser {
 
     private String login;
