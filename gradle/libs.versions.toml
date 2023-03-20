@@ -33,7 +33,6 @@ micronaut-validation = { module = "io.micronaut.validation:micronaut-validation-
 
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
-groovy-json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 selenium-api = { module = "org.seleniumhq.selenium:selenium-api", version.ref = "selenium" }

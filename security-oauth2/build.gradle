@@ -23,7 +23,7 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(platform(libs.testcontainers.bom))
     testImplementation(libs.testcontainers)
-    testImplementation(libs.groovy.json)
+    testImplementation(mn.groovy.json)
     testImplementation(projects.micronautSecurityJwt)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
