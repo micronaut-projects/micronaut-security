@@ -8,7 +8,7 @@ dependencies {
     implementation(platform(mn.micronaut.core.bom))
     testCompileOnly(mn.micronaut.inject.groovy)
     testImplementation(mnTest.micronaut.test.spock)
-    runtimeOnly(libs.logback.classic)
+    runtimeOnly(mn.logback.classic)
     testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)
