@@ -51,7 +51,7 @@ bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
-testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref ="testcontainers" }
+testcontainers-selenium = { module = "org.testcontainers:selenium"}
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
