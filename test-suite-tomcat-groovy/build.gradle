@@ -5,7 +5,6 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(mn.micronaut.core.bom))
     testCompileOnly(mn.micronaut.inject.groovy)
     testImplementation(mnTest.micronaut.test.spock)
     runtimeOnly(mn.logback.classic)

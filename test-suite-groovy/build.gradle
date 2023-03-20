@@ -5,8 +5,6 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(mn.micronaut.core.bom))
-
     testCompileOnly(mn.micronaut.inject.groovy)
 
     testImplementation(mnTest.micronaut.test.spock)
@@ -23,7 +21,6 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(mnReactor.micronaut.reactor)
-    testAnnotationProcessor(platform(mn.micronaut.core.bom))
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)}
 
