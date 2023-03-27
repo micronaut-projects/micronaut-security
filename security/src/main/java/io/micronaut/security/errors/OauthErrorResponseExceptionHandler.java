@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,26 +37,25 @@ import java.util.Map;
 @Produces
 @Singleton
 public class OauthErrorResponseExceptionHandler implements ExceptionHandler<OauthErrorResponseException, MutableHttpResponse<?>> {
+    @Override
+    public MutableHttpResponse<?> handle(HttpRequest request, OauthErrorResponseException exception) {
+        return HttpResponse.badRequest(responseBody(exception));
+    }
 
-        @Override
-        public MutableHttpResponse<?> handle(HttpRequest request, OauthErrorResponseException exception) {
-                return HttpResponse.badRequest(responseBody(exception));
+    /**
+     *
+     * @param errorResponse Error Response
+     * @return A Map which will be serialized as the body of the HTTP response
+     */
+    protected Map<String, Object> responseBody(ErrorResponse errorResponse) {
+        Map<String, Object> m = new HashMap<>();
+        m.put(ErrorResponse.JSON_KEY_ERROR, errorResponse.getError().toString());
+        if (errorResponse.getErrorDescription() != null) {
+            m.put(ErrorResponse.JSON_KEY_ERROR_DESCRIPTION, errorResponse.getErrorDescription());
         }
-
-        /**
-         *
-         * @param errorResponse Error Response
-         * @return A Map which will be serialized as the body of the HTTP response
-         */
-        protected Map<String, Object> responseBody(ErrorResponse errorResponse) {
-                Map<String, Object> m = new HashMap<>();
-                m.put(ErrorResponse.JSON_KEY_ERROR, errorResponse.getError().toString());
-                if (errorResponse.getErrorDescription() != null) {
-                        m.put(ErrorResponse.JSON_KEY_ERROR_DESCRIPTION, errorResponse.getErrorDescription());
-                }
-                if (errorResponse.getErrorUri() != null) {
-                        m.put(ErrorResponse.JSON_KEY_ERROR_URI, errorResponse.getErrorUri());
-                }
-                return m;
+        if (errorResponse.getErrorUri() != null) {
+            m.put(ErrorResponse.JSON_KEY_ERROR_URI, errorResponse.getErrorUri());
         }
+        return m;
+    }
 }

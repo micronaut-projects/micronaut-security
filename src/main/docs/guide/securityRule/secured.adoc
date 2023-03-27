@@ -10,11 +10,8 @@ include::{testssecurity}/security/securityRule/secured/ExampleController.java[ta
 <2> Users granted role `ROLE_ADMIN` or `ROLE_X` roles can access `withroles` Controller's action.
 <3> Anonymous users (authenticated and not authenticated users) can access `anonymous` Controller's action.
 
-Alternatively, you can use https://jcp.org/en/jsr/detail?id=250[JSR_250] annotations:
+Alternatively, you can use https://jakarta.ee/specifications/annotations/2.1/annotations-spec-2.1.html[Jakarta Annotations]:
 
-* `javax.annotation.security.PermitAll`
-* `javax.annotation.security.RolesAllowed`
-* `javax.annotation.security.DenyAll`
 * `jakarta.annotation.security.PermitAll`
 * `jakarta.annotation.security.RolesAllowed`
 * `jakarta.annotation.security.DenyAll`

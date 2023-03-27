@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.RouteMatch;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -57,7 +56,6 @@ public class IpPatternsRule extends AbstractSecurityRule {
      * @param rolesFinder Roles Parser
      * @param securityConfiguration Security Configuration
      */
-    @Inject
     public IpPatternsRule(RolesFinder rolesFinder,
                           SecurityConfiguration securityConfiguration) {
         super(rolesFinder);

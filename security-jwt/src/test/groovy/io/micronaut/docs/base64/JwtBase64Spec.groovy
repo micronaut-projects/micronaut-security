@@ -20,9 +20,9 @@ micronaut:
       jwt:
         signatures:
           secret:
-            generator: 
-              secret: 'cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU=' #<1>
-              base64: true #<2>
+            generator:
+              secret: 'cGxlYXNlQ2hhbmdlVGhpc1NlY3JldEZvckFOZXdPbmU='
+              base64: true
               jws-algorithm: HS256
 #end::yamlconfig[]
 """

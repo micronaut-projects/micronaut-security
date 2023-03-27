@@ -8,9 +8,12 @@ import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.oauth2.client.DefaultOpenIdClient
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.testutils.Keycloak
+import io.micronaut.security.oauth2.keycloack.v16.Keycloak
+import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
+import spock.lang.Requires
 
+@Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class KeycloakEndSessionEndpointSpec extends EmbeddedServerSpecification {
 
     @Override

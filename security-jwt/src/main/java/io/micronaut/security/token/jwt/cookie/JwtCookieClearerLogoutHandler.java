@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.handlers.LogoutHandler;
 import jakarta.inject.Singleton;
 import java.net.URI;
@@ -47,14 +48,15 @@ public class JwtCookieClearerLogoutHandler implements LogoutHandler {
      * @param accessTokenCookieConfiguration JWT Cookie Configuration
      * @param refreshTokenCookieConfiguration Refresh token cookie configuration
      * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirection Service
      */
     public JwtCookieClearerLogoutHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                          RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
-                                         RedirectConfiguration redirectConfiguration) {
+                                         RedirectConfiguration redirectConfiguration,
+                                         RedirectService redirectService) {
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
-
-        this.logout = redirectConfiguration.isEnabled() ? redirectConfiguration.getLogout() : null;
+        this.logout = redirectConfiguration.isEnabled() ? redirectService.logoutUrl() : null;
     }
 
     @Override

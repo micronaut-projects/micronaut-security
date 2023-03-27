@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
@@ -64,12 +65,14 @@ public class SessionLoginHandler implements RedirectingLoginHandler {
      * @param redirectConfiguration Redirect configuration
      * @param sessionStore The session store
      * @param priorToLoginPersistence The persistence to store the original url
+     * @param redirectService Redirection Service
      */
     public SessionLoginHandler(RedirectConfiguration redirectConfiguration,
                                SessionStore<Session> sessionStore,
-                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this.loginFailure = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginFailure() : null;
-        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginSuccess() : null;
+                               @Nullable PriorToLoginPersistence priorToLoginPersistence,
+                               RedirectService redirectService) {
+        this.loginFailure = redirectConfiguration.isEnabled() ? redirectService.loginFailureUrl() : null;
+        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectService.loginSuccessUrl() : null;
         this.redirectConfiguration = redirectConfiguration;
         this.sessionStore = sessionStore;
         this.priorToLoginPersistence = priorToLoginPersistence;

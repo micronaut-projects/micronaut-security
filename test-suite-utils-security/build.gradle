@@ -5,15 +5,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(platform(mn.micronaut.bom))
     annotationProcessor(mn.micronaut.inject.java)
-    implementation(platform(mn.micronaut.bom))
     api(mn.micronaut.inject)
-    implementation project(":security")
-    implementation(libs.reactor.core)
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("1.8")
-    targetCompatibility = JavaVersion.toVersion("1.8")
+    implementation(projects.micronautSecurity)
+    implementation(mnReactor.micronaut.reactor)
 }

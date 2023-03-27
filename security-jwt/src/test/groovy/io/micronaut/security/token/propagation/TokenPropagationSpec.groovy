@@ -22,6 +22,7 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
@@ -177,6 +178,7 @@ class TokenPropagationSpec extends Specification {
         Publisher<Integer> inventory(String isbn);
     }
 
+    @Serdeable
     static class Book {
         private String isbn;
         private String name;
@@ -221,5 +223,4 @@ class TokenPropagationSpec extends Specification {
             return stock;
         }
     }
-
 }

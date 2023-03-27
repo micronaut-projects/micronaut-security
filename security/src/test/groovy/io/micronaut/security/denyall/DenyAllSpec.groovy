@@ -15,7 +15,7 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
 
-import javax.annotation.security.DenyAll
+import jakarta.annotation.security.DenyAll
 
 class DenyAllSpec extends EmbeddedServerSpecification {
 

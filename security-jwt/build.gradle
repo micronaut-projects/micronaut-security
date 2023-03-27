@@ -4,13 +4,16 @@ plugins {
 
 dependencies {
     annotationProcessor(mn.micronaut.graal)
+    annotationProcessor(mnSerde.micronaut.serde.processor)
+    implementation(mnSerde.micronaut.serde.jackson)
+    annotationProcessor(mnValidation.micronaut.validation.processor)
+    api(mnValidation.micronaut.validation)
     api(mn.micronaut.http)
     api(mn.micronaut.http.server)
-    api project(":security")
+    api(projects.micronautSecurity)
     api(libs.managed.nimbus.jose.jwt)
 
-    implementation(libs.reactor.core)
-
+    implementation(mnReactor.micronaut.reactor)
     testImplementation(libs.bcpkix.jdk15on)
     testImplementation(libs.bcprov.jdk15on)
 
@@ -18,11 +21,19 @@ dependencies {
     testImplementation(mn.micronaut.http.client)
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation project(":test-suite-utils")
-    testImplementation project(":test-suite-utils-security")
-    testImplementation(mn.micronaut.multitenancy)
-    testImplementation(mn.micronaut.views.velocity)
-    testRuntimeOnly(libs.velocity.engine.core)
+    testImplementation(projects.testSuiteUtils)
+    testImplementation(projects.testSuiteUtilsSecurity)
+    testImplementation(mnMultitenancy.micronaut.multitenancy)
+    testImplementation(mnViews.micronaut.views.velocity)
+    testRuntimeOnly(mnViews.velocity.engine.core)
+
+
+    testImplementation(mn.snakeyaml)
+    testImplementation(mn.micronaut.websocket)
+    testImplementation(mn.groovy.json)
+
+    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.testcontainers)
 }
 
 test {

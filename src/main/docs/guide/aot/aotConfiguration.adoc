@@ -1,0 +1,36 @@
+
+With https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuration[Micronaut Gradle Plugin], you can use `aotPlugins` configuration to declare additional AOT modules to be used:
+
+[source,groovy]
+----
+dependencies {
+...
+..
+//http://github.com/micronaut-projects/micronaut-security/releases
+aotPlugins("io.micronaut.security:micronaut-security-aot:3.9.0")
+}
+----
+
+for https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/aot.html[Micronaut Maven Plugin] you will need to do:
+
+[source,xml]
+----
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.micronaut.build</groupId>
+        <artifactId>micronaut-maven-plugin</artifactId>
+        <configuration>
+          <aotDependencies>
+            <dependency>
+              <groupId>io.micronaut.security</groupId>
+              <artifactId>micronaut-security-aot</artifactId>
+              <version>3.9.0</version>
+            </dependency>
+            ...
+          </aotDependencies>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+----

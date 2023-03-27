@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,14 +35,15 @@ import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
 import io.micronaut.web.router.RouteMatch;
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Security Filter.
@@ -106,7 +107,6 @@ public class SecurityFilter implements HttpServerFilter {
     @Override
     public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         request.getAttributes().put(KEY, true);
-        populateWithOldKey(request);
         RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
 
         return Flux.fromIterable(authenticationFetchers)
@@ -115,16 +115,6 @@ public class SecurityFilter implements HttpServerFilter {
                 .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain, routeMatch)))
                 .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain, routeMatch))
                         .next());
-    }
-
-    /**
-     * Remove once {@link io.micronaut.http.filter.OncePerRequestHttpServerFilter} is deleted.
-     *
-     * @deprecated see {@link io.micronaut.http.filter.OncePerRequestHttpServerFilter}.
-     */
-    @Deprecated
-    private void populateWithOldKey(HttpRequest<?> request) {
-        request.getAttributes().put("micronaut.once." + SecurityFilter.class.getSimpleName(), true);
     }
 
     private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,

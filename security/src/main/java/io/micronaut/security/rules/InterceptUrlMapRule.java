@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.RouteMatch;
-import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -54,8 +53,7 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
     /**
      * @param rolesFinder Roles Parser
      */
-    @Inject
-    public InterceptUrlMapRule(RolesFinder rolesFinder) {
+    protected InterceptUrlMapRule(RolesFinder rolesFinder) {
         super(rolesFinder);
         this.pathMatcher = PathMatcher.ANT;
     }

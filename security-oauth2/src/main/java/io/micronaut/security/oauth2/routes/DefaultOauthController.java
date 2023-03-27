@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.micronaut.security.oauth2.routes;
 
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Parameter;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -40,6 +41,7 @@ import reactor.core.publisher.Flux;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = RedirectingLoginHandler.class)
 @EachBean(OauthClient.class)
 public class DefaultOauthController implements OauthController {
 
@@ -47,19 +49,25 @@ public class DefaultOauthController implements OauthController {
 
     private final OauthClient oauthClient;
     private final RedirectingLoginHandler loginHandler;
-    private final ApplicationEventPublisher eventPublisher;
+
+    private final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
+
+    private final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
 
     /**
-     * @param oauthClient The oauth client
-     * @param loginHandler The login handler
-     * @param eventPublisher The event publisher
+     * @param oauthClient                   The oauth client
+     * @param loginHandler                  The login handler
+     * @param loginSuccessfulEventPublisher Application event publisher for {@link LoginSuccessfulEvent}.
+     * @param loginFailedEventPublisher     Application event publisher for {@link LoginFailedEvent}.
      */
     DefaultOauthController(@Parameter OauthClient oauthClient,
                            RedirectingLoginHandler loginHandler,
-                           ApplicationEventPublisher eventPublisher) {
+                           ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
+                           ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher) {
         this.oauthClient = oauthClient;
         this.loginHandler = loginHandler;
-        this.eventPublisher = eventPublisher;
+        this.loginSuccessfulEventPublisher = loginSuccessfulEventPublisher;
+        this.loginFailedEventPublisher = loginFailedEventPublisher;
     }
 
     @Override
@@ -88,13 +96,13 @@ public class DefaultOauthController implements OauthController {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Authentication succeeded. User [{}] is now logged in", authentication.getName());
                 }
-                eventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
+                loginSuccessfulEventPublisher.publishEvent(new LoginSuccessfulEvent(authentication));
                 return loginHandler.loginSuccess(authentication, request);
             } else {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Authentication failed: {}", response.getMessage().orElse("unknown reason"));
                 }
-                eventPublisher.publishEvent(new LoginFailedEvent(response));
+                loginFailedEventPublisher.publishEvent(new LoginFailedEvent(response));
                 return loginHandler.loginFailed(response, request);
             }
         }).defaultIfEmpty(HttpResponse.status(HttpStatus.UNAUTHORIZED));

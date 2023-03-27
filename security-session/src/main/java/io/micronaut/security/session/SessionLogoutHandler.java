@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.session.Session;
@@ -46,9 +47,10 @@ public class SessionLogoutHandler implements LogoutHandler {
     /**
      * Constructor.
      * @param redirectConfiguration Redirect Configuration
+     * @param redirectService Redirection Service
      */
-    public SessionLogoutHandler(RedirectConfiguration redirectConfiguration) {
-        this.logout = redirectConfiguration.isEnabled() ? redirectConfiguration.getLogout() : null;
+    public SessionLogoutHandler(RedirectConfiguration redirectConfiguration, RedirectService redirectService) {
+        this.logout = redirectConfiguration.isEnabled() ? redirectService.logoutUrl() : null;
     }
 
     @Override

@@ -5,6 +5,7 @@ whatsNew: What's New
 breaks: Breaking Changes
 gettingStarted:
   title: Getting Started
+exceptionHandlers: 'Exception Handlers'
 securityConfiguration:
   title: Security Configuration
   rejectNotFound: Reject Not Found Routes
@@ -89,6 +90,7 @@ oauth:
           id-token-hint: ID Token Hint
         token-validation: Token Validation
       state: State Parameter
+      pkce: PKCE
     clientcredentials:
       title: Client Credentials
       clientecredentialshttpclient: HTTP Client Filter for Client Credentials
@@ -100,4 +102,9 @@ oauth:
     revocation: Revocation
     user-info: OpenID User Info
   custom-client: Custom Clients
+aot:
+  title: Ahead-of-time optimizations
+  aotConfiguration: Micronaut Security AOT Configuration
+  aotOpenidConfiguration: OpenID Configuration Optimization
+  aotJwks: JWKS Optimization
 repository: Repository

@@ -45,7 +45,7 @@ class RefreshTokenIntrospectionEndpointSpec extends EmbeddedServerSpecification 
 
         when:
         String refreshToken = loginRsp.body().refreshToken
-        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest(refreshToken))
+        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest(refreshToken, null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .basicAuth('user', 'password')
         HttpResponse<Map> response = client.exchange(request, Map)

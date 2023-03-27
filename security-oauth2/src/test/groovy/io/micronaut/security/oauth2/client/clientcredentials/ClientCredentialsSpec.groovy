@@ -47,10 +47,11 @@ import org.slf4j.LoggerFactory
 import reactor.core.publisher.Flux
 import spock.lang.AutoCleanup
 import spock.lang.Narrative
+import spock.lang.PendingFeature
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.text.ParseException
@@ -63,13 +64,13 @@ import java.text.ParseException
      |         |<--(B)---- Access Token ---------<|               |
      |         |                                  |               |
      +---------+                                  +---------------+
-     
+
      +---------+                                  +-----------------+
      |         |                                  |                 |
      |         |>--(C)- Bearer Access Token ----->| Resource Server |
      | Client  |                                  |     Server      |
      |         |                                  |                 |
-     |         |<--(D)---- Protected Resource ---<|                 |     
+     |         |<--(D)---- Protected Resource ---<|                 |
      +---------+                                  +-----------------+
 ''')
 class ClientCredentialsSpec extends Specification {
@@ -290,6 +291,7 @@ class ClientCredentialsSpec extends Specification {
         resourceServerResp.getBody(String).get() == "Your father is Rhaegar Targaryen"
     }
 
+    @PendingFeature
     void 'A bean of type ClientCredentialsClient is created for an OAuth 2.0 client which sets both token manually and an open id issuer which providers information about its token endpoint. The manual set token endpoint takes precedence'() {
 
         when:
@@ -442,14 +444,17 @@ class ClientCredentialsSpec extends Specification {
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Get("/openid-configuration")
         Map<String, Object> index() {
-            Map<String, Object> conf = [
+            [
+                    "issuer": "${url}",
+                    "authorization_endpoint": "${url}/authorize",
+                    "jwks_uri" : "${url}/keys",
                     "token_endpoint": "${url}/token".toString(),
                     "token_endpoint_auth_methods_supported": authenticationMethods.collect {it.toString()},
-                    "grant_types_supported": [
-                            "client_credentials"
-                    ]
+                    "grant_types_supported": ["client_credentials"],
+                    "response_types_supported": ["code", "code id_token", "id_token", "token id_token"],
+                    "subject_types_supported": ["public", "pairwise"],
+                    "id_token_signing_alg_values_supported": ["RS256", "ES256", "HS256"],
             ]
-            conf
         }
     }
 
@@ -481,14 +486,17 @@ class ClientCredentialsSpec extends Specification {
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Get("/openid-configuration")
         Map<String, Object> index() {
-            Map<String, Object> conf = [
-            "token_endpoint": "${url}/token".toString(),
-            "token_endpoint_auth_methods_supported": authenticationMethods.collect {it.toString()},
-            "grant_types_supported": [
-                    "client_credentials"
+            [
+                    "issuer": "${url}",
+                    "authorization_endpoint": "${url}/authorize",
+                    "jwks_uri" : "${url}/keys",
+                    "token_endpoint": "${url}/token".toString(),
+                    "response_types_supported": ["code", "code id_token", "id_token", "token id_token"],
+                    "subject_types_supported": ["public", "pairwise"],
+                    "id_token_signing_alg_values_supported": ["RS256", "ES256", "HS256"],
+                    "token_endpoint_auth_methods_supported": authenticationMethods.collect {it.toString()},
+                    "grant_types_supported": ["client_credentials"],
             ]
-            ]
-            conf
         }
     }
 

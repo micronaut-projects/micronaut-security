@@ -5,25 +5,16 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(mn.micronaut.bom))
     testCompileOnly(mn.micronaut.inject.groovy)
-    testImplementation(libs.spock.core) {
-        exclude module:'groovy-all'
-    }
-    testImplementation(mn.micronaut.test.spock)
-    runtimeOnly(libs.logback.classic)
-    testImplementation("io.micronaut.servlet:micronaut-http-server-tomcat")
+    testImplementation(mnTest.micronaut.test.spock)
+    runtimeOnly(mn.logback.classic)
+    testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
-    testImplementation project(":security-jwt")
-    testImplementation project(":test-suite-utils-security")
-    testImplementation(libs.reactor.core)
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.testSuiteUtilsSecurity)
+    testImplementation(mnReactor.micronaut.reactor)
 }
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("1.8")
-    targetCompatibility = JavaVersion.toVersion("1.8")
 }

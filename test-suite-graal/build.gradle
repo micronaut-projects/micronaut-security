@@ -1,0 +1,47 @@
+plugins {
+    id 'java-library'
+    id 'org.graalvm.buildtools.native'
+    id "io.micronaut.build.internal.security-tests"
+}
+
+dependencies {
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.http)
+    testImplementation(mn.micronaut.json.core)
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(projects.micronautSecurity)
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(mnTest.micronaut.test.junit5)
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+tasks.named("check") { task ->
+    def graal = ["jvmci.Compiler", "java.vendor.version", "java.vendor"].any {
+        println "$it ${System.getProperty(it)}"
+        System.getProperty(it)?.toLowerCase(Locale.ENGLISH)?.contains("graal")
+    }
+    if (graal) {
+        task.dependsOn("nativeTest")
+    }
+}
+
+def openGraalModules = [
+        "org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
+        "org.graalvm.nativeimage.builder/com.oracle.svm.core.configure",
+        "org.graalvm.sdk/org.graalvm.nativeimage.impl"
+]
+
+graalvmNative {
+    toolchainDetection = false
+    binaries {
+        all {
+            openGraalModules.each { module ->
+                jvmArgs.add("--add-exports=" + module + "=ALL-UNNAMED")
+            }
+        }
+    }
+}

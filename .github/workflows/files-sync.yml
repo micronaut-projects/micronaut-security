@@ -1,0 +1,167 @@
+name: Files sync
+on:
+  push:
+    branches:
+      - master
+jobs:
+  sync-files:
+    if: github.repository == 'micronaut-projects/micronaut-project-template'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        repo:
+          - acme
+          - aot
+          - aws
+          - azure
+          - cache
+          - cassandra
+          - chatbots
+          - coherence
+          - core
+          - couchbase
+          - crac
+          - data
+          - discovery-client
+          - elasticsearch
+          - email
+          - flyway
+          - gcp
+          - graphql
+          - groovy
+          - grpc
+          - hibernate-validator
+          - ignite
+          - jackson-xml
+          - jaxrs
+          - jms
+          - jmx
+          - kafka
+          - kotlin
+          - kubernetes
+          - liquibase
+          - micrometer
+          - microstream
+          - mongodb
+          - mqtt
+          - multitenancy
+          - nats
+          - neo4j
+          - object-storage
+          - openapi
+          - oracle-cloud
+          - picocli
+          - platform
+          - problem-json
+          - pulsar
+          - r2dbc
+          - rabbitmq
+          - reactor
+          - redis
+          - rss
+          - rxjava2
+          - rxjava3
+          - security
+          - serialization
+          - servlet
+          - session
+          - spring
+          - sql
+          - test
+          - test-resources
+          - toml
+          - tracing
+          - validation
+          - views
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+        with:
+          path: source
+      - name: Checkout target - default branch
+        uses: actions/checkout@v3
+        with:
+          repository: micronaut-projects/micronaut-${{ matrix.repo }}
+          path: target
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Determine current branch
+        id: branch
+        working-directory: target
+        run: |
+          branch=$(git rev-parse --abbrev-ref HEAD)
+          echo "Current branch: ${branch}"
+          echo "branch=${branch}" >> $GITHUB_OUTPUT
+      - name: Sync workflows
+        run: |
+          mkdir -p target/.github/workflows/
+          rsync --verbose --verbose  --archive -F "source/.github/workflows/" "target/.github/workflows/"
+          rm -f target/.github/dependabot.yml
+          rm -f target/.github/stale.yml
+          rm -f target/.github/release-drafter.yml
+          rm -f target/.github/workflows/release-notes.yml
+          rm -f target/.github/workflows/dependency-update.yml
+      - name: Copy files from source to target branches
+        run: |
+          while IFS= read -r file; do
+              dest_dirname="$(dirname $file)"
+              dest_filename="$(basename $file)"
+              mkdir -p target/$dest_dirname
+              [ ! -f target/${dest_dirname}/${dest_filename}.lock ] && cp source/$file target/${dest_dirname}/${dest_filename}
+          done <<< "$FILES"
+        env:
+          FILES: |-
+            .editorconfig
+            .gitattributes
+            .gitignore
+            .github/renovate.json
+            .github/release.yml
+            .github/ISSUE_TEMPLATE/bug_report.yaml
+            .github/ISSUE_TEMPLATE/config.yml
+            .github/ISSUE_TEMPLATE/new_feature.yaml
+            .github/ISSUE_TEMPLATE/other.yaml
+            gradle/wrapper/gradle-wrapper.jar
+            gradle/wrapper/gradle-wrapper.properties
+            gradlew
+            gradlew.bat
+            MAINTAINING.md
+            SECURITY.md
+            LICENSE
+            config/HEADER
+            config/spotless.license.java
+            config/checkstyle/checkstyle.xml
+            config/checkstyle/suppressions.xml
+      - name: Sleep for 3 minutes to avoid rate limiting
+        run: sleep 180s
+        shell: bash
+      - name: Create Pull Request - ${{ steps.branch.outputs.branch }}
+        uses: peter-evans/create-pull-request@v4
+        with:
+          path: target
+          token: ${{ secrets.GH_TOKEN }}
+          committer: micronaut-build <${{ secrets.MICRONAUT_BUILD_EMAIL }}>
+          author: micronaut-build <${{ secrets.MICRONAUT_BUILD_EMAIL }}>
+          commit-message: Update common files
+          title: "[${{ matrix.repo }}] Update common files for branch ${{ steps.branch.outputs.branch }}"
+          body: Update common files
+          labels: "relates-to: build"
+          branch: sync-files-${{ steps.branch.outputs.branch }}
+          base: ${{ steps.branch.outputs.branch }}
+          add-paths: |
+            .editorconfig
+            .gitattributes
+            .gitignore
+            .github/*
+            .github/ISSUE_TEMPLATE/*
+            .github/workflows/*
+            gradle/*
+            gradlew*
+            MAINTAINING.md
+            SECURITY.md
+            LICENSE
+            config/HEADER
+            config/spotless.license.java
+            config/checkstyle/checkstyle.xml
+            config/checkstyle/suppressions.xml

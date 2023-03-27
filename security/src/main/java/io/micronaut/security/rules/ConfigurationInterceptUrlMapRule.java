@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 package io.micronaut.security.rules;
 
 import io.micronaut.security.config.InterceptUrlMapPattern;
+import io.micronaut.security.config.InterceptUrlPatternModifier;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.token.RolesFinder;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.List;
 
@@ -42,12 +42,15 @@ public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
      *
      * @param rolesFinder Roles Parser
      * @param securityConfiguration The Security Configuration
+     * @param interceptUrlPatternModifier InterceptURLMap modifier
      */
-    @Inject
     public ConfigurationInterceptUrlMapRule(RolesFinder rolesFinder,
-                                            SecurityConfiguration securityConfiguration) {
+                                            SecurityConfiguration securityConfiguration,
+                                            InterceptUrlPatternModifier interceptUrlPatternModifier) {
         super(rolesFinder);
-        this.patternList = securityConfiguration.getInterceptUrlMap();
+        this.patternList = securityConfiguration.getInterceptUrlMap().stream()
+            .map(interceptUrlPatternModifier::modify)
+            .toList();
     }
 
     @Override

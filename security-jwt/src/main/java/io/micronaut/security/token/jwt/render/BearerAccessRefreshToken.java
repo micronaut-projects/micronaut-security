@@ -15,11 +15,12 @@
  */
 package io.micronaut.security.token.jwt.render;
 
-import io.micronaut.core.annotation.Creator;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.serde.annotation.Serdeable;
 
+import jakarta.validation.constraints.NotBlank;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Encapsulates an Access Token response as described in <a href="https://tools.ietf.org/html/rfc6749#section-4.1.4">RFC 6749</a>.
@@ -27,15 +28,14 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Serdeable
 public class BearerAccessRefreshToken extends AccessRefreshToken {
+    @NonNull
+    @NotBlank
+    private final String username;
 
-    private String username;
-    private Collection<String> roles;
-
-    /**
-     * Necessary for JSON serialization.
-     */
-    public BearerAccessRefreshToken() { }
+    @Nullable
+    private final Collection<String> roles;
 
     /**
      *
@@ -46,13 +46,12 @@ public class BearerAccessRefreshToken extends AccessRefreshToken {
      * @param refreshToken  JWT token
      * @param tokenType Type of token
      */
-    @Creator
-    public BearerAccessRefreshToken(String username,
+    public BearerAccessRefreshToken(@NonNull String username,
                                     @Nullable Collection<String> roles,
                                     @Nullable Integer expiresIn,
-                                    String accessToken,
+                                    @NonNull String accessToken,
                                     @Nullable String refreshToken,
-                                    String tokenType
+                                    @NonNull String tokenType
     ) {
         super(accessToken, refreshToken, tokenType, expiresIn);
         this.username = username;
@@ -63,31 +62,17 @@ public class BearerAccessRefreshToken extends AccessRefreshToken {
      * username getter.
      * @return a string e.g. admin
      */
+    @NonNull
     public String getUsername() {
         return username;
-    }
-
-    /**
-     * username setter.
-     * @param username e.g. admin
-     */
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     /**
      * roles getter.
      * @return Collection of Strings e.g. ( [ROLE_USER, ROLE_ADMIN] )
      */
+    @Nullable
     public Collection<String> getRoles() {
         return roles;
-    }
-
-    /**
-     * roles property setter.
-     * @param roles list of Strings e.g. ( [ROLE_USER, ROLE_ADMIN] )
-     */
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
     }
 }

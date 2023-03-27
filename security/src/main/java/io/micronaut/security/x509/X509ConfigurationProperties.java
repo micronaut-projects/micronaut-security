@@ -18,7 +18,7 @@ package io.micronaut.security.x509;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.config.SecurityConfigurationProperties;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Configuration for X.509 authentication.

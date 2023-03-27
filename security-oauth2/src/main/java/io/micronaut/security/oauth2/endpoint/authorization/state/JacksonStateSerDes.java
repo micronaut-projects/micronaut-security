@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,14 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.core.type.Argument;
-import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.io.IOException;
-import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Base64;
 
 /**
  * Jackson based implementation for state serdes.
@@ -40,19 +38,9 @@ public class JacksonStateSerDes implements StateSerDes {
     private final JsonMapper jsonMapper;
 
     /**
-     * @param objectMapper To serialize/de-serialize the state
-     * @deprecated Use {@link #JacksonStateSerDes(JsonMapper)} instead
-     */
-    @Deprecated
-    public JacksonStateSerDes(ObjectMapper objectMapper) {
-        this.jsonMapper = new JacksonDatabindMapper(objectMapper);
-    }
-
-    /**
      * @param jsonMapper To serialize/de-serialize the state
      * @since 3.3
      */
-    @Inject
     public JacksonStateSerDes(JsonMapper jsonMapper) {
         this.jsonMapper = jsonMapper;
     }

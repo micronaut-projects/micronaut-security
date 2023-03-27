@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
@@ -51,10 +52,17 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdTokenLoginHandler.class);
 
+    /**
+     * @param accessTokenCookieConfiguration Access token cookie configuration
+     * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirect service
+     * @param priorToLoginPersistence The prior to login persistence strategy
+     */
     public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
+                               RedirectService redirectService,
                                @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        super(accessTokenCookieConfiguration, redirectConfiguration, priorToLoginPersistence);
+        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
     }
 
     /**

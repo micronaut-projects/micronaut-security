@@ -15,17 +15,14 @@
  */
 package io.micronaut.security.oauth2.client.condition;
 
-import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.BeanContext;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.naming.Named;
-import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
+import io.micronaut.security.utils.QualifierUtils;
 
 import java.util.Optional;
 
@@ -40,25 +37,21 @@ public abstract class AbstractCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context) {
         AnnotationMetadataProvider component = context.getComponent();
-        BeanContext beanContext = context.getBeanContext();
-
-        if (beanContext instanceof ApplicationContext && component instanceof ValueResolver) {
-            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-            if (optional.isPresent()) {
-                String name = optional.get();
-
-                OauthClientConfiguration clientConfiguration = beanContext.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
-
-                String failureMsgPrefix = getFailureMessagePrefix(name);
-                if (clientConfiguration.isEnabled()) {
-                    return handleConfigurationEnabled(clientConfiguration, context, failureMsgPrefix);
-                } else {
-                    context.fail(failureMsgPrefix + "] because the configuration is disabled");
-                }
-                return false;
-            }
+        Optional<String> nameOptional = QualifierUtils.nameQualifier(component);
+        if (nameOptional.isEmpty()) {
+            return true;
         }
-        return true;
+
+        String name = nameOptional.get();
+
+        OauthClientConfiguration clientConfiguration = context.getBean(OauthClientConfiguration.class, Qualifiers.byName(name));
+        String failureMsgPrefix = getFailureMessagePrefix(name);
+        if (clientConfiguration.isEnabled()) {
+            return handleConfigurationEnabled(clientConfiguration, context, failureMsgPrefix);
+        } else {
+            context.fail(failureMsgPrefix + "] because the configuration is disabled");
+        }
+        return false;
     }
 
     @NonNull

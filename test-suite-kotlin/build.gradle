@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.kapt)
@@ -5,24 +6,25 @@ plugins {
 }
 
 dependencies {
-    kaptTest(platform(mn.micronaut.bom))
     kaptTest(mn.micronaut.inject.java)
 
-    testImplementation(platform(mn.micronaut.bom))
     testImplementation(libs.junit.jupiter.api)
-    testImplementation(mn.micronaut.test.junit5)
+    testImplementation(mnTest.micronaut.test.junit5)
     testRuntimeOnly(libs.junit.jupiter.engine)
 
-    testRuntimeOnly(libs.logback.classic)
+    testRuntimeOnly(mn.logback.classic)
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.micronaut.http.client)
-    testImplementation project(":security-jwt")
-    testImplementation project(":security-oauth2")
-    testImplementation project(":test-suite-utils")
-    testImplementation project(":test-suite-utils-security")
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(projects.testSuiteUtils)
+    testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(libs.kotlin.stdlib.jdk8)
-    testImplementation(libs.reactor.core)
+    testImplementation(mnReactor.micronaut.reactor)
+
+    testImplementation(mn.jackson.databind)
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
 }
 
 tasks.named('test') {
@@ -30,13 +32,8 @@ tasks.named('test') {
 }
 
 compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = '1.8'
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
         javaParameters = true
     }
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("1.8")
-    targetCompatibility = JavaVersion.toVersion("1.8")
 }

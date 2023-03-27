@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,12 @@ import io.micronaut.core.convert.TypeConverter;
 import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.http.HttpMethod;
 import jakarta.inject.Singleton;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Sergio del Amo
@@ -42,7 +43,7 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
     private final ConversionService conversionService;
 
     /**
-     * @param conversionService The conversion service
+     * @param conversionService     The conversion service
      */
     InterceptUrlMapConverter(ConversionService conversionService) {
         this.conversionService = conversionService;
@@ -62,14 +63,13 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
         m = transform(m);
         Optional<String> optionalPattern = conversionService.convert(m.get(PATTERN), String.class);
         if (optionalPattern.isPresent()) {
-            Optional<List<String>> optionalAccessList = conversionService.convert(m.get(ACCESS), List.class);
-            optionalAccessList = optionalAccessList.map(list -> list.stream()
-                .map(o -> conversionService.convert(o, String.class))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(String.class::cast)
-                .collect(Collectors.toList()));
+            Optional<List> optionalAccessList = conversionService.convert(m.get(ACCESS), List.class);
             if (optionalAccessList.isPresent()) {
+                List<String> accessList = new ArrayList<>();
+                for (Object obj : optionalAccessList.get()) {
+                    conversionService.convert(obj, String.class)
+                        .ifPresent(accessList::add);
+                }
                 Optional<HttpMethod> httpMethod;
                 if (m.containsKey(HTTP_METHOD)) {
                     httpMethod = conversionService.convert(m.get(HTTP_METHOD), HttpMethod.class);
@@ -80,7 +80,8 @@ public class InterceptUrlMapConverter implements TypeConverter<Map<String, Objec
                     httpMethod = Optional.empty();
                 }
 
-                return Optional.of(new InterceptUrlMapPattern(optionalPattern.get(), optionalAccessList.get(), httpMethod.orElse(null)));
+                return optionalPattern
+                    .map(pattern -> new InterceptUrlMapPattern(pattern, accessList, httpMethod.orElse(null)));
             } else {
                 throw new ConfigurationException(String.format("interceptUrlMap configuration record %s rejected due to missing or empty %s key.", m.toString(), ACCESS));
             }

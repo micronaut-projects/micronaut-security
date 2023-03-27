@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,7 +174,7 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
     }
 
     @Override
-    public Optional<EndpointConfiguration> getAuthorization() {
+    public Optional<OauthAuthorizationEndpointConfiguration> getAuthorization() {
         return Optional.ofNullable(authorization);
     }
 
@@ -407,7 +407,23 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
      * OAuth 2.0 authorization endpoint configuration.
      */
     @ConfigurationProperties("authorization")
-    public static class AuthorizationEndpointConfigurationProperties extends DefaultEndpointConfiguration {
+    public static class AuthorizationEndpointConfigurationProperties extends DefaultEndpointConfiguration implements OauthAuthorizationEndpointConfiguration {
+        private String codeChallengeMethod;
+
+        @Override
+        @NonNull
+        public Optional<String> getCodeChallengeMethod() {
+            return Optional.ofNullable(codeChallengeMethod);
+        }
+
+        /**
+         * Code Challenge Method to use for PKCE.
+         *
+         * @param codeChallengeMethod Code Challenge Method
+         */
+        public void setCodeChallengeMethod(@Nullable String codeChallengeMethod) {
+            this.codeChallengeMethod = codeChallengeMethod;
+        }
 
     }
 
@@ -603,6 +619,8 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             private List<String> uiLocales;
             private List<String>  acrValues;
 
+            private String codeChallengeMethod;
+
             @NonNull
             @Override
             public ResponseType getResponseType() {
@@ -692,6 +710,21 @@ public class OauthClientConfigurationProperties implements OauthClientConfigurat
             @Override
             public Optional<List<String>> getAcrValues() {
                 return Optional.ofNullable(acrValues);
+            }
+
+            @Override
+            @NonNull
+            public Optional<String> getCodeChallengeMethod() {
+                return Optional.ofNullable(codeChallengeMethod);
+            }
+
+            /**
+             * Code Challenge Method to use for PKCE.
+             *
+             * @param codeChallengeMethod Code Challenge Method
+             */
+            public void setCodeChallengeMethod(@Nullable String codeChallengeMethod) {
+                this.codeChallengeMethod = codeChallengeMethod;
             }
 
             /**

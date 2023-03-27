@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@ package io.micronaut.security.token.jwt.render;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.core.annotation.Creator;
-import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.serde.annotation.Serdeable;
+
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Stores the combination of access and refresh tokens.
@@ -27,39 +29,28 @@ import io.micronaut.core.annotation.Nullable;
  * @author Sergio del Amo
  * @since 1.0
  */
-@Introspected
+@Serdeable
 public class AccessRefreshToken {
 
     @JsonProperty("access_token")
-    private String accessToken;
+    @NonNull
+    @NotBlank
+    private final String accessToken;
 
     @JsonProperty("refresh_token")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String refreshToken;
+    @Nullable
+    private final String refreshToken;
 
     @JsonProperty("token_type")
-    private String tokenType;
+    @NonNull
+    @NotBlank
+    private final String tokenType;
 
     @JsonProperty("expires_in")
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Nullable
     private Integer expiresIn;
-
-    /**
-     * Necessary for JSON serialization.
-     */
-    public AccessRefreshToken() { }
-
-    /**
-     *
-     * @param accessToken JWT token
-     * @param refreshToken JWT token
-     * @param tokenType Type of token
-     */
-    public AccessRefreshToken(String accessToken, @Nullable String refreshToken, String tokenType) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.tokenType = tokenType;
-    }
 
     /**
      *
@@ -68,8 +59,10 @@ public class AccessRefreshToken {
      * @param tokenType Type of token
      * @param expiresIn Seconds until token expiration
      */
-    @Creator
-    public AccessRefreshToken(String accessToken, @Nullable String refreshToken, String tokenType, @Nullable Integer expiresIn) {
+    public AccessRefreshToken(@NonNull String accessToken,
+                              @Nullable String refreshToken,
+                              @NonNull String tokenType,
+                              @Nullable Integer expiresIn) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.tokenType = tokenType;
@@ -80,6 +73,7 @@ public class AccessRefreshToken {
      * accessToken getter.
      * @return The access token
      */
+    @NonNull
     public String getAccessToken() {
         return accessToken;
     }
@@ -88,6 +82,7 @@ public class AccessRefreshToken {
      * refreshToken getter.
      * @return The refresh token
      */
+    @Nullable
     public String getRefreshToken() {
         return refreshToken;
     }
@@ -96,6 +91,7 @@ public class AccessRefreshToken {
      * token type getter.
      * @return TokenType e.g. Bearer
      */
+    @NonNull
     public String getTokenType() {
         return tokenType;
     }
@@ -104,6 +100,7 @@ public class AccessRefreshToken {
      * lifetime in seconds of the access token getter.
      * @return expiration time
      */
+    @Nullable
     public Integer getExpiresIn() {
         return expiresIn;
     }

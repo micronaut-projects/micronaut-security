@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public enum TokenError {
     UNSUPPORTED_GRANT_TYPE("unsupported_grant_type"),
     INVALID_SCOPE("invalid_scope");
 
-    private String errorCode;
+    private final String errorCode;
 
     /**
      * @param errorCode The error code

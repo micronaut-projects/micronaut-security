@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.config.RefreshRedirectConfiguration;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.handlers.RedirectingLoginHandler;
@@ -56,15 +57,17 @@ public abstract class CookieLoginHandler implements RedirectingLoginHandler {
     /**
      * @param accessTokenCookieConfiguration Access token cookie configuration
      * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirect service
      * @param priorToLoginPersistence The prior to login persistence strategy
      */
-    public CookieLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+    protected CookieLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                               RedirectConfiguration redirectConfiguration,
+                              RedirectService redirectService,
                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        this.loginFailure = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginFailure() : null;
-        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectConfiguration.getLoginSuccess() : null;
+        this.loginFailure = redirectConfiguration.isEnabled() ? redirectService.loginFailureUrl() : null;
+        this.loginSuccess = redirectConfiguration.isEnabled() ? redirectService.loginSuccessUrl() : null;
         RefreshRedirectConfiguration refreshConfig = redirectConfiguration.getRefresh();
-        this.refresh = redirectConfiguration.isEnabled() && refreshConfig.isEnabled() ? refreshConfig.getUrl() : null;
+        this.refresh = redirectConfiguration.isEnabled() && refreshConfig.isEnabled() ? redirectService.refreshUrl() : null;
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.priorToLoginPersistence = priorToLoginPersistence;
     }

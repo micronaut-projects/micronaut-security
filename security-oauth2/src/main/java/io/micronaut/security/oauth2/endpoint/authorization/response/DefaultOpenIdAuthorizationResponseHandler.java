@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence;
 import io.micronaut.security.oauth2.endpoint.authorization.state.InvalidStateException;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
@@ -36,12 +37,13 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 import jakarta.inject.Singleton;
-import java.text.ParseException;
-import java.util.Optional;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
+
+import java.text.ParseException;
+import java.util.Optional;
 
 /**
  * Default implementation of {@link OpenIdAuthorizationResponseHandler}.
@@ -60,24 +62,29 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
     private final TokenEndpointClient tokenEndpointClient;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
     private final @Nullable StateValidator stateValidator;
+    private final @Nullable
+    PkcePersistence pkcePersistence;
 
     /**
      * @param tokenResponseValidator The token response validator
-     * @param authenticationMapper Authentication Mapper
-     * @param tokenEndpointClient The token endpoint client
-     * @param oauthRouteUrlBuilder The oauth route url builder
-     * @param stateValidator The state validator
+     * @param authenticationMapper   Authentication Mapper
+     * @param tokenEndpointClient    The token endpoint client
+     * @param oauthRouteUrlBuilder   The oauth route url builder
+     * @param stateValidator         The state validator
+     * @param pkcePersistence        The PKCE persistence
      */
     public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
                                                      DefaultOpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,
                                                      OauthRouteUrlBuilder oauthRouteUrlBuilder,
-                                                     @Nullable StateValidator stateValidator) {
+                                                     @Nullable StateValidator stateValidator,
+                                                     @Nullable PkcePersistence pkcePersistence) {
         this.tokenResponseValidator = tokenResponseValidator;
         this.defaultAuthenticationMapper = authenticationMapper;
         this.tokenEndpointClient = tokenEndpointClient;
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateValidator = stateValidator;
+        this.pkcePersistence = pkcePersistence;
     }
 
     @Override
@@ -131,7 +138,12 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
     private Publisher<OpenIdTokenResponse> sendRequest(OpenIdAuthorizationResponse authorizationResponse,
                                                OauthClientConfiguration clientConfiguration,
                                                SecureEndpoint tokenEndpoint) {
-        OpenIdCodeTokenRequestContext requestContext = new OpenIdCodeTokenRequestContext(authorizationResponse, oauthRouteUrlBuilder, tokenEndpoint, clientConfiguration);
+        OpenIdCodeTokenRequestContext requestContext = new OpenIdCodeTokenRequestContext(authorizationResponse,
+            oauthRouteUrlBuilder,
+            tokenEndpoint,
+            clientConfiguration,
+            pkcePersistence == null ? null :
+                pkcePersistence.retrieveCodeVerifier(authorizationResponse.getCallbackRequest()).orElse(null));
         return tokenEndpointClient.sendRequest(requestContext);
     }
 

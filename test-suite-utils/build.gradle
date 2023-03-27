@@ -1,25 +1,12 @@
 plugins {
     id 'java-library'
     id 'groovy'
-    id "io.micronaut.build.internal.security-module"
+    id "io.micronaut.build.internal.security-tests"
 }
 
 dependencies {
-    api(libs.geb.spock)
     compileOnly(mn.micronaut.inject.groovy)
-    implementation(platform(mn.micronaut.bom))
-    implementation(mn.micronaut.test.spock)
+    implementation(mnTest.micronaut.test.spock)
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.micronaut.http.client)
-    implementation(libs.testcontainers.selenium)
-    implementation(libs.selenium.remote.driver)
-    implementation(libs.selenium.api)
-    implementation(libs.selenium.support)
-    runtimeOnly(libs.selenium.firefox.driver)
-    runtimeOnly(libs.selenium.chrome.driver)
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("1.8")
-    targetCompatibility = JavaVersion.toVersion("1.8")
 }

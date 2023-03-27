@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.event.LogoutEvent;
 import io.micronaut.security.handlers.LogoutHandler;
 import io.micronaut.security.rules.SecurityRule;
-import jakarta.inject.Inject;
 
 /**
  *
@@ -47,21 +46,20 @@ import jakarta.inject.Inject;
 public class LogoutController {
 
     private final LogoutHandler logoutHandler;
-    private final ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher<LogoutEvent> logoutEventPublisher;
     private final boolean getAllowed;
 
     /**
      *
      * @param logoutHandler A collaborator which helps to build HTTP response if user logout.
-     * @param eventPublisher The application event publisher
+     * @param logoutEventPublisher The application event publisher
      * @param logoutControllerConfiguration Configuration for the Logout controller
      */
-    @Inject
     public LogoutController(LogoutHandler logoutHandler,
-                            ApplicationEventPublisher eventPublisher,
+                            ApplicationEventPublisher<LogoutEvent> logoutEventPublisher,
                             LogoutControllerConfiguration logoutControllerConfiguration) {
         this.logoutHandler = logoutHandler;
-        this.eventPublisher = eventPublisher;
+        this.logoutEventPublisher = logoutEventPublisher;
         this.getAllowed = logoutControllerConfiguration.isGetAllowed();
     }
 
@@ -102,7 +100,7 @@ public class LogoutController {
      */
     protected MutableHttpResponse<?> handleLogout(HttpRequest<?> request, @Nullable Authentication authentication) {
         if (authentication != null) {
-            eventPublisher.publishEvent(new LogoutEvent(authentication));
+            logoutEventPublisher.publishEvent(new LogoutEvent(authentication));
         }
         return logoutHandler.logout(request);
     }

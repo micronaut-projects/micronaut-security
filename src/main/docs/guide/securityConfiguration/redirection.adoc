@@ -4,7 +4,9 @@ You can configure the redirection destinations with:
 
 include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.adoc[]
 
+include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties.adoc[]
 
-include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.adoc[]
+include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties.adoc[]
 
-include::{includedir}configurationProperties/io.micronaut.security.config.RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.adoc[]
+IMPORTANT: Use the API api:security.config.RedirectService[], which prepends the context path, if defined, to the redirect URLs.
+

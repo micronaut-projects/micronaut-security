@@ -7,7 +7,7 @@ that token to other requests in your network.
 
 You can configure token propagation to achieve that.
 
-[source, yaml]
+[configuration]
 ----
 include::{testssecurity}/security/token/propagation/TokenPropagationSpec.groovy[tag=yamlconfig,indent=0]
 ----

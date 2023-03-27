@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
-import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import javax.validation.constraints.NotBlank;
+import io.micronaut.serde.annotation.Serdeable;
+
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * A parameter representing the token along with optional parameters representing
@@ -27,7 +28,7 @@ import javax.validation.constraints.NotBlank;
  * @author Sergio del Amo
  * @since 2.1.0
  */
-@Introspected
+@Serdeable
 public class IntrospectionRequest {
 
     /**
@@ -35,27 +36,13 @@ public class IntrospectionRequest {
      */
     @NonNull
     @NotBlank
-    private String token;
+    private final String token;
 
     /**
      * A hint about the type of the token submitted for introspection.
      */
     @Nullable
-    private String token_type_hint;
-
-    /**
-     * Constructor.
-     */
-    public IntrospectionRequest() {
-    }
-
-    /**
-     *
-     * @param token The string value of the token
-     */
-    public IntrospectionRequest(@NonNull @NotBlank String token) {
-        this.token = token;
-    }
+    private final String token_type_hint;
 
     /**
      *
@@ -78,27 +65,11 @@ public class IntrospectionRequest {
 
     /**
      *
-     * @param token  The string value of the tok
-     */
-    public void setToken(@NonNull String token) {
-        this.token = token;
-    }
-
-    /**
-     *
      * @return A hint about the type of the token submitted for introspection.
      */
     @Nullable
     public String getTokenTypeHint() {
         return token_type_hint;
-    }
-
-    /**
-     *
-     * @param tokenTypeHint A hint about the type of the token submitted for introspection.
-     */
-    public void setTokenTypeHint(@Nullable String tokenTypeHint) {
-        this.token_type_hint = tokenTypeHint;
     }
 
     /**
@@ -109,15 +80,6 @@ public class IntrospectionRequest {
     @SuppressWarnings("MethodName")
     public String getToken_type_hint() {
         return getTokenTypeHint();
-    }
-
-    /**
-     *
-     * @param tokenTypeHint A hint about the type of the token submitted for introspection.
-     */
-    @SuppressWarnings("MethodName")
-    public void setToken_type_hint(@Nullable String tokenTypeHint) {
-        setTokenTypeHint(tokenTypeHint);
     }
 
     @Override

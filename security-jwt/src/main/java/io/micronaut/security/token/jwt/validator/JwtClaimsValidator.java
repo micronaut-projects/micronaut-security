@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,6 @@ import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
  * @since 1.1.0
  */
 public interface JwtClaimsValidator {
-
-    /**
-     * @deprecated use {@link JwtClaimsValidatorConfigurationProperties#PREFIX} instead.
-     */
-    @Deprecated
-    String PREFIX = JwtClaimsValidatorConfigurationProperties.PREFIX;
 
     /**
      * @param claims JWT Claims
