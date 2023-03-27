@@ -46,7 +46,6 @@ public class PkceConfigurationProperties implements PkceConfiguration {
      */
     private static final int DEFAULT_CODE_VERIFIER_ENTROPY = 64;
 
-    @Pattern(regexp = "cookie|session")
     private String persistence = DEFAULT_PERSISTENCE;
     private boolean enabled = DEFAULT_ENABLED;
     private int entropy = DEFAULT_CODE_VERIFIER_ENTROPY;
@@ -66,7 +65,7 @@ public class PkceConfigurationProperties implements PkceConfiguration {
 
     @Override
     @NonNull
-    public Optional<String> getPersistence() {
+    public Optional<@Pattern(regexp = "cookie|session") String> getPersistence() {
         return Optional.ofNullable(persistence);
     }
 
