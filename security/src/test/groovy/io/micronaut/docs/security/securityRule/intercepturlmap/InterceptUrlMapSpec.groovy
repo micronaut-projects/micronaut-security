@@ -23,22 +23,22 @@ micronaut:
         pattern: /images/*
         http-method: GET
         access:
-          - isAnonymous() # <1>
+          - isAnonymous()
       -
         pattern: /books
         access:
-          - isAuthenticated() # <2>
+          - isAuthenticated()
       -
         pattern: /books/grails
         http-method: POST
         access:
-          - ROLE_GRAILS # <3>
+          - ROLE_GRAILS
           - ROLE_GROOVY
-      - 
+      -
         pattern: /books/grails
         http-method: PUT
-        access: 
-          - ROLE_ADMIN        
+        access:
+          - ROLE_ADMIN
 '''//end::yamlconfig[]
 
     @Shared

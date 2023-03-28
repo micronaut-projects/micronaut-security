@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package io.micronaut.security.oauth2.client;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
@@ -125,7 +124,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     private final List<String> claimTypesSupported;
 
     @Nullable
-    private final Boolean claimsParameterSupported = Boolean.FALSE;
+    private final Boolean claimsParameterSupported;
 
     @Nullable
     private final String opTosUri;
@@ -157,50 +156,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     @Nullable
     private final String checkSessionIframe;
 
-    public DefaultOpenIdProviderMetadata() {
-        this(null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null);
-    }
-
     @SuppressWarnings("ParameterNumber")
-    @Creator
     public DefaultOpenIdProviderMetadata(@Nullable String authorizationEndpoint,
                                          @NonNull List<String> idTokenSigningAlgValuesSupported,
                                          @NonNull String issuer,
@@ -230,6 +186,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
                                          @Nullable List<String> idTokenEncryptionEncValuesSupported,
                                          @Nullable List<String> displayValuesSupported,
                                          @Nullable List<String> claimTypesSupported,
+                                         @Nullable Boolean claimsParameterSupported,
                                          @Nullable String opTosUri,
                                          @Nullable String opPolicyUri,
                                          @Nullable List<String> uriLocalesSupported,
@@ -269,6 +226,7 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
         this.idTokenEncryptionEncValuesSupported = idTokenEncryptionEncValuesSupported;
         this.displayValuesSupported = displayValuesSupported;
         this.claimTypesSupported = claimTypesSupported;
+        this.claimsParameterSupported = claimsParameterSupported  != null ? claimsParameterSupported : Boolean.FALSE;
         this.opTosUri = opTosUri;
         this.opPolicyUri = opPolicyUri;
         this.uriLocalesSupported = uriLocalesSupported;
@@ -571,5 +529,600 @@ public class DefaultOpenIdProviderMetadata implements OpenIdProviderMetadata {
     @Override
     public List<String> getRequestObjectEncryptionEncValuesSupported() {
         return requestObjectEncryptionEncValuesSupported;
+    }
+
+    /**
+     *
+     * @return Creates a Builder.
+     */
+    @NonNull
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder.
+     */
+    public static class Builder {
+        @Nullable
+        private String authorizationEndpoint;
+
+        @NonNull
+        private List<String> idTokenSigningAlgValuesSupported;
+
+        @NonNull
+        private String issuer;
+        @NonNull
+        private String jwksUri;
+
+        @Nullable
+        private List<String> acrValuesSupported;
+        @Nullable
+        private List<String> responseTypesSupported;
+        @Nullable
+        private List<String> responseModesSupported;
+        @Nullable
+        private List<String> scopesSupported;
+
+        @Nullable
+        private List<String> grantTypesSupported;
+
+        @NonNull
+        private List<String> subjectTypesSupported;
+        @NonNull
+        private String tokenEndpoint;
+
+        @Nullable
+        private List<String> tokenEndpointAuthMethodsSupported;
+
+        @Nullable
+        private String userinfoEndpoint;
+
+        @Nullable
+        private String registrationEndpoint;
+        @Nullable private List<String> claimsSupported;
+        @Nullable
+        private List<String> codeChallengeMethodsSupported;
+        @Nullable
+        private String introspectionEndpoint;
+        @Nullable
+        private List<String> introspectionEndpointAuthMethodsSupported;
+        @Nullable
+        private String revocationEndpoint;
+        @Nullable
+        private List<String> revocationEndpointAuthMethodsSupported;
+        @Nullable
+        private String endSessionEndpoint;
+        @Nullable
+        private Boolean requestParameterSupported;
+        @Nullable
+        private Boolean requestUriParameterSupported;
+        @Nullable
+        private Boolean requireRequestUriRegistration;
+        @Nullable
+        private List<String> requestObjectSigningAlgValuesSupported;
+        @Nullable
+        private String serviceDocumentation;
+        @Nullable
+        private List<String> idTokenEncryptionEncValuesSupported;
+        @Nullable
+        private List<String> displayValuesSupported;
+        @Nullable
+        private List<String> claimTypesSupported;
+
+        @NonNull
+        private Boolean claimsParameterSupported = Boolean.FALSE;
+
+        @Nullable
+        private String opTosUri;
+        @Nullable
+        private String opPolicyUri;
+        @Nullable
+        private List<String> uriLocalesSupported;
+        @Nullable
+        private List<String> claimsLocalesSupported;
+        @Nullable
+        private List<String> userinfoEncryptionAlgValuesSupported;
+        @Nullable
+        private List<String> userinfoEncryptionEncValuesSupported;
+        @Nullable
+        private List<String> tokenEndpointAuthSigningAlgValuesSupported;
+        @Nullable
+        private List<String> requestObjectEncryptionAlgValuesSupported;
+        @Nullable
+        private List<String> requestObjectEncryptionEncValuesSupported;
+        @Nullable
+        private String checkSessionIframe;
+
+        /**
+         *
+         * @param authorizationEndpoint URL of the Open ID Provider's OAuth 2.0 Authorization Endpoint
+         * @return The Builder
+         */
+        @NonNull
+        public Builder authorizationEndpoint(@Nullable String authorizationEndpoint) {
+            this.authorizationEndpoint = authorizationEndpoint;
+            return this;
+        }
+
+        /**
+         *
+         * @param idTokenSigningAlgValuesSupported List of the JWS signing algorithms (alg values) supported by the OP for the ID Token to encode the Claims in a JWT [JWT].
+         * @return The Builder
+         */
+        @NonNull
+        public Builder idTokenSigningAlgValuesSupported(@NonNull List<String> idTokenSigningAlgValuesSupported) {
+            this.idTokenSigningAlgValuesSupported = idTokenSigningAlgValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param issuer URL using the https scheme with no query or fragment component that the Open ID Provider asserts as its Issuer Identifier.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder issuer(@NonNull String issuer) {
+            this.issuer = issuer;
+            return this;
+        }
+
+        /**
+         *
+         * @param jwksUri URL of the Open ID Provider's JSON Web Key Set
+         * @return The Builder
+         */
+        @NonNull
+        public Builder jwksUri(@NonNull String jwksUri) {
+            this.jwksUri = jwksUri;
+            return this;
+        }
+
+        /**
+         *
+         * @param acrValuesSupported List of the Authentication Context Class References that this OP supports.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder acrValuesSupported(@NonNull List<String> acrValuesSupported) {
+            this.acrValuesSupported = acrValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param responseTypesSupported List of the OAuth 2.0 response_type values that this Open ID Provider supports.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder responseTypesSupported(@Nullable List<String> responseTypesSupported) {
+            this.responseTypesSupported = responseTypesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param responseModesSupported List of the OAuth 2.0 response_mode values that this Open ID Provider supports.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder responseModesSupported(@Nullable List<String> responseModesSupported) {
+            this.responseModesSupported = responseModesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param scopesSupported List of the OAuth 2.0 [RFC6749] scope values that this server supports.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder scopesSupported(@Nullable List<String> scopesSupported) {
+            this.scopesSupported = scopesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param grantTypesSupported List of the OAuth 2.0 Grant Type values that this Open ID Provider supports.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder grantTypesSupported(@Nullable List<String> grantTypesSupported) {
+            this.grantTypesSupported = grantTypesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param subjectTypesSupported List of the Subject Identifier types that this OP supports.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder subjectTypesSupported(@NonNull List<String> subjectTypesSupported) {
+            this.subjectTypesSupported = subjectTypesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param tokenEndpoint URL of the Open ID Provider's OAuth 2.0 Token Endpoint
+         * @return The Builder
+         */
+        @NonNull
+        public Builder tokenEndpoint(@NonNull String tokenEndpoint) {
+            this.tokenEndpoint = tokenEndpoint;
+            return this;
+        }
+
+        /**
+         *
+         * @param tokenEndpointAuthMethodsSupported List of Client Authentication methods supported by this Token Endpoint.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder tokenEndpointAuthMethodsSupported(@Nullable List<String> tokenEndpointAuthMethodsSupported) {
+            this.tokenEndpointAuthMethodsSupported = tokenEndpointAuthMethodsSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param userinfoEndpoint URL of the Open ID Provider's UserInfo Endpoint
+         * @return The Builder
+         */
+        @NonNull
+        public Builder userinfoEndpoint(@Nullable String userinfoEndpoint) {
+            this.userinfoEndpoint = userinfoEndpoint;
+            return this;
+        }
+
+        /**
+         *
+         * @param registrationEndpoint URL of the Open ID Provider's Dynamic Client Registration Endpoint
+         * @return The Builder
+         */
+        @NonNull
+        public Builder registrationEndpoint(@Nullable String registrationEndpoint) {
+            this.registrationEndpoint = registrationEndpoint;
+            return this;
+        }
+
+        /**
+         *
+         * @param claimsSupported List of the Claim Names of the Claims that the OpenID Provider MAY be able to supply values for.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder claimsSupported(@Nullable List<String> claimsSupported) {
+            this.claimsSupported = claimsSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param codeChallengeMethodsSupported List of the supported transformation methods by the authorisation code verifier for Proof Key for Code Exchange (PKCE).
+         * @return The Builder
+         */
+        @NonNull
+        public Builder codeChallengeMethodsSupported(@Nullable List<String> codeChallengeMethodsSupported) {
+            this.codeChallengeMethodsSupported = codeChallengeMethodsSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param introspectionEndpoint The fully qualified URL of the server's introspection endpoint defined by OAuth Token Introspection [RFC7662]
+         * @return The Builder
+         */
+        @NonNull
+        public Builder introspectionEndpoint(@Nullable String introspectionEndpoint) {
+            this.introspectionEndpoint = introspectionEndpoint;
+            return this;
+        }
+
+        /**
+         *
+         * @param introspectionEndpointAuthMethodsSupported List of Client Authentication methods supported by Introspection Endpoint
+         * @return The Builder
+         */
+        @NonNull
+        public Builder introspectionEndpointAuthMethodsSupported(@Nullable List<String> introspectionEndpointAuthMethodsSupported) {
+            this.introspectionEndpointAuthMethodsSupported = introspectionEndpointAuthMethodsSupported;
+            return this;
+        }
+
+
+        /**
+         *
+         * @param revocationEndpoint The fully qualified URL of the server's revocation endpoint defined by Oauth Token Revocation.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder revocationEndpoint(@Nullable String revocationEndpoint) {
+            this.revocationEndpoint = revocationEndpoint;
+            return this;
+        }
+
+        /**
+         *
+         * @param revocationEndpointAuthMethodsSupported List of Client Authentication methods supported by Revocation Endpoint
+         * @return The Builder
+         */
+        @NonNull
+        public Builder revocationEndpointAuthMethodsSupported(@Nullable List<String> revocationEndpointAuthMethodsSupported) {
+            this.revocationEndpointAuthMethodsSupported = revocationEndpointAuthMethodsSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param endSessionEndpoint URL at the OP to which an RP can perform a redirect to request that the End-User be logged out at the OP.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder endSessionEndpoint(@Nullable String endSessionEndpoint) {
+            this.endSessionEndpoint = endSessionEndpoint;
+            return this;
+        }
+
+        /**
+         *
+         * @param requestParameterSupported Boolean value specifying whether the OP supports use of the request parameter, with true indicating support.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder requestParameterSupported(@Nullable Boolean requestParameterSupported) {
+            this.requestParameterSupported = requestParameterSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param requestUriParameterSupported Boolean value specifying whether the OP supports use of the request_uri parameter, with true indicating support.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder requestUriParameterSupported(@Nullable Boolean requestUriParameterSupported) {
+            this.requestUriParameterSupported = requestUriParameterSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param requireRequestUriRegistration Boolean value specifying whether the OP requires any request_uri values used to be pre-registered using the request_uris registration parameter. Pre-registration is REQUIRED when the value is true. If omitted, the default value is false.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder requireRequestUriRegistration(@Nullable Boolean requireRequestUriRegistration) {
+            this.requireRequestUriRegistration = requireRequestUriRegistration;
+            return this;
+        }
+
+        /**
+         *
+         * @param requestObjectSigningAlgValuesSupported List of the JWS signing algorithms (alg values) supported by the OP for Request Objects.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder requestObjectSigningAlgValuesSupported(@Nullable List<String> requestObjectSigningAlgValuesSupported) {
+            this.requestObjectSigningAlgValuesSupported = requestObjectSigningAlgValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param serviceDocumentation URL of a page containing human-readable information that developers might want or need to know when using the OpenID Provider.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder serviceDocumentation(@Nullable String serviceDocumentation) {
+            this.serviceDocumentation = serviceDocumentation;
+            return this;
+        }
+
+        /**
+         *
+         * @param idTokenEncryptionEncValuesSupported List of the JWE encryption algorithms (enc values) supported by the OP for the ID Token to encode the Claims in a JWT [JWT].
+         * @return The Builder
+         */
+        @NonNull
+        public Builder idTokenEncryptionEncValuesSupported(@Nullable List<String> idTokenEncryptionEncValuesSupported) {
+            this.idTokenEncryptionEncValuesSupported = idTokenEncryptionEncValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param displayValuesSupported List of the display parameter values that the OpenID Provider supports.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder displayValuesSupported(@Nullable List<String> displayValuesSupported) {
+            this.displayValuesSupported = displayValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param claimTypesSupported List of the Claim Types that the OpenID Provider supports.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder claimTypesSupported(@Nullable List<String> claimTypesSupported) {
+            this.claimTypesSupported = claimTypesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param claimsParameterSupported Boolean value specifying whether the OP supports use of the claims parameter.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder claimsParameterSupported(@NonNull Boolean claimsParameterSupported) {
+            this.claimsParameterSupported = claimsParameterSupported;
+            return this;
+        }
+
+
+
+        /**
+         *
+         * @param opTosUri URL that the OpenID Provider provides to the person registering the Client to read about OpenID Provider's terms of service.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder opTosUri(@Nullable String opTosUri) {
+            this.opTosUri = opTosUri;
+            return this;
+        }
+
+        /**
+         *
+         * @param opPolicyUri URL that the OpenID Provider provides to the person registering the Client to read about the OP's requirements on how the Relying Party can use the data provided by the OP.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder opPolicyUri(@Nullable String opPolicyUri) {
+            this.opPolicyUri = opPolicyUri;
+            return this;
+        }
+
+        /**
+         *
+         * @param uriLocalesSupported Languages and scripts supported for the user interface
+         * @return The Builder
+         */
+        @NonNull
+        public Builder uriLocalesSupported(@Nullable List<String> uriLocalesSupported) {
+            this.uriLocalesSupported = uriLocalesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param claimsLocalesSupported Languages and scripts supported for values in Claims
+         * @return The Builder
+         */
+        @NonNull
+        public Builder claimsLocalesSupported(@Nullable List<String> claimsLocalesSupported) {
+            this.claimsLocalesSupported = claimsLocalesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param userinfoEncryptionAlgValuesSupported List of the JWE [JWE] encryption algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].
+         * @return The Builder
+         */
+        @NonNull
+        public Builder userinfoEncryptionAlgValuesSupported(@Nullable List<String> userinfoEncryptionAlgValuesSupported) {
+            this.userinfoEncryptionAlgValuesSupported = userinfoEncryptionAlgValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param userinfoEncryptionEncValuesSupported List of the JWE encryption algorithms (enc values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].
+         * @return The Builder
+         */
+        @NonNull
+        public Builder userinfoEncryptionEncValuesSupported(@Nullable List<String> userinfoEncryptionEncValuesSupported) {
+            this.userinfoEncryptionEncValuesSupported = userinfoEncryptionEncValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param tokenEndpointAuthSigningAlgValuesSupported List of the JWS signing algorithms (alg values) supported by the Token Endpoint.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder tokenEndpointAuthSigningAlgValuesSupported(@Nullable List<String> tokenEndpointAuthSigningAlgValuesSupported) {
+            this.tokenEndpointAuthSigningAlgValuesSupported = tokenEndpointAuthSigningAlgValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param requestObjectEncryptionAlgValuesSupported list of the JWE encryption algorithms (alg values) supported by the OP for Request Objects.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder requestObjectEncryptionAlgValuesSupported(@Nullable List<String> requestObjectEncryptionAlgValuesSupported) {
+            this.requestObjectEncryptionAlgValuesSupported = requestObjectEncryptionAlgValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param requestObjectEncryptionEncValuesSupported List of the JWE encryption algorithms (enc values) supported by the OP for Request Objects.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder requestObjectEncryptionEncValuesSupported(@Nullable List<String> requestObjectEncryptionEncValuesSupported) {
+            this.requestObjectEncryptionEncValuesSupported = requestObjectEncryptionEncValuesSupported;
+            return this;
+        }
+
+        /**
+         *
+         * @param checkSessionIframe URL of an OP iframe that supports cross-origin communications for session state information with the RP Client, using the HTML5 postMessage API.
+         * @return The Builder
+         */
+        @NonNull
+        public Builder checkSessionIframe(@Nullable String checkSessionIframe) {
+            this.checkSessionIframe = checkSessionIframe;
+            return this;
+        }
+
+        /**
+         *
+         * @return a {@link DefaultOpenIdProviderMetadata} instance.
+         */
+        @NonNull
+        public DefaultOpenIdProviderMetadata build() {
+            return new DefaultOpenIdProviderMetadata(authorizationEndpoint,
+                idTokenSigningAlgValuesSupported,
+                issuer,
+                jwksUri,
+                acrValuesSupported,
+                responseTypesSupported,
+                responseModesSupported,
+                scopesSupported,
+                grantTypesSupported,
+                subjectTypesSupported,
+                tokenEndpoint,
+                tokenEndpointAuthMethodsSupported,
+                userinfoEndpoint,
+                registrationEndpoint,
+                claimsSupported,
+                codeChallengeMethodsSupported,
+                introspectionEndpoint,
+                introspectionEndpointAuthMethodsSupported,
+                revocationEndpoint,
+                revocationEndpointAuthMethodsSupported,
+                endSessionEndpoint,
+                requestParameterSupported,
+                requestUriParameterSupported,
+                requireRequestUriRegistration,
+                requestObjectSigningAlgValuesSupported,
+                serviceDocumentation,
+                idTokenEncryptionEncValuesSupported,
+                displayValuesSupported,
+                claimTypesSupported,
+                claimsParameterSupported,
+                opTosUri,
+                opPolicyUri,
+                uriLocalesSupported,
+                claimsLocalesSupported,
+                userinfoEncryptionAlgValuesSupported,
+                userinfoEncryptionEncValuesSupported,
+                tokenEndpointAuthSigningAlgValuesSupported,
+                requestObjectEncryptionAlgValuesSupported,
+                requestObjectEncryptionEncValuesSupported,
+                checkSessionIframe);
+        }
     }
 }

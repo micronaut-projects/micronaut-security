@@ -2,7 +2,7 @@ A https://tools.ietf.org/html/rfc7517[JSON Web Key (JWK)] is a JSON object that 
 
 You can configure a remote JWKS as a signature validator:
 
-[source, groovy]
+[configuration]
 ----
 include::{testssecurityjwt}/jwks/JwksSpec.groovy[indent=0, tag=yamlconfig]
 ----

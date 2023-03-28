@@ -393,5 +393,255 @@
     "type": "io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext",
     "member": "Constructor io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext(io.micronaut.security.oauth2.endpoint.authorization.response.AuthorizationResponse,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.SecureEndpoint,io.micronaut.security.oauth2.configuration.OauthClientConfiguration)",
     "reason": "removed deprecated constructor in Micronaut Security 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.config.$RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.config.$RedirectConfigurationProperties$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$RefreshRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$RefreshRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.config.$RedirectConfigurationProperties$RefreshRedirectConfigurationProperties$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$RefreshRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$RefreshRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$RefreshRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$RefreshRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.config.$RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.config.$RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.$IntrospectionController$Definition$Intercepted$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.$IntrospectionController$Definition$Intercepted$Definition$Reference",
+    "member": "Constructor io.micronaut.security.endpoints.introspection.$IntrospectionController$Definition$Intercepted$Definition$Reference()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.$IntrospectionController$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.$IntrospectionController$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.$IntrospectionController$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.$IntrospectionController$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.AdvisedBeanType",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.$IntrospectionController$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.endpoints.introspection.$IntrospectionController$Definition$Intercepted$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.filters.$SecurityFilterConfigurationProperties$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.filters.$SecurityFilterConfigurationProperties$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.filters.$SecurityFilterConfigurationProperties$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.filters.$SecurityFilterConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.filters.$SecurityFilterConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.filters.$SecurityFilterConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.filters.$SecurityFilterConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509ConfigurationProperties$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509ConfigurationProperties$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.x509.$X509ConfigurationProperties$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509ConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509ConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509ConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.x509.$X509ConfigurationProperties$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
   }
 ]

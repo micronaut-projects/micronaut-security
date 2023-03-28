@@ -40,7 +40,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.*
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.text.ParseException

@@ -9,8 +9,6 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.http.client.BlockingHttpClient
-import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
@@ -18,7 +16,6 @@ import io.micronaut.security.oauth2.keycloack.v16.Keycloak
 import io.micronaut.security.pages.HomePage
 import io.micronaut.security.pages.LoginPage
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.testutils.ConfigurationFixture
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
@@ -28,6 +25,7 @@ import io.micronaut.security.utils.BaseUrlUtils
 import io.micronaut.security.utils.HtmlUtils
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Mono
 import spock.lang.AutoCleanup
 import spock.lang.IgnoreIf
@@ -36,6 +34,7 @@ import spock.lang.Shared
 import java.security.Principal
 import java.util.concurrent.ConcurrentHashMap
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class JwtCookieRefreshSpec extends GebSpec {
     @AutoCleanup
     @Shared

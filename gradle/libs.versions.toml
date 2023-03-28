@@ -1,31 +1,26 @@
 [versions]
-managed-nimbus-jose-jwt = "9.28"
+managed-nimbus-jose-jwt = "9.31"
 
-micronaut = "4.0.0-SNAPSHOT"
+micronaut = "4.0.0-M1"
 micronaut-docs = "2.0.0"
-groovy = "4.0.6"
-spock = "2.3-groovy-4.0"
+groovy = "4.0.10"
 
-geb = "6.0"
-geb-groovy = "3.0.13"
-geb-spock = "2.2-groovy-3.0"
-reactor-test = "3.5.1"
-selenium = "4.7.2"
+geb = "7.0"
+selenium = "4.8.1"
 testcontainers = "1.17.6"
-unboundid-ldapsdk = "6.0.7"
-velocity-engine-core = "2.3"
+unboundid-ldapsdk = "6.0.8"
 bouncycastle = "1.70"
-javax-activation = "1.2.0"
-kotlin = "1.7.21"
+kotlin = "1.8.10"
 bcpkix = "1.70"
 
 micronaut-test = "4.0.0-SNAPSHOT"
-micronaut-multitenancy = "5.0.0-SNAPSHOT"
-micronaut-reactor = "3.0.0-SNAPSHOT"
-micronaut-serde = "2.0.0-SNAPSHOT"
+micronaut-multitenancy = "5.0.0-M1"
+micronaut-reactor = "3.0.0-M1"
+micronaut-serde = "2.0.0-M1"
 micronaut-servlet = "4.0.0-SNAPSHOT"
-micronaut-session = "1.0.0-SNAPSHOT"
-micronaut-views = "3.7.2"
+micronaut-session = "4.0.0-M1"
+micronaut-views = "4.0.0-M1"
+micronaut-validation = "4.0.0-M2"
 
 [libraries]
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
@@ -34,34 +29,26 @@ micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.r
 micronaut-servlet = { module = "io.micronaut.servlet:micronaut-servlet-bom", version.ref = "micronaut-servlet" }
 micronaut-session = { module = "io.micronaut.session:micronaut-session-bom", version.ref = "micronaut-session" }
 micronaut-views = { module = "io.micronaut.views:micronaut-views-bom", version.ref = "micronaut-views" }
+micronaut-validation = { module = "io.micronaut.validation:micronaut-validation-bom", version.ref = "micronaut-validation" }
 
 managed-nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "managed-nimbus-jose-jwt" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb" }
-spock-geb = { module = "org.spockframework:spock-core", version.ref = "geb-spock" }
-geb-groovy-test = { module = "org.codehaus.groovy:groovy-test", version.ref = "geb-groovy" }
-groovy-json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
-logback-classic = { module = "ch.qos.logback:logback-classic" }
-reactor-core = { module = "io.projectreactor:reactor-core" }
-reactor-test = { module = "io.projectreactor:reactor-test", version.ref = "reactor-test" }
 selenium-api = { module = "org.seleniumhq.selenium:selenium-api", version.ref = "selenium" }
 selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-driver", version.ref = "selenium" }
 selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-driver", version.ref = "selenium" }
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "selenium" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }
 unboundid-ldapsdk = { module = "com.unboundid:unboundid-ldapsdk", version.ref = "unboundid-ldapsdk" }
-velocity-engine-core = { module = "org.apache.velocity:velocity-engine-core", version.ref = "velocity-engine-core" }
 bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bouncycastle" }
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bouncycastle" }
-javax-activation = { module = "com.sun.activation:javax.activation", version.ref = "javax-activation" }
-spock-core = { module = "org.spockframework:spock-core", version.ref = "spock" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkix" }
 
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
 testcontainers = { module = "org.testcontainers:testcontainers" }
-testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref ="testcontainers" }
+testcontainers-selenium = { module = "org.testcontainers:selenium"}
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
