@@ -19,17 +19,20 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.context.ServerContextPathProvider;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.RedirectConfiguration;
 import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.config.ServerContextPathProviderUtils;
 import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
 import io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator;
 import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
@@ -49,6 +52,9 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
     protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
     protected final AccessTokenConfiguration accessTokenConfiguration;
 
+    @Nullable
+    protected ServerContextPathProvider serverContextPathProvider;
+
     /**
      * @param redirectService Redirection Service
      * @param redirectConfiguration Redirect configuration
@@ -57,7 +63,37 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
      * @param accessTokenConfiguration JWT Generator Configuration
      * @param accessRefreshTokenGenerator Access Refresh Token Generator
      * @param priorToLoginPersistence Prior To Login Persistence Mechanism
+     * @param serverContextPathProvider Server Context Path provider
      */
+    @Inject
+    public JwtCookieLoginHandler(RedirectService redirectService,
+                                 RedirectConfiguration redirectConfiguration,
+                                 AccessTokenCookieConfiguration accessTokenCookieConfiguration,
+                                 RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
+                                 AccessTokenConfiguration accessTokenConfiguration,
+                                 AccessRefreshTokenGenerator accessRefreshTokenGenerator,
+                                 @Nullable PriorToLoginPersistence priorToLoginPersistence,
+                                 @Nullable ServerContextPathProvider serverContextPathProvider) {
+        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
+        this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
+        this.accessTokenConfiguration = accessTokenConfiguration;
+        this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+        this.serverContextPathProvider = serverContextPathProvider;
+
+    }
+
+
+    /**
+     * @param redirectService Redirection Service
+     * @param redirectConfiguration Redirect configuration
+     * @param accessTokenCookieConfiguration JWT Access Token Cookie Configuration
+     * @param refreshTokenCookieConfiguration Refresh Token Cookie Configuration
+     * @param accessTokenConfiguration JWT Generator Configuration
+     * @param accessRefreshTokenGenerator Access Refresh Token Generator
+     * @param priorToLoginPersistence Prior To Login Persistence Mechanism
+     * @deprecated Use {@link JwtCookieLoginHandler(RedirectService,RedirectConfiguration,AccessTokenCookieConfiguration,RefreshTokenCookieConfiguration,AccessTokenConfiguration,AccessRefreshTokenGenerator,PriorToLoginPersistence,ServerContextPathProvider)} instead.
+     */
+    @Deprecated
     public JwtCookieLoginHandler(RedirectService redirectService,
                                  RedirectConfiguration redirectConfiguration,
                                  AccessTokenCookieConfiguration accessTokenCookieConfiguration,
@@ -65,10 +101,7 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
                                  AccessTokenConfiguration accessTokenConfiguration,
                                  AccessRefreshTokenGenerator accessRefreshTokenGenerator,
                                  @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
-        this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
-        this.accessTokenConfiguration = accessTokenConfiguration;
-        this.accessRefreshTokenGenerator = accessRefreshTokenGenerator;
+        this(redirectService, redirectConfiguration, accessTokenCookieConfiguration, refreshTokenCookieConfiguration, accessTokenConfiguration, accessRefreshTokenGenerator, priorToLoginPersistence, () -> "");
     }
 
     @Override
@@ -98,6 +131,10 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
         List<Cookie> cookies = new ArrayList<>(2);
         Cookie jwtCookie = Cookie.of(accessTokenCookieConfiguration.getCookieName(), accessRefreshToken.getAccessToken());
         jwtCookie.configure(accessTokenCookieConfiguration, request.isSecure());
+        if (serverContextPathProvider != null) {
+            accessTokenCookieConfiguration.getCookiePath()
+                .ifPresent(path -> jwtCookie.path(ServerContextPathProviderUtils.prependContextPath(path, serverContextPathProvider)));
+        }
         TemporalAmount maxAge = accessTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofSeconds(accessTokenConfiguration.getExpiration()));
         jwtCookie.maxAge(maxAge);
 
@@ -107,10 +144,13 @@ public class JwtCookieLoginHandler extends CookieLoginHandler {
         if (StringUtils.isNotEmpty(refreshToken)) {
             Cookie refreshCookie = Cookie.of(refreshTokenCookieConfiguration.getCookieName(), refreshToken);
             refreshCookie.configure(refreshTokenCookieConfiguration, request.isSecure());
+            if (serverContextPathProvider != null) {
+                refreshTokenCookieConfiguration.getCookiePath()
+                    .ifPresent(path -> refreshCookie.path(ServerContextPathProviderUtils.prependContextPath(path, serverContextPathProvider)));
+            }
             refreshCookie.maxAge(refreshTokenCookieConfiguration.getCookieMaxAge().orElseGet(() -> Duration.ofDays(30)));
             cookies.add(refreshCookie);
         }
-
         return cookies;
     }
 }
