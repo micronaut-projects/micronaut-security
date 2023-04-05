@@ -1,7 +1,7 @@
 [versions]
 managed-nimbus-jose-jwt = "9.31"
 
-micronaut = "3.8.5"
+micronaut = "3.8.8"
 micronaut-docs = "2.0.0"
 micronaut-test = "3.8.2"
 groovy = "3.0.13"
