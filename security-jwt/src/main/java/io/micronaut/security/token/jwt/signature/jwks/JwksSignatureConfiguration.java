@@ -31,7 +31,7 @@ public interface JwksSignatureConfiguration {
      * Json Web Key Set endpoint url.
      * @return returns a url where a JWKS is exposed.
      */
-    @Nullable
+    @NonNull
     String getUrl();
 
     /**
