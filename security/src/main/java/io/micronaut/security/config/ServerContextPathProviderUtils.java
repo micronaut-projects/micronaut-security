@@ -40,7 +40,7 @@ public final class ServerContextPathProviderUtils {
     public static String prependContextPath(@NonNull String url,
                                             @NonNull ServerContextPathProvider serverContextPathProvider) {
         String contextPath = serverContextPathProvider.getContextPath();
-        return contextPath == null ?
+        return contextPath == null || "/".equals(contextPath) ?
             url :
             UriBuilder.of("/")
                 .path(contextPath)
