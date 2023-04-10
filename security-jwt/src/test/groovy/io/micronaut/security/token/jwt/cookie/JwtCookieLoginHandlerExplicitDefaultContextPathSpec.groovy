@@ -5,24 +5,24 @@ import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 
-class JwtCookieLoginHandlerContextPathSpec extends EmbeddedServerSpecification {
+class JwtCookieLoginHandlerExplicitDefaultContextPathSpec extends EmbeddedServerSpecification {
 
     @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
-                'micronaut.server.context-path': 'foo',
+                'micronaut.server.context-path': '/',
                 'micronaut.security.authentication': 'cookie'
         ]
     }
 
-    void "uses context path"() {
+    void "uses explicit default context path"() {
         given:
         JwtCookieLoginHandler loginHandler = applicationContext.getBean(JwtCookieLoginHandler)
 
         expect:
-        '/foo/' == loginHandler.loginFailure
-        '/foo/' == loginHandler.loginSuccess
-        '/foo/' == loginHandler.refresh
+        '/' == loginHandler.loginFailure
+        '/' == loginHandler.loginSuccess
+        '/' == loginHandler.refresh
 
         when:
         def request = Mock(HttpRequest)
@@ -37,7 +37,7 @@ class JwtCookieLoginHandlerContextPathSpec extends EmbeddedServerSpecification {
 
         then:
         optionalCookie.isPresent()
-        "/foo/" == optionalCookie.get().path
+        "/" == optionalCookie.get().path
 
 
         when:
@@ -45,6 +45,6 @@ class JwtCookieLoginHandlerContextPathSpec extends EmbeddedServerSpecification {
 
         then:
         optionalRefreshCookie.isPresent()
-        "/foo/oauth/access_token" == optionalRefreshCookie.get().path
+        "/oauth/access_token" == optionalRefreshCookie.get().path
     }
 }

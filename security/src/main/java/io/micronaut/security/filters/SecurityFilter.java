@@ -142,7 +142,7 @@ public class SecurityFilter implements HttpServerFilter {
             LOG.debug("Attributes: {}", attributes
                     .entrySet()
                     .stream()
-                    .map((entry) -> entry.getKey() + "=>" + entry.getValue().toString())
+                    .map((entry) -> entry.getKey() + "=>" + (entry.getValue() != null ? entry.getValue().toString() : null))
                     .collect(Collectors.joining(", ")));
         }
     }
