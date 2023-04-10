@@ -104,13 +104,13 @@ public final class JwksSignatureUtils {
      * @return A message indicating the supported algorithms.
      */
     public static String supportedAlgorithmsMessage(List<JWK> keys) {
-        String message = keys.stream()
+        return keys.stream()
             .map(JWK::getAlgorithm)
             .map(Algorithm::getName)
+            .distinct()
             .reduce((a, b) -> a + ", " + b)
-            .map(s -> "Only the " + s)
-            .orElse("No");
-        return message + " algorithms are supported";
+            .map(s -> "Algorithms supported: " + s)
+            .orElse("No algorithms are supported");
     }
 
     /**
