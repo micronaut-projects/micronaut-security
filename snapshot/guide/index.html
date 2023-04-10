@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
     <title>Micronaut Security</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
     <link rel="stylesheet" href="../css/custom.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
@@ -293,7 +292,7 @@
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/introduction.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/introduction.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -318,7 +317,7 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/releaseHistory.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/releaseHistory.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -334,7 +333,7 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <h1 id="whatsNew"><a class="anchor" href="#whatsNew"></a>3 What's New</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/whatsNew.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/whatsNew.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -371,7 +370,7 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <h1 id="breaks"><a class="anchor" href="#breaks"></a>4 Breaking Changes</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/breaks.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/breaks.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -379,46 +378,6 @@ Micronaut Security 3.x requires Micronaut 3.x.
 
 <div class="paragraph">
 <p>This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x &#8594; 2.x.x).</p>
-</div>
-<div class="sect1">
-<h2 id="_micronaut_security_4_0_breaking_changes">Micronaut Security 4.0 breaking changes</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code> defaults to <code>true</code>. Thus intercept url patterns are be prepended with the server context path if it is set.</p>
-</div>
-<div class="sect2">
-<h3 id="_annotation_mappers_removed">Annotation Mappers Removed</h3>
-<div class="paragraph">
-<p>The mappers for <code>javax.annotation.security</code> annotations – <code>DenyAll</code>, <code>PermitAll</code>, <code>RolesAllowed</code> – have been removed. Use the Jakarta versions for <code>jakarta.annotation.security</code> annotations instead.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Removed</th>
-<th class="tableblock halign-left valign-top">Retained</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.annotation.DenyAllAnnotationMapper</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.annotation.JakartaDenyAllAnnotationMapper</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.annotation.PermitAllAnnotationMapper</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.annotation.JakartaPermitAllAnnotationMapper</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.annotation.RolesAllowedAnnotationMapper</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">io.micronaut.security.annotation.JakartaRolesAllowedAnnotationMapper</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <div class="sect1">
 <h2 id="_micronaut_security_3_4_breaking_changes">Micronaut Security 3.4 breaking changes</h2>
@@ -742,7 +701,7 @@ If the <code>cookie-secure</code> setting is not set, cookies will be secure if 
 <h1 id="gettingStarted"><a class="anchor" href="#gettingStarted"></a>5 Getting Started</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/gettingStarted.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/gettingStarted.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -830,7 +789,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h1 id="exceptionHandlers"><a class="anchor" href="#exceptionHandlers"></a>6 Exception Handlers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/exceptionHandlers.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/exceptionHandlers.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -874,7 +833,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h1 id="securityConfiguration"><a class="anchor" href="#securityConfiguration"></a>7 Security Configuration</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityConfiguration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -900,15 +859,14 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/AuthenticationMode.html">AuthenticationMode</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie, idtoken. Should
- only be supplied if the service handles login and logout requests.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If Security is enabled. Default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If Security is enabled. Default value true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the intercept URL patterns should be prepended with context path if defined. Defaults to false.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.intercept-url-map</code></p></td>
@@ -918,12 +876,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ip-patterns</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allowed IP patterns. Default value ([])</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the intercept URL patterns should be prepended with context path if defined. Defaults to .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allowed IP patterns. Default value (["0.0.0.0"])</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication-provider-strategy</code></p></td>
@@ -935,13 +888,19 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Whether the server should respond with 401 for requests that do not match any routes on the server, if you set it to false, it will return 404 for requests that do not match any routes on the server. Default value (true).</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.authentication</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/AuthenticationMode.html">AuthenticationMode</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie, idtoken. Should
+ only be supplied if the service handles login and logout requests.</p></td>
+</tr>
 </tbody>
 </table>
 
 <h2 id="rejectNotFound"><a class="anchor" href="#rejectNotFound"></a>7.1 Reject Not Found Routes</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/rejectNotFound.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityConfiguration/rejectNotFound.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -954,7 +913,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="authenticationStrategy"><a class="anchor" href="#authenticationStrategy"></a>7.2 Authentication Strategy</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/authenticationStrategy.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityConfiguration/authenticationStrategy.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -967,7 +926,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="loginHandler"><a class="anchor" href="#loginHandler"></a>7.3 Login Handler</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/loginHandler.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityConfiguration/loginHandler.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1019,7 +978,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="logoutHandler"><a class="anchor" href="#logoutHandler"></a>7.4 Logout Handler</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/logoutHandler.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityConfiguration/logoutHandler.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1066,7 +1025,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="noRedirection"><a class="anchor" href="#noRedirection"></a>7.5 Handlers without redirection</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/noRedirection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityConfiguration/noRedirection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1080,7 +1039,7 @@ If you disable redirection configuration with by setting <code>micronaut.securit
 <h2 id="redirection"><a class="anchor" href="#redirection"></a>7.6 Redirection Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityConfiguration/redirection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityConfiguration/redirection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1109,37 +1068,37 @@ If you disable redirection configuration with by setting <code>micronaut.securit
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether Redirection configuration enabled. Default value (true).</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a successful login. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a successful login. Default value ("/").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a failed login. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a failed login. Default value ("/").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL where the user is redirected after logout. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL where the user is redirected after logout. Default value ("/").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.prior-to-login</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized
  request that initiated the login flow. Supersedes the &lt;code&gt;login-success&lt;/code&gt;
- configuration for those cases. Default value .</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether Redirection configuration enabled. Default value ().</p></td>
+ configuration for those cases. Default value false.</p></td>
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.config.RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html">RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties</a></caption>
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html">ForbiddenRedirectConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1154,20 +1113,25 @@ If you disable redirection configuration with by setting <code>micronaut.securit
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.forbidden.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after trying to access a secured route which he is forbidden to access. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.forbidden</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.ForbiddenRedirectConfigurationProperties.html">RedirectConfigurationProperties$ForbiddenRedirectConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the forbidden redirect configuration.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.forbidden.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether it should redirect on forbidden rejections. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether it should redirect on forbidden rejections. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.forbidden.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after trying to access a secured route which he is forbidden to access. Default value ("/").</p></td>
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.config.RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.config.RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties" href="#io.micronaut.security.config.RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html">RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties</a></caption>
+<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html">UnauthorizedRedirectConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1182,14 +1146,19 @@ If you disable redirection configuration with by setting <code>micronaut.securit
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after trying to access a secured route. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/config/RedirectConfigurationProperties.UnauthorizedRedirectConfigurationProperties.html">RedirectConfigurationProperties$UnauthorizedRedirectConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the unauthorized redirect configuration.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether it should redirect on unauthorized rejections. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether it should redirect on unauthorized rejections. Default value (true).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.unauthorized.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after trying to access a secured route. Default value ("/").</p></td>
 </tr>
 </tbody>
 </table>
@@ -1209,7 +1178,7 @@ Use the API <a href="../api/io/micronaut/security/config/RedirectService.html">R
 <h1 id="authenticationProviders"><a class="anchor" href="#authenticationProviders"></a>8 Authentication Providers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationProviders.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationProviders.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1260,7 +1229,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
 <h1 id="securityRule"><a class="anchor" href="#securityRule"></a>9 Security Rules</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityRule.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1345,7 +1314,7 @@ Because of that, <a href="../api/io/micronaut/security/rules/SecurityRule.html">
 <h2 id="ipPattern"><a class="anchor" href="#ipPattern"></a>9.1 IP Pattern Rule</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/ipPattern.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityRule/ipPattern.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1431,7 +1400,7 @@ either <code>127.0.0.1</code> or <code>192.168.1.*</code> range.</p>
 <h2 id="secured"><a class="anchor" href="#secured"></a>9.2 Secured Annotation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/secured.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityRule/secured.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1486,10 +1455,19 @@ public class ExampleController {
 </table>
 </div>
 <div class="paragraph">
-<p>Alternatively, you can use <a href="https://jakarta.ee/specifications/annotations/2.1/annotations-spec-2.1.html">Jakarta Annotations</a>:</p>
+<p>Alternatively, you can use <a href="https://jcp.org/en/jsr/detail?id=250">JSR_250</a> annotations:</p>
 </div>
 <div class="ulist">
 <ul>
+<li>
+<p><code>javax.annotation.security.PermitAll</code></p>
+</li>
+<li>
+<p><code>javax.annotation.security.RolesAllowed</code></p>
+</li>
+<li>
+<p><code>javax.annotation.security.DenyAll</code></p>
+</li>
 <li>
 <p><code>jakarta.annotation.security.PermitAll</code></p>
 </li>
@@ -1550,7 +1528,7 @@ The use of JSR 250 annotations requires <code>io.micronaut.security:micronaut-se
 <h2 id="interceptUrlMap"><a class="anchor" href="#interceptUrlMap"></a>9.3 Intercept URL Map</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/interceptUrlMap.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityRule/interceptUrlMap.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1845,7 +1823,7 @@ micronaut.security.intercept-url-map[1].access[0]=isAuthenticated()</code></pre>
 <h2 id="builtInEndpointsAccess"><a class="anchor" href="#builtInEndpointsAccess"></a>9.4 Built-In Endpoints Security</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityRule/builtInEndpointsAccess.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityRule/builtInEndpointsAccess.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2051,7 +2029,7 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
 <h1 id="authenticationStrategies"><a class="anchor" href="#authenticationStrategies"></a>10 Authorization Strategies</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2062,7 +2040,7 @@ class SensitiveEndpointRuleReplacement(endpointSensitivityProcessor: EndpointSen
 <h2 id="basicAuth"><a class="anchor" href="#basicAuth"></a>10.1 Basic Authentication</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/basicAuth.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/basicAuth.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2118,7 +2096,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-basicaut
 <h2 id="session"><a class="anchor" href="#session"></a>10.2 Session Authorization</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/session.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/session.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2308,7 +2286,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.
 <h2 id="jwt"><a class="anchor" href="#jwt"></a>10.3 JSON Web Token</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2336,22 +2314,22 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-session.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the configuration is enabled. Default value .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the configuration is enabled. Default value true.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.roles-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s roles. Default value "roles".</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.name-key</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map key for the user&#8217;s name. Default value "sub".</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.roles-separator</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If the entry used for the roles in the  attributes map is a String, you can use the separator to split its value into multiple roles. Default value .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the entry used for the roles in the <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a> attributes map is a String, you can use the separator to split its value into multiple roles. Default value <a href="../api/io/micronaut/security/token/config/TokenConfiguration.html#DEFAULT_ROLES_SEPARATOR">DEFAULT_ROLES_SEPARATOR</a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2451,7 +2429,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT security is enabled. Default value (true).</p></td>
 </tr>
 </tbody>
 </table>
@@ -2510,7 +2488,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="reader"><a class="anchor" href="#reader"></a>10.3.1 Reading JWT Token</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/reader.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2521,7 +2499,7 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <h2 id="bearerToken"><a class="anchor" href="#bearerToken"></a>10.3.1.1 Bearer Token Reader</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/reader/bearerToken.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2557,17 +2535,17 @@ The <code>micronaut-security-annotations</code> dependency is only required to u
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set whether to enable bearer token authentication. Default value .</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.prefix</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the prefix to use for the auth token. Default value Bearer.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set whether to enable bearer token authentication. Default value true.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.header-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the header name to use. Default value Authorization.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.bearer.prefix</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the prefix to use for the auth token. Default value Bearer.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2611,7 +2589,7 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <h2 id="cookieToken"><a class="anchor" href="#cookieToken"></a>10.3.1.2 Cookie Token Reader</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/reader/cookieToken.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2650,22 +2628,22 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-domain</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the domain name of this Cookie.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-http-only</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value (AbstractAccessTokenCookieConfigurationProperties.DEFAULT_HTTPONLY).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-secure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-max-age</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the maximum age of the cookie.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-same-site</code></p></td>
@@ -2673,19 +2651,19 @@ Check out the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the same-site setting of the cookie. Default value null. Value is case sensitive. Allowed values: <code>Strict</code>, <code>Lax</code> or <code>None</code>.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ("/").</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether JWT cookie configuration is enabled. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.cookie.cookie-path</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ("JWT").</p></td>
 </tr>
 </tbody>
 </table>
@@ -2705,7 +2683,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwtValidation"><a class="anchor" href="#jwtValidation"></a>10.3.2 JWT Signature Validation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2732,7 +2710,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwks"><a class="anchor" href="#jwks"></a>10.3.2.1 Validation with remote JWKS</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/jwtValidation/jwks.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2848,7 +2826,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwtGenerator"><a class="anchor" href="#jwtGenerator"></a>10.3.3 JWT Token Generation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2879,7 +2857,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.access-token.expiration</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access token expiration. Default value (3600).</p></td>
 </tr>
 </tbody>
 </table>
@@ -2887,7 +2865,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-jwt-cook
 <h2 id="jwtGeneratorSignature"><a class="anchor" href="#jwtGeneratorSignature"></a>10.3.3.1 Signed JWT Generation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSignature.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2919,7 +2897,7 @@ Remember to qualify with <code>@Named</code> <code>generator</code> your signatu
 <h2 id="jwtGeneratorSecret"><a class="anchor" href="#jwtGeneratorSecret"></a>10.3.3.2 Example of JWT Signed with Secret</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSecret.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorSecret.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3161,7 +3139,7 @@ micronaut.security.token.jwt.signatures.secret.generator.jws-algorithm=HS256</co
 <h2 id="jwtGeneratorRSA"><a class="anchor" href="#jwtGeneratorRSA"></a>10.3.3.3 Example of JWT Signed with RSA</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorRSA.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/jwtGenerator/jwtGeneratorRSA.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3198,7 +3176,7 @@ class MySignatureGeneratorConfigurationFactory {
 <h2 id="jwtEncryption"><a class="anchor" href="#jwtEncryption"></a>10.3.4 JWT Encryption</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3230,7 +3208,7 @@ class MySignatureGeneratorConfigurationFactory {
 <h2 id="jwtGeneratorEncryption"><a class="anchor" href="#jwtGeneratorEncryption"></a>10.3.4.1 Example of JWT Signed with Secret and Encrypted with RSA</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption/jwtGeneratorEncryption.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/jwtEncryption/jwtGeneratorEncryption.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3466,7 +3444,7 @@ class KeyPairProvider {
 <h2 id="claimsGeneration"><a class="anchor" href="#claimsGeneration"></a>10.3.5 Claims Generation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/claimsGeneration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3481,7 +3459,7 @@ fulfil your needs you can provide your own <a href="https://micronaut-projects.g
 <h2 id="claimsValidation"><a class="anchor" href="#claimsValidation"></a>10.3.6 Claims Validation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/claimsValidation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/claimsValidation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3539,7 +3517,7 @@ fulfil your needs you can provide your own <a href="https://micronaut-projects.g
 <h2 id="render"><a class="anchor" href="#render"></a>10.3.7 Token Render</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/jwt/render.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/jwt/render.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3577,7 +3555,7 @@ Pragma: no-cache
 <h2 id="ldap"><a class="anchor" href="#ldap"></a>10.4 LDAP Authentication</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/ldap.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/ldap.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3612,7 +3590,7 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <h2 id="configuration"><a class="anchor" href="#configuration"></a>10.4.1 Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/ldap/configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3640,13 +3618,13 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether this configuration is enabled. Default .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether this configuration is enabled. Default true.</p></td>
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.ldap.configuration.LdapConfiguration$ContextConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration$ContextConfiguration">&#128279;</a>
+<a id="io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration.ContextConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">LdapConfiguration$ContextConfiguration</a></caption>
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">ContextConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -3661,35 +3639,40 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.ContextConfiguration.html">LdapConfiguration$ContextConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.server</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the server URL.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.manager-dn</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the manager DN.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.manager-password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the manager password.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.factory</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the context factory class. Default "com.sun.jndi.ldap.LdapCtxFactory"</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.context.properties</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any additional properties that should be passed to {@link javax.naming.directory.InitialDirContext#InitialDirContext(java.util.Hashtable)}.</p></td>
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.ldap.configuration.LdapConfiguration$SearchConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration$SearchConfiguration">&#128279;</a>
+<a id="io.micronaut.security.ldap.configuration.LdapConfiguration.SearchConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration.SearchConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">LdapConfiguration$SearchConfiguration</a></caption>
+<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">SearchConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -3704,30 +3687,35 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.SearchConfiguration.html">LdapConfiguration$SearchConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.subtree</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if the subtree should be searched. Default true</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.base</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the base DN to search.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.filter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the search filter. Default "(uid={0})"</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.search.attributes</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the attributes to return. Default all</p></td>
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.ldap.configuration.LdapConfiguration$GroupConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration$GroupConfiguration">&#128279;</a>
+<a id="io.micronaut.security.ldap.configuration.LdapConfiguration.GroupConfiguration" href="#io.micronaut.security.ldap.configuration.LdapConfiguration.GroupConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">LdapConfiguration$GroupConfiguration</a></caption>
+<caption class="title">Table 4. Configuration Properties for <a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">GroupConfiguration</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -3742,34 +3730,40 @@ basis, eg <code>micronaut.security.ldap.default.enabled: false</code>.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.subtree</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.base</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.filter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.attribute</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/ldap/configuration/LdapConfiguration.GroupConfiguration.html">LdapConfiguration$GroupConfiguration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group configuration.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if group search is enabled. Default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if group search is enabled. Default false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.subtree</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets if the subtree should be searched. Default true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.base</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the base DN to search from.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.filter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group search filter. Default "uniquemember={0}"</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.filter-attribute</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The argument to pass to the search filter.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the name of the user attribute to bind to the
+ group search filter. Defaults to the user&#8217;s DN.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.ldap.*.groups.attribute</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the group attribute name. Default "cn"</p></td>
 </tr>
 </tbody>
 </table>
@@ -3795,7 +3789,7 @@ To connect to an LDAP server with SSL, set the standard Java system properties t
 <h2 id="extending"><a class="anchor" href="#extending"></a>10.4.2 Extending Default Behavior</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/ldap/extending.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/ldap/extending.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3919,7 +3913,7 @@ public class MyContextBuilder implements ContextBuilder {
 <h2 id="x509"><a class="anchor" href="#x509"></a>10.5 X.509 Certificate Authentication</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/x509.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/x509.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3956,14 +3950,14 @@ public class MyContextBuilder implements ContextBuilder {
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.x509.subject-dn-regex</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set the Subject DN regex. Default value .</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.x509.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the . Default value .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the {@link X509AuthenticationFetcher}. Default value false.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.x509.subject-dn-regex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the Subject DN regex. Default value "CN=(.*?)(?:,</p></td>
 </tr>
 </tbody>
 </table>
@@ -4160,7 +4154,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-security-x509.htm
 <h2 id="custom"><a class="anchor" href="#custom"></a>10.6 Custom Authorization Strategies</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/authenticationStrategies/custom.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/authenticationStrategies/custom.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4210,7 +4204,7 @@ public class SiteminderAuthenticationFetcher implements AuthenticationFetcher {
 <h1 id="rejection"><a class="anchor" href="#rejection"></a>11 Rejection Handling</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/rejection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/rejection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4239,31 +4233,31 @@ public class SiteminderAuthenticationFetcher implements AuthenticationFetcher {
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether Redirection configuration enabled. Default value (true).</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-success</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a successful login. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a successful login. Default value ("/").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.login-failure</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a failed login. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the user is redirected to after a failed login. Default value ("/").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.logout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL where the user is redirected after logout. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL where the user is redirected after logout. Default value ("/").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.prior-to-login</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If true, the user should be redirected back to the unauthorized
  request that initiated the login flow. Supersedes the &lt;code&gt;login-success&lt;/code&gt;
- configuration for those cases. Default value .</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.redirect.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether Redirection configuration enabled. Default value ().</p></td>
+ configuration for those cases. Default value false.</p></td>
 </tr>
 </tbody>
 </table>
@@ -4283,27 +4277,15 @@ public class SiteminderAuthenticationFetcher implements AuthenticationFetcher {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.http.server.exceptions.response.ErrorResponseProcessor;
 import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler;
-import io.micronaut.security.config.RedirectConfiguration;
-import io.micronaut.security.config.RedirectService;
-import io.micronaut.security.errors.PriorToLoginPersistence;
 import jakarta.inject.Singleton;
 
 @Singleton
 @Replaces(DefaultAuthorizationExceptionHandler.class)
 public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
-
-    public MyRejectionHandler(ErrorResponseProcessor&lt;?&gt; errorResponseProcessor,
-                              RedirectConfiguration redirectConfiguration,
-                              RedirectService redirectService,
-                              @Nullable PriorToLoginPersistence priorToLoginPersistence) {
-        super(errorResponseProcessor, redirectConfiguration, redirectService, priorToLoginPersistence);
-    }
 
     @Override
     public MutableHttpResponse&lt;?&gt; handle(HttpRequest request, AuthorizationException exception) {
@@ -4318,7 +4300,7 @@ public class MyRejectionHandler extends DefaultAuthorizationExceptionHandler {
 <h1 id="tokenPropagation"><a class="anchor" href="#tokenPropagation"></a>12 Token Propagation</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/tokenPropagation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/tokenPropagation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4534,12 +4516,12 @@ will propagate the security token seamlessly.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.service-id-regex</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a regular expression to match the service id.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.uri-regex</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a regular expression to match the uri.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.service-id-pattern</code></p></td>
@@ -4554,12 +4536,12 @@ will propagate the security token seamlessly.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables . Default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a>. Default value false</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures <a href="../api/io/micronaut/security/token/propagation/TokenPropagationHttpClientFilter.html">TokenPropagationHttpClientFilter</a> path. Default value "/**"</p></td>
 </tr>
 </tbody>
 </table>
@@ -4583,19 +4565,19 @@ will propagate the security token seamlessly.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.header-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Http Header to be used to propagate the token. Default value (HttpHeaders.AUTHORIZATION)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable . Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable <a href="../api/io/micronaut/security/token/propagation/HttpHeaderTokenPropagator.html">HttpHeaderTokenPropagator</a>. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.prefix</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.propagation.header.header-name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value prefix for Http Header. Default value (HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER).</p></td>
 </tr>
 </tbody>
 </table>
@@ -4615,7 +4597,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <h1 id="endpoints"><a class="anchor" href="#endpoints"></a>13 Built-In Security Controllers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/endpoints.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4626,7 +4608,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <h2 id="login"><a class="anchor" href="#login"></a>13.1 Login Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/login.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/endpoints/login.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4657,12 +4639,12 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.login.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/endpoints/LoginController.html">LoginController</a>. Default value true</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.login.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the . Default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/endpoints/LoginController.html">LoginController</a>. Default value "/login"</p></td>
 </tr>
 </tbody>
 </table>
@@ -4686,7 +4668,7 @@ Read the <a href="https://guides.micronaut.io/latest/micronaut-token-propagation
 <h2 id="logout"><a class="anchor" href="#logout"></a>13.2 Logout Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/logout.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/endpoints/logout.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4718,17 +4700,17 @@ A custom implementation can, of course, be provided. However, several <a href="#
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/endpoints/LogoutController.html">LogoutController</a>. Default value true.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the . Default value .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/endpoints/LogoutController.html">LogoutController</a>. Default value "/logout".</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.logout.get-allowed</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables HTTP GET invocations of <a href="../api/io/micronaut/security/endpoints/LogoutController.html">LogoutController</a>. Default value (false).</p></td>
 </tr>
 </tbody>
 </table>
@@ -4759,7 +4741,7 @@ If you are using JWT authentication not stored in a cookie, you may not need to 
 <h2 id="refresh"><a class="anchor" href="#refresh"></a>13.3 Refresh Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/refresh.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/endpoints/refresh.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -4805,12 +4787,12 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether  is enabled. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether <a href="../api/io/micronaut/security/token/jwt/generator/SignedRefreshTokenGenerator.html">SignedRefreshTokenGenerator</a> is enabled. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.jws-algorithm</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">com.nimbusds.jose.JWSAlgorithm</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">. Defaults to HS256</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{@link com.nimbusds.jose.JWSAlgorithm}. Defaults to HS256</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.secret</code></p></td>
@@ -4820,7 +4802,7 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.token.jwt.generator.refresh-token.base64</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether the supplied secret is base64 encoded. Default value .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether the supplied secret is base64 encoded. Default value false.</p></td>
 </tr>
 </tbody>
 </table>
@@ -4949,17 +4931,18 @@ The refresh token functionality has changed dramatically starting in Micronaut S
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.oauth.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthController.html">OauthController</a> is enabled. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.oauth.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path to map the  to. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path to map the <a href="../api/io/micronaut/security/token/jwt/endpoints/OauthController.html">OauthController</a> to. Default value ("/oauth/access_token").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.oauth.get-allowed</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables HTTP GET invocations of refresh token requests. Only applies
+  to requests sending a cookie (JWT_REFRESH_TOKEN). Default value (true).</p></td>
 </tr>
 </tbody>
 </table>
@@ -5012,7 +4995,7 @@ See <a href="https://tools.ietf.org/html/rfc6749#section-10.4">section 10.4 of t
 <h2 id="keys"><a class="anchor" href="#keys"></a>13.4 Keys Controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/keys.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/endpoints/keys.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5061,12 +5044,12 @@ This controller can only be enabled if you are using JWT authentication.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.keys.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysController.html">KeysController</a>. Default value true.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.keys.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the . Default value .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/token/jwt/endpoints/KeysController.html">KeysController</a>. Default value "/keys".</p></td>
 </tr>
 </tbody>
 </table>
@@ -5074,7 +5057,7 @@ This controller can only be enabled if you are using JWT authentication.
 <h2 id="introspectionendpoint"><a class="anchor" href="#introspectionendpoint"></a>13.5 Introspection Endpoint</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/endpoints/introspectionendpoint.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/endpoints/introspectionendpoint.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5138,12 +5121,12 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3O
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.introspection.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/endpoints/introspection/IntrospectionController.html">IntrospectionController</a>. Default value true</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.endpoints.introspection.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the . Default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the <a href="../api/io/micronaut/security/endpoints/introspection/IntrospectionController.html">IntrospectionController</a>. Default value "/token_info"</p></td>
 </tr>
 </tbody>
 </table>
@@ -5151,7 +5134,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3O
 <h1 id="retrievingAuthenticatedUser"><a class="anchor" href="#retrievingAuthenticatedUser"></a>14 Retrieve the authenticated user</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/retrievingAuthenticatedUser.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/retrievingAuthenticatedUser.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5222,7 +5205,7 @@ class UserController {
 <h2 id="securityService"><a class="anchor" href="#securityService"></a>14.1 User outside of a controller</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/retrievingAuthenticatedUser/securityService.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/retrievingAuthenticatedUser/securityService.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5235,7 +5218,7 @@ class UserController {
 <h1 id="securityEvents"><a class="anchor" href="#securityEvents"></a>15 Security Events</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/securityEvents.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/securityEvents.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5287,7 +5270,7 @@ class UserController {
 <h1 id="oauth"><a class="anchor" href="#oauth"></a>16 OAuth 2.0</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5425,7 +5408,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 <h2 id="installation"><a class="anchor" href="#installation"></a>16.1 Installation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/installation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/installation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5457,7 +5440,7 @@ Read the following guides to learn more <strong>Secure a Micronaut app with <a h
 <h2 id="openid"><a class="anchor" href="#openid"></a>16.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/openid.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/openid.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5517,7 +5500,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <h2 id="flows"><a class="anchor" href="#flows"></a>16.3 Flows</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5528,7 +5511,7 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <h2 id="authorization-code"><a class="anchor" href="#authorization-code"></a>16.3.1 Authorization Code</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5559,19 +5542,19 @@ Even though OpenID providers return JWT tokens, that token is not used directly 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the OAuth 2.0 support is enabled. Default value ().</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.login-uri</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The URI template that is used to initiate an OAuth 2.0
- authorization code grant flow. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the OAuth 2.0 support is enabled. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.callback-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The URI template that OAuth 2.0 providers can use to
- submit an authorization callback request. Default value ().</p></td>
+ submit an authorization callback request. Default value ("/oauth/callback{/provider}").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.login-uri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI template that is used to initiate an OAuth 2.0
+ authorization code grant flow. Default value ("/oauth/login{/provider}").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.default-provider</code></p></td>
@@ -5718,7 +5701,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 <h2 id="oauth2-authorization-code"><a class="anchor" href="#oauth2-authorization-code"></a>16.3.1.1 OAuth 2.0</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5739,7 +5722,7 @@ class OAuthCsrfFilter : HttpServerFilter {
 <h2 id="oauth2-configuration"><a class="anchor" href="#oauth2-configuration"></a>16.3.1.1.1 Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5938,7 +5921,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <h2 id="oauth2-user-details"><a class="anchor" href="#oauth2-user-details"></a>16.3.1.1.2 User Details Mapper</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/oauth2-authorization-code/oauth2-user-details.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -5961,12 +5944,12 @@ To disable a specific client for any given environment, set <code>enabled: false
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 
 @Introspected
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class GithubUser {
 
     private String login;
@@ -5979,12 +5962,12 @@ public class GithubUser {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import io.micronaut.core.annotation.Introspected
 
 @Introspected
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 class GithubUser {
 
     String login
@@ -6189,7 +6172,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 <h2 id="openid-authorization-code"><a class="anchor" href="#openid-authorization-code"></a>16.3.1.2 OpenID Connect</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6210,7 +6193,7 @@ Read the <strong>secure a Micronaut app with <a href="https://guides.micronaut.i
 <h2 id="openid-configuration"><a class="anchor" href="#openid-configuration"></a>16.3.1.2.1 Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6358,9 +6341,9 @@ To disable a specific client for any given environment, set <code>enabled: false
 <div class="paragraph">
 <p>See the following tables for the configuration options:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OpenIdClientConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -6374,6 +6357,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The open id configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.issuer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
@@ -6383,7 +6371,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.configuration-path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The configuration path to discover openid configuration. Default ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The configuration path to discover openid configuration. Default ("/.well-known/openid-configuration").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.jwks-uri</code></p></td>
@@ -6392,9 +6380,9 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties</a></caption>
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html">AuthorizationEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -6408,6 +6396,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the authorization endpoint configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.authorization.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -6456,9 +6449,9 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties</a></caption>
+<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html">TokenEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -6472,6 +6465,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.token</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.TokenEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$TokenEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the token endpoint configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.token.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -6489,9 +6487,9 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties</a></caption>
+<caption class="title">Table 4. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">EndSessionConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -6505,6 +6503,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the end session endpoint configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -6513,13 +6516,13 @@ To disable a specific client for any given environment, set <code>enabled: false
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The end session enabled flag. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The end session enabled flag. Default value (true).</p></td>
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$RegistrationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$RegistrationEndpointConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$RegistrationEndpointConfigurationProperties</a></caption>
+<caption class="title">Table 5. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties.html">RegistrationEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -6533,6 +6536,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.registration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.RegistrationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$RegistrationEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the registration endpoint configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.registration.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -6540,9 +6548,9 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties</a></caption>
+<caption class="title">Table 6. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html">UserInfoEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -6556,6 +6564,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.user-info</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the user info endpoint configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.user-info.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -6567,7 +6580,7 @@ To disable a specific client for any given environment, set <code>enabled: false
 <h2 id="openid-user-details"><a class="anchor" href="#openid-user-details"></a>16.3.1.2.2 OAuth 2.0 Authentication Mapper</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-user-details.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6579,9 +6592,9 @@ To disable a specific client for any given environment, set <code>enabled: false
 <div class="paragraph">
 <p>A default implementation of <a href="../api/io/micronaut/security/oauth2/endpoint/token/response/OpenIdAuthenticationMapper.html">OpenIdAuthenticationMapper</a> has been provided for you to map the JWT token to a <a href="../api/io/micronaut/security/authentication/Authentication.html">Authentication</a>. The default implementation will carry over any of the specific OpenID JWT claims, as well as potentially include other claims based on configuration. The original provider name will always be included in the JWT with the claim key "oauth2Provider". The following table explains the additional claims.</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html">AdditionalClaimsConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -6595,6 +6608,11 @@ To disable a specific client for any given environment, set <code>enabled: false
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.additional-claims</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.AdditionalClaimsConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$AdditionalClaimsConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Claims Configuration</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.additional-claims.jwt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
@@ -6810,7 +6828,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <h2 id="openid-auth-parameters"><a class="anchor" href="#openid-auth-parameters"></a>16.3.1.2.3 Parameters</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6822,9 +6840,9 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <div class="paragraph">
 <p>Here are the configuration option for authorization request parameters:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html">AuthorizationEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -6838,6 +6856,11 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.AuthorizationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$AuthorizationEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the authorization endpoint configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.authorization.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -6890,7 +6913,7 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <h2 id="nonce"><a class="anchor" href="#nonce"></a>16.3.1.2.3.1 Nonce</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/nonce.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -6928,12 +6951,12 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.persistence</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the mechanism to persist the nonce for later retrieval for validation.
- Supported values (, ). Default value ().</p></td>
+ Supported values ("session", "cookie"). Default value ("cookie").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether a nonce parameter will be sent. Default ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether a nonce parameter will be sent. Default (true).</p></td>
 </tr>
 </tbody>
 </table>
@@ -6967,24 +6990,24 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ``.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ("/").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-http-only</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-max-age</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the maximum age of the cookie. Default value (5 minutes).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.nonce.cookie.cookie-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name.</p></td>
 </tr>
 </tbody>
 </table>
@@ -7158,7 +7181,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="login-hint"><a class="anchor" href="#login-hint"></a>16.3.1.2.3.2 Login Hint</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/login-hint.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7171,7 +7194,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="id-token-hint"><a class="anchor" href="#id-token-hint"></a>16.3.1.2.3.3 ID Token Hint</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/openid-auth-parameters/id-token-hint.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7184,7 +7207,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="token-validation"><a class="anchor" href="#token-validation"></a>16.3.1.2.4 Token Validation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/openid-authorization-code/token-validation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7203,7 +7226,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="state"><a class="anchor" href="#state"></a>16.3.1.3 State Parameter</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/state.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7242,24 +7265,24 @@ If nonce validation fails, the user will not be authenticated.
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets whether the cookie is secured. Defaults to the secure status of the request.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name. Default value ``.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the path of the cookie. Default value ("/").</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-http-only</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Cookie can only be accessed via HTTP. Default value (true).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-max-age</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sets the maximum age of the cookie. Default value (5 minutes).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.state.cookie.cookie-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie Name.</p></td>
 </tr>
 </tbody>
 </table>
@@ -7383,7 +7406,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="pkce"><a class="anchor" href="#pkce"></a>16.3.1.4 PKCE</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/authorization-code/pkce.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/authorization-code/pkce.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7403,7 +7426,7 @@ If nonce validation fails, the user will not be authenticated.
 <h2 id="clientcredentials"><a class="anchor" href="#clientcredentials"></a>16.3.2 Client Credentials</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/clientcredentials.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7580,7 +7603,7 @@ beanContext.getBean(ClientCredentialsClient.class, Qualifiers.byName("companyaut
 <h2 id="clientecredentialshttpclient"><a class="anchor" href="#clientecredentialshttpclient"></a>16.3.2.1 HTTP Client Filter for Client Credentials</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/clientcredentials/clientecredentialshttpclient.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/clientcredentials/clientecredentialshttpclient.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7713,9 +7736,9 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 <div class="paragraph">
 <p>The following configuration options are available per OAuth 2.0 client:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">ClientCredentialsConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -7740,10 +7763,19 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.advanced-expiration</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds for a token obtained via client credentials grant to be considered expired
-                           prior to its expiration date. Default value (30 seconds).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.service-id-pattern</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.regex.Pattern</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.uri-pattern</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.util.regex.Pattern</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables <a href="../api/io/micronaut/security/oauth2/client/clientcredentials/ClientCredentialsClient.html">ClientCredentialsClient</a>. Default value true</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.scope</code></p></td>
@@ -7751,14 +7783,19 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 <td class="tableblock halign-left valign-top"><p class="tableblock">Scope to be requested in the client credentials request. Defaults to none.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables . Default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.advanced-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.time.Duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds for a token obtained via client credentials grant to be considered expired</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials.additional-request-params</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Additional parameters included in the client-credentials flow.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.client-credentials</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.ClientCredentialsConfigurationProperties.html">OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the Client Credentials configuration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -7766,7 +7803,7 @@ micronaut.security.oauth2.clients.companyauthserver.token.auth-method=client_sec
 <h2 id="password"><a class="anchor" href="#password"></a>16.3.3 Password</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/flows/password.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/flows/password.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7894,7 +7931,7 @@ This example above is not intended to be a complete configuration reference
 <h2 id="oauth-endpoints"><a class="anchor" href="#oauth-endpoints"></a>16.4 Endpoints</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/oauth-endpoints.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7905,7 +7942,7 @@ This example above is not intended to be a complete configuration reference
 <h2 id="endsession"><a class="anchor" href="#endsession"></a>16.4.1 OpenID End Session</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/oauth-endpoints/endsession.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -7925,9 +7962,9 @@ This example above is not intended to be a complete configuration reference
 <div class="paragraph">
 <p>All of the above is configurable through <code>micronaut.security.oauth2.openid</code>:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html">OpenIdConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -7941,16 +7978,21 @@ This example above is not intended to be a complete configuration reference
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The OpenID configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.logout-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The URI used to log out of an OpenID provider. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI used to log out of an OpenID provider. Default value ("/oauth/logout").</p></td>
 </tr>
 </tbody>
 </table>
-<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties</a></caption>
+<caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.html">EndSessionConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -7965,9 +8007,14 @@ This example above is not intended to be a complete configuration reference
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.end-session</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthConfigurationProperties.OpenIdConfigurationProperties.EndSessionConfigurationProperties.html">OauthConfigurationProperties$OpenIdConfigurationProperties$EndSessionConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The end session configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.openid.end-session.redirect-uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The URI the OpenID provider should redirect to after logging out. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URI the OpenID provider should redirect to after logging out. Default value ("/logout").</p></td>
 </tr>
 </tbody>
 </table>
@@ -7995,9 +8042,9 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>If for example you are using one of the providers that is supported out of the box and you don&#8217;t want the end session support, it is possible to disable it per client.</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties</a></caption>
+<caption class="title">Table 3. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">EndSessionConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -8012,6 +8059,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.EndSessionConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$EndSessionConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the end session endpoint configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
@@ -8019,7 +8071,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.end-session.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The end session enabled flag. Default value ().</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The end session enabled flag. Default value (true).</p></td>
 </tr>
 </tbody>
 </table>
@@ -8027,7 +8079,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="introspection"><a class="anchor" href="#introspection"></a>16.4.2 Introspection</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/introspection.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/oauth-endpoints/introspection.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -8039,9 +8091,9 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>See the following configuration table:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">IntrospectionEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -8055,6 +8107,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.IntrospectionEndpointConfigurationProperties.html">OauthClientConfigurationProperties$IntrospectionEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the introspection endpoint configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.introspection.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -8071,7 +8128,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="revocation"><a class="anchor" href="#revocation"></a>16.4.3 Revocation</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/revocation.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/oauth-endpoints/revocation.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -8083,9 +8140,9 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>See the following configuration table:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">RevocationEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -8099,6 +8156,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.RevocationEndpointConfigurationProperties.html">OauthClientConfigurationProperties$RevocationEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the revocation endpoint configuration.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.revocation.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
@@ -8115,7 +8177,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="user-info"><a class="anchor" href="#user-info"></a>16.4.4 OpenID User Info</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/oauth-endpoints/user-info.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -8127,9 +8189,9 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <div class="paragraph">
 <p>See the following configuration table:</p>
 </div>
-<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties">&#128279;</a>
+<a id="io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties" href="#io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties</a></caption>
+<caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html">UserInfoEndpointConfigurationProperties</a></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -8144,6 +8206,11 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.user-info</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/oauth2/configuration/OauthClientConfigurationProperties.OpenIdClientConfigurationProperties.UserInfoEndpointConfigurationProperties.html">OauthClientConfigurationProperties$OpenIdClientConfigurationProperties$UserInfoEndpointConfigurationProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the user info endpoint configuration.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>micronaut.security.oauth2.clients.*.openid.user-info.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL</p></td>
@@ -8154,7 +8221,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="custom-client"><a class="anchor" href="#custom-client"></a>16.5 Custom Clients</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/oauth/custom-client.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/oauth/custom-client.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -8215,7 +8282,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h1 id="aot"><a class="anchor" href="#aot"></a>17 Ahead-of-time optimizations</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/aot.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/aot.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -8235,7 +8302,7 @@ The <code>get-allowed</code> configuration option must be set to <code>true</cod
 <h2 id="aotConfiguration"><a class="anchor" href="#aotConfiguration"></a>17.1 Micronaut Security AOT Configuration</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/aot/aotConfiguration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/aot/aotConfiguration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -8283,7 +8350,7 @@ aotPlugins("io.micronaut.security:micronaut-security-aot:3.9.0")
 <h2 id="aotOpenidConfiguration"><a class="anchor" href="#aotOpenidConfiguration"></a>17.2 OpenID Configuration Optimization</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/aot/aotOpenidConfiguration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/aot/aotOpenidConfiguration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -8322,7 +8389,7 @@ The application uses the configuration present at the authorization server at bu
 <h2 id="aotJwks"><a class="anchor" href="#aotJwks"></a>17.3 JWKS Optimization</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/aot/aotJwks.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/aot/aotJwks.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -8357,7 +8424,7 @@ The application uses the JWKS exposed by the authorization server at build time.
 <h1 id="repository"><a class="anchor" href="#repository"></a>18 Repository</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/master/src/main/docs/guide/repository.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-security/edit/3.10.x/src/main/docs/guide/repository.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
