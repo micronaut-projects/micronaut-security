@@ -15,12 +15,9 @@
  */
 package io.micronaut.security.token.jwt.signature.jwks;
 
-import com.nimbusds.jose.Algorithm;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKMatcher;
-import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.KeyType;
 import com.nimbusds.jwt.SignedJWT;
@@ -29,14 +26,15 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Signature configuration which enables verification of remote JSON Web Key Set.
@@ -173,13 +171,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Override
     public String supportedAlgorithmsMessage() {
-        String message = getJsonWebKeys().stream()
-                .map(JWK::getAlgorithm)
-                .map(Algorithm::getName)
-                .reduce((a, b) -> a + ", " + b)
-                .map(s -> "Only the " + s)
-                .orElse("No");
-        return message + " algorithms are supported";
+        return JwksSignatureUtils.supportedAlgorithmsMessage(getJsonWebKeys());
     }
 
     /**
@@ -190,10 +182,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Override
     public boolean supports(JWSAlgorithm algorithm) {
-        return getJsonWebKeys()
-                .stream()
-                .map(JWK::getAlgorithm)
-                .anyMatch(algorithm::equals);
+        return JwksSignatureUtils.supports(algorithm, getJsonWebKeys());
     }
 
     /**
@@ -205,14 +194,7 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      */
     @Override
     public boolean verify(SignedJWT jwt) throws JOSEException {
-        List<JWK> matches = matches(jwt, computeJWKSet().orElse(null));
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Found {} matching JWKs", matches.size());
-        }
-        if (matches == null || matches.isEmpty()) {
-            return false;
-        }
-        return verify(matches, jwt);
+        return JwksSignatureUtils.verify(jwt, computeJWKSet().orElse(null), jwkValidator);
     }
 
     /**
@@ -247,31 +229,11 @@ public class JwksSignature implements JwksCache, SignatureConfiguration {
      * @param jwt A Signed JWT
      * @param jwkSet A JSON Web Key Set
      * @return a List of JSON Web Keys
+     * @deprecated Use {@link JwksSignatureUtils#matches(SignedJWT, JWKSet, KeyType)} instead.
      */
+    @Deprecated
     protected List<JWK> matches(SignedJWT jwt, @Nullable JWKSet jwkSet) {
-        List<JWK> matches = Collections.emptyList();
-        if (jwkSet != null) {
-            JWKMatcher.Builder builder = new JWKMatcher.Builder();
-            if (jwksSignatureConfiguration.getKeyType() != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Key Type: {}", jwksSignatureConfiguration.getKeyType());
-                }
-                builder = builder.keyType(jwksSignatureConfiguration.getKeyType());
-            }
-            String keyId = jwt.getHeader().getKeyID();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT Key ID: {}", keyId);
-            }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("JWK Set Key IDs: {}", String.join(",", getKeyIds().orElse(Collections.emptyList())));
-            }
-            if (keyId != null) {
-                builder = builder.keyID(keyId);
-            }
-
-            matches = new JWKSelector(builder.build()).select(jwkSet);
-        }
-        return matches;
+        return JwksSignatureUtils.matches(jwt, jwkSet, jwksSignatureConfiguration.getKeyType());
     }
 
     /**
