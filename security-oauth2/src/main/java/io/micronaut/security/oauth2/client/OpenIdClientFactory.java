@@ -116,12 +116,12 @@ class OpenIdClientFactory {
             endSessionEndpoint = endSessionEndpointResolver.resolve(clientConfiguration, metadataSupplier, endSessionCallbackUrlBuilder).orElse(null);
         }
         return new DefaultOpenIdClient(clientConfiguration,
-                metadataSupplier,
-                authenticationMapper,
-                redirectUrlBuilder,
-                authorizationResponseHandler,
-                beanContext,
-                endSessionEndpoint);
+            metadataSupplier,
+            authenticationMapper,
+            redirectUrlBuilder,
+            authorizationResponseHandler,
+            beanContext,
+            endSessionEndpoint);
     }
 
     @NonNull
@@ -131,45 +131,48 @@ class OpenIdClientFactory {
         String endSessionEndpoint = providerMetadata == null ? null : providerMetadata.getEndSessionEndpoint();
         EndSessionEndpointConfiguration endSession = openIdClientConfiguration.getEndSession();
         Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
-        return new DefaultOpenIdProviderMetadata(authorization.flatMap(OauthAuthorizationEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getAuthorizationEndpoint()),
-            providerMetadata == null ? null : providerMetadata.getIdTokenSigningAlgValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getIssuer(),
-            openIdClientConfiguration.getJwksUri().orElseGet(() -> providerMetadata == null ? null : providerMetadata.getJwksUri()),
-            providerMetadata == null ? null : providerMetadata.getAcrValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getResponseTypesSupported(),
-            providerMetadata == null ? null : providerMetadata.getResponseModesSupported(),
-            providerMetadata == null ? null : providerMetadata.getScopesSupported(),
-            providerMetadata == null ? null : providerMetadata.getGrantTypesSupported(),
-            providerMetadata == null ? null : providerMetadata.getSubjectTypesSupported(),
-            openIdClientConfiguration.getToken().flatMap(SecureEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getTokenEndpoint()),
-            oauthClientConfiguration.getToken().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getTokenEndpointAuthMethodsSupported()),
-            openIdClientConfiguration.getUserInfo().flatMap(EndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getUserinfoEndpoint()),
-            openIdClientConfiguration.getRegistration().flatMap(EndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRegistrationEndpoint()),
-            providerMetadata == null ? null : providerMetadata.getClaimsSupported(),
-            authorization.flatMap(OauthAuthorizationEndpointConfiguration::getCodeChallengeMethod).map(Collections::singletonList).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getCodeChallengeMethodsSupported()),
-            oauthClientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getIntrospectionEndpoint()),
-            oauthClientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getIntrospectionEndpointAuthMethodsSupported()),
-            oauthClientConfiguration.getRevocation().flatMap(SecureEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRevocationEndpoint()),
-            oauthClientConfiguration.getRevocation().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRevocationEndpointAuthMethodsSupported()),
-            endSession.isEnabled() ? endSession.getUrl().orElse(endSessionEndpoint) : endSessionEndpoint,
-            providerMetadata == null ? null : providerMetadata.getRequestParameterSupported(),
-            providerMetadata == null ? null : providerMetadata.getRequestUriParameterSupported(),
-            providerMetadata == null ? null : providerMetadata.getRequireRequestUriRegistration(),
-            providerMetadata == null ? null : providerMetadata.getRequestObjectSigningAlgValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getServiceDocumentation(),
-            providerMetadata == null ? null : providerMetadata.getIdTokenEncryptionEncValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getDisplayValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getClaimTypesSupported(),
-            providerMetadata == null ? null : providerMetadata.getClaimsParameterSupported(),
-            providerMetadata == null ? null : providerMetadata.getOpTosUri(),
-            providerMetadata == null ? null : providerMetadata.getOpPolicyUri(),
-            providerMetadata == null ? null : providerMetadata.getUriLocalesSupported(),
-            providerMetadata == null ? null : providerMetadata.getClaimsLocalesSupported(),
-            providerMetadata == null ? null : providerMetadata.getUserInfoEncryptionAlgValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getUserinfoEncryptionEncValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getTokenEndpointAuthSigningAlgValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getRequestObjectEncryptionAlgValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getRequestObjectEncryptionEncValuesSupported(),
-            providerMetadata == null ? null : providerMetadata.getCheckSessionIframe());
+        return DefaultOpenIdProviderMetadata.builder()
+            .authorizationEndpoint(authorization.flatMap(OauthAuthorizationEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getAuthorizationEndpoint()))
+            .idTokenSigningAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getIdTokenSigningAlgValuesSupported())
+            .issuer(providerMetadata == null ? null : providerMetadata.getIssuer())
+            .jwksUri(openIdClientConfiguration.getJwksUri().orElseGet(() -> providerMetadata == null ? null : providerMetadata.getJwksUri()))
+            .acrValuesSupported(providerMetadata == null ? null : providerMetadata.getAcrValuesSupported())
+            .responseTypesSupported(providerMetadata == null ? null : providerMetadata.getResponseTypesSupported())
+            .responseModesSupported(providerMetadata == null ? null : providerMetadata.getResponseModesSupported())
+            .scopesSupported(providerMetadata == null ? null : providerMetadata.getScopesSupported())
+            .grantTypesSupported(providerMetadata == null ? null : providerMetadata.getGrantTypesSupported())
+            .subjectTypesSupported(providerMetadata == null ? null : providerMetadata.getSubjectTypesSupported())
+            .tokenEndpoint(openIdClientConfiguration.getToken().flatMap(SecureEndpointConfiguration::getUrl)
+                    .orElseGet(() -> providerMetadata == null ? null : providerMetadata.getTokenEndpoint()))
+            .tokenEndpointAuthMethodsSupported(oauthClientConfiguration.getToken().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getTokenEndpointAuthMethodsSupported()))
+            .userinfoEndpoint(openIdClientConfiguration.getUserInfo().flatMap(EndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getUserinfoEndpoint()))
+            .registrationEndpoint(openIdClientConfiguration.getRegistration().flatMap(EndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRegistrationEndpoint()))
+            .claimsSupported(providerMetadata == null ? null : providerMetadata.getClaimsSupported())
+            .codeChallengeMethodsSupported(authorization.flatMap(OauthAuthorizationEndpointConfiguration::getCodeChallengeMethod).map(Collections::singletonList).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getCodeChallengeMethodsSupported()))
+            .introspectionEndpoint(oauthClientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getIntrospectionEndpoint()))
+            .introspectionEndpointAuthMethodsSupported(oauthClientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getIntrospectionEndpointAuthMethodsSupported()))
+            .revocationEndpoint(oauthClientConfiguration.getRevocation().flatMap(SecureEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRevocationEndpoint()))
+            .revocationEndpointAuthMethodsSupported(oauthClientConfiguration.getRevocation().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRevocationEndpointAuthMethodsSupported()))
+            .endSessionEndpoint(endSession.isEnabled() ? endSession.getUrl().orElse(endSessionEndpoint) : endSessionEndpoint)
+            .requestParameterSupported(providerMetadata == null ? null : providerMetadata.getRequestParameterSupported())
+            .requestUriParameterSupported(providerMetadata == null ? null : providerMetadata.getRequestUriParameterSupported())
+            .requireRequestUriRegistration(providerMetadata == null ? null : providerMetadata.getRequireRequestUriRegistration())
+            .requestObjectSigningAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getRequestObjectSigningAlgValuesSupported())
+            .serviceDocumentation(providerMetadata == null ? null : providerMetadata.getServiceDocumentation())
+            .idTokenEncryptionEncValuesSupported(providerMetadata == null ? null : providerMetadata.getIdTokenEncryptionEncValuesSupported())
+            .displayValuesSupported(providerMetadata == null ? null : providerMetadata.getDisplayValuesSupported())
+            .claimTypesSupported(providerMetadata == null ? null : providerMetadata.getClaimTypesSupported())
+            .claimsParameterSupported(providerMetadata == null ? null : providerMetadata.getClaimsParameterSupported())
+            .opTosUri(providerMetadata == null ? null : providerMetadata.getOpTosUri())
+            .opPolicyUri(providerMetadata == null ? null : providerMetadata.getOpPolicyUri())
+            .uriLocalesSupported(providerMetadata == null ? null : providerMetadata.getUriLocalesSupported())
+            .claimsLocalesSupported(providerMetadata == null ? null : providerMetadata.getClaimsLocalesSupported())
+            .userinfoEncryptionAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getUserInfoEncryptionAlgValuesSupported())
+            .userinfoEncryptionEncValuesSupported(providerMetadata == null ? null : providerMetadata.getUserinfoEncryptionEncValuesSupported())
+            .tokenEndpointAuthSigningAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getTokenEndpointAuthSigningAlgValuesSupported())
+            .requestObjectEncryptionAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getRequestObjectEncryptionAlgValuesSupported())
+            .requestObjectEncryptionEncValuesSupported(providerMetadata == null ? null : providerMetadata.getRequestObjectEncryptionEncValuesSupported())
+            .checkSessionIframe(providerMetadata == null ? null : providerMetadata.getCheckSessionIframe())
+            .build();
     }
 }
