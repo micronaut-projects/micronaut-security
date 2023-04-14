@@ -48,12 +48,7 @@ jobs:
       - name: Build with Gradle
         id: gradle
         run: |
-          if ./gradlew tasks --no-daemon --all | grep -w "testNativeImage"
-          then
-            ./gradlew check testNativeImage --continue --no-daemon
-          else
-            ./gradlew check --continue --no-daemon
-          fi
+          ./gradlew check --continue --no-daemon
         env:
            TESTCONTAINERS_RYUK_DISABLED: true
            GH_TOKEN_PUBLIC_REPOS_READONLY: ${{ secrets.GH_TOKEN_PUBLIC_REPOS_READONLY }}
