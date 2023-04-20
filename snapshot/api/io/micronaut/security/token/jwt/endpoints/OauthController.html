@@ -126,12 +126,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#index(io.micronaut.http.HttpRequest,io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest,java.lang.String)" class="member-name-link">index</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
- <a href="TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#index(io.micronaut.http.HttpRequest,java.lang.String)" class="member-name-link">index</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieRefreshToken)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#index(io.micronaut.http.HttpRequest,java.lang.String)" class="member-name-link">index</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#index(io.micronaut.http.HttpRequest,java.util.Map,java.lang.String)" class="member-name-link">index</a><wbr>(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;body,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieRefreshToken)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -176,20 +176,20 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="index(io.micronaut.http.HttpRequest,io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest,java.lang.String)">
+<section class="detail" id="index(io.micronaut.http.HttpRequest,java.util.Map,java.lang.String)">
 <h3>index</h3>
 <div class="member-signature"><span class="annotations">@Consumes({"application/x-www-form-urlencoded","application/json"})
 @Post
 @SingleResult
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.reactivestreams.Publisher&lt;io.micronaut.http.MutableHttpResponse&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">index</span><wbr><span class="parameters">(io.micronaut.http.HttpRequest&lt;?&gt;&nbsp;request,
  @Nullable @Body
- <a href="TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints">TokenRefreshRequest</a>&nbsp;tokenRefreshRequest,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;body,
  @Nullable @CookieValue("JWT_REFRESH_TOKEN")
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cookieRefreshToken)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>request</code> - The current request</dd>
-<dd><code>tokenRefreshRequest</code> - An instance of <a href="TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>TokenRefreshRequest</code></a> present in the request</dd>
+<dd><code>body</code> - HTTP Request body which will be mapped to a <a href="TokenRefreshRequest.html" title="class in io.micronaut.security.token.jwt.endpoints"><code>TokenRefreshRequest</code></a>.</dd>
 <dd><code>cookieRefreshToken</code> - The refresh token stored in a cookie</dd>
 <dt>Returns:</dt>
 <dd>A response or a failure indicated by the HTTP status</dd>
