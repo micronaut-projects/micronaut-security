@@ -33,10 +33,12 @@ public class TokenRefreshRequest {
 
     public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
 
+    public static final String GRANT_TYPE = "grant_type";
+
     @NonNull
     @NotBlank
     @Pattern(regexp = GRANT_TYPE_REFRESH_TOKEN)
-    @JsonProperty("grant_type")
+    @JsonProperty(GRANT_TYPE)
     private final String grantType;
 
     @NotBlank
