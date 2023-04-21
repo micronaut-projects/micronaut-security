@@ -3,7 +3,8 @@ This section will document breaking changes that may happen during milestone or 
 
 == Micronaut Security 4.0 breaking changes
 
-`micronaut.security.intercept-url-map-prepend-pattern-with-context-path` defaults to `true`. Thus intercept url patterns are be prepended with the server context path if it is set.
+- `micronaut.security.intercept-url-map-prepend-pattern-with-context-path` defaults to `true`. Thus intercept url patterns are be prepended with the server context path if it is set.
+
 
 === Annotation Mappers Removed
 
@@ -22,6 +23,10 @@ The mappers for `javax.annotation.security` annotations – `DenyAll`, `PermitAl
 | io.micronaut.security.annotation.JakartaRolesAllowedAnnotationMapper
 
 |===
+
+=== Reactive OpenIdAuthenticationMapper
+
+The return type of the `OpenIdAuthenticationMapper.createAuthenticationResponse` has changed to return a `Publisher` to be consistent with the `OauthAuthenticationMapper` interface. Because the method now returns a Publisher, blocking operations can be offloaded to another thread pool using the reactive streams implementation of your choice.
 
 == Micronaut Security 3.4 breaking changes
 
