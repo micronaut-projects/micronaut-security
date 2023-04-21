@@ -20,6 +20,21 @@
     "reason": "Make this method Reactive similar to the OauthAuthenticationMapper interface. This allows you to make non-blocking API calls in the OIDC authentication mapper."
   },
   {
+    "type": "io.micronaut.security.token.propagation.TokenPropagationConfiguration",
+    "member": "Implemented interface io.micronaut.http.util.OutgointRequestProcessorMatcher",
+    "reason": "Renamed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.propagation.AbstractOutgoingRequestProcessorMatcher",
+    "member": "Implemented interface io.micronaut.http.util.OutgointRequestProcessorMatcher",
+    "reason": "Renamed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.propagation.TokenPropagationConfigurationProperties",
+    "member": "Implemented interface io.micronaut.http.util.OutgointRequestProcessorMatcher",
+    "reason": "Renamed in Micronaut Framework 4"
+  },
+  {
     "type": "io.micronaut.security.token.jwt.signature.jwks.JwksSignature",
     "member": "Constructor io.micronaut.security.token.jwt.signature.jwks.JwksSignature(io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration,io.micronaut.security.token.jwt.signature.jwks.JwkValidator)",
     "reason": "Removed deprecated constructor for Micronaut 4"

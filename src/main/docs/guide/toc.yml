@@ -33,7 +33,9 @@ authenticationStrategies:
       cookieToken: Cookie Token Reader
     jwtValidation:
       title: JWT Signature Validation
-      jwks: Validation with remote JWKS
+      jwks:
+        title: Remote JWKS
+        staticJwks: Local JWKS
     jwtGenerator:
       title: JWT Token Generation
       jwtGeneratorSignature: Signed JWT Generation

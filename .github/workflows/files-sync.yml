@@ -137,7 +137,7 @@ jobs:
         run: sleep 180s
         shell: bash
       - name: Create Pull Request - ${{ steps.branch.outputs.branch }}
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           path: target
           token: ${{ secrets.GH_TOKEN }}

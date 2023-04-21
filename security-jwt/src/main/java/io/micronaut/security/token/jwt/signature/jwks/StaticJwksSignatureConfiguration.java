@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.token.propagation;
+package io.micronaut.security.token.jwt.signature.jwks;
 
-import io.micronaut.core.util.Toggleable;
-import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
+import io.micronaut.core.annotation.NonNull;
 
 /**
- * Token propagation Configuration.
- *
- * @author Sergio del Amo
- * @since 1.0
+ * Configuration JSON Web Key Sets defined as static resources.
  */
-public interface TokenPropagationConfiguration extends Toggleable, OutgoingRequestProcessorMatcher {
+public interface StaticJwksSignatureConfiguration {
 
     /**
-     *
-     * @return Path to be matched by Token Propagation Filter.
+     * A path either starting with `classpath:` or `file:`. You can serve a JSON JWKS from anywhere on disk or the classpath.
+     * For example to serve static resources from `src/main/resources/security/jwks.json`, you would use `classpath:security/jwks.json` as the path.
+     * @return A path either starting with `classpath:` or `file:`.
      */
+    @NonNull
     String getPath();
 }
