@@ -385,8 +385,12 @@ Micronaut Security 3.x requires Micronaut 3.x.
 <div class="sect1">
 <h2 id="_micronaut_security_4_0_breaking_changes">Micronaut Security 4.0 breaking changes</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="ulist">
+<ul>
+<li>
 <p><code>micronaut.security.intercept-url-map-prepend-pattern-with-context-path</code> defaults to <code>true</code>. Thus intercept url patterns are be prepended with the server context path if it is set.</p>
+</li>
+</ul>
 </div>
 <div class="sect2">
 <h3 id="_annotation_mappers_removed">Annotation Mappers Removed</h3>
@@ -419,6 +423,12 @@ Micronaut Security 3.x requires Micronaut 3.x.
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_reactive_openidauthenticationmapper">Reactive OpenIdAuthenticationMapper</h3>
+<div class="paragraph">
+<p>The return type of the <code>OpenIdAuthenticationMapper.createAuthenticationResponse</code> has changed to return a <code>Publisher</code> to be consistent with the <code>OauthAuthenticationMapper</code> interface. Because the method now returns a Publisher, blocking operations can be offloaded to another thread pool using the reactive streams implementation of your choice.</p>
+</div>
 </div>
 </div>
 </div>
@@ -6754,6 +6764,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthentication
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 @Singleton
 @Replaces(DefaultOpenIdAuthenticationMapper.class)
@@ -6761,8 +6773,8 @@ public class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMap
 
     @Override
     @NonNull
-    public AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        return AuthenticationResponse.success("name");
+    public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
+        return Flux.just(AuthenticationResponse.success("name"));
     }
 }</code></pre>
 </div>
@@ -6776,6 +6788,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthentication
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Singleton
 @Replaces(DefaultOpenIdAuthenticationMapper.class)
@@ -6783,8 +6797,8 @@ class GlobalOpenIdAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
-    AuthenticationResponse createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
-        AuthenticationResponse.success("name")
+    Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims, @Nullable State state) {
+        return Flux.just(AuthenticationResponse.success("name"));
     }
 }</code></pre>
 </div>
@@ -6799,13 +6813,15 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthentication
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Singleton
 @Replaces(DefaultOpenIdAuthenticationMapper::class)
 class GlobalOpenIdAuthenticationMapper : OpenIdAuthenticationMapper {
 
-    override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): AuthenticationResponse {
-        return AuthenticationResponse.success("name")
+    override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): Publisher&lt;AuthenticationResponse&gt; {
+        return Flux.just(AuthenticationResponse.success("name"));
     }
 }</code></pre>
 </div>
@@ -6824,6 +6840,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 @Singleton
 @Named("okta") // <b class="conum">(1)</b>
@@ -6831,11 +6849,11 @@ public class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
-    public AuthenticationResponse createAuthenticationResponse(String providerName, // <b class="conum">(2)</b>
-                                                               OpenIdTokenResponse tokenResponse, // <b class="conum">(3)</b>
-                                                               OpenIdClaims openIdClaims, // <b class="conum">(4)</b>
-                                                               @Nullable State state) { // <b class="conum">(5)</b>
-        return AuthenticationResponse.success("name"); // <b class="conum">(6)</b>
+    public Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(String providerName, // <b class="conum">(2)</b>
+                                                                          OpenIdTokenResponse tokenResponse, // <b class="conum">(3)</b>
+                                                                          OpenIdClaims openIdClaims, // <b class="conum">(4)</b>
+                                                                          @Nullable State state) { // <b class="conum">(5)</b>
+        return Flux.just(AuthenticationResponse.success("name")); // <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
@@ -6847,6 +6865,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Singleton
 @Named("okta") // <b class="conum">(1)</b>
@@ -6854,11 +6874,11 @@ class OktaAuthenticationMapper implements OpenIdAuthenticationMapper {
 
     @Override
     @NonNull
-    AuthenticationResponse createAuthenticationResponse(String providerName, // <b class="conum">(2)</b>
-                                                        OpenIdTokenResponse tokenResponse, // <b class="conum">(3)</b>
-                                                        OpenIdClaims openIdClaims, // <b class="conum">(4)</b>
-                                                        @Nullable State state) { // <b class="conum">(5)</b>
-        AuthenticationResponse.success("name") // <b class="conum">(6)</b>
+    Publisher&lt;AuthenticationResponse&gt; createAuthenticationResponse(String providerName, // <b class="conum">(2)</b>
+                                                                   OpenIdTokenResponse tokenResponse, // <b class="conum">(3)</b>
+                                                                   OpenIdClaims openIdClaims, // <b class="conum">(4)</b>
+                                                                   @Nullable State state) { // <b class="conum">(5)</b>
+        Flux.just(AuthenticationResponse.success("name")); // <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
@@ -6872,6 +6892,8 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Singleton
 @Named("okta") // <b class="conum">(1)</b>
@@ -6881,8 +6903,8 @@ class OktaAuthenticationMapper : OpenIdAuthenticationMapper {
                                               tokenResponse: OpenIdTokenResponse, // <b class="conum">(3)</b>
                                               openIdClaims: OpenIdClaims, // <b class="conum">(4)</b>
                                               state: State?) // <b class="conum">(5)</b>
-            : AuthenticationResponse {
-        return AuthenticationResponse.success("name") // <b class="conum">(6)</b>
+            : Publisher&lt;AuthenticationResponse&gt; {
+        return Flux.just(AuthenticationResponse.success("name")) // <b class="conum">(6)</b>
     }
 }</code></pre>
 </div>
