@@ -1,5 +1,5 @@
 plugins {
-    id 'io.micronaut.application' version "$micronautGradlePluginVersion"
+    id 'io.micronaut.minimal.application' version "$micronautGradlePluginVersion"
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
@@ -24,6 +24,8 @@ micronaut {
 dependencies {
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-management")
+    implementation(mnSerde.micronaut.serde.jackson)
+    runtimeOnly(mn.snakeyaml)
 }
 
 shadowJar {

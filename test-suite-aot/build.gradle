@@ -29,6 +29,7 @@ micronaut {
 dependencies {
     implementation(projects.micronautSecurityJwt)
     implementation(projects.micronautSecurityOauth2)
+    implementation(mn.micronaut.jackson.databind)
     aotPlugins(projects.micronautSecurityAot)
 }
 
@@ -36,6 +37,7 @@ version = '0.1'
 
 configurations.all {
     resolutionStrategy {
+        preferProjectModules()
         // TODO: Remove this once aligned
         eachDependency {
             if (requested.group == "io.micronaut.platform" && requested.name == "micronaut-platform") {
