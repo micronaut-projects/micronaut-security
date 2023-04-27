@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(mn.micronaut.core.bom))
     implementation(platform(libs.testcontainers.bom))
     implementation(libs.testcontainers)
 }

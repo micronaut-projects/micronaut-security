@@ -35,6 +35,7 @@ import io.micronaut.security.utils.BaseUrlUtils
 import io.micronaut.security.utils.HtmlUtils
 import jakarta.inject.Singleton
 import spock.lang.AutoCleanup
+import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
 import spock.lang.Shared
 
@@ -139,6 +140,7 @@ class JwtCookieAuthenticationSpec extends GebSpec {
     }
 
     @IgnoreIf({ System.getProperty(Keycloak.SYS_TESTCONTAINERS) != null && !Boolean.valueOf(System.getProperty(Keycloak.SYS_TESTCONTAINERS)) })
+    @spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
     def "verify jwt cookie authentication works"() {
         when:
         to HomePage

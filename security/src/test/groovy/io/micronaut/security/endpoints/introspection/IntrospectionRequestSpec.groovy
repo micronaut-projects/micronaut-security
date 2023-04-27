@@ -12,8 +12,8 @@ import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.serde.SerdeIntrospections
 import spock.lang.Shared
 
-import javax.validation.Valid
-import javax.validation.Validator
+import jakarta.validation.Valid
+import jakarta.validation.Validator
 
 class IntrospectionRequestSpec extends EmbeddedServerSpecification {
 

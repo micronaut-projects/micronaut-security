@@ -40,7 +40,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.*
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.text.ParseException
@@ -97,21 +97,13 @@ class ClientCredentialsConcurrentSpec extends Specification {
     @AutoCleanup
     BlockingHttpClient client = httpClient.toBlocking()
 
-    @IgnoreIf({ env['GITHUB_RUN_ID'] != null }) // No idea why it fails in Github Actions
     void "no exception for concurrent requests using client credentials"() {
         when:
-        CompletableFuture<Void> run1 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run2 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run3 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run4 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run5 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run6 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run7 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run8 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run9 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run10 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture.allOf(run1, run2, run3, run4, run5, run6, run7, run8, run9, run10)
-                .get()
+        int numberOfFutures = Runtime.getRuntime().availableProcessors() - 1
+        List<CompletableFuture<Void>> futures = (1..numberOfFutures).collect {
+            CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
+        }
+        CompletableFuture.allOf(*futures).get()
 
         then:
         noExceptionThrown()

@@ -51,7 +51,7 @@ import spock.lang.PendingFeature
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.text.ParseException

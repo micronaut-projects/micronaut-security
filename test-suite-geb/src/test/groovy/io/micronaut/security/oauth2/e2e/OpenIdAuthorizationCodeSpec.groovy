@@ -30,11 +30,13 @@ import io.micronaut.security.utils.BaseUrlUtils
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import spock.lang.AutoCleanup
+import org.testcontainers.DockerClientFactory
 import spock.lang.IgnoreIf
 import spock.lang.Shared
 
 import java.security.Principal
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OpenIdAuthorizationCodeSpec extends GebSpec {
 
     @AutoCleanup

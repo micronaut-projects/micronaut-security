@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,15 @@ import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.validation.Validated;
+
+import java.util.Map;
 import java.util.Optional;
+
+import jakarta.validation.Valid;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
+
+import static io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest.GRANT_TYPE;
 
 /**
  *
@@ -83,7 +89,7 @@ public class OauthController {
 
     /**
      * @param request The current request
-     * @param tokenRefreshRequest An instance of {@link TokenRefreshRequest} present in the request
+     * @param body HTTP Request body which will be mapped to a {@link TokenRefreshRequest}.
      * @param cookieRefreshToken The refresh token stored in a cookie
      * @return A response or a failure indicated by the HTTP status
      */
@@ -91,8 +97,10 @@ public class OauthController {
     @Post
     @SingleResult
     public Publisher<MutableHttpResponse<?>> index(HttpRequest<?> request,
-                                                   @Nullable @Body TokenRefreshRequest tokenRefreshRequest,
+                                                   @Nullable @Body Map<String, String> body,
                                                    @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
+        TokenRefreshRequest tokenRefreshRequest = body == null ? null :
+            new TokenRefreshRequest(body.get(GRANT_TYPE), body.get(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN));
         String refreshToken = resolveRefreshToken(tokenRefreshRequest, cookieRefreshToken);
         return createResponse(request, refreshToken);
     }

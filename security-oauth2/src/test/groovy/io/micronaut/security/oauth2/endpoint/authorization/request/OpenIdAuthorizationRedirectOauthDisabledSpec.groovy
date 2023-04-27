@@ -23,6 +23,7 @@ import io.micronaut.security.oauth2.keycloack.v16.Keycloak
 import jakarta.inject.Named
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
+import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Flux
 import reactor.core.publisher.FluxSink
 import spock.lang.IgnoreIf
@@ -30,6 +31,7 @@ import spock.lang.IgnoreIf
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
+@spock.lang.Requires({ DockerClientFactory.instance().isDockerAvailable() })
 class OpenIdAuthorizationRedirectOauthDisabledSpec extends EmbeddedServerSpecification {
 
     @Override

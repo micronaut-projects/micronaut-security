@@ -26,7 +26,7 @@ Check the <<redirection, Redirection configuration>> to customize session based 
 
 == Example of Session-Based Authentication configuration
 
-[source, yaml]
+[configuration]
 ----
 include::{testsuitegeb}/security/session/SessionAuthenticationSpec.groovy[tag=yamlconfig,indent=0]
 ----

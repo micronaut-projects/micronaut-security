@@ -1,7 +1,7 @@
 plugins {
     id 'io.micronaut.application' version "$micronautGradlePluginVersion"
     id 'io.micronaut.aot' version "$micronautGradlePluginVersion"
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 
 }
 
@@ -28,9 +28,9 @@ micronaut {
 }
 
 dependencies {
-    implementation project(':security-jwt')
-    implementation project(':security-oauth2')
-    aotPlugins(project(':security-aot'))
+    implementation(projects.micronautSecurityJwt)
+    implementation(projects.micronautSecurityOauth2)
+    aotPlugins(projects.micronautSecurityAot)
 }
 
 version = '0.1'

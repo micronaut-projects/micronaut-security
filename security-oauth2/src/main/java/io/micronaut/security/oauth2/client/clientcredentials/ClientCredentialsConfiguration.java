@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package io.micronaut.security.oauth2.client.clientcredentials;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.Toggleable;
-import io.micronaut.http.util.OutgointRequestProcessorMatcher;
+import io.micronaut.http.util.OutgoingRequestProcessorMatcher;
 import io.micronaut.security.oauth2.client.clientcredentials.propagation.ClientCredentialsHeaderTokenPropagatorConfiguration;
 import java.time.Duration;
 import java.util.Map;
@@ -29,7 +29,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 2.2.0
  */
-public interface ClientCredentialsConfiguration extends Toggleable, OutgointRequestProcessorMatcher {
+public interface ClientCredentialsConfiguration extends Toggleable, OutgoingRequestProcessorMatcher {
 
     /**
      *
