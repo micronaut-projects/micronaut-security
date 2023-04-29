@@ -10,7 +10,7 @@ selenium = "4.9.0"
 testcontainers = "1.18.0"
 unboundid-ldapsdk = "6.0.8"
 bouncycastle = "1.70"
-kotlin = "1.8.20"
+kotlin = "1.8.21"
 bcpkix = "1.70"
 
 micronaut-test = "4.0.0-SNAPSHOT"
