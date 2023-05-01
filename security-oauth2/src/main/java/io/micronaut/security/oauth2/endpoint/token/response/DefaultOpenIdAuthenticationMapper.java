@@ -25,6 +25,9 @@ import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfigur
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -60,14 +63,14 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
 
     @NonNull
     @Override
-    public AuthenticationResponse createAuthenticationResponse(String providerName,
-                                                               OpenIdTokenResponse tokenResponse,
-                                                               OpenIdClaims openIdClaims,
-                                                               @Nullable State state) {
+    public Publisher<AuthenticationResponse> createAuthenticationResponse(String providerName,
+                                                                         OpenIdTokenResponse tokenResponse,
+                                                                         OpenIdClaims openIdClaims,
+                                                                         @Nullable State state) {
         Map<String, Object> claims = buildAttributes(providerName, tokenResponse, openIdClaims);
         List<String> roles = getRoles(providerName, tokenResponse, openIdClaims);
         String username = getUsername(providerName, tokenResponse, openIdClaims);
-        return AuthenticationResponse.success(username, roles, claims);
+        return Flux.just(AuthenticationResponse.success(username, roles, claims));
     }
 
     /**
