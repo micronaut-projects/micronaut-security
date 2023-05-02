@@ -12,9 +12,6 @@ jobs:
   build:
     if: github.repository != 'micronaut-projects/micronaut-project-template'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: ['17']
     steps:
        # https://github.com/actions/virtual-environments/issues/709
       - name: Free disk space
@@ -30,6 +27,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+      - name: Set up JDK
+        uses: actions/setup-java@v3.9.0
+        with:
+          distribution: 'adopt'
+          java-version: '17'
       - name: Run AOT Tests
         run: ./test-suite-aot.sh
         env:
