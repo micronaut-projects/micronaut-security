@@ -3,7 +3,7 @@ managed-nimbus-jose-jwt = "9.31"
 
 micronaut = "4.0.0-M2"
 micronaut-docs = "2.0.0"
-groovy = "4.0.10"
+groovy = "4.0.11"
 
 geb = "7.0"
 selenium = "4.9.0"
@@ -13,14 +13,14 @@ bouncycastle = "1.70"
 kotlin = "1.8.21"
 bcpkix = "1.70"
 
-micronaut-test = "4.0.0-SNAPSHOT"
-micronaut-multitenancy = "5.0.0-M1"
+micronaut-test = "4.0.0-M2"
+micronaut-multitenancy = "5.0.0-M2"
 micronaut-reactor = "3.0.0-M1"
-micronaut-serde = "2.0.0-M1"
-micronaut-servlet = "4.0.0-SNAPSHOT"
+micronaut-serde = "2.0.0-M3"
+micronaut-servlet = "4.0.0-M3"
 micronaut-session = "4.0.0-M1"
 micronaut-views = "4.0.0-M1"
-micronaut-validation = "4.0.0-M3"
+micronaut-validation = "4.0.0-M5"
 
 [libraries]
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
