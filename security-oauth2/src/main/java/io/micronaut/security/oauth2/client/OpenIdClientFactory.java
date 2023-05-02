@@ -24,17 +24,13 @@ import io.micronaut.context.annotation.Parallel;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.SupplierUtil;
 import io.micronaut.security.oauth2.client.condition.OpenIdClientCondition;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRedirectHandler;
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
@@ -43,7 +39,6 @@ import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallb
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -124,55 +119,36 @@ class OpenIdClientFactory {
             endSessionEndpoint);
     }
 
-    @NonNull
-    private static DefaultOpenIdProviderMetadata overrideFromConfig(@Nullable DefaultOpenIdProviderMetadata providerMetadata,
-                                                                    @NonNull OpenIdClientConfiguration openIdClientConfiguration,
-                                                                    @NonNull OauthClientConfiguration oauthClientConfiguration) {
-        String endSessionEndpoint = providerMetadata == null ? null : providerMetadata.getEndSessionEndpoint();
+    private void overrideFromConfig(DefaultOpenIdProviderMetadata configuration,
+                                    OpenIdClientConfiguration openIdClientConfiguration,
+                                    OauthClientConfiguration oauthClientConfiguration) {
+        openIdClientConfiguration.getJwksUri().ifPresent(configuration::setJwksUri);
+
+        oauthClientConfiguration.getIntrospection().ifPresent(introspection -> {
+            introspection.getUrl().ifPresent(configuration::setIntrospectionEndpoint);
+            introspection.getAuthMethod().ifPresent(authMethod -> configuration.setIntrospectionEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
+        });
+        oauthClientConfiguration.getRevocation().ifPresent(revocation -> {
+            revocation.getUrl().ifPresent(configuration::setRevocationEndpoint);
+            revocation.getAuthMethod().ifPresent(authMethod -> configuration.setRevocationEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
+        });
+        openIdClientConfiguration.getRegistration()
+            .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setRegistrationEndpoint);
+        openIdClientConfiguration.getUserInfo()
+            .flatMap(EndpointConfiguration::getUrl).ifPresent(configuration::setUserinfoEndpoint);
+        openIdClientConfiguration.getAuthorization().ifPresent(authorizationEndpointConfiguration -> {
+            authorizationEndpointConfiguration.getUrl().ifPresent(configuration::setAuthorizationEndpoint);
+            authorizationEndpointConfiguration.getCodeChallengeMethod()
+                .ifPresent(codeChallengeMethod -> configuration.setCodeChallengeMethodsSupported(Collections.singletonList(codeChallengeMethod)));
+        });
+        openIdClientConfiguration.getToken().ifPresent(token -> {
+            token.getUrl().ifPresent(configuration::setTokenEndpoint);
+            token.getAuthMethod().ifPresent(authMethod -> configuration.setTokenEndpointAuthMethodsSupported(Collections.singletonList(authMethod.toString())));
+        });
+
         EndSessionEndpointConfiguration endSession = openIdClientConfiguration.getEndSession();
-        Optional<AuthorizationEndpointConfiguration> authorization = openIdClientConfiguration.getAuthorization();
-        return DefaultOpenIdProviderMetadata.builder()
-            .authorizationEndpoint(authorization.flatMap(OauthAuthorizationEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getAuthorizationEndpoint()))
-            .idTokenSigningAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getIdTokenSigningAlgValuesSupported())
-            .issuer(providerMetadata == null ? null : providerMetadata.getIssuer())
-            .jwksUri(openIdClientConfiguration.getJwksUri().orElseGet(() -> providerMetadata == null ? null : providerMetadata.getJwksUri()))
-            .acrValuesSupported(providerMetadata == null ? null : providerMetadata.getAcrValuesSupported())
-            .responseTypesSupported(providerMetadata == null ? null : providerMetadata.getResponseTypesSupported())
-            .responseModesSupported(providerMetadata == null ? null : providerMetadata.getResponseModesSupported())
-            .scopesSupported(providerMetadata == null ? null : providerMetadata.getScopesSupported())
-            .grantTypesSupported(providerMetadata == null ? null : providerMetadata.getGrantTypesSupported())
-            .subjectTypesSupported(providerMetadata == null ? null : providerMetadata.getSubjectTypesSupported())
-            .tokenEndpoint(openIdClientConfiguration.getToken().flatMap(SecureEndpointConfiguration::getUrl)
-                    .orElseGet(() -> providerMetadata == null ? null : providerMetadata.getTokenEndpoint()))
-            .tokenEndpointAuthMethodsSupported(oauthClientConfiguration.getToken().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getTokenEndpointAuthMethodsSupported()))
-            .userinfoEndpoint(openIdClientConfiguration.getUserInfo().flatMap(EndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getUserinfoEndpoint()))
-            .registrationEndpoint(openIdClientConfiguration.getRegistration().flatMap(EndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRegistrationEndpoint()))
-            .claimsSupported(providerMetadata == null ? null : providerMetadata.getClaimsSupported())
-            .codeChallengeMethodsSupported(authorization.flatMap(OauthAuthorizationEndpointConfiguration::getCodeChallengeMethod).map(Collections::singletonList).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getCodeChallengeMethodsSupported()))
-            .introspectionEndpoint(oauthClientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getIntrospectionEndpoint()))
-            .introspectionEndpointAuthMethodsSupported(oauthClientConfiguration.getIntrospection().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getIntrospectionEndpointAuthMethodsSupported()))
-            .revocationEndpoint(oauthClientConfiguration.getRevocation().flatMap(SecureEndpointConfiguration::getUrl).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRevocationEndpoint()))
-            .revocationEndpointAuthMethodsSupported(oauthClientConfiguration.getRevocation().flatMap(SecureEndpointConfiguration::getAuthMethod).map(authMethod -> Collections.singletonList(authMethod.toString())).orElseGet(() -> providerMetadata == null ? null : providerMetadata.getRevocationEndpointAuthMethodsSupported()))
-            .endSessionEndpoint(endSession.isEnabled() ? endSession.getUrl().orElse(endSessionEndpoint) : endSessionEndpoint)
-            .requestParameterSupported(providerMetadata == null ? null : providerMetadata.getRequestParameterSupported())
-            .requestUriParameterSupported(providerMetadata == null ? null : providerMetadata.getRequestUriParameterSupported())
-            .requireRequestUriRegistration(providerMetadata == null ? null : providerMetadata.getRequireRequestUriRegistration())
-            .requestObjectSigningAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getRequestObjectSigningAlgValuesSupported())
-            .serviceDocumentation(providerMetadata == null ? null : providerMetadata.getServiceDocumentation())
-            .idTokenEncryptionEncValuesSupported(providerMetadata == null ? null : providerMetadata.getIdTokenEncryptionEncValuesSupported())
-            .displayValuesSupported(providerMetadata == null ? null : providerMetadata.getDisplayValuesSupported())
-            .claimTypesSupported(providerMetadata == null ? null : providerMetadata.getClaimTypesSupported())
-            .claimsParameterSupported(providerMetadata == null ? null : providerMetadata.getClaimsParameterSupported())
-            .opTosUri(providerMetadata == null ? null : providerMetadata.getOpTosUri())
-            .opPolicyUri(providerMetadata == null ? null : providerMetadata.getOpPolicyUri())
-            .uriLocalesSupported(providerMetadata == null ? null : providerMetadata.getUriLocalesSupported())
-            .claimsLocalesSupported(providerMetadata == null ? null : providerMetadata.getClaimsLocalesSupported())
-            .userinfoEncryptionAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getUserInfoEncryptionAlgValuesSupported())
-            .userinfoEncryptionEncValuesSupported(providerMetadata == null ? null : providerMetadata.getUserinfoEncryptionEncValuesSupported())
-            .tokenEndpointAuthSigningAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getTokenEndpointAuthSigningAlgValuesSupported())
-            .requestObjectEncryptionAlgValuesSupported(providerMetadata == null ? null : providerMetadata.getRequestObjectEncryptionAlgValuesSupported())
-            .requestObjectEncryptionEncValuesSupported(providerMetadata == null ? null : providerMetadata.getRequestObjectEncryptionEncValuesSupported())
-            .checkSessionIframe(providerMetadata == null ? null : providerMetadata.getCheckSessionIframe())
-            .build();
+        if (endSession.isEnabled()) {
+            endSession.getUrl().ifPresent(configuration::setEndSessionEndpoint);
+        }
     }
 }
