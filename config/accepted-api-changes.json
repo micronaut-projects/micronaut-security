@@ -678,5 +678,15 @@
     "type": "io.micronaut.security.token.jwt.signature.secret.$SecretSignatureConfiguration$IntrospectionRef",
     "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
     "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration",
+    "member": "Implemented interface io.micronaut.http.util.OutgointRequestProcessorMatcher",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.configuration.OauthClientConfigurationProperties$ClientCredentialsConfigurationProperties",
+    "member": "Implemented interface io.micronaut.http.util.OutgointRequestProcessorMatcher",
+    "reason": "Changed in Micronaut Framework 4"
   }
 ]
