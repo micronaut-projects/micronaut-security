@@ -6,11 +6,11 @@ micronaut-docs = "2.0.0"
 groovy = "4.0.11"
 
 geb = "7.0"
-selenium = "4.8.3"
+selenium = "4.9.0"
 testcontainers = "1.18.0"
 unboundid-ldapsdk = "6.0.8"
 bouncycastle = "1.70"
-kotlin = "1.8.20"
+kotlin = "1.8.21"
 bcpkix = "1.70"
 
 micronaut-test = "4.0.0-M2"

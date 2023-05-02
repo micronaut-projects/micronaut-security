@@ -1,5 +1,25 @@
 [
   {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper",
+    "member": "Class io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper",
+    "reason": "createAuthenticationResponse now returns a Publisher"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper",
+    "member": "Method io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper.createAuthenticationResponse(java.lang.String,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims,io.micronaut.security.oauth2.endpoint.authorization.state.State)",
+    "reason": "createAuthenticationResponse now returns a Publisher"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper",
+    "member": "Class io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper",
+    "reason": "createAuthenticationResponse now returns a Publisher"
+  },
+  {
+    "type": "io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper",
+    "member": "Method io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper.createAuthenticationResponse(java.lang.String,io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse,io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims,io.micronaut.security.oauth2.endpoint.authorization.state.State)",
+    "reason": "Make this method Reactive similar to the OauthAuthenticationMapper interface. This allows you to make non-blocking API calls in the OIDC authentication mapper."
+  },
+  {
     "type": "io.micronaut.security.token.propagation.TokenPropagationConfiguration",
     "member": "Implemented interface io.micronaut.http.util.OutgointRequestProcessorMatcher",
     "reason": "Renamed in Micronaut Framework 4"
@@ -120,9 +140,9 @@
     "reason": "Removed deprecated constructor for Micronaut 4"
   },
   {
-  "type": "io.micronaut.security.token.jwt.endpoints.KeysController",
-  "member": "Constructor io.micronaut.security.token.jwt.endpoints.KeysController(java.util.Collection,com.fasterxml.jackson.databind.ObjectMapper)",
-  "reason": "Removed deprecated constructor for Micronaut 4"
+    "type": "io.micronaut.security.token.jwt.endpoints.KeysController",
+    "member": "Constructor io.micronaut.security.token.jwt.endpoints.KeysController(java.util.Collection,com.fasterxml.jackson.databind.ObjectMapper)",
+    "reason": "Removed deprecated constructor for Micronaut 4"
   },
   {
     "type": "io.micronaut.security.token.jwt.signature.jwks.JwksSignature",
@@ -302,22 +322,22 @@
   {
     "type": "io.micronaut.security.authentication.AuthenticationExceptionHandler",
     "member": "Field eventPublisher",
-     "reason": "Remove deprecated code in mayor version"
+    "reason": "Remove deprecated code in mayor version"
   },
   {
     "type": "io.micronaut.security.authentication.AuthenticationExceptionHandler",
     "member": "Constructor io.micronaut.security.authentication.AuthenticationExceptionHandler(io.micronaut.context.event.ApplicationEventPublisher)",
-     "reason": "Remove deprecated code in mayor version"
+    "reason": "Remove deprecated code in mayor version"
   },
   {
     "type": "io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler",
     "member": "Constructor io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler(io.micronaut.security.config.RedirectConfiguration,io.micronaut.security.errors.PriorToLoginPersistence)",
-     "reason": "Remove deprecated code in mayor version"
+    "reason": "Remove deprecated code in mayor version"
   },
   {
     "type": "io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler",
     "member": "Constructor io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler()",
-     "reason": "Remove deprecated code in mayor version"
+    "reason": "Remove deprecated code in mayor version"
   },
   {
     "type": "io.micronaut.security.authentication.DefaultAuthorizationExceptionHandler",

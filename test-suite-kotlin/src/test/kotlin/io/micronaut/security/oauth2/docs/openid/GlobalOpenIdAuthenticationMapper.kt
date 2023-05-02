@@ -10,13 +10,15 @@ import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthentication
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Flux
 
 @Singleton
 @Replaces(DefaultOpenIdAuthenticationMapper::class)
 class GlobalOpenIdAuthenticationMapper : OpenIdAuthenticationMapper {
 
-    override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): AuthenticationResponse {
-        return AuthenticationResponse.success("name")
+    override fun createAuthenticationResponse(providerName: String, tokenResponse: OpenIdTokenResponse, openIdClaims: OpenIdClaims, state: State?): Publisher<AuthenticationResponse> {
+        return Flux.just(AuthenticationResponse.success("name"));
     }
 }
 //end::clazz[]
