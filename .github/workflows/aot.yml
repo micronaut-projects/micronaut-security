@@ -30,7 +30,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3.9.0
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '17'
       - name: Run AOT Tests
         run: ./test-suite-aot.sh
