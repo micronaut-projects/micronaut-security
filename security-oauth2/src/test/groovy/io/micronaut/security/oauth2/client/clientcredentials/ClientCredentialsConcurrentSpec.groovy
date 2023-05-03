@@ -10,6 +10,7 @@ import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.ConfigurationException
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.io.socket.SocketUtils
@@ -157,22 +158,54 @@ class ClientCredentialsConcurrentSpec extends Specification {
             this.tokenExpiration = tokenExpiration
         }
 
+
+        @Introspected
+        static class ClientCredentialsForm {
+            @NonNull
+            private final String grant_type;
+
+            @Nullable
+            private final String client_id;
+
+            @Nullable
+            private final String client_secret;
+
+            ClientCredentialsForm(@NonNull String grant_type, @Nullable String client_id, @Nullable String client_secret) {
+                this.grant_type = grant_type
+                this.client_id = client_id
+                this.client_secret = client_secret
+            }
+
+            @NonNull
+            String getGrant_type() {
+                return grant_type
+            }
+
+            @Nullable
+            String getClient_id() {
+                return client_id
+            }
+
+            @Nullable
+            String getClient_secret() {
+                return client_secret
+            }
+        }
+
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
         @Post
-        HttpResponse<?> index(String grant_type,
-                              @Nullable String client_id,
-                              @Nullable String client_secret,
+        HttpResponse<?> index(@Body ClientCredentialsForm form,
                               @Nullable @Header String authorization) {
             numberOfRequests++
             if (down) {
                 return HttpResponse.serverError()
             }
-            if (grant_type != GrantType.CLIENT_CREDENTIALS.toString()) {
+            if (form.getGrant_type() != GrantType.CLIENT_CREDENTIALS.toString()) {
                 return HttpResponse.badRequest([error: 'invalid_grant'])
             }
 
-            if (!validate(client_id, client_id, authorization)) {
+            if (!validate(form.getClient_id(), form.getClient_secret(), authorization)) {
                 return HttpResponse.status(HttpStatus.UNAUTHORIZED).body([error: 'invalid_client'])
             }
 
