@@ -1,6 +1,5 @@
 package io.micronaut.security.oauth2.client.clientcredentials
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.nimbusds.jose.Algorithm
 import com.nimbusds.jose.JOSEException
 import com.nimbusds.jose.JWSAlgorithm
@@ -164,36 +163,33 @@ class ClientCredentialsConcurrentSpec extends Specification {
         @Introspected
         static class ClientCredentialsForm {
             @NonNull
-            @JsonProperty("grant_type")
-            private final String grantType;
+            private final String grant_type;
 
             @Nullable
-            @JsonProperty("client_id")
-            private final String clientId;
+            private final String client_id;
 
             @Nullable
-            @JsonProperty("client_secret")
-            private final String clientSecret;
+            private final String client_secret;
 
-            ClientCredentialsForm(@NonNull String grantType, @Nullable String clientId, @Nullable String clientSecret) {
-                this.grantType = grantType
-                this.clientId = clientId
-                this.clientSecret = clientSecret
+            ClientCredentialsForm(@NonNull String grant_type, @Nullable String client_id, @Nullable String client_secret) {
+                this.grant_type = grant_type
+                this.client_id = client_id
+                this.client_secret = client_secret
             }
 
             @NonNull
-            String getGrantType() {
-                return grantType
+            String getGrant_type() {
+                return grant_type
             }
 
             @Nullable
-            String getClientId() {
-                return clientId
+            String getClient_id() {
+                return client_id
             }
 
             @Nullable
-            String getClientSecret() {
-                return clientSecret
+            String getClient_secret() {
+                return client_secret
             }
         }
 
@@ -206,11 +202,11 @@ class ClientCredentialsConcurrentSpec extends Specification {
             if (down) {
                 return HttpResponse.serverError()
             }
-            if (form.getGrantType() != GrantType.CLIENT_CREDENTIALS.toString()) {
+            if (form.getGrant_type() != GrantType.CLIENT_CREDENTIALS.toString()) {
                 return HttpResponse.badRequest([error: 'invalid_grant'])
             }
 
-            if (!validate(form.getClientId(), form.getClientSecret(), authorization)) {
+            if (!validate(form.getClient_id(), form.getClient_secret(), authorization)) {
                 return HttpResponse.status(HttpStatus.UNAUTHORIZED).body([error: 'invalid_client'])
             }
 
