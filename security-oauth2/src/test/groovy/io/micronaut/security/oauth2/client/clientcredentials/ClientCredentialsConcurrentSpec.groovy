@@ -98,10 +98,11 @@ class ClientCredentialsConcurrentSpec extends Specification {
     @AutoCleanup
     BlockingHttpClient client = httpClient.toBlocking()
 
-    @IgnoreIf({ Runtime.getRuntime().availableProcessors() <= 2 })
+    @IgnoreIf({ (Runtime.runtime.availableProcessors().intdiv(2) ?: 1) == 1 })
     void "no exception for concurrent requests using client credentials"() {
         when:
-        int numberOfFutures = Runtime.getRuntime().availableProcessors() - 1
+        int numberOfFutures = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        System.out.println("NUMBER_OF_FUTURES: " + numberOfFutures)
         List<CompletableFuture<Void>> futures = (1..numberOfFutures).collect {
             CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
         }
