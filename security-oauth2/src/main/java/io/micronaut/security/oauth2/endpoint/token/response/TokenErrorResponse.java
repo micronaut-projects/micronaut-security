@@ -33,8 +33,13 @@ import io.micronaut.core.annotation.Nullable;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TokenErrorResponse {
 
+    @NonNull
     private TokenError error;
+
+    @Nullable
     private String errorDescription;
+
+    @Nullable
     private String errorUri;
 
     /**
