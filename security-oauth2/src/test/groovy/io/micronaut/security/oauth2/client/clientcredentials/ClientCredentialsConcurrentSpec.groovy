@@ -97,6 +97,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
     @AutoCleanup
     BlockingHttpClient client = httpClient.toBlocking()
 
+    @IgnoreIf({ Runtime.getRuntime().availableProcessors() <= 2 })
     void "no exception for concurrent requests using client credentials"() {
         when:
         int numberOfFutures = Runtime.getRuntime().availableProcessors() - 1
