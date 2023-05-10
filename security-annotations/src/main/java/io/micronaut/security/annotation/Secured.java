@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.annotation;
 
-import io.micronaut.context.annotation.AnnotationExpressionContext;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

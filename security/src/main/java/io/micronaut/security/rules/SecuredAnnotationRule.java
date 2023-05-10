@@ -69,36 +69,22 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
             MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
             if (methodRoute.hasAnnotation(Secured.class)) {
 
-                for (AnnotationValue<Secured> securedAnnotation: methodRoute.getAnnotationValuesByType(Secured.class)) {
-                    if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
-                        Optional<SecurityRuleResult> result = securedAnnotation.booleanValue()
-                            .map(b -> (Boolean.TRUE.equals(b) ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED));
-                        if (result.isPresent()) {
-                            return Mono.just(result.get());
-                        }
+                AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
+                if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
+                    Optional<SecurityRuleResult> result = securedAnnotation.booleanValue()
+                        .map(b -> (Boolean.TRUE.equals(b) ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED));
+                    if (result.isPresent()) {
+                        return Mono.just(result.get());
                     }
                 }
-                Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
-                if (optionalValue.isPresent()) {
-                    List<String> values = Arrays.asList(optionalValue.get());
-                    if (values.contains(SecurityRule.DENY_ALL)) {
-                        return Mono.just(SecurityRuleResult.REJECTED);
-                    }
-                    return compareRoles(values, getRoles(authentication));
+                List<String> values = Arrays.asList(securedAnnotation.stringValues());
+                if (values.contains(SecurityRule.DENY_ALL)) {
+                    return Mono.just(SecurityRuleResult.REJECTED);
                 }
+                return compareRoles(values, getRoles(authentication));
             }
         }
         return Mono.just(SecurityRuleResult.UNKNOWN);
-    }
-
-    @NonNull
-    Optional<EvaluatedAnnotationValue<Secured>> retrieveEvaluatedAnnoationValue(@NonNull MethodBasedRouteMatch<?, ?> methodRoute) {
-        for (AnnotationValue<Secured> securedAnnotation: methodRoute.getAnnotationValuesByType(Secured.class)) {
-            if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured> evaluated) {
-                return Optional.of(evaluated);
-            }
-        }
-        return Optional.empty();
     }
 
     @Override
