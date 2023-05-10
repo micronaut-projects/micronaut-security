@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     kaptTest(mn.micronaut.inject.java)
+    kaptTest(projects.micronautSecurityAnnotations)
 
     testImplementation(libs.junit.jupiter.api)
     testImplementation(mnTest.micronaut.test.junit5)
@@ -24,6 +25,7 @@ dependencies {
     testImplementation(mnReactor.micronaut.reactor)
 
     testImplementation(mn.jackson.databind)
+    testAnnotationProcessor(projects.micronautSecurityAnnotations)
     testAnnotationProcessor(mnSerde.micronaut.serde.processor)
 }
 
