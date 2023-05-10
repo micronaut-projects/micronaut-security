@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.security.expressions;
+package io.micronaut.security.annotation.expressions;
 
 import io.micronaut.expressions.context.ExpressionEvaluationContextRegistrar;
 
+/**
+ * Registers Security Evaluation Context.
+ * @author Dean Wette
+ * @since 4.0.0
+ */
 public class SecuredEvaluationContextRegistrar implements ExpressionEvaluationContextRegistrar {
     @Override
     public String getContextClassName() {
-        return "io.micronaut.security.authentication.SecuredEvaluationContextImpl";
+        return "io.micronaut.security.expressions.SecuredEvaluationContext";
     }
 
 }

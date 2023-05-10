@@ -16,6 +16,7 @@
 package io.micronaut.security.rules;
 
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.annotation.EvaluatedAnnotationValue;
@@ -66,16 +67,17 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
-
-            for (AnnotationValue<Secured> securedAnnotation: methodRoute.getAnnotationValuesByType(Secured.class)) {
-                if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured> evaluated) {
-                    // TBD do the stuff!, i.e. compare with `authentication`
-                    evaluated.booleanValue();
-                }
-            }
-
-            // this part needs to change
             if (methodRoute.hasAnnotation(Secured.class)) {
+
+                for (AnnotationValue<Secured> securedAnnotation: methodRoute.getAnnotationValuesByType(Secured.class)) {
+                    if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
+                        Optional<SecurityRuleResult> result = securedAnnotation.booleanValue()
+                            .map(b -> (Boolean.TRUE.equals(b) ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED));
+                        if (result.isPresent()) {
+                            return Mono.just(result.get());
+                        }
+                    }
+                }
                 Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
                 if (optionalValue.isPresent()) {
                     List<String> values = Arrays.asList(optionalValue.get());
@@ -87,6 +89,16 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
             }
         }
         return Mono.just(SecurityRuleResult.UNKNOWN);
+    }
+
+    @NonNull
+    Optional<EvaluatedAnnotationValue<Secured>> retrieveEvaluatedAnnoationValue(@NonNull MethodBasedRouteMatch<?, ?> methodRoute) {
+        for (AnnotationValue<Secured> securedAnnotation: methodRoute.getAnnotationValuesByType(Secured.class)) {
+            if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured> evaluated) {
+                return Optional.of(evaluated);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override

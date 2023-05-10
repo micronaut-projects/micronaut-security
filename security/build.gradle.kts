@@ -23,8 +23,4 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(mn.snakeyaml)
     testImplementation(libs.bcpkix)
-
-//    compileOnly(projects.micronautSecurityExpressions)
-//    testImplementation(projects.micronautSecurityExpressions)
-    testAnnotationProcessor(projects.micronautSecurityExpressions)
 }
