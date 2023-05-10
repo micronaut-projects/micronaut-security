@@ -93,28 +93,27 @@ class SecuredExpressionSpec extends Specification {
 
     @Requires(property = "spec.name", value = "SecuredExpressionSpec")
     @Controller("/authenticated")
-
     static class SecuredExpressionController {
 
         @Secured("#{ user?.attributes?.get('email') == 'sherlock@micronaut.example' }")
         @Produces(MediaType.TEXT_PLAIN)
         @Get("/authenticationExpressionFromContext")
         String authenticationExpressionFromContext(Authentication authentication) {
-            return authentication.getName() + " is authenticated";
+            return authentication.getName() + " is authenticated"
         }
 
         @Secured("#{ principal?.name == 'sherlock' }")
         @Produces(MediaType.TEXT_PLAIN)
         @Get("/principalExpression")
         String principalExpression(Authentication auth) {
-            return auth.getName() + " is authenticated";
+            return auth.getName() + " is authenticated"
         }
 
         @Secured(SecurityRule.IS_AUTHENTICATED)
         @Produces(MediaType.TEXT_PLAIN)
         @Get()
         String authenticated(Authentication authentication) {
-            return authentication.getName() + " is authenticated";
+            return authentication.getName() + " is authenticated"
         }
     }
 

@@ -16,7 +16,6 @@
 package io.micronaut.security.rules;
 
 import io.micronaut.core.annotation.AnnotationValue;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.annotation.EvaluatedAnnotationValue;
@@ -26,11 +25,12 @@ import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
 
 /**
  * Security rule implementation for the {@link Secured} annotation.
