@@ -34,7 +34,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@AnnotationExpressionContext(SecuredEvaluationContext.class)
 @Inherited
 @Documented
 public @interface Secured {
