@@ -71,11 +71,20 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
 
                 AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
                 if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
-                    Optional<SecurityRuleResult> result = securedAnnotation.booleanValue()
-                        .map(b -> (Boolean.TRUE.equals(b) ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED));
-                    if (result.isPresent()) {
-                        return Mono.just(result.get());
-                    }
+
+                    // this doesn't work right, because Secured value is String[], not String
+//                    Optional<SecurityRuleResult> result = securedAnnotation.booleanValue()
+//                        .map(b -> (Boolean.TRUE.equals(b) ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED));
+//                    if (result.isPresent()) {
+//                        return Mono.just(result.get());
+//                    }
+
+                    // I think we want something like this. It's not exactly right, but I'll fix,
+                    // ...or we should consider adding to Secured: `String condition() default "";`
+                    // then we can keep the above code using `securedAnnotation.booleanValue("cpndition")`
+                    SecurityRuleResult result = Arrays.stream(securedAnnotation.stringValues())
+                        .anyMatch(Boolean::valueOf) ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED;
+                        return Mono.just(result);
                 }
                 List<String> values = Arrays.asList(securedAnnotation.stringValues());
                 if (values.contains(SecurityRule.DENY_ALL)) {
