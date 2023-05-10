@@ -31,7 +31,7 @@ public class SecuredEvaluationContext {
     }
 
     @Nullable
-    public Authentication getAuthentication() {
+    public Authentication getUser() {
         return securityService.getAuthentication().orElse(null);
     }
 
