@@ -19,7 +19,7 @@ Security rules return a publisher that should emit a single api:security.rules.S
 
 IMPORTANT: If all security rules return `UNKNOWN`, the request will be rejected!
 
-IMPORTANT: This implementation of api:security.filters.SecurityFilter[] so the security rules are exclusive: The first that manages the request (which returns alternatively `ALLOWED` or `REJECTED`) will be *the only one considered*.
+IMPORTANT: api:security.filters.SecurityFilter[] evaluates security rules in order. **The remaining rules are not evaluated once a rule returns `ALLOWED` or `REJECTED`**.
 
 Security rules implement the ordered interface and so all of the existing rules have a static variable `ORDER` that stores the order of that rule. The rules they are executed in order from lower to higher values. You can use those variables to place your custom rule before or after any of the existing rules.
 
