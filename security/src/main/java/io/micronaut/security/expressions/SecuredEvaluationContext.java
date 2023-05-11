@@ -26,7 +26,7 @@ import jakarta.inject.Singleton;
  */
 @Internal
 @Singleton
-public class SecuredEvaluationContext {
+public final class SecuredEvaluationContext {
 
     private final SecurityService securityService;
 
