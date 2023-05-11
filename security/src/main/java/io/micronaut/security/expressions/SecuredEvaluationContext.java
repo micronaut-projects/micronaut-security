@@ -33,7 +33,7 @@ public class SecuredEvaluationContext {
     }
 
     /**
-     * @return the possibly null {@link io.micronaut.security.authentication.Authentication} of the current user
+     * @return the authenticated user {@link io.micronaut.security.authentication.Authentication} or {@literal null}.
      */
     @Nullable
     public Authentication getUser() {
