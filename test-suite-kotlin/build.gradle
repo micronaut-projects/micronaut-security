@@ -25,8 +25,7 @@ dependencies {
     testImplementation(mnReactor.micronaut.reactor)
 
     testImplementation(mn.jackson.databind)
-    testAnnotationProcessor(projects.micronautSecurityAnnotations)
-    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    kaptTest(mnSerde.micronaut.serde.processor)
 }
 
 tasks.named('test') {
