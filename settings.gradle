@@ -38,7 +38,6 @@ enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {
     useStandardizedProjectNames=true
-    addSnapshotRepository()
     importMicronautCatalog()
     importMicronautCatalog("micronaut-multitenancy")
     importMicronautCatalog("micronaut-reactor")
