@@ -75,9 +75,9 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
                         return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
                     }
                 }
-                Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
-                if (optionalValue.isPresent()) {
-                    List<String> values = Arrays.asList(optionalValue.get());
+                String[] valuesArr = methodRoute.stringValues(Secured.class);
+                if (valuesArr.length > 0) {
+                    List<String> values = Arrays.asList(valuesArr);
                     if (values.contains(SecurityRule.DENY_ALL)) {
                         return Mono.just(SecurityRuleResult.REJECTED);
                     }
