@@ -1,5 +1,5 @@
 The decision to allow access to a particular endpoint to anonymous or authenticated users is determined by a collection of
-Security Rules which are executed from the api:security.filter.SecurityFilter[]. Micronaut ships with several built-in security rules. If they don't fulfil your needs,
+Security Rules which are executed from the api:security.filters.SecurityFilter[]. Micronaut ships with several built-in security rules. If they don't fulfil your needs,
 you can implement your own api:security.rules.SecurityRule[].
 
 Security rules return a publisher that should emit a single api:security.rules.SecurityRuleResult[]. See the following table for a description of each result.
@@ -19,7 +19,7 @@ Security rules return a publisher that should emit a single api:security.rules.S
 
 IMPORTANT: If all security rules return `UNKNOWN`, the request will be rejected!
 
-IMPORTANT: This implementation of api:security.filter.SecurityFilter[] so the security rules are exclusive: The first that manages the request (which returns alternatively `ALLOWED` or `REJECTED`) will be *the only one considered*.
+IMPORTANT: This implementation of api:security.filters.SecurityFilter[] so the security rules are exclusive: The first that manages the request (which returns alternatively `ALLOWED` or `REJECTED`) will be *the only one considered*.
 
 Security rules implement the ordered interface and so all of the existing rules have a static variable `ORDER` that stores the order of that rule. The rules they are executed in order from lower to higher values. You can use those variables to place your custom rule before or after any of the existing rules.
 
