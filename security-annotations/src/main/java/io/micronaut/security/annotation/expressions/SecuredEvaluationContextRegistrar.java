@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.annotation.expressions;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.expressions.context.ExpressionEvaluationContextRegistrar;
 
 /**
@@ -22,6 +23,7 @@ import io.micronaut.expressions.context.ExpressionEvaluationContextRegistrar;
  * @author Dean Wette
  * @since 4.0.0
  */
+@Internal
 public class SecuredEvaluationContextRegistrar implements ExpressionEvaluationContextRegistrar {
     @Override
     public String getContextClassName() {
