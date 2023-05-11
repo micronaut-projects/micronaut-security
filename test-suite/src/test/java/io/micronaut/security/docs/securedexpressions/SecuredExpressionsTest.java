@@ -27,25 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Property(name = "spec.name", value = "docexpressions")
 @Property(name = "micronaut.http.client.read-timeout", value = "3600s")
 @MicronautTest
-public class SecuredExpressionsTest {
+class SecuredExpressionsTest {
     @Inject
     @Client("/")
     HttpClient httpClient;
-
-    @Test
-    void authenticatedByPrincipal() {
-        BlockingHttpClient client = httpClient.toBlocking();
-        HttpResponse<?> response = client.exchange(HttpRequest.GET("/authenticated/principal").basicAuth("sherlock", "password"));
-        assertEquals(HttpStatus.OK, response.status());
-
-        Executable e = () -> client.exchange(HttpRequest.GET("/authenticated/principal").basicAuth("moriarty", "password"));
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, e);
-        assertEquals(HttpStatus.FORBIDDEN, thrown.getStatus());
-
-        e = () -> client.exchange(HttpRequest.GET("/authenticated/principal").basicAuth("watson", "password"));
-        thrown = assertThrows(HttpClientResponseException.class, e);
-        assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
-    }
 
     @Test
     void authenticatedByEmail() {

@@ -29,21 +29,6 @@ class SecuredExpressionsTest {
     lateinit var httpClient: HttpClient
 
     @Test
-    fun authenticatedByPrincipal() {
-        val client = httpClient.toBlocking()
-        val response: HttpResponse<*> = client.exchange<Any, Any>(HttpRequest.GET<Any>("/authenticated/principal").basicAuth("sherlock", "password"))
-        Assertions.assertEquals(HttpStatus.OK, response.status())
-
-        var e = Executable { client.exchange<Any, Any>(HttpRequest.GET<Any>("/authenticated/principal").basicAuth("moriarty", "password")) }
-        var thrown = Assertions.assertThrows(HttpClientResponseException::class.java, e)
-        Assertions.assertEquals(HttpStatus.FORBIDDEN, thrown.status)
-
-        e = Executable { client.exchange<Any, Any>(HttpRequest.GET<Any>("/authenticated/principal").basicAuth("watson", "password")) }
-        thrown = Assertions.assertThrows(HttpClientResponseException::class.java, e)
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, thrown.status)
-    }
-
-    @Test
     fun authenticatedByEmail() {
         val client = httpClient.toBlocking()
         val response: HttpResponse<*> = client.exchange<Any, Any>(HttpRequest.GET<Any>("/authenticated/email").basicAuth("sherlock", "password"))
@@ -53,6 +38,7 @@ class SecuredExpressionsTest {
         var thrown = Assertions.assertThrows(HttpClientResponseException::class.java, e)
 
         Assertions.assertEquals(HttpStatus.FORBIDDEN, thrown.status)
+
         e = Executable { client.exchange<Any, Any>(HttpRequest.GET<Any>("/authenticated/email").basicAuth("watson", "password")) }
         thrown = Assertions.assertThrows(HttpClientResponseException::class.java, e)
         Assertions.assertEquals(HttpStatus.UNAUTHORIZED, thrown.status)

@@ -30,23 +30,10 @@ class SecuredExpressionsSpec extends Specification {
 
     void "verify you can access an endpoint annotated with @Secured() expression with an authenticated user"() {
         when:
-        client.toBlocking().exchange(HttpRequest.GET("/authenticated/principal").basicAuth("sherlock", "password"))
-
-        then:
-        noExceptionThrown()
-
-        when:
-        client.toBlocking().exchange(HttpRequest.GET("/authenticated/principal").basicAuth("moriarty", "password"))
-
-        then:
-        HttpClientResponseException e = thrown()
-        e.status == HttpStatus.FORBIDDEN
-
-        when:
         client.toBlocking().exchange(HttpRequest.GET("/authenticated/principal").basicAuth("watson", "password"))
 
         then:
-        e = thrown()
+        HttpClientResponseException e = thrown()
         e.status == HttpStatus.UNAUTHORIZED
 
         when:

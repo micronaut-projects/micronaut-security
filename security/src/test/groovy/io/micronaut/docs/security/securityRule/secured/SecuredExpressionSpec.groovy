@@ -50,45 +50,24 @@ class SecuredExpressionSpec extends Specification {
         noExceptionThrown()
 
         when:
-        client.toBlocking().exchange(HttpRequest.GET("/authenticated/principalExpression").basicAuth("sherlock", "password"))
+        client.toBlocking().exchange(HttpRequest.GET("/authenticated/expression").basicAuth("sherlock", "password"))
 
         then:
         noExceptionThrown()
 
         when:
-        client.toBlocking().exchange(HttpRequest.GET("/authenticated/principalExpression").basicAuth("moriarty", "password"))
+        client.toBlocking().exchange(HttpRequest.GET("/authenticated/expression").basicAuth("moriarty", "password"))
 
         then:
         HttpClientResponseException e = thrown()
         e.status == HttpStatus.FORBIDDEN
 
         when:
-        client.toBlocking().exchange(HttpRequest.GET("/authenticated/principalExpression").basicAuth("watson", "password"))
+        client.toBlocking().exchange(HttpRequest.GET("/authenticated/expression").basicAuth("watson", "password"))
 
         then:
         e = thrown()
         e.status == HttpStatus.UNAUTHORIZED
-
-        when:
-        client.toBlocking().exchange(HttpRequest.GET("/authenticated/authenticationExpressionFromContext").basicAuth("sherlock", "password"))
-
-        then:
-        noExceptionThrown()
-
-        when:
-        client.toBlocking().exchange(HttpRequest.GET("/authenticated/authenticationExpressionFromContext").basicAuth("moriarty", "password"))
-
-        then:
-        e = thrown()
-        e.status == HttpStatus.FORBIDDEN
-
-        when:
-        client.toBlocking().exchange(HttpRequest.GET("/authenticated/authenticationExpressionFromContext").basicAuth("watson", "password"))
-
-        then:
-        e = thrown()
-        e.status == HttpStatus.UNAUTHORIZED
-
     }
 
     @Requires(property = "spec.name", value = "SecuredExpressionSpec")
@@ -97,16 +76,9 @@ class SecuredExpressionSpec extends Specification {
 
         @Secured("#{ user?.attributes?.get('email') == 'sherlock@micronaut.example' }")
         @Produces(MediaType.TEXT_PLAIN)
-        @Get("/authenticationExpressionFromContext")
+        @Get("/expression")
         String authenticationExpressionFromContext(Authentication authentication) {
             return authentication.getName() + " is authenticated"
-        }
-
-        @Secured("#{ principal?.name == 'sherlock' }")
-        @Produces(MediaType.TEXT_PLAIN)
-        @Get("/principalExpression")
-        String principalExpression(Authentication auth) {
-            return auth.getName() + " is authenticated"
         }
 
         @Secured(SecurityRule.IS_AUTHENTICATED)

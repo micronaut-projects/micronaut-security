@@ -25,12 +25,12 @@ import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.MethodBasedRouteMatch;
 import io.micronaut.web.router.RouteMatch;
 import jakarta.inject.Singleton;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 
 /**
  * Security rule implementation for the {@link Secured} annotation.
@@ -68,29 +68,23 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
             if (methodRoute.hasAnnotation(Secured.class)) {
-
-                AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
-                if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
-
-                    // this doesn't work right, because Secured value is String[], not String
-//                    Optional<SecurityRuleResult> result = securedAnnotation.booleanValue()
-//                        .map(b -> (Boolean.TRUE.equals(b) ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED));
-//                    if (result.isPresent()) {
-//                        return Mono.just(result.get());
-//                    }
-
-                    // I think we want something like this. It's not exactly right, but I'll fix,
-                    // ...or we should consider adding to Secured: `String condition() default "";`
-                    // then we can keep the above code using `securedAnnotation.booleanValue("cpndition")`
-                    SecurityRuleResult result = Arrays.stream(securedAnnotation.stringValues())
-                        .anyMatch(Boolean::valueOf) ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED;
-                        return Mono.just(result);
+                for (AnnotationValue<Secured> securedAnnotation: methodRoute.getAnnotationValuesByType(Secured.class)) {
+                    if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured> evaluatedAnnotationValue) {
+                        boolean[] arr = evaluatedAnnotationValue.withArguments(((MethodBasedRouteMatch<?, ?>) routeMatch).getArguments())
+                            .booleanValues();
+                        if (arr.length > 0) {
+                            return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
+                        }
+                    }
                 }
-                List<String> values = Arrays.asList(securedAnnotation.stringValues());
-                if (values.contains(SecurityRule.DENY_ALL)) {
-                    return Mono.just(SecurityRuleResult.REJECTED);
+                Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
+                if (optionalValue.isPresent()) {
+                    List<String> values = Arrays.asList(optionalValue.get());
+                    if (values.contains(SecurityRule.DENY_ALL)) {
+                        return Mono.just(SecurityRuleResult.REJECTED);
+                    }
+                    return compareRoles(values, getRoles(authentication));
                 }
-                return compareRoles(values, getRoles(authentication));
             }
         }
         return Mono.just(SecurityRuleResult.UNKNOWN);

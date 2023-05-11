@@ -19,7 +19,6 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.utils.SecurityService;
 import jakarta.inject.Singleton;
-import java.security.Principal;
 
 /**
  * Context for supporting {@link io.micronaut.security.annotation.Secured} annotation expressions with object references.
@@ -33,24 +32,11 @@ public class SecuredEvaluationContext {
         this.securityService = securityService;
     }
 
-
     /**
      * @return the possibly null {@link io.micronaut.security.authentication.Authentication} of the current user
      */
     @Nullable
     public Authentication getUser() {
         return securityService.getAuthentication().orElse(null);
-    }
-
-    /**
-     * @return the possibly null {@link java.security.Principal} of the current user
-     */
-    @Nullable
-    public Principal getPrincipal() {
-        String name = securityService.getAuthentication().map(Authentication::getName).orElse(null);
-        if (name == null) {
-            return null;
-        }
-        return () -> name;
     }
 }
