@@ -69,9 +69,8 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
             MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
             if (methodRoute.hasAnnotation(Secured.class)) {
                 for (AnnotationValue<Secured> securedAnnotation: methodRoute.getAnnotationValuesByType(Secured.class)) {
-                    if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured> evaluatedAnnotationValue) {
-                        boolean[] arr = evaluatedAnnotationValue.withArguments(((MethodBasedRouteMatch<?, ?>) routeMatch).getArguments())
-                            .booleanValues();
+                    if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
+                        boolean[] arr = securedAnnotation.booleanValues();
                         if (arr.length > 0) {
                             return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
                         }
