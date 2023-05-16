@@ -4,14 +4,17 @@ plugins {
 
 dependencies {
     annotationProcessor(mn.micronaut.graal)
+
     annotationProcessor(mnSerde.micronaut.serde.processor)
     implementation(mnSerde.micronaut.serde.jackson)
-    api(mn.micronaut.http)
-    api(mn.micronaut.http.server)
+
     annotationProcessor(mnValidation.micronaut.validation.processor)
+    api(mnSerde.micronaut.serde.api)
     api(mnValidation.micronaut.validation)
     api(projects.micronautSecurityAnnotations)
     implementation(mnReactor.micronaut.reactor)
+
+    compileOnly(mn.micronaut.http.server)
     compileOnly(mn.micronaut.management)
     compileOnly(mn.jackson.databind)
     testImplementation(mnReactor.micronaut.reactor)

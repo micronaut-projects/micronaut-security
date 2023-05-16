@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -38,8 +39,9 @@ import reactor.core.publisher.Mono;
  * @author James Kleeh
  * @since 1.0
  */
+@Requires(classes = { RouteMatch.class, MethodBasedRouteMatch.class })
 @Singleton
-public class SecuredAnnotationRule extends AbstractSecurityRule {
+public class SecuredAnnotationRule extends AbstractSecurityRule<RouteMatch<?>> {
 
     /**
      * The order of the rule.

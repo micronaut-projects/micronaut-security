@@ -53,6 +53,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Requires(property = SecurityFilterConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
+@Requires(classes = { HttpServerFilter.class, RouteMatch.class})
 @Replaces(EndpointsFilter.class)
 @Filter("${" + SecurityFilterConfigurationProperties.PREFIX + ".pattern:" + Filter.MATCH_ALL_PATTERN + "}")
 public class SecurityFilter implements HttpServerFilter {
@@ -159,7 +160,7 @@ public class SecurityFilter implements HttpServerFilter {
                                         .defaultIfEmpty(SecurityRuleResult.UNKNOWN)
                                         // Ideally should return just empty but filter the unknowns
                                         .filter(result -> result != SecurityRuleResult.UNKNOWN)
-                                        .doOnSuccess(result -> logResult(result, method, path, rule)))
+                                        .doOnSuccess(result -> logResult((SecurityRuleResult) result, method, path, rule)))
                 .next()
                 .flatMapMany(result -> {
                     if (result == SecurityRuleResult.REJECTED) {

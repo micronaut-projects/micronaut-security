@@ -23,7 +23,6 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.web.router.RouteMatch;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -38,8 +37,9 @@ import reactor.core.publisher.Mono;
  *
  * @author James Kleeh
  * @since 1.0
+ * @param <T> Route Match
  */
-abstract class InterceptUrlMapRule extends AbstractSecurityRule {
+abstract class InterceptUrlMapRule<T> extends AbstractSecurityRule<T> {
 
     /**
      * The order of the rule.
@@ -74,7 +74,7 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
      * @return The result
      */
     @Override
-    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable T routeMatch, @Nullable Authentication authentication) {
         final String path = request.getUri().getPath();
         final HttpMethod httpMethod = request.getMethod();
 

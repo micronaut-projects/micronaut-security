@@ -29,7 +29,7 @@ import java.util.List;
  * @since 1.0
  */
 @Singleton
-public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
+public class ConfigurationInterceptUrlMapRule<T> extends InterceptUrlMapRule<T> {
 
     /**
      * The order of the rule.

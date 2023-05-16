@@ -49,8 +49,9 @@ import reactor.core.publisher.Mono;
  * @since 1.0
  */
 @Requires(beans = EndpointSensitivityProcessor.class)
+@Requires(classes = { RouteMatch.class, MethodBasedRouteMatch.class })
 @Singleton
-public class SensitiveEndpointRule implements SecurityRule {
+public class SensitiveEndpointRule implements SecurityRule<RouteMatch<?>> {
     /**
      * The order of the rule.
      */

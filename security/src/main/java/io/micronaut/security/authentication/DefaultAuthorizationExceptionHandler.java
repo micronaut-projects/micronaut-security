@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.authentication;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -39,6 +40,7 @@ import org.slf4j.LoggerFactory;
  * @author James Kleeh
  * @since 1.4.0
  */
+@Requires(classes = ExceptionHandler.class)
 @Singleton
 public class DefaultAuthorizationExceptionHandler implements ExceptionHandler<AuthorizationException, MutableHttpResponse<?>> {
 

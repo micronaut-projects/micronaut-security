@@ -19,7 +19,6 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.web.router.RouteMatch;
 import org.reactivestreams.Publisher;
 
 /**
@@ -27,8 +26,9 @@ import org.reactivestreams.Publisher;
  *
  * @author James Kleeh
  * @since 1.0
+ * @param <T> Route Match
  */
-public interface SecurityRule extends Ordered {
+public interface SecurityRule<T> extends Ordered {
 
     /**
      * The token to represent allowing anonymous access.
@@ -55,5 +55,5 @@ public interface SecurityRule extends Ordered {
      * @param authentication The user authentication. Null if not authenticated
      * @return The result
      */
-    Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication);
+    Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable T routeMatch, @Nullable Authentication authentication);
 }
