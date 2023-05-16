@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
  */
 package io.micronaut.security.ldap;
 
-import io.micronaut.security.ldap.configuration.LdapConfiguration;
-import io.micronaut.security.ldap.context.ContextBuilder;
-import io.micronaut.security.ldap.context.LdapSearchService;
-import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.scheduling.TaskExecutors;
-
+import io.micronaut.security.ldap.configuration.LdapConfiguration;
+import io.micronaut.security.ldap.context.ContextBuilder;
+import io.micronaut.security.ldap.context.LdapSearchService;
+import io.micronaut.security.ldap.group.LdapGroupProcessor;
 import jakarta.inject.Named;
 import java.util.concurrent.ExecutorService;
 

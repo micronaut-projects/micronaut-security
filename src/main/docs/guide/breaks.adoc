@@ -1,6 +1,43 @@
 
 This section will document breaking changes that may happen during milestone or release candidate releases, as well as major releases eg (1.x.x -> 2.x.x).
 
+== Micronaut Security 4.0 breaking changes
+
+- `micronaut.security.intercept-url-map-prepend-pattern-with-context-path` defaults to `true`. Thus intercept url patterns are be prepended with the server context path if it is set.
+
+
+=== Annotation Mappers Removed
+
+The mappers for `javax.annotation.security` annotations – `DenyAll`, `PermitAll`, `RolesAllowed` – have been removed. Use the Jakarta versions for `jakarta.annotation.security` annotations instead.
+
+|===
+|Removed |Retained
+
+| io.micronaut.security.annotation.DenyAllAnnotationMapper
+| io.micronaut.security.annotation.JakartaDenyAllAnnotationMapper
+
+| io.micronaut.security.annotation.PermitAllAnnotationMapper
+| io.micronaut.security.annotation.JakartaPermitAllAnnotationMapper
+
+| io.micronaut.security.annotation.RolesAllowedAnnotationMapper
+| io.micronaut.security.annotation.JakartaRolesAllowedAnnotationMapper
+
+|===
+
+=== Reactive OpenIdAuthenticationMapper
+
+The return type of the `OpenIdAuthenticationMapper.createAuthenticationResponse` has changed to return a `Publisher` to be consistent with the `OauthAuthenticationMapper` interface. Because the method now returns a Publisher, blocking operations can be offloaded to another thread pool using the reactive streams implementation of your choice.
+
+== Micronaut Security 3.4 breaking changes
+
+Sensitive endpoints will now respond with an error unless a replacement for the api:security.rules.SensitiveEndpointRule[] is bound.
+
+The following code snippet illustrates how to restore the previous functionality:
+
+NOTE: The previous functionality allows any authenticated user, no matter their role to view sensitive endpoints.
+
+snippet::io.micronaut.security.docs.sensitiveendpointrule.SensitiveEndpointRuleReplacement[tags="imports,clazz"]
+
 == Micronaut Security 3.1 breaking changes
 
 Micronaut security no longer exposes `micronaut-management` dependency.

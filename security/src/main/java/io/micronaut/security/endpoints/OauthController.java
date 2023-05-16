@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package io.micronaut.security.endpoints;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
@@ -39,10 +39,14 @@ import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
 import io.micronaut.validation.Validated;
+
+import java.util.Map;
+import java.util.Optional;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
+import static io.micronaut.security.endpoints.TokenRefreshRequest.GRANT_TYPE;
+
 
 /**
  *
@@ -84,7 +88,7 @@ public class OauthController {
 
     /**
      * @param request The current request
-     * @param tokenRefreshRequest An instance of {@link TokenRefreshRequest} present in the request
+     * @param body HTTP Request body which will be mapped to a {@link TokenRefreshRequest}.
      * @param cookieRefreshToken The refresh token stored in a cookie
      * @return A response or a failure indicated by the HTTP status
      */
@@ -92,8 +96,10 @@ public class OauthController {
     @Post
     @SingleResult
     public Publisher<MutableHttpResponse<?>> index(HttpRequest<?> request,
-                                                   @Nullable @Body TokenRefreshRequest tokenRefreshRequest,
+                                                   @Nullable @Body Map<String, String> body,
                                                    @Nullable @CookieValue("JWT_REFRESH_TOKEN") String cookieRefreshToken) {
+        TokenRefreshRequest tokenRefreshRequest = body == null ? null :
+            new TokenRefreshRequest(body.get(GRANT_TYPE), body.get(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN));
         String refreshToken = resolveRefreshToken(tokenRefreshRequest, cookieRefreshToken);
         return createResponse(request, refreshToken);
     }
@@ -137,6 +143,8 @@ public class OauthController {
             refreshToken = tokenRefreshRequest.getRefreshToken();
         } else if (cookieRefreshToken != null) {
             refreshToken = cookieRefreshToken;
+        } else {
+            throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token and grant_type are required", null);
         }
         if (StringUtils.isEmpty(refreshToken)) {
             throw new OauthErrorResponseException(IssuingAnAccessTokenErrorCode.INVALID_REQUEST, "refresh_token is required", null);

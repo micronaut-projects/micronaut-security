@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package io.micronaut.security.oauth2.client.clientcredentials.propagation;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.exceptions.NoSuchBeanException;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -32,10 +32,10 @@ import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsCl
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
@@ -156,12 +156,9 @@ public class ClientCredentialsHttpClientFilter implements HttpClientFilter {
      * @return An OAuth 2.0 Client configuration which has client credentials configuration set and should process the request
      */
     protected Optional<OauthClientConfiguration> getClientConfiguration(HttpRequest<?> request) {
-        for (OauthClientConfiguration oauthClient : oauthClientConfigurationCollection) {
-            ClientCredentialsConfiguration clientCredentialsConfiguration = oauthClient.getClientCredentials().get();
-            if (outgoingHttpRequestProcessor.shouldProcessRequest(clientCredentialsConfiguration, request)) {
-                return Optional.of(oauthClient);
-            }
-        }
-        return Optional.empty();
+        return oauthClientConfigurationCollection.stream()
+                .filter(occ -> occ.getClientCredentials().isPresent())
+                .filter(occ -> outgoingHttpRequestProcessor.shouldProcessRequest(occ.getClientCredentials().get(), request))
+                .findFirst();
     }
 }

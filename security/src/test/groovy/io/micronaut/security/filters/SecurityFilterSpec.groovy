@@ -2,6 +2,7 @@ package io.micronaut.security.filters
 
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.util.StringUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -19,7 +20,6 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.web.router.RouteMatch
 import jakarta.inject.Named
 import jakarta.inject.Singleton
-import org.jetbrains.annotations.Nullable
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
@@ -27,9 +27,7 @@ import reactor.core.scheduler.Schedulers
 import java.time.Duration
 import java.util.concurrent.ExecutorService
 
-import static io.micronaut.security.rules.SecurityRuleResult.ALLOWED
-import static io.micronaut.security.rules.SecurityRuleResult.REJECTED
-import static io.micronaut.security.rules.SecurityRuleResult.UNKNOWN
+import static io.micronaut.security.rules.SecurityRuleResult.*
 
 @MicronautTest(rebuildContext = true)
 class SecurityFilterSpec extends EmbeddedServerSpecification {

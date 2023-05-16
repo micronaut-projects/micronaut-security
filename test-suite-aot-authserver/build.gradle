@@ -1,0 +1,48 @@
+plugins {
+    id 'io.micronaut.minimal.application' version "$micronautGradlePluginVersion"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'io.micronaut.security.test.aot.authserver.Application'
+}
+
+micronaut {
+    version = micronautVersion
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("io.micronaut.security.test.aot.authserver")
+    }
+}
+
+dependencies {
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-management")
+    implementation(mnSerde.micronaut.serde.jackson)
+    runtimeOnly(mn.snakeyaml)
+}
+
+shadowJar {
+    archiveBaseName.set('authserver')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+}
+
+configurations.all {
+    resolutionStrategy {
+        preferProjectModules()
+        // TODO: Remove this once aligned
+        eachDependency {
+            if (requested.group == "io.micronaut.platform" && requested.name == "micronaut-platform") {
+                useVersion("4.0.0-M1")
+                because("There's no M2 platform yet")
+            }
+        }
+    }
+}

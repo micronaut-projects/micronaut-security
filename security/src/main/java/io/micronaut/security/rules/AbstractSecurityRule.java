@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,13 @@ package io.micronaut.security.rules;
 
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
-import jakarta.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A base {@link SecurityRule} class to extend from that provides
@@ -44,8 +42,7 @@ public abstract class AbstractSecurityRule implements SecurityRule {
     /**
      * @param rolesFinder Roles Parser
      */
-    @Inject
-    public AbstractSecurityRule(RolesFinder rolesFinder) {
+    protected AbstractSecurityRule(RolesFinder rolesFinder) {
         this.rolesFinder = rolesFinder;
     }
 

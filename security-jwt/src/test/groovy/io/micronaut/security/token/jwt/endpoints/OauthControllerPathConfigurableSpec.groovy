@@ -7,12 +7,11 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.endpoints.OauthController
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
-import io.micronaut.security.testutils.EmbeddedServerSpecification
-import org.reactivestreams.Publisher
-
 import jakarta.inject.Singleton
+import org.reactivestreams.Publisher
 
 class OauthControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 

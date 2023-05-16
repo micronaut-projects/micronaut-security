@@ -1,9 +1,9 @@
 package io.micronaut.security.oauth2.endpoint.token.response.validation
 
-import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.oauth2.client.OpenIdProviderMetadata
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import spock.lang.Unroll
 
 class AudienceClaimValidatorSpec extends ApplicationContextSpecification {
@@ -30,13 +30,14 @@ class AudienceClaimValidatorSpec extends ApplicationContextSpecification {
         expected == validator.validate(openIdClaims, oauthClientConfiguration, openIdProviderMetadata)
 
         where:
-        clientId   | audience            | authorizedParty || expected
-        'CLIENTID' | []                  | null            || false
-        'CLIENTID' | ['FOO']             | null            || false
-        'CLIENTID' | ['CLIENTID']        | null            || true
-        'CLIENTID' | ['CLIENTID', 'FOO'] | null            || false
-        'CLIENTID' | ['CLIENTID', 'FOO'] | 'YYY'           || true
+        clientId   | audience                   | authorizedParty || expected
+        'CLIENTID' | []                         | null            || false
+        'CLIENTID' | ['FOO']                    | null            || false
+        'CLIENTID' | ['CLIENTID']               | null            || true
+        'CLIENTID' | ['CLIENTID', 'FOO']        | null            || false
+        'CLIENTID' | ['CLIENTID', 'FOO']        | 'YYY'           || true
+        'CLIENTID' | ['ANOTHERCLIENTID', 'FOO'] | 'YYY'           || false
 
-        description = audience.size() > 1 ? (authorizedParty ? "for multiple audiences, azp claim must be present." : "for multiple audiencies claim if azp is not present validation should fail") : (!audience ? 'if audience is empty validation fails' : (clientId != audience.first() ? 'if audience claim does not match client id validation must fail' : 'if audience claim must match client id'))
+        description = audience.size() > 1 ? (authorizedParty ? "for multiple audiences, azp claim must be present." : "for multiple audiences claim if azp is not present validation should fail") : (!audience ? 'if audience is empty validation fails' : (clientId != audience.first() ? 'if audience claim does not match client id validation must fail' : 'if audience claim must match client id'))
     }
 }

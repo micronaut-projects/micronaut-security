@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,11 +41,11 @@ public class SecureGrantMap extends HashMap<String, String> implements SecureGra
 
     @Override
     public void setClientId(String clientId) {
-        put("client_id", clientId);
+        put(KEY_CLIENT_ID, clientId);
     }
 
     @Override
     public void setClientSecret(String clientSecret) {
-        put("client_secret", clientSecret);
+        put(KEY_CLIENT_SECRET, clientSecret);
     }
 }

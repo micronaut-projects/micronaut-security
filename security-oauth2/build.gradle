@@ -1,22 +1,32 @@
-dependencies {
-    annotationProcessor project(":security-annotations")
-
-    compileOnly "io.micronaut:micronaut-inject-java"
-    compileOnly project(":security-jwt")
-    api project(":security")
-    implementation "io.micronaut:micronaut-http-client"
-    compileOnly "io.micronaut:micronaut-session"
-
-    implementation "io.projectreactor:reactor-core"
-    testImplementation project(":security-session")
-    testImplementation "io.micronaut:micronaut-http-client"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation 'com.sun.activation:javax.activation:1.2.0' // Java 11
-    testImplementation "org.testcontainers:testcontainers:1.16.0"
-    testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
-    testImplementation project(":security-jwt")
-    testImplementation project(":test-suite-utils")
-    testImplementation project(":test-suite-utils-security")
+plugins {
+    id "io.micronaut.build.internal.security-module"
 }
 
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+dependencies {
+    annotationProcessor(mn.micronaut.graal)
+
+    annotationProcessor(mnSerde.micronaut.serde.processor)
+    implementation(mnSerde.micronaut.serde.jackson)
+    annotationProcessor(projects.micronautSecurityAnnotations)
+    annotationProcessor(mnValidation.micronaut.validation.processor)
+    api(mnValidation.micronaut.validation)
+    compileOnly(mn.micronaut.inject.java)
+    compileOnly(projects.micronautSecurityJwt)
+    api(projects.micronautSecurity)
+    implementation(mn.micronaut.http.client)
+    compileOnly(mn.jackson.databind)
+    compileOnly(mnSession.micronaut.session)
+    implementation(mnReactor.micronaut.reactor)
+
+    testImplementation(projects.micronautSecuritySession)
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.testcontainers)
+    testImplementation(mn.groovy.json)
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.testSuiteUtils)
+    testImplementation(projects.testSuiteUtilsSecurity)
+    testImplementation(projects.testSuiteKeycloak16)
+    testImplementation(mnLogging.logback.classic)
+}

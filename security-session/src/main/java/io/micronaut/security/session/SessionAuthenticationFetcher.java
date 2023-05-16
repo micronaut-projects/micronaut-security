@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,10 @@ import io.micronaut.security.filters.SecurityFilter;
 import io.micronaut.security.token.TokenAuthenticationFetcher;
 import io.micronaut.session.Session;
 import io.micronaut.session.http.HttpSessionFilter;
-import org.reactivestreams.Publisher;
-
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Mono;
-
 import java.util.Optional;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 
 /**
  * Attempts to retrieve an instance of {@link Authentication} from {@link Session}.

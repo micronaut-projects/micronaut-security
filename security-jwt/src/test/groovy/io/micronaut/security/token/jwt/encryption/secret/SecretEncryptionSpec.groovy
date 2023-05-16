@@ -1,7 +1,6 @@
 package io.micronaut.security.token.jwt.encryption.secret
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
 import spock.lang.Specification
 
@@ -13,7 +12,7 @@ class SecretEncryptionSpec extends Specification {
                 'micronaut.security.token.jwt.encryptions.secret.generator.secret': 'XXX',
                 'micronaut.security.token.jwt.encryptions.secret.generator.jwe-algorithm': 'dir',
                 'micronaut.security.token.jwt.encryptions.secret.generator.encryption-method': 'A128CBC-HS256',
-        ], Environment.TEST)
+        ])
 
         when:
         ctx.getBean(SecretEncryptionFactory)

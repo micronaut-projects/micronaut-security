@@ -1,7 +1,6 @@
 package io.micronaut.docs.validator
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.jwt.validator.SubjectNotNullJwtClaimsValidator
@@ -14,7 +13,7 @@ class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
         EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
                 'spec.name'                 : SubjectNotNullJwtClaimsValidatorSpec.simpleName,
 
-        ], Environment.TEST)
+        ])
 
         when:
         embeddedServer.applicationContext.getBean(SubjectNotNullJwtClaimsValidator)
@@ -33,7 +32,7 @@ class SubjectNotNullJwtClaimsValidatorSpec extends Specification {
                 'spec.name'                 : SubjectNotNullJwtClaimsValidatorSpec.simpleName,
                 'micronaut.security.token.jwt.claims-validators.subject-not-null': false
 
-        ], Environment.TEST)
+        ])
 
         when:
         embeddedServer.applicationContext.getBean(SubjectNotNullJwtClaimsValidator)

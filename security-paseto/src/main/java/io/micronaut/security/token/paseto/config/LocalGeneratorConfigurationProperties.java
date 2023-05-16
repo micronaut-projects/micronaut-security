@@ -22,7 +22,7 @@ import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Named;
 
 import javax.crypto.SecretKey;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author Sergio del Amo

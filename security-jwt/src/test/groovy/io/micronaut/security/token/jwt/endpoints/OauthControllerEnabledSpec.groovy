@@ -6,15 +6,16 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.endpoints.OauthController
 import io.micronaut.security.endpoints.OauthControllerConfiguration
 import io.micronaut.security.endpoints.OauthControllerConfigurationProperties
+import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
 import io.micronaut.security.token.generator.AccessRefreshTokenGenerator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
+
+
 import io.micronaut.security.token.validator.RefreshTokenValidator
-import io.micronaut.security.testutils.ApplicationContextSpecification
+import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import spock.lang.Unroll
-
-import jakarta.inject.Singleton
 
 class OauthControllerEnabledSpec extends ApplicationContextSpecification {
 

@@ -1,0 +1,50 @@
+plugins {
+    id 'io.micronaut.application' version "$micronautGradlePluginVersion"
+    id 'io.micronaut.aot' version "$micronautGradlePluginVersion"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'io.micronaut.security.test.aot.Application'
+}
+
+micronaut {
+    version = micronautVersion
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("io.micronaut.security.oauth2.docs.app")
+    }
+    aot {
+        version = micronautAotVersion
+        configFile = file("aot.properties")
+    }
+}
+
+dependencies {
+    implementation(projects.micronautSecurityJwt)
+    implementation(projects.micronautSecurityOauth2)
+    implementation(mn.micronaut.jackson.databind)
+    aotPlugins(projects.micronautSecurityAot)
+    runtimeOnly(mn.snakeyaml)
+}
+
+version = '0.1'
+
+configurations.all {
+    resolutionStrategy {
+        preferProjectModules()
+        // TODO: Remove this once aligned
+        eachDependency {
+            if (requested.group == "io.micronaut.platform" && requested.name == "micronaut-platform") {
+                useVersion("4.0.0-M1")
+                because("There's no M2 platform yet")
+            }
+        }
+    }
+}

@@ -11,7 +11,6 @@ import io.micronaut.security.MockAuthenticationProvider
 import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.event.LoginFailedEvent
 import io.micronaut.security.event.LoginSuccessfulEvent

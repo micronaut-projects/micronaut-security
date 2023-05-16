@@ -1,0 +1,27 @@
+plugins {
+    id 'groovy'
+    id 'java-library'
+    id "io.micronaut.build.internal.security-tests"
+}
+
+dependencies {
+    testCompileOnly(mn.micronaut.inject.groovy)
+    testImplementation(mnTest.micronaut.test.spock)
+
+    testRuntimeOnly(mnLogging.logback.classic)
+
+    testImplementation(mn.micronaut.management)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(mn.micronaut.http.client)
+    testImplementation(mnSerde.micronaut.serde.jackson)
+    testImplementation(projects.micronautSecurityJwt)
+    testImplementation(projects.micronautSecurityOauth2)
+    testImplementation(projects.testSuiteUtils)
+    testImplementation(projects.testSuiteUtilsSecurity)
+    testImplementation(mnReactor.micronaut.reactor)
+    testImplementation(mn.groovy.json)
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

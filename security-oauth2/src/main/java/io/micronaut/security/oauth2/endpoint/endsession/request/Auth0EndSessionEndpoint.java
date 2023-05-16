@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,18 @@
  */
 package io.micronaut.security.oauth2.endpoint.endsession.request;
 
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.endpoint.endsession.response.EndSessionCallbackUrlBuilder;
 
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -52,7 +54,7 @@ public class Auth0EndSessionEndpoint extends AbstractEndSessionRequest {
     protected String getUrl() {
         URL url = clientConfiguration.getOpenid()
                 .flatMap(OpenIdClientConfiguration::getIssuer)
-                .get();
+                .orElseThrow(() -> new ConfigurationException("Open ID client configuration is missing the issuer URL"));
         return StringUtils.prependUri(url.toString(), "/v2/logout");
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,18 @@
  */
 package io.micronaut.security.token.jwt.validator;
 
-import java.util.Date;
-
+import com.nimbusds.jwt.JWTClaimsSet;
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
-
-import com.nimbusds.jwt.JWTClaimsSet;
-
-import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.StringUtils;
+import java.util.Date;
 
 /**
  * Validate current time is not before the not-before claim of a JWT token.

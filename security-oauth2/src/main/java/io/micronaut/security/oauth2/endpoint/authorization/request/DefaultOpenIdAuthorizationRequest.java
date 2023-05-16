@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,20 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceChallenge;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceFactory;
 import io.micronaut.security.oauth2.endpoint.authorization.state.StateFactory;
 import io.micronaut.security.oauth2.endpoint.nonce.NonceFactory;
 import io.micronaut.security.oauth2.url.OauthRouteUrlBuilder;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,38 +49,46 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
 
     private final HttpRequest<?> request;
     private OauthClientConfiguration oauthConfiguration;
+    private OpenIdProviderMetadata openIdProviderMetadata;
     private final StateFactory stateFactory;
     private final NonceFactory nonceFactory;
     private LoginHintResolver loginHintResolver;
     private IdTokenHintResolver idTokenHintResolver;
     private AuthorizationEndpointConfiguration endpointConfiguration;
     private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
+    private final PkceFactory pkceFactory;
 
     /**
-     * @param request The original request prior redirect.
-     * @param oauthConfiguration The OAuth 2.0 configuration
+     * @param request              The original request prior redirect.
+     * @param oauthConfiguration   The OAuth 2.0 configuration
+     * @param openIdProviderMetadata OpenID Provider Metadata
      * @param oauthRouteUrlBuilder The oauth route URL builder
-     * @param stateFactory The state provider
-     * @param nonceFactory The nonce provider
-     * @param loginHintResolver The login hint provider
-     * @param idTokenHintResolver The id token hint provider
+     * @param stateFactory         The state provider
+     * @param nonceFactory         The nonce provider
+     * @param loginHintResolver    The login hint provider
+     * @param idTokenHintResolver  The id token hint provider
+     * @param pkceFactory          PKCE Factory
      */
     public DefaultOpenIdAuthorizationRequest(@Parameter HttpRequest<?> request,
                                              @Parameter OauthClientConfiguration oauthConfiguration,
+                                             @Parameter OpenIdProviderMetadata openIdProviderMetadata,
                                              OauthRouteUrlBuilder oauthRouteUrlBuilder,
                                              @Nullable StateFactory stateFactory,
                                              @Nullable NonceFactory nonceFactory,
                                              @Nullable LoginHintResolver loginHintResolver,
-                                             @Nullable IdTokenHintResolver idTokenHintResolver) {
+                                             @Nullable IdTokenHintResolver idTokenHintResolver,
+                                             @Nullable PkceFactory pkceFactory) {
         this.request = request;
         this.oauthConfiguration = oauthConfiguration;
+        this.openIdProviderMetadata = openIdProviderMetadata;
         this.endpointConfiguration = oauthConfiguration.getOpenid()
-                .flatMap(OpenIdClientConfiguration::getAuthorization).orElse(null);
+            .flatMap(OpenIdClientConfiguration::getAuthorization).orElse(null);
         this.oauthRouteUrlBuilder = oauthRouteUrlBuilder;
         this.stateFactory = stateFactory;
         this.nonceFactory = nonceFactory;
         this.loginHintResolver = loginHintResolver;
         this.idTokenHintResolver = idTokenHintResolver;
+        this.pkceFactory = pkceFactory;
     }
 
     @Override
@@ -120,9 +131,16 @@ class DefaultOpenIdAuthorizationRequest implements OpenIdAuthorizationRequest {
     }
 
     @Override
+    @NonNull
+    public Optional<PkceChallenge> getPkceChallenge(@NonNull MutableHttpResponse<?> response) {
+        return Optional.ofNullable(pkceFactory)
+            .flatMap(sf -> sf.buildChallenge(request, response, openIdProviderMetadata.getCodeChallengeMethodsSupported()));
+    }
+
+    @Override
     public Optional<String> getResponseMode() {
         return Optional.ofNullable(endpointConfiguration)
-                .flatMap(AuthorizationEndpointConfiguration::getResponseMode);
+            .flatMap(AuthorizationEndpointConfiguration::getResponseMode);
     }
 
     @Override

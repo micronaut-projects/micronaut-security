@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,14 +69,14 @@ public enum GrantType {
 
     SAML_2_0_BEARER_ASSERTION_GRANT("urn:ietf:params:oauth:grant-type:saml2-bearer");
 
-    private String grantType;
+    private String grantTypeName;
 
     /**
      *
-     * @param grantType The OAuth 2.0 Grant Type
+     * @param grantTypeName The OAuth 2.0 Grant Type
      */
-    GrantType(String grantType) {
-        this.grantType = grantType;
+    GrantType(String grantTypeName) {
+        this.grantTypeName = grantTypeName;
     }
 
     /**
@@ -85,6 +85,6 @@ public enum GrantType {
      */
     @Override
     public String toString() {
-        return this.grantType;
+        return this.grantTypeName;
     }
 }

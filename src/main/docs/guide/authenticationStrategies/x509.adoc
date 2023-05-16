@@ -1,0 +1,44 @@
+Micronaut Security supports using https://en.wikipedia.org/wiki/X.509#Certificates[X.509 client certificates] with HTTPS to enable https://en.wikipedia.org/wiki/Mutual_authentication[mutual authentication].
+
+Once you have https://docs.micronaut.io/latest/guide/#https[configured HTTPS] in your application, users can install X.509 browser certificates to provide authentication information and access restricted URLs.
+
+When X.509 is enabled, in addition to the client (e.g. browser or API client) verifying that the server certificate is valid (i.e. that it was issued and signed by a trusted certificate authority (CA)), the server can also verify the client with the certificate from the client SSL handshake. If the client certificate is valid and contains a username/principal that corresponds to an application user, access will be granted.
+
+=== Configuration
+
+There are two configuration options as seen in the following table:
+
+include::{includedir}configurationProperties/io.micronaut.security.x509.X509ConfigurationProperties.adoc[]
+
+Use `micronaut.security.x509.enabled` to enable X.509 support, or enable per-environment.
+
+Use the `micronaut.security.x509.subject-dn-regex` property to override the default regular expression used to extract the principal (username) from the certificate. Typically, the principal is stored in the `CN` (Common Name) property, prefixed with `"CN="`. The default regular expression `"CN=(.*?)(?:,|$)"` will extract the text after `"CN="` and up to the next (optional) delimiter, but if your certificates are configured differently, override the regex as needed.
+
+In addition to X.509-specific configuration, you must also https://docs.micronaut.io/latest/guide/#https[configure HTTPS] for your server, and configure requesting client certificates during the SSL handshake. Set the value of the property `micronaut.server.ssl.client-authentication` to `want` or `need` (depending on whether client certificates are optional or required).
+
+Here's a sample configuration enabling and configuring HTTPS and X.509:
+
+[configuration]
+----
+micronaut:
+  application:
+    name: your_application_name
+  security:
+    x509:
+      enabled: true
+  ssl:
+    enabled: true
+  server:
+    ssl:
+      client-authentication: want # or 'need'
+      key-store:
+        path: classpath:ssl/keystore.p12
+        password: your_keystore_password
+        type: PKCS12
+      trust-store:
+        path: classpath:ssl/truststore.jks
+        password: your_truststore_password
+        type: JKS
+----
+
+TIP: Read the https://guides.micronaut.io/latest/micronaut-security-x509.html[X.509 Authentication Micronaut Guide] to learn about configuring applications to use X.509 and how to create the various certificates for testing.

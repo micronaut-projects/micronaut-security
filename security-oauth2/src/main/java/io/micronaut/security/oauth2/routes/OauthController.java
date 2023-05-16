@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,8 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.oauth2.client.OauthClient;
 import io.micronaut.security.rules.SecurityRule;
-import org.reactivestreams.Publisher;
-
 import java.util.Map;
+import org.reactivestreams.Publisher;
 
 /**
  * Responsible for OAuth 2.0 authorization redirect, authorization

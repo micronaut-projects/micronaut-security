@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
  */
 package io.micronaut.security.oauth2.grants;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -30,33 +31,26 @@ import java.util.Map;
  * @since 1.2.0
  */
 @Introspected
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class AuthorizationCodeGrant implements SecureGrant, AsMap {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class AuthorizationCodeGrant extends AbstractClientSecureGrant implements SecureGrant, AsMap {
 
-    private static final String KEY_GRANT_TYPE = "grant_type";
-    private static final String KEY_CLIENT_ID = "client_id";
-    private static final String KEY_CLIENT_SECRET = "client_secret";
     private static final String KEY_REDIRECT_URI = "redirect_uri";
     private static final String KEY_CODE = "code";
+    private static final String KEY_CODE_VERIFIER = "code_verifier";
 
     private String grantType = GrantType.AUTHORIZATION_CODE.toString();
-    private String clientId;
-    private String clientSecret;
     private String redirectUri;
     private String code;
 
-    /**
-     * Default Constructor.
-     */
-    public AuthorizationCodeGrant() {
-
-    }
+    @Nullable
+    private String codeVerifier;
 
     /**
      *
      * @return OAuth 2.0 Grant Type.
      */
     @NonNull
+    @Override
     public String getGrantType() {
         return grantType;
     }
@@ -65,41 +59,9 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
      *
      * @param grantType OAuth 2.0 Grant Type.
      */
+    @Override
     public void setGrantType(@NonNull String grantType) {
         this.grantType = grantType;
-    }
-
-    /**
-     *
-     * @return The application's Client identifier.
-     */
-    @NonNull
-    public String getClientId() {
-        return clientId;
-    }
-
-    /**
-     *
-     * @param clientId Application's Client identifier.
-     */
-    public void setClientId(@NonNull String clientId) {
-        this.clientId = clientId;
-    }
-
-    /**
-     *
-     * @param clientSecret Application's Client clientSecret.
-     */
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    /**
-     *
-     * @return The application's Client clientSecret.
-     */
-    public String getClientSecret() {
-        return this.clientSecret;
     }
 
     /**
@@ -129,7 +91,6 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
     }
 
     /**
-     *
      * @param code An authorization code.
      */
     public void setCode(@NonNull String code) {
@@ -137,22 +98,35 @@ public class AuthorizationCodeGrant implements SecureGrant, AsMap {
     }
 
     /**
-     *
+     * @since 3.9.0
+     * @return A PKCE code verifier.
+     */
+    @Nullable
+    public String getCodeVerifier() {
+        return codeVerifier;
+    }
+
+    /**
+     * @param codeVerifier A PKCE code verifier.
+     * @since 3.9.0
+     */
+    public void setCodeVerifier(@Nullable String codeVerifier) {
+        this.codeVerifier = codeVerifier;
+    }
+
+    /**
      * @return this object as a Map
      */
     @Override
+    @NonNull
     public Map<String, String> toMap() {
-        Map<String, String> m = new SecureGrantMap(5);
-        m.put(KEY_GRANT_TYPE, getGrantType());
+        Map<String, String> m = super.toMap();
         m.put(KEY_CODE, getCode());
-        if (clientId != null) {
-            m.put(KEY_CLIENT_ID, clientId);
-        }
-        if (clientSecret != null) {
-            m.put(KEY_CLIENT_SECRET, clientSecret);
-        }
         if (redirectUri != null) {
             m.put(KEY_REDIRECT_URI, getRedirectUri());
+        }
+        if (codeVerifier != null) {
+            m.put(KEY_CODE_VERIFIER, codeVerifier);
         }
         return m;
     }

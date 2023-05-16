@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,15 @@ package io.micronaut.security.oauth2.endpoint.authorization.response;
 
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
 import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
-
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.errors.ErrorCode;
+import io.micronaut.security.oauth2.endpoint.authorization.state.StateSerDes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
 import java.util.Map;
@@ -37,6 +38,7 @@ import java.util.Map;
  */
 @Prototype
 public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCallback implements AuthorizationErrorResponse {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthorizationErrorResponse.class);
 
     private final ConvertibleMultiValues<String> responseData;
 
@@ -58,8 +60,30 @@ public class DefaultAuthorizationErrorResponse extends StateAwareAuthorizationCa
     @NonNull
     @Override
     public ErrorCode getError() {
-        String name = responseData.get(JSON_KEY_ERROR).toUpperCase(Locale.ENGLISH);
-        return AuthorizationErrorCode.valueOf(name);
+        return getError(responseData);
+    }
+
+    @NonNull
+    static ErrorCode getError(ConvertibleMultiValues<String> responseData) {
+        String name = responseData.get(JSON_KEY_ERROR);
+        try {
+            if (name != null) {
+                return AuthorizationErrorCode.valueOf(name.toUpperCase(Locale.ENGLISH));
+            }
+        } catch (IllegalArgumentException e) {
+            LOG.trace("{} not found in enum AuthorizationErrorCode", name);
+        }
+        return new ErrorCode() {
+            @Override
+            public String getErrorCode() {
+                return responseData.get(JSON_KEY_ERROR);
+            }
+
+            @Override
+            public String getErrorCodeDescription() {
+                return responseData.get(JSON_KEY_ERROR_DESCRIPTION);
+            }
+        };
     }
 
     @Nullable

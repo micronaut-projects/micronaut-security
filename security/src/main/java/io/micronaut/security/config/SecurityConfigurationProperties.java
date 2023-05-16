@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.config;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.security.authentication.AuthenticationMode;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,14 +40,28 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      */
     @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_ENABLED = true;
+
+    /**
+     * The default value whether intercept url patterns should be prepended with the context path.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH = true;
     /**
      * The default enable value.
      */
     @SuppressWarnings("WeakerAccess")
     public static final AuthenticationStrategy DEFAULT_AUTHENTICATION_STRATEGY = AuthenticationStrategy.ANY;
+
+    /**
+     * The default reject-not-found value.
+     */
+    @SuppressWarnings("WeakerAccess")
     public static final boolean DEFAULT_REJECT_NOT_FOUND = true;
 
     private boolean enabled = DEFAULT_ENABLED;
+
+    private boolean interceptUrlMapPrependPatternWithContextPath = DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH;
+
     private List<InterceptUrlMapPattern> interceptUrlMap = new ArrayList<>();
     private List<String> ipPatterns = Collections.singletonList(ANYWHERE);
     private AuthenticationStrategy authenticationProviderStrategy = DEFAULT_AUTHENTICATION_STRATEGY;
@@ -64,7 +77,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     /**
-     * Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie. Should
+     * Defines which authentication to use. Defaults to null. Possible values bearer, session, cookie, idtoken. Should
      * only be supplied if the service handles login and logout requests.
      * @param authentication Login Handler Mode
      */
@@ -94,6 +107,19 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public boolean isInterceptUrlMapPrependPatternWithContextPath() {
+        return interceptUrlMapPrependPatternWithContextPath;
+    }
+
+    /**
+     * Whether the intercept URL patterns should be prepended with context path if defined. Defaults to {@value #DEFAULT_INTERCEPT_URL_MAP_PREPEND_PATTERN_WITH_CONTEXT_PATH}.
+     * @param interceptUrlMapPrependPatternWithContextPath Prepend Intercept URL Map pattern with context path
+     */
+    public void setInterceptUrlMapPrependPatternWithContextPath(boolean interceptUrlMapPrependPatternWithContextPath) {
+        this.interceptUrlMapPrependPatternWithContextPath = interceptUrlMapPrependPatternWithContextPath;
     }
 
     /**
@@ -135,8 +161,7 @@ public class SecurityConfigurationProperties implements SecurityConfiguration {
     }
 
     /**
-     * @param rejectNotFound Set to true if the server should respond with 404 for requests that do not
-     *      * match any routes on the server. Default value ({#DEFAULT_REJECT_NOT_FOUND}).
+     * @param rejectNotFound Whether the server should respond with 401 for requests that do not match any routes on the server, if you set it to false, it will return 404 for requests that do not match any routes on the server. Default value ({@value #DEFAULT_REJECT_NOT_FOUND}).
      */
     public void setRejectNotFound(boolean rejectNotFound) {
         this.rejectNotFound = rejectNotFound;

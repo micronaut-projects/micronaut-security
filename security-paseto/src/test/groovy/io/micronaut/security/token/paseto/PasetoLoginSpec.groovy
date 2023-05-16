@@ -20,7 +20,7 @@ import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.validator.TokenValidator
 import jakarta.inject.Singleton
 
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 import java.security.Principal
 
 class PasetoLoginSpec extends EmbeddedServerSpecification {

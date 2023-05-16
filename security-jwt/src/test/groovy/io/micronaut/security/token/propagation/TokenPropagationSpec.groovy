@@ -22,12 +22,11 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.render.BearerAccessRefreshToken
+import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import spock.lang.Ignore
-import spock.lang.Issue
 import spock.lang.Specification
 
 import java.time.Duration
@@ -36,8 +35,6 @@ class TokenPropagationSpec extends Specification {
 
     static final SPEC_NAME_PROPERTY = 'spec.name'
 
-    @Issue("https://github.com/micronaut-projects/micronaut-core/issues/5625")
-    @Ignore // Flaky due to above issue
     void "test token propagation"() {
         Map<String, Object> inventoryConfig = [
                 'micronaut.application.name': 'inventory',
@@ -181,6 +178,7 @@ class TokenPropagationSpec extends Specification {
         Publisher<Integer> inventory(String isbn);
     }
 
+    @Serdeable
     static class Book {
         private String isbn;
         private String name;
@@ -225,5 +223,4 @@ class TokenPropagationSpec extends Specification {
             return stock;
         }
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.ldap.context;
 
-import javax.naming.NamingException;
 import java.util.List;
+import javax.naming.NamingException;
 
 /**
  * Generic functional interface that returns a list of search

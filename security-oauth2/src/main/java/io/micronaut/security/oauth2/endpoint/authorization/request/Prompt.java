@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,25 +30,25 @@ public enum Prompt {
     CONSENT("consent"),
     SELECT_ACCOUNT("select_account");
 
-    private String prompt;
+    private String promptName;
 
     /**
      * Instantiates the OpenID connect Prompt parameter.
-     * @param prompt Prompt parameter.
+     * @param promptName Prompt parameter.
      */
-    Prompt(String prompt) {
-        this.prompt = prompt;
+    Prompt(String promptName) {
+        this.promptName = promptName;
     }
 
     /**
      * @return OpenID connect Prompt parameter
      */
     public String getPrompt() {
-        return prompt;
+        return promptName;
     }
 
     @Override
     public String toString() {
-        return prompt;
+        return promptName;
     }
 }

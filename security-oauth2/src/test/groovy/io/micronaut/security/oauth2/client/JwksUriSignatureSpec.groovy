@@ -1,6 +1,5 @@
 package io.micronaut.security.oauth2.client
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nimbusds.jose.JOSEException
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
@@ -17,16 +16,13 @@ import io.micronaut.context.annotation.Value
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.core.io.socket.SocketUtils
-import io.micronaut.http.HttpMethod
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
-import io.micronaut.http.MediaType
+import io.micronaut.http.*
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
+import io.micronaut.json.JsonMapper
 import io.micronaut.runtime.ApplicationConfiguration
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
@@ -135,10 +131,10 @@ class JwksUriSignatureSpec extends Specification {
         jwtB
         JWTParser.parse(jwtB) instanceof SignedJWT
 
-        and:'authorization servers are not contacted until the first request comes in'
-        authServerA.applicationContext.getBean(AuthServerAOpenIdConfigurationController).invocations == 0
+        and:'authorization servers are not contacted on bean context initialization'
+        authServerA.applicationContext.getBean(AuthServerAOpenIdConfigurationController).invocations == 1
         authServerA.applicationContext.getBean(AuthServerAKeysController).invocations == 0
-        authServerB.applicationContext.getBean(AuthServerBOpenIdConfigurationController).invocations == 0
+        authServerB.applicationContext.getBean(AuthServerBOpenIdConfigurationController).invocations == 1
         authServerB.applicationContext.getBean(AuthServerBKeysController).invocations == 0
 
         when: 'authentication should work since the auth server JWKS endpoint is configured automatically'
@@ -333,8 +329,8 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerBKeysController extends KeysController {
         int invocations = 0
 
-        AuthServerBKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        AuthServerBKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
 
         @Override
@@ -353,8 +349,8 @@ class JwksUriSignatureSpec extends Specification {
     static class AuthServerAKeysController extends KeysController {
         int invocations = 0
 
-        AuthServerAKeysController(Collection<JwkProvider> jwkProviders, ObjectMapper objectMapper) {
-            super(jwkProviders, objectMapper)
+        AuthServerAKeysController(Collection<JwkProvider> jwkProviders, JsonMapper jsonMapper) {
+            super(jwkProviders, jsonMapper)
         }
 
         @Override

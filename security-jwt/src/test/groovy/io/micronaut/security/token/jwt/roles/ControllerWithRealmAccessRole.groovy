@@ -10,11 +10,11 @@ import io.micronaut.security.annotation.Secured
 
 @CompileStatic
 @Requires(property = "spec.name", value = "customclaimsrolesparser")
-@Controller("/")
+@Controller
 class ControllerWithRealmAccessRole {
 
     @Secured("uma_authorization")
-    @Get("/")
+    @Get
     @Status(HttpStatus.OK)
     void index() {}
 }

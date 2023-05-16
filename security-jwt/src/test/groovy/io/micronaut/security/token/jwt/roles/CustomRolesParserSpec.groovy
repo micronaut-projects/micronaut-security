@@ -1,7 +1,6 @@
 package io.micronaut.security.token.jwt.roles
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -25,7 +24,7 @@ class CustomRolesParserSpec extends Specification {
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name': "customclaimsrolesparser",
             'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
-    ], Environment.TEST)
+    ])
 
     @Shared
     @AutoCleanup

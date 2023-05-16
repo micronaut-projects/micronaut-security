@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,11 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.BeanContext;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.value.ConvertibleMultiValues;
-import io.micronaut.core.convert.value.MutableConvertibleMultiValuesMap;
 import io.micronaut.core.util.SupplierUtil;
-import io.micronaut.http.HttpHeaders;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.*;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -40,15 +35,17 @@ import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthor
 import io.micronaut.security.oauth2.endpoint.authorization.response.OpenIdAuthorizationResponseHandler;
 import io.micronaut.security.oauth2.endpoint.endsession.request.EndSessionEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
-import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import static io.micronaut.security.oauth2.client.ClientUtils.getResponseData;
 
 /**
  * The default implementation of {@link OpenIdClient}.
@@ -119,8 +116,9 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     @Override
     public Publisher<MutableHttpResponse<?>> authorizationRedirect(HttpRequest<?> originating) {
-        AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration);
-        String endpoint = openIdProviderMetadata.get().getAuthorizationEndpoint();
+        OpenIdProviderMetadata openIdProviderMetadataResolved = openIdProviderMetadata.get();
+        AuthorizationRequest authorizationRequest = beanContext.createBean(OpenIdAuthorizationRequest.class, originating, clientConfiguration, openIdProviderMetadataResolved);
+        String endpoint = openIdProviderMetadataResolved.getAuthorizationEndpoint();
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Starting authorization code grant flow to provider [{}]. Redirecting to [{}]", getName(), endpoint);
@@ -130,12 +128,7 @@ public class DefaultOpenIdClient implements OpenIdClient {
 
     @Override
     public Publisher<AuthenticationResponse> onCallback(HttpRequest<Map<String, Object>> request) {
-        ConvertibleMultiValues<String> responseData = request.getBody()
-                .map(body -> {
-                    MutableConvertibleMultiValuesMap<String> map = new MutableConvertibleMultiValuesMap<>();
-                    body.forEach((key, value) -> map.add(key, value.toString()));
-                    return (ConvertibleMultiValues<String>) map;
-                }).orElseGet(request::getParameters);
+        ConvertibleMultiValues<String> responseData = getResponseData(request);
 
         if (isErrorCallback(responseData)) {
             AuthorizationErrorResponse errorResponse = beanContext.createBean(AuthorizationErrorResponse.class, request);

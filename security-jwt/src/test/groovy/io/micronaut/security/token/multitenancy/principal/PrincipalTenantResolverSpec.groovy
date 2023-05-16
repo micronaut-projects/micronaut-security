@@ -1,7 +1,6 @@
 package io.micronaut.security.token.multitenancy.principal
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
@@ -61,7 +60,7 @@ class PrincipalTenantResolverSpec extends Specification {
 
         ]
 
-        gormEmbeddedServer = ApplicationContext.run(EmbeddedServer, gormConfig, Environment.TEST)
+        gormEmbeddedServer = ApplicationContext.run(EmbeddedServer, gormConfig)
 
         gormClient = gormEmbeddedServer.applicationContext.createBean(HttpClient, gormEmbeddedServer.getURL())
 
@@ -95,7 +94,7 @@ class PrincipalTenantResolverSpec extends Specification {
                 'micronaut.security.token.propagation.service-id-regex': 'books',
         ]
 
-        gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig, Environment.TEST)
+        gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig)
 
         when:
         for (Class beanClazz : [AuthenticationProviderUserPassword,

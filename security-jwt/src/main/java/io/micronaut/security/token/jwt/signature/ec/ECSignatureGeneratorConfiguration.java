@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,10 @@
  */
 package io.micronaut.security.token.jwt.signature.ec;
 
+import io.micronaut.core.annotation.NonNull;
+
 import java.security.interfaces.ECPrivateKey;
+import java.util.Optional;
 
 /**
  * Elliptic curve signature generation configuration.
@@ -29,4 +32,14 @@ public interface ECSignatureGeneratorConfiguration extends ECSignatureConfigurat
      * @return The EC Private Key
      */
     ECPrivateKey getPrivateKey();
+
+    /**
+     *
+     * @return The Key ID
+     * @since 3.9.0
+     */
+    @NonNull
+    default Optional<String> getKid() {
+        return Optional.empty();
+    }
 }

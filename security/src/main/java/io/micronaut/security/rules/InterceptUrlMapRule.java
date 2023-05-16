@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.AntPathMatcher;
 import io.micronaut.core.util.PathMatcher;
 import io.micronaut.http.HttpMethod;
@@ -23,17 +24,13 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.InterceptUrlMapPattern;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.RouteMatch;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.Nullable;
-import jakarta.inject.Inject;
-import reactor.core.publisher.Mono;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 /**
  * An abstract class with common functionality for Security Rule implementations which
@@ -56,8 +53,7 @@ abstract class InterceptUrlMapRule extends AbstractSecurityRule {
     /**
      * @param rolesFinder Roles Parser
      */
-    @Inject
-    public InterceptUrlMapRule(RolesFinder rolesFinder) {
+    protected InterceptUrlMapRule(RolesFinder rolesFinder) {
         super(rolesFinder);
         this.pathMatcher = PathMatcher.ANT;
     }

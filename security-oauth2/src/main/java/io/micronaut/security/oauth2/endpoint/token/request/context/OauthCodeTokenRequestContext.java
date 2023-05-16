@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.request.context;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
@@ -24,7 +25,6 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenErrorResponse;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import io.micronaut.security.oauth2.grants.AuthorizationCodeGrant;
-
 import java.util.Map;
 
 /**
@@ -38,16 +38,22 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
 
     private final AuthorizationResponse authorizationResponse;
 
+    @Nullable
+    private final String codeVerifier;
+
     /**
      * @param authorizationResponse The authorization response
-     * @param tokenEndpoint The token endpoint
-     * @param clientConfiguration The client configuration
+     * @param tokenEndpoint         The token endpoint
+     * @param clientConfiguration   The client configuration
+     * @param codeVerifier         The PKCE code_verifier
      */
     public OauthCodeTokenRequestContext(AuthorizationResponse authorizationResponse,
                                         SecureEndpoint tokenEndpoint,
-                                        OauthClientConfiguration clientConfiguration) {
+                                        OauthClientConfiguration clientConfiguration,
+                                        @Nullable String codeVerifier) {
         super(MediaType.APPLICATION_FORM_URLENCODED_TYPE, tokenEndpoint, clientConfiguration);
         this.authorizationResponse = authorizationResponse;
+        this.codeVerifier = codeVerifier;
     }
 
     @Override
@@ -55,6 +61,7 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant();
         codeGrant.setCode(authorizationResponse.getCode());
         State state = authorizationResponse.getState();
+        codeGrant.setCodeVerifier(getCodeVerifier());
         if (state != null && state.getRedirectUri() != null) {
             codeGrant.setRedirectUri(authorizationResponse.getState().getRedirectUri().toString());
         }
@@ -69,5 +76,14 @@ public class OauthCodeTokenRequestContext extends AbstractTokenRequestContext<Ma
     @Override
     public Argument<?> getErrorResponseType() {
         return Argument.of(TokenErrorResponse.class);
+    }
+
+    /**
+     * @since 3.9.0
+     * @return The PKCE code verifier
+     */
+    @Nullable
+    public String getCodeVerifier() {
+        return codeVerifier;
     }
 }

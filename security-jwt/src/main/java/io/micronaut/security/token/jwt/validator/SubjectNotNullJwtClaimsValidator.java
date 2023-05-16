@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,9 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.Claims;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.inject.Singleton;
 
 /**
  * Validate JWT subject claim is not null.
@@ -47,16 +46,14 @@ public class SubjectNotNullJwtClaimsValidator implements GenericJwtClaimsValidat
     public boolean validate(JWTClaimsSet claimsSet) {
         final String subject = claimsSet.getSubject();
         boolean hasSubject = subject != null;
-        if (!hasSubject) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("JWT must contain a subject ('sub' claim)");
-            }
+        if (!hasSubject && LOG.isDebugEnabled()) {
+            LOG.debug("JWT must contain a subject ('sub' claim)");
         }
         return hasSubject;
     }
 
     @Override
     public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
-        return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));        
+        return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 }

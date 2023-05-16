@@ -1,10 +1,11 @@
 package io.micronaut.security.oauth2.grants
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.security.testutils.ApplicationContextSpecification
+import io.micronaut.serde.ObjectMapper
 import spock.lang.Shared
-import javax.validation.Validator
+
+import jakarta.validation.Validator
 
 class ClientCredentialsGrantSpec extends ApplicationContextSpecification {
 

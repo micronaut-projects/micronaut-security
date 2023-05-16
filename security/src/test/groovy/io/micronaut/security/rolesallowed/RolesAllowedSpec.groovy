@@ -12,7 +12,7 @@ import io.micronaut.security.SuccessAuthenticationScenario
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
 
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 
 class RolesAllowedSpec extends EmbeddedServerSpecification {
 

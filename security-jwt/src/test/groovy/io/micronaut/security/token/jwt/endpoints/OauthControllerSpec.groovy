@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.nimbusds.jose.JWSObject
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.NoSuchBeanException
-import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.async.publisher.Publishers
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
@@ -33,6 +32,7 @@ import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.token.validator.TokenValidator
+import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
@@ -106,7 +106,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         sleep(1_000) // Sleep for one second to give time for Claims issue date to be different
         String originalAccessToken = accessRefreshToken.accessToken
         String refreshToken = accessRefreshToken.refreshToken
-        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(refreshToken)
+        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN, refreshToken)
         HttpResponse<BearerAccessRefreshToken> refreshRsp = client.exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), BearerAccessRefreshToken)
 
         then:
@@ -149,7 +149,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         String refreshToken = 'XXX'
 
         when:
-        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(refreshToken)
+        TokenRefreshRequest tokenRefreshReq = new TokenRefreshRequest(TokenRefreshRequest.GRANT_TYPE_REFRESH_TOKEN, refreshToken)
         Argument<AccessRefreshToken> bodyType = Argument.of(AccessRefreshToken)
         Argument<CustomErrorResponse> errorType = Argument.of(CustomErrorResponse)
         client.exchange(HttpRequest.POST('/oauth/access_token', tokenRefreshReq), bodyType, errorType)
@@ -202,7 +202,11 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
     }
 
     @Unroll
-    void "missing #paramName returns 400 with {\"error\": \"invalid_request\"...}"(String grantType, String refreshToken, String paramName) {
+    void "missing #paramName returns 400 with {\"error\": \"invalid_request\"...}"(String grantType,
+                                                                                   String refreshToken,
+                                                                                   String error,
+                                                                                   String errorDescription,
+                                                                                   String paramName) {
         given:
         Map<String, Object> body = new HashMap<>()
         if (grantType) {
@@ -233,14 +237,14 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
 
         then:
         errorResponse.error
-        errorResponse.error == 'invalid_request'
-        errorResponse.errorDescription == 'refresh_token and grant_type are required'
+        errorResponse.error == error
+        errorResponse.errorDescription == errorDescription
 
         where:
-        grantType       | refreshToken
-        'refresh_token' | null
-        null            | 'XXXX'
-
+        grantType       | refreshToken | error                    | errorDescription
+        'refresh_token' | null         | 'invalid_request'        | "refresh_token and grant_type are required"
+        null            | 'XXXX'       | 'invalid_request'        | "refresh_token and grant_type are required"
+        'foo_token'     | 'XXXX'       | 'unsupported_grant_type' | 'grant_type must be refresh_token'
         paramName = grantType == null ? 'grant_type' : (refreshToken == null ? 'refresh_token': '')
     }
 
@@ -281,7 +285,7 @@ class OauthControllerSpec extends EmbeddedServerSpecification {
         }
     }
 
-    @Introspected
+    @Serdeable
     static class CustomErrorResponse {
         String error
 

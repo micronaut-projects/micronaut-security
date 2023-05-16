@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,19 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.AuthenticationModeConfiguration;
-import io.micronaut.security.authentication.AuthenticationMode;
 import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -60,14 +63,14 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
 
     @NonNull
     @Override
-    public AuthenticationResponse createAuthenticationResponse(String providerName,
-                                                               OpenIdTokenResponse tokenResponse,
-                                                               OpenIdClaims openIdClaims,
-                                                               @Nullable State state) {
+    public Publisher<AuthenticationResponse> createAuthenticationResponse(String providerName,
+                                                                         OpenIdTokenResponse tokenResponse,
+                                                                         OpenIdClaims openIdClaims,
+                                                                         @Nullable State state) {
         Map<String, Object> claims = buildAttributes(providerName, tokenResponse, openIdClaims);
         List<String> roles = getRoles(providerName, tokenResponse, openIdClaims);
         String username = getUsername(providerName, tokenResponse, openIdClaims);
-        return AuthenticationResponse.success(username, roles, claims);
+        return Flux.just(AuthenticationResponse.success(username, roles, claims));
     }
 
     /**

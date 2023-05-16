@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
+import org.reactivestreams.Publisher;
 
 /**
  * Responsible for converting an OpenID token response to
@@ -42,8 +43,8 @@ public interface OpenIdAuthenticationMapper {
      * @return An authentication response
      */
     @NonNull
-    AuthenticationResponse createAuthenticationResponse(String providerName,
-                                                        OpenIdTokenResponse tokenResponse,
-                                                        OpenIdClaims openIdClaims,
-                                                        @Nullable State state);
+    Publisher<AuthenticationResponse> createAuthenticationResponse(String providerName,
+                                                                  OpenIdTokenResponse tokenResponse,
+                                                                  OpenIdClaims openIdClaims,
+                                                                  @Nullable State state);
 }

@@ -1,7 +1,7 @@
 package io.micronaut.security.oauth2.endpoint.nonce.persistence
 
-import io.micronaut.security.testutils.ApplicationContextSpecification
 import io.micronaut.security.oauth2.endpoint.nonce.persistence.cookie.CookieNoncePersistence
+import io.micronaut.security.testutils.ApplicationContextSpecification
 
 class NoncePersistenceSpec extends ApplicationContextSpecification {
 

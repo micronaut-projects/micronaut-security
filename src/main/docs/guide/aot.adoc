@@ -1,0 +1,5 @@
+____
+https://micronaut-projects.github.io/micronaut-aot/latest/guide/[Micronaut AOT] is a framework which implements ahead-of-time (AOT) optimizations for Micronaut application and libraries. Those optimizations consist of computing at build time things which would normally be done at runtime]
+____
+
+Micronaut Security offers several ahead-of-time optimizations.

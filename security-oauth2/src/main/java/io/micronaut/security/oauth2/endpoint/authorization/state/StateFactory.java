@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 package io.micronaut.security.oauth2.endpoint.authorization.state;
 
 import io.micronaut.context.annotation.DefaultImplementation;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.oauth2.endpoint.authorization.request.AuthorizationRequest;
-
-import io.micronaut.core.annotation.Nullable;
 
 /**
  * Generates a state parameter.

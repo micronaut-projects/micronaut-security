@@ -1,9 +1,7 @@
 package io.micronaut.security.authentication
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.core.serialize.JdkSerializer
-import io.micronaut.jackson.serialize.JacksonObjectSerializer
-import io.micronaut.security.authentication.jackson.SecurityJacksonModule
+import io.micronaut.serde.ObjectMapper
 import spock.lang.Specification
 
 class AuthenticationSerializationSpec extends Specification {
@@ -26,15 +24,14 @@ class AuthenticationSerializationSpec extends Specification {
     }
 
     void "test authentication is serializable to json"() {
-        ObjectMapper objectMapper = new ObjectMapper()
-        objectMapper.registerModule(new SecurityJacksonModule())
-        JacksonObjectSerializer serializer = new JacksonObjectSerializer(objectMapper)
+        given:
+        ObjectMapper objectMapper = ObjectMapper.getDefault()
 
         when:
         //this represents the claims that will be set by the server
         Authentication authentication = new ClientAuthentication("john", [attr1: 1, attr2: 2, rolesKey: "roles", "roles": ["X", "Y"]])
-        byte[] data = serializer.serialize(authentication).get()
-        Authentication deserialized = serializer.deserialize(data, Authentication).get()
+        String json = objectMapper.writeValueAsString(authentication)
+        Authentication deserialized = objectMapper.readValue(json, Authentication)
 
         then:
         deserialized.name == "john"
@@ -43,5 +40,17 @@ class AuthenticationSerializationSpec extends Specification {
         deserialized.roles.size() == 2
         deserialized.roles.contains("X")
         deserialized.roles.contains("Y")
+    }
+
+    void "deserialization without attributes"() {
+        given:
+        ObjectMapper objectMapper = ObjectMapper.getDefault()
+
+        when:
+        Authentication deserialized = objectMapper.readValue('{\"name\":\"foo\"}', Authentication)
+
+        then:
+        deserialized.name == "foo"
+        deserialized.attributes.isEmpty()
     }
 }

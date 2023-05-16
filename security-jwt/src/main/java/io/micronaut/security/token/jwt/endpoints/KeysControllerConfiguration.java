@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.token.jwt.endpoints;
 
-import io.micronaut.core.util.Toggleable;
+import io.micronaut.security.endpoints.ControllerConfiguration;
 
 /**
  * Encapsulates the configuration of {@link KeysController}.
@@ -23,12 +23,5 @@ import io.micronaut.core.util.Toggleable;
  * @author Sergio del Amo
  * @since 1.1.0
  */
-public interface KeysControllerConfiguration extends Toggleable  {
-
-    /**
-     * The path where the {@link KeysController} can be accessed at.
-     *
-     * @return The path e.g. /keys
-     */
-    String getPath();
+public interface KeysControllerConfiguration extends ControllerConfiguration {
 }

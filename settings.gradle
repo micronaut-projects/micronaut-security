@@ -6,22 +6,47 @@ pluginManagement {
 }
 
 plugins {
-    id 'io.micronaut.build.shared.settings' version '4.1.4'
+    id("io.micronaut.build.shared.settings") version "6.4.4"
 }
 
-rootProject.name = 'micronaut-security'
+rootProject.name = 'security-parent'
 
+include "security-bom"
 include "security"
+include "security-aot"
 include "security-annotations"
 include "security-jwt"
 include "security-session"
 include "security-ldap"
 include "security-oauth2"
-
+//include "test-suite-graal"
 include "test-suite-groovy"
 include "test-suite"
+include "test-suite-geb"
+include "test-suite-keycloak"
+include "test-suite-keycloak-16"
+include "test-suite-tomcat"
+include "test-suite-tomcat-groovy"
 include "test-suite-utils"
 include "test-suite-utils-security"
 include "test-suite-kotlin"
 include 'security-paseto'
+include "test-suite-aot"
+include "test-suite-aot-authserver"
+include "test-suite-serde"
+
+enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
+
+micronautBuild {
+    useStandardizedProjectNames=true
+    importMicronautCatalog()
+    importMicronautCatalog("micronaut-multitenancy")
+    importMicronautCatalog("micronaut-reactor")
+    importMicronautCatalog("micronaut-serde")
+    importMicronautCatalog("micronaut-servlet")
+    importMicronautCatalog("micronaut-session")
+    importMicronautCatalog("micronaut-views")
+    importMicronautCatalog("micronaut-validation")
+    importMicronautCatalog("micronaut-logging")
+}
 

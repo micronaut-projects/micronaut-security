@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.oauth2.client;
 
-import com.nimbusds.jose.jwk.KeyType;
+import com.nimbusds.jose.jwk.JWKSet;
 import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.EachBean;
 import io.micronaut.context.annotation.Factory;
@@ -23,11 +23,10 @@ import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.config.SecurityConfigurationProperties;
+import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
-import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfiguration;
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 
 /**
  * Factory to create {@link JwksSignature} beans for the {@link OpenIdProviderMetadata#getJwksUri()} of OpenID clients.
@@ -38,29 +37,20 @@ import io.micronaut.core.annotation.Nullable;
 @Factory
 @Internal
 public class JwksUriSignatureFactory {
-
     /**
      *
      * @param openIdProviderMetadata The open id provider metadata
      * @param jwkValidator JWK Validator
+     * @param jwkSetFetcher Json Web Key Set Fetcher
      * @return a {@link JwksSignature} pointed to the jwks_uri exposed via OpenID configuration
      */
     @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
     @EachBean(DefaultOpenIdProviderMetadata.class)
     public JwksSignature createJwksUriSignature(@Parameter BeanProvider<DefaultOpenIdProviderMetadata> openIdProviderMetadata,
-                                                JwkValidator jwkValidator) {
-        return new JwksSignature(new JwksSignatureConfiguration() {
-            @NonNull
-            @Override
-            public String getUrl() {
-                return openIdProviderMetadata.get().getJwksUri();
-            }
-
-            @Nullable
-            @Override
-            public KeyType getKeyType() {
-                return null;
-            }
-        }, jwkValidator);
+                                                JwkValidator jwkValidator,
+                                                JwkSetFetcher<JWKSet> jwkSetFetcher) {
+        JwksSignatureConfigurationProperties jwksSignatureConfiguration = new JwksSignatureConfigurationProperties();
+        jwksSignatureConfiguration.setUrl(openIdProviderMetadata.get().getJwksUri());
+        return new JwksSignature(jwksSignatureConfiguration, jwkValidator, jwkSetFetcher);
     }
 }

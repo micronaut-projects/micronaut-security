@@ -7,7 +7,6 @@ import com.nimbusds.jwt.EncryptedJWT
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
@@ -89,7 +88,7 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
                 'micronaut.server.port'                       : -1,
         ]
 
-        booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig, Environment.TEST)
+        booksEmbeddedServer = ApplicationContext.run(EmbeddedServer, booksConfig)
         booksPort = booksEmbeddedServer.getPort()
         BooksRsaSignatureConfiguration booksRsaSignatureConfiguration = new BooksRsaSignatureConfiguration(rsaJwk)
         booksEmbeddedServer.applicationContext.registerSingleton(RSASignatureConfiguration, booksRsaSignatureConfiguration, Qualifiers.byName("validation"))
@@ -105,7 +104,6 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
 
         when:
         for (Class beanClazz : [
-                BooksRsaSignatureConfiguration,
                 BooksController,
                 RSASignatureConfiguration,
                 RSASignatureFactory,
@@ -113,9 +111,14 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
         ]) {
             booksEmbeddedServer.applicationContext.getBean(beanClazz)
         }
-
         then:
         noExceptionThrown()
+
+        when:
+        RSASignatureConfiguration rsaSignatureConfiguration = booksEmbeddedServer.applicationContext.getBean(RSASignatureConfiguration)
+
+        then:
+        rsaSignatureConfiguration instanceof BooksRsaSignatureConfiguration
     }
 
     def "setup gateway server"() {
@@ -126,7 +129,7 @@ class TwoServicesOneSignWithRsaOneVerfiesWithRsaSpec extends Specification imple
                 'micronaut.security.authentication'   : 'bearer',
         ]
 
-        gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig, Environment.TEST)
+        gatewayEmbeddedServer = ApplicationContext.run(EmbeddedServer, gatewayConfig)
         GatewayRsaSignatureConfiguration bean  = gatewayEmbeddedServer.applicationContext.createBean(GatewayRsaSignatureConfiguration, rsaJwk)
         gatewayEmbeddedServer.applicationContext.registerSingleton(bean)
 

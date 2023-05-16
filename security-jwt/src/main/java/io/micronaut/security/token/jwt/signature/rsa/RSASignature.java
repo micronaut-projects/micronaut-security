@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jose.crypto.impl.RSASSAProvider;
 import com.nimbusds.jwt.SignedJWT;
-import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.security.token.jwt.signature.AbstractSignatureConfiguration;
 import java.security.interfaces.RSAPublicKey;
 
 /**
@@ -55,7 +55,7 @@ public class RSASignature extends AbstractSignatureConfiguration {
 
     @Override
     public boolean supports(final JWSAlgorithm algorithm) {
-        return algorithm != null && RSASSAVerifier.SUPPORTED_ALGORITHMS.contains(algorithm);
+        return algorithm != null && RSASSAProvider.SUPPORTED_ALGORITHMS.contains(algorithm);
     }
 
     @Override

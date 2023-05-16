@@ -1,35 +1,42 @@
-ext {
-    nimbusJoseJwtVersion = '9.15.2'
-    bouncyCastleVersion = '1.69'
+plugins {
+    id "io.micronaut.build.internal.security-module"
 }
 
 dependencies {
-    api "io.micronaut:micronaut-http"
-    api "io.micronaut:micronaut-http-server"
-    api project(":security")
-    api "com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"
+    annotationProcessor(mn.micronaut.graal)
+    annotationProcessor(mnSerde.micronaut.serde.processor)
+    implementation(mnSerde.micronaut.serde.jackson)
+    annotationProcessor(mnValidation.micronaut.validation.processor)
+    api(mnValidation.micronaut.validation)
+    api(mn.micronaut.http)
+    api(mn.micronaut.http.server)
+    api(projects.micronautSecurity)
+    api(libs.managed.nimbus.jose.jwt)
 
-    implementation "io.projectreactor:reactor-core"
+    implementation(mnReactor.micronaut.reactor)
+    testImplementation(libs.bcpkix.jdk15on)
+    testImplementation(libs.bcprov.jdk15on)
 
-    testImplementation "org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion"
-    testImplementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
+    testImplementation(mn.micronaut.management)
+    testImplementation(mn.micronaut.http.client)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mn.micronaut.http.server.netty)
+    testImplementation(projects.testSuiteUtils)
+    testImplementation(projects.testSuiteUtilsSecurity)
+    testImplementation(mnMultitenancy.micronaut.multitenancy)
+    testImplementation(mnViews.micronaut.views.velocity)
+    testRuntimeOnly(mnViews.velocity.engine.core)
+    testRuntimeOnly(mnLogging.logback.classic)
 
-    testImplementation "io.micronaut:micronaut-management"
-    testImplementation "io.micronaut:micronaut-http-client"
-    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testImplementation "io.micronaut:micronaut-http-server-netty"
-    testImplementation project(":test-suite-utils")
-    testImplementation project(":test-suite-utils-security")
-    testImplementation "io.micronaut.multitenancy:micronaut-multitenancy"
+    testImplementation(mn.snakeyaml)
+    testImplementation(mn.micronaut.websocket)
+    testImplementation(mn.groovy.json)
 
-    testImplementation "io.micronaut.views:micronaut-views-velocity"
-    testRuntimeOnly "org.apache.velocity:velocity-engine-core:2.3"
+    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.testcontainers)
 }
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
 test {
     testLogging.showStandardStreams = true
     testLogging.exceptionFormat = 'full'
 }
-
-//compileTestGroovy.groovyOptions.forkOptions.jvmArgs = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']

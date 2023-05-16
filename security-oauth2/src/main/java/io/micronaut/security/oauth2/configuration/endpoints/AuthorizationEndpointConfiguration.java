@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.oauth2.configuration.endpoints;
 
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Display;
 import io.micronaut.security.oauth2.endpoint.authorization.request.Prompt;
 import io.micronaut.security.oauth2.endpoint.authorization.request.ResponseType;
-
-import io.micronaut.core.annotation.NonNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +28,7 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface AuthorizationEndpointConfiguration extends EndpointConfiguration {
+public interface AuthorizationEndpointConfiguration extends OauthAuthorizationEndpointConfiguration {
 
     /**
      *

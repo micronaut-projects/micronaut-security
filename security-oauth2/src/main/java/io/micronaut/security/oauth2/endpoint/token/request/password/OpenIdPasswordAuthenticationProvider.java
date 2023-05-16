@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,22 +20,19 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
-import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdPasswordTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
-import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
+import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
-import reactor.core.publisher.FluxSink;
-import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 import java.text.ParseException;
 import java.util.List;
@@ -59,11 +56,11 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
     private final OpenIdTokenResponseValidator tokenResponseValidator;
 
     /**
-     * @param clientConfiguration The client configuration
-     * @param openIdProviderMetadata The provider metadata
-     * @param tokenEndpointClient The token endpoint client
+     * @param clientConfiguration        The client configuration
+     * @param openIdProviderMetadata     The provider metadata
+     * @param tokenEndpointClient        The token endpoint client
      * @param openIdAuthenticationMapper The user details mapper
-     * @param tokenResponseValidator The token response validator
+     * @param tokenResponseValidator     The token response validator
      */
     public OpenIdPasswordAuthenticationProvider(OauthClientConfiguration clientConfiguration,
                                                 OpenIdProviderMetadata openIdProviderMetadata,
@@ -76,10 +73,6 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
         this.openIdAuthenticationMapper = openIdAuthenticationMapper;
         this.tokenResponseValidator = tokenResponseValidator;
 
-        Optional<TokenEndpointConfiguration> tokenEndpointConfiguration = clientConfiguration.getOpenid().flatMap(OpenIdClientConfiguration::getToken);
-        if (!tokenEndpointConfiguration.isPresent()) {
-            throw new IllegalArgumentException("Missing token endpoint configuration");
-        }
         this.secureEndpoint = getTokenEndpoint(openIdProviderMetadata);
     }
 
@@ -90,23 +83,21 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
 
         return Flux.from(
                 tokenEndpointClient.sendRequest(requestContext))
-                .switchMap(response -> {
-                    return Flux.create(emitter -> {
-                        Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
-                        if (jwt.isPresent()) {
-                            try {
-                                OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
-                                emitter.next(openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null));
-                                emitter.complete();
-                            } catch (ParseException e) {
-                                //Should never happen as validation succeeded
-                                emitter.error(e);
-                            }
-                        } else {
-                            emitter.error(AuthenticationResponse.exception("JWT validation failed"));
-                        }
-                    }, FluxSink.OverflowStrategy.ERROR);
-                });
+            .switchMap(response -> {
+                Optional<JWT> jwt = tokenResponseValidator.validate(clientConfiguration, openIdProviderMetadata, response, null);
+                if (jwt.isPresent()) {
+                    try {
+                        OpenIdClaims claims = new JWTOpenIdClaims(jwt.get().getJWTClaimsSet());
+                        return openIdAuthenticationMapper.createAuthenticationResponse(clientConfiguration.getName(), response, claims, null);
+                    } catch (ParseException e) {
+                        // Should never happen as validation succeeded
+                        return Flux.error(e);
+                    }
+                } else {
+                    return Flux.error(AuthenticationResponse.exception("JWT validation failed"));
+                }
+            });
+
     }
 
     /**
@@ -120,9 +111,9 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
         List<AuthenticationMethod> authenticationMethods = null;
         if (authMethodsSupported != null) {
             authenticationMethods = authMethodsSupported.stream()
-                    .map(String::toUpperCase)
-                    .map(AuthenticationMethod::valueOf)
-                    .collect(Collectors.toList());
+                .map(String::toUpperCase)
+                .map(AuthenticationMethod::valueOf)
+                .collect(Collectors.toList());
         }
         return new DefaultSecureEndpoint(openIdProviderMetadata.getTokenEndpoint(), authenticationMethods);
     }

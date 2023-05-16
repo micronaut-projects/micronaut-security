@@ -6,7 +6,6 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
-
 import java.util.List;
 
 @Requires(property = "spec.name", value = "rsajwtgateway")

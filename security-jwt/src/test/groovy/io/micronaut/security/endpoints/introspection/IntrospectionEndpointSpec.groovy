@@ -40,7 +40,7 @@ class IntrospectionEndpointSpec extends EmbeddedServerSpecification {
 
         when:
         String accessToken = loginRsp.body().accessToken
-        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest("XXX"))
+        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest("XXX", null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .bearerAuth(accessToken)
         HttpResponse<Map> response = client.exchange(request, Map)
@@ -89,8 +89,8 @@ class IntrospectionEndpointSpec extends EmbeddedServerSpecification {
         introspectionResponse.extensions
         introspectionResponse.extensions['roles'] == ['ROLE_ADMIN', 'ROLE_USER']
         introspectionResponse.extensions['email'] == 'john@micronaut.io'
-
     }
+
     void "authenticated GET /token_info returns the user introspection"() {
         when:
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials('user', 'password')

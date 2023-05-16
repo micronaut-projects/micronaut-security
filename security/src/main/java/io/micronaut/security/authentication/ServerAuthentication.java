@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.token.config.TokenConfiguration;
+import io.micronaut.serde.annotation.Serdeable;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,14 +37,29 @@ import java.util.Map;
  * @author James Kleeh
  * @since 3.0.0
  */
+@Serdeable
 public class ServerAuthentication implements Authentication {
 
     private static final String JSON_KEY_NAME = "name";
     private static final String JSON_KEY_ATTRIBUTES = "attributes";
+    @NonNull
+    @NotBlank
     private final String name;
+
+    @NonNull
+    @NotNull
     private final Collection<String> roles;
+
+    @NonNull
+    @NotNull
     private final Map<String, Object> attributes;
 
+    /**
+     *
+     * @param name The name of this principal name
+     * @param roles Roles of the authenticated user
+     * @param attributes Attributes of the authenticated user
+     */
     public ServerAuthentication(@NonNull String name,
                                 @Nullable Collection<String> roles,
                                 @Nullable Map<String, Object> attributes) {
@@ -61,8 +79,8 @@ public class ServerAuthentication implements Authentication {
         return Collections.unmodifiableMap(attributes);
     }
 
-    @NonNull
     @Override
+    @NonNull
     public Collection<String> getRoles() {
         return Collections.unmodifiableCollection(roles);
     }

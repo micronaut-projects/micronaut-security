@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.micronaut.context.exceptions.ConfigurationException;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.security.token.jwt.endpoints.JwkProvider;
 import io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration;
-
-import io.micronaut.core.annotation.NonNull;
 import java.security.interfaces.RSAPrivateKey;
+import java.util.Objects;
 
 /**
  * RSA signature Generator. Expands {@link RSASignature} to add methods to sign JWT.
@@ -53,6 +53,7 @@ public class RSASignatureGenerator extends RSASignature implements SignatureGene
         if (config instanceof JwkProvider) {
             ((JwkProvider) config).retrieveJsonWebKeys().stream()
                     .map(JWK::getKeyID)
+                    .filter(Objects::nonNull)
                     .findFirst()
                     .ifPresent(keyIdentifier -> this.keyId = keyIdentifier);
         }

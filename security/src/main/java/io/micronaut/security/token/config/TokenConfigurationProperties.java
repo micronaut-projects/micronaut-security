@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package io.micronaut.security.token.config;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.security.config.SecurityConfigurationProperties;
@@ -108,7 +108,7 @@ public class TokenConfigurationProperties implements TokenConfiguration {
     }
 
     /**
-     * If the entry used for the roles in the {@link io.micronaut.security.authentication.Authentication} attributes map is a String, you can use the separator to split its value into multiple roles. Default value {@value io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_SEPARATOR}.
+     * If the entry used for the roles in the {@link io.micronaut.security.authentication.Authentication} attributes map is a String, you can use the separator to split its value into multiple roles. Default value {@link io.micronaut.security.token.config.TokenConfiguration#DEFAULT_ROLES_SEPARATOR}.
      * @param rolesSeparator separator to split roles by
      */
     public void setRolesSeparator(@Nullable String rolesSeparator) {

@@ -2,11 +2,7 @@ package io.micronaut.security.endpoints.introspection
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.Nullable
-import io.micronaut.http.HttpHeaders
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
-import io.micronaut.http.MediaType
+import io.micronaut.http.*
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.MockAuthenticationProvider
 import io.micronaut.security.SuccessAuthenticationScenario
@@ -25,7 +21,7 @@ class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
     }
 
     private static HttpRequest introspectionEndpointRequestWithBasicAuth(String token) {
-        HttpRequest.POST("/token_info", new IntrospectionRequest(token))
+        HttpRequest.POST("/token_info", new IntrospectionRequest(token, null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .basicAuth("user", "password")
     }
@@ -69,7 +65,7 @@ class IntrospectionAuthorizerSpec extends EmbeddedServerSpecification {
     @Unroll("For HTTP Header Authorization: #authorization IntrospectionEndpointAuthorizer returns false")
     void "if the IntrospectionEndpointAuthorizer returns false the introspection endpoint returns 401"(String authorization) {
         when:
-        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest("2YotnFZFEjr1zCsicMWpAA"))
+        HttpRequest request = HttpRequest.POST("/token_info", new IntrospectionRequest("2YotnFZFEjr1zCsicMWpAA", null))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header(HttpHeaders.AUTHORIZATION, authorization)
         client.exchange(request, Map)

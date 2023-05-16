@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 package io.micronaut.security.authentication;
-
-import io.micronaut.core.convert.ArgumentConversionContext;
-import io.micronaut.core.type.Argument;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.bind.binders.TypedRequestArgumentBinder;
-import io.micronaut.security.filters.SecurityFilter;
-
 import jakarta.inject.Singleton;
 import java.security.Principal;
-import java.util.Optional;
 
 /**
  * Responsible for binding a {@link Principal} to a route argument.
@@ -32,24 +24,8 @@ import java.util.Optional;
  * @since 1.0
  */
 @Singleton
-public class PrincipalArgumentBinder implements TypedRequestArgumentBinder<Principal> {
-
-    @Override
-    public Argument<Principal> argumentType() {
-        return Argument.of(Principal.class);
-    }
-
-    @Override
-    public BindingResult<Principal> bind(ArgumentConversionContext<Principal> context, HttpRequest<?> source) {
-        if (source.getAttributes().contains(SecurityFilter.KEY)) {
-            final Optional<Principal> existing = source.getUserPrincipal();
-            if (existing.isPresent()) {
-                return () -> existing;
-            } else {
-                return BindingResult.EMPTY;
-            }
-        } else {
-            return BindingResult.UNSATISFIED;
-        }
+public class PrincipalArgumentBinder extends AbstractPrincipalArgumentBinder<Principal> {
+    public PrincipalArgumentBinder() {
+        super(Principal.class);
     }
 }

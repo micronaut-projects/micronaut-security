@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,5 +29,6 @@ public interface JwtConfiguration extends Toggleable {
      *
      * @return a boolean flag indicating whether JWT beans should be enabled or not
      */
+    @Override
     boolean isEnabled();
 }

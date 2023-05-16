@@ -21,7 +21,7 @@ import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.crypto.SecretKey;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * {@link EachProperty} implementation of {@link SharedSecretConfiguration}.

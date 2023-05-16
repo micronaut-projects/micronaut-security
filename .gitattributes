@@ -1,0 +1,22 @@
+# Auto detect text files and perform LF normalization
+*        text=auto
+
+*.java   text eol=lf
+*.groovy text eol=lf
+*.html   text eol=lf
+*.kt     text eol=lf
+*.kts    text eol=lf
+*.md     text diff=markdown eol=lf
+*.py     text diff=python executable
+*.pl     text diff=perl executable
+*.pm     text diff=perl
+*.css    text diff=css eol=lf
+*.js     text eol=lf
+*.sql    text eol=lf
+*.q      text eol=lf
+
+*.sh     text eol=lf
+gradlew  text eol=lf
+
+*.bat    text eol=crlf
+*.cmd    text eol=crlf

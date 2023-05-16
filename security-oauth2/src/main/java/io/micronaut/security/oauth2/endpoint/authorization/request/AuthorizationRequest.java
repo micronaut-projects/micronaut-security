@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
  */
 package io.micronaut.security.oauth2.endpoint.authorization.request;
 
-import io.micronaut.http.MutableHttpResponse;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.oauth2.endpoint.authorization.pkce.PkceChallenge;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -33,9 +34,10 @@ public interface AuthorizationRequest {
     String PARAMETER_CLIENT_ID = "client_id";
     String PARAMETER_REDIRECT_URI = "redirect_uri";
     String PARAMETER_STATE = "state";
+    String PARAMETER_PKCE_CODE_CHALLENGE = "code_challenge";
+    String PARAMETER_PKCE_CODE_CHALLENGE_METHOD = "code_challenge_method";
 
     /**
-     *
      * @return OAuth 2.0 scopes.
      */
     @NonNull
@@ -52,7 +54,7 @@ public interface AuthorizationRequest {
      * @param response authorization redirect response
      * @return Opaque value used to maintain state between the request and the callback.
      */
-    Optional<String> getState(MutableHttpResponse response);
+    Optional<String> getState(MutableHttpResponse<?> response);
 
     /**
      * @return OAuth 2.0 Response Type value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used.
@@ -65,4 +67,14 @@ public interface AuthorizationRequest {
      */
     Optional<String> getRedirectUri();
 
+    /**
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc7636">RFC 7636</a>
+     * @param response HTTP Response
+     * @return The PCKE challenge
+     * @since 3.9.0
+     */
+    @NonNull
+    default Optional<PkceChallenge> getPkceChallenge(@NonNull MutableHttpResponse<?> response) {
+        return Optional.empty();
+    }
 }

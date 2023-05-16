@@ -7,14 +7,13 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.handlers.LoginHandler
-import spock.lang.Unroll
-
+import io.micronaut.security.testutils.EmbeddedServerSpecification
 import jakarta.inject.Singleton
+import spock.lang.Unroll
 
 class LoginControllerValidationSpec extends EmbeddedServerSpecification {
 

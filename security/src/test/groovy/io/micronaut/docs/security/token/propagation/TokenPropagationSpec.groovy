@@ -1,13 +1,12 @@
 package io.micronaut.docs.security.token.propagation
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagator
 import io.micronaut.security.token.propagation.HttpHeaderTokenPropagatorConfiguration
 import io.micronaut.security.token.propagation.TokenPropagationHttpClientFilter
-import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -81,8 +80,7 @@ micronaut:
     @Shared
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer,
-            config as Map<String, Object>,
-            Environment.TEST)
+            config as Map<String, Object>)
 
     @Shared
     @AutoCleanup

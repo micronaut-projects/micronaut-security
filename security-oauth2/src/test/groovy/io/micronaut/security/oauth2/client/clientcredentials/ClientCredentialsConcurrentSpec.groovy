@@ -5,31 +5,27 @@ import com.nimbusds.jose.JOSEException
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.RSAKey
-import io.micronaut.core.annotation.NonNull
-import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.exceptions.ConfigurationException
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.core.io.socket.SocketUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
-import io.micronaut.http.annotation.Consumes
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Header
-import io.micronaut.http.annotation.Post
-import io.micronaut.http.annotation.Produces
+import io.micronaut.http.annotation.*
 import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.authentication.BasicAuthUtils
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.authentication.BasicAuthUtils
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.grants.GrantType
@@ -39,17 +35,13 @@ import io.micronaut.security.token.generator.AccessTokenConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.security.token.claims.JtiGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import spock.lang.AutoCleanup
-import spock.lang.IgnoreIf
-import spock.lang.Issue
-import spock.lang.Shared
-import spock.lang.Specification
-
 import jakarta.inject.Named
 import jakarta.inject.Singleton
-import javax.validation.constraints.NotBlank
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import spock.lang.*
+
+import jakarta.validation.constraints.NotBlank
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.text.ParseException
@@ -106,21 +98,15 @@ class ClientCredentialsConcurrentSpec extends Specification {
     @AutoCleanup
     BlockingHttpClient client = httpClient.toBlocking()
 
-    @IgnoreIf({ env['GITHUB_RUN_ID'] != null }) // No idea why it fails in Github Actions
+    @IgnoreIf({ (Runtime.runtime.availableProcessors().intdiv(2) ?: 1) == 1 })
     void "no exception for concurrent requests using client credentials"() {
         when:
-        CompletableFuture<Void> run1 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run2 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run3 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run4 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run5 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run6 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run7 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run8 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run9 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture<Void> run10 = CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
-        CompletableFuture.allOf(run1, run2, run3, run4, run5, run6, run7, run8, run9, run10)
-                .get()
+        int numberOfFutures = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        System.out.println("NUMBER_OF_FUTURES: " + numberOfFutures)
+        List<CompletableFuture<Void>> futures = (1..numberOfFutures).collect {
+            CompletableFuture.runAsync({ -> assert client.retrieve(HttpRequest.GET('/father'), String) == 'Your father is Rhaegar Targaryen' })
+        }
+        CompletableFuture.allOf(*futures).get()
 
         then:
         noExceptionThrown()
@@ -173,22 +159,54 @@ class ClientCredentialsConcurrentSpec extends Specification {
             this.tokenExpiration = tokenExpiration
         }
 
+
+        @Introspected
+        static class ClientCredentialsForm {
+            @NonNull
+            private final String grant_type;
+
+            @Nullable
+            private final String client_id;
+
+            @Nullable
+            private final String client_secret;
+
+            ClientCredentialsForm(@NonNull String grant_type, @Nullable String client_id, @Nullable String client_secret) {
+                this.grant_type = grant_type
+                this.client_id = client_id
+                this.client_secret = client_secret
+            }
+
+            @NonNull
+            String getGrant_type() {
+                return grant_type
+            }
+
+            @Nullable
+            String getClient_id() {
+                return client_id
+            }
+
+            @Nullable
+            String getClient_secret() {
+                return client_secret
+            }
+        }
+
         @Secured(SecurityRule.IS_ANONYMOUS)
         @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
         @Post
-        HttpResponse<?> index(String grant_type,
-                              @Nullable String client_id,
-                              @Nullable String client_secret,
+        HttpResponse<?> index(@Body ClientCredentialsForm form,
                               @Nullable @Header String authorization) {
             numberOfRequests++
             if (down) {
                 return HttpResponse.serverError()
             }
-            if (grant_type != GrantType.CLIENT_CREDENTIALS.toString()) {
+            if (form.getGrant_type() != GrantType.CLIENT_CREDENTIALS.toString()) {
                 return HttpResponse.badRequest([error: 'invalid_grant'])
             }
 
-            if (!validate(client_id, client_id, authorization)) {
+            if (!validate(form.getClient_id(), form.getClient_secret(), authorization)) {
                 return HttpResponse.status(HttpStatus.UNAUTHORIZED).body([error: 'invalid_client'])
             }
 

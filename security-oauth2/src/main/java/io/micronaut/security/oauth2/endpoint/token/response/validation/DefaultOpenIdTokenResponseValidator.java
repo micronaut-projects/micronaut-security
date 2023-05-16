@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,23 @@
  */
 package io.micronaut.security.oauth2.endpoint.token.response.validation;
 
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
-import jakarta.inject.Singleton;
-
+import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdTokenResponse;
-import io.micronaut.security.oauth2.client.OpenIdProviderMetadata;
+import io.micronaut.security.token.jwt.signature.jwks.JwkSetFetcher;
 import io.micronaut.security.token.jwt.signature.jwks.JwkValidator;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
+import io.micronaut.security.token.jwt.signature.jwks.JwksSignatureConfigurationProperties;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtValidator;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,21 +58,25 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
     private final NonceClaimValidator nonceClaimValidator;
     private final JwkValidator jwkValidator;
     private final Map<String, JwksSignature> jwksSignatures = new ConcurrentHashMap<>();
+    private final JwkSetFetcher<JWKSet> jwkSetFetcher;
 
     /**
      * @param idTokenValidators OpenID JWT claim validators
      * @param genericJwtClaimsValidators Generic JWT claim validators
      * @param nonceClaimValidator The nonce claim validator
      * @param jwkValidator The JWK validator
+     * @param jwkSetFetcher Json Web Key Set Fetcher
      */
     public DefaultOpenIdTokenResponseValidator(Collection<OpenIdClaimsValidator> idTokenValidators,
                                                Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
                                                @Nullable NonceClaimValidator nonceClaimValidator,
-                                               JwkValidator jwkValidator) {
+                                               JwkValidator jwkValidator,
+                                               JwkSetFetcher<JWKSet> jwkSetFetcher) {
         this.openIdClaimsValidators = idTokenValidators;
         this.genericJwtClaimsValidators = genericJwtClaimsValidators;
         this.nonceClaimValidator = nonceClaimValidator;
         this.jwkValidator = jwkValidator;
+        this.jwkSetFetcher = jwkSetFetcher;
     }
 
     @Override
@@ -123,20 +129,14 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
                     }
                     if (nonceClaimValidator.validate(claims, clientConfiguration, openIdProviderMetadata, nonce)) {
                         return Optional.of(jwt);
-                    } else {
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("Nonce {} validation failed for claims {}", nonce, claims.getClaims().keySet().stream().map(key -> key + "=" + claims.getClaims().get(key)).collect(Collectors.joining(", ", "{", "}")));
-                        }
+                    } else if (LOG.isErrorEnabled()) {
+                        LOG.error("Nonce {} validation failed for claims {}", nonce, claims.getClaims().keySet().stream().map(key -> key + "=" + claims.getClaims().get(key)).collect(Collectors.joining(", ", "{", "}")));
                     }
-                } else {
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
-                    }
+                } else if (LOG.isErrorEnabled()) {
+                    LOG.error("JWT OpenID specific claims validation failed for provider [{}]", clientConfiguration.getName());
                 }
-            } else {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("JWT generic claims validation failed for provider [{}]", clientConfiguration.getName());
-                }
+            } else if (LOG.isErrorEnabled()) {
+                LOG.error("JWT generic claims validation failed for provider [{}]", clientConfiguration.getName());
             }
         } catch (ParseException e) {
             if (LOG.isErrorEnabled()) {
@@ -169,9 +169,11 @@ public class DefaultOpenIdTokenResponseValidator implements OpenIdTokenResponseV
      */
     protected JwksSignature jwksSignatureForOpenIdProviderMetadata(@NonNull OpenIdProviderMetadata openIdProviderMetadata) {
         final String jwksuri = openIdProviderMetadata.getJwksUri();
-        if (!jwksSignatures.containsKey(jwksuri)) {
-            jwksSignatures.put(jwksuri, new JwksSignature(openIdProviderMetadata.getJwksUri(), null, jwkValidator));
-        }
+        jwksSignatures.computeIfAbsent(jwksuri, k -> {
+            JwksSignatureConfigurationProperties config = new JwksSignatureConfigurationProperties();
+            config.setUrl(openIdProviderMetadata.getJwksUri());
+            return new JwksSignature(config, jwkValidator, jwkSetFetcher);
+        });
         return jwksSignatures.get(jwksuri);
     }
 }

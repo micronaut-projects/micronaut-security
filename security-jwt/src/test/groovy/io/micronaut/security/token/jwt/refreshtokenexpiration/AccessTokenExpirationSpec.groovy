@@ -10,8 +10,9 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
-import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.security.token.render.BearerAccessRefreshToken
+
 
 class AccessTokenExpirationSpec extends EmbeddedServerSpecification {
 
@@ -55,7 +56,7 @@ class AccessTokenExpirationSpec extends EmbeddedServerSpecification {
     @Controller("/secured")
     static class SecuredController {
 
-        @Get("/")
+        @Get
         String test() {
             "test"
         }

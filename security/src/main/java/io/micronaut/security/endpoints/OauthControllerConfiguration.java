@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package io.micronaut.security.endpoints;
 
-import io.micronaut.core.util.Toggleable;
+import io.micronaut.security.endpoints.ControllerConfiguration;
 
 /**
  * Encapsulates the configuration of {@link OauthController}.
@@ -23,14 +23,7 @@ import io.micronaut.core.util.Toggleable;
  * @author Sergio del Amo
  * @since 1.0
  */
-public interface OauthControllerConfiguration extends Toggleable {
-
-    /**
-     * The path the controller can be accessed at.
-     *
-     * @return The path e.g. /oauth/access_token
-     */
-    String getPath();
+public interface OauthControllerConfiguration extends ControllerConfiguration {
 
     /**
      * @return Whether GET requests are allowed to refresh tokens. Only applies to cookie based requests.

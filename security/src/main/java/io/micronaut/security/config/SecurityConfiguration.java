@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package io.micronaut.security.config;
 
 import io.micronaut.core.util.Toggleable;
-
 import java.util.List;
 
 /**
@@ -54,4 +53,10 @@ public interface SecurityConfiguration extends Toggleable, AuthenticationModeCon
     default boolean isRejectNotFound() {
         return true;
     }
+
+    /**
+     * @since 3.7.2
+     * @return Whether the intercept URL patterns should be prepended with context path if defined.
+     */
+    boolean isInterceptUrlMapPrependPatternWithContextPath();
 }

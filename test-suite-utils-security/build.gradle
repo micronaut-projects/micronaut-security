@@ -1,9 +1,12 @@
 plugins {
+    id 'java-library'
     id 'groovy'
+    id "io.micronaut.build.internal.security-tests"
 }
 
 dependencies {
-    implementation project(":security")
-    implementation "io.projectreactor:reactor-core"
+    annotationProcessor(mn.micronaut.inject.java)
+    api(mn.micronaut.inject)
+    implementation(projects.micronautSecurity)
+    implementation(mnReactor.micronaut.reactor)
 }
-

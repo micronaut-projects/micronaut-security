@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,24 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.RolesFinder;
 import io.micronaut.web.router.RouteMatch;
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.micronaut.core.annotation.Nullable;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Mono;
-
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.reactivestreams.Publisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
+
+import static io.micronaut.security.utils.LoggingUtils.debug;
 
 /**
  * A security rule implementation backed by the {@link SecurityConfigurationProperties#getIpPatterns()} ()}.
@@ -49,7 +48,7 @@ public class IpPatternsRule extends AbstractSecurityRule {
      */
     public static final Integer ORDER = SecuredAnnotationRule.ORDER - 100;
 
-    private static final Logger LOG = LoggerFactory.getLogger(InterceptUrlMapRule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IpPatternsRule.class);
 
     private final List<Pattern> patternList;
 
@@ -57,7 +56,6 @@ public class IpPatternsRule extends AbstractSecurityRule {
      * @param rolesFinder Roles Parser
      * @param securityConfiguration Security Configuration
      */
-    @Inject
     public IpPatternsRule(RolesFinder rolesFinder,
                           SecurityConfiguration securityConfiguration) {
         super(rolesFinder);
@@ -76,40 +74,32 @@ public class IpPatternsRule extends AbstractSecurityRule {
     public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
 
         if (patternList.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No IP patterns provided. Skipping host address check.");
-            }
+            debug(LOG, "No IP patterns provided. Skipping host address check.");
             return Mono.just(SecurityRuleResult.UNKNOWN);
         } else {
-            InetSocketAddress socketAddress = request.getRemoteAddress();
-            //noinspection ConstantConditions https://github.com/micronaut-projects/micronaut-security/issues/186
-            if (socketAddress != null) {
-                if (socketAddress.getAddress() != null) {
-                    String hostAddress = socketAddress.getAddress().getHostAddress();
-
-                    if (patternList.stream().anyMatch(pattern ->
-                            pattern.pattern().equals(SecurityConfigurationProperties.ANYWHERE) ||
-                                    pattern.matcher(hostAddress).matches())) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("One or more of the IP patterns matched the host address [{}]. Continuing request processing.", hostAddress);
-                        }
-                        return Mono.just(SecurityRuleResult.UNKNOWN);
-                    } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("None of the IP patterns [{}] matched the host address [{}]. Rejecting the request.", patternList.stream().map(Pattern::pattern).collect(Collectors.toList()), hostAddress);
-                        }
-                        return Mono.just(SecurityRuleResult.REJECTED);
-                    }
-                } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Could not resolve the InetAddress. Continuing request processing.");
-                    }
+            try {
+                InetSocketAddress socketAddress = request.getRemoteAddress();
+                //noinspection ConstantConditions https://github.com/micronaut-projects/micronaut-security/issues/186
+                if (socketAddress == null) {
+                    debug(LOG, "Request remote address was not found. Continuing request processing.");
                     return Mono.just(SecurityRuleResult.UNKNOWN);
                 }
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Request remote address was not found. Continuing request processing.");
+                if (socketAddress.getAddress() == null) {
+                    debug(LOG, "Could not resolve the InetAddress. Continuing request processing.");
+                    return Mono.just(SecurityRuleResult.UNKNOWN);
                 }
+                String hostAddress = socketAddress.getAddress().getHostAddress();
+                if (patternList.stream().anyMatch(pattern ->
+                        pattern.pattern().equals(SecurityConfigurationProperties.ANYWHERE) ||
+                                pattern.matcher(hostAddress).matches())) {
+                            debug(LOG, "One or more of the IP patterns matched the host address [{}]. Continuing request processing.", hostAddress);
+                            return Mono.just(SecurityRuleResult.UNKNOWN);
+                } else {
+                    debug(LOG, "None of the IP patterns [{}] matched the host address [{}]. Rejecting the request.", patternList.stream().map(Pattern::pattern).collect(Collectors.toList()), hostAddress);
+                    return Mono.just(SecurityRuleResult.REJECTED);
+                }
+            } catch (IllegalArgumentException e) {
+                debug(LOG, "IllegalArgumentException thrown while getting the request remote address. Continuing request processing.");
                 return Mono.just(SecurityRuleResult.UNKNOWN);
             }
         }

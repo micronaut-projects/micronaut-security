@@ -1,13 +1,12 @@
 package io.micronaut.docs.security.securityRule.intercepturlmap
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
-import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.security.testutils.YamlAsciidocTagCleaner
 import org.yaml.snakeyaml.Yaml
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -24,22 +23,22 @@ micronaut:
         pattern: /images/*
         http-method: GET
         access:
-          - isAnonymous() # <1>
+          - isAnonymous()
       -
         pattern: /books
         access:
-          - isAuthenticated() # <2>
+          - isAuthenticated()
       -
         pattern: /books/grails
         http-method: POST
         access:
-          - ROLE_GRAILS # <3>
+          - ROLE_GRAILS
           - ROLE_GROOVY
-      - 
+      -
         pattern: /books/grails
         http-method: PUT
-        access: 
-          - ROLE_ADMIN        
+        access:
+          - ROLE_ADMIN
 '''//end::yamlconfig[]
 
     @Shared
@@ -80,7 +79,7 @@ micronaut:
 
     @Shared
     @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, config as Map<String, Object>, Environment.TEST)
+    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, config as Map<String, Object>)
 
     @Shared
     @AutoCleanup

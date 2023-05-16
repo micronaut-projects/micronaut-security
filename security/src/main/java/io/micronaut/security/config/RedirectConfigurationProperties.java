@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,10 @@
  */
 package io.micronaut.security.config;
 
-import io.micronaut.core.annotation.NonNull;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
-
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * {@link ConfigurationProperties} implementation of {@link RedirectConfiguration}.
@@ -30,6 +29,12 @@ import javax.validation.constraints.NotBlank;
 @ConfigurationProperties(RedirectConfigurationProperties.PREFIX)
 public class RedirectConfigurationProperties implements RedirectConfiguration {
     public static final String PREFIX = SecurityConfigurationProperties.PREFIX + ".redirect";
+
+    /**
+     * The default enable value.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final boolean DEFAULT_ENABLED = true;
 
     /**
      * The default logout URL.
@@ -53,6 +58,8 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
      * The default behavior of redirect to the uri prior to login.
      */
     public static final boolean DEFAULT_PRIOR_TO_LOGIN = false;
+
+    private boolean enabled = DEFAULT_ENABLED;
 
     @NonNull
     @NotBlank
@@ -178,6 +185,19 @@ public class RedirectConfigurationProperties implements RedirectConfiguration {
     @Override
     public boolean isPriorToLogin() {
         return priorToLogin;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Sets whether Redirection configuration enabled. Default value ({@value #DEFAULT_ENABLED}).
+     * @param enabled True if it is
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**

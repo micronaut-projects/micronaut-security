@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,10 @@ package io.micronaut.security.ldap.group;
 
 import io.micronaut.security.ldap.context.LdapSearchResult;
 import io.micronaut.security.ldap.context.SearchProvider;
-
-import javax.naming.NamingException;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import javax.naming.NamingException;
 
 /**
  * Contract to allow the list of groups returned from LDAP to be transformed

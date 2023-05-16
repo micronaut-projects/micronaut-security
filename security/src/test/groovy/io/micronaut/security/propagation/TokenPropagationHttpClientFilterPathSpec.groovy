@@ -1,7 +1,6 @@
 package io.micronaut.security.propagation
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.env.Environment
 import io.micronaut.core.annotation.AnnotationMetadataResolver
 import io.micronaut.core.annotation.AnnotationValue
 import io.micronaut.core.util.PathMatcher
@@ -21,7 +20,7 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
                 'micronaut.security.token.writer.header.enabled': true,
                 'micronaut.security.token.propagation.enabled': true,
                 (SPEC_NAME_PROPERTY):getClass().simpleName
-        ], Environment.TEST)
+        ])
 
         when:
         TokenPropagationHttpClientFilter filter = context.getBean(TokenPropagationHttpClientFilter)
@@ -64,7 +63,7 @@ class TokenPropagationHttpClientFilterPathSpec extends Specification {
                 'micronaut.security.token.propagation.enabled': true,
                 'micronaut.security.token.propagation.path': '/books/**',
                 (SPEC_NAME_PROPERTY):getClass().simpleName
-        ], Environment.TEST)
+        ])
 
         when:
         TokenPropagationHttpClientFilter filter = context.getBean(TokenPropagationHttpClientFilter)

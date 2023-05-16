@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,13 @@
  */
 package io.micronaut.security.ldap;
 
-import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
 import io.micronaut.core.annotation.AnnotationMetadataProvider;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.naming.Named;
-import io.micronaut.core.value.ValueResolver;
 import io.micronaut.inject.qualifiers.Qualifiers;
-
-import java.util.Optional;
+import io.micronaut.security.ldap.configuration.LdapConfiguration;
+import io.micronaut.security.utils.QualifierUtils;
 
 /**
  * Condition to enable the LDAP authentication provider.
@@ -38,17 +35,9 @@ public class LdapEnabledCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context) {
         AnnotationMetadataProvider component = context.getComponent();
-
-        if (component instanceof ValueResolver) {
-            Optional<String> optional = ((ValueResolver) component).get(Named.class.getName(), String.class);
-            if (optional.isPresent()) {
-                String name = optional.get();
-
-                LdapConfiguration ldapConfiguration = context.getBean(LdapConfiguration.class, Qualifiers.byName(name));
-                return ldapConfiguration.isEnabled();
-            }
-        }
-
-        return true;
+        return QualifierUtils.nameQualifier(component)
+            .map(name -> context.getBean(LdapConfiguration.class, Qualifiers.byName(name)))
+            .map(LdapConfiguration::isEnabled)
+            .orElse(true);
     }
 }

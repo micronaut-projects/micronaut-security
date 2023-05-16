@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ public enum  IssuingAnAccessTokenErrorCode implements ErrorCode {
     INVALID_GRANT("invalid_grant", "The provided authorization grant (e.g., authorization code, resource owner credentials) or refresh token is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client."),
     UNAUTHORIZED_CLIENT("unauthorized_client", "The authenticated client is not authorized to use this authorization grant type."),
     UNSUPPORTED_GRANT_TYPE("unsupported_grant_type", "The authorization grant type is not supported by the authorization server.");
-
 
     private String errorCode;
     private String errorCodeDescription;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.micronaut.security.token.jwt.generator.claims;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.env.Environment;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.Claims;
@@ -24,9 +25,6 @@ import io.micronaut.security.token.claims.ClaimsAudienceProvider;
 import io.micronaut.security.token.claims.ClaimsGenerator;
 import io.micronaut.security.token.claims.JtiGenerator;
 import io.micronaut.security.token.config.TokenConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Singleton;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -35,6 +33,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Sergio del Amo
@@ -83,7 +83,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
         populateNbf(builder);
         populateWithAuthentication(builder, authentication);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Generated claim set: {}", builder.build().toJSONObject().toString());
+            LOG.debug("Generated claim set: {}", builder.build().toJSONObject());
         }
         return builder.build().getClaims();
     }
@@ -132,7 +132,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      */
     protected void populateExp(JWTClaimsSet.Builder builder, @Nullable Integer expiration) {
         if (expiration != null) {
-            LOG.debug("Setting expiration to {}", expiration.toString());
+            LOG.debug("Setting expiration to {}", expiration);
             builder.expirationTime(Date.from(Instant.now().plus(expiration, ChronoUnit.SECONDS))); // exp
         }
     }

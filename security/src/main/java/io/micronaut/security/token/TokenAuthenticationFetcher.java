@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package io.micronaut.security.token;
 
+import static io.micronaut.security.filters.SecurityFilter.TOKEN;
+
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
@@ -22,16 +24,11 @@ import io.micronaut.security.event.TokenValidatedEvent;
 import io.micronaut.security.filters.AuthenticationFetcher;
 import io.micronaut.security.token.reader.TokenResolver;
 import io.micronaut.security.token.validator.TokenValidator;
-import org.reactivestreams.Publisher;
-
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import reactor.core.publisher.Flux;
-
 import java.util.Collection;
 import java.util.Optional;
-
-import static io.micronaut.security.filters.SecurityFilter.TOKEN;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 /**
  * Attempts to retrieve a token form the {@link HttpRequest} and if existing validated.
@@ -50,19 +47,18 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
     public static final Integer ORDER = 0;
 
     protected final Collection<TokenValidator> tokenValidators;
-    protected final ApplicationEventPublisher eventPublisher;
+    protected final ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher;
     private final TokenResolver tokenResolver;
 
     /**
      * @param tokenValidators The list of {@link TokenValidator} which attempt to validate the request
      * @param tokenResolver   The {@link io.micronaut.security.token.reader.TokenResolver} which returns the first found token in the request.
-     * @param eventPublisher  The Application event publisher
+     * @param tokenValidatedEventPublisher Application event publisher for {@link TokenValidatedEvent}.
      */
-    @Inject
     public TokenAuthenticationFetcher(Collection<TokenValidator> tokenValidators,
                                       TokenResolver tokenResolver,
-                                      ApplicationEventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
+                                      ApplicationEventPublisher<TokenValidatedEvent> tokenValidatedEventPublisher) {
+        this.tokenValidatedEventPublisher = tokenValidatedEventPublisher;
         this.tokenResolver = tokenResolver;
         this.tokenValidators = tokenValidators;
     }
@@ -83,7 +79,7 @@ public class TokenAuthenticationFetcher implements AuthenticationFetcher {
                 .next()
                 .map(authentication -> {
                     request.setAttribute(TOKEN, tokenValue);
-                    eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
+                    tokenValidatedEventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
                     return authentication;
                 });
     }

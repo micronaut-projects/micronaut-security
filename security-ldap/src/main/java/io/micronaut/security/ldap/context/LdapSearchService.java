@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package io.micronaut.security.ldap.context;
 
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import java.util.List;
 import java.util.Optional;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
 
 /**
  * Contract for searching LDAP using an existing context.

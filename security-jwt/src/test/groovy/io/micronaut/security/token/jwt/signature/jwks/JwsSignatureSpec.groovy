@@ -9,19 +9,18 @@ import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import com.nimbusds.jwt.SignedJWT
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.token.jwt.JwtFixture
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
-import jakarta.inject.Named
-import jakarta.inject.Singleton
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 
@@ -37,13 +36,13 @@ class JwsSignatureSpec extends Specification implements JwtFixture {
 
     @AutoCleanup
     @Shared
-    EmbeddedServer embeddedServer = embeddedServer = ApplicationContext.run(EmbeddedServer, conf, Environment.TEST)
+    EmbeddedServer embeddedServer = embeddedServer = ApplicationContext.run(EmbeddedServer, conf)
 
     void "JwsSignature does not verify a RSA256 signed JWT, which was generated with a different signature, even if both the JwsSiganture and the JWT support the same algorithm"() {
         given:
         ApplicationContext context = ApplicationContext.run([
                 'micronaut.security.token.jwt.signatures.jwks.awscognito.url':  "http://localhost:${embeddedServer.getPort()}/keys",
-        ], Environment.TEST)
+        ])
 
         when:
         Collection<JwksSignature> beans = context.getBeansOfType(JwksSignature)
@@ -55,7 +54,7 @@ class JwsSignatureSpec extends Specification implements JwtFixture {
         JwksSignature jwksSignature = beans[0]
 
         then:
-        jwksSignature.supportedAlgorithmsMessage() == 'Only the RS256 algorithms are supported'
+        jwksSignature.supportedAlgorithmsMessage() == 'Algorithms supported: RS256'
         jwksSignature.supports(JWSAlgorithm.RS256)
 
         when:

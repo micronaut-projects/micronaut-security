@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package io.micronaut.security.token.cookie;
 
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
@@ -23,6 +24,7 @@ import io.micronaut.http.cookie.Cookie;
 import io.micronaut.http.cookie.CookieConfiguration;
 import io.micronaut.security.authentication.CookieBasedAuthenticationModeCondition;
 import io.micronaut.security.config.RedirectConfiguration;
+import io.micronaut.security.config.RedirectService;
 import io.micronaut.security.handlers.LogoutHandler;
 import jakarta.inject.Singleton;
 import java.net.URI;
@@ -37,6 +39,7 @@ import java.net.URISyntaxException;
 @Singleton
 public class TokenCookieClearerLogoutHandler implements LogoutHandler {
 
+    @Nullable
     protected final String logout;
     protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
     protected final RefreshTokenCookieConfiguration refreshTokenCookieConfiguration;
@@ -45,20 +48,21 @@ public class TokenCookieClearerLogoutHandler implements LogoutHandler {
      * @param accessTokenCookieConfiguration JWT Cookie Configuration
      * @param refreshTokenCookieConfiguration Refresh token cookie configuration
      * @param redirectConfiguration Redirect configuration
+     * @param redirectService Redirection Service
      */
     public TokenCookieClearerLogoutHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
-                                           RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
-                                           RedirectConfiguration redirectConfiguration) {
+                                         RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
+                                         RedirectConfiguration redirectConfiguration,
+                                         RedirectService redirectService) {
         this.accessTokenCookieConfiguration = accessTokenCookieConfiguration;
         this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
-        this.logout = redirectConfiguration.getLogout();
+        this.logout = redirectConfiguration.isEnabled() ? redirectService.logoutUrl() : null;
     }
 
     @Override
     public MutableHttpResponse<?> logout(HttpRequest<?> request) {
         try {
-            URI location = new URI(logout);
-            MutableHttpResponse<?> response = HttpResponse.seeOther(location);
+            MutableHttpResponse<?> response = logout == null ? HttpResponse.ok() : HttpResponse.seeOther(new URI(logout));
             clearCookie(accessTokenCookieConfiguration, response);
             if (refreshTokenCookieConfiguration != null) {
                 clearCookie(refreshTokenCookieConfiguration, response);

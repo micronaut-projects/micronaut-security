@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,7 @@
  */
 package io.micronaut.security.oauth2.endpoint.nonce;
 
-import io.micronaut.core.util.Toggleable;
-
-import java.util.Optional;
+import io.micronaut.security.oauth2.endpoint.PersistableConfiguration;
 
 /**
  * Configuration options for nonce validation.
@@ -25,10 +23,5 @@ import java.util.Optional;
  * @author James Kleeh
  * @since 1.2.0
  */
-public interface NonceConfiguration extends Toggleable {
-
-    /**
-     * @return The nonce persistence mechanism
-     */
-    Optional<String> getPersistence();
+public interface NonceConfiguration extends PersistableConfiguration {
 }

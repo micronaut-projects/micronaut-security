@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@ package io.micronaut.security.oauth2.client.clientcredentials;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.annotation.Internal;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.ClientCredentialsTokenRequestContext;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
-import reactor.core.publisher.Flux;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Signal;
 
@@ -111,7 +111,7 @@ public abstract class AbstractClientCredentialsClient implements ClientCredentia
         return expirationDate(tokenResponse).map(expDate -> {
             boolean isExpired = isExpired(expDate);
             if (isExpired && LOG.isTraceEnabled()) {
-                LOG.trace("token: {} is expired" + tokenResponse.getAccessToken());
+                LOG.trace("token: {} is expired", tokenResponse.getAccessToken());
             }
             return isExpired;
         }).orElse(true);

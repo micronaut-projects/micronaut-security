@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,17 @@
 package io.micronaut.security.oauth2.configuration;
 
 import io.micronaut.context.exceptions.ConfigurationException;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.Toggleable;
 import io.micronaut.security.oauth2.client.clientcredentials.ClientCredentialsConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.OauthAuthorizationEndpointConfiguration;
 import io.micronaut.security.oauth2.configuration.endpoints.SecureEndpointConfiguration;
 import io.micronaut.security.oauth2.endpoint.AuthenticationMethod;
 import io.micronaut.security.oauth2.endpoint.DefaultSecureEndpoint;
 import io.micronaut.security.oauth2.endpoint.SecureEndpoint;
 import io.micronaut.security.oauth2.grants.GrantType;
-
-import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
-
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
@@ -88,16 +87,14 @@ public interface OauthClientConfiguration extends Toggleable {
      * @see <a href="https://tools.ietf.org/html/rfc6749#section-3.1">RFC 6749 Section 3.1</a>
      * @return The optional authorization endpoint configuration
      */
-    Optional<EndpointConfiguration> getAuthorization();
+    Optional<OauthAuthorizationEndpointConfiguration> getAuthorization();
 
     /**
      *
      * @return The Client Credentials Configuration
      */
     @NonNull
-    default Optional<ClientCredentialsConfiguration> getClientCredentials() {
-        return Optional.empty(); //@deprecated Default implementation will be removed in next mayor version.
-    }
+    Optional<ClientCredentialsConfiguration> getClientCredentials();
 
     /**
      * @see <a href="https://tools.ietf.org/html/rfc7662">RFC 7662</a>

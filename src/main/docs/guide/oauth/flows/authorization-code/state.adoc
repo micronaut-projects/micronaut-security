@@ -14,10 +14,11 @@ dependency:io.micronaut.security:micronaut-session[]
 +
 . Set the state persistence to `session`
 +
-.application.yml
+[configuration]
 ----
 micronaut.security.oauth2.state.persistence: session
 ----
+
 +
 
 If state validation fails, the user will not be authenticated.

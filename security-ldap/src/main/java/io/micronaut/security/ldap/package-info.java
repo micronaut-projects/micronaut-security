@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 @Requires(property = LdapConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 package io.micronaut.security.ldap;
 
-import io.micronaut.security.ldap.configuration.LdapConfiguration;
 import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.security.ldap.configuration.LdapConfiguration;

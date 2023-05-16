@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,13 +35,6 @@ public class DefaultState implements MutableState {
     private URI originalUri;
     private URI redirectUri;
     private String nonce = UUID.randomUUID().toString();
-
-    @Override
-    @Nullable
-    @Deprecated
-    public URI getOriginalUri() {
-        return originalUri;
-    }
 
     @NonNull
     @Override

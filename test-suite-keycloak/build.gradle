@@ -1,0 +1,11 @@
+plugins {
+    id 'java-library'
+    id "io.micronaut.build.internal.security-tests"
+}
+
+dependencies {
+    annotationProcessor(mn.micronaut.inject.java)
+    implementation(projects.micronautSecurityJwt)
+    implementation(projects.micronautSecurityOauth2)
+    implementation(projects.testSuiteUtils)
+}

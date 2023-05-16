@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,22 @@ package io.micronaut.security.authentication;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpHeaderValues;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for Basic Auth.
  */
-public class BasicAuthUtils {
+public final class BasicAuthUtils {
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthUtils.class);
     private static final String PREFIX = HttpHeaderValues.AUTHORIZATION_PREFIX_BASIC + " ";
+    private static final String DELIMITER = ":";
+
+    private BasicAuthUtils() {
+    }
 
     /**
      *
@@ -56,15 +59,14 @@ public class BasicAuthUtils {
         }
 
         String token = new String(decoded, StandardCharsets.UTF_8);
-
-        String[] parts = token.split(":");
-        if (parts.length < 2) {
+        int index = token.indexOf(DELIMITER);
+        if (index == -1) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Bad format of the basic auth header - Delimiter : not found");
             }
             return Optional.empty();
         }
-
-        return Optional.of(new UsernamePasswordCredentials(parts[0], parts[1]));
+        return Optional.of(new UsernamePasswordCredentials(token.substring(0, index),
+                token.substring(index + DELIMITER.length())));
     }
 }

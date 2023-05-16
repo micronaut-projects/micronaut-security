@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package io.micronaut.security.token.jwt.validator;
 import com.nimbusds.jwt.JWT;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.TokenAuthenticationFactory;
-
 import java.util.Optional;
 
 /**

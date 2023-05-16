@@ -4,9 +4,9 @@ import com.nimbusds.jose.JWSAlgorithm
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
 import io.micronaut.docs.signandencrypt.KeyPairProvider
-
 import jakarta.inject.Named
 import jakarta.inject.Singleton
+
 import java.security.KeyPair
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey

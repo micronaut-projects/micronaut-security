@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,12 @@
  */
 package io.micronaut.security.oauth2.configuration;
 
-import io.micronaut.core.naming.Named;
-import io.micronaut.security.oauth2.configuration.endpoints.*;
-
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.naming.Named;
+import io.micronaut.security.oauth2.configuration.endpoints.AuthorizationEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndSessionEndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.EndpointConfiguration;
+import io.micronaut.security.oauth2.configuration.endpoints.TokenEndpointConfiguration;
 import java.net.URL;
 import java.util.Optional;
 

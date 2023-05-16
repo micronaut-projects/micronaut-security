@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package io.micronaut.security.token.jwt.signature.jwks;
 
 import com.nimbusds.jose.jwk.KeyType;
-
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 
@@ -41,4 +40,10 @@ public interface JwksSignatureConfiguration {
      */
     @Nullable
     KeyType getKeyType();
+
+    /**
+     * @return The number of seconds to cache the JWKS.
+     */
+    @NonNull
+    Integer getCacheExpiration();
 }

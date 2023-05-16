@@ -2,21 +2,18 @@ package io.micronaut.security.endpoints.introspection
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.core.beans.BeanIntrospection
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Consumes
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Post
-import io.micronaut.http.annotation.Produces
-import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.http.annotation.*
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.endpoints.introspection.IntrospectionRequest
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.security.testutils.EmbeddedServerSpecification
+import io.micronaut.serde.SerdeIntrospections
 import spock.lang.Shared
 
-import javax.validation.Valid
-import javax.validation.Validator
+import jakarta.validation.Valid
+import jakarta.validation.Validator
 
 class IntrospectionRequestSpec extends EmbeddedServerSpecification {
 
@@ -27,6 +24,28 @@ class IntrospectionRequestSpec extends EmbeddedServerSpecification {
 
     @Shared
     Validator validator = applicationContext.getBean(Validator)
+
+    void "IntrospectionRequest is annotated with @Serdeable.Deserializable"() {
+        given:
+        SerdeIntrospections serdeIntrospections = applicationContext.getBean(SerdeIntrospections)
+
+        when:
+        serdeIntrospections.getDeserializableIntrospection(Argument.of(IntrospectionRequest))
+
+        then:
+        noExceptionThrown()
+    }
+
+    void "IntrospectionRequest is annotated with @Serdeable.Serializable"() {
+        given:
+        SerdeIntrospections serdeIntrospections = applicationContext.getBean(SerdeIntrospections)
+
+        when:
+        serdeIntrospections.getSerializableIntrospection(Argument.of(IntrospectionRequest))
+
+        then:
+        noExceptionThrown()
+    }
 
     void "IntrospectionRequest is annotated with Introspected"() {
         when:
@@ -46,8 +65,7 @@ class IntrospectionRequestSpec extends EmbeddedServerSpecification {
 
     void "IntrospectionRequest::token is required"() {
         when:
-        IntrospectionRequest req = validIntrospectionRequest()
-        req.token = null
+        IntrospectionRequest req = new IntrospectionRequest(null, null)
 
         then:
         !validator.validate(req).isEmpty()
@@ -56,16 +74,13 @@ class IntrospectionRequestSpec extends EmbeddedServerSpecification {
     void "IntrospectionRequest::tokenTypeHint is optional"() {
         when:
         IntrospectionRequest req = validIntrospectionRequest()
-        req.tokenTypeHint = null
 
         then:
         validator.validate(req).isEmpty()
     }
 
     static IntrospectionRequest validIntrospectionRequest() {
-        IntrospectionRequest req = new IntrospectionRequest()
-        req.token = "2YotnFZFEjr1zCsicMWpAA"
-        req
+        new IntrospectionRequest("2YotnFZFEjr1zCsicMWpAA", null)
     }
 
     void "token type hint needs to be supplied as a string separated with underscores"() {

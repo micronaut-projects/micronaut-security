@@ -48,7 +48,7 @@ class JwtCookiePathAndDomainSpec extends EmbeddedServerSpecification {
 
         when:
         String cookie = loginRsp.getHeaders().get('Set-Cookie')
-        println cookie
+
         then:
         cookie
         cookie.contains('JWT=')
@@ -87,7 +87,7 @@ class JwtCookiePathAndDomainSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "JwtCookiePathAndDomainSpec")
     @Secured("isAnonymous()")
-    @Controller("/")
+    @Controller
     static class HomeController {
 
         @Produces(MediaType.TEXT_HTML)

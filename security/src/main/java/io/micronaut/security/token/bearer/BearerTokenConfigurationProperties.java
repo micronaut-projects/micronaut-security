@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
 
     private boolean enabled = DEFAULT_ENABLED;
     private String headerName = HttpHeaders.AUTHORIZATION;
-    private String prefix = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
+    private String headerPrefix = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
 
     @Override
     public boolean isEnabled() {
@@ -47,14 +47,14 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
 
     @Override
     public String getPrefix() {
-        return prefix;
+        return headerPrefix;
     }
 
     @Override
     public String getHeaderName() {
         return headerName;
     }
-    
+
     /**
      * Set whether to enable bearer token authentication. Default value {@value #DEFAULT_ENABLED}.
      *
@@ -75,9 +75,9 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
 
     /**
      * Sets the prefix to use for the auth token. Default value Bearer.
-     * @param prefix The prefix to use
+     * @param headerPrefix The prefix to use
      */
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
+    public void setPrefix(String headerPrefix) {
+        this.headerPrefix = headerPrefix;
     }
 }

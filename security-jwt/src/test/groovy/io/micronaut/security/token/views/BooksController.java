@@ -6,14 +6,13 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.views.View;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Requires(property = "spec.name", value = "SecurityViewModelProcessorSpec")
 //tag::class[]
-@Controller("/")
+@Controller
 public class BooksController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
