@@ -15,13 +15,11 @@
  */
 package io.micronaut.security.config;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.context.ServerContextPathProvider;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import java.util.List;
 
 /**
  * Get redirection URLs combining context path and redirect configuration.
@@ -29,25 +27,12 @@ import java.util.List;
  * @since 3.7.2
  * @author Sergio del Amo
  */
+@Requires(beans = { ServerContextPathProvider.class, SecurityConfiguration.class })
 @Singleton
 public class DefaultRedirectService implements RedirectService {
 
     private final ServerContextPathProvider serverContextPathProvider;
     private final RedirectConfiguration redirectConfiguration;
-
-    /**
-     *
-     * @param serverContextPathProviders Server Context Path providers
-     * @param redirectConfiguration Redirect Configuration
-     */
-    @Inject
-    public DefaultRedirectService(RedirectConfiguration redirectConfiguration,
-                                  List<ServerContextPathProvider> serverContextPathProviders) {  // Inject list because when using Tomcat there is a multiple beans exception
-        this(redirectConfiguration,
-            serverContextPathProviders.isEmpty() ?
-                null :
-                serverContextPathProviders.get(0));
-    }
 
     /**
      *

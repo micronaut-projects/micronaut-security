@@ -41,10 +41,10 @@ class IntrospectionControllerPathConfigurableSpec extends EmbeddedServerSpecific
 
     @Requires(property = 'spec.name', value = 'IntrospectionControllerPathConfigurableSpec')
     @Singleton
-    static class CustomTokenValidator implements TokenValidator {
+    static class CustomTokenValidator<T> implements TokenValidator<T> {
 
         @Override
-        Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
+        Publisher<Authentication> validateToken(String token, @Nullable T request) {
             Authentication authentication = Authentication.build('user', ['ROLE_ADMIN', 'ROLE_USER'], [email: 'john@micronaut.io'])
             if (token == "2YotnFZFEjr1zCsicMWpAA") {
                 return Flux.just(authentication)

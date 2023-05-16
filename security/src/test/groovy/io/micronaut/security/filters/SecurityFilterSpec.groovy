@@ -125,7 +125,7 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
         }
 
         @Override
-        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable T routeMatch, @Nullable Authentication authentication) {
+        Publisher<SecurityRuleResult> check(T request, @Nullable Authentication authentication) {
             return Mono.just(result)
                     .delayElement(Duration.ofMillis(delayMs))
                     .subscribeOn(Schedulers.fromExecutor(executorService))
@@ -144,7 +144,7 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
         static SecurityRuleResult result = UNKNOWN
 
         @Override
-        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable T routeMatch, @Nullable Authentication authentication) {
+        Publisher<SecurityRuleResult> check(T request, @Nullable Authentication authentication) {
             return Mono.just(result)
         }
 
@@ -161,7 +161,7 @@ class SecurityFilterSpec extends EmbeddedServerSpecification {
         static SecurityRuleResult result = UNKNOWN
 
         @Override
-        Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable T routeMatch, @Nullable Authentication authentication) {
+        Publisher<SecurityRuleResult> check(T request, @Nullable Authentication authentication) {
             return Mono.just(result)
         }
 

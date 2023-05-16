@@ -12,6 +12,10 @@ dependencies {
 
     testRuntimeOnly(mnLogging.logback.classic)
     testImplementation(mn.micronaut.management)
+
+    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testImplementation(mnSerde.micronaut.serde.jackson)
+
     testImplementation(mnServlet.micronaut.http.server.tomcat)
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautSecurityJwt)

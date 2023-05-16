@@ -17,7 +17,6 @@ package io.micronaut.security.token.jwt.validator;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.Claims;
 
 /**
@@ -25,13 +24,14 @@ import io.micronaut.security.token.Claims;
  *
  * @author Sergio del Amo
  * @since 1.1.0
+ * @param <T> Request
  */
-public interface JwtClaimsValidator {
+public interface JwtClaimsValidator<T> {
 
     /**
      * @param claims JWT Claims
      * @param request HTTP request
      * @return whether the JWT claims pass validation.
      */
-    boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request);
+    boolean validate(@NonNull Claims claims, @Nullable T request);
 }

@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.RedirectConfiguration;
@@ -41,6 +42,7 @@ import java.util.List;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = { HttpRequest.class })
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "cookie")
 @Singleton
 public class TokenCookieLoginHandler extends CookieLoginHandler {
@@ -64,7 +66,7 @@ public class TokenCookieLoginHandler extends CookieLoginHandler {
                                  RefreshTokenCookieConfiguration refreshTokenCookieConfiguration,
                                  AccessTokenConfiguration accessTokenConfiguration,
                                  AccessRefreshTokenGenerator accessRefreshTokenGenerator,
-                                 @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+                                 @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence) {
         super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
         this.refreshTokenCookieConfiguration = refreshTokenCookieConfiguration;
         this.accessTokenConfiguration = accessTokenConfiguration;

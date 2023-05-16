@@ -37,6 +37,7 @@ import org.reactivestreams.Publisher;
  * @since 1.0
  */
 @Filter("${" + TokenPropagationConfigurationProperties.PREFIX + ".path:/**}")
+@Requires(classes = HttpClientFilter.class)
 @Requires(beans = {TokenPropagator.class, TokenPropagationConfiguration.class})
 @Requires(property = TokenPropagationConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 public class TokenPropagationHttpClientFilter implements HttpClientFilter {

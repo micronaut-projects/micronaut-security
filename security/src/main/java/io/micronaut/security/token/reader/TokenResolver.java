@@ -16,7 +16,6 @@
 package io.micronaut.security.token.reader;
 
 import io.micronaut.context.annotation.DefaultImplementation;
-import io.micronaut.http.HttpRequest;
 import java.util.Optional;
 
 /**
@@ -24,10 +23,11 @@ import java.util.Optional;
  *
  * @author Sergio del Amo
  * @since 1.1.0
+ * @param <T> request
  */
 @DefaultImplementation(DefaultTokenResolver.class)
 @FunctionalInterface
-public interface TokenResolver {
+public interface TokenResolver<T> {
 
     /**
      * Resolves the token from the provided request.
@@ -35,5 +35,5 @@ public interface TokenResolver {
      * @param request The HTTP request.
      * @return The token in the supplied request. Empty if no token was found.
      */
-    Optional<String> resolveToken(HttpRequest<?> request);
+    Optional<String> resolveToken(T request);
 }

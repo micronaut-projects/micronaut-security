@@ -20,7 +20,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -34,10 +33,11 @@ import java.util.Date;
  * @author Jason Schindler
  * @author Sergio del Amo
  * @since 2.4.0
+ * @param <T> Request
  */
 @Singleton
 @Requires(property = NotBeforeJwtClaimsValidator.NOT_BEFORE_PROP, value = StringUtils.TRUE)
-public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
+public class NotBeforeJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
     public static final String NOT_BEFORE_PROP = JwtClaimsValidatorConfigurationProperties.PREFIX + ".not-before";
 
@@ -73,7 +73,7 @@ public class NotBeforeJwtClaimsValidator implements GenericJwtClaimsValidator {
      * @return true if the not-before claim denotes a date before now
      */
     @Override
-    public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable T request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 

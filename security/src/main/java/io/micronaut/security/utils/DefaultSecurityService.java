@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.utils;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.context.ServerRequestContext;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
@@ -29,6 +30,7 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = ServerRequestContext.class)
 @Singleton
 public class DefaultSecurityService implements SecurityService {
 

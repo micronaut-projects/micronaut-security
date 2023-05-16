@@ -39,7 +39,7 @@ import java.util.Optional;
  */
 @Requires(condition = SessionAuthenticationModeCondition.class)
 @Singleton
-public class SessionLogoutHandler implements LogoutHandler {
+public class SessionLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
     @Nullable
     protected final String logout;

@@ -17,10 +17,12 @@ package io.micronaut.security.token.bearer;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.cookie.CookieTokenReader;
 import io.micronaut.security.token.reader.HttpHeaderTokenReader;
 import io.micronaut.security.token.reader.TokenReader;
 import jakarta.inject.Singleton;
+
 
 /**
  * Reads JWT token from {@link io.micronaut.http.HttpHeaders#AUTHORIZATION} header. e.g. Bearer XXXXX.
@@ -28,9 +30,10 @@ import jakarta.inject.Singleton;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = HttpRequest.class)
 @Requires(property = BearerTokenConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Singleton
-public class BearerTokenReader extends HttpHeaderTokenReader implements TokenReader {
+public class BearerTokenReader extends HttpHeaderTokenReader implements TokenReader<HttpRequest<?>> {
 
     /*
      *

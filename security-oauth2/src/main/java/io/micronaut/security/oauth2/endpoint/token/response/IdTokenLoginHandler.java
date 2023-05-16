@@ -20,6 +20,7 @@ import com.nimbusds.jwt.JWTParser;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.cookie.Cookie;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationMode;
@@ -51,6 +52,7 @@ import java.util.Optional;
  * @since 2.0.0
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
+@Requires(classes = HttpRequest.class)
 @Singleton
 public class IdTokenLoginHandler extends CookieLoginHandler {
 
@@ -65,7 +67,7 @@ public class IdTokenLoginHandler extends CookieLoginHandler {
     public IdTokenLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration,
                                RedirectConfiguration redirectConfiguration,
                                RedirectService redirectService,
-                               @Nullable PriorToLoginPersistence priorToLoginPersistence) {
+                               @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence) {
         super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence);
     }
 

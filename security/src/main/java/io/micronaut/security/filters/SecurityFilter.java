@@ -34,7 +34,6 @@ import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
-import io.micronaut.web.router.RouteMatch;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Requires(property = SecurityFilterConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
-@Requires(classes = { HttpServerFilter.class, RouteMatch.class})
+@Requires(classes = { HttpServerFilter.class })
 @Replaces(EndpointsFilter.class)
 @Filter("${" + SecurityFilterConfigurationProperties.PREFIX + ".pattern:" + Filter.MATCH_ALL_PATTERN + "}")
 public class SecurityFilter implements HttpServerFilter {
@@ -82,8 +81,8 @@ public class SecurityFilter implements HttpServerFilter {
      */
     private static final Integer ORDER = ServerFilterPhase.SECURITY.order();
 
-    protected final Collection<SecurityRule> securityRules;
-    protected final Collection<AuthenticationFetcher> authenticationFetchers;
+    protected final Collection<SecurityRule<HttpRequest<?>>> securityRules;
+    protected final Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers;
 
     protected final SecurityConfiguration securityConfiguration;
 
@@ -92,8 +91,8 @@ public class SecurityFilter implements HttpServerFilter {
      * @param authenticationFetchers List of {@link AuthenticationFetcher} beans in the context.
      * @param securityConfiguration  The security configuration
      */
-    public SecurityFilter(Collection<SecurityRule> securityRules,
-                          Collection<AuthenticationFetcher> authenticationFetchers,
+    public SecurityFilter(Collection<SecurityRule<HttpRequest<?>>> securityRules,
+                          Collection<AuthenticationFetcher<HttpRequest<?>>> authenticationFetchers,
                           SecurityConfiguration securityConfiguration) {
         this.securityRules = securityRules;
         this.authenticationFetchers = authenticationFetchers;
@@ -108,23 +107,21 @@ public class SecurityFilter implements HttpServerFilter {
     @Override
     public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         request.getAttributes().put(KEY, true);
-        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
 
         return Flux.fromIterable(authenticationFetchers)
                 .flatMap(authenticationFetcher -> authenticationFetcher.fetchAuthentication(request))
                 .next()
-                .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain, routeMatch)))
-                .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain, routeMatch))
+                .flatMap(authentication -> Mono.from(createResponse(authentication, request, chain)))
+                .switchIfEmpty(Flux.defer(() -> createResponse(null, request, chain))
                         .next());
     }
 
     private Publisher<MutableHttpResponse<?>> createResponse(@Nullable Authentication authentication,
                                                              HttpRequest<?> request,
-                                                             ServerFilterChain chain,
-                                                             RouteMatch<?> routeMatch) {
+                                                             ServerFilterChain chain) {
         request.setAttribute(AUTHENTICATION, authentication);
         logAuthenticationAttributes(authentication);
-        return checkRules(request, chain, routeMatch, authentication);
+        return checkRules(request, chain, authentication);
     }
 
     private void logAuthenticationAttributes(@Nullable Authentication authentication) {
@@ -143,20 +140,18 @@ public class SecurityFilter implements HttpServerFilter {
      *
      * @param request The request
      * @param chain The server chain
-     * @param routeMatch The route match
      * @param authentication The authentication
      * @return A response publisher
      */
     protected Publisher<MutableHttpResponse<?>> checkRules(HttpRequest<?> request,
                                                            ServerFilterChain chain,
-                                                           @Nullable RouteMatch<?> routeMatch,
                                                            @Nullable Authentication authentication) {
         boolean forbidden = authentication != null;
         String method = request.getMethod().toString();
         String path = request.getPath();
 
         return Flux.fromIterable(securityRules)
-                .concatMap(rule -> Mono.from(rule.check(request, routeMatch, authentication))
+                .concatMap(rule -> Mono.from(rule.check(request, authentication))
                                         .defaultIfEmpty(SecurityRuleResult.UNKNOWN)
                                         // Ideally should return just empty but filter the unknowns
                                         .filter(result -> result != SecurityRuleResult.UNKNOWN)
@@ -181,11 +176,11 @@ public class SecurityFilter implements HttpServerFilter {
                                 path);
                     }
                     // no rule found for the given request
-                    if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
-                        return chain.proceed(request);
-                    } else {
+                    if (securityConfiguration.isRejectNotFound()) {
                         request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
                         return Mono.error(new AuthorizationException(authentication));
+                    } else {
+                        return chain.proceed(request);
                     }
                 }));
     }

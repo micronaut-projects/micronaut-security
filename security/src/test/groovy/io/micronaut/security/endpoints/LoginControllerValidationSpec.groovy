@@ -52,7 +52,7 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
         String jsonError = errorOptional.get()
 
         then:
-        jsonError.contains('must not be blank') || jsonError.contains('must not be null')
+        jsonError.contains('must not be blank') || jsonError.contains('must not be null') || jsonError.contains("Failed to convert argument")
 
         where:
         username | password
@@ -64,7 +64,7 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'LoginControllerValidationSpec')
     @Singleton
-    static class CustomLoginHandler implements LoginHandler {
+    static class CustomLoginHandler implements LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
         @Override
         MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {

@@ -38,7 +38,6 @@ import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.token.refresh.RefreshTokenPersistence;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
-import io.micronaut.validation.Validated;
 
 import java.util.Map;
 import java.util.Optional;
@@ -58,17 +57,17 @@ import static io.micronaut.security.endpoints.TokenRefreshRequest.GRANT_TYPE;
  * @since 1.0
  */
 @Requires(property = OauthControllerConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@Requires(classes = Controller.class)
 @Requires(beans = RefreshTokenPersistence.class)
 @Requires(beans = RefreshTokenValidator.class)
 @Controller("${" + OauthControllerConfigurationProperties.PREFIX + ".path:/oauth/access_token}")
 @Secured(SecurityRule.IS_ANONYMOUS)
-@Validated
 public class OauthController {
 
     private final RefreshTokenPersistence refreshTokenPersistence;
     private final RefreshTokenValidator refreshTokenValidator;
     private final OauthControllerConfigurationProperties oauthControllerConfigurationProperties;
-    private final LoginHandler loginHandler;
+    private final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler;
 
     /**
      * @param refreshTokenPersistence The persistence mechanism for the refresh token
@@ -79,7 +78,7 @@ public class OauthController {
     public OauthController(RefreshTokenPersistence refreshTokenPersistence,
                            RefreshTokenValidator refreshTokenValidator,
                            OauthControllerConfigurationProperties oauthControllerConfigurationProperties,
-                           LoginHandler loginHandler) {
+                           LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler) {
         this.refreshTokenPersistence = refreshTokenPersistence;
         this.refreshTokenValidator = refreshTokenValidator;
         this.oauthControllerConfigurationProperties = oauthControllerConfigurationProperties;

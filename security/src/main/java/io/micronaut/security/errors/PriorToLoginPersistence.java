@@ -15,17 +15,17 @@
  */
 package io.micronaut.security.errors;
 
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.MutableHttpResponse;
 import java.net.URI;
 import java.util.Optional;
 
 /**
  * Keep track of state before login.
+ * @param <I> Request
+ * @param <O> Response
  */
-public interface PriorToLoginPersistence {
+public interface PriorToLoginPersistence<I, O> {
 
-    void onUnauthorized(HttpRequest<?> request, MutableHttpResponse<?> response);
+    void onUnauthorized(I request, O response);
 
-    Optional<URI> getOriginalUri(HttpRequest<?> request, MutableHttpResponse<?> response);
+    Optional<URI> getOriginalUri(I request, O response);
 }

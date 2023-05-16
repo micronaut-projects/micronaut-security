@@ -18,6 +18,7 @@ package io.micronaut.security.rules;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.management.endpoint.EndpointSensitivityProcessor;
@@ -49,9 +50,9 @@ import reactor.core.publisher.Mono;
  * @since 1.0
  */
 @Requires(beans = EndpointSensitivityProcessor.class)
-@Requires(classes = { RouteMatch.class, MethodBasedRouteMatch.class })
+@Requires(classes = { HttpRequest.class })
 @Singleton
-public class SensitiveEndpointRule implements SecurityRule<RouteMatch<?>> {
+public class SensitiveEndpointRule implements SecurityRule<HttpRequest<?>> {
     /**
      * The order of the rule.
      */
@@ -105,7 +106,8 @@ public class SensitiveEndpointRule implements SecurityRule<RouteMatch<?>> {
     }
 
     @Override
-    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
+        RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
         if (routeMatch instanceof MethodBasedRouteMatch) {
             ExecutableMethod<?, ?> method = ((MethodBasedRouteMatch<?, ?>) routeMatch).getExecutableMethod();
             if (endpointMethods.containsKey(method)) {

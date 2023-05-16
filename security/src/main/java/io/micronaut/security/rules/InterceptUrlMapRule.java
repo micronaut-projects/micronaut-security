@@ -37,9 +37,8 @@ import reactor.core.publisher.Mono;
  *
  * @author James Kleeh
  * @since 1.0
- * @param <T> Route Match
  */
-abstract class InterceptUrlMapRule<T> extends AbstractSecurityRule<T> {
+abstract class InterceptUrlMapRule extends AbstractSecurityRule<HttpRequest<?>> {
 
     /**
      * The order of the rule.
@@ -69,17 +68,16 @@ abstract class InterceptUrlMapRule<T> extends AbstractSecurityRule<T> {
      * Reads the rules in order. The first matched rule will be used for determining authorization.
      *
      * @param request The current request
-     * @param routeMatch The matched route
      * @param authentication The user authentication. Null if not authenticated
      * @return The result
      */
     @Override
-    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable T routeMatch, @Nullable Authentication authentication) {
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
         final String path = request.getUri().getPath();
         final HttpMethod httpMethod = request.getMethod();
 
-        Predicate<InterceptUrlMapPattern> exactMatch = p -> pathMatcher.matches(p.getPattern(), path) && p.getHttpMethod().isPresent() && httpMethod.equals(p.getHttpMethod().get());
-        Predicate<InterceptUrlMapPattern> uriPatternMatchOnly = p -> pathMatcher.matches(p.getPattern(), path) && !p.getHttpMethod().isPresent();
+        Predicate<InterceptUrlMapPattern> exactMatch = p -> pathMatcher.matches(p.getPattern(), path) && p.getHttpMethod() != null && httpMethod.equals(p.getHttpMethod());
+        Predicate<InterceptUrlMapPattern> uriPatternMatchOnly = p -> pathMatcher.matches(p.getPattern(), path) && p.getHttpMethod() == null;
 
         Optional<InterceptUrlMapPattern> matchedPattern = getPatternList()
                 .stream()

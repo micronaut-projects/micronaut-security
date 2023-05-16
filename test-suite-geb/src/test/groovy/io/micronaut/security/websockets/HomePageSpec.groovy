@@ -10,13 +10,10 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
-import io.micronaut.http.client.BlockingHttpClient
-import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.annotation.Secured
-import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.oauth2.keycloack.v16.Keycloak
-import io.micronaut.security.testutils.ConfigurationFixture
+import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
@@ -26,11 +23,16 @@ import io.micronaut.security.token.reader.TokenReader
 import io.micronaut.security.utils.BaseUrlUtils
 import io.micronaut.websocket.WebSocketBroadcaster
 import io.micronaut.websocket.WebSocketSession
-import io.micronaut.websocket.annotation.*
+import io.micronaut.websocket.annotation.ClientWebSocket
+import io.micronaut.websocket.annotation.OnClose
+import io.micronaut.websocket.annotation.OnMessage
+import io.micronaut.websocket.annotation.OnOpen
+import io.micronaut.websocket.annotation.ServerWebSocket
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.testcontainers.DockerClientFactory
 import spock.lang.AutoCleanup
 import spock.lang.IgnoreIf
 import spock.lang.Issue
@@ -40,7 +42,6 @@ import spock.util.concurrent.PollingConditions
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.function.Predicate
-import org.testcontainers.DockerClientFactory
 
 class HomePageSpec extends GebSpec {
 
@@ -144,7 +145,7 @@ class HomePageSpec extends GebSpec {
 
     @Requires(property = 'spec.name', value = 'HomePageSpec')
     @Singleton
-    static class ParamTokenReader implements TokenReader {
+    static class ParamTokenReader implements TokenReader<HttpRequest<?>> {
         @Override
         Optional<String> findToken(HttpRequest<?> request) {
             Optional.ofNullable(request.getParameters().get("token"))

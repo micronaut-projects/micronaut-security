@@ -63,7 +63,7 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
     @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestPassedSpec')
     @Singleton
     @Replaces(JwtTokenValidator)
-    static class CustomJwtTokenValidator extends JwtTokenValidator {
+    static class CustomJwtTokenValidator<T> extends JwtTokenValidator<T> {
         CustomJwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
                                 Collection<EncryptionConfiguration> encryptionConfigurations,
                                 Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
@@ -72,20 +72,20 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
         }
 
         @Override
-        Publisher<Authentication> validateToken(String token, HttpRequest<?> request) {
+        Publisher<Authentication> validateToken(String token, T request) {
             return validator.validate(token, request)
                     .flatMap(jwtAuthenticationFactory::createAuthentication)
                     .map(Flux::just)
-                    .orElse(Flux.empty())
+                    .orElse(Flux.empty()) as Publisher<Authentication>
         }
     }
 
     @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestPassedSpec')
     @Singleton
-    static class HttpRequestClaimsValidator implements GenericJwtClaimsValidator {
+    static class HttpRequestClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
         @Override
-        boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
+        boolean validate(@NonNull Claims claims, @Nullable T request) {
             request != null
         }
     }

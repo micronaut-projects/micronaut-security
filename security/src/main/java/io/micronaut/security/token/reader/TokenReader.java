@@ -16,7 +16,6 @@
 package io.micronaut.security.token.reader;
 
 import io.micronaut.core.order.Ordered;
-import io.micronaut.http.HttpRequest;
 import java.util.Optional;
 
 /**
@@ -24,9 +23,10 @@ import java.util.Optional;
  *
  * @author Sergio del Amo
  * @since 1.0
+ * @param <T> request
  */
 @FunctionalInterface
-public interface TokenReader extends Ordered {
+public interface TokenReader<T> extends Ordered {
 
     /**
      * Attempts to retrieve a token in a request.
@@ -34,5 +34,5 @@ public interface TokenReader extends Ordered {
      * @param request The request to look for the token in
      * @return An optional token string
      */
-    Optional<String> findToken(HttpRequest<?> request);
+    Optional<String> findToken(T request);
 }

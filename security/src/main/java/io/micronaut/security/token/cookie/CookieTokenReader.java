@@ -31,10 +31,11 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = HttpRequest.class)
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Requires(property = TokenCookieConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE, defaultValue = StringUtils.TRUE)
 @Singleton
-public class CookieTokenReader implements TokenReader {
+public class CookieTokenReader implements TokenReader<HttpRequest<?>> {
 
     /*
      *

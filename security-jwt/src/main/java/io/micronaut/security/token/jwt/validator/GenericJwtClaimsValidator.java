@@ -20,6 +20,7 @@ package io.micronaut.security.token.jwt.validator;
  *
  * @author Sergio del Amo
  * @since 1.1.0
+ * @param <T> Request
  */
-public interface GenericJwtClaimsValidator extends JwtClaimsValidator {
+public interface GenericJwtClaimsValidator<T> extends JwtClaimsValidator<T> {
 }

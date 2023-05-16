@@ -19,7 +19,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
@@ -46,11 +45,12 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sergio del Amo
  * @since 2.2.0
+ * @param <T> request
  */
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "idtoken")
 @Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".openid-idtoken", notEquals = StringUtils.FALSE)
 @Singleton
-public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
+public class IdTokenClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
     protected static final Logger LOG = LoggerFactory.getLogger(IdTokenClaimsValidator.class);
     protected static final String AUTHORIZED_PARTY = "azp";
 
@@ -65,7 +65,7 @@ public class IdTokenClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     @Override
-    public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable T request) {
         Optional<String> claimIssuerOptional = parseIssuerClaim(claims);
         if (!claimIssuerOptional.isPresent()) {
             return false;

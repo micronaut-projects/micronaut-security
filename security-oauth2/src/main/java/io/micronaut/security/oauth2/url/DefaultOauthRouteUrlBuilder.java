@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.oauth2.url;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.server.util.HttpHostResolver;
@@ -36,6 +37,7 @@ import java.util.Map;
  * @author James Kleeh
  * @since 1.2.0
  */
+@Requires(beans = HttpHostResolver.class)
 @Singleton
 public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
 

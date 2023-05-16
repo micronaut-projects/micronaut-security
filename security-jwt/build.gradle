@@ -5,21 +5,21 @@ plugins {
 dependencies {
     annotationProcessor(mn.micronaut.graal)
     annotationProcessor(mnSerde.micronaut.serde.processor)
-    implementation(mnSerde.micronaut.serde.jackson)
     annotationProcessor(mnValidation.micronaut.validation.processor)
     api(mnValidation.micronaut.validation)
-    api(mn.micronaut.http)
-    api(mn.micronaut.http.server)
     api(projects.micronautSecurity)
     api(libs.managed.nimbus.jose.jwt)
-
     implementation(mnReactor.micronaut.reactor)
     testImplementation(libs.bcpkix.jdk15on)
     testImplementation(libs.bcprov.jdk15on)
 
+    compileOnly(mn.micronaut.http.server)
+    compileOnly(mn.micronaut.json.core)
+
     testImplementation(mn.micronaut.management)
     testImplementation(mn.micronaut.http.client)
     testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnSerde.micronaut.serde.jackson)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)

@@ -16,7 +16,6 @@
 package io.micronaut.security.oauth2.endpoint.token.request.password;
 
 import com.nimbusds.jwt.JWT;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -45,8 +44,9 @@ import java.util.stream.Collectors;
  *
  * @author James Kleeh
  * @since 1.2.0
+ * @param <T> Request
  */
-public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvider {
+public class OpenIdPasswordAuthenticationProvider<T> implements AuthenticationProvider<T> {
 
     private final TokenEndpointClient tokenEndpointClient;
     private final SecureEndpoint secureEndpoint;
@@ -77,7 +77,7 @@ public class OpenIdPasswordAuthenticationProvider implements AuthenticationProvi
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
 
         OpenIdPasswordTokenRequestContext requestContext = new OpenIdPasswordTokenRequestContext(authenticationRequest, secureEndpoint, clientConfiguration);
 

@@ -15,8 +15,6 @@
  */
 package io.micronaut.security.endpoints;
 
-import io.micronaut.security.endpoints.ControllerConfiguration;
-
 /**
  * Encapsulates the configuration of {@link OauthController}.
  *

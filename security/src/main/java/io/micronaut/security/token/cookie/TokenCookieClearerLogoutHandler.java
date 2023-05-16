@@ -35,9 +35,10 @@ import java.net.URISyntaxException;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = { MutableHttpResponse.class, HttpRequest.class })
 @Requires(condition = CookieBasedAuthenticationModeCondition.class)
 @Singleton
-public class TokenCookieClearerLogoutHandler implements LogoutHandler {
+public class TokenCookieClearerLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
     @Nullable
     protected final String logout;

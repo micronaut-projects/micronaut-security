@@ -22,7 +22,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,10 +31,11 @@ import org.slf4j.LoggerFactory;
  * @author Jason Schindler
  * @author Sergio del Amo
  * @since 2.4.0
+ * @param <T> Request
  */
 @Singleton
 @Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".audience")
-public class AudienceJwtClaimsValidator implements GenericJwtClaimsValidator {
+public class AudienceJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AudienceJwtClaimsValidator.class);
 
@@ -81,7 +81,7 @@ public class AudienceJwtClaimsValidator implements GenericJwtClaimsValidator {
 
     @Override
     public boolean validate(@NonNull Claims claims,
-                            @Nullable HttpRequest<?> request) {
+                            @Nullable T request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 }

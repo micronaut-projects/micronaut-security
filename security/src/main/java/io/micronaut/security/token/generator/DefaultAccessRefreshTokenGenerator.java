@@ -1,9 +1,5 @@
 /*
-<<<<<<< HEAD:security/src/main/java/io/micronaut/security/token/generator/DefaultAccessRefreshTokenGenerator.java
- * Copyright 2017-2021 original authors
-=======
  * Copyright 2017-2023 original authors
->>>>>>> master:security-jwt/src/main/java/io/micronaut/security/token/jwt/generator/DefaultAccessRefreshTokenGenerator.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

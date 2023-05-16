@@ -36,10 +36,10 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = {HttpRequest.class, MutableHttpResponse.class})
 @Requires(property = SecurityConfigurationProperties.PREFIX + ".authentication", value = "bearer")
 @Singleton
-public class AccessRefreshTokenLoginHandler implements LoginHandler {
-
+public class AccessRefreshTokenLoginHandler implements LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
     protected final AccessRefreshTokenGenerator accessRefreshTokenGenerator;
 
     /**
@@ -71,4 +71,5 @@ public class AccessRefreshTokenLoginHandler implements LoginHandler {
     public MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         throw new AuthenticationException(authenticationFailed.getMessage().orElse(null));
     }
+
 }

@@ -18,8 +18,6 @@ package io.micronaut.security.token.bearer;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpHeaderValues;
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.security.token.config.TokenConfigurationProperties;
 
 /**
@@ -37,8 +35,8 @@ public class BearerTokenConfigurationProperties implements BearerTokenConfigurat
     public static final boolean DEFAULT_ENABLED = true;
 
     private boolean enabled = DEFAULT_ENABLED;
-    private String headerName = HttpHeaders.AUTHORIZATION;
-    private String headerPrefix = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
+    private String headerName = "Authorization";
+    private String headerPrefix = "Bearer";
 
     @Override
     public boolean isEnabled() {

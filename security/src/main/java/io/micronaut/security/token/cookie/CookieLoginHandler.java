@@ -41,10 +41,10 @@ import java.util.Optional;
  * @author Sergio del Amo
  * @since 3.2.0
  */
-public abstract class CookieLoginHandler implements RedirectingLoginHandler {
+public abstract class CookieLoginHandler implements RedirectingLoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
     protected final AccessTokenCookieConfiguration accessTokenCookieConfiguration;
-    protected final PriorToLoginPersistence priorToLoginPersistence;
+    protected final PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence;
     @Nullable
     protected final String loginFailure;
 

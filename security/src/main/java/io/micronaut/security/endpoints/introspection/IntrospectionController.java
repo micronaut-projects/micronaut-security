@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.endpoints.introspection;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.HttpRequest;
@@ -37,6 +38,7 @@ import jakarta.validation.constraints.NotNull;
  * @author Sergio del Amo
  * @since 2.1.0
  */
+@Requires(classes = Controller.class)
 @Controller("${" + IntrospectionConfigurationProperties.PREFIX + ".path:/token_info}")
 @Secured(SecurityRule.IS_AUTHENTICATED)
 public class IntrospectionController {

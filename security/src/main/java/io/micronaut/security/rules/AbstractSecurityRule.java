@@ -32,7 +32,7 @@ import reactor.core.publisher.Mono;
  *
  * @author James Kleeh
  * @since 1.0
- * @param <T> Route Match
+ * @param <T> Request
  */
 public abstract class AbstractSecurityRule<T> implements SecurityRule<T> {
 

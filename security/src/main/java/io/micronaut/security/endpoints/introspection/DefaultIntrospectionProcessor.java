@@ -17,7 +17,6 @@ package io.micronaut.security.endpoints.introspection;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.validator.RefreshTokenValidator;
@@ -46,7 +45,7 @@ import reactor.core.publisher.Flux;
  * @since 2.1.0
  */
 @Singleton
-public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
+public class DefaultIntrospectionProcessor<T> implements IntrospectionProcessor<T> {
     public static final String CLIENT_ID = "client_id";
     public static final String USERNAME = "username";
     public static final String TOKEN_TYPE = "token_type";
@@ -72,11 +71,11 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
             JWT_ID);
 
     protected static final Logger LOG = LoggerFactory.getLogger(DefaultIntrospectionProcessor.class);
-    protected final Collection<TokenValidator> tokenValidators;
+    protected final Collection<TokenValidator<T>> tokenValidators;
     protected final TokenConfiguration tokenConfiguration;
     protected final RefreshTokenValidator refreshTokenValidator;
 
-    public DefaultIntrospectionProcessor(Collection<TokenValidator> tokenValidators,
+    public DefaultIntrospectionProcessor(Collection<TokenValidator<T>> tokenValidators,
                                          TokenConfiguration tokenConfiguration,
                                          @Nullable RefreshTokenValidator refreshTokenValidator) {
         this.tokenValidators = tokenValidators;
@@ -87,7 +86,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     @NonNull
     @Override
     public Publisher<IntrospectionResponse> introspect(@NonNull IntrospectionRequest introspectionRequest,
-                                                       @NonNull HttpRequest<?> httpRequest) {
+                                                       @NonNull T httpRequest) {
         String token = introspectionRequest.getToken();
         return Flux.fromIterable(tokenValidators)
                 .flatMap(tokenValidator -> tokenValidator.validateToken(token, httpRequest))
@@ -123,7 +122,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
     @NonNull
     @Override
     public Publisher<IntrospectionResponse> introspect(@NonNull Authentication authentication,
-                                                       @NonNull HttpRequest<?> httpRequest) {
+                                                       @NonNull T httpRequest) {
         return Flux.just(createIntrospectionResponse(authentication, httpRequest));
     }
 
@@ -135,7 +134,7 @@ public class DefaultIntrospectionProcessor implements IntrospectionProcessor {
      */
     @NonNull
     public IntrospectionResponse createIntrospectionResponse(@NonNull Authentication authentication,
-                                                             @NonNull HttpRequest<?> httpRequest) {
+                                                             @NonNull T httpRequest) {
         return new IntrospectionResponse(true,
             resolveTokenType(authentication).orElse(null),
             resolveScope(authentication).orElse(null),

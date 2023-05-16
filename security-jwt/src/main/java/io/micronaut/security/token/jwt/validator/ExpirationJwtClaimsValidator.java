@@ -20,7 +20,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +31,11 @@ import java.util.Date;
  *
  * @author Sergio del Amo
  * @since 1.1.0
+ * @param <T> Request
  */
 @Singleton
 @Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".expiration", notEquals = StringUtils.FALSE)
-public class ExpirationJwtClaimsValidator implements GenericJwtClaimsValidator {
+public class ExpirationJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExpirationJwtClaimsValidator.class);
 
@@ -59,7 +59,7 @@ public class ExpirationJwtClaimsValidator implements GenericJwtClaimsValidator {
     }
 
     @Override
-    public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable T request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 }

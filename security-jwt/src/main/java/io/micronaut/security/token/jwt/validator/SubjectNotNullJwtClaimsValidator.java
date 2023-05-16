@@ -20,7 +20,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -31,10 +30,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sergio del Amo
  * @since 1.1.0
+ * @param <T> Request
  */
 @Singleton
 @Requires(property = JwtClaimsValidatorConfigurationProperties.PREFIX + ".subject-not-null", notEquals = StringUtils.FALSE)
-public class SubjectNotNullJwtClaimsValidator implements GenericJwtClaimsValidator {
+public class SubjectNotNullJwtClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SubjectNotNullJwtClaimsValidator.class);
 
@@ -53,7 +53,7 @@ public class SubjectNotNullJwtClaimsValidator implements GenericJwtClaimsValidat
     }
 
     @Override
-    public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable T request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 }

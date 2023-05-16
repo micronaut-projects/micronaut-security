@@ -135,7 +135,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
-    static class CustomLogoutHandler implements LogoutHandler {
+    static class CustomLogoutHandler implements LogoutHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
         @Override
         MutableHttpResponse<?> logout(HttpRequest<?> request) {
@@ -153,7 +153,7 @@ class EventListenerSpec extends EmbeddedServerSpecification {
 
     @Requires(property = "spec.name", value = "EventListenerSpec")
     @Singleton
-    static class CustomLoginHandler implements LoginHandler {
+    static class CustomLoginHandler implements LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
         @Override
         MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {

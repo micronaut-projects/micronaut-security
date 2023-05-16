@@ -12,6 +12,7 @@ dependencies {
     api(mnValidation.micronaut.validation)
     compileOnly(mn.micronaut.inject.java)
     compileOnly(projects.micronautSecurityJwt)
+    compileOnly(mn.micronaut.http.server)
     api(projects.micronautSecurity)
     implementation(mn.micronaut.http.client)
     compileOnly(mn.jackson.databind)

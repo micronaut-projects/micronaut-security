@@ -47,7 +47,7 @@ class SecuredExpressionsTest {
     @Requires(property = "spec.name", value = "docexpressions")
     @Singleton
     internal class AuthenticationProviderUserPassword :
-        MockAuthenticationProvider(
+        MockAuthenticationProvider<HttpRequest<Any>>(
             Arrays.asList(
                 SuccessAuthenticationScenario("sherlock", listOf("ROLE_ADMIN"), Map.of<String, Any>("email", "sherlock@micronaut.example")),
                 SuccessAuthenticationScenario("moriarty", listOf("ROLE_ADMIN"), Map.of<String, Any>("email", "moriarty@micronaut.example"))
