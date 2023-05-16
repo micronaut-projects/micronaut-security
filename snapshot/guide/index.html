@@ -1280,8 +1280,11 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
 
 <div class="paragraph">
 <p>The decision to allow access to a particular endpoint to anonymous or authenticated users is determined by a collection of
-Security Rules which are executed from the <a href="../api/io/micronaut/security/filters/SecurityFilter.html">SecurityFilter</a>. Micronaut ships with several built-in security rules. If they don&#8217;t fulfil your needs,
+Security Rules. Micronaut ships with several built-in security rules. If they don&#8217;t fulfil your needs,
 you can implement your own <a href="../api/io/micronaut/security/rules/SecurityRule.html">SecurityRule</a>.</p>
+</div>
+<div class="paragraph">
+<p>Security rules implement the ordered interface and they are executed in order. All of the existing rules have a static variable <code>ORDER</code> that stores the order of that rule. You can use those variables to place your own rule before or after any of the existing rules.</p>
 </div>
 <div class="paragraph">
 <p>Security rules return a publisher that should emit a single <a href="../api/io/micronaut/security/rules/SecurityRuleResult.html">SecurityRuleResult</a>. See the following table for a description of each result.</p>
@@ -1300,11 +1303,11 @@ you can implement your own <a href="../api/io/micronaut/security/rules/SecurityR
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#ALLOWED">ALLOWED</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be granted and <strong>no further rules will be considered</strong>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be granted and no further rules will be considered.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#REJECTED">REJECTED</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be rejected and <strong>no further rules will be considered</strong>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to the resource should be rejected and no further rules will be considered.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../api/io/micronaut/security/rules/SecurityRuleResult.html#UNKNOWN">UNKNOWN</a></p></td>
@@ -1324,72 +1327,6 @@ If all security rules return <code>UNKNOWN</code>, the request will be rejected!
 </tr>
 </table>
 </div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<a href="../api/io/micronaut/security/filters/SecurityFilter.html">SecurityFilter</a> evaluates security rules in order. <strong>The remaining rules are not evaluated once a rule returns <code>ALLOWED</code> or <code>REJECTED</code></strong>.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Security rules implement the ordered interface and so all of the existing rules have a static variable <code>ORDER</code> that stores the order of that rule. The rules they are executed in order from lower to higher values. You can use those variables to place your custom rule before or after any of the existing rules.</p>
-</div>
-<div class="paragraph">
-<p>In the following table you can find the order and a short description of the behavior of built-in security rules. You can find more details about theese rules in their own guide sections.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Rule</th>
-<th class="tableblock halign-left valign-top">Order</th>
-<th class="tableblock halign-left valign-top">ACCEPT condition</th>
-<th class="tableblock halign-left valign-top">REJECT condition</th>
-<th class="tableblock halign-left valign-top">UNKNOWN confition</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ipPattern">IpPatternsRule</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-300</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Never</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None of the IP patterns matched the hostaddress</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The address matches at least one of the patterns or no address could be resolved</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secured">SecuredAnnotationRule</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-200</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">At least one required role is granted to the authenticated user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None of the required roles is granted to the authenticated user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No secured annotation is specified on the requested method</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#interceptUrlMap">ConfigurationInterceptUrlMapRule</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-100</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">At least one required role is granted to the authenticated user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None of the required roles is granted to the authenticated user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No path pattern is matched</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#builtInEndpointsAccess">SensitiveEndpointRule</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User is authenticated</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User is not authenticated</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path is not a sensitive one</p></td>
-</tr>
-</tbody>
-</table>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1617,18 +1554,6 @@ public class ExampleController {
 </td>
 <td class="content">
 The use of JSR 250 annotations requires <code>io.micronaut.security:micronaut-security-annotations</code> to be in the annotation processor classpath (<code>annotationProcessor</code>, <code>kapt</code>, <code>compileOnly</code>) respectively for Java, Kotlin, Groovy.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-When the <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation has a set of roles, the <a href="#secured">SecuredAnnotationRule</a> grants access to a user if they have <strong>any</strong> of the roles.
 </td>
 </tr>
 </table>
@@ -1927,18 +1852,6 @@ micronaut.security.intercept-url-map[1].access[0]=isAuthenticated()</code></pre>
 <p>accessing <code>/v1/myResource/**</code> with a request that isn&#8217;t GET requires authentication</p>
 </li>
 </ul>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-When the <a href="../api/io/micronaut/security/annotation/Secured.html">@Secured</a> annotation has a set of roles, the <a href="#secured">SecuredAnnotationRule</a> grants access to a user if they have <strong>any</strong> of the roles.
-</td>
-</tr>
-</table>
 </div>
 
 <h2 id="builtInEndpointsAccess"><a class="anchor" href="#builtInEndpointsAccess"></a>9.4 Built-In Endpoints Security</h2>
