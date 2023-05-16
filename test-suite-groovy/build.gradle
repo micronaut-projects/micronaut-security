@@ -21,7 +21,8 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(mnReactor.micronaut.reactor)
-    testAnnotationProcessor(mnSerde.micronaut.serde.processor)
+    testCompileOnly(projects.micronautSecurityAnnotations)
+    testCompileOnly(mnSerde.micronaut.serde.processor)
     testImplementation(mnSerde.micronaut.serde.jackson)}
 
 tasks.named('test') {

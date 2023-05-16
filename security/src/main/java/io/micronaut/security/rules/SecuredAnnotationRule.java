@@ -15,8 +15,10 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.inject.annotation.EvaluatedAnnotationValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.RolesFinder;
@@ -26,6 +28,7 @@ import jakarta.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
@@ -65,6 +68,13 @@ public class SecuredAnnotationRule extends AbstractSecurityRule {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             MethodBasedRouteMatch<?, ?> methodRoute = ((MethodBasedRouteMatch) routeMatch);
             if (methodRoute.hasAnnotation(Secured.class)) {
+                AnnotationValue<Secured> securedAnnotation = methodRoute.getAnnotation(Secured.class);
+                if (securedAnnotation instanceof EvaluatedAnnotationValue<Secured>) {
+                    boolean[] arr = securedAnnotation.booleanValues();
+                    if (arr.length > 0) {
+                        return Mono.just(arr[0] ? SecurityRuleResult.ALLOWED : SecurityRuleResult.REJECTED);
+                    }
+                }
                 Optional<String[]> optionalValue = methodRoute.getValue(Secured.class, String[].class);
                 if (optionalValue.isPresent()) {
                     List<String> values = Arrays.asList(optionalValue.get());

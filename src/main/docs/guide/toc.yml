@@ -18,7 +18,10 @@ authenticationProviders: Authentication Providers
 securityRule:
   title: Security Rules
   ipPattern: IP Pattern Rule
-  secured: Secured Annotation
+  secured:
+    title: Secured Annotation
+    jakartaAnnotations: Jakarta Annotations
+    securedExpression: Secured with expressions
   interceptUrlMap: Intercept URL Map
   builtInEndpointsAccess: Built-In Endpoints Security
 authenticationStrategies:
