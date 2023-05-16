@@ -20,7 +20,7 @@ import io.micronaut.core.naming.Named;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.oauth2.configuration.OpenIdClientConfiguration;
 import io.micronaut.security.oauth2.endpoint.token.response.OauthAuthenticationMapper;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class DefaultProviderResolver implements ProviderResolver {
      * @return {@literal Optional#empty()} if iss claim not found, or if the iss claim does not match the issuer of any open id client. If it matches, the open id client is returned wrapped in an optional
      */
     protected Optional<String> openIdClientNameWhichMatchesIssClaim(Authentication authentication) {
-        Object issuer = authentication.getAttributes().get(JwtClaims.ISSUER);
+        Object issuer = authentication.getAttributes().get(Claims.ISSUER);
         return issuer != null ? openIdClientNameWhichMatchesIssuer(issuer.toString()) : Optional.empty();
     }
 

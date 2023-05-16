@@ -31,9 +31,9 @@ import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse
 import io.micronaut.security.oauth2.grants.GrantType
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
-import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration
+import io.micronaut.security.token.generator.AccessTokenConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
+import io.micronaut.security.token.claims.JtiGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
 import jakarta.inject.Singleton
@@ -60,7 +60,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
     @AutoCleanup
     EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                                                     : 'ClientCredentialsConcurrentSpecAuthServer',
-            'micronaut.security.token.jwt.generator.access-token.expiration': 5,
+            'micronaut.security.token.generator.access-token.expiration'    : 5,
             'authserver.config.jwk'                                         : jwkJsonString(),
             'micronaut.server.port'                                         : authServerPort,
             'sample.client-id'                                              : '3ljrgej68ggm7i720o9u12t7lm',
@@ -152,7 +152,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
         TokenController(JwtTokenGenerator jwtTokenGenerator,
                         SampleClientConfiguration sampleClientConfiguration,
                         AccessTokenConfiguration accessTokenConfiguration,
-                        @Property(name = 'micronaut.security.token.jwt.generator.access-token.expiration') Integer tokenExpiration) {
+                        @Property(name = 'micronaut.security.token.generator.access-token.expiration') Integer tokenExpiration) {
             this.jwtTokenGenerator = jwtTokenGenerator
             this.sampleClientConfiguration = sampleClientConfiguration
             this.accessTokenConfiguration = accessTokenConfiguration
@@ -285,7 +285,7 @@ class ClientCredentialsConcurrentSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'ClientCredentialsConcurrentSpecAuthServer')
     @Singleton
-    static class CustomJwtIdGenerator implements JwtIdGenerator {
+    static class CustomJwtIdGenerator implements JtiGenerator {
 
         @Override
         String generateJtiClaim() {

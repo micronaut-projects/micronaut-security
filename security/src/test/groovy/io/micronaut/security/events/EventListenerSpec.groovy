@@ -37,6 +37,11 @@ class EventListenerSpec extends EmbeddedServerSpecification {
         ]
     }
 
+    @Override
+    Map<String, Object> getLoginModeCookie() {
+        [:]
+    }
+
     def "failed login publishes LoginFailedEvent"() {
         when: "sending request to login with bogus/password"
         HttpRequest request = HttpRequest.POST("/login", new UsernamePasswordCredentials("bogus", "password"))

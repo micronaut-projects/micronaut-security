@@ -18,7 +18,7 @@ package io.micronaut.security.token.jwt.validator;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.Claims;
 
 /**
  * Provides a contract to create custom JWT claims validations.
@@ -33,5 +33,5 @@ public interface JwtClaimsValidator {
      * @param request HTTP request
      * @return whether the JWT claims pass validation.
      */
-    boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request);
+    boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request);
 }

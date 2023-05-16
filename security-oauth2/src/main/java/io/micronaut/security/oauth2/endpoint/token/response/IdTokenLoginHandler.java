@@ -29,15 +29,19 @@ import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.errors.OauthErrorResponseException;
 import io.micronaut.security.errors.ObtainingAuthorizationErrorCode;
 import io.micronaut.security.errors.PriorToLoginPersistence;
-import io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration;
-import io.micronaut.security.token.jwt.cookie.CookieLoginHandler;
+import io.micronaut.security.token.cookie.AccessTokenCookieConfiguration;
+import io.micronaut.security.token.cookie.CookieLoginHandler;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Sets {@link CookieLoginHandler}`s cookie value to the idtoken received from an authentication provider.

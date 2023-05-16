@@ -23,7 +23,7 @@ import io.micronaut.security.authentication.AuthenticationResponse;
 import io.micronaut.security.config.AuthenticationModeConfiguration;
 import io.micronaut.security.oauth2.configuration.OpenIdAdditionalClaimsConfiguration;
 import io.micronaut.security.oauth2.endpoint.authorization.state.State;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
@@ -81,7 +81,7 @@ public class DefaultOpenIdAuthenticationMapper implements OpenIdAuthenticationMa
      */
     protected Map<String, Object> buildAttributes(String providerName, OpenIdTokenResponse tokenResponse, OpenIdClaims openIdClaims) {
         Map<String, Object> claims = new HashMap<>(openIdClaims.getClaims());
-        JwtClaims.ALL_CLAIMS.forEach(claims::remove);
+        Claims.ALL_CLAIMS.forEach(claims::remove);
         claims.put(OauthAuthenticationMapper.PROVIDER_KEY, providerName);
         boolean idtokenAuthentication = authenticationModeConfiguration.getAuthentication() != null && authenticationModeConfiguration.getAuthentication() == AuthenticationMode.IDTOKEN;
         if (idtokenAuthentication || openIdAdditionalClaimsConfiguration.isJwt()) {

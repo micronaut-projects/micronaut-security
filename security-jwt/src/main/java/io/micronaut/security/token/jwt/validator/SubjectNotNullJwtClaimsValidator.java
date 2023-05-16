@@ -21,7 +21,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
+import io.micronaut.security.token.Claims;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class SubjectNotNullJwtClaimsValidator implements GenericJwtClaimsValidat
     }
 
     @Override
-    public boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+    public boolean validate(@NonNull Claims claims, @Nullable HttpRequest<?> request) {
         return validate(JWTClaimsSetUtils.jwtClaimsSetFromClaims(claims));
     }
 }

@@ -7,6 +7,9 @@ import io.micronaut.security.authentication.AuthenticationMode
 import io.micronaut.security.config.RedirectConfiguration
 import io.micronaut.security.config.RedirectService
 import io.micronaut.security.handlers.LogoutHandler
+import io.micronaut.security.token.cookie.AccessTokenCookieConfiguration
+import io.micronaut.security.token.cookie.TokenCookieClearerLogoutHandler
+import io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration
 import spock.lang.Specification
 
 class JwtCookieClearerLogoutHandlerSpec extends Specification {
@@ -16,7 +19,7 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
         ApplicationContext ctx = ApplicationContext.run([:])
 
         expect:
-        !ctx.containsBean(JwtCookieClearerLogoutHandler)
+        !ctx.containsBean(TokenCookieClearerLogoutHandler)
         !ctx.containsBean(LogoutHandler)
 
         cleanup:
@@ -28,7 +31,7 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
         ApplicationContext ctx = ApplicationContext.run(['micronaut.security.authentication':'cookie'])
 
         expect:
-        ctx.containsBean(JwtCookieClearerLogoutHandler)
+        ctx.containsBean(TokenCookieClearerLogoutHandler)
         ctx.containsBean(LogoutHandler)
 
         cleanup:
@@ -40,7 +43,7 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
         ApplicationContext ctx = ApplicationContext.run(['micronaut.security.authentication': mode])
 
         expect:
-        ctx.containsBean(JwtCookieClearerLogoutHandler) == expected
+        ctx.containsBean(TokenCookieClearerLogoutHandler) == expected
         ctx.containsBean(LogoutHandler) == expected
 
         cleanup:
@@ -74,7 +77,7 @@ class JwtCookieClearerLogoutHandlerSpec extends Specification {
         }
         HttpRequest<?> request = Mock()
 
-        LogoutHandler handler = new JwtCookieClearerLogoutHandler(accessTokenCookieConfiguration, refreshTokenCookieConfiguration, redirectConfiguration, redirectService)
+        LogoutHandler handler = new TokenCookieClearerLogoutHandler(accessTokenCookieConfiguration, refreshTokenCookieConfiguration, redirectConfiguration, redirectService);
         MutableHttpResponse<?> response = handler.logout(request)
         List<String> cookieHeaders = response.getHeaders().getAll("Set-Cookie")
 

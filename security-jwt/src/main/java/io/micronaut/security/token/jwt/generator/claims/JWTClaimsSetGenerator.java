@@ -20,6 +20,10 @@ import io.micronaut.context.env.Environment;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.token.Claims;
+import io.micronaut.security.token.claims.ClaimsAudienceProvider;
+import io.micronaut.security.token.claims.ClaimsGenerator;
+import io.micronaut.security.token.claims.JtiGenerator;
 import io.micronaut.security.token.config.TokenConfiguration;
 import jakarta.inject.Singleton;
 import java.time.Instant;
@@ -43,7 +47,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
     private static final String ROLES_KEY = "rolesKey";
 
     private final TokenConfiguration tokenConfiguration;
-    private final JwtIdGenerator jwtIdGenerator;
+    private final JtiGenerator jwtIdGenerator;
     private final ClaimsAudienceProvider claimsAudienceProvider;
     private final String appName;
 
@@ -54,7 +58,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
      * @param applicationConfiguration The application configuration
      */
     public JWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                 @Nullable JwtIdGenerator jwtIdGenerator,
+                                 @Nullable JtiGenerator jwtIdGenerator,
                                  @Nullable ClaimsAudienceProvider claimsAudienceProvider,
                                  @Nullable ApplicationConfiguration applicationConfiguration) {
         this.tokenConfiguration = tokenConfiguration;
@@ -189,7 +193,7 @@ public class JWTClaimsSetGenerator implements ClaimsGenerator {
     @Override
     public Map<String, Object> generateClaimsSet(Map<String, ?> oldClaims, Integer expiration) {
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
-        List<String> excludedClaims = Arrays.asList(JwtClaims.EXPIRATION_TIME, JwtClaims.ISSUED_AT, JwtClaims.NOT_BEFORE);
+        List<String> excludedClaims = Arrays.asList(Claims.EXPIRATION_TIME, Claims.ISSUED_AT, Claims.NOT_BEFORE);
         for (String k : oldClaims.keySet()
                 .stream()
                 .filter(p -> !excludedClaims.contains(p))
