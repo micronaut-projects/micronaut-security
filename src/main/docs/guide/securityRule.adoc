@@ -1,8 +1,6 @@
 The decision to allow access to a particular endpoint to anonymous or authenticated users is determined by a collection of
-Security Rules. Micronaut ships with several built-in security rules. If they don't fulfil your needs,
+Security Rules which are executed from the api:security.filters.SecurityFilter[]. Micronaut ships with several built-in security rules. If they don't fulfil your needs,
 you can implement your own api:security.rules.SecurityRule[].
-
-Security rules implement the ordered interface and they are executed in order. All of the existing rules have a static variable `ORDER` that stores the order of that rule. You can use those variables to place your own rule before or after any of the existing rules.
 
 Security rules return a publisher that should emit a single api:security.rules.SecurityRuleResult[]. See the following table for a description of each result.
 
@@ -10,16 +8,34 @@ Security rules return a publisher that should emit a single api:security.rules.S
 |Result |Description
 
 |api:security.rules.SecurityRuleResult#ALLOWED[ALLOWED]
-|Access to the resource should be granted and no further rules will be considered.
+|Access to the resource should be granted and *no further rules will be considered*.
 
 |api:security.rules.SecurityRuleResult#REJECTED[REJECTED]
-|Access to the resource should be rejected and no further rules will be considered.
+|Access to the resource should be rejected and *no further rules will be considered*.
 
 |api:security.rules.SecurityRuleResult#UNKNOWN[UNKNOWN]
 |The rule doesn't apply to the request resource, or it cannot be determined either way. This result will cause other security rules to be considered.
 |===
 
 IMPORTANT: If all security rules return `UNKNOWN`, the request will be rejected!
+
+IMPORTANT: api:security.filters.SecurityFilter[] evaluates security rules in order. **The remaining rules are not evaluated once a rule returns `ALLOWED` or `REJECTED`**.
+
+Security rules implement the ordered interface and so all of the existing rules have a static variable `ORDER` that stores the order of that rule. The rules they are executed in order from lower to higher values. You can use those variables to place your custom rule before or after any of the existing rules.
+
+In the following table you can find the order and a short description of the behavior of built-in security rules. You can find more details about theese rules in their own guide sections.
+
+|===
+|Rule |Order |ACCEPT condition |REJECT condition |UNKNOWN confition
+
+|<<ipPattern, IpPatternsRule>> |-300 |Never |None of the IP patterns matched the hostaddress |The address matches at least one of the patterns or no address could be resolved
+
+|<<secured, SecuredAnnotationRule>> |-200 |At least one required role is granted to the authenticated user |None of the required roles is granted to the authenticated user |No secured annotation is specified on the requested method
+
+|<<interceptUrlMap, ConfigurationInterceptUrlMapRule>> |-100 |At least one required role is granted to the authenticated user |None of the required roles is granted to the authenticated user |No path pattern is matched
+
+|<<builtInEndpointsAccess, SensitiveEndpointRule>> |0 |User is authenticated |User is not authenticated |Path is not a sensitive one
+|===
 
 WARNING: Do not execute any blocking operations in the rule implementation without offloading those operations to another thread pool.
 

@@ -26,3 +26,4 @@ include::{testssecurityjava}/security/securityRule/permitall/ExampleController.j
 
 NOTE: The use of JSR 250 annotations requires `io.micronaut.security:micronaut-security-annotations` to be in the annotation processor classpath (`annotationProcessor`, `kapt`, `compileOnly`) respectively for Java, Kotlin, Groovy.
 
+IMPORTANT: When the ann:security.annotation.Secured[] annotation has a set of roles, the <<secured, SecuredAnnotationRule>> grants access to a user if they have **any** of the roles.
