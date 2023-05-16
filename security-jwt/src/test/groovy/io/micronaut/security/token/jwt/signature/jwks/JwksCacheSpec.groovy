@@ -36,6 +36,7 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.token.generator.TokenGenerator
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
 import io.micronaut.security.token.jwt.endpoints.KeysController
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
@@ -369,7 +370,7 @@ class JwksCacheSpec extends Specification {
     @Requires(property = 'spec.name', value = 'CognitoJwksCacheSpec')
     @Refreshable
     @Singleton
-    @Replaces(JwtTokenGenerator.class)
+    @Replaces(TokenGenerator.class)
     static class JwtTokenGeneratorReplacement extends JwtTokenGenerator {
         JwtTokenGeneratorReplacement(CognitoSignatureConfiguration cognitoSignatureConfiguration,
                                      ClaimsGenerator claimsGenerator) {
@@ -445,7 +446,7 @@ class JwksCacheSpec extends Specification {
     @Requires(property = 'spec.name', value = 'GoogleJwksCacheSpec')
     @Refreshable
     @Singleton
-    @Replaces(JwtTokenGenerator.class)
+    @Replaces(TokenGenerator.class)
     static class GoogleJwtTokenGeneratorReplacement extends JwtTokenGenerator {
         GoogleJwtTokenGeneratorReplacement(GoogleSignatureConfiguration googleSignatureConfiguration,
                                            ClaimsGenerator claimsGenerator) {

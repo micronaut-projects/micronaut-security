@@ -31,7 +31,7 @@ dependencies {
     testImplementation(mn.micronaut.inject.groovy)
     testImplementation(libs.selenium.support)
     testRuntimeOnly(libs.selenium.firefox.driver)
-    testRuntimeOnly(mn.logback.classic)
+    testRuntimeOnly(mnLogging.logback.classic)
     testImplementation(mn.micronaut.websocket)
     testImplementation(mn.micronaut.jackson.databind)
 

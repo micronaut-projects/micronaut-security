@@ -28,5 +28,5 @@ dependencies {
     testImplementation(projects.testSuiteUtils)
     testImplementation(projects.testSuiteUtilsSecurity)
     testImplementation(projects.testSuiteKeycloak16)
-    testImplementation(mn.logback.classic)
+    testImplementation(mnLogging.logback.classic)
 }

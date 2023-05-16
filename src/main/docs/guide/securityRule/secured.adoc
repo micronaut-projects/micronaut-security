@@ -9,3 +9,4 @@ include::{testssecurity}/security/securityRule/secured/ExampleController.java[ta
 <1> Authenticated users are able to access `authenticated` Controller's action.
 <2> Users granted role `ROLE_ADMIN` or `ROLE_X` roles can access `withroles` Controller's action.
 <3> Anonymous users (authenticated and not authenticated users) can access `anonymous` Controller's action.
+

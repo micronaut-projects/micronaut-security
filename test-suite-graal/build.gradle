@@ -19,16 +19,6 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
-tasks.named("check") { task ->
-    def graal = ["jvmci.Compiler", "java.vendor.version", "java.vendor"].any {
-        println "$it ${System.getProperty(it)}"
-        System.getProperty(it)?.toLowerCase(Locale.ENGLISH)?.contains("graal")
-    }
-    if (graal) {
-        task.dependsOn("nativeTest")
-    }
-}
-
 def openGraalModules = [
         "org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk",
         "org.graalvm.nativeimage.builder/com.oracle.svm.core.configure",
