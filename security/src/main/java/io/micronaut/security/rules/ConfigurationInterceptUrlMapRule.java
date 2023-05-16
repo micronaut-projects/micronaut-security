@@ -31,6 +31,7 @@ import io.micronaut.http.HttpRequest;
  * @since 1.0
  */
 @Requires(classes = HttpRequest.class)
+@Requires(beans = { RolesFinder.class, SecurityConfiguration.class, InterceptUrlPatternModifier.class })
 @Singleton
 public class ConfigurationInterceptUrlMapRule extends InterceptUrlMapRule {
 

@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.reader;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import jakarta.inject.Singleton;
 import java.util.Collection;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
  * @author Sergio del Amo
  * @since 1.1.0
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
 public class DefaultTokenResolver implements TokenResolver<HttpRequest<?>> {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTokenResolver.class);

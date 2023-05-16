@@ -16,6 +16,7 @@
 package io.micronaut.security.token.generator;
 
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -43,6 +44,12 @@ import static io.micronaut.security.utils.LoggingUtils.debug;
  * @author Sergio del Amo
  * @since 3.2.0
  */
+@Requires(beans = {
+    AccessTokenConfiguration.class,
+    TokenRenderer.class,
+    TokenGenerator.class,
+    ClaimsGenerator.class
+})
 @Singleton
 public class DefaultAccessRefreshTokenGenerator implements AccessRefreshTokenGenerator {
 

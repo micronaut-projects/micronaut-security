@@ -39,7 +39,7 @@ import java.util.Map;
  */
 @Requires(beans = HttpHostResolver.class)
 @Singleton
-public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder {
+public class DefaultOauthRouteUrlBuilder implements OauthRouteUrlBuilder<HttpRequest<?>> {
 
     private static final String HTTP = "http";
     private final HttpHostResolver hostResolver;
