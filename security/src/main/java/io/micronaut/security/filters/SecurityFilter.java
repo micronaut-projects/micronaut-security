@@ -34,6 +34,7 @@ import io.micronaut.security.authentication.AuthorizationException;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.security.rules.SecurityRuleResult;
+import io.micronaut.web.router.RouteMatch;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,12 +176,13 @@ public class SecurityFilter implements HttpServerFilter {
                                 method,
                                 path);
                     }
+                    RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
                     // no rule found for the given request
-                    if (securityConfiguration.isRejectNotFound()) {
+                    if (routeMatch == null && !securityConfiguration.isRejectNotFound()) {
+                        return chain.proceed(request);
+                    } else {
                         request.setAttribute(REJECTION, forbidden ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED);
                         return Mono.error(new AuthorizationException(authentication));
-                    } else {
-                        return chain.proceed(request);
                     }
                 }));
     }
