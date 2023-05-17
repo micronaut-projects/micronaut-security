@@ -67,13 +67,20 @@ Some classes have been renamed and moved from `io.micronaut.security:micronaut-s
 | io.micronaut.security.token.jwt.cookie.CookieLoginHandler
 | io.micronaut.security.token.cookie.CookieLoginHandler
 
-|
+| io.micronaut.security.token.jwt.bearer.AccessRefreshTokenLoginHandler
 | io.micronaut.security.token.bearer.AccessRefreshTokenLoginHandler
 
-|
-| io.micronaut.security.token.bearer.BearerTokenConfigurationProperties
-|
-| io.micronaut.security.token.bearer.BearerTokenReader
+| `io.micronaut.security.token.jwt.bearer.BearerTokenConfiguration`
+| `io.micronaut.security.token.bearer.BearerTokenConfiguration`
+
+| `io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties`
+| `io.micronaut.security.token.bearer.BearerTokenConfigurationProperties`
+
+| `io.micronaut.security.token.jwt.bearer.BearerTokenReader`
+| `io.micronaut.security.token.bearer.BearerTokenReader`
+
+| `io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader`
+| `io.micronaut.security.token.cookie.CookieTokenReader`
 
 | JwtCookieClearerLogoutHandler
 | io.micronaut.security.token.cookie.TokenCookieClearerLogoutHandler

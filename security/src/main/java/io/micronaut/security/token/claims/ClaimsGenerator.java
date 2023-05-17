@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  *
  * @author Sergio del Amo
- * @since 3.2.0
+ * @since 1.0
  */
 public interface ClaimsGenerator {
 
