@@ -100,8 +100,8 @@ Some classes have been renamed and moved from `io.micronaut.security:micronaut-s
 | io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider
 | io.micronaut.security.token.claims.ClaimsAudienceProvider
 
-|
-| io.micronaut.security.token.claims.ClaimsGenerator
+| io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties
+| io.micronaut.security.token.cookie.AbstractAccessTokenCookieConfigurationProperties
 
 | io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
 | io.micronaut.security.token.claims.JtiGenerator
