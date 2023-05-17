@@ -15,7 +15,6 @@
  */
 package io.micronaut.security;
 
-import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
@@ -29,7 +28,7 @@ import reactor.core.publisher.FluxSink;
 /**
  * Utility class to mock authentication scenarios.
  */
-public class MockAuthenticationProvider implements AuthenticationProvider  {
+public class MockAuthenticationProvider<T> implements AuthenticationProvider<T>  {
 
     private final List<SuccessAuthenticationScenario> successAuthenticationScenarioList;
     private final List<FailedAuthenticationScenario> failedAuthenticationScenarios;
@@ -53,7 +52,7 @@ public class MockAuthenticationProvider implements AuthenticationProvider  {
     }
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(T httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flux.create(emitter -> {
             Optional<SuccessAuthenticationScenario> successAuth = successAuthenticationScenarioList.stream()
                     .filter(scenario -> {

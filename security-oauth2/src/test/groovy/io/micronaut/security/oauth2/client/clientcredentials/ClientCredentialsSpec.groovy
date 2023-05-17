@@ -38,9 +38,9 @@ import io.micronaut.security.oauth2.grants.ClientCredentialsGrant
 import io.micronaut.security.oauth2.grants.GrantType
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.token.jwt.endpoints.JwkProvider
-import io.micronaut.security.token.jwt.generator.AccessTokenConfiguration
+import io.micronaut.security.token.generator.AccessTokenConfiguration
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
+import io.micronaut.security.token.claims.JtiGenerator
 import io.micronaut.security.token.jwt.signature.rsa.RSASignatureGeneratorConfiguration
 import jakarta.inject.Named
 import jakarta.inject.Singleton
@@ -89,7 +89,7 @@ class ClientCredentialsSpec extends Specification {
     @AutoCleanup
     EmbeddedServer authServer = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                                                     : 'ClientCredentialsSpecAuthServer',
-            'micronaut.security.token.jwt.generator.access-token.expiration': 5,
+            'micronaut.security.token.generator.access-token.expiration'    : 5,
             'authserver.config.jwk'                                         : jwkJsonString(),
             'micronaut.server.port'                                         : authServerPort,
             'sample.client-id'                                              : '3ljrgej68ggm7i720o9u12t7lm',
@@ -100,7 +100,7 @@ class ClientCredentialsSpec extends Specification {
     @AutoCleanup
     EmbeddedServer authServerDown = ApplicationContext.run(EmbeddedServer, [
             'spec.name'                                                     : 'ClientCredentialsSpecAuthServerDown',
-            'micronaut.security.token.jwt.generator.access-token.expiration': 5,
+            'micronaut.security.token.generator.access-token.expiration'    : 5,
             'authserver.config.jwk'                                         : secondaryJwkJsonString,
             'micronaut.server.port'                                         : authServerDownPort,
     ])
@@ -518,7 +518,7 @@ class ClientCredentialsSpec extends Specification {
         TokenController(JwtTokenGenerator jwtTokenGenerator,
                         SampleClientConfiguration sampleClientConfiguration,
                         AccessTokenConfiguration accessTokenConfiguration,
-                        @Property(name = 'micronaut.security.token.jwt.generator.access-token.expiration') Integer tokenExpiration) {
+                        @Property(name = 'micronaut.security.token.generator.access-token.expiration') Integer tokenExpiration) {
             this.jwtTokenGenerator = jwtTokenGenerator
             this.sampleClientConfiguration = sampleClientConfiguration
             this.accessTokenConfiguration = accessTokenConfiguration
@@ -649,7 +649,7 @@ class ClientCredentialsSpec extends Specification {
 
     @Requires(property = 'spec.name', value = 'ClientCredentialsSpecAuthServer')
     @Singleton
-    static class CustomJwtIdGenerator implements JwtIdGenerator {
+    static class CustomJwtIdGenerator implements JtiGenerator {
 
         @Override
         String generateJtiClaim() {

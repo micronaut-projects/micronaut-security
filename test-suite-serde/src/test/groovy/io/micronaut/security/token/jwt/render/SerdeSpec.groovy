@@ -1,5 +1,7 @@
 package io.micronaut.security.token.jwt.render
 
+import io.micronaut.security.token.render.AccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.serde.ObjectMapper
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject

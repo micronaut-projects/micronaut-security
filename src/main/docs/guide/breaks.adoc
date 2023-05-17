@@ -5,6 +5,137 @@ This section will document breaking changes that may happen during milestone or 
 
 - `micronaut.security.intercept-url-map-prepend-pattern-with-context-path` defaults to `true`. Thus intercept url patterns are be prepended with the server context path if it is set.
 
+=== Configuration Changes
+
+Some configuration keys have changed.
+
+|===
+| Old | New
+
+| `micronaut.security.token.jwt.generator.access-token.expiration`
+| `micronaut.security.token.generator.access-token.expiration`
+
+| `micronaut.security.token.jwt.cookie.enabled`
+| `micronaut.security.token.cookie.enabled`
+
+| `micronaut.security.token.jwt.cookie.cookie-max-age`
+| `micronaut.security.token.cookie.cookie-max-age`
+
+| `micronaut.security.token.jwt.cookie.cookie-path`
+| `micronaut.security.token.cookie.cookie-path`
+
+| `micronaut.security.token.jwt.cookie.cookie-domain`
+| `micronaut.security.token.cookie.cookie-domain`
+
+| `micronaut.security.token.jwt.cookie.cookie-same-site`
+| `micronaut.security.token.cookie.cookie-same-site`
+
+| `micronaut.security.token.jwt.bearer.enabled`
+| `micronaut.security.token.bearer.enabled`
+
+|===
+
+
+=== Classes relocated
+
+Some classes have been renamed and moved from `io.micronaut.security:micronaut-security-jwt` to `io.micronaut.security:micronaut.security`.
+
+|===
+| Old Pkg | New Pkg
+
+| `io.micronaut.security.token.jwt.endpoints.TokenRefreshRequest`
+| `io.micronaut.security.endpoints.TokenRefreshRequest`
+
+| `io.micronaut.security.token.jwt.render.AccessRefreshToken`
+| `io.micronaut.security.token.render.AccessRefreshToken`
+
+| `io.micronaut.security.token.jwt.render.BearerAccessRefreshToken`
+| `io.micronaut.security.token.render.BearerAccessRefreshToken`
+
+| `io.micronaut.security.token.jwt.endpoints.OauthController`
+| `io.micronaut.security.endpoints.OauthController`
+
+| `io.micronaut.security.token.jwt.endpoints.OauthControllerConfiguration`
+| `io.micronaut.security.endpoints.OauthControllerConfiguration`
+
+| `io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties`
+| `io.micronaut.security.endpoints.OauthControllerConfigurationProperties`
+
+| `io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator`
+| `io.micronaut.security.token.generator.DefaultAccessRefreshTokenGenerator`
+
+| `io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration`
+| `io.micronaut.security.token.cookie.AccessTokenCookieConfiguration`
+
+| `io.micronaut.security.token.jwt.cookie.CookieLoginHandler`
+| `io.micronaut.security.token.cookie.CookieLoginHandler`
+
+| `io.micronaut.security.token.jwt.bearer.AccessRefreshTokenLoginHandler`
+| `io.micronaut.security.token.bearer.AccessRefreshTokenLoginHandler`
+
+| `io.micronaut.security.token.jwt.bearer.BearerTokenConfiguration`
+| `io.micronaut.security.token.bearer.BearerTokenConfiguration`
+
+| `io.micronaut.security.token.jwt.bearer.BearerTokenConfigurationProperties`
+| `io.micronaut.security.token.bearer.BearerTokenConfigurationProperties`
+
+| `io.micronaut.security.token.jwt.bearer.BearerTokenReader`
+| `io.micronaut.security.token.bearer.BearerTokenReader`
+
+| `io.micronaut.security.token.jwt.render.TokenRenderer`
+| `io.micronaut.security.token.render.TokenRenderer`
+
+| `io.micronaut.security.token.jwt.render.BearerTokenRenderer`
+| `io.micronaut.security.token.render.BearerTokenRenderer`
+
+| `io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader`
+| `io.micronaut.security.token.cookie.CookieTokenReader`
+
+| `io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfiguration`
+| `io.micronaut.security.token.cookie.RefreshTokenCookieConfiguration`
+
+| `io.micronaut.security.token.jwt.cookie.RefreshTokenCookieConfigurationProperties`
+| `io.micronaut.security.token.cookie.RefreshTokenCookieConfigurationProperties`
+
+| `io.micronaut.security.token.jwt.cookie.JwtCookieClearerLogoutHandler`
+| `io.micronaut.security.token.cookie.TokenCookieClearerLogoutHandler`
+
+| `io.micronaut.security.token.jwt.cookie.JwtCookieLoginHandler`
+| `io.micronaut.security.token.cookie.TokenCookieLoginHandler`
+
+| `io.micronaut.security.token.jwt.cookie.JwtCookieTokenReader`
+| `io.micronaut.security.token.cookie.TokenCookieTokenReader`
+
+| `io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator`
+| `io.micronaut.security.token.generator.AccessRefreshTokenGenerator`
+
+| `io.micronaut.security.token.jwt.generator.AccessTokenConfiguration`
+| `io.micronaut.security.token.generator.AccessTokenConfiguration`
+
+| `io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties`
+| `io.micronaut.security.token.generator.AccessTokenConfigurationProperties`
+
+| `io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator`
+| `io.micronaut.security.token.claims.ClaimsGenerator`
+
+| `io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider`
+| `io.micronaut.security.token.claims.ClaimsAudienceProvider`
+
+| `io.micronaut.security.token.jwt.cookie.AbstractAccessTokenCookieConfigurationProperties`
+| `io.micronaut.security.token.cookie.AbstractAccessTokenCookieConfigurationProperties`
+
+| `io.micronaut.security.token.jwt.cookie.JwtCookieConfigurationProperties`
+| `io.micronaut.security.token.cookie.TokenCookieConfigurationProperties`
+
+| `io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator`
+| `io.micronaut.security.token.claims.JtiGenerator`
+
+| `io.micronaut.security.token.jwt.generator.claims.JwtClaims`
+| `io.micronaut.security.token.Claims`
+
+|===
+
+
 
 === Annotation Mappers Removed
 

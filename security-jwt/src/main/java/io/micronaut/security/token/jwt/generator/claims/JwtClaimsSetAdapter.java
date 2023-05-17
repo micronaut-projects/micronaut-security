@@ -18,15 +18,17 @@ package io.micronaut.security.token.jwt.generator.claims;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.security.token.Claims;
+
 import java.util.Set;
 
 /**
- * Adapts from {@link JWTClaimsSet} to {@link JwtClaims}.
+ * Adapts from {@link JWTClaimsSet} to {@link Claims}.
  *
  * @author Sergio del Amo
  * @since 1.1.0
  */
-public class JwtClaimsSetAdapter implements JwtClaims {
+public class JwtClaimsSetAdapter implements Claims {
 
     private final JWTClaimsSet jwtClaimsSet;
 

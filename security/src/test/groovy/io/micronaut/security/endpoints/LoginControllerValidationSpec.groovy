@@ -22,6 +22,11 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
         'LoginControllerValidationSpec'
     }
 
+    @Override
+    Map<String, Object> getLoginModeCookie() {
+        [:]
+    }
+
     @Unroll("{\"username\": \"#username\", \"password\": \"#password\"} is invalid payload")
     void "LoginController responds BAD_REQUEST if POJO sent to /login is invalid"(String username, String password) {
         given:
@@ -59,7 +64,7 @@ class LoginControllerValidationSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'LoginControllerValidationSpec')
     @Singleton
-    static class CustomLoginHandler implements LoginHandler {
+    static class CustomLoginHandler implements LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
         @Override
         MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {

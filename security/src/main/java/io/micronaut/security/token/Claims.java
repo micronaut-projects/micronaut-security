@@ -17,6 +17,9 @@ package io.micronaut.security.token;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,6 +29,23 @@ import java.util.Set;
  * @author Sergio del Amo
  */
 public interface Claims {
+    String ISSUER = "iss";
+
+    String SUBJECT = "sub";
+
+    String EXPIRATION_TIME = "exp";
+
+    String NOT_BEFORE = "nbf";
+
+    String ISSUED_AT = "iat";
+
+    String TOKEN_ID = "jti";
+
+    String KEY_ID = "kid";
+
+    String AUDIENCE = "aud";
+
+    List<String> ALL_CLAIMS = Arrays.asList(ISSUER, SUBJECT, EXPIRATION_TIME, NOT_BEFORE, ISSUED_AT, TOKEN_ID, AUDIENCE);
 
     /**
      * Retrieves a value from the claims for the given name.

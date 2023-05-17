@@ -15,13 +15,13 @@
  */
 package io.micronaut.security.rules;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.config.SecurityConfiguration;
 import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.token.RolesFinder;
-import io.micronaut.web.router.RouteMatch;
 import jakarta.inject.Singleton;
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -40,8 +40,9 @@ import static io.micronaut.security.utils.LoggingUtils.debug;
  * @author Sergio del Amo
  * @since 1.0
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
-public class IpPatternsRule extends AbstractSecurityRule {
+public class IpPatternsRule extends AbstractSecurityRule<HttpRequest<?>> {
 
     /**
      * The order of the rule.
@@ -71,7 +72,7 @@ public class IpPatternsRule extends AbstractSecurityRule {
     }
 
     @Override
-    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable RouteMatch<?> routeMatch, @Nullable Authentication authentication) {
+    public Publisher<SecurityRuleResult> check(HttpRequest<?> request, @Nullable Authentication authentication) {
 
         if (patternList.isEmpty()) {
             debug(LOG, "No IP patterns provided. Skipping host address check.");

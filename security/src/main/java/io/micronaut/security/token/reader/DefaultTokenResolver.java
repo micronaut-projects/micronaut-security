@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.token.reader;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import jakarta.inject.Singleton;
 import java.util.Collection;
@@ -28,18 +29,17 @@ import org.slf4j.LoggerFactory;
  * @author Sergio del Amo
  * @since 1.1.0
  */
+@Requires(classes = HttpRequest.class)
 @Singleton
-public class DefaultTokenResolver implements TokenResolver {
-
+public class DefaultTokenResolver implements TokenResolver<HttpRequest<?>> {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTokenResolver.class);
-
-    private final Collection<TokenReader> tokenReaders;
+    private final Collection<TokenReader<HttpRequest<?>>> tokenReaders;
 
     /**
      * Instantiates a {@link io.micronaut.security.token.reader.DefaultTokenResolver} with a list of available {@link io.micronaut.security.token.reader.TokenReader}.
      * @param tokenReaders Collection of available {@link io.micronaut.security.token.reader.TokenReader} beans.
      */
-    public DefaultTokenResolver(Collection<TokenReader> tokenReaders) {
+    public DefaultTokenResolver(Collection<TokenReader<HttpRequest<?>>> tokenReaders) {
         this.tokenReaders = tokenReaders;
     }
 
@@ -49,15 +49,14 @@ public class DefaultTokenResolver implements TokenResolver {
      * @param request The current HTTP request.
      * @return the first found token in the supplied request.
      */
+    @Override
     public Optional<String> resolveToken(HttpRequest<?> request) {
-
         Optional<String> token = this.tokenReaders
-                .stream()
-                .map(reader -> reader.findToken(request))
-                .filter(Optional::isPresent)
-                .findFirst()
-                .orElse(Optional.empty());
-
+            .stream()
+            .map(reader -> reader.findToken(request))
+            .filter(Optional::isPresent)
+            .findFirst()
+            .orElse(Optional.empty());
         if (LOG.isDebugEnabled()) {
             String method = request.getMethod().toString();
             String path = request.getPath();

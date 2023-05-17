@@ -38,6 +38,11 @@ class LoginControllerPathConfigurableSpec extends EmbeddedServerSpecification {
     }
 
     @Override
+    Map<String, Object> getLoginModeCookie() {
+        [:]
+    }
+
+    @Override
     Map<String, Object> getConfiguration() {
         super.configuration + [
             'micronaut.security.endpoints.login.path': '/auth',
@@ -64,7 +69,7 @@ class LoginControllerPathConfigurableSpec extends EmbeddedServerSpecification {
 
     @Requires(property = 'spec.name', value = 'LoginControllerPathConfigurableSpec')
     @Singleton
-    static class CustomLoginHandler implements LoginHandler {
+    static class CustomLoginHandler implements LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> {
 
         @Override
         MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {

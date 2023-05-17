@@ -7,13 +7,12 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpMethod
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.endpoints.OauthController
 import io.micronaut.security.oauth2.keycloack.v16.Keycloak
-import io.micronaut.security.testutils.ConfigurationFixture
 import io.micronaut.security.testutils.ConfigurationUtils
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.event.RefreshTokenGeneratedEvent
-import io.micronaut.security.token.jwt.endpoints.OauthController
 import io.micronaut.security.token.refresh.RefreshTokenPersistence
 import io.micronaut.security.utils.BaseUrlUtils
 import io.micronaut.web.router.RouteMatch

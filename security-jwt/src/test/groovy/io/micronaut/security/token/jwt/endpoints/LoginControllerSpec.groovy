@@ -12,7 +12,7 @@ import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import jakarta.inject.Singleton
 

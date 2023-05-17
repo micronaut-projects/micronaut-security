@@ -32,17 +32,18 @@ import reactor.core.publisher.Flux;
  * and password from the Authorization header and authenticates the credentials
  * against any {@link AuthenticationProvider}s available.
  */
+@Requires(classes = HttpRequest.class)
 @Requires(property = BasicAuthAuthenticationConfiguration.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
 @Singleton
-public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher {
+public class BasicAuthAuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(BasicAuthAuthenticationFetcher.class);
-    private final Authenticator authenticator;
+    private final Authenticator<HttpRequest<?>> authenticator;
 
     /**
      * @param authenticator The authenticator to authenticate the credentials
      */
-    public BasicAuthAuthenticationFetcher(Authenticator authenticator) {
+    public BasicAuthAuthenticationFetcher(Authenticator<HttpRequest<?>> authenticator) {
         this.authenticator = authenticator;
     }
 

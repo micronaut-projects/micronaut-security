@@ -29,7 +29,6 @@ import io.micronaut.security.oauth2.endpoint.authorization.state.State;
 import io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator;
 import io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient;
 import io.micronaut.security.oauth2.endpoint.token.request.context.OpenIdCodeTokenRequestContext;
-import io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.JWTOpenIdClaims;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdAuthenticationMapper;
 import io.micronaut.security.oauth2.endpoint.token.response.OpenIdClaims;
@@ -50,20 +49,21 @@ import java.util.Optional;
  *
  * @author Sergio del Amo
  * @since 1.2.0
+ * @param <T> Request
  */
+@Requires(beans = { OpenIdTokenResponseValidator.class, OpenIdAuthenticationMapper.class, TokenEndpointClient.class, OauthRouteUrlBuilder.class})
 @Singleton
 @Requires(configuration = "io.micronaut.security.token.jwt")
-public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthorizationResponseHandler {
+public class DefaultOpenIdAuthorizationResponseHandler<T> implements OpenIdAuthorizationResponseHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultOpenIdAuthorizationResponseHandler.class);
 
     private final OpenIdTokenResponseValidator tokenResponseValidator;
     private final OpenIdAuthenticationMapper defaultAuthenticationMapper;
     private final TokenEndpointClient tokenEndpointClient;
-    private final OauthRouteUrlBuilder oauthRouteUrlBuilder;
+    private final OauthRouteUrlBuilder<T> oauthRouteUrlBuilder;
     private final @Nullable StateValidator stateValidator;
-    private final @Nullable
-    PkcePersistence pkcePersistence;
+    private final @Nullable PkcePersistence pkcePersistence;
 
     /**
      * @param tokenResponseValidator The token response validator
@@ -74,9 +74,9 @@ public class DefaultOpenIdAuthorizationResponseHandler implements OpenIdAuthoriz
      * @param pkcePersistence        The PKCE persistence
      */
     public DefaultOpenIdAuthorizationResponseHandler(OpenIdTokenResponseValidator tokenResponseValidator,
-                                                     DefaultOpenIdAuthenticationMapper authenticationMapper,
+                                                     OpenIdAuthenticationMapper authenticationMapper,
                                                      TokenEndpointClient tokenEndpointClient,
-                                                     OauthRouteUrlBuilder oauthRouteUrlBuilder,
+                                                     OauthRouteUrlBuilder<T> oauthRouteUrlBuilder,
                                                      @Nullable StateValidator stateValidator,
                                                      @Nullable PkcePersistence pkcePersistence) {
         this.tokenResponseValidator = tokenResponseValidator;

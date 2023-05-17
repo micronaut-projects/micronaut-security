@@ -81,7 +81,7 @@ micronaut:
         def authentication = Mock(Authentication)
 
         when:
-        Publisher<SecurityRuleResult> securityRuleResultPublisher = patternsRule.check(request, routeMatch, authentication)
+        Publisher<SecurityRuleResult> securityRuleResultPublisher = patternsRule.check(request, authentication)
 
         then:
         noExceptionThrown()

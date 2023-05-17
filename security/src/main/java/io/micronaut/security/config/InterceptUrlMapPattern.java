@@ -17,9 +17,9 @@ package io.micronaut.security.config;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpMethod;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -30,7 +30,9 @@ public class InterceptUrlMapPattern {
 
     private final String pattern;
     private final List<String> access;
-    private final Optional<HttpMethod> httpMethod;
+
+    @Nullable
+    private final HttpMethod httpMethod;
 
     /**
      * If the provided http method is null, the pattern will match all methods.
@@ -42,7 +44,7 @@ public class InterceptUrlMapPattern {
     public InterceptUrlMapPattern(String pattern, List<String> access, @Nullable HttpMethod httpMethod) {
         this.pattern = pattern;
         this.access = access;
-        this.httpMethod = Optional.ofNullable(httpMethod);
+        this.httpMethod = httpMethod;
     }
 
     /**
@@ -65,7 +67,8 @@ public class InterceptUrlMapPattern {
      * httpMethod getter.
      * @return e.g. HttpMethod.GET
      */
-    public Optional<HttpMethod> getHttpMethod() {
+    @Nullable
+    public HttpMethod getHttpMethod() {
         return httpMethod;
     }
 }

@@ -6,8 +6,8 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.UsernamePasswordCredentials
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.testutils.EmbeddedServerSpecification
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 
 class AccessTokenExpirationSpec extends EmbeddedServerSpecification {
 
@@ -21,7 +21,7 @@ class AccessTokenExpirationSpec extends EmbeddedServerSpecification {
         super.configuration + [
                 'endpoints.beans.enabled': true,
                 'endpoints.beans.sensitive': true,
-                'micronaut.security.token.jwt.generator.access-token.expiration': 5,
+                'micronaut.security.token.generator.access-token.expiration': 5,
                 'micronaut.security.token.jwt.signatures.secret.generator.secret': 'pleaseChangeThisSecretForANewOne',
                 'micronaut.security.authentication'   : 'bearer',
         ]

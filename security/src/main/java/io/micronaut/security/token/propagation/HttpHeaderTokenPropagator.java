@@ -30,6 +30,7 @@ import java.util.Optional;
  * @since 1.4.0
  */
 @Requires(property = HttpHeaderTokenPropagatorConfigurationProperties.PREFIX + ".enabled", notEquals = StringUtils.FALSE)
+@Requires(classes = { HttpRequest.class })
 @Singleton
 public class HttpHeaderTokenPropagator implements TokenPropagator {
 

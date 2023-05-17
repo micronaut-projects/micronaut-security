@@ -15,6 +15,7 @@
  */
 package io.micronaut.security.expressions;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.Authentication;
@@ -24,6 +25,7 @@ import jakarta.inject.Singleton;
 /**
  * Context for supporting {@link io.micronaut.security.annotation.Secured} annotation expressions with object references.
  */
+@Requires(bean = SecurityService.class)
 @Internal
 @Singleton
 public final class SecuredEvaluationContext {

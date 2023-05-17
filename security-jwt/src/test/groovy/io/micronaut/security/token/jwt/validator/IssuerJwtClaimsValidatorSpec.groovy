@@ -4,8 +4,8 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.security.authentication.Authentication
+import io.micronaut.security.token.Claims
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims
 import reactor.core.publisher.Flux
 import spock.lang.Shared
 import spock.lang.Specification
@@ -32,7 +32,7 @@ class IssuerJwtClaimsValidatorSpec extends Specification {
         Authentication result = authenticate(context, jwt)
         then:
         result
-        result.attributes[JwtClaims.SUBJECT] == "alice"
+        result.attributes[Claims.SUBJECT] == "alice"
 
         cleanup:
         context.close()
@@ -50,7 +50,7 @@ class IssuerJwtClaimsValidatorSpec extends Specification {
 
         then:
         result
-        result.attributes[JwtClaims.SUBJECT] == "alice"
+        result.attributes[Claims.SUBJECT] == "alice"
 
         cleanup:
         context.close()
@@ -100,9 +100,9 @@ class IssuerJwtClaimsValidatorSpec extends Specification {
     private static String generateJwtWithIssuer(ApplicationContext context, @Nullable Object issuer) {
         JwtTokenGenerator jwtGenerator = context.getBean(JwtTokenGenerator.class)
         Map<String, Object> claims = [:]
-        claims[JwtClaims.SUBJECT] = 'alice'
+        claims[Claims.SUBJECT] = 'alice'
         if (issuer != null) {
-            claims[JwtClaims.ISSUER] = issuer
+            claims[Claims.ISSUER] = issuer
         }
         jwtGenerator.generateToken(claims).get()
     }

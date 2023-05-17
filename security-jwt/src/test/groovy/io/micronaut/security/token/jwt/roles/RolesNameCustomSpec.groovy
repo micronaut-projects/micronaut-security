@@ -28,7 +28,7 @@ import io.micronaut.security.annotation.Secured
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import jakarta.inject.Singleton
 
 class RolesNameCustomSpec extends EmbeddedServerSpecification {

@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 @Requires(property = "spec.name", value = "X509AuthorizationSpec")
 //tag::clazz[]
 @Singleton
-public class X509AuthenticationFetcher implements AuthenticationFetcher {
+public class X509AuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
 
     @Override
     public Publisher<Authentication> fetchAuthentication(HttpRequest<?> request) {

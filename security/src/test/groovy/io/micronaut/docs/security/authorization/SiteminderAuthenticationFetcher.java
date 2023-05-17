@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 @Requires(property = "spec.name", value = "SiteminderAuthorizationSpec")
 //tag::clazz[]
 @Singleton
-public class SiteminderAuthenticationFetcher implements AuthenticationFetcher {
+public class SiteminderAuthenticationFetcher implements AuthenticationFetcher<HttpRequest<?>> {
 
     public static final String SITEMINDER_USER_HEADER = "SM_USER";
 

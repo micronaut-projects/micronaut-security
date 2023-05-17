@@ -15,9 +15,9 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.EmbeddedServerSpecification
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
+import io.micronaut.security.token.Claims
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration
-import io.micronaut.security.token.jwt.generator.claims.JwtClaims
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher
@@ -63,7 +63,7 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
     @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestPassedSpec')
     @Singleton
     @Replaces(JwtTokenValidator)
-    static class CustomJwtTokenValidator extends JwtTokenValidator {
+    static class CustomJwtTokenValidator<T> extends JwtTokenValidator<T> {
         CustomJwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
                                 Collection<EncryptionConfiguration> encryptionConfigurations,
                                 Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
@@ -72,20 +72,20 @@ class JwtClaimsValidatorRequestPassedSpec extends EmbeddedServerSpecification {
         }
 
         @Override
-        Publisher<Authentication> validateToken(String token, HttpRequest<?> request) {
+        Publisher<Authentication> validateToken(String token, T request) {
             return validator.validate(token, request)
                     .flatMap(jwtAuthenticationFactory::createAuthentication)
                     .map(Flux::just)
-                    .orElse(Flux.empty())
+                    .orElse(Flux.empty()) as Publisher<Authentication>
         }
     }
 
     @Requires(property = 'spec.name', value = 'JwtClaimsValidatorRequestPassedSpec')
     @Singleton
-    static class HttpRequestClaimsValidator implements GenericJwtClaimsValidator {
+    static class HttpRequestClaimsValidator<T> implements GenericJwtClaimsValidator<T> {
 
         @Override
-        boolean validate(@NonNull JwtClaims claims, @Nullable HttpRequest<?> request) {
+        boolean validate(@NonNull Claims claims, @Nullable T request) {
             request != null
         }
     }

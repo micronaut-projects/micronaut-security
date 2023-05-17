@@ -50,7 +50,7 @@ class ConfigurationInterceptUrlMapRuleSpec extends Specification {
         ConfigurationInterceptUrlMapRule provider = new ConfigurationInterceptUrlMapRule(rolesFinder, securityConfiguration, new DefaultInterceptUrlPatternModifier(securityConfiguration, () -> null))
 
         expect:
-        Mono.from(provider.check(request, null, null)).block() == securityRuleResult
+        Mono.from(provider.check(request, null)).block() == securityRuleResult
 
         where:
         securityRuleResult          | interceptUrlMap                                                                               | description

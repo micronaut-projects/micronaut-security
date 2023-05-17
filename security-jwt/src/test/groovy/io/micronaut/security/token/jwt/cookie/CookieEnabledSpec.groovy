@@ -2,19 +2,22 @@ package io.micronaut.security.token.jwt.cookie
 
 import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.security.testutils.ApplicationContextSpecification
+import io.micronaut.security.token.cookie.AccessTokenCookieConfiguration
+import io.micronaut.security.token.cookie.CookieTokenReader
+import io.micronaut.security.token.cookie.TokenCookieConfigurationProperties
 import spock.lang.Unroll
 
 class CookieEnabledSpec extends ApplicationContextSpecification {
     @Override
     Map<String, Object> getConfiguration() {
         Map<String, Object> conf = super.configuration + [
-            'micronaut.security.token.jwt.cookie.enabled': false,
+            'micronaut.security.token.cookie.enabled': false,
         ]
         conf
     }
 
-    @Unroll("if micronaut.security.token.jwt.cookie.enabled=false bean [#description] is not loaded")
-    void "if micronaut.security.token.jwt.cookie.enabled=false security related beans are not loaded"(Class clazz, String description) {
+    @Unroll("if micronaut.security.token.cookie.enabled=false bean [#description] is not loaded")
+    void "if micronaut.security.token.cookie.enabled=false security related beans are not loaded"(Class clazz, String description) {
         when:
         applicationContext.getBean(clazz)
 
@@ -25,8 +28,8 @@ class CookieEnabledSpec extends ApplicationContextSpecification {
         where:
         clazz << [
                 AccessTokenCookieConfiguration,
-                JwtCookieConfigurationProperties,
-                JwtCookieTokenReader,
+                TokenCookieConfigurationProperties,
+                CookieTokenReader,
         ]
 
         description = clazz.name

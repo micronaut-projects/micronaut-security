@@ -21,7 +21,7 @@ import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.rules.SecurityRule
 import io.micronaut.security.testutils.authprovider.MockAuthenticationProvider
 import io.micronaut.security.testutils.authprovider.SuccessAuthenticationScenario
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import org.reactivestreams.Publisher

@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     annotationProcessor(mn.micronaut.inject.java)
+    implementation(mn.micronaut.http.server)
     implementation(projects.micronautSecurityJwt)
     implementation(projects.micronautSecurityOauth2)
     implementation(projects.testSuiteUtils)

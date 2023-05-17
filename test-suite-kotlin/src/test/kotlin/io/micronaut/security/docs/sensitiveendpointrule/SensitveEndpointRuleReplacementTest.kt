@@ -39,5 +39,5 @@ class SensitiveEndpointRuleReplacementTest {
     @Singleton
     @Requires(property = "spec.name", value = "SensitiveEndpointRuleReplacementTest")
     internal class AuthenticationProviderUserPassword :
-        MockAuthenticationProvider(listOf(SuccessAuthenticationScenario("user")))
+        MockAuthenticationProvider<HttpRequest<Any>>(listOf(SuccessAuthenticationScenario("user")))
 }
