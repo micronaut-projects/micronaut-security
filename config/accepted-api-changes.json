@@ -1738,5 +1738,300 @@
     "type": "io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler",
     "member": "Constructor io.micronaut.security.oauth2.endpoint.authorization.response.DefaultOpenIdAuthorizationResponseHandler(io.micronaut.security.oauth2.endpoint.token.response.validation.OpenIdTokenResponseValidator,io.micronaut.security.oauth2.endpoint.token.response.DefaultOpenIdAuthenticationMapper,io.micronaut.security.oauth2.endpoint.token.request.TokenEndpointClient,io.micronaut.security.oauth2.url.OauthRouteUrlBuilder,io.micronaut.security.oauth2.endpoint.authorization.state.validation.StateValidator,io.micronaut.security.oauth2.endpoint.authorization.pkce.persistence.PkcePersistence)",
     "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$AccessTokenConfigurationProperties$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$AccessTokenConfigurationProperties$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$AccessTokenConfigurationProperties$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$AccessTokenConfigurationProperties$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$DefaultAccessRefreshTokenGenerator$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$DefaultAccessRefreshTokenGenerator$Definition$Reference",
+    "member": "Constructor io.micronaut.security.token.jwt.generator.$DefaultAccessRefreshTokenGenerator$Definition$Reference()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$DefaultAccessRefreshTokenGenerator$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$DefaultAccessRefreshTokenGenerator$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$DefaultAccessRefreshTokenGenerator$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$DefaultAccessRefreshTokenGenerator$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.$DefaultAccessRefreshTokenGenerator$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties",
+    "member": "Field PREFIX",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties",
+    "member": "Field DEFAULT_EXPIRATION",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties",
+    "member": "Constructor io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.AccessTokenConfigurationProperties",
+    "member": "Implemented interface io.micronaut.security.token.jwt.generator.AccessTokenConfiguration",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "member": "Field ISSUER",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "member": "Field ISSUED_AT",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "member": "Field NOT_BEFORE",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "member": "Field ALL_CLAIMS",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "member": "Field AUDIENCE",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "member": "Field SUBJECT",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "member": "Field EXPIRATION_TIME",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "member": "Field JWT_ID",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "member": "Implemented interface io.micronaut.security.token.Claims",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JwtClaimsSetAdapter",
+    "member": "Implemented interface io.micronaut.security.token.jwt.generator.claims.JwtClaims",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator",
+    "member": "Constructor io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator(io.micronaut.security.token.config.TokenConfiguration,io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator,io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider,io.micronaut.runtime.ApplicationConfiguration)",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator",
+    "member": "Implemented interface io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
+    "member": "Field accessTokenConfiguration",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
+    "member": "Field claimsGenerator",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
+    "member": "Field tokenRenderer",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
+    "member": "Field beanContext",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
+    "member": "Field refreshTokenGenerator",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
+    "member": "Field tokenGenerator",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator",
+    "member": "Implemented interface io.micronaut.security.token.jwt.generator.AccessRefreshTokenGenerator",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.JwtTokenGenerator",
+    "member": "Field claimsGenerator",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.generator.JwtTokenGenerator",
+    "member": "Constructor io.micronaut.security.token.jwt.generator.JwtTokenGenerator(io.micronaut.security.token.jwt.signature.SignatureGeneratorConfiguration,io.micronaut.security.token.jwt.encryption.EncryptionConfiguration,io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator)",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$AccessRefreshToken$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$AccessRefreshToken$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.token.jwt.render.$AccessRefreshToken$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$AccessRefreshToken$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$AccessRefreshToken$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$AccessRefreshToken$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$AccessRefreshToken$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerAccessRefreshToken$IntrospectionRef",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerAccessRefreshToken$IntrospectionRef",
+    "member": "Constructor io.micronaut.security.token.jwt.render.$BearerAccessRefreshToken$IntrospectionRef()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerAccessRefreshToken$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerAccessRefreshToken$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerAccessRefreshToken$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.naming.Named",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerAccessRefreshToken$IntrospectionRef",
+    "member": "Implemented interface io.micronaut.core.beans.BeanIntrospectionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerTokenRenderer$Definition$Reference",
+    "member": "Field $ANNOTATION_METADATA",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerTokenRenderer$Definition$Reference",
+    "member": "Constructor io.micronaut.security.token.jwt.render.$BearerTokenRenderer$Definition$Reference()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerTokenRenderer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationSource",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerTokenRenderer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanContextConditional",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerTokenRenderer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.core.annotation.AnnotationMetadataProvider",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerTokenRenderer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanType",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.$BearerTokenRenderer$Definition$Reference",
+    "member": "Implemented interface io.micronaut.inject.BeanDefinitionReference",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.AccessRefreshToken",
+    "member": "Constructor io.micronaut.security.token.jwt.render.AccessRefreshToken(java.lang.String,java.lang.String,java.lang.String,java.lang.Integer)",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.BearerAccessRefreshToken",
+    "member": "Constructor io.micronaut.security.token.jwt.render.BearerAccessRefreshToken(java.lang.String,java.util.Collection,java.lang.Integer,java.lang.String,java.lang.String,java.lang.String)",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.BearerTokenRenderer",
+    "member": "Constructor io.micronaut.security.token.jwt.render.BearerTokenRenderer()",
+    "reason": "Changed in Micronaut Framework 4"
+  },
+  {
+    "type": "io.micronaut.security.token.jwt.render.BearerTokenRenderer",
+    "member": "Implemented interface io.micronaut.security.token.jwt.render.TokenRenderer",
+    "reason": "Changed in Micronaut Framework 4"
   }
 ]
