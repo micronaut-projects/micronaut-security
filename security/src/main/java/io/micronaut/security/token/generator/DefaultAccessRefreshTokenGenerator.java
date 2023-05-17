@@ -42,7 +42,7 @@ import static io.micronaut.security.utils.LoggingUtils.debug;
  * Generates http responses with access and refresh token.
  *
  * @author Sergio del Amo
- * @since 3.2.0
+ * @since 1.0
  */
 @Requires(beans = {
     AccessTokenConfiguration.class,

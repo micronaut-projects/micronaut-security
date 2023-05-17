@@ -61,6 +61,9 @@ Some classes have been renamed and moved from `io.micronaut.security:micronaut-s
 | `io.micronaut.security.token.jwt.endpoints.OauthControllerConfigurationProperties`
 | `io.micronaut.security.endpoints.OauthControllerConfigurationProperties`
 
+| `io.micronaut.security.token.jwt.generator.DefaultAccessRefreshTokenGenerator`
+| `io.micronaut.security.token.generator.DefaultAccessRefreshTokenGenerator`
+
 | `io.micronaut.security.token.jwt.cookie.AccessTokenCookieConfiguration`
 | `io.micronaut.security.token.cookie.AccessTokenCookieConfiguration`
 
