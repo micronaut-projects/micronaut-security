@@ -23,8 +23,8 @@ import io.micronaut.security.token.config.TokenConfigurationProperties;
 /**
  * Access token configuration.
  *
- * @author Sergio del Amo
- * @since 3.2.0
+ * @author James Kleeh
+ * @since 2.0.0
  */
 @ConfigurationProperties(AccessTokenConfigurationProperties.PREFIX)
 public class AccessTokenConfigurationProperties implements AccessTokenConfiguration {
